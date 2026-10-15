@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 google-services-mcps is a set of MCP servers for Google products, packaged as Claude Code plugins in one marketplace, with an installer (`gsm`) for Codex, OpenCode and Antigravity (`agy`). One plugin per product (23 in total), and each plugin runs one MCP server with the same name as the plugin. Public repository: https://github.com/FiredMosquito831/google-services-mcps (owner FiredMosquito831). Licence Apache-2.0 with NOTICE. The website is GitHub Pages from `site/`.
 
-Status: built and tested offline (464 passing tests, 1 opt-in network test, smoke test over all servers, plugin validation). Not yet run against live Google accounts. Treat any claim about live behaviour as unverified until a live test has run.
+Status: built and tested offline (465 tests: 464 pass on Windows and 451 on Linux, the rest are platform-only or opt-in), smoke test over all servers, plugin validation. Published to npm as `@firedmosquito831/google-services-mcps` 0.1.1 through the `npm` workflow (trusted publishing, with provenance). Not yet run against live Google accounts. Treat any claim about live behaviour as unverified until a live test has run.
 
 ## Stack and versions
 
@@ -81,6 +81,9 @@ Append a dated bullet whenever you learn something non-obvious about this reposi
 - 2026-10-16: in `cmd`, `move` of a folder from `%TEMP%` to another drive fails with "Access is denied". `scripts/install.cmd` uses `xcopy` for that step. Test `5. cmd: ... another drive` runs when a second drive exists.
 - 2026-10-16: `npm publish` from this shell stops at `EOTP` (browser approval). The owner runs `npm publish --access public` in a terminal and approves in the browser. `prepublishOnly` runs the build and the tests first (about 6 minutes).
 - 2026-10-16: on this machine the `sh` on PATH is msys64's, not Git for Windows'. In a test, the `sh` that a piped `curl | sh` starts did not see `USERPROFILE`, `CLAUDE_CONFIG_DIR` or `GSM_DIR` exported by the parent script. The cause was not fully established, and that run wrote a marketplace and folders into the real profile. Before a one-liner test, probe the environment inside the pipeline, and check the real Claude config afterwards with `claude plugin marketplace list`.
+- 2026-10-16: a test that writes an executable fake (such as a fake `node` on PATH) must `chmod` it. Linux skips a non-executable PATH entry, and the test then runs the real program.
+- 2026-10-16: to run the suite on Linux, use WSL (Ubuntu 24.04 here): copy the tree and `.git`, then `npm ci && npm test`. The bootstrap tests call `git archive`, which fails without `.git`.
+- 2026-10-16: the `npm` workflow runs on a push only when `package.json` changes. A commit that changes only tests or docs does not publish. Start it with `gh workflow run npm.yml --ref main` when needed. The version guard stops a re-run for a version that is already on npm.
 - 2026-10-16: npm trusted publishing is set on the package's page on npmjs.com, so the package must exist first. The first publish is manual (from the owner's terminal, with two-factor). The `npm.yml` workflow (copied from ase-moodle-mcp) publishes later versions only when `package.json` has a new version.
 
 ## Preferences (the owner)
