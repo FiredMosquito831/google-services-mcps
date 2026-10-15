@@ -41,7 +41,7 @@ Usage:
                 [--path <dir>] [--servers <a,b>] [--allow-writes] [--confirmation <every-change|destructive-only|off>]
                 [--dry-run] [--home <dir>]
   gsm uninstall --agent <...> --plugin <...> --scope <...> [--path <dir>] [--servers <a,b>] [--dry-run] [--home <dir>] [--keep-data]
-  gsm login <group> [--profile readonly|readwrite|full] [--scopes <url,url>] [--servers <a,b>] [--client-secret <file>]
+  gsm login <group> [--profile readonly|readwrite|full] [--scopes <url,url>] [--servers <a,b>] [--client-secret <file>] [--no-browser]
   gsm scopes <group> [--profile readonly|readwrite|full] [--servers <a,b>] [--json]
   gsm setup-client <path-to-client_secret.json> [--force]
   gsm setup-apikey [--force]
@@ -68,6 +68,7 @@ Groups:  OAuth login: cloud, workspace-user, searchconsole, business, developer.
          workspace-admin: setup-admin (service account with domain-wide delegation, no login).
 Agents:  claude (official plugin CLI), codex (config.toml), opencode (opencode.json), agy (global scope only).
 Flags:   --dry-run prints every planned change and command and writes nothing.
+         --no-browser (login) prints the login URL only, and does not open the browser.
          --allow-writes sets GSM_ALLOW_WRITES=true for the installed servers (install only).
          --confirmation sets GSM_CONFIRMATION (every-change, destructive-only or off) for codex, opencode and agy.
                         For claude it is the plugin option "confirmation": the command prints how to set it.
@@ -165,11 +166,12 @@ async function dispatch(argv: string[]): Promise<number> {
     }
 
     case 'login': {
-      const group = parseGroup(parsed.positionals, 'usage: gsm login <group> [--profile readonly|readwrite|full] [--scopes <urls>] [--servers a,b] [--client-secret <file>]');
+      const group = parseGroup(parsed.positionals, 'usage: gsm login <group> [--profile readonly|readwrite|full] [--scopes <urls>] [--servers a,b] [--client-secret <file>] [--no-browser]');
       const choice = parseLoginScopes(parsed.values);
       const servers = parseServers(parsed.values);
       const clientSecretFile = typeof parsed.values['client-secret'] === 'string' ? parsed.values['client-secret'] : undefined;
-      return runLogin({ group, servers, clientSecretFile, profile: choice.profile, customScopes: choice.customScopes }, registryFor, out);
+      const noBrowser = parsed.values['no-browser'] === true;
+      return runLogin({ group, servers, clientSecretFile, profile: choice.profile, customScopes: choice.customScopes, noBrowser }, registryFor, out);
     }
 
     case 'scopes': {

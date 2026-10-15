@@ -247,19 +247,20 @@ test('ads_mutate rejects a malformed operation before the gate or any request', 
 
 // ---- developer token and login ----
 
-test('without a developer token no request is sent, and the message names the setting', async () => {
+test('without a developer token a call is still sent, with no developer-token header, and nothing asks for it', async () => {
   setEnv({ GSM_ADS_DEVELOPER_TOKEN: undefined });
   try {
-    reset(() => ({}));
+    reset(() => ({ resourceNames: ['customers/1234567890'] }));
     const { ctx, gateCalls } = gateContext();
-    await assert.rejects(tool('ads_list_customers').handler({}), /GSM_ADS_DEVELOPER_TOKEN/);
-    // A write checks the token before it asks for approval, so the user is not asked for a call that cannot succeed.
-    await assert.rejects(
-      tool('ads_mutate').handler({ customer_id: CUSTOMER, operations: [{ campaignOperation: { create: {} } }], validate_only: false }, ctx),
-      /GSM_ADS_DEVELOPER_TOKEN/,
-    );
-    assert.equal(gateCalls.length, 0);
-    assert.equal(calls.length, 0);
+    await tool('ads_list_customers').handler({});
+    assert.equal(calls.length, 1, 'the read is sent');
+    assert.equal('developer-token' in calls[0].headers, false);
+    // A write asks for approval as it does with a token, and is then sent with no developer-token header.
+    reset(() => ({}));
+    await tool('ads_mutate').handler({ customer_id: CUSTOMER, operations: [{ campaignOperation: { create: {} } }], validate_only: false }, ctx);
+    assert.equal(gateCalls.length, 1, 'the write asks for approval');
+    assert.equal(calls.length, 1, 'the write is sent after approval');
+    assert.equal('developer-token' in calls[0].headers, false);
   } finally {
     setEnv({ GSM_ADS_DEVELOPER_TOKEN: TOKEN });
   }

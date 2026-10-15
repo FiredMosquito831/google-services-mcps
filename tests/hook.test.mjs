@@ -33,7 +33,7 @@ const TOOL_MAP = [
  * A fake plugin folder. toolMap null means no tool-map.json. policy, when given, is written
  * as <tokenDir>/policy.json; a string is written as-is, anything else as JSON.
  */
-function fakePlugin({ toolMap = TOOL_MAP, policy, folder = 'google-cloud' } = {}) {
+function fakePlugin({ toolMap = TOOL_MAP, policy, folder = 'google-cloud', manifest } = {}) {
   const root = mkdtempSync(join(tmpdir(), 'gsm-hook-test-'));
   work.push(root);
   const plugin = join(root, folder);
@@ -47,6 +47,11 @@ function fakePlugin({ toolMap = TOOL_MAP, policy, folder = 'google-cloud' } = {}
   // The hook also imports the dynamic-risk rule (resolveDynamicKind) for dynamic tools.
   copyFileSync(dist('core/dynamic.js'), join(plugin, 'core', 'dynamic.js'));
   if (toolMap !== null) writeFileSync(join(plugin, 'tool-map.json'), JSON.stringify(toolMap, null, 2));
+  // manifest: undefined writes no plugin.json; a string is written as-is; anything else as JSON.
+  if (manifest !== undefined) {
+    mkdirSync(join(plugin, '.claude-plugin'));
+    writeFileSync(join(plugin, '.claude-plugin', 'plugin.json'), typeof manifest === 'string' ? manifest : JSON.stringify(manifest));
+  }
   if (policy !== undefined) {
     writeFileSync(join(tokenDir, 'policy.json'), typeof policy === 'string' ? policy : JSON.stringify(policy));
   }
@@ -167,10 +172,39 @@ test('built-in tools and tools of other MCP servers are ignored', () => {
   }
 });
 
-test('a plugin tool that is not in this plugin\'s map asks, so a wrong matcher cannot silently allow it', () => {
+test('a tool of another plugin prints nothing, even one this plugin\'s map does not list', () => {
+  // Changed: this used to expect an ask. Another plugin's tool is not this plugin's, so the hook says nothing about it.
   const { hook, tokenDir } = fakePlugin();
-  const out = decisionOf(runHook(hook, { input: event('mcp__plugin_google_workspace_gmail__send_message'), tokenDir }));
+  assert.equal(runHook(hook, { input: event('mcp__plugin_google_workspace_gmail__send_message'), tokenDir }), '');
+  assert.equal(runHook(hook, { input: event('mcp__plugin_gmail_gmail__send_message'), tokenDir }), '');
+});
+
+test('the plugin name in plugin.json, not the folder, decides which tools are this plugin\'s', () => {
+  // The folder is a version number, and the manifest names the plugin google-cloud.
+  const { hook, tokenDir } = fakePlugin({ folder: '0.1.0', manifest: { name: 'google-cloud' } });
+  assert.equal(decisionOf(runHook(hook, { input: event(DESTRUCTIVE), tokenDir })).permissionDecision, 'ask');
+  assert.equal(runHook(hook, { input: event('mcp__plugin_google_workspace_gmail__send_message'), tokenDir }), '');
+});
+
+test('a manifest name with a hyphen is matched with the underscore form that Claude Code uses in tool names', () => {
+  // The manifest says google-cloud; its tools are named mcp__plugin_google_cloud_..., so they are this plugin's.
+  const { hook, tokenDir } = fakePlugin({ manifest: { name: 'google-cloud' } });
+  assert.equal(decisionOf(runHook(hook, { input: event(MODIFY), tokenDir })).permissionDecision, 'ask');
+});
+
+test('an unreadable plugin.json falls back to the prefix of the first tool-map entry', () => {
+  const { hook, tokenDir } = fakePlugin({ manifest: '{ "name": ' });
+  assert.equal(decisionOf(runHook(hook, { input: event(DESTRUCTIVE), tokenDir })).permissionDecision, 'ask');
+  assert.equal(runHook(hook, { input: event('mcp__plugin_google_workspace_gmail__send_message'), tokenDir }), '');
+});
+
+test('with neither plugin.json nor a tool map, this plugin cannot be identified: its tools ask, and others print nothing', () => {
+  const { hook, tokenDir } = fakePlugin({ toolMap: null });
+  const out = decisionOf(runHook(hook, { input: event(READ), tokenDir }));
   assert.equal(out.permissionDecision, 'ask');
+  assert.match(out.permissionDecisionReason, /could not be identified/);
+  assert.notEqual(runHook(hook, { input: event('mcp__plugin_google_workspace_gmail__send_message'), tokenDir }), '', 'a plugin tool still asks');
+  assert.equal(runHook(hook, { input: event('Bash'), tokenDir }), '', 'a built-in tool prints nothing');
 });
 
 test('garbage stdin produces no output and exits 0', () => {
@@ -198,14 +232,15 @@ test('an invalid CLAUDE_PLUGIN_OPTION_CONFIRMATION is ignored, so the default as
 });
 
 test('a missing tool map asks for every plugin tool, including reads', () => {
-  const { hook, tokenDir } = fakePlugin({ toolMap: null });
+  // With a manifest the plugin is known, so the tool map is the only thing missing.
+  const { hook, tokenDir } = fakePlugin({ toolMap: null, manifest: { name: 'google-cloud' } });
   const out = decisionOf(runHook(hook, { input: event(READ), tokenDir }));
   assert.equal(out.permissionDecision, 'ask');
   assert.match(out.permissionDecisionReason, /Tool map not found in this plugin, asking to be safe\./);
 });
 
 test('a malformed tool map asks, and the reason says why', () => {
-  const { hook, tokenDir } = fakePlugin({ toolMap: { not: 'an array' } });
+  const { hook, tokenDir } = fakePlugin({ toolMap: { not: 'an array' }, manifest: { name: 'google-cloud' } });
   const out = decisionOf(runHook(hook, { input: event(READ), tokenDir }));
   assert.equal(out.permissionDecision, 'ask');
   assert.match(out.permissionDecisionReason, /must hold a JSON array/);

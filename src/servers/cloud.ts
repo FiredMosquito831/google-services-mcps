@@ -141,6 +141,7 @@ async function bqCall<T>(
     if (value !== undefined) url.searchParams.set(key, String(value));
   }
   try {
+    // The auth client retries each request (core/auth.ts), so this call is covered.
     const res = await (await authFor(cfg)).request<T>({ url: url.toString(), method, data: opts.body });
     return res.data;
   } catch (err) {

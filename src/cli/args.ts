@@ -49,7 +49,7 @@ const COMMANDS: Record<Exclude<Command, 'help'>, Record<string, OptionType>> = {
     home: 'string',
   },
   uninstall: { agent: 'string', plugin: 'string', scope: 'string', path: 'string', servers: 'string', 'dry-run': 'boolean', home: 'string', 'keep-data': 'boolean' },
-  login: { servers: 'string', 'client-secret': 'string', profile: 'string', scopes: 'string' },
+  login: { servers: 'string', 'client-secret': 'string', profile: 'string', scopes: 'string', 'no-browser': 'boolean' },
   'setup-client': { force: 'boolean' },
   'setup-apikey': { force: 'boolean' },
   status: {},

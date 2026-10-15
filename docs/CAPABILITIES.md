@@ -6,10 +6,10 @@ Each product has a file under `docs/capabilities/` that lists every tool.
 
 | Product | What it covers | Server | Login | Tools (read / write / destructive / dynamic) | APIs (per-method / gateway) | Detail |
 |---|---|---|---|---|---|---|
-| `gcloud` | Google Cloud: Google Cloud console APIs: projects, service enablement, API keys, billing, monitoring, storage, BigQuery and IAM, plus the rest of the infrastructure, data, devops, networking, security and governance APIs. | `gcloud` | Desktop OAuth client, then `login cloud` | 374 (186 / 136 / 51 / 1) | 12 / 277 | [gcloud](capabilities/gcloud.md) |
-| `gsc` | Search Console: Search Console sites, sitemaps, search analytics, URL indexing and site verification. | `gsc` | Desktop OAuth client, then `login searchconsole` | 31 (16 / 10 / 5 / 0) | 3 / 0 | [gsc](capabilities/gsc.md) |
-| `gsearch` | Search and Web Quality: Public search and web-quality APIs (Custom Search, PageSpeed, CrUX, Safe Browsing, Web Risk, Fact Check) that take an API key instead of OAuth. | `gsearch` | API key, then `setup-apikey` (no login) | 51 (42 / 5 / 3 / 1) | 15 / 2 | [gsearch](capabilities/gsearch.md) |
-| `gdrive` | Google Drive and Docs: Google Drive files, labels and activity, plus Docs, Sheets, Slides, Forms and Books. | `gdrive` | Desktop OAuth client, then `login workspace-user` | 185 (88 / 74 / 22 / 1) | 8 / 2 | [gdrive](capabilities/gdrive.md) |
+| `gcloud` | Google Cloud: Google Cloud console APIs: projects, service enablement, API keys, billing, monitoring, storage, BigQuery and IAM, plus the rest of the infrastructure, data, devops, networking, security and governance APIs. | `gcloud` | Desktop OAuth client, then `login cloud` | 374 (185 / 137 / 51 / 1) | 12 / 277 | [gcloud](capabilities/gcloud.md) |
+| `gsc` | Search Console: Search Console sites, sitemaps, search analytics, URL indexing and site verification. | `gsc` | Desktop OAuth client, then `login searchconsole` | 31 (15 / 11 / 5 / 0) | 3 / 0 | [gsc](capabilities/gsc.md) |
+| `gsearch` | Search and Web Quality: Public search and web-quality APIs (Custom Search, PageSpeed, CrUX, Safe Browsing, Web Risk, Fact Check) that take an API key instead of OAuth. The Custom Search JSON API is closed to new customers and is scheduled to be discontinued on 2027-01-01. | `gsearch` | API key, then `setup-apikey` (no login) | 51 (42 / 5 / 3 / 1) | 15 / 2 | [gsearch](capabilities/gsearch.md) |
+| `gdrive` | Google Drive and Docs: Google Drive files, labels and activity, plus Docs, Sheets, Slides, Forms and Books. | `gdrive` | Desktop OAuth client, then `login workspace-user` | 185 (87 / 75 / 22 / 1) | 8 / 2 | [gdrive](capabilities/gdrive.md) |
 | `gmail` | Gmail: Gmail mailboxes, messages, labels and settings, plus Gmail Postmaster Tools. | `gmail` | Desktop OAuth client, then `login workspace-user` | 97 (43 / 35 / 18 / 1) | 2 / 2 | [gmail](capabilities/gmail.md) |
 | `gcalendar` | Google Calendar: Google Calendar calendars, events and calendar settings. | `gcalendar` | Desktop OAuth client, then `login workspace-user` | 46 (16 / 23 / 7 / 0) | 1 / 0 | [gcalendar](capabilities/gcalendar.md) |
 | `gchat` | Google Chat: Google Chat spaces, messages and members, plus Workspace Events subscriptions. | `gchat` | Desktop OAuth client, then `login workspace-user` | 61 (28 / 25 / 8 / 0) | 2 / 0 | [gchat](capabilities/gchat.md) |
@@ -37,7 +37,9 @@ Each product has a file under `docs/capabilities/` that lists every tool.
 - **destructive**: deletes, removes, sends, disables or otherwise cannot be undone easily. Asks first, and the confirmation is shown twice (hook prompt and exact preview), unless the option is off.
 - **dynamic**: the risk depends on the call. Google Ads mutate is read when validateOnly is set, destructive when any operation removes, and write otherwise.
 
-## Gateway tools (every product)
+## Gateway tools (products with gateway APIs)
+
+Products with gateway APIs also expose `api_search`, `api_describe` and `api_call`, which reach those APIs.
 
 - `api_search`: find methods by text in an API the product covers. Read.
 - `api_describe`: parameters, request body and scopes of one method. Read.

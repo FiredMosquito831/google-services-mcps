@@ -4,7 +4,7 @@ Search Console sites, sitemaps, search analytics, URL indexing and site verifica
 
 - Plugin: `gsc`, MCP server: `gsc`, login: Desktop OAuth client, then `login searchconsole`
 - Install: `claude plugin install gsc@google-services-mcps`
-- Tools: 31 total. Curated 10, per-method 20, gateway 0. Read 16, write 10, destructive 5, dynamic 0.
+- Tools: 31 total. Curated 10, per-method 20, gateway 0. Read 15, write 11, destructive 5, dynamic 0.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
@@ -42,7 +42,7 @@ Read tools never ask. Write, destructive and dynamic tools ask before they run, 
 | `searchcons_url_testing_t_mobile_friendl_run` | write | searchconsole.urlTestingTools.mobileFriendlyTest.run | (none) |
 | `siteverif_web_resource_delete` | destructive | siteVerification.webResource.delete | siteverification |
 | `siteverif_web_resource_get` | read | siteVerification.webResource.get | siteverification |
-| `siteverif_web_resource_get_token` | read | siteVerification.webResource.getToken | siteverification, siteverification.verify_only |
+| `siteverif_web_resource_get_token` | write | siteVerification.webResource.getToken | siteverification, siteverification.verify_only |
 | `siteverif_web_resource_insert` | write | siteVerification.webResource.insert | siteverification, siteverification.verify_only |
 | `siteverif_web_resource_list` | read | siteVerification.webResource.list | siteverification |
 | `siteverif_web_resource_patch` | write | siteVerification.webResource.patch | siteverification |

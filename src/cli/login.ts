@@ -18,13 +18,13 @@ import { resolve } from 'node:path';
 import { OAuth2Client, type Credentials } from 'google-auth-library';
 import { ADMIN_SCOPES, readClientSecret } from '../core/auth.js';
 import { loadConfig } from '../core/config.js';
-import { type AuthGroup, type Registry } from '../core/registry.js';
-import { PROFILE_TEXT, requirementsFor, resolveScopes, type Profile } from '../core/scopes.js';
+import { serverByName, type AuthGroup, type Registry } from '../core/registry.js';
+import { PROFILE_TEXT, requirementsForSpecs, resolveScopes, type Profile } from '../core/scopes.js';
 import { OAUTH_GROUPS, type CliGroup } from './args.js';
 import { tokenFileFor } from './credentials.js';
 import { writeAtomic } from './fsutil.js';
 import { postureLine } from './posture.js';
-import { coverageOf, formatCoverage, selectGroupServers } from './scopes.js';
+import { coverageOf, formatCoverage, gatewayReachLine, hasGatewayApis, selectGroupServers } from './scopes.js';
 import type { Output } from './report.js';
 import { UsageError } from './types.js';
 
@@ -37,6 +37,8 @@ export interface LoginRequest {
   /** readonly, readwrite or full. "custom" means exactly customScopes. */
   profile: Profile | 'custom';
   customScopes?: string[];
+  /** --no-browser: print the login URL only, and do not open the browser. */
+  noBrowser?: boolean;
 }
 
 /** `loadRegistry` is passed as a function so that workspace-admin guidance needs no registry. */
@@ -64,7 +66,11 @@ export async function runLogin(req: LoginRequest, loadRegistryFn: () => Registry
 
   // --servers narrows the group; every name must belong to it (checked with the same message as before).
   const servers = selectGroupServers(registry, group, req.servers && req.servers.length > 0 ? req.servers : undefined);
-  const requirements = await requirementsFor(servers, cfg);
+  const requirements = await requirementsForSpecs(
+    servers.map((name) => serverByName(registry, name)),
+    cfg,
+    { warn: (line) => out.warn(line) },
+  );
 
   let scopes: string[];
   if (req.profile === 'custom') {
@@ -78,13 +84,14 @@ export async function runLogin(req: LoginRequest, loadRegistryFn: () => Registry
 
   out.log(`Servers: ${servers.join(', ')}`);
   out.log(`This token runs ${formatCoverage(coverageOf(requirements, scopes))}.`);
+  if (hasGatewayApis(registry, servers)) out.log(gatewayReachLine(requirements, scopes, req.profile));
   out.log(`Logging in for group "${group}" with ${scopes.length} scope(s):`);
   for (const scope of scopes) out.log(`  ${scope}`);
   if (req.servers && req.servers.length > 0) {
     out.log('Note: --servers stores a token that covers only those servers, and it replaces the group token.');
   }
 
-  const tokens = await loopbackLogin(clientId, clientSecret, scopes, out);
+  const tokens = await loopbackLogin(clientId, clientSecret, scopes, out, { openBrowser: req.noBrowser !== true });
   mkdirSync(cfg.tokenDir, { recursive: true, mode: 0o700 });
   const file = tokenFileFor(group, cfg);
   writeAtomic(file, JSON.stringify(tokens, null, 2) + '\n', 0o600);
@@ -131,8 +138,18 @@ function openBrowser(url: string): void {
   }
 }
 
-/** Runs the loopback flow and exchanges the code. Exported for the scratch tests only. */
-export async function loopbackLogin(clientId: string, clientSecret: string, scopes: string[], out: Output): Promise<Credentials> {
+/**
+ * Runs the loopback flow and exchanges the code. With openBrowser false (--no-browser) the URL is printed and the
+ * browser is not opened. The default opens it, as before. Exported for the tests.
+ */
+export async function loopbackLogin(
+  clientId: string,
+  clientSecret: string,
+  scopes: string[],
+  out: Output,
+  options: { openBrowser?: boolean } = {},
+): Promise<Credentials> {
+  const shouldOpen = options.openBrowser !== false;
   const state = randomBytes(16).toString('hex');
 
   const callback = await new Promise<{ redirectUri: string; code: string }>((resolveCallback, rejectCallback) => {
@@ -188,8 +205,12 @@ export async function loopbackLogin(clientId: string, clientSecret: string, scop
         state,
         include_granted_scopes: true,
       });
-      out.log(`\nOpen this URL to log in if the browser does not open:\n${authUrl}\n`);
-      openBrowser(authUrl);
+      if (shouldOpen) {
+        out.log(`\nOpen this URL to log in if the browser does not open:\n${authUrl}\n`);
+        openBrowser(authUrl);
+      } else {
+        out.log(`\nOpen this URL in a browser to log in (--no-browser: the browser is not opened):\n${authUrl}\n`);
+      }
     });
   });
 

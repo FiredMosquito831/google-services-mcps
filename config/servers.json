@@ -3,7 +3,7 @@
   "plugins": {
     "gcloud": "Google Cloud console APIs: projects, service enablement, API keys, billing, monitoring, storage, BigQuery and IAM, plus the rest of the infrastructure, data, devops, networking, security and governance APIs.",
     "gsc": "Search Console sites, sitemaps, search analytics, URL indexing and site verification.",
-    "gsearch": "Public search and web-quality APIs (Custom Search, PageSpeed, CrUX, Safe Browsing, Web Risk, Fact Check) that take an API key instead of OAuth.",
+    "gsearch": "Public search and web-quality APIs (Custom Search, PageSpeed, CrUX, Safe Browsing, Web Risk, Fact Check) that take an API key instead of OAuth. The Custom Search JSON API is closed to new customers and is scheduled to be discontinued on 2027-01-01.",
     "gdrive": "Google Drive files, labels and activity, plus Docs, Sheets, Slides, Forms and Books.",
     "gmail": "Gmail mailboxes, messages, labels and settings, plus Gmail Postmaster Tools.",
     "gcalendar": "Google Calendar calendars, events and calendar settings.",
@@ -1303,7 +1303,7 @@
           "version": "v4"
         }
       ],
-      "label": "Search and Web Quality: Public search and web-quality APIs (Custom Search, PageSpeed, CrUX, Safe Browsing, Web Risk, Fact Check) that take an API key instead of OAuth."
+      "label": "Search and Web Quality: Public search and web-quality APIs (Custom Search, PageSpeed, CrUX, Safe Browsing, Web Risk, Fact Check) that take an API key instead of OAuth. The Custom Search JSON API is closed to new customers and is scheduled to be discontinued on 2027-01-01."
     },
     {
       "name": "gdrive",

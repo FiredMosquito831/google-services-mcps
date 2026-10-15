@@ -59,7 +59,7 @@
   },
   {
     "name": "mcp__plugin_gcloud_gcloud__apikeys_project_location_keys_get_key",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/apikeys",
       "https://www.googleapis.com/auth/apikeys.readonly",

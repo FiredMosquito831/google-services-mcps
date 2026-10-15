@@ -30,8 +30,8 @@
  * api_call is kind 'dynamic': runServer registers it always and does not gate it, so
  * the handler gates each write or destructive call itself. Reads are not gated. A method
  * whose kind is dynamic (the Google Ads mutate methods) is classed per call from its body
- * (core/dynamic.ts), so a validate-only call is a read. A Google Ads call also carries the
- * developer-token header (core/ads.ts), and a missing token is refused before the gate.
+ * (core/dynamic.ts), so a validate-only call is a read. A Google Ads call carries the
+ * developer-token header only when a token is configured (core/ads.ts). A missing token blocks nothing.
  */
 import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -42,7 +42,6 @@ import type { AuthGroup } from './registry.js';
 import { classifyMethod } from './discovery/methods.js';
 import { buildUrl, loadToolKinds, sendAuthorized } from './discovery/tools.js';
 import type { GateFn } from './approval.js';
-import { adsHeaders, isGoogleAdsUrl } from './ads.js';
 import { resolveDynamicKind } from './dynamic.js';
 import { describeError, scopeHint, type ActionKind, type ToolContext, type ToolDef, type ToolKind } from './tools.js';
 
@@ -736,9 +735,6 @@ async function runCall(core: Core, args: CallArgs, ctx: ToolContext | undefined)
   const url = buildUrl(api.rootUrl, api.servicePath, method.path, pathParams);
   checkUrl(url, api.rootUrl, api.servicePath);
   const data = method.httpMethod === 'GET' ? undefined : args.body;
-
-  // A Google Ads call with no developer token is refused here, before any approval is asked.
-  if (isGoogleAdsUrl(url)) adsHeaders(input.cfg);
 
   const kind = callKindOf(entry, args.body);
   if (kind !== 'read') {

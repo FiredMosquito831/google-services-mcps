@@ -89,11 +89,30 @@ function printLoginHints(servers: readonly ServerSpec[], out: Output): void {
 }
 
 /**
+ * The write setting in the summary, for the agents that ran. --allow-writes reaches codex, opencode and agy as
+ * GSM_ALLOW_WRITES=true. Claude does not get it: its write setting is the plugin option allow_writes, which the
+ * user sets with `claude plugin configure`, so the summary names that command and never says writes are enabled for it.
+ */
+function writesText(allowWrites: boolean, agents: readonly AgentId[], products: readonly string[]): string {
+  if (!allowWrites) return 'not set (write tools stay off)';
+  if (!agents.includes('claude')) return 'enabled (GSM_ALLOW_WRITES=true)';
+  const claudeNote = `set the plugin option allow_writes with ${products.map((p) => `\`claude plugin configure ${claude.claudePluginId(p)}\``).join(', ')}`;
+  const others = agents.filter((a) => a !== 'claude');
+  return others.length === 0 ? claudeNote : `enabled (GSM_ALLOW_WRITES=true) for ${others.join(', ')}; for claude, ${claudeNote}`;
+}
+
+/**
  * The last line of an install: the number of products, servers and tools, and the confirmation and write
  * settings that were set. A product without a tool count (no tool-map.json and no generatedToolCount) is
- * counted as unknown instead of zero.
+ * counted as unknown instead of zero. `agents` are the agents that ran (after any skipped by --agent all).
  */
-export function installSummary(run: InstallRun, env: InstallEnv, servers: readonly ServerSpec[]): string {
+export function installSummary(
+  run: InstallRun,
+  env: InstallEnv,
+  servers: readonly ServerSpec[],
+  failed = false,
+  agents: readonly AgentId[] = run.agent === 'all' ? [...AGENTS] : [run.agent],
+): string {
   const products = [...new Set(servers.map((s) => s.plugin))];
   const counts = new Map<string, number | undefined>();
   try {
@@ -110,9 +129,11 @@ export function installSummary(run: InstallRun, env: InstallEnv, servers: readon
   }
   const toolText = `${tools} tools${unknown > 0 ? ` (${unknown} product(s) without a tool count)` : ''}`;
   const confirmation = run.confirmation ?? 'not set (plugin default every-change)';
-  const writes = run.allowWrites ? 'enabled (GSM_ALLOW_WRITES=true)' : 'not set (write tools stay off)';
-  const verb = run.dryRun ? 'would install' : 'installed';
-  return `summary: ${verb} ${products.length} products, ${servers.length} servers, ${toolText}; confirmation: ${confirmation}; writes: ${writes}`;
+  const writes = writesText(run.allowWrites, agents, products);
+  // A run with an error must not say "installed": the error was printed above and the exit code is 1.
+  const verb = run.dryRun ? 'would install' : failed ? 'could not install' : 'installed';
+  const note = failed && !run.dryRun ? ' (an agent reported an error above)' : '';
+  return `summary: ${verb} ${products.length} products, ${servers.length} servers, ${toolText}${note}; confirmation: ${confirmation}; writes: ${writes}`;
 }
 
 export async function runInstall(run: InstallRun, env: InstallEnv): Promise<number> {
@@ -191,6 +212,6 @@ export async function runInstall(run: InstallRun, env: InstallEnv): Promise<numb
   }
 
   if (run.action === 'install' && !run.dryRun && !failed) printLoginHints(servers, out);
-  if (run.action === 'install') out.log(installSummary(run, env, servers));
+  if (run.action === 'install') out.log(installSummary(run, env, servers, failed, agents));
   return failed ? 1 : 0;
 }

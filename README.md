@@ -2,6 +2,18 @@
 
 MCP servers for Google APIs, packaged as one Claude Code plugin per Google product (23 plugins) in one marketplace. Install the products you need, then turn each plugin's server on or off for a session with `/mcp`. Each plugin bundles one MCP server, its consent hook, its tool map, its catalog subset and a skill. Everything is generated from `config/products.json`.
 
+## Start here
+
+- [GUIDE](docs/GUIDE.md): what the suite is, how the parts fit together, and a five-minute quick start.
+- [INSTALL](docs/INSTALL.md): install, update, check and remove, for Claude Code, Codex, OpenCode and Antigravity.
+- [CHOOSING](docs/CHOOSING.md): which products to install for each goal, with cost and risk.
+- [USING](docs/USING.md): daily use, approvals, the policy file, profiles, the gateway tools and common errors.
+- [LIMITS-AND-COSTS](docs/LIMITS-AND-COSTS.md): quotas, costs and approvals per product.
+- [SETUP](docs/SETUP.md) and [SECURITY](docs/SECURITY.md): logins, and the safety model with its known limits.
+- [SURFACES](docs/SURFACES.md), [CAPABILITIES](docs/CAPABILITIES.md) and [products](docs/products/): what each product covers.
+
+The suite is built and unit-tested. It has not yet been run against live Google accounts. Test each product with one read first.
+
 ## Products
 
 Per-method tools are generated from Google's Discovery documents: one tool per method of the product's APIs. Gateway APIs are reached through three generic tools (`api_search`, `api_describe`, `api_call`), so their methods do not each take a tool. Total tools also include the hand-written tools of the curated products (Cloud, Search Console, Gmail, Drive, Calendar and Workspace Admin).

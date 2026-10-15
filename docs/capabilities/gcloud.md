@@ -4,7 +4,7 @@ Google Cloud console APIs: projects, service enablement, API keys, billing, moni
 
 - Plugin: `gcloud`, MCP server: `gcloud`, login: Desktop OAuth client, then `login cloud`
 - Install: `claude plugin install gcloud@google-services-mcps`
-- Tools: 374 total. Curated 20, per-method 350, gateway 3. Read 186, write 136, destructive 51, dynamic 1.
+- Tools: 374 total. Curated 20, per-method 350, gateway 3. Read 185, write 137, destructive 51, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
@@ -40,7 +40,7 @@ Read tools never ask. Write, destructive and dynamic tools ask before they run, 
 | `apikeys_keys_lookup_key` | read | apikeys.keys.lookupKey | apikeys, apikeys.readonly |
 | `apikeys_operations_get` | read | apikeys.operations.get | apikeys, apikeys.readonly |
 | `apikeys_project_locatio_keys_undelete` | write | apikeys.projects.locations.keys.undelete | apikeys, cloud-platform |
-| `apikeys_project_location_keys_get_key` | read | apikeys.projects.locations.keys.getKeyString | apikeys, apikeys.readonly |
+| `apikeys_project_location_keys_get_key` | write | apikeys.projects.locations.keys.getKeyString | apikeys, apikeys.readonly |
 | `apikeys_projects_location_keys_create` | write | apikeys.projects.locations.keys.create | apikeys, cloud-platform |
 | `apikeys_projects_location_keys_delete` | destructive | apikeys.projects.locations.keys.delete | apikeys, cloud-platform |
 | `apikeys_projects_locations_keys_get` | read | apikeys.projects.locations.keys.get | apikeys, apikeys.readonly |

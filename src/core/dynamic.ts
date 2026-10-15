@@ -16,6 +16,26 @@ export type DynamicRisk = 'read' | 'write' | 'destructive';
 
 const GOOGLE_ADS_PREFIX = 'googleads.';
 
+/** The Discovery method id of googleAds:mutate. Policy rules and the audit log match this id. */
+export const GOOGLE_ADS_MUTATE_METHOD = 'googleads.customers.googleAds.mutate';
+
+/** The curated ads_mutate tool's validate_only default: a call that does not say is validate-only, so Google only checks it. */
+export const CURATED_VALIDATE_ONLY_DEFAULT = true;
+
+/**
+ * The body the rule reads for one call of the curated ads_mutate tool. Its arguments name the flag validate_only,
+ * which defaults to CURATED_VALIDATE_ONLY_DEFAULT. The request body names it validateOnly. Only operations and
+ * validate_only are read here, so a validateOnly key that the tool's schema strips cannot change the kind of a call.
+ * The PreToolUse hook and the curated tool both classify through this function, so they agree.
+ */
+export function curatedMutateBody(input: { operations?: unknown; validate_only?: unknown }): {
+  operations: unknown;
+  validateOnly: boolean;
+} {
+  const validateOnly = input.validate_only === undefined ? CURATED_VALIDATE_ONLY_DEFAULT : input.validate_only === true;
+  return { operations: input.operations, validateOnly };
+}
+
 function isObject(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
 }

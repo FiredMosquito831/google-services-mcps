@@ -944,7 +944,7 @@
   },
   {
     "name": "mcp__plugin_gdrive_gdrive__drive_files_generate_cse_token",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/drive"
     ],

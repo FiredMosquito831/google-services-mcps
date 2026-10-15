@@ -122,9 +122,9 @@ const CONSENT_CONFIG = {
 const ADS_CONFIG = {
   ads_developer_token: {
     type: 'string',
-    title: 'Google Ads developer token',
+    title: 'Google Ads developer token (optional)',
     description:
-      'Issued by Google Ads for your manager account. Stored in the system credential store, not in a file. Leave empty to use the token-directory file instead.',
+      'Optional. Google Ads access is granted to the Cloud project of your OAuth client; the developer token is no longer required. Sent only when set. Stored in the system credential store, not in a file. Leave empty to use the token-directory file instead.',
     sensitive: true,
     required: false,
   },

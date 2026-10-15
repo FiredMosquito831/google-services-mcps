@@ -5,10 +5,12 @@
  * scopes. Tools with no scopes are always covered.
  *
  * resolveScopes is pure. requirementsFor builds the tool definitions of some
- * servers without starting them and makes no network call.
+ * servers, and reads the gateway catalog for their gateway methods, without starting
+ * them and without a network call. A gateway method is a requirement too, so the
+ * profiles and the login summary cover it the same way the gateway checks it per call.
  */
 import type { RuntimeConfig } from './config.js';
-import { loadRegistry, serverByName, type AuthGroup, type Registry } from './registry.js';
+import { gatewayMethodsOf, loadRegistry, serverByName, type AuthGroup, type Registry, type ServerSpec } from './registry.js';
 import { buildServerTools } from '../servers/index.js';
 import type { ToolKind } from './tools.js';
 
@@ -21,11 +23,15 @@ export const PROFILE_TEXT: Record<Profile, string> = {
   full: 'every tool, with the broadest commonly listed scope for each method',
 };
 
-/** One tool and the scopes that grant it (any one of them). */
+/**
+ * One tool and the scopes that grant it (any one of them). Keyed "<server>/<tool>". A gateway method is one
+ * requirement too, keyed "<server>/<method id>", with gateway set: the gateway (api_call) checks its scopes per call.
+ */
 export interface Requirement {
   tool: string;
   kind: ToolKind;
   scopes: string[];
+  gateway?: boolean;
 }
 
 export interface ScopeResolution {
@@ -136,19 +142,64 @@ export function serversOfGroup(reg: Registry, group: AuthGroup, only?: readonly 
     .map((s) => s.name);
 }
 
+export interface RequirementOptions {
+  /** Receives the notes about the gateway catalog: missing, or lacking an API. Default: stderr. */
+  warn?: (line: string) => void;
+}
+
 /**
- * The tool requirements of the named servers. Each tool is keyed "<server>/<tool>",
- * because discovery servers share the name api_methods. Building the definitions
- * reads the Discovery snapshots only: no server starts and no network call is made.
+ * The requirements of the named servers, from the server map. Each tool is keyed "<server>/<tool>", because
+ * discovery servers share the name api_methods. Building the definitions reads the Discovery snapshots and the
+ * gateway catalog only: no server starts and no network call is made.
  */
-export async function requirementsFor(serverNames: readonly string[], cfg: RuntimeConfig): Promise<Requirement[]> {
+export async function requirementsFor(
+  serverNames: readonly string[],
+  cfg: RuntimeConfig,
+  opts: RequirementOptions = {},
+): Promise<Requirement[]> {
   const reg = loadRegistry();
+  return requirementsForSpecs(
+    serverNames.map((name) => serverByName(reg, name)),
+    cfg,
+    opts,
+  );
+}
+
+/**
+ * The requirements of the given servers: their curated and generated tools, then one requirement per gateway method.
+ * With no catalog, the gateway methods are left out and one note says so. Upload methods are not requirements.
+ */
+export async function requirementsForSpecs(
+  specs: readonly ServerSpec[],
+  cfg: RuntimeConfig,
+  opts: RequirementOptions = {},
+): Promise<Requirement[]> {
+  const warn = opts.warn ?? ((line: string) => process.stderr.write(`${line}\n`));
   const out: Requirement[] = [];
-  for (const name of serverNames) {
-    const spec = serverByName(reg, name);
+  const withoutCatalog: string[] = [];
+  for (const spec of specs) {
     for (const tool of await buildServerTools(spec, cfg)) {
-      out.push({ tool: `${name}/${tool.name}`, kind: tool.kind, scopes: [...(tool.scopes ?? [])] });
+      out.push({ tool: `${spec.name}/${tool.name}`, kind: tool.kind, scopes: [...(tool.scopes ?? [])] });
     }
+    if (!spec.gatewayApis?.length) continue;
+
+    const gateway = gatewayMethodsOf(spec.gatewayApis);
+    if (!gateway.file) {
+      withoutCatalog.push(spec.name);
+      continue;
+    }
+    if (gateway.missingApis.length > 0) {
+      warn(`[${spec.name}] not in the API catalog, so their methods are not counted: ${gateway.missingApis.join(', ')}`);
+    }
+    for (const m of gateway.methods) {
+      out.push({ tool: `${spec.name}/${m.id}`, kind: m.kind, scopes: [...m.scopes], gateway: true });
+    }
+  }
+  if (withoutCatalog.length > 0) {
+    warn(
+      `The API catalog (catalog.json) was not found, so the gateway methods of ${withoutCatalog.join(', ')} are not counted and add no scopes. ` +
+        'Set GSM_DATA_DIR to the folder that holds catalog.json. In the repo, build it with: node scripts/build-catalog.mjs',
+    );
   }
   return out;
 }

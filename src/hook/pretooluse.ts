@@ -14,12 +14,17 @@ import { homedir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { decide, describeAction, loadPolicyFile, riskFromKind, type Policy } from '../core/policy.js';
-import { resolveDynamicKind } from '../core/dynamic.js';
+import { curatedMutateBody, GOOGLE_ADS_MUTATE_METHOD, resolveDynamicKind } from '../core/dynamic.js';
 import type { ToolMapEntry, ToolMapKind } from '../core/dump.js';
 
 const TOOL_MAP_FILE = 'tool-map.json';
 /** Written by the build: method id -> read, write, dynamic or destructive, for every gateway method of this plugin. */
 const METHOD_KIND_FILE = 'method-kinds.json';
+const MANIFEST_FILE = join('.claude-plugin', 'plugin.json');
+/** Every plugin tool is named mcp__plugin_<plugin>_<server>__<tool>. */
+const PLUGIN_TOOL_PREFIX = 'mcp__plugin_';
+/** The curated Google Ads mutate tool. Its tool name ends in this, and it names no method. */
+const CURATED_MUTATE_SUFFIX = 'ads_mutate';
 const DEFAULT_TOKEN_DIR_NAME = '.google-services-mcps';
 const KINDS: ReadonlySet<string> = new Set(['read', 'write', 'destructive', 'dynamic']);
 const CONCRETE_KINDS: ReadonlySet<string> = new Set(['read', 'write', 'destructive']);
@@ -32,28 +37,43 @@ function readMethodKinds(root: string): Record<string, unknown> | null {
 }
 
 /**
- * Kind and method of one call of a dynamic tool.
- *  - A per-method tool names its method in the tool map (entry.methodId). Its kind is decided by the body.
- *  - The gateway's api_call names its method in tool_input.method. The method must be in this plugin's table:
- *    a concrete kind is used as it is, and a dynamic one is decided by the body.
- * The body is tool_input.body in both cases. resolveDynamicKind returns null for a method with no rule, and then
- * the caller asks. A method missing from the table, or with no method at all, returns null too.
+ * Kind and method of one call of a dynamic tool. Three cases, in this order:
+ *  - The curated ads_mutate (no methodId, name ends in ads_mutate): the Google Ads mutate method, decided by the
+ *    curated arguments, where validate_only is read as validateOnly (curatedMutateBody). A method key is ignored.
+ *  - The gateway's api_call (no methodId, tool_input names a method): the method must be in this plugin's table.
+ *    A concrete kind is used as it is, and a dynamic one is decided by tool_input.body.
+ *  - A per-method tool (methodId set): decided by tool_input.body, or by tool_input itself when there is no body argument.
+ * resolveDynamicKind returns null for a method with no rule, and then the caller asks. So does a dynamic tool that
+ * is none of these.
  */
 function kindOfDynamicCall(root: string, entry: ToolMapEntry, input: unknown): { kind: ToolMapKind; methodId: string } | null {
   const obj = typeof input === 'object' && input !== null ? (input as Record<string, unknown>) : {};
-  const named = typeof obj.method === 'string' && obj.method.length > 0 ? obj.method : undefined;
-  const methodId = entry.methodId ?? named;
-  if (methodId === undefined) return null;
 
-  if (entry.methodId === undefined) {
-    const tabled = readMethodKinds(root)?.[methodId];
-    if (typeof tabled !== 'string') return null;
-    if (CONCRETE_KINDS.has(tabled)) return { kind: tabled as ToolMapKind, methodId };
-    if (tabled !== 'dynamic') return null;
+  // The curated ads_mutate names no method and its server ignores any method key, so the key is ignored here too.
+  // Trusting it would let a key that names a read method pass a real change without a prompt.
+  if (entry.methodId === undefined && entry.name.endsWith(CURATED_MUTATE_SUFFIX)) {
+    const kind = resolveDynamicKind(GOOGLE_ADS_MUTATE_METHOD, curatedMutateBody(obj));
+    return kind === null ? null : { kind, methodId: GOOGLE_ADS_MUTATE_METHOD };
   }
 
-  const kind = resolveDynamicKind(methodId, obj.body);
-  return kind === null ? null : { kind, methodId };
+  // The gateway's api_call: the method it names must be in this plugin's table.
+  const named = typeof obj.method === 'string' && obj.method.length > 0 ? obj.method : undefined;
+  if (entry.methodId === undefined && named !== undefined) {
+    const tabled = readMethodKinds(root)?.[named];
+    if (typeof tabled !== 'string') return null;
+    if (CONCRETE_KINDS.has(tabled)) return { kind: tabled as ToolMapKind, methodId: named };
+    if (tabled !== 'dynamic') return null;
+    const kind = resolveDynamicKind(named, obj.body);
+    return kind === null ? null : { kind, methodId: named };
+  }
+
+  // A per-method tool: its fixed method, and the body argument (or the arguments themselves when there is none).
+  if (entry.methodId !== undefined) {
+    const kind = resolveDynamicKind(entry.methodId, obj.body !== undefined ? obj.body : obj);
+    return kind === null ? null : { kind, methodId: entry.methodId };
+  }
+
+  return null;
 }
 
 type HookDecision = 'ask' | 'deny';
@@ -81,6 +101,36 @@ function messageOf(err: unknown): string {
 /** The bundle sits at <plugin>/bin/gsm-hook.mjs, so the plugin root is one folder up from bin. */
 function pluginRoot(): string {
   return resolve(dirname(fileURLToPath(import.meta.url)), '..');
+}
+
+/** The "name" of <plugin>/.claude-plugin/plugin.json, or null when the file is missing, unreadable or has no name. */
+function manifestName(root: string): string | null {
+  const file = join(root, MANIFEST_FILE);
+  if (!existsSync(file)) return null;
+  try {
+    const raw = JSON.parse(readFileSync(file, 'utf8').replace(/^﻿/, '')) as { name?: unknown } | null;
+    return typeof raw?.name === 'string' && raw.name.trim() !== '' ? raw.name : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * The name prefix of this plugin's own tools. The name comes from plugin.json, not from the folder: Claude Code may
+ * run a plugin from a versioned folder. Without a usable manifest, the first tool-map entry gives the prefix of its
+ * server (mcp__plugin_<plugin>_<server>__). Returns null when neither source works, so the caller asks.
+ */
+function ownToolPrefix(root: string): string | null {
+  const name = manifestName(root);
+  if (name !== null) return `${PLUGIN_TOOL_PREFIX}${name.replace(/[^A-Za-z0-9]/g, '_')}_`;
+  try {
+    const first = readToolMap(join(root, TOOL_MAP_FILE))?.keys().next().value;
+    if (typeof first !== 'string' || !first.startsWith(PLUGIN_TOOL_PREFIX)) return null;
+    const cut = first.indexOf('__', PLUGIN_TOOL_PREFIX.length);
+    return cut > PLUGIN_TOOL_PREFIX.length ? first.slice(0, cut + 2) : null;
+  } catch {
+    return null;
+  }
 }
 
 function tokenDirectory(): string {
@@ -202,12 +252,26 @@ async function run(): Promise<void> {
   const event = parseEvent(await readStdin());
   if (!event) return;
 
-  // Plugin MCP tools are named mcp__plugin_<plugin>_<server>__<tool>. The plugin's own hooks.json
-  // matcher already limits what reaches this program, so only the prefix is checked here. The folder
-  // name is not used: Claude Code may run a plugin from a versioned cache folder.
-  if (!event.tool_name.startsWith('mcp__plugin_')) return;
+  // Only this plugin's own tools are checked. A tool of another plugin, or of any other MCP server, prints nothing.
+  // When this plugin cannot be identified, every plugin tool is asked about, because any of them could be ours.
+  if (!event.tool_name.startsWith(PLUGIN_TOOL_PREFIX)) return;
 
   const root = pluginRoot();
+  const prefix = ownToolPrefix(root);
+  if (prefix === null) {
+    emit(
+      'ask',
+      describeAction({
+        toolName: event.tool_name,
+        risk: 'destructive',
+        args: event.tool_input,
+        reason: 'This plugin could not be identified (no readable plugin.json and no tool map), so asking to be safe.',
+      }),
+    );
+    return;
+  }
+  if (!event.tool_name.startsWith(prefix)) return;
+
   try {
     check(event, root);
   } catch (err) {

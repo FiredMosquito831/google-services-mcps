@@ -242,27 +242,56 @@ test('(b) the gateway api_call sends the developer-token header for googleads, a
   assert.equal(String(err.message).includes(TOKEN), false);
 });
 
-// ---- (c) a missing token gives the setup message and sends no request ----
+// ---- (c) no developer token is not an error: the call is sent without the header ----
 
-test('(c) without a developer token, the setup message names the variable and ads.json, and no request is sent', async () => {
+test('(c) without a developer token, a read is sent with no developer-token header, and nothing blocks it', async () => {
+  setEnv({ GSM_ADS_DEVELOPER_TOKEN: undefined });
+  try {
+    reset(() => ({ resourceNames: ['customers/1234567890'] }));
+    const { ctx, gateCalls } = gateContext();
+    const list = byMethod('googleads.customers.listAccessibleCustomers');
+    await list.handler({}, ctx);
+    assert.equal(calls.length, 1, 'the request is sent');
+    assert.equal(calls[0].url, `${ADS_BASE}/customers:listAccessibleCustomers`);
+    assert.equal('developer-token' in calls[0].headers, false, 'no developer-token header without a configured token');
+    assert.equal(gateCalls.length, 0, 'a read asks for no approval');
+  } finally {
+    setEnv({ GSM_ADS_DEVELOPER_TOKEN: TOKEN });
+  }
+});
+
+test('(c) without a developer token, a write still asks for approval, and then is sent with no developer-token header', async () => {
   setEnv({ GSM_ADS_DEVELOPER_TOKEN: undefined });
   try {
     reset(() => ({}));
     const { ctx, gateCalls } = gateContext();
-    const list = byMethod('googleads.customers.listAccessibleCustomers');
-    await assert.rejects(list.handler({}, ctx), (err) => {
-      assert.match(err.message, /GSM_ADS_DEVELOPER_TOKEN/);
-      assert.match(err.message, /ads\.json/);
-      return true;
-    });
-    // A write checks the token before it asks for approval, so the user is not asked for a call that cannot be sent.
     const mutate = byMethod(MUTATE_CAMPAIGNS);
-    await assert.rejects(
-      mutate.handler({ customerId: CUSTOMER, body: { operations: [{ campaignOperation: { create: {} } }] } }, ctx),
-      /GSM_ADS_DEVELOPER_TOKEN/,
-    );
-    assert.equal(gateCalls.length, 0, 'no approval is asked when the call cannot be sent');
-    assert.equal(calls.length, 0, 'no request is sent');
+    await mutate.handler({ customerId: CUSTOMER, body: { operations: [{ campaignOperation: { create: {} } }] } }, ctx);
+    assert.equal(gateCalls.length, 1, 'the write asks for approval, as it does with a token');
+    assert.equal(calls.length, 1, 'the request is sent after approval');
+    assert.equal('developer-token' in calls[0].headers, false);
+  } finally {
+    setEnv({ GSM_ADS_DEVELOPER_TOKEN: TOKEN });
+  }
+});
+
+test('(c) the developer-token header is absent when no token is configured, and present when one is', async () => {
+  const ads = await import(dist('core/ads.js'));
+  const noTokenDir = makeTokenDir();
+  setEnv({ GSM_ADS_DEVELOPER_TOKEN: undefined });
+  try {
+    assert.equal(ads.developerTokenOf({ tokenDir: noTokenDir }), undefined);
+    assert.deepEqual(ads.adsHeaders({ tokenDir: noTokenDir }), {}, 'no headers at all without a token');
+
+    reset(() => ({ resourceNames: [] }));
+    await byMethod('googleads.customers.listAccessibleCustomers').handler({}, gateContext().ctx);
+    assert.equal('developer-token' in calls[0].headers, false, 'absent in the request');
+
+    setEnv({ GSM_ADS_DEVELOPER_TOKEN: TOKEN });
+    assert.deepEqual(ads.adsHeaders({ tokenDir: noTokenDir }), { 'developer-token': TOKEN });
+    reset(() => ({ resourceNames: [] }));
+    await byMethod('googleads.customers.listAccessibleCustomers').handler({}, gateContext().ctx);
+    assert.equal(calls[0].headers['developer-token'], TOKEN, 'present in the request once a token is configured');
   } finally {
     setEnv({ GSM_ADS_DEVELOPER_TOKEN: TOKEN });
   }
@@ -375,19 +404,17 @@ test('(g) the gateway api_call: validate-only is not gated, a remove is destruct
   assert.equal(calls.length, 0, 'a refused call sends nothing');
 });
 
-test('(g) the gateway refuses a Google Ads call with no developer token before any approval is asked', async () => {
+test('(g) the gateway sends a Google Ads call with no developer token, with no header, after the usual approval', async () => {
   setEnv({ GSM_ADS_DEVELOPER_TOKEN: undefined });
   try {
     const gw = gateway.gatewayTools({ product: 'gads', group: 'business', apis: [{ api: 'googleads', version: 'v26' }], cfg });
     const apiCall = gw.find((t) => t.name === 'api_call');
     const { ctx, gateCalls } = gateContext();
     reset(() => ({}));
-    await assert.rejects(
-      apiCall.handler({ method: MUTATE_CAMPAIGNS, pathParams: { customerId: CUSTOMER }, body: { operations: [{ campaignOperation: { create: {} } }] } }, ctx),
-      /GSM_ADS_DEVELOPER_TOKEN/,
-    );
-    assert.equal(gateCalls.length, 0);
-    assert.equal(calls.length, 0);
+    await apiCall.handler({ method: MUTATE_CAMPAIGNS, pathParams: { customerId: CUSTOMER }, body: { operations: [{ campaignOperation: { create: {} } }] } }, ctx);
+    assert.equal(gateCalls.length, 1, 'the create asks for approval');
+    assert.equal(calls.length, 1, 'the request is sent');
+    assert.equal('developer-token' in calls[0].headers, false, 'no developer-token header without a token');
   } finally {
     setEnv({ GSM_ADS_DEVELOPER_TOKEN: TOKEN });
   }
@@ -399,6 +426,8 @@ const HOOK_DIR_NAME = 'gads';
 const ADS_OK = `mcp__plugin_${HOOK_DIR_NAME}_gads__googleads_customers_campaigns_mutate`;
 const API_CALL = `mcp__plugin_${HOOK_DIR_NAME}_gads__api_call`;
 const OTHER_DYNAMIC = `mcp__plugin_${HOOK_DIR_NAME}_gads__other_dynamic`;
+/** The curated mutate tool: dynamic, no methodId, and its arguments are validate_only plus operations. */
+const CURATED_MUTATE = `mcp__plugin_${HOOK_DIR_NAME}_gads__ads_mutate`;
 
 /** A fake plugin folder with the compiled hook, the policy and dynamic-rule modules, and a tool map and method-kinds table. */
 function fakeHookPlugin() {
@@ -419,9 +448,13 @@ function fakeHookPlugin() {
       { name: ADS_OK, kind: 'dynamic', scopes: [ADWORDS], methodId: MUTATE_CAMPAIGNS },
       { name: API_CALL, kind: 'dynamic', scopes: [] },
       { name: OTHER_DYNAMIC, kind: 'dynamic', scopes: [], methodId: 'compute.instances.update' },
+      { name: CURATED_MUTATE, kind: 'dynamic', scopes: [ADWORDS] },
     ]),
   );
-  writeFileSync(join(plugin, 'method-kinds.json'), JSON.stringify({ [MUTATE_CAMPAIGNS]: 'dynamic', 'compute.instances.delete': 'destructive' }));
+  writeFileSync(
+    join(plugin, 'method-kinds.json'),
+    JSON.stringify({ [MUTATE_CAMPAIGNS]: 'dynamic', 'compute.instances.delete': 'destructive', 'googleads.customers.listAccessibleCustomers': 'read' }),
+  );
   return { hook: join(plugin, 'bin', 'gsm-hook.mjs'), tokenDir: tokens };
 }
 
@@ -480,6 +513,81 @@ test('(e) the hook classifies the gateway api_call from its body, and asks when 
 test('(e) the hook asks for a dynamic per-method tool whose method has no dynamic rule, even with a validate-only body', () => {
   const { hook, tokenDir: tokens } = fakeHookPlugin();
   assert.equal(runHook(hook, tokens, hookEvent(OTHER_DYNAMIC, { body: { validateOnly: true } }))?.permissionDecision, 'ask');
+});
+
+// ---- (h) the curated ads_mutate: the hook and the tool classify the same arguments the same way ----
+
+const CAMPAIGN_REMOVE = { campaignOperation: { remove: `customers/${CUSTOMER}/campaigns/9` } };
+const CAMPAIGN_CREATE = { campaignOperation: { create: { name: 'Summer' } } };
+
+test('(h) the hook: a validate-only curated mutate prints nothing', () => {
+  const { hook, tokenDir: tokens } = fakeHookPlugin();
+  const validate = { customer_id: CUSTOMER, operations: [CAMPAIGN_REMOVE], validate_only: true };
+  assert.equal(runHook(hook, tokens, hookEvent(CURATED_MUTATE, validate)), null, 'validate_only true is a read, not asked');
+});
+
+test('(h) the hook: validate_only defaults to true, as the curated tool does, so an omitted flag is not asked', () => {
+  const { hook, tokenDir: tokens } = fakeHookPlugin();
+  assert.equal(runHook(hook, tokens, hookEvent(CURATED_MUTATE, { customer_id: CUSTOMER, operations: [CAMPAIGN_CREATE] })), null);
+});
+
+test('(h) the hook: operations with remove ask, as destructive, with a preview of the operations', () => {
+  const { hook, tokenDir: tokens } = fakeHookPlugin();
+  const decision = runHook(
+    hook,
+    tokens,
+    hookEvent(CURATED_MUTATE, { customer_id: CUSTOMER, operations: [CAMPAIGN_REMOVE], validate_only: false }),
+  );
+  assert.equal(decision?.permissionDecision, 'ask');
+  assert.match(decision.permissionDecisionReason, /permanently change or delete Google data/);
+  assert.match(decision.permissionDecisionReason, /may be irreversible/);
+  assert.match(decision.permissionDecisionReason, /"remove": "customers\/1234567890\/campaigns\/9"/, 'the operations are shown');
+  assert.match(decision.permissionDecisionReason, /Method: googleads\.customers\.googleAds\.mutate/, 'the Google method is named');
+});
+
+test('(h) the hook: operations with create ask as a write, under the default confirmation', () => {
+  const { hook, tokenDir: tokens } = fakeHookPlugin();
+  const decision = runHook(hook, tokens, hookEvent(CURATED_MUTATE, { customer_id: CUSTOMER, operations: [CAMPAIGN_CREATE], validate_only: false }));
+  assert.equal(decision?.permissionDecision, 'ask');
+  assert.match(decision.permissionDecisionReason, /About to change Google data/);
+  assert.doesNotMatch(decision.permissionDecisionReason, /permanently/);
+});
+
+test('(h) a method key in the curated arguments is ignored, so a removal cannot borrow the kind of a read method', () => {
+  // The table says this method is a read. The curated server ignores the key and applies the removal, so the hook must ask.
+  const { hook, tokenDir: tokens } = fakeHookPlugin();
+  const borrowed = {
+    customer_id: CUSTOMER,
+    operations: [CAMPAIGN_REMOVE],
+    validate_only: false,
+    method: 'googleads.customers.listAccessibleCustomers',
+  };
+  assert.equal(runHook(hook, tokens, hookEvent(CURATED_MUTATE, borrowed))?.permissionDecision, 'ask');
+});
+
+test('(h) a validateOnly key in the curated arguments cannot turn a real change into a read', () => {
+  // The curated schema strips validateOnly, so the server applies this change. The hook must ask for it.
+  const { hook, tokenDir: tokens } = fakeHookPlugin();
+  const sneaky = { customer_id: CUSTOMER, operations: [CAMPAIGN_CREATE], validate_only: false, validateOnly: true };
+  assert.equal(runHook(hook, tokens, hookEvent(CURATED_MUTATE, sneaky))?.permissionDecision, 'ask');
+});
+
+test('(h) the server gate agrees with the hook: a validate-only call is not gated, a remove is gated as destructive', async () => {
+  reset(() => ({}));
+  const tool = (await ads.buildTools(cfg)).find((t) => t.name === 'ads_mutate');
+  assert.ok(tool, 'the curated ads_mutate tool');
+
+  const validate = gateContext();
+  await tool.handler({ customer_id: CUSTOMER, operations: [CAMPAIGN_REMOVE], validate_only: true }, validate.ctx);
+  assert.equal(validate.gateCalls.length, 0, 'validate-only: no gate call');
+  assert.equal(calls.length, 1, 'validate-only: still sent to Google, which changes nothing');
+  assert.equal(calls[0].body.validateOnly, true);
+
+  const remove = gateContext();
+  await tool.handler({ customer_id: CUSTOMER, operations: [CAMPAIGN_REMOVE], validate_only: false }, remove.ctx);
+  assert.equal(remove.gateCalls.length, 1);
+  assert.equal(remove.gateCalls[0].kind, 'destructive');
+  assert.equal(remove.gateCalls[0].methodId, 'googleads.customers.googleAds.mutate');
 });
 
 // ---- the rule's home: the pattern in config/tool-kinds.json ----

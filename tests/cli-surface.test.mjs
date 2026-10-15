@@ -376,16 +376,67 @@ test('doctor: a token directory that does not exist yet passes when it can be cr
   });
 });
 
-test('doctor: the Ads developer token is checked only for gads, and only its presence is printed', async () => {
+test('doctor: the Ads developer token is an information line for gads, never a FAIL, and its value is never printed', async () => {
   await withTemp((p) => {
     const plugin = join(p.root, 'plugin');
     makePluginFixture(plugin, 'gads');
     writeToken(p.tokens, 'client_secret.json', '{}');
     const missing = doctorOn(plugin, p.tokens, { pluginId: 'gads', env: {} });
-    assert.ok(missing.lines.some((l) => l.startsWith('FAIL GSM_ADS_DEVELOPER_TOKEN is not set')), missing.text);
+    assert.ok(missing.lines.some((l) => l.startsWith('INFO GSM_ADS_DEVELOPER_TOKEN is not set')), missing.text);
+    assert.equal(
+      missing.lines.some((l) => l.startsWith('FAIL') && l.includes('GSM_ADS_DEVELOPER_TOKEN')),
+      false,
+      'a missing developer token is not a failure',
+    );
     const set = doctorOn(plugin, p.tokens, { pluginId: 'gads', env: { GSM_ADS_DEVELOPER_TOKEN: 'ADS-SECRET-VALUE' } });
-    assert.ok(set.lines.some((l) => l.startsWith('PASS GSM_ADS_DEVELOPER_TOKEN is set')), set.text);
+    assert.ok(set.lines.some((l) => l.startsWith('INFO GSM_ADS_DEVELOPER_TOKEN is set')), set.text);
     assert.equal(set.text.includes('ADS-SECRET-VALUE'), false);
+  });
+});
+
+test('doctor: workspace-admin FAILs without setup-admin or both environment variables, and passes with either', async () => {
+  await withTemp((p) => {
+    const plugin = join(p.root, 'plugin');
+    makePluginFixture(plugin, 'gadmin');
+    // The fixture gives every server the workspace-user group; the admin check needs workspace-admin.
+    const map = JSON.parse(readFileSync(join(plugin, 'servers.json'), 'utf8'));
+    map.servers[0].group = 'workspace-admin';
+    writeFileSync(join(plugin, 'servers.json'), JSON.stringify(map));
+    const none = doctorOn(plugin, p.tokens, { pluginId: 'gadmin', env: {} });
+    assert.equal(none.code, 1, none.text);
+    assert.ok(none.lines.some((l) => l.startsWith('FAIL workspace-admin is not set up')), none.text);
+
+    const oneVariable = doctorOn(plugin, p.tokens, { pluginId: 'gadmin', env: { GSM_ADMIN_SUBJECT: 'admin@example.com' } });
+    assert.ok(oneVariable.lines.some((l) => l.startsWith('FAIL workspace-admin is not set up')), 'one variable is not enough');
+
+    const both = doctorOn(plugin, p.tokens, {
+      pluginId: 'gadmin',
+      env: { GSM_ADMIN_SUBJECT: 'admin@example.com', GSM_SERVICE_ACCOUNT_KEY_FILE: join(p.root, 'key.json') },
+    });
+    assert.ok(both.lines.some((l) => l.startsWith('PASS workspace-admin is set up')), both.text);
+
+    writeToken(p.tokens, 'workspace-admin.scopes.json', JSON.stringify({ subject: 'admin@example.com', scopes: [], profile: 'custom', keyFile: 'key.json' }));
+    const stored = doctorOn(plugin, p.tokens, { pluginId: 'gadmin', env: {} });
+    assert.ok(stored.lines.some((l) => l.startsWith('PASS workspace-admin is set up')), stored.text);
+  });
+});
+
+test('gsm login --no-browser: the help names the flag, and the URL is printed without opening a browser', async () => {
+  await withTemp(async (p) => {
+    assert.match(runGsm(['--help'], p).stdout, /--no-browser/);
+    const client = join(p.root, 'client_secret.json');
+    writeFileSync(client, JSON.stringify({ installed: { client_id: 'test-client', client_secret: 'test-secret' } }));
+    // The login waits for the browser callback, so the run is stopped once the URL is printed (the timeout kills it).
+    const res = spawnSync(process.execPath, [GSM, 'login', 'business', '--no-browser', '--client-secret', client], {
+      env: { ...process.env, HOME: p.home, USERPROFILE: p.home, GSM_TOKEN_DIR: p.tokens },
+      encoding: 'utf8',
+      timeout: 6000,
+    });
+    const out = res.stdout ?? '';
+    assert.match(out, /Open this URL in a browser to log in \(--no-browser: the browser is not opened\):/, out + (res.stderr ?? ''));
+    assert.match(out, /https:\/\/accounts\.google\.com\/o\/oauth2/);
+    assert.equal(out.includes('if the browser does not open'), false, 'the default wording is not used');
+    assert.equal(existsSync(join(p.tokens, 'business.token.json')), false, 'no token is saved before the login completes');
   });
 });
 
@@ -555,6 +606,25 @@ test('install summary states the confirmation mode and the write setting that we
 
     const plain = runGsm(['install', '--agent', 'codex', '--plugin', 'gcloud', '--scope', 'global', '--home', p.home, '--dry-run'], p);
     assert.match(plain.stdout, /confirmation: not set \(plugin default every-change\); writes: not set \(write tools stay off\)/);
+  });
+});
+
+test('install summary: for claude, --allow-writes is not claimed as enabled; it names the plugin option instead', async () => {
+  await withTemp((p) => {
+    const claudeOnly = runGsm(['install', '--agent', 'claude', '--plugin', 'gmail', '--scope', 'global', '--allow-writes', '--dry-run'], p);
+    assert.equal(claudeOnly.code, 0, claudeOnly.stderr);
+    const line = claudeOnly.stdout.split(/\r?\n/).filter((l) => l.startsWith('summary:'));
+    assert.equal(line.length, 1, 'exactly one summary line');
+    assert.match(line[0], /; writes: set the plugin option allow_writes with `claude plugin configure gmail@google-services-mcps`$/);
+    assert.doesNotMatch(line[0], /enabled/, 'claude never reports writes as enabled');
+
+    const mixed = runGsm(['install', '--agent', 'all', '--plugin', 'gmail', '--scope', 'global', '--allow-writes', '--dry-run'], p);
+    assert.equal(mixed.code, 0, mixed.stderr);
+    const mixedLine = mixed.stdout.split(/\r?\n/).find((l) => l.startsWith('summary:'));
+    assert.match(mixedLine, /writes: enabled \(GSM_ALLOW_WRITES=true\) for codex, opencode; for claude, set the plugin option allow_writes with `claude plugin configure gmail@google-services-mcps`$/);
+
+    const off = runGsm(['install', '--agent', 'claude', '--plugin', 'gmail', '--scope', 'global', '--dry-run'], p);
+    assert.match(off.stdout, /writes: not set \(write tools stay off\)$/m);
   });
 });
 

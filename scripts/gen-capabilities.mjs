@@ -168,7 +168,9 @@ out.push('- **write**: creates or changes data. Asks first unless the confirmati
 out.push('- **destructive**: deletes, removes, sends, disables or otherwise cannot be undone easily. Asks first, and the confirmation is shown twice (hook prompt and exact preview), unless the option is off.');
 out.push('- **dynamic**: the risk depends on the call. Google Ads mutate is read when validateOnly is set, destructive when any operation removes, and write otherwise.');
 out.push('');
-out.push('## Gateway tools (every product)');
+out.push('## Gateway tools (products with gateway APIs)');
+out.push('');
+out.push('Products with gateway APIs also expose `api_search`, `api_describe` and `api_call`, which reach those APIs.');
 out.push('');
 out.push('- `api_search`: find methods by text in an API the product covers. Read.');
 out.push('- `api_describe`: parameters, request body and scopes of one method. Read.');

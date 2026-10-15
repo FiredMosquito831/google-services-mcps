@@ -7,6 +7,10 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { classifyMethod } from './discovery/methods.js';
+import { loadToolKinds } from './discovery/tools.js';
+import { catalogPath } from './gateway.js';
+import type { ToolKind } from './tools.js';
 
 /**
  * One auth group per token file, or 'apikey' for products that take an API key
@@ -113,17 +117,130 @@ function unique(values: Iterable<string>): string[] {
   return [...new Set(values)].sort();
 }
 
-/** Union of curated and discovery scopes for one server. */
+// ---------------------------------------------------------------------------
+// Gateway methods: the methods the gateway (core/gateway.ts) can reach for a server
+
+/** A gateway method as the gateway serves it. The first catalog entry of an id is the one used. */
+export interface GatewayMethod {
+  /** Method id, for example "adsense.accounts.list". */
+  id: string;
+  /** Safety kind, classified the way the gateway classifies it (config/tool-kinds.json overrides apply). */
+  kind: ToolKind;
+  /** Scopes that grant the method (any one of them). Empty means the method is always allowed. */
+  scopes: string[];
+}
+
+export interface GatewayMethods {
+  /** The catalog file the gateway reads (GSM_DATA_DIR, else found by walking up), or undefined when there is none. */
+  file: string | undefined;
+  /** The methods of the listed APIs, in list order. Upload methods are left out, because the gateway refuses them. */
+  methods: GatewayMethod[];
+  /** Listed APIs (name.version) that the catalog does not have. Empty when there is no catalog. */
+  missingApis: string[];
+}
+
+interface CatalogRow {
+  id: string;
+  verb: string;
+  scopes: string[];
+  upload: boolean;
+}
+
+interface CatalogApi {
+  name: string;
+  version: string;
+  methods: CatalogRow[];
+}
+
+/** Same verbs the gateway accepts (HTTP_VERBS in core/gateway.ts). */
+const GATEWAY_VERBS: readonly string[] = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'];
+
+const catalogCache = new Map<string, CatalogApi[]>();
+
+/** One catalog row, read the way the gateway reads it (parseMethod in core/gateway.ts). Rows it could not call are dropped. */
+function parseRow(row: unknown): CatalogRow[] {
+  if (!Array.isArray(row) || typeof row[0] !== 'string' || typeof row[2] !== 'string') return [];
+  const verb = String(row[1] ?? '').toUpperCase();
+  if (!GATEWAY_VERBS.includes(verb)) return [];
+  const flags = typeof row[4] === 'string' ? row[4] : '';
+  const scopes = Array.isArray(row[3]) ? row[3].filter((s): s is string => typeof s === 'string') : [];
+  return [{ id: row[0], verb, scopes, upload: flags.includes('u') }];
+}
+
+/** The catalog's APIs, read the way the gateway reads them (parseCatalogApis in core/gateway.ts). Cached per file. */
+function readCatalogApis(file: string): CatalogApi[] {
+  const cached = catalogCache.get(file);
+  if (cached) return cached;
+  const raw = JSON.parse(readFileSync(file, 'utf8')) as { apis?: unknown };
+  if (!Array.isArray(raw.apis)) throw new Error(`${file} has no "apis" list. Rebuild it with: node scripts/build-catalog.mjs`);
+  const apis: CatalogApi[] = raw.apis.map((item): CatalogApi => {
+    const a = (item ?? {}) as Record<string, unknown>;
+    return {
+      name: typeof a.name === 'string' ? a.name : '',
+      version: typeof a.version === 'string' ? a.version : '',
+      methods: Array.isArray(a.methods) ? a.methods.flatMap(parseRow) : [],
+    };
+  });
+  catalogCache.set(file, apis);
+  return apis;
+}
+
+/** Kind overrides beside the catalog, then one level up, as the gateway looks them up (overridesFor in core/gateway.ts). */
+function overridesFor(file: string): Record<string, ToolKind> {
+  const dir = dirname(file);
+  for (const root of [dir, dirname(dir)]) {
+    const overrides = loadToolKinds(root).overrides;
+    if (Object.keys(overrides).length > 0) return overrides;
+  }
+  return {};
+}
+
+/**
+ * The methods the gateway serves for the listed APIs, with the scopes and kind the gateway checks at call time.
+ * The catalog is the one the gateway reads: GSM_DATA_DIR, else found by walking up from the module. Reads the
+ * catalog only; no Discovery document and no network call.
+ */
+export function gatewayMethodsOf(apis: readonly ApiRef[]): GatewayMethods {
+  const file = catalogPath();
+  if (!file) return { file: undefined, methods: [], missingApis: [] };
+
+  const catalog = readCatalogApis(file);
+  const overrides = overridesFor(file);
+  const seen = new Set<string>();
+  const methods: GatewayMethod[] = [];
+  const missingApis: string[] = [];
+  for (const ref of apis) {
+    const api = catalog.find((a) => a.name === ref.api && a.version === ref.version);
+    if (!api) {
+      missingApis.push(`${ref.api}.${ref.version}`);
+      continue;
+    }
+    for (const row of api.methods) {
+      if (seen.has(row.id)) continue;
+      seen.add(row.id);
+      if (row.upload) continue;
+      const methodName = row.id.slice(row.id.lastIndexOf('.') + 1);
+      methods.push({ id: row.id, kind: classifyMethod(row.verb, methodName, row.id, overrides), scopes: [...row.scopes] });
+    }
+  }
+  return { file, methods, missingApis };
+}
+
+/**
+ * Union of the scopes of one server: curated tools, discovery methods and gateway methods. The gateway part is empty
+ * when the catalog is missing (see gatewayMethodsOf); the CLI reports that when it builds requirements.
+ */
 export function scopesForServer(reg: Registry, name: string): string[] {
   const server = serverByName(reg, name);
   const curated = server.scopes ?? [];
-  if (!server.apis?.length) return unique(curated);
+  const gateway = gatewayMethodsOf(server.gatewayApis ?? []).methods.flatMap((m) => m.scopes);
+  if (!server.apis?.length) return unique([...curated, ...gateway]);
 
   const all = discoveryScopes(reg);
   if (!all) {
     throw new Error(`scopesForServer: scopes.json not found under ${reg.dataRoot}. Run: node scripts/snapshot-discovery.mjs`);
   }
-  return unique([...curated, ...(all[name] ?? [])]);
+  return unique([...curated, ...(all[name] ?? []), ...gateway]);
 }
 
 /** Union of scopes across every server in an auth group, optionally narrowed to some servers. */

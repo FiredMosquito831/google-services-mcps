@@ -4,7 +4,7 @@ Google Drive files, labels and activity, plus Docs, Sheets, Slides, Forms and Bo
 
 - Plugin: `gdrive`, MCP server: `gdrive`, login: Desktop OAuth client, then `login workspace-user`
 - Install: `claude plugin install gdrive@google-services-mcps`
-- Tools: 185 total. Curated 6, per-method 175, gateway 3. Read 88, write 74, destructive 22, dynamic 1.
+- Tools: 185 total. Curated 6, per-method 175, gateway 3. Read 87, write 75, destructive 22, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
@@ -112,7 +112,7 @@ Read tools never ask. Write, destructive and dynamic tools ask before they run, 
 | `drive_files_download` | read | drive.files.download | drive, drive.file |
 | `drive_files_empty_trash` | destructive | drive.files.emptyTrash | drive |
 | `drive_files_export` | read | drive.files.export | drive, drive.file |
-| `drive_files_generate_cse_token` | read | drive.files.generateCseToken | drive |
+| `drive_files_generate_cse_token` | write | drive.files.generateCseToken | drive |
 | `drive_files_generate_ids` | read | drive.files.generateIds | drive, drive.appdata |
 | `drive_files_get` | read | drive.files.get | drive, drive.appdata |
 | `drive_files_list` | read | drive.files.list | drive, drive.appdata |

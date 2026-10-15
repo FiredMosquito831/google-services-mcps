@@ -1,10 +1,12 @@
 /**
- * Google Ads request credentials, shared by the curated ads server (src/servers/gads.ts) and the generic
- * request path (discovery tools and the gateway's api_call).
+ * Google Ads request headers, shared by the curated ads server (src/servers/gads.ts) and the generic request path
+ * (discovery tools and the gateway's api_call).
  *
- * Every call to the Google Ads API carries a developer-token header, and a login-customer-id header when the
- * calls go through a manager account. The developer token is read from GSM_ADS_DEVELOPER_TOKEN, else from the
- * developerToken field of <tokenDir>/ads.json. It is never printed, logged or returned: errors are redacted.
+ * Google sunset developer tokens on 2026-09-09: access belongs to the Cloud project of the OAuth client, and the
+ * developer-token header is optional and ignored by the API. So the header is sent only when a token is configured,
+ * from GSM_ADS_DEVELOPER_TOKEN, else from the developerToken field of <tokenDir>/ads.json. A missing token is not an
+ * error and blocks nothing. The login-customer-id header is sent when GSM_ADS_LOGIN_CUSTOMER_ID is set (manager accounts).
+ * A token is never printed, logged or returned: errors are redacted.
  */
 import { existsSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
@@ -25,31 +27,30 @@ export function isGoogleAdsUrl(url: string): boolean {
 }
 
 /**
- * The developer token: GSM_ADS_DEVELOPER_TOKEN, else the developerToken field of <tokenDir>/ads.json.
- * Read on each call. The file is never printed: a warning names only its path and mode.
+ * The developer token, when one is configured: GSM_ADS_DEVELOPER_TOKEN, else the developerToken field of
+ * <tokenDir>/ads.json. Returns undefined when there is none, which is not an error. Read on each call. The file is
+ * never printed: a warning names only its path and mode, or says that the file is not valid JSON.
  */
-export function developerTokenOf(cfg: Pick<RuntimeConfig, 'tokenDir'>): string {
+export function developerTokenOf(cfg: Pick<RuntimeConfig, 'tokenDir'>): string | undefined {
   const fromEnv = process.env[DEVELOPER_TOKEN_ENV]?.trim();
   if (fromEnv) return fromEnv;
   const file = join(cfg.tokenDir, 'ads.json');
-  if (existsSync(file)) {
-    if (process.platform !== 'win32') {
-      const mode = statSync(file).mode & 0o777;
-      if (mode !== 0o600) {
-        process.stderr.write(`[gads] ${file} is mode ${mode.toString(8)}; it holds a developer token and should be 0600.\n`);
-      }
+  if (!existsSync(file)) return undefined;
+  if (process.platform !== 'win32') {
+    const mode = statSync(file).mode & 0o777;
+    if (mode !== 0o600) {
+      process.stderr.write(`[gads] ${file} is mode ${mode.toString(8)}; it may hold a developer token and should be 0600.\n`);
     }
-    let raw: { developerToken?: unknown } | null;
-    try {
-      raw = JSON.parse(readFileSync(file, 'utf8').replace(/^﻿/, '')) as { developerToken?: unknown } | null;
-    } catch {
-      throw new Error(`${file} is not valid JSON, so no developer token was read.`);
-    }
-    if (typeof raw?.developerToken === 'string' && raw.developerToken.trim() !== '') return raw.developerToken.trim();
   }
-  throw new Error(
-    `Google Ads needs a developer token. Set ${DEVELOPER_TOKEN_ENV}, or add {"developerToken": "..."} to ${file}. No request was sent.`,
-  );
+  let raw: { developerToken?: unknown } | null;
+  try {
+    raw = JSON.parse(readFileSync(file, 'utf8').replace(/^﻿/, '')) as { developerToken?: unknown } | null;
+  } catch {
+    process.stderr.write(`[gads] ${file} is not valid JSON, so no developer token was read. Requests are sent without one.\n`);
+    return undefined;
+  }
+  if (typeof raw?.developerToken === 'string' && raw.developerToken.trim() !== '') return raw.developerToken.trim();
+  return undefined;
 }
 
 /** The optional manager account ID, digits only (dashes are allowed and removed). */
@@ -62,11 +63,14 @@ export function loginCustomerIdOf(): string | undefined {
 }
 
 /**
- * The headers every Google Ads request carries. Throws, before any request, when the developer token is missing.
- * The returned object holds the token, so it must never be logged or put in an error.
+ * The headers of one Google Ads request: developer-token only when a token is configured, and login-customer-id
+ * when it is set. Never throws for a missing token. The returned object can hold the token, so it must never be
+ * logged or put in an error.
  */
 export function adsHeaders(cfg: Pick<RuntimeConfig, 'tokenDir'>): Record<string, string> {
-  const headers: Record<string, string> = { 'developer-token': developerTokenOf(cfg) };
+  const headers: Record<string, string> = {};
+  const token = developerTokenOf(cfg);
+  if (token !== undefined) headers['developer-token'] = token;
   const loginCustomerId = loginCustomerIdOf();
   if (loginCustomerId) headers['login-customer-id'] = loginCustomerId;
   return headers;

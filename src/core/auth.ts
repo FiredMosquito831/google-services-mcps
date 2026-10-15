@@ -2,6 +2,7 @@ import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync, chmodSync }
 import { dirname, join } from 'node:path';
 import { OAuth2Client, GoogleAuth, JWT, type Credentials } from 'google-auth-library';
 import type { RuntimeConfig } from './config.js';
+import { isIdempotentMethod, requestWithRetry, type HttpResult } from './http.js';
 
 /**
  * One auth group per token file. Each group maps to one or more MCP servers
@@ -35,12 +36,34 @@ export function googleScopes(...names: string[]): string[] {
 }
 
 export class AuthRequiredError extends Error {
-  constructor(kind: AuthKind) {
+  /** `cause` is the underlying failure, such as google-auth-library's Application Default Credentials error. It is shown only in verbose mode. */
+  constructor(kind: AuthKind, options?: { cause?: unknown }) {
     super(
       `Not logged in for "${kind}". Run: node <plugin>/bin/gsm.mjs login ${kind} (after setting up the OAuth desktop client with setup-client).`,
+      options,
     );
     this.name = 'AuthRequiredError';
   }
+}
+
+/**
+ * Makes every request of an OAuth, service account or ADC client go through requestWithRetry (core/http.ts). The
+ * generated googleapis clients send their requests through the auth client's request method, and so do the curated
+ * tools that call it directly, so one wrap here covers them all. A GET, HEAD or OPTIONS request may repeat a 403
+ * rate-limit answer; any other method may not. The wrapper calls the class's own request method, so a replaced
+ * prototype method is still the one that runs.
+ *
+ * gaxios, the HTTP layer under these clients, retries 429 and 5xx on its own by default. That would multiply the
+ * attempts, so retry is switched off for each request here, and the attempts are counted in one place only.
+ */
+function withRetry<C extends OAuth2Client | JWT>(client: C): C {
+  const target = client as unknown as { request: (opts: { method?: string }) => Promise<HttpResult> };
+  target.request = (opts) =>
+    requestWithRetry(
+      () => Reflect.apply(Object.getPrototypeOf(client).request, client, [{ ...opts, retry: false }]) as Promise<HttpResult>,
+      { idempotent: isIdempotentMethod(String(opts.method ?? 'GET')) },
+    );
+  return client;
 }
 
 function tokenPath(kind: AuthKind, cfg: RuntimeConfig): string {
@@ -92,7 +115,7 @@ export interface AdminScopeRecord {
   keyFile: string;
 }
 
-export function adminScopeFileFor(cfg: RuntimeConfig): string {
+export function adminScopeFileFor(cfg: Pick<RuntimeConfig, 'tokenDir'>): string {
   return join(cfg.tokenDir, 'workspace-admin.scopes.json');
 }
 
@@ -139,11 +162,13 @@ export async function getAuthClient(kind: AuthKind, cfg: RuntimeConfig): Promise
       );
     }
     if (!existsSync(keyFile)) throw new Error(`Service account key file not found: ${keyFile}. Run gsm setup-admin again with the right --key-file.`);
-    return new JWT({
-      keyFile,
-      scopes: stored?.scopes ?? ADMIN_SCOPES,
-      subject,
-    });
+    return withRetry(
+      new JWT({
+        keyFile,
+        scopes: stored?.scopes ?? ADMIN_SCOPES,
+        subject,
+      }),
+    );
   }
 
   const tokens = loadUserTokens(kind, cfg);
@@ -157,13 +182,22 @@ export async function getAuthClient(kind: AuthKind, cfg: RuntimeConfig): Promise
     const merged = { ...loadUserTokens(kind, cfg), ...fresh };
     writeSecureJson(tokenPath(kind, cfg), merged);
   });
-  return client;
+  return withRetry(client);
 }
 
-/** Cloud servers fall back to Application Default Credentials when no OAuth token is stored. */
+/**
+ * Cloud servers fall back to Application Default Credentials when no OAuth token is stored. When there are none
+ * either, the failure is reported as gsm's "not logged in" message, with Google's own text kept as the cause.
+ */
 export async function getCloudAdcClient(): Promise<OAuth2Client | JWT> {
   const auth = new GoogleAuth({ scopes: CLOUD_SCOPES });
-  return (await auth.getClient()) as OAuth2Client | JWT;
+  let client: OAuth2Client | JWT;
+  try {
+    client = (await auth.getClient()) as OAuth2Client | JWT;
+  } catch (err) {
+    throw new AuthRequiredError('cloud', { cause: err });
+  }
+  return withRetry(client);
 }
 
 /**

@@ -5,9 +5,8 @@
  *  - repo layout: config/products.json. Its shape (products keyed by id, each with a server, a group and
  *    API lists) is not the registry shape, so it is converted here. Each product id is the plugin id.
  *
- * Known limit: core/scopes.ts requirementsFor() calls loadRegistry() itself, so in the repo layout the
- * tool counts of gsm login, scopes and setup-admin still come from config/servers.json until core takes
- * the registry as an argument.
+ * gsm login and gsm scopes take their server specs from this registry (requirementsForSpecs). gsm setup-admin
+ * still calls requirementsFor(), which loads config/servers.json in the repo layout.
  */
 import { existsSync, readFileSync, statSync } from 'node:fs';
 import { dirname, join } from 'node:path';

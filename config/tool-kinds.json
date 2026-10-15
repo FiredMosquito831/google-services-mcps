@@ -17,6 +17,18 @@
   "sql.instances.export": "write",
   "run.projects.locations.jobs.run": "write",
 
+  "apikeys.projects.locations.keys.getKeyString": "write",
+  "recaptchaenterprise.projects.keys.retrieveLegacySecretKey": "write",
+  "threatintelligence.projects.alerts.getPassword": "write",
+  "vmwareengine.projects.locations.privateClouds.showVcenterCredentials": "write",
+  "vmwareengine.projects.locations.privateClouds.showNsxCredentials": "write",
+  "discoveryengine.projects.locations.collections.dataConnector.getConnectorSecret": "write",
+  "domains.projects.locations.registrations.retrieveAuthorizationCode": "write",
+  "cloudshell.users.environments.generateAccessToken": "write",
+  "networkmanagement.projects.locations.networkMonitoringProviders.generateProviderAccessToken": "write",
+  "integrations.callback.generateToken": "write",
+  "drive.files.generateCseToken": "write",
+
   "script.scripts.run": "destructive",
   "compute.instances.deleteAccessConfig": "destructive",
   "compute.instances.deleteNetworkInterface": "destructive",

@@ -1,7 +1,7 @@
 // Tests for the Discovery tool engine. Run after compiling: npx tsc -p tsconfig.json && node --test tests/
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, mkdtempSync } from 'node:fs';
+import { existsSync, mkdtempSync, readFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -11,7 +11,7 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const dist = (p) => new URL(`../dist/${p}`, import.meta.url).href;
 
 const { schemaToZod, paramToZod } = await import(dist('core/discovery/schema.js'));
-const { classifyMethod, assignToolNames, toolNameFor, MAX_TOOL_NAME, nameBudget, CLAUDE_TOOL_NAME_MAX } = await import(dist('core/discovery/methods.js'));
+const { classifyMethod, assignToolNames, toolNameFor, MAX_TOOL_NAME, nameBudget, CLAUDE_TOOL_NAME_MAX, READ_POST_EXACT } = await import(dist('core/discovery/methods.js'));
 const { buildUrl, buildRequest, serializeQuery, discoveryToolsFor, generateDiscoveryTools } = await import(dist('core/discovery/tools.js'));
 const { loadConfig } = await import(dist('core/config.js'));
 const { loadRegistry, scopesForGroup } = await import(dist('core/registry.js'));
@@ -149,6 +149,48 @@ test('classify: POST verbs that run work, mint credentials, export, query or tes
   assert.equal(classifyMethod('POST', 'testIamPermissions', 'example.things.testIamPermissions'), 'read');
   assert.equal(classifyMethod('POST', 'batchGet', 'example.things.batchGet'), 'read');
   assert.equal(classifyMethod('POST', 'validate', 'example.things.validate'), 'read');
+});
+
+test('classify: a POST that mints, reveals or uses a credential is a write, even when its name is read-like', () => {
+  // The guard words (token, credential, secret, password, authoriz, key) decide before the read-verb rules.
+  assert.equal(classifyMethod('POST', 'fetchAccessToken', 'backupdr.projects.locations.backupVaults.dataSources.fetchAccessToken'), 'write');
+  assert.equal(classifyMethod('POST', 'fetchReadToken', 'developerconnect.projects.locations.connections.gitRepositoryLinks.fetchReadToken'), 'write');
+  assert.equal(classifyMethod('POST', 'fetchReadWriteToken', 'developerconnect.projects.locations.connections.gitRepositoryLinks.fetchReadWriteToken'), 'write');
+  assert.equal(classifyMethod('POST', 'getKeyString', 'apikeys.projects.locations.keys.getKeyString'), 'write');
+  assert.equal(classifyMethod('POST', 'getSyncAuthorization', 'apigee.organizations.getSyncAuthorization'), 'write');
+  assert.equal(classifyMethod('POST', 'checkAuthorization', 'notebooks.projects.locations.instances.checkAuthorization'), 'write');
+  // Any non-GET verb with a guard word is a write too.
+  assert.equal(classifyMethod('PUT', 'getToken', 'example.things.getToken'), 'write');
+});
+
+test('classify: read-like POST names without a credential word stay read, and every exact read name is still read', () => {
+  assert.equal(classifyMethod('POST', 'validateAddress', 'addressvalidation.v1.validateAddress'), 'read');
+  assert.equal(classifyMethod('POST', 'testIamPermissions', 'example.things.testIamPermissions'), 'read');
+  assert.equal(classifyMethod('POST', 'fetchAddressDetails', 'example.things.fetchAddressDetails'), 'read', 'fetch stays a read verb');
+  for (const name of READ_POST_EXACT) {
+    assert.equal(classifyMethod('POST', name, `example.things.${name}`), 'read', `${name} must stay read`);
+  }
+});
+
+test('classify: a GET is not decided by the credential rule; the GET credential reveals are write through config/tool-kinds.json', () => {
+  const file = JSON.parse(readFileSync(join(ROOT, 'config', 'tool-kinds.json'), 'utf8'));
+  const overrides = Object.fromEntries(Object.entries(file).filter(([, v]) => typeof v === 'string'));
+  const lastSegment = (id) => id.slice(id.lastIndexOf('.') + 1);
+
+  // Without an override a GET stays read, whatever its name.
+  assert.equal(classifyMethod('GET', 'getKeyString', 'apikeys.projects.locations.keys.getKeyString'), 'read');
+  // The override makes the reveal a write. The read-only key lookup has no override and stays read.
+  for (const id of [
+    'apikeys.projects.locations.keys.getKeyString',
+    'cloudshell.users.environments.generateAccessToken',
+    'vmwareengine.projects.locations.privateClouds.showVcenterCredentials',
+    'discoveryengine.projects.locations.collections.dataConnector.getConnectorSecret',
+  ]) {
+    assert.equal(overrides[id], 'write', `${id} is listed`);
+    assert.equal(classifyMethod('GET', lastSegment(id), id, overrides), 'write', id);
+  }
+  assert.equal(classifyMethod('GET', 'lookupKey', 'apikeys.keys.lookupKey', overrides), 'read');
+  assert.equal(classifyMethod('GET', 'getPublicKey', 'cloudkms.projects.locations.keyRings.cryptoKeys.cryptoKeyVersions.getPublicKey', overrides), 'read');
 });
 
 // ---------------------------------------------------------------------------

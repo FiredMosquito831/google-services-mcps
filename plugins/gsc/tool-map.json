@@ -232,7 +232,7 @@
   },
   {
     "name": "mcp__plugin_gsc_gsc__siteverif_web_resource_get_token",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/siteverification",
       "https://www.googleapis.com/auth/siteverification.verify_only"

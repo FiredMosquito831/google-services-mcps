@@ -130,6 +130,14 @@ export const DESTRUCTIVE_NAMES = [
   'move-to-trash',
 ];
 
+/**
+ * Credential words in a method name (the last id segment): a token, a key string, a secret, a password or an
+ * authorization. A POST (or any non-GET) with one of them mints, reveals or uses a credential, so it is a write
+ * even when its name is read-like: fetchAccessToken, fetchReadToken, getKeyString, getSyncAuthorization.
+ * GET methods are not decided by this rule. The GET credential reveals are listed in config/tool-kinds.json.
+ */
+export const CREDENTIAL_NAME = /token|credential|secret|password|authoriz|key/i;
+
 const normalizeName = (s: string): string => s.replace(/[-_]/g, '').toLowerCase();
 const DESTRUCTIVE_SET = new Set(DESTRUCTIVE_NAMES.map(normalizeName));
 
@@ -160,7 +168,8 @@ export function overrideKind(overrides: Readonly<Record<string, ToolKind>>, full
 
 /**
  * Safety class of one method. An override (from config/tool-kinds.json, by exact id or by pattern) wins.
- * Then DELETE and the destructive names. Then GET, and POST methods with a read-only name. Everything else is a write.
+ * Then DELETE and the destructive names. Then a non-GET method with a credential word in its name (CREDENTIAL_NAME)
+ * is a write. Then GET, and POST methods with a read-only name. Everything else is a write.
  * A dynamic override means the kind is decided per call (see core/dynamic.ts).
  */
 export function classifyMethod(
@@ -175,6 +184,7 @@ export function classifyMethod(
   const http = httpMethod.toUpperCase();
   if (http === 'DELETE') return 'destructive';
   if (DESTRUCTIVE_SET.has(normalizeName(methodName))) return 'destructive';
+  if (http !== 'GET' && CREDENTIAL_NAME.test(methodName)) return 'write';
   if (http === 'GET') return 'read';
   if (http === 'POST') {
     if (READ_POST_EXACT.includes(methodName)) return 'read';

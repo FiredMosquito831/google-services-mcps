@@ -13,8 +13,9 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { JWT, OAuth2Client } from 'google-auth-library';
 import { z, type ZodRawShape } from 'zod';
-import type { RuntimeConfig } from '../config.js';
+import { verboseOn, type RuntimeConfig } from '../config.js';
 import { getAuthClient, getCloudAdcClient, loadUserTokens, type AuthKind } from '../auth.js';
+import { isIdempotentMethod, requestWithRetry } from '../http.js';
 import type { ToolContext, ToolDef, ToolKind } from '../tools.js';
 import { loadRegistry, serverByName, type ApiRef, type AuthGroup, type ServerSpec } from '../registry.js';
 import { assignToolNames, flattenMethods, MAX_TOOL_NAME, nameBudget, type DiscoveryDoc, type MethodRecord } from './methods.js';
@@ -188,11 +189,13 @@ export interface AuthorizedRequest {
 /**
  * Sends one request through the client of its auth group (see authFor). OAuth
  * clients serialize repeated query keys with serializeQuery. Used by the per-method
- * tools and by the gateway's api_call, so both take the same path.
+ * tools and by the gateway's api_call, so both take the same path. Each request goes
+ * through requestWithRetry (core/http.ts): a 429 or 503 is repeated, and so is a 403
+ * rate-limit answer for a GET.
  *
- * A request to the Google Ads host carries the developer-token header, and the
- * login-customer-id header when it is set (see core/ads.ts). Its token is checked
- * before any request is sent, and it is removed from any error that comes back.
+ * A request to the Google Ads host carries the developer-token header when a token is
+ * configured, and the login-customer-id header when it is set (see core/ads.ts). A
+ * missing token blocks nothing. A configured token is removed from any error that comes back.
  */
 export async function sendAuthorized(
   group: AuthGroup,
@@ -201,7 +204,10 @@ export async function sendAuthorized(
 ): Promise<{ status: number; data: unknown }> {
   const headers = isGoogleAdsUrl(req.url) ? adsHeaders(cfg) : undefined;
   const client = await authFor(group, cfg);
-  if (client instanceof ApiKeyClient) return client.request(req);
+  // An OAuth or ADC client retries inside its own request method (core/auth.ts), so every request sent through it is covered.
+  if (client instanceof ApiKeyClient) {
+    return requestWithRetry(() => client.request(req), { idempotent: isIdempotentMethod(req.method) });
+  }
   const hasParams = req.params !== undefined && Object.keys(req.params).length > 0;
   try {
     const res = await client.request({
@@ -210,7 +216,7 @@ export async function sendAuthorized(
       params: hasParams ? req.params : undefined,
       paramsSerializer: serializeQuery,
       data: req.data,
-      ...(headers ? { headers } : {}),
+      ...(headers && Object.keys(headers).length > 0 ? { headers } : {}),
     });
     return { status: res.status, data: res.data };
   } catch (err) {
@@ -350,7 +356,6 @@ function buildMethodTool(
       if (m.kind === 'dynamic') {
         // The kind depends on the request body. A call that changes something goes through the gate first.
         // Read calls (validateOnly) are not gated. A method with no dynamic rule asks, as destructive.
-        if (isGoogleAdsUrl(req.url)) adsHeaders(cfg); // a missing developer token fails before any approval is asked
         const kind = resolveDynamicKind(m.fullId, req.data) ?? 'destructive';
         if (kind !== 'read') {
           if (typeof ctx?.gate !== 'function') {
@@ -518,10 +523,15 @@ export async function discoveryToolsFor(serverName: string, cfg: RuntimeConfig, 
 
   const kinds = loadToolKinds(reg.dataRoot);
   const generated = generateDiscoveryTools(serverName, server.group, sources, kinds, cfg, nameBudget(server.plugin, serverName), reserved);
-  if (generated.skippedUploads.length > 0) {
-    process.stderr.write(
-      `[${serverName}] skipped ${generated.skippedUploads.length} media-upload method(s): ${generated.skippedUploads.join(', ')}\n`,
-    );
-  }
+  noteSkippedUploads(serverName, generated.skippedUploads);
   return generated.tools;
+}
+
+/**
+ * Reports the media-upload methods that are not generated. This is a normal, expected skip, so it is written to
+ * stderr only when GSM_VERBOSE=1. Otherwise every run of every server would print it.
+ */
+export function noteSkippedUploads(serverName: string, skipped: readonly string[], env: NodeJS.ProcessEnv = process.env): void {
+  if (skipped.length === 0 || !verboseOn(env)) return;
+  process.stderr.write(`[${serverName}] skipped ${skipped.length} media-upload method(s): ${skipped.join(', ')}\n`);
 }

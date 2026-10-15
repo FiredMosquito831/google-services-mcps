@@ -116,7 +116,11 @@ export class ApiKeyClient {
       }
     }
 
-    if (!res.ok) throw new Error(String(redactKeyIn(failureText(res.status, data, text), key)));
+    if (!res.ok) {
+      // The status and the redacted body ride on the error, so requestWithRetry (core/http.ts) can read the status.
+      const failure = new Error(String(redactKeyIn(failureText(res.status, data, text), key)));
+      throw Object.assign(failure, { response: { status: res.status, data: redactKeyIn(data, key) } });
+    }
     return { status: res.status, data: redactKeyIn(data, key) };
   }
 }

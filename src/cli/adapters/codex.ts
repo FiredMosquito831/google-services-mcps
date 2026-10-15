@@ -35,6 +35,11 @@ import {
 } from '../types.js';
 
 const TABLE_HEADER = /^\[mcp_servers\.(gsm-[A-Za-z0-9_-]+)\]\s*$/;
+/**
+ * Written inside the block when install added a final newline to a file that had none. Uninstall reads it and removes
+ * exactly that newline, so install followed by uninstall gives back the original bytes.
+ */
+const NEWLINE_MARK = '# gsm: a newline was added above this block; uninstall removes it';
 
 export function codexConfigPath(ctx: AdapterContext): string {
   switch (ctx.scope) {
@@ -83,8 +88,9 @@ function parseTables(body: readonly string[]): Map<string, string[]> {
   return tables;
 }
 
-function renderBlock(tables: ReadonlyMap<string, readonly string[]>): string[] {
+function renderBlock(tables: ReadonlyMap<string, readonly string[]>, addedNewline: boolean): string[] {
   const out = [CODEX_BEGIN];
+  if (addedNewline) out.push(NEWLINE_MARK);
   let first = true;
   for (const lines of tables.values()) {
     if (!first) out.push('');
@@ -145,7 +151,9 @@ export function planCodex(input: PlanInput): FileChange {
 
   if (action === 'uninstall') {
     if (!located) return unchanged();
-    const tables = parseTables(lines.slice(located.begin + 1, located.end));
+    const body = lines.slice(located.begin + 1, located.end);
+    const tables = parseTables(body);
+    const addedNewline = body.some((line) => line.trim() === NEWLINE_MARK);
     const removed: string[] = [];
     for (const key of keys) if (tables.delete(key)) removed.push(key);
     if (removed.length === 0) return unchanged();
@@ -156,9 +164,12 @@ export function planCodex(input: PlanInput): FileChange {
     if (tables.size === 0) {
       // Install puts one blank separator line before the block. Remove it with the block.
       if (before.length > 0 && (before[before.length - 1] ?? '').trim() === '') before.pop();
-      next = [...before, ...after];
+      // The file ended without a newline before install, and install added one. The block is the last thing in the
+      // file (after holds only the empty piece after its final newline), so that newline goes too.
+      const endsWithBlock = after.length === 1 && after[0] === '';
+      next = addedNewline && endsWithBlock ? before : [...before, ...after];
     } else {
-      next = [...before, ...renderBlock(tables), ...after];
+      next = [...before, ...renderBlock(tables, addedNewline), ...after];
     }
     return { file, before: text, after: next.join(eol), added: [], updated: [], removed };
   }
@@ -175,7 +186,12 @@ export function planCodex(input: PlanInput): FileChange {
     }
   }
 
-  const tables = located ? parseTables(lines.slice(located.begin + 1, located.end)) : new Map<string, string[]>();
+  const body = located ? lines.slice(located.begin + 1, located.end) : [];
+  const tables = parseTables(body);
+  // A block that already exists keeps its own record of the newline. A new block records one when the text has
+  // content and no final newline, because the block is appended after a newline that install adds.
+  const addsNewline = text !== null && text !== '' && !text.endsWith('\n');
+  const addedNewline = located ? body.some((line) => line.trim() === NEWLINE_MARK) : addsNewline;
   const added: string[] = [];
   const updated: string[] = [];
   for (const server of input.servers) {
@@ -187,14 +203,14 @@ export function planCodex(input: PlanInput): FileChange {
     tables.set(key, next);
   }
 
-  const block = renderBlock(tables);
+  const block = renderBlock(tables, addedNewline);
   let nextText: string;
   if (located) {
     nextText = [...lines.slice(0, located.begin), ...block, ...lines.slice(located.end + 1)].join(eol);
   } else if (text === null || text === '') {
     nextText = block.join(eol) + eol;
   } else {
-    const base = text.endsWith('\n') ? text : text + eol;
+    const base = addsNewline ? text + eol : text;
     nextText = base + eol + block.join(eol) + eol;
   }
   return { file, before: text, after: nextText, added, updated, removed: [] };

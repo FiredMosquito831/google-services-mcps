@@ -11,6 +11,7 @@ import { accessSync, constants as fsConstants, existsSync, readFileSync, statSyn
 import { dirname, join } from 'node:path';
 import type { Registry } from '../core/registry.js';
 import { loadConfig } from '../core/config.js';
+import { adminScopeFileFor } from '../core/auth.js';
 import { OAUTH_GROUPS } from './args.js';
 import { apiKeyFileFor, apiKeyState } from './credentials.js';
 import type { InstallRoots } from './paths.js';
@@ -252,11 +253,22 @@ export function runDoctor(req: DoctorRequest, out: Output): number {
     else tally.check(false, `API key file is unreadable or holds no key: ${file}. Run: gsm setup-apikey --force`);
   }
 
+  // Google Ads no longer needs a developer token: access belongs to the Cloud project of the OAuth client, and the
+  // header is optional. So this is an information line only. It is never a FAIL, and the value is never printed.
   if (active.includes(ADS_PRODUCT)) {
     const set = (req.env[ADS_TOKEN_ENV] ?? '').trim() !== '';
-    tally.check(set, set
-      ? `${ADS_TOKEN_ENV} is set (Ads developer token for ${ADS_PRODUCT})`
-      : `${ADS_TOKEN_ENV} is not set (Ads developer token for ${ADS_PRODUCT})`);
+    out.log(`INFO ${ADS_TOKEN_ENV} is ${set ? 'set' : 'not set'} (optional for ${ADS_PRODUCT}). Google Ads access is granted to the Cloud project of your OAuth client; the developer token is no longer required.`);
+  }
+
+  // workspace-admin needs its setup before any call: the file setup-admin writes, or both environment variables.
+  const adminIds = active.filter((id) => groupOf(id) === 'workspace-admin');
+  if (adminIds.length > 0) {
+    const file = adminScopeFileFor({ tokenDir });
+    const fromEnv = (req.env.GSM_ADMIN_SUBJECT ?? '').trim() !== '' && (req.env.GSM_SERVICE_ACCOUNT_KEY_FILE ?? '').trim() !== '';
+    const stored = existsSync(file);
+    tally.check(stored || fromEnv, stored || fromEnv
+      ? `workspace-admin is set up (needed by ${list(adminIds)}): ${stored ? file : 'GSM_ADMIN_SUBJECT and GSM_SERVICE_ACCOUNT_KEY_FILE are set'}`
+      : `workspace-admin is not set up (needed by ${list(adminIds)}): no ${file}, and GSM_ADMIN_SUBJECT and GSM_SERVICE_ACCOUNT_KEY_FILE are not both set. Run: gsm setup-admin --subject <email> --key-file <file>`);
   }
 
   out.log(`doctor: ${tally.passed} passed, ${tally.failed} failed`);

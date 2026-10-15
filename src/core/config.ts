@@ -63,6 +63,14 @@ function readApiKeyFile(tokenDir: string): string | undefined {
   }
 }
 
+/**
+ * True when GSM_VERBOSE is 1. Only then are notices that are normally silent written to stderr, and the cause of
+ * an error shown to the user.
+ */
+export function verboseOn(env: NodeJS.ProcessEnv = process.env): boolean {
+  return env.GSM_VERBOSE === '1';
+}
+
 export function loadConfig(env: NodeJS.ProcessEnv = process.env): RuntimeConfig {
   // Fixed default on purpose: the CLI (run from a shell) and the MCP servers
   // (started by Claude Code, which sets CLAUDE_PLUGIN_DATA) must read the same tokens.

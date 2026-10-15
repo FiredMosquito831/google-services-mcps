@@ -28,7 +28,7 @@
   "drive.files.delete": "destructive",
   "drive.files.emptyTrash": "destructive",
   "drive.files.export": "read",
-  "drive.files.generateCseToken": "read",
+  "drive.files.generateCseToken": "write",
   "drive.files.generateIds": "read",
   "drive.files.get": "read",
   "drive.files.insert": "write",

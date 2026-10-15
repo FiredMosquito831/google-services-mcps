@@ -84,6 +84,9 @@ export const FALLBACK_DESTRUCTIVE_NAMES = [
   'move-to-trash',
 ];
 
+/** Credential words in the method name. Same as CREDENTIAL_NAME in core/discovery/methods.ts. */
+const FALLBACK_CREDENTIAL_NAME = /token|credential|secret|password|authoriz|key/i;
+
 const normalizeName = (s: string): string => s.replace(/[-_]/g, '').toLowerCase();
 const DESTRUCTIVE_SET = new Set(FALLBACK_DESTRUCTIVE_NAMES.map(normalizeName));
 
@@ -105,6 +108,7 @@ export const fallbackClassify: KindClassifier = (httpMethod, methodName, fullId,
   const http = httpMethod.toUpperCase();
   if (http === 'DELETE') return 'destructive';
   if (DESTRUCTIVE_SET.has(normalizeName(methodName))) return 'destructive';
+  if (http !== 'GET' && FALLBACK_CREDENTIAL_NAME.test(methodName)) return 'write';
   if (http === 'GET') return 'read';
   if (http === 'POST') {
     if (FALLBACK_READ_POST_EXACT.includes(methodName)) return 'read';

@@ -2,7 +2,7 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import type { CallToolResult } from '@modelcontextprotocol/sdk/types.js';
 import { z, type ZodRawShape } from 'zod';
-import { loadConfig, type RuntimeConfig } from './config.js';
+import { loadConfig, verboseOn, type RuntimeConfig } from './config.js';
 import { AuthRequiredError, grantedScopes } from './auth.js';
 import { createGate, type GateFn } from './approval.js';
 import { toolMapFromDefs } from './dump.js';
@@ -88,8 +88,19 @@ function lacksScope(status: unknown, reason: string | undefined, message: string
   return /ACCESS_TOKEN_SCOPE_INSUFFICIENT/.test(JSON.stringify(err.response?.data ?? ''));
 }
 
+/**
+ * The cause of an error, as " | cause: ..." in verbose mode (GSM_VERBOSE=1) and empty otherwise. A gsm message
+ * such as "Not logged in" hides Google's own text, which is kept as the cause for the user who asks for it.
+ */
+function causeSuffix(err: unknown): string {
+  if (!verboseOn()) return '';
+  const cause = (err as { cause?: unknown } | null)?.cause;
+  const text = cause instanceof Error ? cause.message : typeof cause === 'string' ? cause : '';
+  return text ? ` | cause: ${text}` : '';
+}
+
 export function describeError(err: unknown, group?: string): string {
-  if (err instanceof AuthRequiredError) return err.message;
+  if (err instanceof AuthRequiredError) return err.message + causeSuffix(err);
   // googleapis errors carry status code and a Google-formatted message.
   const e = err as { code?: number; status?: number; message?: string; errors?: Array<{ reason?: string }>; response?: { data?: unknown } };
   const status = e?.code ?? e?.status;
@@ -97,7 +108,7 @@ export function describeError(err: unknown, group?: string): string {
   const base = e?.message ?? String(err);
   const parts = [status ? `HTTP ${status}` : null, reason ? `reason=${reason}` : null, base];
   if (lacksScope(status, reason, base, e ?? {})) parts.push(scopeHint(group));
-  return parts.filter(Boolean).join(' | ');
+  return parts.filter(Boolean).join(' | ') + causeSuffix(err);
 }
 
 /**
