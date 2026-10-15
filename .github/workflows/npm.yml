@@ -1,0 +1,44 @@
+name: npm
+
+# Publishes @firedmosquito831/google-services-mcps when package.json changes on main, and only when its version is not on
+# npm yet. Uses trusted publishing (OIDC), so no token is stored in the repository.
+#
+# To publish a new version: raise "version" in package.json and push to main.
+#
+# Setup on npmjs.com (once): package @firedmosquito831/google-services-mcps -> Settings -> Trusted Publisher ->
+# GitHub Actions: owner FiredMosquito831, repository google-services-mcps, workflow filename npm.yml, environment empty.
+
+on:
+  push:
+    branches: [main]
+    paths: ["package.json"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+
+      - name: Use npm 11.5.1 or newer (trusted publishing)
+        run: npm install -g npm@latest
+
+      - name: Publish if the version is new
+        run: |
+          NAME=$(node -p "require('./package.json').name")
+          VERSION=$(node -p "require('./package.json').version")
+          if npm view "$NAME@$VERSION" version > /dev/null 2>&1; then
+            echo "$NAME@$VERSION is already on npm. Raise the version in package.json to publish."
+          else
+            npm ci
+            npm publish --provenance --access public
+          fi
