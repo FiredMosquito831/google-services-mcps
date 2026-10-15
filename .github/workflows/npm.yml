@@ -1,44 +1,88 @@
-name: npm
+name: npm publish
 
-# Publishes @firedmosquito831/google-services-mcps when package.json changes on main, and only when its version is not on
-# npm yet. Uses trusted publishing (OIDC), so no token is stored in the repository.
+# Publishes @firedmosquito831/google-services-mcps when a GitHub release is published, or by hand with a tag.
+# The tag must match the version in package.json (a hard failure otherwise). A version that is already on npm is skipped.
+# A push to main does not publish.
 #
-# To publish a new version: raise "version" in package.json and push to main.
+# Release steps: bump "version" in package.json, push to main, then create the GitHub release vX.Y.Z and publish it
+# (not a draft; a draft does not fire this workflow).
 #
-# Setup on npmjs.com (once): package @firedmosquito831/google-services-mcps -> Settings -> Trusted Publisher ->
-# GitHub Actions: owner FiredMosquito831, repository google-services-mcps, workflow filename npm.yml, environment empty.
+# Uses trusted publishing (OIDC): no token is stored. npmjs.com setting for this package: Settings -> Trusted Publisher
+# -> GitHub Actions: owner FiredMosquito831, repository google-services-mcps, workflow filename npm.yml, environment empty.
 
 on:
-  push:
-    branches: [main]
-    paths: ["package.json"]
+  release:
+    types: [published]
   workflow_dispatch:
+    inputs:
+      tag:
+        description: "The existing release tag to publish from, e.g. v0.1.1"
+        required: true
+        type: string
+
+concurrency:
+  group: npm-publish-${{ github.event.release.tag_name || inputs.tag }}
+  cancel-in-progress: false
 
 permissions:
   contents: read
-  id-token: write
 
 jobs:
   publish:
+    name: Publish to npm
     runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      # The OIDC identity token that trusted publishing runs on, and what npm signs the provenance attestation with.
+      id-token: write
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
+      # The same commit-hash pins as my-claude-code's npm-release.yml.
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
-          node-version: 24
-          registry-url: https://registry.npmjs.org
+          ref: ${{ github.event.release.tag_name || inputs.tag }}
+          fetch-depth: 1
 
-      - name: Use npm 11.5.1 or newer (trusted publishing)
-        run: npm install -g npm@latest
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "24"
+          registry-url: "https://registry.npmjs.org"
 
-      - name: Publish if the version is new
+      - name: Use an npm that can do trusted publishing
+        # Trusted publishing arrived in npm 11.5.1; the npm bundled with a Node release can lag it.
         run: |
-          NAME=$(node -p "require('./package.json').name")
-          VERSION=$(node -p "require('./package.json').version")
-          if npm view "$NAME@$VERSION" version > /dev/null 2>&1; then
-            echo "$NAME@$VERSION is already on npm. Raise the version in package.json to publish."
-          else
-            npm ci
-            npm publish --provenance --access public
+          set -euo pipefail
+          npm install -g npm@latest
+          npm --version
+
+      - name: Check the tag against package.json, and skip if already published
+        id: check
+        env:
+          TAG: ${{ github.event.release.tag_name || inputs.tag }}
+        run: |
+          set -euo pipefail
+          version="${TAG#v}"
+          declared="$(node -p 'require("./package.json").version')"
+          if [ "$version" != "$declared" ]; then
+            echo "::error::tag '$TAG' is version '$version' but package.json says '$declared'. Refusing to publish."
+            exit 1
           fi
+          name="$(node -p 'require("./package.json").name')"
+          published="$(npm view "$name@$version" version 2>/dev/null || true)"
+          if [ "$published" = "$version" ]; then
+            echo "publish=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::$name@$version is already published; nothing to do."
+          else
+            echo "publish=true" >> "$GITHUB_OUTPUT"
+            echo "publishing $name@$version"
+          fi
+
+      - name: Install dependencies
+        if: steps.check.outputs.publish == 'true'
+        # npm ci also installs the dev dependencies that prepublishOnly needs (the build and the tests).
+        run: npm ci
+
+      - name: npm publish (trusted publishing)
+        if: steps.check.outputs.publish == 'true'
+        # prepublishOnly runs the build and the test suite first; a failing test stops the publish.
+        run: npm publish --access public --provenance
