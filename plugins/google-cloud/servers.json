@@ -1,0 +1,132 @@
+{
+  "plugins": {
+    "google-cloud": "Google Cloud console: projects, APIs, keys, dashboards, data, compute"
+  },
+  "groups": {
+    "cloud": "Application Default Credentials or OAuth user token with cloud-platform scope",
+    "workspace-user": "OAuth user token (Gmail, Drive, Calendar and the user-data APIs)",
+    "workspace-admin": "Service account with domain-wide delegation, impersonating a super admin",
+    "searchconsole": "OAuth user token with webmasters scope",
+    "business": "OAuth user token with the scopes of the business APIs"
+  },
+  "servers": [
+    {
+      "name": "gcloud",
+      "plugin": "google-cloud",
+      "group": "cloud",
+      "kind": "curated",
+      "curated": "src/servers/cloud.ts",
+      "label": "Cloud console core: projects, enable/disable APIs, API keys, IAM policy, operations",
+      "scopes": [
+        "https://www.googleapis.com/auth/cloud-platform"
+      ]
+    },
+    {
+      "name": "gcloud-ops",
+      "plugin": "google-cloud",
+      "group": "cloud",
+      "kind": "discovery",
+      "apis": [
+        {
+          "api": "monitoring",
+          "version": "v3"
+        },
+        {
+          "api": "logging",
+          "version": "v2"
+        },
+        {
+          "api": "cloudtrace",
+          "version": "v2"
+        },
+        {
+          "api": "clouderrorreporting",
+          "version": "v1beta1"
+        },
+        {
+          "api": "cloudbilling",
+          "version": "v1"
+        },
+        {
+          "api": "cloudquotas",
+          "version": "v1"
+        },
+        {
+          "api": "cloudasset",
+          "version": "v1"
+        }
+      ],
+      "label": "Cloud dashboards: monitoring, logging, trace, error reporting, billing, quotas, asset inventory"
+    },
+    {
+      "name": "gcloud-data",
+      "plugin": "google-cloud",
+      "group": "cloud",
+      "kind": "discovery",
+      "apis": [
+        {
+          "api": "bigquery",
+          "version": "v2"
+        },
+        {
+          "api": "storage",
+          "version": "v1"
+        },
+        {
+          "api": "firestore",
+          "version": "v1"
+        },
+        {
+          "api": "spanner",
+          "version": "v1"
+        },
+        {
+          "api": "sqladmin",
+          "version": "v1"
+        },
+        {
+          "api": "pubsub",
+          "version": "v1"
+        },
+        {
+          "api": "run",
+          "version": "v2"
+        },
+        {
+          "api": "cloudfunctions",
+          "version": "v2"
+        },
+        {
+          "api": "secretmanager",
+          "version": "v1"
+        },
+        {
+          "api": "cloudkms",
+          "version": "v1"
+        },
+        {
+          "api": "artifactregistry",
+          "version": "v1"
+        },
+        {
+          "api": "container",
+          "version": "v1"
+        }
+      ],
+      "label": "Cloud data and runtimes: BigQuery, Cloud Storage, Firestore, Spanner, Cloud SQL, Pub/Sub, Cloud Run, Functions, Secrets, KMS, Artifact Registry, GKE"
+    },
+    {
+      "name": "gcloud-compute",
+      "plugin": "google-cloud",
+      "group": "cloud",
+      "kind": "discovery",
+      "apis": [
+        {
+          "api": "compute",
+          "version": "v1"
+        }
+      ],
+      "label": "Compute Engine: instances, disks, networks, firewalls, load balancers (large surface)"
+    }
+  ]
+}

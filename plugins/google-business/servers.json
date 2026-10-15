@@ -1,0 +1,63 @@
+{
+  "plugins": {
+    "google-business": "Google Business: Analytics, Tag Manager, YouTube, Business Profile"
+  },
+  "groups": {
+    "cloud": "Application Default Credentials or OAuth user token with cloud-platform scope",
+    "workspace-user": "OAuth user token (Gmail, Drive, Calendar and the user-data APIs)",
+    "workspace-admin": "Service account with domain-wide delegation, impersonating a super admin",
+    "searchconsole": "OAuth user token with webmasters scope",
+    "business": "OAuth user token with the scopes of the business APIs"
+  },
+  "servers": [
+    {
+      "name": "gbiz",
+      "plugin": "google-business",
+      "group": "business",
+      "kind": "discovery",
+      "apis": [
+        {
+          "api": "analyticsadmin",
+          "version": "v1beta"
+        },
+        {
+          "api": "analyticsdata",
+          "version": "v1beta"
+        },
+        {
+          "api": "tagmanager",
+          "version": "v2"
+        },
+        {
+          "api": "youtube",
+          "version": "v3"
+        },
+        {
+          "api": "youtubeAnalytics",
+          "version": "v2"
+        },
+        {
+          "api": "mybusinessaccountmanagement",
+          "version": "v1"
+        },
+        {
+          "api": "mybusinessbusinessinformation",
+          "version": "v1"
+        },
+        {
+          "api": "mybusinessverifications",
+          "version": "v1"
+        },
+        {
+          "api": "businessprofileperformance",
+          "version": "v1"
+        },
+        {
+          "api": "mybusinessnotifications",
+          "version": "v1"
+        }
+      ],
+      "label": "Business: Google Analytics admin and data, Tag Manager, YouTube, Business Profile"
+    }
+  ]
+}

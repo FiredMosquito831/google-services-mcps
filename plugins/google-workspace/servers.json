@@ -1,0 +1,110 @@
+{
+  "plugins": {
+    "google-workspace": "Google Workspace: Gmail, Drive, Calendar, Docs, Sheets, Slides, Forms, Tasks, People, Chat, Apps Script, Meet, admin"
+  },
+  "groups": {
+    "cloud": "Application Default Credentials or OAuth user token with cloud-platform scope",
+    "workspace-user": "OAuth user token (Gmail, Drive, Calendar and the user-data APIs)",
+    "workspace-admin": "Service account with domain-wide delegation, impersonating a super admin",
+    "searchconsole": "OAuth user token with webmasters scope",
+    "business": "OAuth user token with the scopes of the business APIs"
+  },
+  "servers": [
+    {
+      "name": "gws-user",
+      "plugin": "google-workspace",
+      "group": "workspace-user",
+      "kind": "curated+discovery",
+      "curated": "src/servers/workspace-user.ts",
+      "apis": [
+        {
+          "api": "docs",
+          "version": "v1"
+        },
+        {
+          "api": "sheets",
+          "version": "v4"
+        },
+        {
+          "api": "slides",
+          "version": "v1"
+        },
+        {
+          "api": "forms",
+          "version": "v1"
+        },
+        {
+          "api": "tasks",
+          "version": "v1"
+        },
+        {
+          "api": "people",
+          "version": "v1"
+        },
+        {
+          "api": "chat",
+          "version": "v1"
+        },
+        {
+          "api": "script",
+          "version": "v1"
+        },
+        {
+          "api": "meet",
+          "version": "v2"
+        }
+      ],
+      "label": "Workspace user data: Gmail, Drive, Calendar (curated) plus Docs, Sheets, Slides, Forms, Tasks, People, Chat, Apps Script, Meet",
+      "scopes": [
+        "https://www.googleapis.com/auth/gmail.readonly",
+        "https://www.googleapis.com/auth/gmail.compose",
+        "https://www.googleapis.com/auth/drive",
+        "https://www.googleapis.com/auth/calendar.readonly",
+        "https://www.googleapis.com/auth/calendar.events"
+      ]
+    },
+    {
+      "name": "gws-admin",
+      "plugin": "google-workspace",
+      "group": "workspace-admin",
+      "kind": "curated+discovery",
+      "curated": "src/servers/workspace-admin.ts",
+      "apis": [
+        {
+          "api": "reports",
+          "version": "v1"
+        },
+        {
+          "api": "licensing",
+          "version": "v1"
+        },
+        {
+          "api": "groupssettings",
+          "version": "v1"
+        },
+        {
+          "api": "alertcenter",
+          "version": "v1beta1"
+        },
+        {
+          "api": "datatransfer",
+          "version": "v1"
+        },
+        {
+          "api": "vault",
+          "version": "v1"
+        },
+        {
+          "api": "cloudidentity",
+          "version": "v1"
+        }
+      ],
+      "label": "Workspace admin: users, org units, groups (curated) plus reports, licensing, group settings, alerts, data transfer, Vault, Cloud Identity",
+      "scopes": [
+        "https://www.googleapis.com/auth/admin.directory.user",
+        "https://www.googleapis.com/auth/admin.directory.group",
+        "https://www.googleapis.com/auth/admin.directory.orgunit"
+      ]
+    }
+  ]
+}

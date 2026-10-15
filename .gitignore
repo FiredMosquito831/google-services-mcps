@@ -1,0 +1,23 @@
+# Reference clones (other people's code, read-only analysis)
+reference/
+# Session transcript copy and remember-plugin state (may contain private chat content)
+session/
+.remember/
+# Build and dependency output
+node_modules/
+dist/
+# Credentials and tokens must never be committed
+*.token.json
+client_secret*.json
+*.key.json
+service-account*.json
+.env
+.env.*
+# Logs and OS junk
+*.log
+.DS_Store
+Thumbs.db
+
+# Handoff note from the planning session (not part of the product)
+HANDOFF.md
+

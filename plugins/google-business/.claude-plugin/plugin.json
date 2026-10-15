@@ -1,0 +1,22 @@
+{
+  "name": "google-business",
+  "displayName": "Google Business",
+  "version": "0.1.0",
+  "description": "Google business tools for Claude: Google Analytics admin and data, Tag Manager, YouTube and YouTube Analytics, and Business Profile. Read-only unless you turn writes on.",
+  "author": { "name": "FiredMosquito831" },
+  "keywords": ["google-business", "analytics", "tag-manager", "youtube", "business-profile", "mcp"],
+  "userConfig": {
+    "allow_writes": {
+      "type": "boolean",
+      "title": "Allow write tools",
+      "description": "Expose tools that create or change business data. Delete and remove tools also need confirm=true in each call.",
+      "default": false
+    },
+    "token_dir": {
+      "type": "string",
+      "title": "Token directory (optional)",
+      "description": "Where OAuth tokens are stored. Leave empty for ~/.google-services-mcps.",
+      "required": false
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "name": "google-cloud",
+  "displayName": "Google Cloud",
+  "version": "0.1.0",
+  "description": "Google Cloud console tools for Claude: projects, API enable/disable, API keys, IAM, monitoring, logging, billing, BigQuery, Cloud Run, Compute Engine and more. Read-only unless you turn writes on.",
+  "author": { "name": "FiredMosquito831" },
+  "keywords": ["google-cloud", "gcloud", "api-keys", "monitoring", "bigquery", "compute", "mcp"],
+  "userConfig": {
+    "allow_writes": {
+      "type": "boolean",
+      "title": "Allow write tools",
+      "description": "Expose tools that create or change resources. Delete and disable tools also need confirm=true in each call.",
+      "default": false
+    },
+    "token_dir": {
+      "type": "string",
+      "title": "Token directory (optional)",
+      "description": "Where OAuth tokens are stored. Leave empty for ~/.google-services-mcps.",
+      "required": false
+    }
+  }
+}

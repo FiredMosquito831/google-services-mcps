@@ -1,0 +1,27 @@
+{
+  "name": "google-services-mcps",
+  "owner": { "name": "FiredMosquito831" },
+  "description": "MCP servers for Google Cloud, Google Workspace, Google Search and Google Business. One plugin per category: install only what you need.",
+  "plugins": [
+    {
+      "name": "google-cloud",
+      "source": "./plugins/google-cloud",
+      "description": "Google Cloud console: projects, APIs, API keys, IAM, monitoring, logging, billing, data services, Compute Engine"
+    },
+    {
+      "name": "google-workspace",
+      "source": "./plugins/google-workspace",
+      "description": "Google Workspace: Gmail, Drive, Calendar, Docs, Sheets, Slides, Forms, Tasks, People, Chat, and admin (users, org units, groups)"
+    },
+    {
+      "name": "google-search",
+      "source": "./plugins/google-search",
+      "description": "Google Search: Search Console sites, sitemaps, analytics, URL inspection, Custom Search, site verification, Indexing API"
+    },
+    {
+      "name": "google-business",
+      "source": "./plugins/google-business",
+      "description": "Google Business: Analytics, Tag Manager, YouTube, Business Profile"
+    }
+  ]
+}

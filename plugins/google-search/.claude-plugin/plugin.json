@@ -1,0 +1,22 @@
+{
+  "name": "google-search",
+  "displayName": "Google Search",
+  "version": "0.1.0",
+  "description": "Google Search tools for Claude: Search Console sites, sitemaps, search analytics and URL inspection, plus Custom Search, site verification and the Indexing API (restricted to job postings and livestreams). Read-only unless you turn writes on.",
+  "author": { "name": "FiredMosquito831" },
+  "keywords": ["google-search", "search-console", "sitemaps", "indexing", "url-inspection", "mcp"],
+  "userConfig": {
+    "allow_writes": {
+      "type": "boolean",
+      "title": "Allow write tools",
+      "description": "Expose tools that add sites or submit sitemaps. Site and sitemap deletion also need confirm=true in each call.",
+      "default": false
+    },
+    "token_dir": {
+      "type": "string",
+      "title": "Token directory (optional)",
+      "description": "Where OAuth tokens are stored. Leave empty for ~/.google-services-mcps.",
+      "required": false
+    }
+  }
+}

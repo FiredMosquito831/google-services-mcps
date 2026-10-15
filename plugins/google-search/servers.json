@@ -1,0 +1,39 @@
+{
+  "plugins": {
+    "google-search": "Google Search: Search Console sites, sitemaps, analytics, URL inspection, Custom Search, site verification, Indexing API"
+  },
+  "groups": {
+    "cloud": "Application Default Credentials or OAuth user token with cloud-platform scope",
+    "workspace-user": "OAuth user token (Gmail, Drive, Calendar and the user-data APIs)",
+    "workspace-admin": "Service account with domain-wide delegation, impersonating a super admin",
+    "searchconsole": "OAuth user token with webmasters scope",
+    "business": "OAuth user token with the scopes of the business APIs"
+  },
+  "servers": [
+    {
+      "name": "gsc",
+      "plugin": "google-search",
+      "group": "searchconsole",
+      "kind": "curated+discovery",
+      "curated": "src/servers/searchconsole.ts",
+      "apis": [
+        {
+          "api": "customsearch",
+          "version": "v1"
+        },
+        {
+          "api": "siteVerification",
+          "version": "v1"
+        },
+        {
+          "api": "indexing",
+          "version": "v3"
+        }
+      ],
+      "label": "Search Console: sites, sitemaps, analytics, URL inspection (curated) plus Custom Search, site verification, Indexing API (restricted use)",
+      "scopes": [
+        "https://www.googleapis.com/auth/webmasters"
+      ]
+    }
+  ]
+}

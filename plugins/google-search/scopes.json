@@ -1,0 +1,7 @@
+{
+  "gsc": [
+    "https://www.googleapis.com/auth/indexing",
+    "https://www.googleapis.com/auth/siteverification",
+    "https://www.googleapis.com/auth/siteverification.verify_only"
+  ]
+}
