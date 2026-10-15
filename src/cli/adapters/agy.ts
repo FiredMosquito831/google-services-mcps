@@ -18,15 +18,15 @@
  * Entries: mcpServers["gsm-<name>"] = { command: "node", args: ["<absolute .mjs>"], disabled: false }
  * (plus env with GSM_ALLOW_WRITES: "true" for --allow-writes and GSM_CONFIRMATION for --confirmation,
  * each only when its flag is given). Other keys are preserved.
- * Uninstall removes only the exact gsm- keys it installs. An empty "mcpServers"
- * object is left in place (same reasoning as OpenCode).
+ * Uninstall removes only the exact gsm- keys it installs. When that leaves "mcpServers" empty, the empty
+ * object goes too (same rule as OpenCode).
  */
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { readText, commitChanges } from '../fsutil.js';
 import { planJsonMap } from './json-map.js';
 import { envObject, serverEnvironment, type EnvPairs } from '../settings.js';
-import { SERVER_PREFIX, type AdapterContext, type AdapterResult } from '../types.js';
+import { AGY_GLOBAL_ONLY, SERVER_PREFIX, type AdapterContext, type AdapterResult } from '../types.js';
 
 export function agyConfigDir(home: string): string {
   return join(home, '.gemini', 'config');
@@ -46,7 +46,7 @@ function agyEntry(serverFile: string, env: EnvPairs): Record<string, unknown> {
 }
 
 function assertGlobal(ctx: AdapterContext): void {
-  if (ctx.scope !== 'global') throw new Error('agy supports only global scope in this build');
+  if (ctx.scope !== 'global') throw new Error(AGY_GLOBAL_ONLY);
 }
 
 export async function install(ctx: AdapterContext): Promise<AdapterResult> {
@@ -64,10 +64,8 @@ export async function install(ctx: AdapterContext): Promise<AdapterResult> {
     set.set(`${SERVER_PREFIX}${server.name}`, agyEntry(ctx.serverFile(server), env));
   }
   const change = planJsonMap({ file, before: readText(file), containerKey: 'mcpServers', template: {}, set });
-  const changed = change.before !== change.after;
   const notes = ['Verify with: agy mcp list (the gsm- servers should be listed).'];
   if (!folderExists) notes.push(`agy config folder not found (${dir}). A real install stops until agy has run once and created it.`);
-  if (changed) notes.push('Restart agy to load the servers.');
   if (ctx.allowWrites) notes.push('GSM_ALLOW_WRITES=true is set: write tools are enabled for these servers.');
   if (ctx.confirmation !== undefined) notes.push(`GSM_CONFIRMATION=${ctx.confirmation} is set for these servers.`);
   return {
@@ -102,6 +100,7 @@ export async function uninstall(ctx: AdapterContext): Promise<AdapterResult> {
     containerKey: 'mcpServers',
     template: {},
     remove: ctx.servers.map((s) => `${SERVER_PREFIX}${s.name}`),
+    dropEmptyContainer: true,
   });
   return {
     agent: 'agy',

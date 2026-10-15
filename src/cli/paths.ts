@@ -31,7 +31,12 @@ export function findRoots(fromUrl: string): InstallRoots {
     const repoMap = join(dir, 'config', 'products.json');
     if (existsSync(repoMap)) return { layout: 'repo', root: dir, mapFile: repoMap };
     const parent = dirname(dir);
-    if (parent === dir) throw new Error(`servers.json or config/products.json not found above ${dirname(fileURLToPath(fromUrl))}`);
+    if (parent === dir) {
+      throw new Error(
+        `cannot find the plugins: no servers.json (a plugin folder) or config/products.json (the repository) ` +
+          `above ${dirname(fileURLToPath(fromUrl))}. Run gsm from the repository, or from an installed plugin folder.`,
+      );
+    }
     dir = parent;
   }
 }
@@ -48,10 +53,9 @@ export function repoRootFor(roots: InstallRoots): string | undefined {
   return basename(parent) === 'plugins' ? dirname(parent) : undefined;
 }
 
-/** The folder for --scope folder. The scope requires --path, and the CLI checks that it exists. */
-export function folderDir(pathArg: string | undefined): string {
-  if (!pathArg) throw new Error('folder scope needs --path <dir>');
-  return pathArg;
+/** The folder of project and local scope: --path when given, else the current folder. */
+export function scopeFolder(pathArg: string | undefined, cwd: string): string {
+  return pathArg ?? cwd;
 }
 
 /** Absolute path of a server's bundled .mjs file. */

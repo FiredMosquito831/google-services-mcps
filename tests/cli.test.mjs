@@ -16,7 +16,7 @@ import { parseCliArgs, parseInstallArgs } from '../dist/cli/args.js';
 import { runInstall, selectPlugins, selectServers } from '../dist/cli/install.js';
 import { backupFile, timestamp } from '../dist/cli/fsutil.js';
 import { findRoots, repoRootFor, serverFileFor } from '../dist/cli/paths.js';
-import { CODEX_BEGIN, CODEX_END, UsageError } from '../dist/cli/types.js';
+import { AGY_GLOBAL_ONLY, CODEX_BEGIN, CODEX_END, UsageError } from '../dist/cli/types.js';
 
 const SERVERS = [
   { name: 'gcloud', plugin: 'google-cloud', group: 'cloud' },
@@ -210,12 +210,12 @@ test('opencode: JSONC input (comments or trailing commas) is refused and left un
 
 // ---------- agy ----------
 
-test('agy: project and folder scope are refused', () =>
+test('agy: project and local scope are refused', () =>
   withTemp(async (p) => {
-    for (const scope of ['project', 'folder']) {
+    for (const scope of ['project', 'local', 'folder']) {
       const ctx = makeCtx(p, { scope, pathArg: p.folder });
-      await assert.rejects(agy.install(ctx), /agy supports only global scope in this build/);
-      await assert.rejects(agy.uninstall(ctx), /agy supports only global scope in this build/);
+      await assert.rejects(agy.install(ctx), (err) => err.message === AGY_GLOBAL_ONLY);
+      await assert.rejects(agy.uninstall(ctx), (err) => err.message === AGY_GLOBAL_ONLY);
     }
   }));
 
@@ -381,12 +381,16 @@ test('claude: dry-run plans the commands and runs nothing', () =>
     assert.ok(res.commands.some((c) => c.includes('plugin marketplace add /repo')));
   }));
 
-test('claude: an unregistered marketplace with no repo checkout is an error, and nothing is installed', () =>
+test('claude: with no checkout the marketplace comes from GitHub, and --marketplace overrides the source', () =>
   withTemp(async (p) => {
     const { run, calls } = fakeRunner((cmd, args) => (args[2] === 'list' ? { code: 0, stdout: '[]', stderr: '' } : OK));
     const res = await claude.install(makeCtx(p, { run, plugins: ['google-cloud'], repoRoot: undefined }));
-    assert.equal(res.errors.length, 1);
-    assert.equal(calls.length, 1);
+    assert.deepEqual(res.errors, []);
+    assert.deepEqual(calls[1].args, ['plugin', 'marketplace', 'add', 'FiredMosquito831/google-services-mcps']);
+
+    const fork = fakeRunner((cmd, args) => (args[2] === 'list' ? { code: 0, stdout: '[]', stderr: '' } : OK));
+    await claude.install(makeCtx(p, { run: fork.run, plugins: ['google-cloud'], repoRoot: '/repo', marketplace: 'someone/fork' }));
+    assert.deepEqual(fork.calls[1].args, ['plugin', 'marketplace', 'add', 'someone/fork'], '--marketplace beats the checkout');
   }));
 
 // ---------- argument parsing ----------
@@ -409,8 +413,10 @@ test('args: install flags are validated', () => {
   assert.equal(parsed.dryRun, true);
 
   const bad = (argv) => () => parseInstallArgs(parseCliArgs(argv).values, argv[0], resolvePath, ids);
-  assert.throws(bad(['install', '--agent', 'codex', '--plugin', 'all', '--scope', 'folder']), /needs --path/);
-  assert.throws(bad(['install', '--agent', 'codex', '--plugin', 'all', '--scope', 'global', '--path', '/x']), /only valid with --scope folder/);
+  // local without --path acts on the current folder; "folder" is an alias of local.
+  assert.equal(parseInstallArgs(parseCliArgs(['install', '--agent', 'codex', '--plugin', 'all', '--scope', 'folder']).values, 'install', resolvePath, ids).scope, 'local');
+  assert.throws(bad(['install', '--agent', 'codex', '--plugin', 'all', '--scope', 'global', '--path', '/x']), /only used with --scope project or local/);
+  assert.throws(bad(['install', '--agent', 'codex', '--plugin', 'all', '--scope', 'nope']), /--scope must be one of: global, project, local/);
   assert.throws(bad(['install', '--agent', 'claude', '--plugin', 'all', '--scope', 'global', '--home', '/h']), /does not apply to claude/);
   assert.throws(bad(['install', '--agent', 'nope', '--plugin', 'all', '--scope', 'global']), /--agent must be one of/);
   assert.throws(bad(['install', '--plugin', 'all', '--scope', 'global']), /--agent is required/);
@@ -491,7 +497,7 @@ test('install: with --agent all and project scope, agy is skipped with the globa
   withTemp(async (p) => {
     const lines = [];
     await runInstall(request({ scope: 'project' }), orchestratorEnv(p, lines));
-    assert.ok(lines.some((l) => l === '[agy] skipped: agy supports only global scope in this build'));
+    assert.ok(lines.some((l) => l === `[agy] skipped: ${AGY_GLOBAL_ONLY}`));
   }));
 
 test('install: an agent named explicitly is never skipped, and its refusal is reported as an error', () =>
@@ -499,7 +505,7 @@ test('install: an agent named explicitly is never skipped, and its refusal is re
     const lines = [];
     const code = await runInstall(request({ agent: 'agy', scope: 'project' }), orchestratorEnv(p, lines));
     assert.equal(code, 1);
-    assert.ok(lines.some((l) => l === 'WARN [agy] error: agy supports only global scope in this build'));
+    assert.ok(lines.some((l) => l === `WARN [agy] error: ${AGY_GLOBAL_ONLY}`));
   }));
 
 test('install: --servers must belong to the selected plugins, and unknown names are rejected', () => {

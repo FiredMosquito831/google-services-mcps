@@ -3,9 +3,13 @@
   "version": "0.1.0",
   "description": "MCP servers for Google Cloud console, Google Workspace (user data and admin), and Google Search Console, packaged as a Claude Code plugin and installable into Codex, OpenCode and Antigravity (agy).",
   "private": true,
+  "license": "Apache-2.0",
   "type": "module",
   "engines": {
     "node": ">=20"
+  },
+  "bin": {
+    "gsm": "gsm.mjs"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

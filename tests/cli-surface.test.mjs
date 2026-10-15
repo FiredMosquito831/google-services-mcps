@@ -24,7 +24,7 @@ const GSM_URL = pathToFileURL(GSM).href;
 const REPO_PRODUCTS = JSON.parse(readFileSync(join(REPO, 'config', 'products.json'), 'utf8')).products;
 const REPO_IDS = Object.keys(REPO_PRODUCTS);
 const AGENTS = ['claude', 'codex', 'opencode', 'agy', 'all'];
-const SCOPES = ['global', 'folder'];
+const SCOPES = ['global', 'project', 'local'];
 
 async function withTemp(fn) {
   const root = mkdtempSync(join(tmpdir(), 'gsm-surface-test-'));
@@ -553,19 +553,19 @@ for (const agent of AGENTS) {
     test(`install and uninstall --dry-run for ${agent} at ${scope} scope print the plan and write nothing`, async () => {
       await withTemp((p) => {
         // claude never takes --home (it always uses the real Claude Code configuration), so its HOME is the temp home instead.
-        const scopeArgs = scope === 'folder' ? ['--path', p.folder] : [];
+        const scopeArgs = scope === 'global' ? [] : ['--path', p.folder];
         const homeArgs = agent === 'claude' ? [] : ['--home', p.home];
         const common = ['--agent', agent, '--plugin', 'all', '--scope', scope, ...scopeArgs, ...homeArgs, '--dry-run'];
 
         const install = runGsm(['install', ...common], p);
         const uninstall = runGsm(['uninstall', ...common], p);
 
-        // agy supports only global scope in this build, and an agent named explicitly is refused, not skipped.
-        const agyRefused = agent === 'agy' && scope === 'folder';
+        // agy has no project or local file, so an agy named explicitly is refused before anything runs (exit 2).
+        const agyRefused = agent === 'agy' && scope !== 'global';
         if (agyRefused) {
-          assert.equal(install.code, 1, install.stderr);
-          assert.equal(uninstall.code, 1, uninstall.stderr);
-          assert.match(install.stderr, /agy supports only global scope in this build/);
+          assert.equal(install.code, 2, install.stderr);
+          assert.equal(uninstall.code, 2, uninstall.stderr);
+          assert.match(install.stderr, /agy supports only --scope global/);
         } else {
           assert.equal(install.code, 0, install.stderr);
           assert.equal(uninstall.code, 0, uninstall.stderr);

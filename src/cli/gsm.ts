@@ -2,26 +2,47 @@
 import { statSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { resolve } from 'node:path';
-import { parseCliArgs, parseGroup, parseInstallArgs, parseLimit, parseLoginScopes, parseProfile, parseSearch, parseServers, parseSetupAdminArgs } from './args.js';
+import { createInterface } from 'node:readline/promises';
+import {
+  parseCliArgs,
+  parseGroup,
+  parseInstallArgs,
+  parseLimit,
+  parseLoginScopes,
+  parseProfile,
+  parseSearch,
+  parseServers,
+  parseSetupAdminArgs,
+  parseUninstallAllArgs,
+} from './args.js';
 import { runSetupAdmin } from './admin.js';
 import { runSetupApiKey } from './apikey.js';
 import { runStatus, runLogout, runSetupClient } from './credentials.js';
 import { runDoctor } from './doctor.js';
 import { spawnRunner } from './exec.js';
-import { runInstall } from './install.js';
+import { runInstall, runUninstallAll, type InstallEnv } from './install.js';
+import { runList } from './list.js';
 import { runLogin } from './login.js';
 import { runApis, runMethods, runProducts, runVersion, type ListingEnv } from './listing.js';
-import { findRoots } from './paths.js';
+import { findRoots, type InstallRoots } from './paths.js';
 import { loadProductRegistry, productIds } from './products.js';
+import type { Registry } from '../core/registry.js';
 import type { Output } from './report.js';
 import { runScopes } from './scopes.js';
 import { UsageError } from './types.js';
 
-export const HELP = `gsm: install and manage the Google services MCP suite
+export const HELP = `gsm: install the Google services MCP suite into an agent, and manage it
+
+Examples:
+  gsm install --agent codex --plugin gmail                        Gmail for Codex, for this user (global is the default)
+  gsm install --agent claude --plugin gcalendar --scope project   Google Calendar for Claude Code, in this project only
+  gsm list                                                        Show every install gsm made, and where
+  gsm uninstall --agent codex --plugin gmail --dry-run            Preview the removal of the Gmail entry
 
 Commands:
   install       Install product plugins for an agent: claude, codex, opencode, agy, or all
-  uninstall     Remove the product plugins again; only the gsm entries are removed
+  uninstall     Remove product plugins again, or every install with --all. Only gsm's own entries are removed
+  list          Show every install gsm made: agent, scope, folder, products, and whether it is still in place
   login         Log in one OAuth group. "gsm login apikey" only explains the API key step
   scopes        Show each profile's scopes, the products of a group and their tool counts
   setup-client  Save the OAuth Desktop client file (client_secret.json)
@@ -37,10 +58,12 @@ Commands:
   --help        Show this help
 
 Usage:
-  gsm install   --agent <claude|codex|opencode|agy|all> --plugin <id[,id...]|all> --scope <global|project|folder>
-                [--path <dir>] [--servers <a,b>] [--allow-writes] [--confirmation <every-change|destructive-only|off>]
-                [--dry-run] [--home <dir>]
-  gsm uninstall --agent <...> --plugin <...> --scope <...> [--path <dir>] [--servers <a,b>] [--dry-run] [--home <dir>] [--keep-data]
+  gsm install   --agent <claude|codex|opencode|agy|all> --plugin <id[,id...]|all> [--scope global|project|local]
+                [--path <dir>] [--allow-writes] [--confirmation <every-change|destructive-only|off>] [--dry-run]
+  gsm uninstall --agent <claude|codex|opencode|agy|all> --plugin <id[,id...]|all> [--scope global|project|local]
+                [--path <dir>] [--dry-run]
+  gsm uninstall --all [--dry-run] [--yes]
+  gsm list [--json] [--home <dir>]
   gsm login <group> [--profile readonly|readwrite|full] [--scopes <url,url>] [--servers <a,b>] [--client-secret <file>] [--no-browser] [--replace]
   gsm scopes <group> [--profile readonly|readwrite|full] [--servers <a,b>] [--json]
   gsm setup-client <path-to-client_secret.json> [--force]
@@ -55,36 +78,36 @@ Usage:
   gsm version
   gsm --help
 
-Plugins: --plugin takes product ids, for example gcloud, gsc, gsearch, gdrive, gmail or gai. An unknown id is refused,
-         and the error lists the valid ids. Plugin folders bundle only their own product.
-Profiles: readonly (default) covers the read tools with read-only scopes. readwrite adds write and
-          destructive tools with the narrowest scopes that cover them. full covers every tool with the
-          broadest listed scope. --scopes gives an exact list instead, and nothing else is requested.
-          The scope list decides which tools the token can run: a tool whose scopes it lacks is not registered.
-          After a login, restart the MCP server (or restart the agent) so the new scopes apply.
-Scopes:  global = your home config, project = the current folder, folder = --path (must exist).
-Groups:  OAuth login: cloud, workspace-user, searchconsole, business, developer.
-         apikey: no login. Save the key with setup-apikey (used by gsearch).
-         workspace-admin: setup-admin (service account with domain-wide delegation, no login).
-Agents:  claude (official plugin CLI), codex (config.toml), opencode (opencode.json), agy (global scope only).
-Flags:   --dry-run prints every planned change and command and writes nothing.
-         --no-browser (login) prints the login URL only, and does not open the browser.
-         --replace (login, setup-admin): by default a login merges the requested scopes with the stored ones; --replace drops the stored ones.
-         --allow-writes sets GSM_ALLOW_WRITES=true for the installed servers (install only).
-         --confirmation sets GSM_CONFIRMATION (every-change, destructive-only or off) for codex, opencode and agy.
-                        For claude it is the plugin option "confirmation": the command prints how to set it.
-                        Without the flag nothing is written, so the plugin default applies.
-         --home overrides the home folder for codex, opencode and agy (not claude).
-         --keep-data keeps claude's plugin data directory on uninstall.
-         --json prints gsm scopes output as JSON.
-API key: setup-apikey reads GSM_API_KEY_INPUT or stdin. The key is never a command-line argument and is never printed.
-Backups: an existing config file is copied to <file>.gsm-backup-<YYYYMMDD-HHMMSS> before it changes.
-Listing: products, apis and methods only read the product map and the catalog. --json prints JSON (apis and methods
-         wrap their rows with the totals). --search matches API names and titles (apis), or method ids and paths (methods).
-         --limit caps the rows shown. methods shows 200 rows unless --limit is given.
-Doctor:  --plugin checks one product. Without it, every product of this checkout (or this plugin folder) is checked.
-         --token-dir checks another token directory. Exit 1 when any check FAILs. It creates nothing and prints no secret.
-Summary: install ends with one summary line: products, servers and tools, and the confirmation and write settings.
+Install and uninstall:
+  --agent       claude (the claude CLI), codex (config.toml), opencode (opencode.json), agy (global only), or all.
+  --scope       global (default): your user-wide config. project: the folder of --path, or the current folder.
+                local: only that folder, not shared. "folder" is accepted as an alias of local.
+                Codex and OpenCode have no separate local file, so project and local write the same file.
+  --path        The folder for project and local scope. It must exist.
+  --plugin      Product ids such as gcloud, gsc, gmail or gai, or all. An unknown id is refused, and the error lists them.
+  --dry-run     Prints every planned change and command, and writes nothing.
+  --allow-writes, --confirmation   Set GSM_ALLOW_WRITES and GSM_CONFIRMATION for codex, opencode and agy.
+                For claude they are plugin options: the install prints the command that sets them.
+  --marketplace claude only: owner/repo, a URL or a path. Default: this checkout, else FiredMosquito831/google-services-mcps.
+  --all         uninstall only: removes every install in the list. It prints the list, then asks; --yes skips the question.
+  --keep-data   uninstall with claude: keeps the plugin data directory.
+  --home        A home folder other than yours, for tests. Not for claude.
+Runtime:  install copies each product's servers and hook to ~/.google-services-mcps/runtime/<product>/, and the codex,
+          opencode and agy configs point there. uninstall removes a copy when no other install uses it.
+          Logins (the token files) are never touched by install or uninstall.
+
+Profiles: readonly (default) covers the read tools with read-only scopes. readwrite adds write and destructive tools
+          with the narrowest scopes that cover them. full covers every tool. --scopes gives an exact list instead.
+          The scopes a token holds decide which tools run: a tool whose scopes it lacks is not registered.
+Groups:   OAuth login: cloud, workspace-user, searchconsole, business, developer. apikey: setup-apikey, no login.
+          workspace-admin: setup-admin (service account with domain-wide delegation).
+Flags:    --no-browser (login) prints the login URL only, and does not open the browser.
+          --replace (login, setup-admin): by default a login merges the requested scopes with the stored ones; --replace drops the stored ones.
+          --json (scopes, products, apis, methods, list) prints JSON.
+API key:  setup-apikey reads GSM_API_KEY_INPUT or stdin. The key is never a command-line argument and is never printed.
+Backups:  an existing config file is copied to <file>.gsm-backup-<YYYYMMDD-HHMMSS> before it changes.
+Doctor:   --plugin checks one product. Without it, every product of this checkout (or this plugin folder) is checked.
+          --token-dir checks another token directory. Exit 1 when any check FAILs. It creates nothing and prints no secret.
 `;
 
 const resolvePath = (p: string): string => resolve(process.cwd(), p);
@@ -130,6 +153,20 @@ function readStdin(): Promise<string | undefined> {
   });
 }
 
+/** A yes or no question on the terminal. Only offered when both stdin and stdout are terminals. */
+async function askYesNo(question: string): Promise<boolean> {
+  const rl = createInterface({ input: process.stdin, output: process.stdout });
+  try {
+    return /^y(es)?$/i.test((await rl.question(`${question} [y/N] `)).trim());
+  } finally {
+    rl.close();
+  }
+}
+
+function installEnv(roots: InstallRoots, registry: Registry): InstallEnv {
+  return { roots, registry, cwd: process.cwd(), defaultHome: homedir(), platform: process.platform, run: spawnRunner, out };
+}
+
 async function dispatch(argv: string[]): Promise<number> {
   const parsed = parseCliArgs(argv);
   const moduleUrl = import.meta.url;
@@ -145,25 +182,35 @@ async function dispatch(argv: string[]): Promise<number> {
       console.log(HELP);
       return 0;
 
-    case 'install':
+    case 'install': {
+      const roots = findRoots(moduleUrl);
+      const registry = loadProductRegistry(roots);
+      const request = parseInstallArgs(parsed.values, 'install', resolvePath, productIds(registry));
+      if (request.pathArg !== undefined) requireDirectory(request.pathArg, '--path');
+      if (request.home !== undefined) requireDirectory(request.home, '--home');
+      return runInstall({ ...request, action: 'install' }, installEnv(roots, registry));
+    }
+
     case 'uninstall': {
       const roots = findRoots(moduleUrl);
       const registry = loadProductRegistry(roots);
-      const request = parseInstallArgs(parsed.values, parsed.command, resolvePath, productIds(registry));
+      if (parsed.values.all === true) {
+        const all = parseUninstallAllArgs(parsed.values, resolvePath);
+        if (all.home !== undefined) requireDirectory(all.home, '--home');
+        const terminal = process.stdin.isTTY && process.stdout.isTTY;
+        return runUninstallAll(all, installEnv(roots, registry), terminal ? () => askYesNo('Remove every install listed above?') : undefined);
+      }
+      const request = parseInstallArgs(parsed.values, 'uninstall', resolvePath, productIds(registry));
       if (request.pathArg !== undefined) requireDirectory(request.pathArg, '--path');
       if (request.home !== undefined) requireDirectory(request.home, '--home');
-      return runInstall(
-        { ...request, action: parsed.command },
-        {
-          roots,
-          registry,
-          cwd: process.cwd(),
-          defaultHome: homedir(),
-          platform: process.platform,
-          run: spawnRunner,
-          out,
-        },
-      );
+      return runInstall({ ...request, action: 'uninstall' }, installEnv(roots, registry));
+    }
+
+    case 'list': {
+      noPositionals(parsed.positionals, 'usage: gsm list [--json] [--home <dir>]');
+      const home = optionalString(parsed.values.home, 'home');
+      if (home !== undefined) requireDirectory(resolvePath(home), '--home');
+      return runList({ home: home === undefined ? homedir() : resolvePath(home), json: parsed.values.json === true }, out);
     }
 
     case 'login': {

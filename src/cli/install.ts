@@ -8,17 +8,32 @@ import * as codex from './adapters/codex.js';
 import * as opencode from './adapters/opencode.js';
 import { OAUTH_GROUPS, type InstallRequestArgs } from './args.js';
 import { apiKeyFileFor, apiKeyState, tokenFileFor } from './credentials.js';
-import { productIds, productRows } from './products.js';
+import { checkInstall, renderInstallList } from './list.js';
 import { repoRootFor, serverFileFor, type InstallRoots } from './paths.js';
-import { printResult, type Output } from './report.js';
+import { productIds, productRows } from './products.js';
+import { printInstallResult, printResult, type Output } from './report.js';
+import {
+  productsOf,
+  productsInRuntimeUse,
+  readInstalls,
+  recordInstall,
+  recordUninstall,
+  writeInstalls,
+  type InstallRecord,
+  type RecordKey,
+  type ServerEntry,
+} from './records.js';
+import { copyRuntime, planRuntimeCopies, removeRuntime, runtimeFolderFor, runtimeServerFile } from './runtime.js';
 import {
   AGENTS,
+  AGY_GLOBAL_ONLY,
   UsageError,
   type AdapterContext,
   type AdapterResult,
   type AgentId,
   type PluginChoice,
   type Runner,
+  type ServerRef,
 } from './types.js';
 
 export interface InstallRun extends InstallRequestArgs {
@@ -69,23 +84,32 @@ export function selectServers(registry: Registry, names: readonly string[] | und
   return picked;
 }
 
-function printLoginHints(servers: readonly ServerSpec[], out: Output): void {
+const toEntry = (s: { name: string; plugin: string }): ServerEntry => ({ name: s.name, plugin: s.plugin });
+const toRef = (s: ServerEntry): ServerRef => ({ name: s.name, plugin: s.plugin, group: '' });
+
+/**
+ * The login steps still needed for these servers: one command per OAuth group without a stored token, the client
+ * file when it is missing, and the setup for the apikey and workspace-admin groups. Empty when nothing is needed.
+ */
+export function loginSteps(servers: readonly ServerSpec[]): string[] {
   const cfg = loadConfig();
-  // The group field is typed narrowly in core; apikey is a group of its own.
-  const groups = servers.map((s) => s.group as string);
-  const loginGroups = [...new Set(groups)].filter((g) => (OAUTH_GROUPS as readonly string[]).includes(g));
-  const pending = loginGroups.filter((g) => !existsSync(tokenFileFor(g, cfg)));
-  if (pending.length > 0) {
-    out.log('Login still needed before these servers can call Google:');
-    for (const group of pending) out.log(`  gsm login ${group}`);
-    if (!existsSync(cfg.clientSecretFile)) out.log('First save the OAuth Desktop client: gsm setup-client <client_secret.json>');
+  const groups = [...new Set(servers.map((s) => s.group as string))];
+  const pending = groups.filter((g) => (OAUTH_GROUPS as readonly string[]).includes(g) && !existsSync(tokenFileFor(g, cfg)));
+  const steps: string[] = [];
+  if (pending.length > 0 && !existsSync(cfg.clientSecretFile)) {
+    steps.push('gsm setup-client <client_secret.json>   (once: the OAuth desktop client)');
+  }
+  for (const group of pending) {
+    const names = servers.filter((s) => s.group === group).map((s) => s.name);
+    steps.push(`gsm login ${group} --profile readonly --servers ${names.join(',')}`);
   }
   if (groups.includes('apikey') && apiKeyState(apiKeyFileFor(cfg)) !== 'saved') {
-    out.log('The apikey products need an API key. Save it with: gsm setup-apikey (reads GSM_API_KEY_INPUT or stdin)');
+    steps.push('gsm setup-apikey   (reads GSM_API_KEY_INPUT or stdin)');
   }
   if (groups.includes('workspace-admin')) {
-    out.log('workspace-admin needs a service account. Run: gsm login workspace-admin (prints the setup steps)');
+    steps.push('gsm setup-admin --subject <super admin email> --key-file <service account JSON>');
   }
+  return steps;
 }
 
 /**
@@ -136,14 +160,11 @@ export function installSummary(
   return `summary: ${verb} ${products.length} products, ${servers.length} servers, ${toolText}${note}; confirmation: ${confirmation}; writes: ${writes}`;
 }
 
-export async function runInstall(run: InstallRun, env: InstallEnv): Promise<number> {
-  const { out } = env;
-  const plugins = selectPlugins(run.plugin, productIds(env.registry));
-  const servers = selectServers(env.registry, run.servers, plugins);
-  const home = run.home ?? env.defaultHome;
-
-  // With --agent all, an agent that cannot apply here is skipped with a note. An agent named
-  // explicitly is never skipped: its adapter reports the problem as an error.
+/**
+ * The agents to act on. With --agent all, an agent that cannot apply here is skipped with a note. An agent named
+ * explicitly is never skipped: its adapter reports the problem as an error.
+ */
+function pickAgents(run: InstallRun, home: string, out: Output): AgentId[] {
   const agents: AgentId[] = [];
   for (const agent of run.agent === 'all' ? [...AGENTS] : [run.agent]) {
     if (run.agent === 'all' && agent === 'claude' && run.home !== undefined) {
@@ -153,7 +174,7 @@ export async function runInstall(run: InstallRun, env: InstallEnv): Promise<numb
     }
     if (run.agent === 'all' && agent === 'agy') {
       if (run.scope !== 'global') {
-        out.log('[agy] skipped: agy supports only global scope in this build');
+        out.log(`[agy] skipped: ${AGY_GLOBAL_ONLY}`);
         continue;
       }
       if (run.action === 'install' && !existsSync(join(home, '.gemini', 'config'))) {
@@ -163,16 +184,40 @@ export async function runInstall(run: InstallRun, env: InstallEnv): Promise<numb
     }
     agents.push(agent);
   }
+  return agents;
+}
+
+export async function runInstall(run: InstallRun, env: InstallEnv): Promise<number> {
+  const { out } = env;
+  const plugins = selectPlugins(run.plugin, productIds(env.registry));
+  const servers = selectServers(env.registry, run.servers, plugins);
+  const home = run.home ?? env.defaultHome;
+  // Global has no folder. Project and local act on --path, or on the current folder.
+  const folder = run.scope === 'global' ? null : (run.pathArg ?? env.cwd);
+  const agents = pickAgents(run, home, out);
+  const products = productsOf(servers);
 
   // Claude installs whole plugins, so --servers selects the plugins that contain them.
-  const claudePlugins = run.servers ? [...new Set(servers.map((s) => s.plugin))] : plugins;
-  if (agents.includes('claude') && run.servers) {
-    out.log(`[claude] installs whole plugins: ${claudePlugins.join(', ')}`);
-  }
-
+  const claudePlugins = run.servers ? products : plugins;
+  const claudeServers = env.registry.servers.filter((s) => claudePlugins.includes(s.plugin)).map(toEntry);
+  if (agents.includes('claude') && run.servers) out.log(`[claude] installs whole plugins: ${claudePlugins.join(', ')}`);
   if (run.dryRun) out.log('dry-run: nothing will be written or run.');
 
-  if (run.action === 'install' && agents.some((a) => a !== 'claude')) {
+  // The record is read before anything is written, so a damaged record file stops the run with nothing changed.
+  let records: InstallRecord[] = readInstalls(home);
+  const keyFor = (agent: AgentId): RecordKey => ({ agent, scope: run.scope, folder });
+
+  // Every agent except claude runs the runtime copy, so the copy is made first. A plugin folder that is missing
+  // stops a real install here, before any config file is touched.
+  const fileAgents = agents.filter((a) => a !== 'claude');
+  const copies = fileAgents.length > 0 && run.action === 'install' ? planRuntimeCopies(env.roots, home, products) : [];
+  for (const copy of copies) {
+    if (copy.sourceExists) continue;
+    const message = `the plugin folder for ${copy.product} was not found: ${copy.source}. The plugins are built into plugins/ (run npm run build), or reinstall the package.`;
+    if (!run.dryRun) throw new Error(message);
+    out.warn(`warning: ${message}`);
+  }
+  if (run.action === 'install' && fileAgents.length > 0) {
     for (const server of servers) {
       const file = serverFileFor(env.roots, server);
       if (!existsSync(file)) {
@@ -180,19 +225,29 @@ export async function runInstall(run: InstallRun, env: InstallEnv): Promise<numb
       }
     }
   }
+  for (const copy of copies) {
+    if (run.dryRun) {
+      out.log(`would copy runtime: ${copy.source} -> ${copy.target}`);
+    } else {
+      copyRuntime(copy);
+      out.log(`copied runtime: ${copy.target}`);
+    }
+  }
 
   let failed = false;
+  const done: Array<{ agent: AgentId; result: AdapterResult }> = [];
   for (const agent of agents) {
     const ctx: AdapterContext = {
       home,
       cwd: env.cwd,
       scope: run.scope,
-      pathArg: run.pathArg,
+      pathArg: folder ?? undefined,
       pluginRoot: env.roots.layout === 'plugin' ? env.roots.root : undefined,
       repoRoot: repoRootFor(env.roots),
+      marketplace: run.marketplace,
       plugins: agent === 'claude' ? claudePlugins : plugins,
       servers,
-      serverFile: (s) => serverFileFor(env.roots, s),
+      serverFile: (s) => runtimeServerFile(home, s),
       dryRun: run.dryRun,
       allowWrites: run.allowWrites,
       confirmation: run.confirmation,
@@ -203,15 +258,141 @@ export async function runInstall(run: InstallRun, env: InstallEnv): Promise<numb
     try {
       const adapter = ADAPTERS[agent];
       const result = run.action === 'install' ? await adapter.install(ctx) : await adapter.uninstall(ctx);
-      printResult(result, run.dryRun, out);
+      if (run.action === 'install' && !run.dryRun) printInstallResult(result, out);
+      else printResult(result, run.dryRun, out);
       if (result.errors.length > 0) failed = true;
+      else done.push({ agent, result });
     } catch (err) {
       failed = true;
       out.warn(`[${agent}] error: ${(err as Error).message}`);
     }
   }
 
-  if (run.action === 'install' && !run.dryRun && !failed) printLoginHints(servers, out);
+  // The record follows the agents that succeeded. A dry run computes the same record, but never writes it.
+  for (const { agent, result } of done) {
+    const entries = agent === 'claude' ? claudeServers : servers.map(toEntry);
+    records =
+      run.action === 'install'
+        ? recordInstall(records, keyFor(agent), result.changes[0]?.file ?? null, entries)
+        : recordUninstall(records, keyFor(agent), entries);
+  }
+  if (!run.dryRun && done.length > 0) writeInstalls(home, records);
+
+  // A runtime copy is kept while a non-claude record still uses its product. Uninstall removes the ones no longer used.
+  // Install removes the copies it just made when no agent ended up using them (every agent failed). A dry run removes nothing.
+  const inUse = productsInRuntimeUse(records);
+  const candidates = run.action === 'uninstall' ? products : run.dryRun ? [] : copies.map((c) => c.product);
+  for (const product of candidates) {
+    if (inUse.has(product)) continue;
+    const target = runtimeFolderFor(home, product);
+    if (!existsSync(target)) continue;
+    if (run.dryRun) {
+      out.log(`would remove runtime copy: ${target}`);
+    } else {
+      removeRuntime(home, product);
+      out.log(`removed runtime copy: ${target}`);
+    }
+  }
+
+  if (run.action === 'install' && !run.dryRun && !failed) {
+    const steps = loginSteps(servers);
+    if (steps.length > 0) {
+      out.log('Still needed before these servers can call Google:');
+      for (const step of steps) out.log(`  ${step}`);
+    }
+  }
   if (run.action === 'install') out.log(installSummary(run, env, servers, failed, agents));
   return failed ? 1 : 0;
+}
+
+/** The arguments of `gsm uninstall --all`. */
+export interface UninstallAllRun {
+  dryRun: boolean;
+  yes: boolean;
+  keepData: boolean;
+  home?: string;
+}
+
+/**
+ * `gsm uninstall --all`: removes every install in the record. It prints the list first. Without --dry-run it
+ * needs --yes, or an interactive `confirm` answer (the CLI passes one only when run from a terminal).
+ * Logins and token files are never touched.
+ */
+export async function runUninstallAll(run: UninstallAllRun, env: InstallEnv, confirm?: () => Promise<boolean>): Promise<number> {
+  const { out } = env;
+  const home = run.home ?? env.defaultHome;
+  const records = readInstalls(home);
+  if (records.length === 0) {
+    out.log(`No gsm installs are recorded in ${home}. Nothing to uninstall.`);
+    return 0;
+  }
+  for (const line of renderInstallList(home, records.map((r) => checkInstall(home, r)))) out.log(line);
+
+  if (run.dryRun) {
+    await uninstallRecords(records, run, env, true);
+    out.log('dry-run: nothing will be removed.');
+    return 0;
+  }
+  if (!run.yes) {
+    if (!confirm) {
+      throw new UsageError('uninstall --all removes every install listed above. Run it again with --yes to confirm (--yes is required when gsm is not run from a terminal). Nothing was removed.');
+    }
+    if (!(await confirm())) {
+      out.log('Nothing was removed.');
+      return 0;
+    }
+  }
+  const failed = await uninstallRecords(records, run, env, false);
+  return failed ? 1 : 0;
+}
+
+/** Uninstalls each record through its agent. Returns true when one failed. Writes the record and the runtime copies unless dry. */
+async function uninstallRecords(records: readonly InstallRecord[], run: UninstallAllRun, env: InstallEnv, dry: boolean): Promise<boolean> {
+  const { out } = env;
+  const home = run.home ?? env.defaultHome;
+  let failed = false;
+  let current = [...records];
+  for (const record of records) {
+    const where = record.folder ? ` at ${record.folder}` : '';
+    out.log(`removing ${record.agent} ${record.scope}${where}`);
+    const ctx: AdapterContext = {
+      home,
+      cwd: env.cwd,
+      scope: record.scope,
+      pathArg: record.folder ?? undefined,
+      pluginRoot: undefined,
+      repoRoot: repoRootFor(env.roots),
+      plugins: record.products,
+      servers: record.servers.map(toRef),
+      serverFile: (s) => runtimeServerFile(home, s),
+      dryRun: dry,
+      allowWrites: false,
+      keepData: run.keepData,
+      run: env.run,
+      platform: env.platform,
+    };
+    try {
+      const result = await ADAPTERS[record.agent].uninstall(ctx);
+      printResult(result, dry, out);
+      if (result.errors.length > 0) {
+        failed = true;
+        continue;
+      }
+      current = recordUninstall(current, { agent: record.agent, scope: record.scope, folder: record.folder }, record.servers);
+    } catch (err) {
+      failed = true;
+      out.warn(`[${record.agent}] error: ${(err as Error).message}`);
+    }
+  }
+  if (dry) return failed;
+
+  writeInstalls(home, current);
+  const inUse = productsInRuntimeUse(current);
+  for (const product of new Set(records.flatMap((r) => r.products))) {
+    if (inUse.has(product)) continue;
+    if (!existsSync(runtimeFolderFor(home, product))) continue;
+    removeRuntime(home, product);
+    out.log(`removed runtime copy: ${runtimeFolderFor(home, product)}`);
+  }
+  return failed;
 }

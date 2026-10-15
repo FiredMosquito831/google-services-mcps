@@ -1,4 +1,4 @@
-import type { AdapterResult, FileChange } from './types.js';
+import type { AdapterResult, AgentId, FileChange } from './types.js';
 
 /** Multiset line diff: lines only in `before` are removed, lines only in `after` are added. */
 export function lineDiff(before: string | null, after: string): { removed: string[]; added: string[] } {
@@ -48,7 +48,7 @@ export interface Output {
   warn(line: string): void;
 }
 
-/** Prints an adapter result. Used by both install and uninstall. Errors go to warn (stderr). */
+/** Prints an adapter result. Used by dry runs and uninstalls. Errors go to warn (stderr). */
 export function printResult(result: AdapterResult, dryRun: boolean, out: Output): void {
   out.log(`[${result.agent}] ${result.action}${dryRun ? ' (dry-run)' : ''}`);
   for (const change of result.changes) {
@@ -60,4 +60,23 @@ export function printResult(result: AdapterResult, dryRun: boolean, out: Output)
   for (const backup of result.backups) out.log(`  backup: ${backup}`);
   for (const note of result.notes) out.log(`  note: ${note}`);
   for (const error of result.errors) out.warn(`  error: ${error}`);
+}
+
+/** The name of each agent as it is written in the restart line. */
+const AGENT_NAME: Record<AgentId, string> = { claude: 'Claude Code', codex: 'Codex', opencode: 'OpenCode', agy: 'agy' };
+
+/**
+ * The output of a real install, one block per agent: the file written (or unchanged), any command run, the backup,
+ * the notes, and the restart line. The login steps are printed by the caller, after the blocks.
+ */
+export function printInstallResult(result: AdapterResult, out: Output): void {
+  out.log(`[${result.agent}] ${result.errors.length > 0 ? 'failed' : 'installed'}`);
+  for (const change of result.changes) {
+    out.log(change.before === change.after ? `  unchanged: ${change.file}` : `  wrote: ${change.file}`);
+  }
+  for (const command of result.commands) out.log(`  ran: ${command}`);
+  for (const backup of result.backups) out.log(`  backup: ${backup}`);
+  for (const note of result.notes) out.log(`  note: ${note}`);
+  for (const error of result.errors) out.warn(`  error: ${error}`);
+  if (result.errors.length === 0) out.log(`  restart ${AGENT_NAME[result.agent]} to load the servers`);
 }

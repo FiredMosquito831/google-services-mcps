@@ -2,9 +2,11 @@ import { parseArgs } from 'node:util';
 import { PROFILES, type Profile } from '../core/scopes.js';
 import {
   AGENTS,
+  AGY_GLOBAL_ONLY,
   CONFIRMATION_MODES,
   SCOPES,
   UsageError,
+  canonicalScope,
   type AgentId,
   type ConfirmationMode,
   type PluginChoice,
@@ -21,6 +23,7 @@ export type CliGroup = (typeof ALL_GROUPS)[number];
 export type Command =
   | 'install'
   | 'uninstall'
+  | 'list'
   | 'login'
   | 'setup-client'
   | 'setup-apikey'
@@ -45,10 +48,23 @@ const COMMANDS: Record<Exclude<Command, 'help'>, Record<string, OptionType>> = {
     servers: 'string',
     'allow-writes': 'boolean',
     confirmation: 'string',
+    marketplace: 'string',
     'dry-run': 'boolean',
     home: 'string',
   },
-  uninstall: { agent: 'string', plugin: 'string', scope: 'string', path: 'string', servers: 'string', 'dry-run': 'boolean', home: 'string', 'keep-data': 'boolean' },
+  uninstall: {
+    agent: 'string',
+    plugin: 'string',
+    scope: 'string',
+    path: 'string',
+    servers: 'string',
+    all: 'boolean',
+    yes: 'boolean',
+    'dry-run': 'boolean',
+    home: 'string',
+    'keep-data': 'boolean',
+  },
+  list: { json: 'boolean', home: 'string' },
   login: { servers: 'string', 'client-secret': 'string', profile: 'string', scopes: 'string', 'no-browser': 'boolean', replace: 'boolean' },
   'setup-client': { force: 'boolean' },
   'setup-apikey': { force: 'boolean' },
@@ -98,14 +114,32 @@ export interface InstallRequestArgs {
   agent: AgentId | 'all';
   plugin: PluginChoice;
   scope: Scope;
+  /** Absolute --path, for project and local scope. Undefined means the current folder. */
   pathArg?: string;
   servers?: string[];
   allowWrites: boolean;
   /** --confirmation, install only. Undefined: nothing is written for it. */
   confirmation?: ConfirmationMode;
+  /** --marketplace, install with claude only: owner/repo, a URL or a path. */
+  marketplace?: string;
   dryRun: boolean;
   home?: string;
   keepData: boolean;
+}
+
+/** The usage lines of install and uninstall. A missing required flag prints them, with the valid values. */
+export const INSTALL_USAGE = 'usage: gsm install --agent <claude|codex|opencode|agy|all> --plugin <id,...|all> [--scope global|project|local] [--path <dir>] [--dry-run]';
+export const UNINSTALL_USAGE =
+  'usage: gsm uninstall --agent <claude|codex|opencode|agy|all> --plugin <id,...|all> [--scope global|project|local] [--path <dir>] [--dry-run]\n' +
+  '       gsm uninstall --all [--dry-run] [--yes]';
+
+/**
+ * --scope: global (the default), project or local. `folder` is an alias of local, accepted with no warning.
+ * Returns the scope name. Refuses any other value with the list of valid ones.
+ */
+export function parseScope(value: string | boolean | undefined): Scope {
+  if (value === undefined) return 'global';
+  return choice(typeof value === 'string' ? canonicalScope(value) : value, 'scope', SCOPES);
 }
 
 function choice<T extends string>(value: string | boolean | undefined, name: string, allowed: readonly T[]): T {
@@ -151,20 +185,24 @@ export function parseInstallArgs(
   resolvePath: (p: string) => string,
   validPluginIds: readonly string[],
 ): InstallRequestArgs {
-  for (const name of ['agent', 'plugin', 'scope'] as const) {
-    if (values[name] === undefined) throw new UsageError(`--${name} is required`);
+  const usage = command === 'install' ? INSTALL_USAGE : UNINSTALL_USAGE;
+  if (values.agent === undefined) {
+    throw new UsageError(`--agent is required. Valid agents: ${[...AGENTS, 'all'].join(', ')}.\n${usage}`);
+  }
+  if (values.plugin === undefined) {
+    throw new UsageError(`--plugin is required. Valid plugin ids: ${validPluginIds.join(', ')}, or all.\n${usage}`);
   }
   const agent = choice(values.agent, 'agent', [...AGENTS, 'all'] as const);
   const plugin = parsePluginChoice(values.plugin, validPluginIds);
-  const scope = choice(values.scope, 'scope', SCOPES);
+  const scope = parseScope(values.scope);
 
   let pathArg: string | undefined;
-  if (scope === 'folder') {
-    if (typeof values.path !== 'string') throw new UsageError('--scope folder needs --path <dir>');
+  if (typeof values.path === 'string') {
+    if (scope === 'global') throw new UsageError('--path is only used with --scope project or local (the folder to act on)');
     pathArg = resolvePath(values.path);
-  } else if (values.path !== undefined) {
-    throw new UsageError('--path is only valid with --scope folder');
   }
+  // agy has no verified project or local config file, so a named agy is refused here, before anything is written.
+  if (agent === 'agy' && scope !== 'global') throw new UsageError(`${AGY_GLOBAL_ONLY}. Use --scope global.`);
 
   const home = typeof values.home === 'string' ? resolvePath(values.home) : undefined;
   if (home !== undefined && agent === 'claude') {
@@ -172,6 +210,16 @@ export function parseInstallArgs(
   }
 
   const confirmation = values.confirmation === undefined ? undefined : choice(values.confirmation, 'confirmation', CONFIRMATION_MODES);
+
+  let marketplace: string | undefined;
+  if (values.marketplace !== undefined) {
+    if (command !== 'install') throw new UsageError('--marketplace applies only to install');
+    if (typeof values.marketplace !== 'string' || values.marketplace.trim() === '') {
+      throw new UsageError('--marketplace needs owner/repo, a git or https URL, or a path to the marketplace folder');
+    }
+    if (agent !== 'claude' && agent !== 'all') throw new UsageError('--marketplace applies only to --agent claude (or all)');
+    marketplace = values.marketplace.trim();
+  }
 
   return {
     agent,
@@ -181,9 +229,33 @@ export function parseInstallArgs(
     servers: splitList(values.servers, 'servers'),
     allowWrites: command === 'install' && values['allow-writes'] === true,
     confirmation: command === 'install' ? confirmation : undefined,
+    marketplace,
     dryRun: values['dry-run'] === true,
     home,
     keepData: command === 'uninstall' && values['keep-data'] === true,
+  };
+}
+
+/**
+ * `gsm uninstall --all`: every install gsm made. It takes no --agent, --plugin, --scope, --path or --servers, so
+ * those are refused here rather than ignored.
+ */
+export function parseUninstallAllArgs(values: ParsedArgs['values'], resolvePath: (p: string) => string): {
+  dryRun: boolean;
+  yes: boolean;
+  keepData: boolean;
+  home?: string;
+} {
+  for (const name of ['agent', 'plugin', 'scope', 'path', 'servers'] as const) {
+    if (values[name] !== undefined) {
+      throw new UsageError(`--all removes every gsm install and cannot be combined with --${name}. Use --all alone, or drop --all.`);
+    }
+  }
+  return {
+    dryRun: values['dry-run'] === true,
+    yes: values.yes === true,
+    keepData: values['keep-data'] === true,
+    home: typeof values.home === 'string' ? resolvePath(values.home) : undefined,
   };
 }
 

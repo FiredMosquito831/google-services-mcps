@@ -3,31 +3,36 @@
  * Claude's settings files.
  *
  *   install:   claude plugin marketplace list --json
- *              claude plugin marketplace add <repoRoot>      (only if google-services-mcps is not registered)
+ *              claude plugin marketplace add <source>        (only if google-services-mcps is not registered)
  *              claude plugin install <plugin>@google-services-mcps --scope user|project|local
  *   uninstall: claude plugin uninstall <plugin>@google-services-mcps --scope ... [--keep-data]
  *
- * Scope mapping: global -> user, project -> project, folder -> local (run inside --path).
- * Every call goes through ctx.run with shell: false and an argument array. On
- * Windows the program is tried as "claude", then "claude.cmd". Dry-run only plans.
+ * <source> is --marketplace when given, else the repo checkout the installer runs from, else
+ * FiredMosquito831/google-services-mcps on GitHub.
+ *
+ * Scope mapping: global -> user, project -> project, local -> local. Project and local run the command inside
+ * the folder (--path, or the current folder). Every call goes through ctx.run with shell: false and an argument
+ * array. On Windows the program is tried as "claude", then "claude.cmd". Dry-run only plans.
  *
  * --confirmation is not written here. It is the plugin user option "confirmation", which the user
  * sets with `claude plugin configure`; install prints that instruction as a note.
  */
 import { displayCommand } from '../exec.js';
+import { scopeFolder } from '../paths.js';
 import {
   MARKETPLACE_NAME,
+  MARKETPLACE_SOURCE,
   type AdapterContext,
   type AdapterResult,
   type RunResult,
   type Scope,
 } from '../types.js';
-import { folderDir } from '../paths.js';
 
-const SCOPE_FLAG: Record<Scope, string> = { global: 'user', project: 'project', folder: 'local' };
-
+/** global -> user; project -> project; local -> local. The alias folder reads as local. */
 export function claudeScopeFlag(scope: Scope): string {
-  return SCOPE_FLAG[scope];
+  if (scope === 'global') return 'user';
+  if (scope === 'project') return 'project';
+  return 'local';
 }
 
 export function claudePluginId(plugin: string): string {
@@ -62,23 +67,23 @@ export async function runClaude(ctx: AdapterContext, args: readonly string[], cw
   );
 }
 
-function marketplaceAddArgs(repoRoot: string): string[] {
-  return ['plugin', 'marketplace', 'add', repoRoot];
+/** The marketplace source for `claude plugin marketplace add`: --marketplace, else the checkout, else GitHub. */
+export function marketplaceSourceFor(ctx: Pick<AdapterContext, 'marketplace' | 'repoRoot'>): string {
+  return ctx.marketplace ?? ctx.repoRoot ?? MARKETPLACE_SOURCE;
+}
+
+function marketplaceAddArgs(source: string): string[] {
+  return ['plugin', 'marketplace', 'add', source];
 }
 
 /** Ensures the marketplace is registered. Returns false when the install must stop. */
 async function ensureMarketplace(ctx: AdapterContext, cwd: string, result: AdapterResult): Promise<boolean> {
+  const source = marketplaceSourceFor(ctx);
   const listArgs = ['plugin', 'marketplace', 'list', '--json'];
   if (ctx.dryRun) {
     result.commands.push(displayCommand('claude', listArgs));
-    if (ctx.repoRoot) {
-      result.commands.push(displayCommand('claude', marketplaceAddArgs(ctx.repoRoot)));
-      result.notes.push(`marketplace add runs only if ${MARKETPLACE_NAME} is not registered yet`);
-    } else {
-      result.notes.push(
-        `repo checkout not found from here; if ${MARKETPLACE_NAME} is not registered, run gsm from the repo checkout`,
-      );
-    }
+    result.commands.push(displayCommand('claude', marketplaceAddArgs(source)));
+    result.notes.push(`marketplace add runs only if ${MARKETPLACE_NAME} is not registered yet (source: ${source})`);
     return true;
   }
 
@@ -91,13 +96,7 @@ async function ensureMarketplace(ctx: AdapterContext, cwd: string, result: Adapt
     result.notes.push(`marketplace ${MARKETPLACE_NAME} is already registered`);
     return true;
   }
-  if (!ctx.repoRoot) {
-    result.errors.push(
-      `marketplace ${MARKETPLACE_NAME} is not registered, and the repo checkout was not found. Run gsm from the repo checkout once.`,
-    );
-    return false;
-  }
-  const addArgs = marketplaceAddArgs(ctx.repoRoot);
+  const addArgs = marketplaceAddArgs(source);
   result.commands.push(displayCommand('claude', addArgs));
   const add = await runClaude(ctx, addArgs, cwd);
   if (add.code !== 0) {
@@ -109,9 +108,11 @@ async function ensureMarketplace(ctx: AdapterContext, cwd: string, result: Adapt
 
 async function run(ctx: AdapterContext, action: 'install' | 'uninstall'): Promise<AdapterResult> {
   const result: AdapterResult = { agent: 'claude', action, changes: [], commands: [], backups: [], notes: [], errors: [] };
-  const cwd = ctx.scope === 'folder' ? folderDir(ctx.pathArg) : ctx.cwd;
+  // Global runs from the current folder; project and local run inside the folder, which the claude CLI reads from its cwd.
+  const cwd = ctx.scope === 'global' ? ctx.cwd : scopeFolder(ctx.pathArg, ctx.cwd);
   const scopeFlag = claudeScopeFlag(ctx.scope);
-  if (ctx.scope === 'folder') result.notes.push(`local scope: applies only inside ${cwd}`);
+  if (ctx.scope === 'project') result.notes.push(`project scope: written to ${cwd}/.claude/settings.json by Claude Code`);
+  if (ctx.scope !== 'global' && ctx.scope !== 'project') result.notes.push(`local scope: written to ${cwd}/.claude/settings.local.json by Claude Code`);
 
   if (action === 'install') {
     const ready = await ensureMarketplace(ctx, cwd, result);
@@ -140,9 +141,6 @@ async function run(ctx: AdapterContext, action: 'install' | 'uninstall'): Promis
     result.notes.push(
       `confirmation is a plugin user option, so gsm does not write it. Set the option "confirmation" to ${ctx.confirmation} with claude plugin configure (plugins: ${ids}).`,
     );
-  }
-  if (action === 'install' && !ctx.dryRun && result.errors.length === 0) {
-    result.notes.push('restart Claude Code (or start a new session) to load the plugins');
   }
   return result;
 }

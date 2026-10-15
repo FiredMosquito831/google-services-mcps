@@ -37,6 +37,11 @@ export interface JsonMapPlan {
   set?: ReadonlyMap<string, unknown>;
   /** Keys to delete inside the container (uninstall). Only these exact keys are removed. */
   remove?: readonly string[];
+  /**
+   * When a removal deletes at least one key and leaves the container empty, drop the container too. Used by uninstall,
+   * so an install that added the container leaves the file as it was. An empty container that nothing removed is kept.
+   */
+  dropEmptyContainer?: boolean;
 }
 
 export function planJsonMap(plan: JsonMapPlan): FileChange {
@@ -68,7 +73,13 @@ export function planJsonMap(plan: JsonMapPlan): FileChange {
   }
 
   const changed = added.length + updated.length + removed.length > 0;
+  const next: Record<string, unknown> = { ...root };
+  if (plan.dropEmptyContainer && removed.length > 0 && Object.keys(container).length === 0) {
+    delete next[plan.containerKey];
+  } else {
+    next[plan.containerKey] = container;
+  }
   // With no change, keep the original text as-is (null stays null: nothing to write).
-  const after = changed ? JSON.stringify({ ...root, [plan.containerKey]: container }, null, 2) + '\n' : plan.before;
+  const after = changed ? JSON.stringify(next, null, 2) + '\n' : plan.before;
   return { file: plan.file, before: plan.before, after, added, updated, removed };
 }

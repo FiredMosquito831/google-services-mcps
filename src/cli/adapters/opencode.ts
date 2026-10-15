@@ -1,8 +1,8 @@
 /**
  * OpenCode adapter (opencode.json).
  *
- * Locations: global <home>/.config/opencode/opencode.json, project <cwd>/opencode.json,
- * folder <path>/opencode.json.
+ * Locations: global <home>/.config/opencode/opencode.json; project and local <folder>/opencode.json, where the folder
+ * is --path or the current folder. OpenCode has no separate local file, so project and local are the same file.
  *
  * Entries: mcp["gsm-<name>"] = { type: "local", command: ["node", "<absolute .mjs>"],
  * environment?: { GSM_ALLOW_WRITES: "true", GSM_CONFIRMATION: "<mode>" }, enabled: true }.
@@ -12,27 +12,22 @@
  *
  * JSON only: a file with comments or trailing commas (JSONC) is refused.
  * Every other key keeps its value and position. Uninstall removes only the exact
- * gsm- keys it would install. An empty "mcp" object is left in place, because
- * gsm cannot tell whether it created that object, and an empty object has no effect.
+ * gsm- keys it would install. When that removal leaves "mcp" empty, the empty object goes too, so an
+ * install followed by an uninstall leaves the file as it was.
  */
 import { join } from 'node:path';
 import { readText, commitChanges } from '../fsutil.js';
-import { folderDir } from '../paths.js';
-import { planJsonMap, isPlainObject } from './json-map.js';
+import { scopeFolder } from '../paths.js';
+import { planJsonMap } from './json-map.js';
 import { envObject, serverEnvironment, type EnvPairs } from '../settings.js';
 import { SERVER_PREFIX, type AdapterContext, type AdapterResult } from '../types.js';
 
 const SCHEMA_URL = 'https://opencode.ai/config.json';
 
+/** Global: <home>/.config/opencode/opencode.json. Project and local: <folder>/opencode.json (the same file for both). */
 export function opencodeConfigPath(ctx: AdapterContext): string {
-  switch (ctx.scope) {
-    case 'global':
-      return join(ctx.home, '.config', 'opencode', 'opencode.json');
-    case 'project':
-      return join(ctx.cwd, 'opencode.json');
-    case 'folder':
-      return join(folderDir(ctx.pathArg), 'opencode.json');
-  }
+  if (ctx.scope === 'global') return join(ctx.home, '.config', 'opencode', 'opencode.json');
+  return join(scopeFolder(ctx.pathArg, ctx.cwd), 'opencode.json');
 }
 
 export function opencodeEntry(serverFile: string, env: EnvPairs): Record<string, unknown> {
@@ -58,8 +53,10 @@ export async function install(ctx: AdapterContext): Promise<AdapterResult> {
     template: { $schema: SCHEMA_URL },
     set,
   });
-  const changed = change.before !== change.after;
-  const notes = changed ? ['Restart OpenCode to load the servers.'] : [];
+  const notes: string[] = [];
+  if (ctx.scope !== 'global' && ctx.scope !== 'project') {
+    notes.push('OpenCode does not separate local from project: --scope local writes the same opencode.json as --scope project.');
+  }
   if (ctx.allowWrites) notes.push('GSM_ALLOW_WRITES=true is set: write tools are enabled for these servers.');
   if (ctx.confirmation !== undefined) notes.push(`GSM_CONFIRMATION=${ctx.confirmation} is set for these servers.`);
   return {
@@ -81,16 +78,10 @@ export async function uninstall(ctx: AdapterContext): Promise<AdapterResult> {
     containerKey: 'mcp',
     template: { $schema: SCHEMA_URL },
     remove: ctx.servers.map((s) => `${SERVER_PREFIX}${s.name}`),
+    dropEmptyContainer: true,
   });
   const notes: string[] = [];
-  if (change.removed.length === 0) {
-    notes.push('no gsm entries found in this scope; nothing to remove');
-  } else if (change.after !== null) {
-    const parsed: unknown = JSON.parse(change.after);
-    if (isPlainObject(parsed) && isPlainObject(parsed.mcp) && Object.keys(parsed.mcp).length === 0) {
-      notes.push('left an empty "mcp" object in place (gsm cannot tell whether it created it; it has no effect)');
-    }
-  }
+  if (change.removed.length === 0) notes.push('no gsm entries found in this scope; nothing to remove');
   return {
     agent: 'opencode',
     action: 'uninstall',

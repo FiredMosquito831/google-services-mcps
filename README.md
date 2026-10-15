@@ -598,10 +598,38 @@ This repository is public, so do not put credentials or account data in an issue
 
 ## Acknowledgements and trademarks
 
-**Acknowledgements.** This project studied community MCP projects for design ideas, including [googleapis/gcloud-mcp](https://github.com/googleapis/gcloud-mcp), [taylorwilsdon/google_workspace_mcp](https://github.com/taylorwilsdon/google_workspace_mcp) and [mikusnuz/gsc-mcp](https://github.com/mikusnuz/gsc-mcp), and others. No code was copied from them. The suite is built from Google's published Discovery documents and the [Model Context Protocol specification](https://modelcontextprotocol.io/specification).
+**Acknowledgements.** This project studied community MCP projects for design ideas only, including [googleapis/gcloud-mcp](https://github.com/googleapis/gcloud-mcp), [taylorwilsdon/google_workspace_mcp](https://github.com/taylorwilsdon/google_workspace_mcp) and [mikusnuz/gsc-mcp](https://github.com/mikusnuz/gsc-mcp), and others. It copied no code from them. The suite is built from Google's published Discovery documents and the [Model Context Protocol specification](https://modelcontextprotocol.io/specification).
 
 **Trademarks.** Google and the Google product names are trademarks of Google LLC. This project is not affiliated with or endorsed by Google.
 
 ### License
 
-No license has been chosen yet. There is no LICENSE file, so the default copyright rules apply.
+google-services-mcps is licensed under the **Apache License, Version 2.0** (SPDX identifier: `Apache-2.0`).
+
+- Full license text: [LICENSE](LICENSE)
+- Attribution notice that must travel with copies: [NOTICE](NOTICE)
+- Why this license, and what it does and does not require: [docs/LICENSE-AND-ATTRIBUTION.md](docs/LICENSE-AND-ATTRIBUTION.md)
+- Contributions are under the same license: [CONTRIBUTING.md](CONTRIBUTING.md)
+
+**Attribution sentence to copy:**
+
+> Based on google-services-mcps by FiredMosquito831 (https://github.com/FiredMosquito831/google-services-mcps, profile https://github.com/FiredMosquito831).
+
+**How to credit this project**
+
+Short, for a post:
+
+```text
+Based on google-services-mcps by FiredMosquito831 (https://github.com/FiredMosquito831/google-services-mcps, profile https://github.com/FiredMosquito831). Licensed under Apache-2.0.
+```
+
+Full, for documentation:
+
+```text
+This project is based on google-services-mcps by FiredMosquito831.
+Repository: https://github.com/FiredMosquito831/google-services-mcps
+Profile:    https://github.com/FiredMosquito831
+License:    Apache License, Version 2.0 (Apache-2.0). See NOTICE and LICENSE.
+```
+
+Apache-2.0 requires the LICENSE and NOTICE files to travel with any copy you distribute or package, and changed files to say they were changed. Private use needs no credit. No open-source license can make people mention the project in every post, so the post text above is a request, not a legal duty.

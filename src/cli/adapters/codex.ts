@@ -1,8 +1,8 @@
 /**
  * OpenAI Codex CLI adapter (config.toml).
  *
- * Locations: global <home>/.codex/config.toml, project <cwd>/.codex/config.toml,
- * folder <path>/.codex/config.toml.
+ * Locations: global <home>/.codex/config.toml; project and local <folder>/.codex/config.toml, where the folder is
+ * --path or the current folder. Codex has no separate local file, so project and local are the same file.
  *
  * All gsm entries live in ONE managed block, bounded by the exact marker lines
  * CODEX_BEGIN and CODEX_END. Text outside the block is never touched. Each
@@ -21,7 +21,7 @@
  */
 import { join } from 'node:path';
 import { readText, commitChanges } from '../fsutil.js';
-import { folderDir } from '../paths.js';
+import { scopeFolder } from '../paths.js';
 import { serverEnvironment, type EnvPairs } from '../settings.js';
 import {
   CODEX_BEGIN,
@@ -41,15 +41,10 @@ const TABLE_HEADER = /^\[mcp_servers\.(gsm-[A-Za-z0-9_-]+)\]\s*$/;
  */
 const NEWLINE_MARK = '# gsm: a newline was added above this block; uninstall removes it';
 
+/** Global: <home>/.codex/config.toml. Project and local: <folder>/.codex/config.toml (the same file for both). */
 export function codexConfigPath(ctx: AdapterContext): string {
-  switch (ctx.scope) {
-    case 'global':
-      return join(ctx.home, '.codex', 'config.toml');
-    case 'project':
-      return join(ctx.cwd, '.codex', 'config.toml');
-    case 'folder':
-      return join(folderDir(ctx.pathArg), '.codex', 'config.toml');
-  }
+  if (ctx.scope === 'global') return join(ctx.home, '.codex', 'config.toml');
+  return join(scopeFolder(ctx.pathArg, ctx.cwd), '.codex', 'config.toml');
 }
 
 /** A TOML literal string when possible (no escaping needed), else a basic string with escapes. */
@@ -236,9 +231,11 @@ async function apply(ctx: AdapterContext, action: 'install' | 'uninstall'): Prom
     if (ctx.scope !== 'global') {
       notes.push('Codex reads a project .codex/config.toml only for trusted projects. Trust this folder in Codex or the servers stay off.');
     }
+    if (ctx.scope !== 'global' && ctx.scope !== 'project') {
+      notes.push('Codex does not separate local from project: --scope local writes the same .codex/config.toml as --scope project.');
+    }
     if (ctx.allowWrites) notes.push('GSM_ALLOW_WRITES=true is set: write tools are enabled for these servers.');
     if (ctx.confirmation !== undefined) notes.push(`GSM_CONFIRMATION=${ctx.confirmation} is set for these servers.`);
-    if (changed) notes.push('Restart Codex to load the servers.');
   } else if (!changed) {
     notes.push('no gsm entries found in this scope; nothing to remove');
   }

@@ -6,6 +6,7 @@
  *
  * Steps:
  *   1. Compile src to dist (tsc -p tsconfig.json), so the helpers the build imports are current.
+ *      Then bundle the installer to gsm.mjs at the repo root (from src/cli/gsm.ts): `node gsm.mjs` works from any folder.
  *   2. Clean the generated parts of each plugin folder. Other files are left alone.
  *   3. Per plugin:
  *      servers/<server>.mjs       bundled from build/entries/<server>.ts (curated, discovery and gateway tools)
@@ -474,6 +475,11 @@ async function main() {
   if (compiled.status !== 0) throw new Error('tsc failed, so dist/ is not current. Fix the compile errors and run the build again.');
   const methods = await import(pathToFileURL(join(ROOT, 'dist', 'core', 'discovery', 'methods.js')).href);
   const dist = await import(pathToFileURL(join(ROOT, 'dist', 'core', 'config.js')).href);
+
+  // The installer at the repo root, gsm.mjs. It is bundled from the same CLI source as each plugin's bin/gsm.mjs. It finds
+  // the plugins in this repository, so `node gsm.mjs ...` works from any folder and does not need dist/.
+  await bundleTo(join(ROOT, 'src', 'cli', 'gsm.ts'), join(ROOT, 'gsm.mjs'));
+  console.log('built gsm.mjs (the installer at the repo root)');
 
   // Every folder under plugins/ must be a product. A stale folder stops the build, so none ships by accident.
   const stale = existsSync(pluginsDir)
