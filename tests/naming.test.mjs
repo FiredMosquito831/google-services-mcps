@@ -14,9 +14,10 @@ const map = JSON.parse(readFileSync(join(here, '..', 'config', 'servers.json'), 
 
 test('budget: the fixed Claude prefix leaves the expected room for each server', () => {
   assert.equal(CLAUDE_TOOL_NAME_MAX, 64);
-  // mcp__plugin_google-cloud_gcloud-compute__ is 41 characters, so 23 remain.
-  assert.equal(nameBudget('google-cloud', 'gcloud-compute'), 23);
-  assert.equal(nameBudget('google-cloud', 'gcloud'), 31);
+  // mcp__plugin_gcloud_gcloud__ is 27 characters, so 37 remain.
+  assert.equal(nameBudget('gcloud', 'gcloud'), 37);
+  // mcp__plugin_gsearch_gsearch__ is 29 characters, so 35 remain.
+  assert.equal(nameBudget('gsearch', 'gsearch'), 35);
 });
 
 test('budget: every server in the map keeps curated and generated names inside its budget', () => {
@@ -34,7 +35,7 @@ test('budget: generated names are unique and never longer than the budget', () =
     resource: ['regionInstanceGroupManagers', `resource${i}`],
     methodName: `operationLongName${i}`,
   }));
-  const budget = nameBudget('google-cloud', 'gcloud-compute');
+  const budget = nameBudget('gcloud', 'gcloud');
   const names = assignToolNames(methods, ['api_methods'], budget);
   assert.equal(new Set(names).size, names.length, 'unique');
   for (const n of names) assert.ok(n.length <= budget, `${n} is longer than ${budget}`);

@@ -1,0 +1,13 @@
+{
+  "gmaps": [
+    "https://www.googleapis.com/auth/cloud-platform",
+    "https://www.googleapis.com/auth/maps-platform.addressvalidation",
+    "https://www.googleapis.com/auth/maps-platform.places",
+    "https://www.googleapis.com/auth/maps-platform.places.autocomplete",
+    "https://www.googleapis.com/auth/maps-platform.places.details",
+    "https://www.googleapis.com/auth/maps-platform.places.getphotomedia",
+    "https://www.googleapis.com/auth/maps-platform.places.nearbysearch",
+    "https://www.googleapis.com/auth/maps-platform.places.textsearch",
+    "https://www.googleapis.com/auth/streetviewpublish"
+  ]
+}

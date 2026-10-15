@@ -1,0 +1,1033 @@
+[
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__api_methods",
+    "kind": "read",
+    "scopes": [],
+    "title": "gclassroom: API methods"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cou_cou_add_cr_a08b",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.addons.teacher"
+    ],
+    "methodId": "classroom.courses.courseWork.addOnAttachments.create",
+    "title": "classroom.courses.courseWork.addOnAttachments.create"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cou_cou_add_cr_e443",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.addons.teacher"
+    ],
+    "methodId": "classroom.courses.courseWorkMaterials.addOnAttachments.create",
+    "title": "classroom.courses.courseWorkMaterials.addOnAttachments.create"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cou_cou_add_de_2e22",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.addons.teacher"
+    ],
+    "methodId": "classroom.courses.courseWorkMaterials.addOnAttachments.delete",
+    "title": "classroom.courses.courseWorkMaterials.addOnAttachments.delete"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cou_cou_add_de_d490",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.addons.teacher"
+    ],
+    "methodId": "classroom.courses.courseWork.addOnAttachments.delete",
+    "title": "classroom.courses.courseWork.addOnAttachments.delete"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cou_cou_add_ge_0da6",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.addons.student",
+      "https://www.googleapis.com/auth/classroom.addons.teacher"
+    ],
+    "methodId": "classroom.courses.courseWork.addOnAttachments.get",
+    "title": "classroom.courses.courseWork.addOnAttachments.get"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cou_cou_add_ge_d005",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.addons.student",
+      "https://www.googleapis.com/auth/classroom.addons.teacher"
+    ],
+    "methodId": "classroom.courses.courseWorkMaterials.addOnAttachments.get",
+    "title": "classroom.courses.courseWorkMaterials.addOnAttachments.get"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cou_cou_add_li_1406",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.addons.student",
+      "https://www.googleapis.com/auth/classroom.addons.teacher"
+    ],
+    "methodId": "classroom.courses.courseWork.addOnAttachments.list",
+    "title": "classroom.courses.courseWork.addOnAttachments.list"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cou_cou_add_li_51f4",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.addons.student",
+      "https://www.googleapis.com/auth/classroom.addons.teacher"
+    ],
+    "methodId": "classroom.courses.courseWorkMaterials.addOnAttachments.list",
+    "title": "classroom.courses.courseWorkMaterials.addOnAttachments.list"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cou_cou_add_pa_3930",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.addons.teacher"
+    ],
+    "methodId": "classroom.courses.courseWorkMaterials.addOnAttachments.patch",
+    "title": "classroom.courses.courseWorkMaterials.addOnAttachments.patch"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cou_cou_add_pa_e09c",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.addons.teacher"
+    ],
+    "methodId": "classroom.courses.courseWork.addOnAttachments.patch",
+    "title": "classroom.courses.courseWork.addOnAttachments.patch"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cou_cou_add_stu_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.addons.student",
+      "https://www.googleapis.com/auth/classroom.addons.teacher",
+      "https://www.googleapis.com/auth/classroom.coursework.me",
+      "https://www.googleapis.com/auth/classroom.coursework.me.readonly",
+      "https://www.googleapis.com/auth/classroom.coursework.students",
+      "https://www.googleapis.com/auth/classroom.coursework.students.readonly",
+      "https://www.googleapis.com/auth/classroom.student-submissions.me.readonly",
+      "https://www.googleapis.com/auth/classroom.student-submissions.students.readonly"
+    ],
+    "methodId": "classroom.courses.courseWork.addOnAttachments.studentSubmissions.get",
+    "title": "classroom.courses.courseWork.addOnAttachments.studentSubmissions.get"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cou_cou_add_stu_pat",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.addons.teacher"
+    ],
+    "methodId": "classroom.courses.courseWork.addOnAttachments.studentSubmissions.patch",
+    "title": "classroom.courses.courseWork.addOnAttachments.studentSubmissions.patch"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cou_pos_add_stu_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.addons.student",
+      "https://www.googleapis.com/auth/classroom.addons.teacher",
+      "https://www.googleapis.com/auth/classroom.coursework.me",
+      "https://www.googleapis.com/auth/classroom.coursework.me.readonly",
+      "https://www.googleapis.com/auth/classroom.coursework.students",
+      "https://www.googleapis.com/auth/classroom.coursework.students.readonly",
+      "https://www.googleapis.com/auth/classroom.student-submissions.me.readonly",
+      "https://www.googleapis.com/auth/classroom.student-submissions.students.readonly"
+    ],
+    "methodId": "classroom.courses.posts.addOnAttachments.studentSubmissions.get",
+    "title": "classroom.courses.posts.addOnAttachments.studentSubmissions.get"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cou_pos_add_stu_pat",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.addons.teacher"
+    ],
+    "methodId": "classroom.courses.posts.addOnAttachments.studentSubmissions.patch",
+    "title": "classroom.courses.posts.addOnAttachments.studentSubmissions.patch"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cour_anno_add_creat",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.addons.teacher"
+    ],
+    "methodId": "classroom.courses.announcements.addOnAttachments.create",
+    "title": "classroom.courses.announcements.addOnAttachments.create"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cour_anno_add_delet",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.addons.teacher"
+    ],
+    "methodId": "classroom.courses.announcements.addOnAttachments.delete",
+    "title": "classroom.courses.announcements.addOnAttachments.delete"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cour_anno_add_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.addons.student",
+      "https://www.googleapis.com/auth/classroom.addons.teacher"
+    ],
+    "methodId": "classroom.courses.announcements.addOnAttachments.list",
+    "title": "classroom.courses.announcements.addOnAttachments.list"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cour_anno_add_o_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.addons.student",
+      "https://www.googleapis.com/auth/classroom.addons.teacher"
+    ],
+    "methodId": "classroom.courses.announcements.addOnAttachments.get",
+    "title": "classroom.courses.announcements.addOnAttachments.get"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cour_anno_add_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.addons.teacher"
+    ],
+    "methodId": "classroom.courses.announcements.addOnAttachments.patch",
+    "title": "classroom.courses.announcements.addOnAttachments.patch"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cour_cour_crea_3302",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.courseworkmaterials"
+    ],
+    "methodId": "classroom.courses.courseWorkMaterials.create",
+    "title": "classroom.courses.courseWorkMaterials.create"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cour_cour_crea_e311",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.coursework.students"
+    ],
+    "methodId": "classroom.courses.courseWork.create",
+    "title": "classroom.courses.courseWork.create"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cour_cour_dele_357c",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.courseworkmaterials"
+    ],
+    "methodId": "classroom.courses.courseWorkMaterials.delete",
+    "title": "classroom.courses.courseWorkMaterials.delete"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cour_cour_dele_a017",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.coursework.students"
+    ],
+    "methodId": "classroom.courses.courseWork.delete",
+    "title": "classroom.courses.courseWork.delete"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cour_cour_get_33a3",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.addons.student",
+      "https://www.googleapis.com/auth/classroom.addons.teacher"
+    ],
+    "methodId": "classroom.courses.courseWorkMaterials.getAddOnContext",
+    "title": "classroom.courses.courseWorkMaterials.getAddOnContext"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cour_cour_get_b5b8",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.addons.student",
+      "https://www.googleapis.com/auth/classroom.addons.teacher"
+    ],
+    "methodId": "classroom.courses.courseWork.getAddOnContext",
+    "title": "classroom.courses.courseWork.getAddOnContext"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cour_cour_list_1590",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.courseworkmaterials",
+      "https://www.googleapis.com/auth/classroom.courseworkmaterials.readonly"
+    ],
+    "methodId": "classroom.courses.courseWorkMaterials.list",
+    "title": "classroom.courses.courseWorkMaterials.list"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cour_cour_list_2b20",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.coursework.me",
+      "https://www.googleapis.com/auth/classroom.coursework.me.readonly",
+      "https://www.googleapis.com/auth/classroom.coursework.students",
+      "https://www.googleapis.com/auth/classroom.coursework.students.readonly"
+    ],
+    "methodId": "classroom.courses.courseWork.list",
+    "title": "classroom.courses.courseWork.list"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cour_cour_patc_480d",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.courseworkmaterials"
+    ],
+    "methodId": "classroom.courses.courseWorkMaterials.patch",
+    "title": "classroom.courses.courseWorkMaterials.patch"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cour_cour_patc_dea2",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.coursework.students"
+    ],
+    "methodId": "classroom.courses.courseWork.patch",
+    "title": "classroom.courses.courseWork.patch"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cour_cour_rubr_crea",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.coursework.students"
+    ],
+    "methodId": "classroom.courses.courseWork.rubrics.create",
+    "title": "classroom.courses.courseWork.rubrics.create"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cour_cour_rubr_dele",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.coursework.students"
+    ],
+    "methodId": "classroom.courses.courseWork.rubrics.delete",
+    "title": "classroom.courses.courseWork.rubrics.delete"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cour_cour_rubr_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.coursework.me",
+      "https://www.googleapis.com/auth/classroom.coursework.me.readonly",
+      "https://www.googleapis.com/auth/classroom.coursework.students",
+      "https://www.googleapis.com/auth/classroom.coursework.students.readonly"
+    ],
+    "methodId": "classroom.courses.courseWork.rubrics.list",
+    "title": "classroom.courses.courseWork.rubrics.list"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cour_cour_rubr_patc",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.coursework.students"
+    ],
+    "methodId": "classroom.courses.courseWork.rubrics.patch",
+    "title": "classroom.courses.courseWork.rubrics.patch"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cour_cour_rubri_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.coursework.me",
+      "https://www.googleapis.com/auth/classroom.coursework.me.readonly",
+      "https://www.googleapis.com/auth/classroom.coursework.students",
+      "https://www.googleapis.com/auth/classroom.coursework.students.readonly"
+    ],
+    "methodId": "classroom.courses.courseWork.rubrics.get",
+    "title": "classroom.courses.courseWork.rubrics.get"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cour_cour_stud_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.coursework.me",
+      "https://www.googleapis.com/auth/classroom.coursework.me.readonly",
+      "https://www.googleapis.com/auth/classroom.coursework.students",
+      "https://www.googleapis.com/auth/classroom.coursework.students.readonly",
+      "https://www.googleapis.com/auth/classroom.student-submissions.me.readonly",
+      "https://www.googleapis.com/auth/classroom.student-submissions.students.readonly"
+    ],
+    "methodId": "classroom.courses.courseWork.studentSubmissions.list",
+    "title": "classroom.courses.courseWork.studentSubmissions.list"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cour_cour_stud_modi",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.coursework.me",
+      "https://www.googleapis.com/auth/classroom.coursework.students"
+    ],
+    "methodId": "classroom.courses.courseWork.studentSubmissions.modifyAttachments",
+    "title": "classroom.courses.courseWork.studentSubmissions.modifyAttachments"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cour_cour_stud_patc",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.coursework.me",
+      "https://www.googleapis.com/auth/classroom.coursework.students"
+    ],
+    "methodId": "classroom.courses.courseWork.studentSubmissions.patch",
+    "title": "classroom.courses.courseWork.studentSubmissions.patch"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cour_cour_stud_recl",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.coursework.me"
+    ],
+    "methodId": "classroom.courses.courseWork.studentSubmissions.reclaim",
+    "title": "classroom.courses.courseWork.studentSubmissions.reclaim"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cour_cour_stud_retu",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.coursework.students"
+    ],
+    "methodId": "classroom.courses.courseWork.studentSubmissions.return",
+    "title": "classroom.courses.courseWork.studentSubmissions.return"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cour_cour_stud_turn",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.coursework.me"
+    ],
+    "methodId": "classroom.courses.courseWork.studentSubmissions.turnIn",
+    "title": "classroom.courses.courseWork.studentSubmissions.turnIn"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cour_cour_stude_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.coursework.me",
+      "https://www.googleapis.com/auth/classroom.coursework.me.readonly",
+      "https://www.googleapis.com/auth/classroom.coursework.students",
+      "https://www.googleapis.com/auth/classroom.coursework.students.readonly",
+      "https://www.googleapis.com/auth/classroom.student-submissions.me.readonly",
+      "https://www.googleapis.com/auth/classroom.student-submissions.students.readonly"
+    ],
+    "methodId": "classroom.courses.courseWork.studentSubmissions.get",
+    "title": "classroom.courses.courseWork.studentSubmissions.get"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cour_cours_get_17da",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.courseworkmaterials",
+      "https://www.googleapis.com/auth/classroom.courseworkmaterials.readonly"
+    ],
+    "methodId": "classroom.courses.courseWorkMaterials.get",
+    "title": "classroom.courses.courseWorkMaterials.get"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cour_cours_get_22e5",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.coursework.me",
+      "https://www.googleapis.com/auth/classroom.coursework.me.readonly",
+      "https://www.googleapis.com/auth/classroom.coursework.students",
+      "https://www.googleapis.com/auth/classroom.coursework.students.readonly"
+    ],
+    "methodId": "classroom.courses.courseWork.get",
+    "title": "classroom.courses.courseWork.get"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cour_post_add_creat",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.addons.teacher"
+    ],
+    "methodId": "classroom.courses.posts.addOnAttachments.create",
+    "title": "classroom.courses.posts.addOnAttachments.create"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cour_post_add_delet",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.addons.teacher"
+    ],
+    "methodId": "classroom.courses.posts.addOnAttachments.delete",
+    "title": "classroom.courses.posts.addOnAttachments.delete"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cour_post_add_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.addons.student",
+      "https://www.googleapis.com/auth/classroom.addons.teacher"
+    ],
+    "methodId": "classroom.courses.posts.addOnAttachments.list",
+    "title": "classroom.courses.posts.addOnAttachments.list"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cour_post_add_o_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.addons.student",
+      "https://www.googleapis.com/auth/classroom.addons.teacher"
+    ],
+    "methodId": "classroom.courses.posts.addOnAttachments.get",
+    "title": "classroom.courses.posts.addOnAttachments.get"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cour_post_add_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.addons.teacher"
+    ],
+    "methodId": "classroom.courses.posts.addOnAttachments.patch",
+    "title": "classroom.courses.posts.addOnAttachments.patch"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cour_stud_crea_3f02",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.profile.emails",
+      "https://www.googleapis.com/auth/classroom.profile.photos",
+      "https://www.googleapis.com/auth/classroom.rosters"
+    ],
+    "methodId": "classroom.courses.students.create",
+    "title": "classroom.courses.students.create"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cour_stud_crea_8b4f",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.rosters"
+    ],
+    "methodId": "classroom.courses.studentGroups.create",
+    "title": "classroom.courses.studentGroups.create"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cour_stud_dele_42c2",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.rosters"
+    ],
+    "methodId": "classroom.courses.students.delete",
+    "title": "classroom.courses.students.delete"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cour_stud_dele_e2fa",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.rosters"
+    ],
+    "methodId": "classroom.courses.studentGroups.delete",
+    "title": "classroom.courses.studentGroups.delete"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cour_stud_list_140b",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.profile.emails",
+      "https://www.googleapis.com/auth/classroom.profile.photos",
+      "https://www.googleapis.com/auth/classroom.rosters",
+      "https://www.googleapis.com/auth/classroom.rosters.readonly"
+    ],
+    "methodId": "classroom.courses.students.list",
+    "title": "classroom.courses.students.list"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cour_stud_list_5754",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.rosters",
+      "https://www.googleapis.com/auth/classroom.rosters.readonly"
+    ],
+    "methodId": "classroom.courses.studentGroups.list",
+    "title": "classroom.courses.studentGroups.list"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cour_stud_stud_crea",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.rosters"
+    ],
+    "methodId": "classroom.courses.studentGroups.studentGroupMembers.create",
+    "title": "classroom.courses.studentGroups.studentGroupMembers.create"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cour_stud_stud_dele",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.rosters"
+    ],
+    "methodId": "classroom.courses.studentGroups.studentGroupMembers.delete",
+    "title": "classroom.courses.studentGroups.studentGroupMembers.delete"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cour_stud_stud_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.rosters",
+      "https://www.googleapis.com/auth/classroom.rosters.readonly"
+    ],
+    "methodId": "classroom.courses.studentGroups.studentGroupMembers.list",
+    "title": "classroom.courses.studentGroups.studentGroupMembers.list"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cours_aliase_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.courses"
+    ],
+    "methodId": "classroom.courses.aliases.create",
+    "title": "classroom.courses.aliases.create"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cours_aliase_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.courses"
+    ],
+    "methodId": "classroom.courses.aliases.delete",
+    "title": "classroom.courses.aliases.delete"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cours_announ_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.announcements"
+    ],
+    "methodId": "classroom.courses.announcements.create",
+    "title": "classroom.courses.announcements.create"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cours_announ_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.announcements"
+    ],
+    "methodId": "classroom.courses.announcements.delete",
+    "title": "classroom.courses.announcements.delete"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cours_announ_get_ad",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.addons.student",
+      "https://www.googleapis.com/auth/classroom.addons.teacher"
+    ],
+    "methodId": "classroom.courses.announcements.getAddOnContext",
+    "title": "classroom.courses.announcements.getAddOnContext"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cours_announ_modify",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.announcements"
+    ],
+    "methodId": "classroom.courses.announcements.modifyAssignees",
+    "title": "classroom.courses.announcements.modifyAssignees"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cours_course_modify",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.coursework.students"
+    ],
+    "methodId": "classroom.courses.courseWork.modifyAssignees",
+    "title": "classroom.courses.courseWork.modifyAssignees"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cours_course_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.coursework.students"
+    ],
+    "methodId": "classroom.courses.courseWork.updateRubric",
+    "title": "classroom.courses.courseWork.updateRubric"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cours_teache_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.profile.emails",
+      "https://www.googleapis.com/auth/classroom.profile.photos",
+      "https://www.googleapis.com/auth/classroom.rosters"
+    ],
+    "methodId": "classroom.courses.teachers.create",
+    "title": "classroom.courses.teachers.create"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cours_teache_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.rosters"
+    ],
+    "methodId": "classroom.courses.teachers.delete",
+    "title": "classroom.courses.teachers.delete"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cours_topics_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.topics"
+    ],
+    "methodId": "classroom.courses.topics.create",
+    "title": "classroom.courses.topics.create"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cours_topics_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.topics"
+    ],
+    "methodId": "classroom.courses.topics.delete",
+    "title": "classroom.courses.topics.delete"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_course_aliases_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.courses",
+      "https://www.googleapis.com/auth/classroom.courses.readonly"
+    ],
+    "methodId": "classroom.courses.aliases.list",
+    "title": "classroom.courses.aliases.list"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_course_announ_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.announcements"
+    ],
+    "methodId": "classroom.courses.announcements.patch",
+    "title": "classroom.courses.announcements.patch"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_course_announc_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.announcements",
+      "https://www.googleapis.com/auth/classroom.announcements.readonly"
+    ],
+    "methodId": "classroom.courses.announcements.list",
+    "title": "classroom.courses.announcements.list"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_course_posts_get_ad",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.addons.student",
+      "https://www.googleapis.com/auth/classroom.addons.teacher"
+    ],
+    "methodId": "classroom.courses.posts.getAddOnContext",
+    "title": "classroom.courses.posts.getAddOnContext"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_course_studen_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.rosters"
+    ],
+    "methodId": "classroom.courses.studentGroups.patch",
+    "title": "classroom.courses.studentGroups.patch"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_course_teacher_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.profile.emails",
+      "https://www.googleapis.com/auth/classroom.profile.photos",
+      "https://www.googleapis.com/auth/classroom.rosters",
+      "https://www.googleapis.com/auth/classroom.rosters.readonly"
+    ],
+    "methodId": "classroom.courses.teachers.list",
+    "title": "classroom.courses.teachers.list"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_course_topics_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.topics"
+    ],
+    "methodId": "classroom.courses.topics.patch",
+    "title": "classroom.courses.topics.patch"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_courses_announc_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.announcements",
+      "https://www.googleapis.com/auth/classroom.announcements.readonly"
+    ],
+    "methodId": "classroom.courses.announcements.get",
+    "title": "classroom.courses.announcements.get"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_courses_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.courses"
+    ],
+    "methodId": "classroom.courses.create",
+    "title": "classroom.courses.create"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_courses_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.courses"
+    ],
+    "methodId": "classroom.courses.delete",
+    "title": "classroom.courses.delete"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_courses_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.courses",
+      "https://www.googleapis.com/auth/classroom.courses.readonly"
+    ],
+    "methodId": "classroom.courses.get",
+    "title": "classroom.courses.get"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_courses_get_grading",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.courses",
+      "https://www.googleapis.com/auth/classroom.courses.readonly"
+    ],
+    "methodId": "classroom.courses.getGradingPeriodSettings",
+    "title": "classroom.courses.getGradingPeriodSettings"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_courses_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.courses",
+      "https://www.googleapis.com/auth/classroom.courses.readonly"
+    ],
+    "methodId": "classroom.courses.list",
+    "title": "classroom.courses.list"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_courses_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.courses"
+    ],
+    "methodId": "classroom.courses.patch",
+    "title": "classroom.courses.patch"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_courses_student_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.profile.emails",
+      "https://www.googleapis.com/auth/classroom.profile.photos",
+      "https://www.googleapis.com/auth/classroom.rosters",
+      "https://www.googleapis.com/auth/classroom.rosters.readonly"
+    ],
+    "methodId": "classroom.courses.students.get",
+    "title": "classroom.courses.students.get"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_courses_teacher_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.profile.emails",
+      "https://www.googleapis.com/auth/classroom.profile.photos",
+      "https://www.googleapis.com/auth/classroom.rosters",
+      "https://www.googleapis.com/auth/classroom.rosters.readonly"
+    ],
+    "methodId": "classroom.courses.teachers.get",
+    "title": "classroom.courses.teachers.get"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_courses_topics_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.topics",
+      "https://www.googleapis.com/auth/classroom.topics.readonly"
+    ],
+    "methodId": "classroom.courses.topics.get",
+    "title": "classroom.courses.topics.get"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_courses_topics_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.topics",
+      "https://www.googleapis.com/auth/classroom.topics.readonly"
+    ],
+    "methodId": "classroom.courses.topics.list",
+    "title": "classroom.courses.topics.list"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_courses_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.courses"
+    ],
+    "methodId": "classroom.courses.update",
+    "title": "classroom.courses.update"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_courses_update_grad",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.courses"
+    ],
+    "methodId": "classroom.courses.updateGradingPeriodSettings",
+    "title": "classroom.courses.updateGradingPeriodSettings"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_invitations_accept",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.rosters"
+    ],
+    "methodId": "classroom.invitations.accept",
+    "title": "classroom.invitations.accept"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_invitations_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.rosters"
+    ],
+    "methodId": "classroom.invitations.create",
+    "title": "classroom.invitations.create"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_invitations_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.rosters"
+    ],
+    "methodId": "classroom.invitations.delete",
+    "title": "classroom.invitations.delete"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_invitations_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.rosters",
+      "https://www.googleapis.com/auth/classroom.rosters.readonly"
+    ],
+    "methodId": "classroom.invitations.get",
+    "title": "classroom.invitations.get"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_invitations_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.rosters",
+      "https://www.googleapis.com/auth/classroom.rosters.readonly"
+    ],
+    "methodId": "classroom.invitations.list",
+    "title": "classroom.invitations.list"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_registration_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.push-notifications"
+    ],
+    "methodId": "classroom.registrations.create",
+    "title": "classroom.registrations.create"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_registration_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.push-notifications"
+    ],
+    "methodId": "classroom.registrations.delete",
+    "title": "classroom.registrations.delete"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_user_guar_list_8842",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.guardianlinks.me.readonly",
+      "https://www.googleapis.com/auth/classroom.guardianlinks.students",
+      "https://www.googleapis.com/auth/classroom.guardianlinks.students.readonly"
+    ],
+    "methodId": "classroom.userProfiles.guardians.list",
+    "title": "classroom.userProfiles.guardians.list"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_user_guar_list_bc1c",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.guardianlinks.students",
+      "https://www.googleapis.com/auth/classroom.guardianlinks.students.readonly"
+    ],
+    "methodId": "classroom.userProfiles.guardianInvitations.list",
+    "title": "classroom.userProfiles.guardianInvitations.list"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_user_guard_get_8b7f",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.guardianlinks.me.readonly",
+      "https://www.googleapis.com/auth/classroom.guardianlinks.students",
+      "https://www.googleapis.com/auth/classroom.guardianlinks.students.readonly"
+    ],
+    "methodId": "classroom.userProfiles.guardians.get",
+    "title": "classroom.userProfiles.guardians.get"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_user_guard_get_ed3d",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.guardianlinks.students",
+      "https://www.googleapis.com/auth/classroom.guardianlinks.students.readonly"
+    ],
+    "methodId": "classroom.userProfiles.guardianInvitations.get",
+    "title": "classroom.userProfiles.guardianInvitations.get"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_user_guardi_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.guardianlinks.students"
+    ],
+    "methodId": "classroom.userProfiles.guardianInvitations.create",
+    "title": "classroom.userProfiles.guardianInvitations.create"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_user_guardi_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.guardianlinks.students"
+    ],
+    "methodId": "classroom.userProfiles.guardians.delete",
+    "title": "classroom.userProfiles.guardians.delete"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_user_p_guardi_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.guardianlinks.students"
+    ],
+    "methodId": "classroom.userProfiles.guardianInvitations.patch",
+    "title": "classroom.userProfiles.guardianInvitations.patch"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_user_profiles_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.profile.emails",
+      "https://www.googleapis.com/auth/classroom.profile.photos",
+      "https://www.googleapis.com/auth/classroom.rosters",
+      "https://www.googleapis.com/auth/classroom.rosters.readonly"
+    ],
+    "methodId": "classroom.userProfiles.get",
+    "title": "classroom.userProfiles.get"
+  }
+]

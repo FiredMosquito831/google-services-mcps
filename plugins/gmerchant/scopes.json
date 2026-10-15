@@ -1,0 +1,6 @@
+{
+  "gmerchant": [
+    "https://www.googleapis.com/auth/content",
+    "https://www.googleapis.com/auth/manufacturercenter"
+  ]
+}

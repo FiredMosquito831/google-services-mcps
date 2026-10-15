@@ -1,0 +1,120 @@
+{
+  "generatedAt": "2026-10-15T12:52:30.872Z",
+  "apiCount": 2,
+  "methodCount": 11,
+  "apis": [
+    {
+      "name": "developerknowledge",
+      "version": "v1alpha",
+      "preferred": false,
+      "title": "Developer Knowledge API",
+      "description": "The Developer Knowledge API provides access to Google's developer knowledge.",
+      "documentationLink": "https://developers.google.com/knowledge",
+      "labels": [],
+      "deprecated": false,
+      "rootUrl": "https://developerknowledge.googleapis.com/",
+      "servicePath": "",
+      "methods": [
+        [
+          "developerknowledge.documents.batchGet",
+          "GET",
+          "v1alpha/documents:batchGet",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "developerknowledge.documents.get",
+          "GET",
+          "v1alpha/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "developerknowledge.documents.searchDocumentChunks",
+          "GET",
+          "v1alpha/documents:searchDocumentChunks",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "developerknowledge.answerQuery",
+          "POST",
+          "v1alpha:answerQuery",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ]
+      ]
+    },
+    {
+      "name": "safebrowsing",
+      "version": "v4",
+      "preferred": false,
+      "title": "Safe Browsing API",
+      "description": "Enables client applications to check web resources (most commonly URLs) against Google-generated lists of unsafe web resources. The Safe Browsing APIs are for n",
+      "documentationLink": "https://developers.google.com/safe-browsing/",
+      "labels": [],
+      "deprecated": false,
+      "rootUrl": "https://safebrowsing.googleapis.com/",
+      "servicePath": "",
+      "methods": [
+        [
+          "safebrowsing.threatListUpdates.fetch",
+          "POST",
+          "v4/threatListUpdates:fetch",
+          [],
+          ""
+        ],
+        [
+          "safebrowsing.fullHashes.find",
+          "POST",
+          "v4/fullHashes:find",
+          [],
+          ""
+        ],
+        [
+          "safebrowsing.threatHits.create",
+          "POST",
+          "v4/threatHits",
+          [],
+          ""
+        ],
+        [
+          "safebrowsing.threatMatches.find",
+          "POST",
+          "v4/threatMatches:find",
+          [],
+          ""
+        ],
+        [
+          "safebrowsing.threatLists.list",
+          "GET",
+          "v4/threatLists",
+          [],
+          ""
+        ],
+        [
+          "safebrowsing.encodedFullHashes.get",
+          "GET",
+          "v4/encodedFullHashes/{encodedRequest}",
+          [],
+          ""
+        ],
+        [
+          "safebrowsing.encodedUpdates.get",
+          "GET",
+          "v4/encodedUpdates/{encodedRequest}",
+          [],
+          ""
+        ]
+      ]
+    }
+  ]
+}

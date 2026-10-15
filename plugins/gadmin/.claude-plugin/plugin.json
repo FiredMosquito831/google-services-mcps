@@ -1,0 +1,52 @@
+{
+  "name": "gadmin",
+  "displayName": "Workspace Admin",
+  "version": "0.1.0",
+  "description": "Google Workspace administration: Cloud Identity, Chrome management and policy, Groups Settings, licensing, reports, alerts, Vault, reseller and Cloud Search admin.",
+  "author": {
+    "name": "FiredMosquito831"
+  },
+  "keywords": [
+    "google",
+    "mcp",
+    "gadmin",
+    "workspace-admin"
+  ],
+  "userConfig": {
+    "allow_writes": {
+      "type": "boolean",
+      "title": "Allow write tools",
+      "description": "Modifying and deleting tools are listed only when this is on, and every change still asks first unless confirmation is off.",
+      "default": false
+    },
+    "confirmation": {
+      "type": "string",
+      "title": "Confirm before changes",
+      "description": "every-change asks before any change or delete (recommended). destructive-only asks only before deleting or sending. off asks for nothing; deny rules still apply. Change it here at any time.",
+      "options": [
+        "every-change",
+        "destructive-only",
+        "off"
+      ],
+      "default": "every-change"
+    },
+    "token_dir": {
+      "type": "string",
+      "title": "Token directory (optional)",
+      "description": "Where OAuth tokens are stored. Leave empty for ~/.google-services-mcps.",
+      "required": false
+    },
+    "admin_subject": {
+      "type": "string",
+      "title": "Workspace super admin email (admin tools only)",
+      "description": "A super admin in your domain. The admin server impersonates this account through domain-wide delegation.",
+      "required": false
+    },
+    "service_account_key_file": {
+      "type": "file",
+      "title": "Service account key file (admin tools only)",
+      "description": "JSON key of the service account that has domain-wide delegation for the admin scopes.",
+      "required": false
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "developerknowledge.answerQuery": "write",
+  "developerknowledge.documents.batchGet": "read",
+  "developerknowledge.documents.get": "read",
+  "developerknowledge.documents.searchDocumentChunks": "read",
+  "safebrowsing.encodedFullHashes.get": "read",
+  "safebrowsing.encodedUpdates.get": "read",
+  "safebrowsing.fullHashes.find": "write",
+  "safebrowsing.threatHits.create": "write",
+  "safebrowsing.threatListUpdates.fetch": "read",
+  "safebrowsing.threatLists.list": "read",
+  "safebrowsing.threatMatches.find": "write"
+}

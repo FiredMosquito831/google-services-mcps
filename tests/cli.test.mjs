@@ -401,13 +401,14 @@ test('args: help and unknown commands', () => {
 
 test('args: install flags are validated', () => {
   const resolvePath = (p) => p;
+  const ids = ['gcloud', 'gsc'];
   const ok = parseCliArgs(['install', '--agent', 'codex', '--plugin', 'all', '--scope', 'global', '--allow-writes', '--dry-run']);
-  const parsed = parseInstallArgs(ok.values, 'install', resolvePath);
+  const parsed = parseInstallArgs(ok.values, 'install', resolvePath, ids);
   assert.equal(parsed.agent, 'codex');
   assert.equal(parsed.allowWrites, true);
   assert.equal(parsed.dryRun, true);
 
-  const bad = (argv) => () => parseInstallArgs(parseCliArgs(argv).values, argv[0], resolvePath);
+  const bad = (argv) => () => parseInstallArgs(parseCliArgs(argv).values, argv[0], resolvePath, ids);
   assert.throws(bad(['install', '--agent', 'codex', '--plugin', 'all', '--scope', 'folder']), /needs --path/);
   assert.throws(bad(['install', '--agent', 'codex', '--plugin', 'all', '--scope', 'global', '--path', '/x']), /only valid with --scope folder/);
   assert.throws(bad(['install', '--agent', 'claude', '--plugin', 'all', '--scope', 'global', '--home', '/h']), /does not apply to claude/);
@@ -418,11 +419,11 @@ test('args: install flags are validated', () => {
 
 // ---------- paths ----------
 
-test('paths: repo layout uses config/servers.json, and plugin layout uses servers.json beside bin/', () =>
+test('paths: repo layout uses config/products.json, and plugin layout uses servers.json beside bin/', () =>
   withTemp((p) => {
     const repo = join(p.root, 'repo');
     mkdirSync(join(repo, 'config'), { recursive: true });
-    writeFileSync(join(repo, 'config', 'servers.json'), '{}');
+    writeFileSync(join(repo, 'config', 'products.json'), '{}');
     mkdirSync(join(repo, 'dist', 'cli'), { recursive: true });
     const repoRoots = findRoots(pathToFileURL(join(repo, 'dist', 'cli', 'gsm.js')).href);
     assert.equal(repoRoots.layout, 'repo');
@@ -508,8 +509,8 @@ test('install: --servers must belong to the selected plugins, and unknown names 
   assert.deepEqual(selectServers(FAKE_REGISTRY, undefined, ['google-search']).map((s) => s.name), ['gsc']);
 });
 
-test('install: a plugin folder installs only its own plugin', () => {
-  const pluginRoots = { layout: 'plugin', root: join(tmpdir(), 'p', 'google-cloud'), mapFile: 'x' };
-  assert.deepEqual(selectPlugins('all', pluginRoots, ['google-cloud', 'google-search']), ['google-cloud']);
-  assert.throws(() => selectPlugins('google-search', pluginRoots, []), /bundles only google-cloud/);
+test('install: "all" expands to the product ids given, and a list is used as it is', () => {
+  // A plugin folder passes only the products of its own servers.json, so validation keeps it to its own product.
+  assert.deepEqual(selectPlugins('all', ['gcloud', 'gsc']), ['gcloud', 'gsc']);
+  assert.deepEqual(selectPlugins(['gsc'], ['gcloud', 'gsc']), ['gsc']);
 });

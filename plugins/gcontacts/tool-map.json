@@ -1,0 +1,1120 @@
+[
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__api_call",
+    "kind": "dynamic",
+    "scopes": [],
+    "title": "Call an API method"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__api_describe",
+    "kind": "read",
+    "scopes": [],
+    "title": "Describe an API method"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__api_methods",
+    "kind": "read",
+    "scopes": [],
+    "title": "gcontacts: API methods"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__api_search",
+    "kind": "read",
+    "scopes": [],
+    "title": "Search API methods"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__dataportab_access_type_check",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/dataportability.alerts.subscriptions",
+      "https://www.googleapis.com/auth/dataportability.chrome.autofill",
+      "https://www.googleapis.com/auth/dataportability.chrome.bookmarks",
+      "https://www.googleapis.com/auth/dataportability.chrome.dictionary",
+      "https://www.googleapis.com/auth/dataportability.chrome.extensions",
+      "https://www.googleapis.com/auth/dataportability.chrome.history",
+      "https://www.googleapis.com/auth/dataportability.chrome.reading_list",
+      "https://www.googleapis.com/auth/dataportability.chrome.settings",
+      "https://www.googleapis.com/auth/dataportability.discover.follows",
+      "https://www.googleapis.com/auth/dataportability.discover.likes",
+      "https://www.googleapis.com/auth/dataportability.discover.not_interested",
+      "https://www.googleapis.com/auth/dataportability.maps.aliased_places",
+      "https://www.googleapis.com/auth/dataportability.maps.commute_routes",
+      "https://www.googleapis.com/auth/dataportability.maps.commute_settings",
+      "https://www.googleapis.com/auth/dataportability.maps.ev_profile",
+      "https://www.googleapis.com/auth/dataportability.maps.factual_contributions",
+      "https://www.googleapis.com/auth/dataportability.maps.offering_contributions",
+      "https://www.googleapis.com/auth/dataportability.maps.photos_videos",
+      "https://www.googleapis.com/auth/dataportability.maps.questions_answers",
+      "https://www.googleapis.com/auth/dataportability.maps.reviews",
+      "https://www.googleapis.com/auth/dataportability.maps.starred_places",
+      "https://www.googleapis.com/auth/dataportability.maps.vehicle_profile",
+      "https://www.googleapis.com/auth/dataportability.myactivity.maps",
+      "https://www.googleapis.com/auth/dataportability.myactivity.myadcenter",
+      "https://www.googleapis.com/auth/dataportability.myactivity.play",
+      "https://www.googleapis.com/auth/dataportability.myactivity.search",
+      "https://www.googleapis.com/auth/dataportability.myactivity.shopping",
+      "https://www.googleapis.com/auth/dataportability.myactivity.youtube",
+      "https://www.googleapis.com/auth/dataportability.mymaps.maps",
+      "https://www.googleapis.com/auth/dataportability.nest.camera_event",
+      "https://www.googleapis.com/auth/dataportability.nest.camera_feature",
+      "https://www.googleapis.com/auth/dataportability.nest.camera_video",
+      "https://www.googleapis.com/auth/dataportability.nest.store",
+      "https://www.googleapis.com/auth/dataportability.nest.user",
+      "https://www.googleapis.com/auth/dataportability.order_reserve.purchases_reservations",
+      "https://www.googleapis.com/auth/dataportability.pixel.device_data",
+      "https://www.googleapis.com/auth/dataportability.play.devices",
+      "https://www.googleapis.com/auth/dataportability.play.grouping",
+      "https://www.googleapis.com/auth/dataportability.play.installs",
+      "https://www.googleapis.com/auth/dataportability.play.library",
+      "https://www.googleapis.com/auth/dataportability.play.playpoints",
+      "https://www.googleapis.com/auth/dataportability.play.promotions",
+      "https://www.googleapis.com/auth/dataportability.play.purchases",
+      "https://www.googleapis.com/auth/dataportability.play.redemptions",
+      "https://www.googleapis.com/auth/dataportability.play.subscriptions",
+      "https://www.googleapis.com/auth/dataportability.play.usersettings",
+      "https://www.googleapis.com/auth/dataportability.saved.collections",
+      "https://www.googleapis.com/auth/dataportability.search_ugc.comments",
+      "https://www.googleapis.com/auth/dataportability.search_ugc.media.reviews_and_stars",
+      "https://www.googleapis.com/auth/dataportability.search_ugc.media.streaming_video_providers",
+      "https://www.googleapis.com/auth/dataportability.search_ugc.media.thumbs",
+      "https://www.googleapis.com/auth/dataportability.search_ugc.media.watched",
+      "https://www.googleapis.com/auth/dataportability.searchnotifications.settings",
+      "https://www.googleapis.com/auth/dataportability.searchnotifications.subscriptions",
+      "https://www.googleapis.com/auth/dataportability.shopping.addresses",
+      "https://www.googleapis.com/auth/dataportability.shopping.reviews",
+      "https://www.googleapis.com/auth/dataportability.streetview.imagery",
+      "https://www.googleapis.com/auth/dataportability.youtube.channel",
+      "https://www.googleapis.com/auth/dataportability.youtube.clips",
+      "https://www.googleapis.com/auth/dataportability.youtube.comments",
+      "https://www.googleapis.com/auth/dataportability.youtube.conversations",
+      "https://www.googleapis.com/auth/dataportability.youtube.live_chat",
+      "https://www.googleapis.com/auth/dataportability.youtube.music",
+      "https://www.googleapis.com/auth/dataportability.youtube.playable",
+      "https://www.googleapis.com/auth/dataportability.youtube.posts",
+      "https://www.googleapis.com/auth/dataportability.youtube.private_playlists",
+      "https://www.googleapis.com/auth/dataportability.youtube.private_videos",
+      "https://www.googleapis.com/auth/dataportability.youtube.public_playlists",
+      "https://www.googleapis.com/auth/dataportability.youtube.public_videos",
+      "https://www.googleapis.com/auth/dataportability.youtube.shopping",
+      "https://www.googleapis.com/auth/dataportability.youtube.subscriptions",
+      "https://www.googleapis.com/auth/dataportability.youtube.unlisted_playlists",
+      "https://www.googleapis.com/auth/dataportability.youtube.unlisted_videos"
+    ],
+    "methodId": "dataportability.accessType.check",
+    "title": "dataportability.accessType.check"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__dataportab_archive_j_get_portab",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/dataportability.alerts.subscriptions",
+      "https://www.googleapis.com/auth/dataportability.chrome.autofill",
+      "https://www.googleapis.com/auth/dataportability.chrome.bookmarks",
+      "https://www.googleapis.com/auth/dataportability.chrome.dictionary",
+      "https://www.googleapis.com/auth/dataportability.chrome.extensions",
+      "https://www.googleapis.com/auth/dataportability.chrome.history",
+      "https://www.googleapis.com/auth/dataportability.chrome.reading_list",
+      "https://www.googleapis.com/auth/dataportability.chrome.settings",
+      "https://www.googleapis.com/auth/dataportability.discover.follows",
+      "https://www.googleapis.com/auth/dataportability.discover.likes",
+      "https://www.googleapis.com/auth/dataportability.discover.not_interested",
+      "https://www.googleapis.com/auth/dataportability.maps.aliased_places",
+      "https://www.googleapis.com/auth/dataportability.maps.commute_routes",
+      "https://www.googleapis.com/auth/dataportability.maps.commute_settings",
+      "https://www.googleapis.com/auth/dataportability.maps.ev_profile",
+      "https://www.googleapis.com/auth/dataportability.maps.factual_contributions",
+      "https://www.googleapis.com/auth/dataportability.maps.offering_contributions",
+      "https://www.googleapis.com/auth/dataportability.maps.photos_videos",
+      "https://www.googleapis.com/auth/dataportability.maps.questions_answers",
+      "https://www.googleapis.com/auth/dataportability.maps.reviews",
+      "https://www.googleapis.com/auth/dataportability.maps.starred_places",
+      "https://www.googleapis.com/auth/dataportability.maps.vehicle_profile",
+      "https://www.googleapis.com/auth/dataportability.myactivity.maps",
+      "https://www.googleapis.com/auth/dataportability.myactivity.myadcenter",
+      "https://www.googleapis.com/auth/dataportability.myactivity.play",
+      "https://www.googleapis.com/auth/dataportability.myactivity.search",
+      "https://www.googleapis.com/auth/dataportability.myactivity.shopping",
+      "https://www.googleapis.com/auth/dataportability.myactivity.youtube",
+      "https://www.googleapis.com/auth/dataportability.mymaps.maps",
+      "https://www.googleapis.com/auth/dataportability.nest.camera_event",
+      "https://www.googleapis.com/auth/dataportability.nest.camera_feature",
+      "https://www.googleapis.com/auth/dataportability.nest.camera_video",
+      "https://www.googleapis.com/auth/dataportability.nest.store",
+      "https://www.googleapis.com/auth/dataportability.nest.user",
+      "https://www.googleapis.com/auth/dataportability.order_reserve.purchases_reservations",
+      "https://www.googleapis.com/auth/dataportability.pixel.device_data",
+      "https://www.googleapis.com/auth/dataportability.play.devices",
+      "https://www.googleapis.com/auth/dataportability.play.grouping",
+      "https://www.googleapis.com/auth/dataportability.play.installs",
+      "https://www.googleapis.com/auth/dataportability.play.library",
+      "https://www.googleapis.com/auth/dataportability.play.playpoints",
+      "https://www.googleapis.com/auth/dataportability.play.promotions",
+      "https://www.googleapis.com/auth/dataportability.play.purchases",
+      "https://www.googleapis.com/auth/dataportability.play.redemptions",
+      "https://www.googleapis.com/auth/dataportability.play.subscriptions",
+      "https://www.googleapis.com/auth/dataportability.play.usersettings",
+      "https://www.googleapis.com/auth/dataportability.saved.collections",
+      "https://www.googleapis.com/auth/dataportability.search_ugc.comments",
+      "https://www.googleapis.com/auth/dataportability.search_ugc.media.reviews_and_stars",
+      "https://www.googleapis.com/auth/dataportability.search_ugc.media.streaming_video_providers",
+      "https://www.googleapis.com/auth/dataportability.search_ugc.media.thumbs",
+      "https://www.googleapis.com/auth/dataportability.search_ugc.media.watched",
+      "https://www.googleapis.com/auth/dataportability.searchnotifications.settings",
+      "https://www.googleapis.com/auth/dataportability.searchnotifications.subscriptions",
+      "https://www.googleapis.com/auth/dataportability.shopping.addresses",
+      "https://www.googleapis.com/auth/dataportability.shopping.reviews",
+      "https://www.googleapis.com/auth/dataportability.streetview.imagery",
+      "https://www.googleapis.com/auth/dataportability.youtube.channel",
+      "https://www.googleapis.com/auth/dataportability.youtube.clips",
+      "https://www.googleapis.com/auth/dataportability.youtube.comments",
+      "https://www.googleapis.com/auth/dataportability.youtube.conversations",
+      "https://www.googleapis.com/auth/dataportability.youtube.live_chat",
+      "https://www.googleapis.com/auth/dataportability.youtube.music",
+      "https://www.googleapis.com/auth/dataportability.youtube.playable",
+      "https://www.googleapis.com/auth/dataportability.youtube.posts",
+      "https://www.googleapis.com/auth/dataportability.youtube.private_playlists",
+      "https://www.googleapis.com/auth/dataportability.youtube.private_videos",
+      "https://www.googleapis.com/auth/dataportability.youtube.public_playlists",
+      "https://www.googleapis.com/auth/dataportability.youtube.public_videos",
+      "https://www.googleapis.com/auth/dataportability.youtube.shopping",
+      "https://www.googleapis.com/auth/dataportability.youtube.subscriptions",
+      "https://www.googleapis.com/auth/dataportability.youtube.unlisted_playlists",
+      "https://www.googleapis.com/auth/dataportability.youtube.unlisted_videos"
+    ],
+    "methodId": "dataportability.archiveJobs.getPortabilityArchiveState",
+    "title": "dataportability.archiveJobs.getPortabilityArchiveState"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__dataportab_archive_jobs_cancel",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/dataportability.alerts.subscriptions",
+      "https://www.googleapis.com/auth/dataportability.chrome.autofill",
+      "https://www.googleapis.com/auth/dataportability.chrome.bookmarks",
+      "https://www.googleapis.com/auth/dataportability.chrome.dictionary",
+      "https://www.googleapis.com/auth/dataportability.chrome.extensions",
+      "https://www.googleapis.com/auth/dataportability.chrome.history",
+      "https://www.googleapis.com/auth/dataportability.chrome.reading_list",
+      "https://www.googleapis.com/auth/dataportability.chrome.settings",
+      "https://www.googleapis.com/auth/dataportability.discover.follows",
+      "https://www.googleapis.com/auth/dataportability.discover.likes",
+      "https://www.googleapis.com/auth/dataportability.discover.not_interested",
+      "https://www.googleapis.com/auth/dataportability.maps.aliased_places",
+      "https://www.googleapis.com/auth/dataportability.maps.commute_routes",
+      "https://www.googleapis.com/auth/dataportability.maps.commute_settings",
+      "https://www.googleapis.com/auth/dataportability.maps.ev_profile",
+      "https://www.googleapis.com/auth/dataportability.maps.factual_contributions",
+      "https://www.googleapis.com/auth/dataportability.maps.offering_contributions",
+      "https://www.googleapis.com/auth/dataportability.maps.photos_videos",
+      "https://www.googleapis.com/auth/dataportability.maps.questions_answers",
+      "https://www.googleapis.com/auth/dataportability.maps.reviews",
+      "https://www.googleapis.com/auth/dataportability.maps.starred_places",
+      "https://www.googleapis.com/auth/dataportability.maps.vehicle_profile",
+      "https://www.googleapis.com/auth/dataportability.myactivity.maps",
+      "https://www.googleapis.com/auth/dataportability.myactivity.myadcenter",
+      "https://www.googleapis.com/auth/dataportability.myactivity.play",
+      "https://www.googleapis.com/auth/dataportability.myactivity.search",
+      "https://www.googleapis.com/auth/dataportability.myactivity.shopping",
+      "https://www.googleapis.com/auth/dataportability.myactivity.youtube",
+      "https://www.googleapis.com/auth/dataportability.mymaps.maps",
+      "https://www.googleapis.com/auth/dataportability.nest.camera_event",
+      "https://www.googleapis.com/auth/dataportability.nest.camera_feature",
+      "https://www.googleapis.com/auth/dataportability.nest.camera_video",
+      "https://www.googleapis.com/auth/dataportability.nest.store",
+      "https://www.googleapis.com/auth/dataportability.nest.user",
+      "https://www.googleapis.com/auth/dataportability.order_reserve.purchases_reservations",
+      "https://www.googleapis.com/auth/dataportability.pixel.device_data",
+      "https://www.googleapis.com/auth/dataportability.play.devices",
+      "https://www.googleapis.com/auth/dataportability.play.grouping",
+      "https://www.googleapis.com/auth/dataportability.play.installs",
+      "https://www.googleapis.com/auth/dataportability.play.library",
+      "https://www.googleapis.com/auth/dataportability.play.playpoints",
+      "https://www.googleapis.com/auth/dataportability.play.promotions",
+      "https://www.googleapis.com/auth/dataportability.play.purchases",
+      "https://www.googleapis.com/auth/dataportability.play.redemptions",
+      "https://www.googleapis.com/auth/dataportability.play.subscriptions",
+      "https://www.googleapis.com/auth/dataportability.play.usersettings",
+      "https://www.googleapis.com/auth/dataportability.saved.collections",
+      "https://www.googleapis.com/auth/dataportability.search_ugc.comments",
+      "https://www.googleapis.com/auth/dataportability.search_ugc.media.reviews_and_stars",
+      "https://www.googleapis.com/auth/dataportability.search_ugc.media.streaming_video_providers",
+      "https://www.googleapis.com/auth/dataportability.search_ugc.media.thumbs",
+      "https://www.googleapis.com/auth/dataportability.search_ugc.media.watched",
+      "https://www.googleapis.com/auth/dataportability.searchnotifications.settings",
+      "https://www.googleapis.com/auth/dataportability.searchnotifications.subscriptions",
+      "https://www.googleapis.com/auth/dataportability.shopping.addresses",
+      "https://www.googleapis.com/auth/dataportability.shopping.reviews",
+      "https://www.googleapis.com/auth/dataportability.streetview.imagery",
+      "https://www.googleapis.com/auth/dataportability.youtube.channel",
+      "https://www.googleapis.com/auth/dataportability.youtube.clips",
+      "https://www.googleapis.com/auth/dataportability.youtube.comments",
+      "https://www.googleapis.com/auth/dataportability.youtube.conversations",
+      "https://www.googleapis.com/auth/dataportability.youtube.live_chat",
+      "https://www.googleapis.com/auth/dataportability.youtube.music",
+      "https://www.googleapis.com/auth/dataportability.youtube.playable",
+      "https://www.googleapis.com/auth/dataportability.youtube.posts",
+      "https://www.googleapis.com/auth/dataportability.youtube.private_playlists",
+      "https://www.googleapis.com/auth/dataportability.youtube.private_videos",
+      "https://www.googleapis.com/auth/dataportability.youtube.public_playlists",
+      "https://www.googleapis.com/auth/dataportability.youtube.public_videos",
+      "https://www.googleapis.com/auth/dataportability.youtube.shopping",
+      "https://www.googleapis.com/auth/dataportability.youtube.subscriptions",
+      "https://www.googleapis.com/auth/dataportability.youtube.unlisted_playlists",
+      "https://www.googleapis.com/auth/dataportability.youtube.unlisted_videos"
+    ],
+    "methodId": "dataportability.archiveJobs.cancel",
+    "title": "dataportability.archiveJobs.cancel"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__dataportab_archive_jobs_retry",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/dataportability.alerts.subscriptions",
+      "https://www.googleapis.com/auth/dataportability.chrome.autofill",
+      "https://www.googleapis.com/auth/dataportability.chrome.bookmarks",
+      "https://www.googleapis.com/auth/dataportability.chrome.dictionary",
+      "https://www.googleapis.com/auth/dataportability.chrome.extensions",
+      "https://www.googleapis.com/auth/dataportability.chrome.history",
+      "https://www.googleapis.com/auth/dataportability.chrome.reading_list",
+      "https://www.googleapis.com/auth/dataportability.chrome.settings",
+      "https://www.googleapis.com/auth/dataportability.discover.follows",
+      "https://www.googleapis.com/auth/dataportability.discover.likes",
+      "https://www.googleapis.com/auth/dataportability.discover.not_interested",
+      "https://www.googleapis.com/auth/dataportability.maps.aliased_places",
+      "https://www.googleapis.com/auth/dataportability.maps.commute_routes",
+      "https://www.googleapis.com/auth/dataportability.maps.commute_settings",
+      "https://www.googleapis.com/auth/dataportability.maps.ev_profile",
+      "https://www.googleapis.com/auth/dataportability.maps.factual_contributions",
+      "https://www.googleapis.com/auth/dataportability.maps.offering_contributions",
+      "https://www.googleapis.com/auth/dataportability.maps.photos_videos",
+      "https://www.googleapis.com/auth/dataportability.maps.questions_answers",
+      "https://www.googleapis.com/auth/dataportability.maps.reviews",
+      "https://www.googleapis.com/auth/dataportability.maps.starred_places",
+      "https://www.googleapis.com/auth/dataportability.maps.vehicle_profile",
+      "https://www.googleapis.com/auth/dataportability.myactivity.maps",
+      "https://www.googleapis.com/auth/dataportability.myactivity.myadcenter",
+      "https://www.googleapis.com/auth/dataportability.myactivity.play",
+      "https://www.googleapis.com/auth/dataportability.myactivity.search",
+      "https://www.googleapis.com/auth/dataportability.myactivity.shopping",
+      "https://www.googleapis.com/auth/dataportability.myactivity.youtube",
+      "https://www.googleapis.com/auth/dataportability.mymaps.maps",
+      "https://www.googleapis.com/auth/dataportability.nest.camera_event",
+      "https://www.googleapis.com/auth/dataportability.nest.camera_feature",
+      "https://www.googleapis.com/auth/dataportability.nest.camera_video",
+      "https://www.googleapis.com/auth/dataportability.nest.store",
+      "https://www.googleapis.com/auth/dataportability.nest.user",
+      "https://www.googleapis.com/auth/dataportability.order_reserve.purchases_reservations",
+      "https://www.googleapis.com/auth/dataportability.pixel.device_data",
+      "https://www.googleapis.com/auth/dataportability.play.devices",
+      "https://www.googleapis.com/auth/dataportability.play.grouping",
+      "https://www.googleapis.com/auth/dataportability.play.installs",
+      "https://www.googleapis.com/auth/dataportability.play.library",
+      "https://www.googleapis.com/auth/dataportability.play.playpoints",
+      "https://www.googleapis.com/auth/dataportability.play.promotions",
+      "https://www.googleapis.com/auth/dataportability.play.purchases",
+      "https://www.googleapis.com/auth/dataportability.play.redemptions",
+      "https://www.googleapis.com/auth/dataportability.play.subscriptions",
+      "https://www.googleapis.com/auth/dataportability.play.usersettings",
+      "https://www.googleapis.com/auth/dataportability.saved.collections",
+      "https://www.googleapis.com/auth/dataportability.search_ugc.comments",
+      "https://www.googleapis.com/auth/dataportability.search_ugc.media.reviews_and_stars",
+      "https://www.googleapis.com/auth/dataportability.search_ugc.media.streaming_video_providers",
+      "https://www.googleapis.com/auth/dataportability.search_ugc.media.thumbs",
+      "https://www.googleapis.com/auth/dataportability.search_ugc.media.watched",
+      "https://www.googleapis.com/auth/dataportability.searchnotifications.settings",
+      "https://www.googleapis.com/auth/dataportability.searchnotifications.subscriptions",
+      "https://www.googleapis.com/auth/dataportability.shopping.addresses",
+      "https://www.googleapis.com/auth/dataportability.shopping.reviews",
+      "https://www.googleapis.com/auth/dataportability.streetview.imagery",
+      "https://www.googleapis.com/auth/dataportability.youtube.channel",
+      "https://www.googleapis.com/auth/dataportability.youtube.clips",
+      "https://www.googleapis.com/auth/dataportability.youtube.comments",
+      "https://www.googleapis.com/auth/dataportability.youtube.conversations",
+      "https://www.googleapis.com/auth/dataportability.youtube.live_chat",
+      "https://www.googleapis.com/auth/dataportability.youtube.music",
+      "https://www.googleapis.com/auth/dataportability.youtube.playable",
+      "https://www.googleapis.com/auth/dataportability.youtube.posts",
+      "https://www.googleapis.com/auth/dataportability.youtube.private_playlists",
+      "https://www.googleapis.com/auth/dataportability.youtube.private_videos",
+      "https://www.googleapis.com/auth/dataportability.youtube.public_playlists",
+      "https://www.googleapis.com/auth/dataportability.youtube.public_videos",
+      "https://www.googleapis.com/auth/dataportability.youtube.shopping",
+      "https://www.googleapis.com/auth/dataportability.youtube.subscriptions",
+      "https://www.googleapis.com/auth/dataportability.youtube.unlisted_playlists",
+      "https://www.googleapis.com/auth/dataportability.youtube.unlisted_videos"
+    ],
+    "methodId": "dataportability.archiveJobs.retry",
+    "title": "dataportability.archiveJobs.retry"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__dataportab_authorization_reset",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/dataportability.alerts.subscriptions",
+      "https://www.googleapis.com/auth/dataportability.chrome.autofill",
+      "https://www.googleapis.com/auth/dataportability.chrome.bookmarks",
+      "https://www.googleapis.com/auth/dataportability.chrome.dictionary",
+      "https://www.googleapis.com/auth/dataportability.chrome.extensions",
+      "https://www.googleapis.com/auth/dataportability.chrome.history",
+      "https://www.googleapis.com/auth/dataportability.chrome.reading_list",
+      "https://www.googleapis.com/auth/dataportability.chrome.settings",
+      "https://www.googleapis.com/auth/dataportability.discover.follows",
+      "https://www.googleapis.com/auth/dataportability.discover.likes",
+      "https://www.googleapis.com/auth/dataportability.discover.not_interested",
+      "https://www.googleapis.com/auth/dataportability.maps.aliased_places",
+      "https://www.googleapis.com/auth/dataportability.maps.commute_routes",
+      "https://www.googleapis.com/auth/dataportability.maps.commute_settings",
+      "https://www.googleapis.com/auth/dataportability.maps.ev_profile",
+      "https://www.googleapis.com/auth/dataportability.maps.factual_contributions",
+      "https://www.googleapis.com/auth/dataportability.maps.offering_contributions",
+      "https://www.googleapis.com/auth/dataportability.maps.photos_videos",
+      "https://www.googleapis.com/auth/dataportability.maps.questions_answers",
+      "https://www.googleapis.com/auth/dataportability.maps.reviews",
+      "https://www.googleapis.com/auth/dataportability.maps.starred_places",
+      "https://www.googleapis.com/auth/dataportability.maps.vehicle_profile",
+      "https://www.googleapis.com/auth/dataportability.myactivity.maps",
+      "https://www.googleapis.com/auth/dataportability.myactivity.myadcenter",
+      "https://www.googleapis.com/auth/dataportability.myactivity.play",
+      "https://www.googleapis.com/auth/dataportability.myactivity.search",
+      "https://www.googleapis.com/auth/dataportability.myactivity.shopping",
+      "https://www.googleapis.com/auth/dataportability.myactivity.youtube",
+      "https://www.googleapis.com/auth/dataportability.mymaps.maps",
+      "https://www.googleapis.com/auth/dataportability.nest.camera_event",
+      "https://www.googleapis.com/auth/dataportability.nest.camera_feature",
+      "https://www.googleapis.com/auth/dataportability.nest.camera_video",
+      "https://www.googleapis.com/auth/dataportability.nest.store",
+      "https://www.googleapis.com/auth/dataportability.nest.user",
+      "https://www.googleapis.com/auth/dataportability.order_reserve.purchases_reservations",
+      "https://www.googleapis.com/auth/dataportability.pixel.device_data",
+      "https://www.googleapis.com/auth/dataportability.play.devices",
+      "https://www.googleapis.com/auth/dataportability.play.grouping",
+      "https://www.googleapis.com/auth/dataportability.play.installs",
+      "https://www.googleapis.com/auth/dataportability.play.library",
+      "https://www.googleapis.com/auth/dataportability.play.playpoints",
+      "https://www.googleapis.com/auth/dataportability.play.promotions",
+      "https://www.googleapis.com/auth/dataportability.play.purchases",
+      "https://www.googleapis.com/auth/dataportability.play.redemptions",
+      "https://www.googleapis.com/auth/dataportability.play.subscriptions",
+      "https://www.googleapis.com/auth/dataportability.play.usersettings",
+      "https://www.googleapis.com/auth/dataportability.saved.collections",
+      "https://www.googleapis.com/auth/dataportability.search_ugc.comments",
+      "https://www.googleapis.com/auth/dataportability.search_ugc.media.reviews_and_stars",
+      "https://www.googleapis.com/auth/dataportability.search_ugc.media.streaming_video_providers",
+      "https://www.googleapis.com/auth/dataportability.search_ugc.media.thumbs",
+      "https://www.googleapis.com/auth/dataportability.search_ugc.media.watched",
+      "https://www.googleapis.com/auth/dataportability.searchnotifications.settings",
+      "https://www.googleapis.com/auth/dataportability.searchnotifications.subscriptions",
+      "https://www.googleapis.com/auth/dataportability.shopping.addresses",
+      "https://www.googleapis.com/auth/dataportability.shopping.reviews",
+      "https://www.googleapis.com/auth/dataportability.streetview.imagery",
+      "https://www.googleapis.com/auth/dataportability.youtube.channel",
+      "https://www.googleapis.com/auth/dataportability.youtube.clips",
+      "https://www.googleapis.com/auth/dataportability.youtube.comments",
+      "https://www.googleapis.com/auth/dataportability.youtube.conversations",
+      "https://www.googleapis.com/auth/dataportability.youtube.live_chat",
+      "https://www.googleapis.com/auth/dataportability.youtube.music",
+      "https://www.googleapis.com/auth/dataportability.youtube.playable",
+      "https://www.googleapis.com/auth/dataportability.youtube.posts",
+      "https://www.googleapis.com/auth/dataportability.youtube.private_playlists",
+      "https://www.googleapis.com/auth/dataportability.youtube.private_videos",
+      "https://www.googleapis.com/auth/dataportability.youtube.public_playlists",
+      "https://www.googleapis.com/auth/dataportability.youtube.public_videos",
+      "https://www.googleapis.com/auth/dataportability.youtube.shopping",
+      "https://www.googleapis.com/auth/dataportability.youtube.subscriptions",
+      "https://www.googleapis.com/auth/dataportability.youtube.unlisted_playlists",
+      "https://www.googleapis.com/auth/dataportability.youtube.unlisted_videos"
+    ],
+    "methodId": "dataportability.authorization.reset",
+    "title": "dataportability.authorization.reset"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__dataportab_portability_initiate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/dataportability.alerts.subscriptions",
+      "https://www.googleapis.com/auth/dataportability.chrome.autofill",
+      "https://www.googleapis.com/auth/dataportability.chrome.bookmarks",
+      "https://www.googleapis.com/auth/dataportability.chrome.dictionary",
+      "https://www.googleapis.com/auth/dataportability.chrome.extensions",
+      "https://www.googleapis.com/auth/dataportability.chrome.history",
+      "https://www.googleapis.com/auth/dataportability.chrome.reading_list",
+      "https://www.googleapis.com/auth/dataportability.chrome.settings",
+      "https://www.googleapis.com/auth/dataportability.discover.follows",
+      "https://www.googleapis.com/auth/dataportability.discover.likes",
+      "https://www.googleapis.com/auth/dataportability.discover.not_interested",
+      "https://www.googleapis.com/auth/dataportability.maps.aliased_places",
+      "https://www.googleapis.com/auth/dataportability.maps.commute_routes",
+      "https://www.googleapis.com/auth/dataportability.maps.commute_settings",
+      "https://www.googleapis.com/auth/dataportability.maps.ev_profile",
+      "https://www.googleapis.com/auth/dataportability.maps.factual_contributions",
+      "https://www.googleapis.com/auth/dataportability.maps.offering_contributions",
+      "https://www.googleapis.com/auth/dataportability.maps.photos_videos",
+      "https://www.googleapis.com/auth/dataportability.maps.questions_answers",
+      "https://www.googleapis.com/auth/dataportability.maps.reviews",
+      "https://www.googleapis.com/auth/dataportability.maps.starred_places",
+      "https://www.googleapis.com/auth/dataportability.maps.vehicle_profile",
+      "https://www.googleapis.com/auth/dataportability.myactivity.maps",
+      "https://www.googleapis.com/auth/dataportability.myactivity.myadcenter",
+      "https://www.googleapis.com/auth/dataportability.myactivity.play",
+      "https://www.googleapis.com/auth/dataportability.myactivity.search",
+      "https://www.googleapis.com/auth/dataportability.myactivity.shopping",
+      "https://www.googleapis.com/auth/dataportability.myactivity.youtube",
+      "https://www.googleapis.com/auth/dataportability.mymaps.maps",
+      "https://www.googleapis.com/auth/dataportability.nest.camera_event",
+      "https://www.googleapis.com/auth/dataportability.nest.camera_feature",
+      "https://www.googleapis.com/auth/dataportability.nest.camera_video",
+      "https://www.googleapis.com/auth/dataportability.nest.store",
+      "https://www.googleapis.com/auth/dataportability.nest.user",
+      "https://www.googleapis.com/auth/dataportability.order_reserve.purchases_reservations",
+      "https://www.googleapis.com/auth/dataportability.pixel.device_data",
+      "https://www.googleapis.com/auth/dataportability.play.devices",
+      "https://www.googleapis.com/auth/dataportability.play.grouping",
+      "https://www.googleapis.com/auth/dataportability.play.installs",
+      "https://www.googleapis.com/auth/dataportability.play.library",
+      "https://www.googleapis.com/auth/dataportability.play.playpoints",
+      "https://www.googleapis.com/auth/dataportability.play.promotions",
+      "https://www.googleapis.com/auth/dataportability.play.purchases",
+      "https://www.googleapis.com/auth/dataportability.play.redemptions",
+      "https://www.googleapis.com/auth/dataportability.play.subscriptions",
+      "https://www.googleapis.com/auth/dataportability.play.usersettings",
+      "https://www.googleapis.com/auth/dataportability.saved.collections",
+      "https://www.googleapis.com/auth/dataportability.search_ugc.comments",
+      "https://www.googleapis.com/auth/dataportability.search_ugc.media.reviews_and_stars",
+      "https://www.googleapis.com/auth/dataportability.search_ugc.media.streaming_video_providers",
+      "https://www.googleapis.com/auth/dataportability.search_ugc.media.thumbs",
+      "https://www.googleapis.com/auth/dataportability.search_ugc.media.watched",
+      "https://www.googleapis.com/auth/dataportability.searchnotifications.settings",
+      "https://www.googleapis.com/auth/dataportability.searchnotifications.subscriptions",
+      "https://www.googleapis.com/auth/dataportability.shopping.addresses",
+      "https://www.googleapis.com/auth/dataportability.shopping.reviews",
+      "https://www.googleapis.com/auth/dataportability.streetview.imagery",
+      "https://www.googleapis.com/auth/dataportability.youtube.channel",
+      "https://www.googleapis.com/auth/dataportability.youtube.clips",
+      "https://www.googleapis.com/auth/dataportability.youtube.comments",
+      "https://www.googleapis.com/auth/dataportability.youtube.conversations",
+      "https://www.googleapis.com/auth/dataportability.youtube.live_chat",
+      "https://www.googleapis.com/auth/dataportability.youtube.music",
+      "https://www.googleapis.com/auth/dataportability.youtube.playable",
+      "https://www.googleapis.com/auth/dataportability.youtube.posts",
+      "https://www.googleapis.com/auth/dataportability.youtube.private_playlists",
+      "https://www.googleapis.com/auth/dataportability.youtube.private_videos",
+      "https://www.googleapis.com/auth/dataportability.youtube.public_playlists",
+      "https://www.googleapis.com/auth/dataportability.youtube.public_videos",
+      "https://www.googleapis.com/auth/dataportability.youtube.shopping",
+      "https://www.googleapis.com/auth/dataportability.youtube.subscriptions",
+      "https://www.googleapis.com/auth/dataportability.youtube.unlisted_playlists",
+      "https://www.googleapis.com/auth/dataportability.youtube.unlisted_videos"
+    ],
+    "methodId": "dataportability.portabilityArchive.initiate",
+    "title": "dataportability.portabilityArchive.initiate"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__health_proje_subsc_subsc_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "health.projects.subscribers.subscriptions.create",
+    "title": "health.projects.subscribers.subscriptions.create"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__health_proje_subsc_subsc_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "health.projects.subscribers.subscriptions.delete",
+    "title": "health.projects.subscribers.subscriptions.delete"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__health_proje_subsc_subscr_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "health.projects.subscribers.subscriptions.patch",
+    "title": "health.projects.subscribers.subscriptions.patch"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__health_proje_subscr_subscr_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "health.projects.subscribers.subscriptions.list",
+    "title": "health.projects.subscribers.subscriptions.list"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__health_projects_subscrib_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "health.projects.subscribers.create",
+    "title": "health.projects.subscribers.create"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__health_projects_subscrib_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "health.projects.subscribers.delete",
+    "title": "health.projects.subscribers.delete"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__health_projects_subscribe_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "health.projects.subscribers.patch",
+    "title": "health.projects.subscribers.patch"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__health_projects_subscriber_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "health.projects.subscribers.list",
+    "title": "health.projects.subscribers.list"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__health_shl_m_get_shl_manifest",
+    "kind": "read",
+    "scopes": [],
+    "methodId": "health.shl.m.getShlManifest",
+    "title": "health.shl.m.getShlManifest"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__health_shl_r_get",
+    "kind": "read",
+    "scopes": [],
+    "methodId": "health.shl.r.get",
+    "title": "health.shl.r.get"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__health_users_data_data_p_batch",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/googlehealth.activity_and_fitness.writeonly",
+      "https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.writeonly",
+      "https://www.googleapis.com/auth/googlehealth.logged_symptoms.writeonly",
+      "https://www.googleapis.com/auth/googlehealth.mindfulness.writeonly",
+      "https://www.googleapis.com/auth/googlehealth.nutrition.writeonly",
+      "https://www.googleapis.com/auth/googlehealth.reproductive_health.writeonly",
+      "https://www.googleapis.com/auth/googlehealth.sleep.writeonly"
+    ],
+    "methodId": "health.users.dataTypes.dataPoints.batchDelete",
+    "title": "health.users.dataTypes.dataPoints.batchDelete"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__health_users_data_data_p_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/googlehealth.activity_and_fitness.writeonly",
+      "https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.writeonly",
+      "https://www.googleapis.com/auth/googlehealth.logged_symptoms.writeonly",
+      "https://www.googleapis.com/auth/googlehealth.mindfulness.writeonly",
+      "https://www.googleapis.com/auth/googlehealth.nutrition.writeonly",
+      "https://www.googleapis.com/auth/googlehealth.reproductive_health.writeonly",
+      "https://www.googleapis.com/auth/googlehealth.sleep.writeonly"
+    ],
+    "methodId": "health.users.dataTypes.dataPoints.create",
+    "title": "health.users.dataTypes.dataPoints.create"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__health_users_data_data_p_daily",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/googlehealth.activity_and_fitness.readonly",
+      "https://www.googleapis.com/auth/googlehealth.activity_and_fitness.writeonly",
+      "https://www.googleapis.com/auth/googlehealth.ecg.readonly",
+      "https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.readonly",
+      "https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.writeonly",
+      "https://www.googleapis.com/auth/googlehealth.irn.readonly",
+      "https://www.googleapis.com/auth/googlehealth.location.readonly",
+      "https://www.googleapis.com/auth/googlehealth.logged_symptoms.readonly",
+      "https://www.googleapis.com/auth/googlehealth.logged_symptoms.writeonly",
+      "https://www.googleapis.com/auth/googlehealth.mindfulness.readonly",
+      "https://www.googleapis.com/auth/googlehealth.mindfulness.writeonly",
+      "https://www.googleapis.com/auth/googlehealth.nutrition.writeonly",
+      "https://www.googleapis.com/auth/googlehealth.reproductive_health.readonly",
+      "https://www.googleapis.com/auth/googlehealth.reproductive_health.writeonly",
+      "https://www.googleapis.com/auth/googlehealth.sleep.readonly",
+      "https://www.googleapis.com/auth/googlehealth.sleep.writeonly"
+    ],
+    "methodId": "health.users.dataTypes.dataPoints.dailyRollUp",
+    "title": "health.users.dataTypes.dataPoints.dailyRollUp"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__health_users_data_data_p_export",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/googlehealth.activity_and_fitness.readonly",
+      "https://www.googleapis.com/auth/googlehealth.location.readonly"
+    ],
+    "methodId": "health.users.dataTypes.dataPoints.exportExerciseTcx",
+    "title": "health.users.dataTypes.dataPoints.exportExerciseTcx"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__health_users_data_data_p_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/googlehealth.activity_and_fitness.writeonly",
+      "https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.writeonly",
+      "https://www.googleapis.com/auth/googlehealth.logged_symptoms.writeonly",
+      "https://www.googleapis.com/auth/googlehealth.mindfulness.writeonly",
+      "https://www.googleapis.com/auth/googlehealth.nutrition.writeonly",
+      "https://www.googleapis.com/auth/googlehealth.reproductive_health.writeonly",
+      "https://www.googleapis.com/auth/googlehealth.sleep.writeonly"
+    ],
+    "methodId": "health.users.dataTypes.dataPoints.patch",
+    "title": "health.users.dataTypes.dataPoints.patch"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__health_users_data_data_p_reconc",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/googlehealth.activity_and_fitness.readonly",
+      "https://www.googleapis.com/auth/googlehealth.activity_and_fitness.writeonly",
+      "https://www.googleapis.com/auth/googlehealth.ecg.readonly",
+      "https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.readonly",
+      "https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.writeonly",
+      "https://www.googleapis.com/auth/googlehealth.irn.readonly",
+      "https://www.googleapis.com/auth/googlehealth.location.readonly",
+      "https://www.googleapis.com/auth/googlehealth.logged_symptoms.readonly",
+      "https://www.googleapis.com/auth/googlehealth.logged_symptoms.writeonly",
+      "https://www.googleapis.com/auth/googlehealth.mindfulness.readonly",
+      "https://www.googleapis.com/auth/googlehealth.mindfulness.writeonly",
+      "https://www.googleapis.com/auth/googlehealth.nutrition.writeonly",
+      "https://www.googleapis.com/auth/googlehealth.reproductive_health.readonly",
+      "https://www.googleapis.com/auth/googlehealth.reproductive_health.writeonly",
+      "https://www.googleapis.com/auth/googlehealth.sleep.readonly",
+      "https://www.googleapis.com/auth/googlehealth.sleep.writeonly"
+    ],
+    "methodId": "health.users.dataTypes.dataPoints.reconcile",
+    "title": "health.users.dataTypes.dataPoints.reconcile"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__health_users_data_data_p_roll_u",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/googlehealth.activity_and_fitness.readonly",
+      "https://www.googleapis.com/auth/googlehealth.activity_and_fitness.writeonly",
+      "https://www.googleapis.com/auth/googlehealth.ecg.readonly",
+      "https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.readonly",
+      "https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.writeonly",
+      "https://www.googleapis.com/auth/googlehealth.irn.readonly",
+      "https://www.googleapis.com/auth/googlehealth.location.readonly",
+      "https://www.googleapis.com/auth/googlehealth.logged_symptoms.readonly",
+      "https://www.googleapis.com/auth/googlehealth.logged_symptoms.writeonly",
+      "https://www.googleapis.com/auth/googlehealth.mindfulness.readonly",
+      "https://www.googleapis.com/auth/googlehealth.mindfulness.writeonly",
+      "https://www.googleapis.com/auth/googlehealth.nutrition.writeonly",
+      "https://www.googleapis.com/auth/googlehealth.reproductive_health.readonly",
+      "https://www.googleapis.com/auth/googlehealth.reproductive_health.writeonly",
+      "https://www.googleapis.com/auth/googlehealth.sleep.readonly",
+      "https://www.googleapis.com/auth/googlehealth.sleep.writeonly"
+    ],
+    "methodId": "health.users.dataTypes.dataPoints.rollUp",
+    "title": "health.users.dataTypes.dataPoints.rollUp"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__health_users_data_t_data_p_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/googlehealth.activity_and_fitness.readonly",
+      "https://www.googleapis.com/auth/googlehealth.activity_and_fitness.writeonly",
+      "https://www.googleapis.com/auth/googlehealth.ecg.readonly",
+      "https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.readonly",
+      "https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.writeonly",
+      "https://www.googleapis.com/auth/googlehealth.irn.readonly",
+      "https://www.googleapis.com/auth/googlehealth.location.readonly",
+      "https://www.googleapis.com/auth/googlehealth.logged_symptoms.readonly",
+      "https://www.googleapis.com/auth/googlehealth.logged_symptoms.writeonly",
+      "https://www.googleapis.com/auth/googlehealth.mindfulness.readonly",
+      "https://www.googleapis.com/auth/googlehealth.mindfulness.writeonly",
+      "https://www.googleapis.com/auth/googlehealth.nutrition.writeonly",
+      "https://www.googleapis.com/auth/googlehealth.reproductive_health.readonly",
+      "https://www.googleapis.com/auth/googlehealth.reproductive_health.writeonly",
+      "https://www.googleapis.com/auth/googlehealth.sleep.readonly",
+      "https://www.googleapis.com/auth/googlehealth.sleep.writeonly"
+    ],
+    "methodId": "health.users.dataTypes.dataPoints.list",
+    "title": "health.users.dataTypes.dataPoints.list"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__health_users_data_t_data_po_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/googlehealth.activity_and_fitness.readonly",
+      "https://www.googleapis.com/auth/googlehealth.activity_and_fitness.writeonly",
+      "https://www.googleapis.com/auth/googlehealth.ecg.readonly",
+      "https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.readonly",
+      "https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.writeonly",
+      "https://www.googleapis.com/auth/googlehealth.irn.readonly",
+      "https://www.googleapis.com/auth/googlehealth.location.readonly",
+      "https://www.googleapis.com/auth/googlehealth.logged_symptoms.readonly",
+      "https://www.googleapis.com/auth/googlehealth.logged_symptoms.writeonly",
+      "https://www.googleapis.com/auth/googlehealth.mindfulness.readonly",
+      "https://www.googleapis.com/auth/googlehealth.mindfulness.writeonly",
+      "https://www.googleapis.com/auth/googlehealth.nutrition.writeonly",
+      "https://www.googleapis.com/auth/googlehealth.reproductive_health.readonly",
+      "https://www.googleapis.com/auth/googlehealth.reproductive_health.writeonly",
+      "https://www.googleapis.com/auth/googlehealth.sleep.readonly",
+      "https://www.googleapis.com/auth/googlehealth.sleep.writeonly"
+    ],
+    "methodId": "health.users.dataTypes.dataPoints.get",
+    "title": "health.users.dataTypes.dataPoints.get"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__health_users_get_identity",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/googlehealth.activity_and_fitness.readonly",
+      "https://www.googleapis.com/auth/googlehealth.ecg.readonly",
+      "https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.readonly",
+      "https://www.googleapis.com/auth/googlehealth.irn.readonly",
+      "https://www.googleapis.com/auth/googlehealth.logged_symptoms.readonly",
+      "https://www.googleapis.com/auth/googlehealth.mindfulness.readonly",
+      "https://www.googleapis.com/auth/googlehealth.profile.readonly",
+      "https://www.googleapis.com/auth/googlehealth.reproductive_health.readonly",
+      "https://www.googleapis.com/auth/googlehealth.settings.readonly",
+      "https://www.googleapis.com/auth/googlehealth.sleep.readonly"
+    ],
+    "methodId": "health.users.getIdentity",
+    "title": "health.users.getIdentity"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__health_users_get_irn_profile",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/googlehealth.irn.readonly"
+    ],
+    "methodId": "health.users.getIrnProfile",
+    "title": "health.users.getIrnProfile"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__health_users_get_profile",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/googlehealth.profile.readonly"
+    ],
+    "methodId": "health.users.getProfile",
+    "title": "health.users.getProfile"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__health_users_get_settings",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/googlehealth.settings.readonly"
+    ],
+    "methodId": "health.users.getSettings",
+    "title": "health.users.getSettings"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__health_users_paired_device_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/googlehealth.settings.readonly"
+    ],
+    "methodId": "health.users.pairedDevices.list",
+    "title": "health.users.pairedDevices.list"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__health_users_paired_devices_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/googlehealth.settings.readonly"
+    ],
+    "methodId": "health.users.pairedDevices.get",
+    "title": "health.users.pairedDevices.get"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__health_users_update_profile",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/googlehealth.profile.writeonly"
+    ],
+    "methodId": "health.users.updateProfile",
+    "title": "health.users.updateProfile"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__health_users_update_settings",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/googlehealth.settings.writeonly"
+    ],
+    "methodId": "health.users.updateSettings",
+    "title": "health.users.updateSettings"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__oauth2_userinfo_get",
+    "kind": "read",
+    "scopes": [
+      "openid",
+      "https://www.googleapis.com/auth/userinfo.email",
+      "https://www.googleapis.com/auth/userinfo.profile"
+    ],
+    "methodId": "oauth2.userinfo.get",
+    "title": "oauth2.userinfo.get"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__oauth2_userinfo_v2_me_get",
+    "kind": "read",
+    "scopes": [
+      "openid",
+      "https://www.googleapis.com/auth/userinfo.email",
+      "https://www.googleapis.com/auth/userinfo.profile"
+    ],
+    "methodId": "oauth2.userinfo.v2.me.get",
+    "title": "oauth2.userinfo.v2.me.get"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__people_contact_g_members_modify",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/contacts"
+    ],
+    "methodId": "people.contactGroups.members.modify",
+    "title": "people.contactGroups.members.modify"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__people_contact_groups_batch_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/contacts",
+      "https://www.googleapis.com/auth/contacts.readonly"
+    ],
+    "methodId": "people.contactGroups.batchGet",
+    "title": "people.contactGroups.batchGet"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__people_contact_groups_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/contacts"
+    ],
+    "methodId": "people.contactGroups.create",
+    "title": "people.contactGroups.create"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__people_contact_groups_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/contacts"
+    ],
+    "methodId": "people.contactGroups.delete",
+    "title": "people.contactGroups.delete"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__people_contact_groups_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/contacts",
+      "https://www.googleapis.com/auth/contacts.readonly"
+    ],
+    "methodId": "people.contactGroups.get",
+    "title": "people.contactGroups.get"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__people_contact_groups_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/contacts",
+      "https://www.googleapis.com/auth/contacts.readonly"
+    ],
+    "methodId": "people.contactGroups.list",
+    "title": "people.contactGroups.list"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__people_contact_groups_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/contacts"
+    ],
+    "methodId": "people.contactGroups.update",
+    "title": "people.contactGroups.update"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__people_other_conta_copy_other_c",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/contacts",
+      "https://www.googleapis.com/auth/contacts.other.readonly"
+    ],
+    "methodId": "people.otherContacts.copyOtherContactToMyContactsGroup",
+    "title": "people.otherContacts.copyOtherContactToMyContactsGroup"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__people_other_contacts_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/contacts.other.readonly"
+    ],
+    "methodId": "people.otherContacts.list",
+    "title": "people.otherContacts.list"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__people_other_contacts_search",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/contacts.other.readonly"
+    ],
+    "methodId": "people.otherContacts.search",
+    "title": "people.otherContacts.search"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__people_people_batch_create_cont",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/contacts"
+    ],
+    "methodId": "people.people.batchCreateContacts",
+    "title": "people.people.batchCreateContacts"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__people_people_batch_delete_cont",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/contacts"
+    ],
+    "methodId": "people.people.batchDeleteContacts",
+    "title": "people.people.batchDeleteContacts"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__people_people_batch_update_cont",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/contacts"
+    ],
+    "methodId": "people.people.batchUpdateContacts",
+    "title": "people.people.batchUpdateContacts"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__people_people_connections_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/contacts",
+      "https://www.googleapis.com/auth/contacts.readonly"
+    ],
+    "methodId": "people.people.connections.list",
+    "title": "people.people.connections.list"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__people_people_create_contact",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/contacts"
+    ],
+    "methodId": "people.people.createContact",
+    "title": "people.people.createContact"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__people_people_delete_contact",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/contacts"
+    ],
+    "methodId": "people.people.deleteContact",
+    "title": "people.people.deleteContact"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__people_people_delete_contact_ph",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/contacts"
+    ],
+    "methodId": "people.people.deleteContactPhoto",
+    "title": "people.people.deleteContactPhoto"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__people_people_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/contacts",
+      "https://www.googleapis.com/auth/contacts.other.readonly",
+      "https://www.googleapis.com/auth/contacts.readonly",
+      "https://www.googleapis.com/auth/directory.readonly",
+      "https://www.googleapis.com/auth/user.addresses.read",
+      "https://www.googleapis.com/auth/user.birthday.read",
+      "https://www.googleapis.com/auth/user.emails.read",
+      "https://www.googleapis.com/auth/user.gender.read",
+      "https://www.googleapis.com/auth/user.organization.read",
+      "https://www.googleapis.com/auth/user.phonenumbers.read",
+      "https://www.googleapis.com/auth/userinfo.email",
+      "https://www.googleapis.com/auth/userinfo.profile"
+    ],
+    "methodId": "people.people.get",
+    "title": "people.people.get"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__people_people_get_batch_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/contacts",
+      "https://www.googleapis.com/auth/contacts.other.readonly",
+      "https://www.googleapis.com/auth/contacts.readonly",
+      "https://www.googleapis.com/auth/directory.readonly",
+      "https://www.googleapis.com/auth/user.addresses.read",
+      "https://www.googleapis.com/auth/user.birthday.read",
+      "https://www.googleapis.com/auth/user.emails.read",
+      "https://www.googleapis.com/auth/user.gender.read",
+      "https://www.googleapis.com/auth/user.organization.read",
+      "https://www.googleapis.com/auth/user.phonenumbers.read",
+      "https://www.googleapis.com/auth/userinfo.email",
+      "https://www.googleapis.com/auth/userinfo.profile"
+    ],
+    "methodId": "people.people.getBatchGet",
+    "title": "people.people.getBatchGet"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__people_people_list_directory_pe",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/directory.readonly"
+    ],
+    "methodId": "people.people.listDirectoryPeople",
+    "title": "people.people.listDirectoryPeople"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__people_people_search_contacts",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/contacts",
+      "https://www.googleapis.com/auth/contacts.readonly"
+    ],
+    "methodId": "people.people.searchContacts",
+    "title": "people.people.searchContacts"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__people_people_search_directory",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/directory.readonly"
+    ],
+    "methodId": "people.people.searchDirectoryPeople",
+    "title": "people.people.searchDirectoryPeople"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__people_people_update_contact",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/contacts"
+    ],
+    "methodId": "people.people.updateContact",
+    "title": "people.people.updateContact"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__people_people_update_contact_ph",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/contacts"
+    ],
+    "methodId": "people.people.updateContactPhoto",
+    "title": "people.people.updateContactPhoto"
+  }
+]

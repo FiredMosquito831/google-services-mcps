@@ -1,0 +1,385 @@
+[
+  {
+    "name": "mcp__plugin_gsearch_gsearch__abusiveexp_sites_get",
+    "kind": "read",
+    "scopes": [],
+    "methodId": "abusiveexperiencereport.sites.get",
+    "title": "abusiveexperiencereport.sites.get"
+  },
+  {
+    "name": "mcp__plugin_gsearch_gsearch__abusiveexp_violating_sites_list",
+    "kind": "read",
+    "scopes": [],
+    "methodId": "abusiveexperiencereport.violatingSites.list",
+    "title": "abusiveexperiencereport.violatingSites.list"
+  },
+  {
+    "name": "mcp__plugin_gsearch_gsearch__accelerate_amp_urls_batch_get",
+    "kind": "read",
+    "scopes": [],
+    "methodId": "acceleratedmobilepageurl.ampUrls.batchGet",
+    "title": "acceleratedmobilepageurl.ampUrls.batchGet"
+  },
+  {
+    "name": "mcp__plugin_gsearch_gsearch__adexperien_sites_get",
+    "kind": "read",
+    "scopes": [],
+    "methodId": "adexperiencereport.sites.get",
+    "title": "adexperiencereport.sites.get"
+  },
+  {
+    "name": "mcp__plugin_gsearch_gsearch__adexperien_violating_sites_list",
+    "kind": "read",
+    "scopes": [],
+    "methodId": "adexperiencereport.violatingSites.list",
+    "title": "adexperiencereport.violatingSites.list"
+  },
+  {
+    "name": "mcp__plugin_gsearch_gsearch__api_call",
+    "kind": "dynamic",
+    "scopes": [],
+    "title": "Call an API method"
+  },
+  {
+    "name": "mcp__plugin_gsearch_gsearch__api_describe",
+    "kind": "read",
+    "scopes": [],
+    "title": "Describe an API method"
+  },
+  {
+    "name": "mcp__plugin_gsearch_gsearch__api_methods",
+    "kind": "read",
+    "scopes": [],
+    "title": "gsearch: API methods"
+  },
+  {
+    "name": "mcp__plugin_gsearch_gsearch__api_search",
+    "kind": "read",
+    "scopes": [],
+    "title": "Search API methods"
+  },
+  {
+    "name": "mcp__plugin_gsearch_gsearch__chromeuxre_records_query_history_re",
+    "kind": "read",
+    "scopes": [],
+    "methodId": "chromeuxreport.records.queryHistoryRecord",
+    "title": "chromeuxreport.records.queryHistoryRecord"
+  },
+  {
+    "name": "mcp__plugin_gsearch_gsearch__chromeuxre_records_query_record",
+    "kind": "read",
+    "scopes": [],
+    "methodId": "chromeuxreport.records.queryRecord",
+    "title": "chromeuxreport.records.queryRecord"
+  },
+  {
+    "name": "mcp__plugin_gsearch_gsearch__civicinfo_divisions_query_division",
+    "kind": "read",
+    "scopes": [],
+    "methodId": "civicinfo.divisions.queryDivisionByAddress",
+    "title": "civicinfo.divisions.queryDivisionByAddress"
+  },
+  {
+    "name": "mcp__plugin_gsearch_gsearch__civicinfo_divisions_search",
+    "kind": "read",
+    "scopes": [],
+    "methodId": "civicinfo.divisions.search",
+    "title": "civicinfo.divisions.search"
+  },
+  {
+    "name": "mcp__plugin_gsearch_gsearch__civicinfo_elections_election_query",
+    "kind": "read",
+    "scopes": [],
+    "methodId": "civicinfo.elections.electionQuery",
+    "title": "civicinfo.elections.electionQuery"
+  },
+  {
+    "name": "mcp__plugin_gsearch_gsearch__civicinfo_elections_voter_info_quer",
+    "kind": "read",
+    "scopes": [],
+    "methodId": "civicinfo.elections.voterInfoQuery",
+    "title": "civicinfo.elections.voterInfoQuery"
+  },
+  {
+    "name": "mcp__plugin_gsearch_gsearch__cse_cse_list",
+    "kind": "read",
+    "scopes": [],
+    "methodId": "search.cse.list",
+    "title": "search.cse.list"
+  },
+  {
+    "name": "mcp__plugin_gsearch_gsearch__cse_cse_siterestrict_list",
+    "kind": "read",
+    "scopes": [],
+    "methodId": "search.cse.siterestrict.list",
+    "title": "search.cse.siterestrict.list"
+  },
+  {
+    "name": "mcp__plugin_gsearch_gsearch__developerk_documents_batch_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "developerknowledge.documents.batchGet",
+    "title": "developerknowledge.documents.batchGet"
+  },
+  {
+    "name": "mcp__plugin_gsearch_gsearch__developerk_documents_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "developerknowledge.documents.get",
+    "title": "developerknowledge.documents.get"
+  },
+  {
+    "name": "mcp__plugin_gsearch_gsearch__developerk_documents_search_documen",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "developerknowledge.documents.searchDocumentChunks",
+    "title": "developerknowledge.documents.searchDocumentChunks"
+  },
+  {
+    "name": "mcp__plugin_gsearch_gsearch__developerk_v1_answer_query",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "developerknowledge.answerQuery",
+    "title": "developerknowledge.answerQuery"
+  },
+  {
+    "name": "mcp__plugin_gsearch_gsearch__digitalass_assetlinks_bulk_check",
+    "kind": "write",
+    "scopes": [],
+    "methodId": "digitalassetlinks.assetlinks.bulkCheck",
+    "title": "digitalassetlinks.assetlinks.bulkCheck"
+  },
+  {
+    "name": "mcp__plugin_gsearch_gsearch__digitalass_assetlinks_check",
+    "kind": "read",
+    "scopes": [],
+    "methodId": "digitalassetlinks.assetlinks.check",
+    "title": "digitalassetlinks.assetlinks.check"
+  },
+  {
+    "name": "mcp__plugin_gsearch_gsearch__digitalass_statements_list",
+    "kind": "read",
+    "scopes": [],
+    "methodId": "digitalassetlinks.statements.list",
+    "title": "digitalassetlinks.statements.list"
+  },
+  {
+    "name": "mcp__plugin_gsearch_gsearch__factcheckt_claims_image_search",
+    "kind": "read",
+    "scopes": [],
+    "methodId": "factchecktools.claims.imageSearch",
+    "title": "factchecktools.claims.imageSearch"
+  },
+  {
+    "name": "mcp__plugin_gsearch_gsearch__factcheckt_claims_search",
+    "kind": "read",
+    "scopes": [],
+    "methodId": "factchecktools.claims.search",
+    "title": "factchecktools.claims.search"
+  },
+  {
+    "name": "mcp__plugin_gsearch_gsearch__factcheckt_pages_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/factchecktools"
+    ],
+    "methodId": "factchecktools.pages.create",
+    "title": "factchecktools.pages.create"
+  },
+  {
+    "name": "mcp__plugin_gsearch_gsearch__factcheckt_pages_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/factchecktools"
+    ],
+    "methodId": "factchecktools.pages.delete",
+    "title": "factchecktools.pages.delete"
+  },
+  {
+    "name": "mcp__plugin_gsearch_gsearch__factcheckt_pages_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/factchecktools"
+    ],
+    "methodId": "factchecktools.pages.get",
+    "title": "factchecktools.pages.get"
+  },
+  {
+    "name": "mcp__plugin_gsearch_gsearch__factcheckt_pages_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/factchecktools"
+    ],
+    "methodId": "factchecktools.pages.list",
+    "title": "factchecktools.pages.list"
+  },
+  {
+    "name": "mcp__plugin_gsearch_gsearch__factcheckt_pages_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/factchecktools"
+    ],
+    "methodId": "factchecktools.pages.update",
+    "title": "factchecktools.pages.update"
+  },
+  {
+    "name": "mcp__plugin_gsearch_gsearch__kgsearch_entities_search",
+    "kind": "read",
+    "scopes": [],
+    "methodId": "kgsearch.entities.search",
+    "title": "kgsearch.entities.search"
+  },
+  {
+    "name": "mcp__plugin_gsearch_gsearch__pagespeedo_pagespeedap_runpagespeed",
+    "kind": "read",
+    "scopes": [
+      "openid"
+    ],
+    "methodId": "pagespeedonline.pagespeedapi.runpagespeed",
+    "title": "pagespeedonline.pagespeedapi.runpagespeed"
+  },
+  {
+    "name": "mcp__plugin_gsearch_gsearch__safebrowsi_hash_list_get",
+    "kind": "read",
+    "scopes": [],
+    "methodId": "safebrowsing.hashList.get",
+    "title": "safebrowsing.hashList.get"
+  },
+  {
+    "name": "mcp__plugin_gsearch_gsearch__safebrowsi_hash_lists_batch_get",
+    "kind": "read",
+    "scopes": [],
+    "methodId": "safebrowsing.hashLists.batchGet",
+    "title": "safebrowsing.hashLists.batchGet"
+  },
+  {
+    "name": "mcp__plugin_gsearch_gsearch__safebrowsi_hash_lists_list",
+    "kind": "read",
+    "scopes": [],
+    "methodId": "safebrowsing.hashLists.list",
+    "title": "safebrowsing.hashLists.list"
+  },
+  {
+    "name": "mcp__plugin_gsearch_gsearch__safebrowsi_hashes_search",
+    "kind": "read",
+    "scopes": [],
+    "methodId": "safebrowsing.hashes.search",
+    "title": "safebrowsing.hashes.search"
+  },
+  {
+    "name": "mcp__plugin_gsearch_gsearch__safebrowsi_urls_search",
+    "kind": "read",
+    "scopes": [],
+    "methodId": "safebrowsing.urls.search",
+    "title": "safebrowsing.urls.search"
+  },
+  {
+    "name": "mcp__plugin_gsearch_gsearch__versionhis_plat_chan_vers_rele_list",
+    "kind": "read",
+    "scopes": [],
+    "methodId": "versionhistory.platforms.channels.versions.releases.list",
+    "title": "versionhistory.platforms.channels.versions.releases.list"
+  },
+  {
+    "name": "mcp__plugin_gsearch_gsearch__versionhis_platf_channe_versio_list",
+    "kind": "read",
+    "scopes": [],
+    "methodId": "versionhistory.platforms.channels.versions.list",
+    "title": "versionhistory.platforms.channels.versions.list"
+  },
+  {
+    "name": "mcp__plugin_gsearch_gsearch__versionhis_platforms_channels_list",
+    "kind": "read",
+    "scopes": [],
+    "methodId": "versionhistory.platforms.channels.list",
+    "title": "versionhistory.platforms.channels.list"
+  },
+  {
+    "name": "mcp__plugin_gsearch_gsearch__versionhis_platforms_list",
+    "kind": "read",
+    "scopes": [],
+    "methodId": "versionhistory.platforms.list",
+    "title": "versionhistory.platforms.list"
+  },
+  {
+    "name": "mcp__plugin_gsearch_gsearch__webfonts_webfonts_list",
+    "kind": "read",
+    "scopes": [],
+    "methodId": "webfonts.webfonts.list",
+    "title": "webfonts.webfonts.list"
+  },
+  {
+    "name": "mcp__plugin_gsearch_gsearch__webrisk_hashes_search",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "webrisk.hashes.search",
+    "title": "webrisk.hashes.search"
+  },
+  {
+    "name": "mcp__plugin_gsearch_gsearch__webrisk_projects_operations_cancel",
+    "kind": "destructive",
+    "scopes": [],
+    "methodId": "webrisk.projects.operations.cancel",
+    "title": "webrisk.projects.operations.cancel"
+  },
+  {
+    "name": "mcp__plugin_gsearch_gsearch__webrisk_projects_operations_delete",
+    "kind": "destructive",
+    "scopes": [],
+    "methodId": "webrisk.projects.operations.delete",
+    "title": "webrisk.projects.operations.delete"
+  },
+  {
+    "name": "mcp__plugin_gsearch_gsearch__webrisk_projects_operations_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "webrisk.projects.operations.get",
+    "title": "webrisk.projects.operations.get"
+  },
+  {
+    "name": "mcp__plugin_gsearch_gsearch__webrisk_projects_operations_list",
+    "kind": "read",
+    "scopes": [],
+    "methodId": "webrisk.projects.operations.list",
+    "title": "webrisk.projects.operations.list"
+  },
+  {
+    "name": "mcp__plugin_gsearch_gsearch__webrisk_projects_submissions_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "webrisk.projects.submissions.create",
+    "title": "webrisk.projects.submissions.create"
+  },
+  {
+    "name": "mcp__plugin_gsearch_gsearch__webrisk_threat_lists_compute_diff",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "webrisk.threatLists.computeDiff",
+    "title": "webrisk.threatLists.computeDiff"
+  },
+  {
+    "name": "mcp__plugin_gsearch_gsearch__webrisk_uris_search",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "webrisk.uris.search",
+    "title": "webrisk.uris.search"
+  }
+]

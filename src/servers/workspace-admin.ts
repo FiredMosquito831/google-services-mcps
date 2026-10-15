@@ -1,7 +1,7 @@
-#!/usr/bin/env node
 /**
- * Workspace admin server (MCP name "gws-admin"): Admin SDK Directory API for users,
- * org units, groups, group members and domains, plus generated Discovery tools.
+ * Curated tool definitions for the Workspace admin server (MCP name "gws-admin"):
+ * Admin SDK Directory API for users, org units, groups, group members and domains.
+ * The Discovery-generated tools are added by the generated entry (scripts/bundle.mjs).
  *
  * Calendar on/off per org unit is console-only (not in the Directory API), so there is no tool for it.
  *
@@ -13,9 +13,8 @@ import { admin, type admin_directory_v1 } from '@googleapis/admin';
 import type { JWT, OAuth2Client } from 'google-auth-library';
 import { z } from 'zod';
 import type { RuntimeConfig } from '../core/config.js';
-import { getAuthClient } from '../core/auth.js';
-import { discoveryToolsFor } from '../core/discovery/tools.js';
-import { defineTool, runServer, type ToolDef } from '../core/tools.js';
+import { getAuthClient, googleScopes } from '../core/auth.js';
+import { defineTool, type ToolDef } from '../core/tools.js';
 
 type Dir = admin_directory_v1.Admin;
 type User = admin_directory_v1.Schema$User;
@@ -120,6 +119,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       title: 'List users',
       description: 'List users in the account or one domain. Returns summaries; use admin_user_get for the full record.',
       kind: 'read',
+      scopes: googleScopes('admin.directory.user', 'admin.directory.user.readonly'),
       inputSchema: {
         customer: customerField,
         domain: domainField,
@@ -144,6 +144,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       title: 'Get user',
       description: 'Get one user (raw record, password removed) plus the emails of the groups the user belongs to.',
       kind: 'read',
+      scopes: googleScopes('admin.directory.user', 'admin.directory.user.readonly'),
       inputSchema: { user_key: userKeyField },
       async handler({ user_key }) {
         const key = requireText(user_key, 'user_key');
@@ -162,6 +163,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       title: 'List org units',
       description: 'List org units, or the sub-units of one org unit.',
       kind: 'read',
+      scopes: googleScopes('admin.directory.orgunit', 'admin.directory.orgunit.readonly'),
       inputSchema: {
         customer_id: z.string().optional().describe('Customer ID, or "my_customer" (default).'),
         org_unit_path: z.string().optional().describe('Parent path, for example /Sales. Omit for all units.'),
@@ -182,6 +184,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       title: 'Get org unit',
       description: 'Get one org unit by its full path, for example /Sales/EU.',
       kind: 'read',
+      scopes: googleScopes('admin.directory.orgunit', 'admin.directory.orgunit.readonly'),
       inputSchema: { org_unit_path: orgPathField },
       async handler({ org_unit_path }) {
         const res = await (await api()).orgunits.get({
@@ -196,6 +199,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       title: 'List groups',
       description: 'List groups in the account or one domain, or the groups one user belongs to (user_key).',
       kind: 'read',
+      scopes: googleScopes('admin.directory.group', 'admin.directory.group.readonly'),
       inputSchema: {
         customer: customerField,
         domain: domainField,
@@ -221,6 +225,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       title: 'Get group',
       description: 'Get one group by email or ID (raw record).',
       kind: 'read',
+      scopes: googleScopes('admin.directory.group', 'admin.directory.group.readonly'),
       inputSchema: { group_key: groupKeyField },
       async handler({ group_key }) {
         return (await (await api()).groups.get({ groupKey: requireText(group_key, 'group_key') })).data;
@@ -231,6 +236,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       title: 'List group members',
       description: 'List the members of a group, optionally filtered by role.',
       kind: 'read',
+      scopes: googleScopes('admin.directory.group', 'admin.directory.group.readonly', 'admin.directory.group.member', 'admin.directory.group.member.readonly'),
       inputSchema: {
         group_key: groupKeyField,
         roles: z.string().optional().describe('Comma-separated roles to keep, for example "MEMBER,OWNER". Values: OWNER, MANAGER, MEMBER.'),
@@ -252,6 +258,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       title: 'List domains',
       description: 'List the domains of the account.',
       kind: 'read',
+      scopes: googleScopes('admin.directory.domain', 'admin.directory.domain.readonly'),
       inputSchema: { customer: customerField },
       async handler({ customer }) {
         const res = await (await api()).domains.list({ customer: customer ?? CUSTOMER });
@@ -267,6 +274,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       title: 'Create user',
       description: 'Create a user. The password is write-only and is never returned.',
       kind: 'write',
+      scopes: googleScopes('admin.directory.user'),
       inputSchema: {
         primary_email: z.string().email().describe('Primary email, for example anna@example.com.'),
         given_name: z.string().min(1),
@@ -294,6 +302,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       title: 'Move user to org unit',
       description: 'Move a user to another org unit. Changes which Workspace services the user can access.',
       kind: 'write',
+      scopes: googleScopes('admin.directory.user'),
       inputSchema: {
         user_key: userKeyField,
         org_unit_path: z.string().min(1).describe('Target path, for example /Sales/EU, or / for the top level.'),
@@ -311,6 +320,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       title: 'Suspend or restore user',
       description: 'Suspend (true) or restore (false) a user. Reversible.',
       kind: 'write',
+      scopes: googleScopes('admin.directory.user'),
       inputSchema: { user_key: userKeyField, suspended: z.boolean() },
       async handler({ user_key, suspended }) {
         const res = await (await api()).users.patch({
@@ -325,6 +335,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       title: 'Create org unit',
       description: 'Create an org unit under a parent path.',
       kind: 'write',
+      scopes: googleScopes('admin.directory.orgunit'),
       inputSchema: {
         name: z.string().min(1).describe('Unit name, not a path, for example "EU".'),
         parent_org_unit_path: z.string().default('/').describe('Parent path, for example /Sales. "/" for the top level.'),
@@ -347,6 +358,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       title: 'Update org unit',
       description: 'Update an org unit (patch: only the fields you pass change). Passing a new parent moves the unit.',
       kind: 'write',
+      scopes: googleScopes('admin.directory.orgunit'),
       // block_inheritance is deprecated in the Directory API (setting it has no effect), so it is not offered.
       inputSchema: {
         org_unit_path: orgPathField,
@@ -375,6 +387,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       title: 'Create group',
       description: 'Create a group with an email address.',
       kind: 'write',
+      scopes: googleScopes('admin.directory.group'),
       inputSchema: {
         email: z.string().email(),
         name: z.string().min(1).describe('Display name.'),
@@ -392,6 +405,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       title: 'Add group member',
       description: 'Add a user or group to a group with a role.',
       kind: 'write',
+      scopes: googleScopes('admin.directory.group', 'admin.directory.group.member'),
       inputSchema: {
         group_key: groupKeyField,
         email: z.string().email().describe('Email of the user or group to add.'),
@@ -406,12 +420,13 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       },
     }),
 
-    // ---- destructive (needs confirm=true). Previews only read; they never change anything. ----
+    // ---- destructive (asks for approval before each call). Previews only read; they never change anything. ----
     defineTool({
       name: 'admin_user_delete',
       title: 'Delete user',
       description: 'Delete a user. Recoverable for a limited time, after which the deletion is permanent.',
       kind: 'destructive',
+      scopes: googleScopes('admin.directory.user'),
       inputSchema: { user_key: userKeyField },
       async preview({ user_key }) {
         const u = (await (await api()).users.get({ userKey: requireText(user_key, 'user_key') })).data;
@@ -433,6 +448,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       title: 'Delete org unit',
       description: 'Delete an org unit. The API refuses while users remain in it.',
       kind: 'destructive',
+      scopes: googleScopes('admin.directory.orgunit'),
       inputSchema: { org_unit_path: orgPathField },
       async preview({ org_unit_path }) {
         const path = ouBodyPath(ouPath(org_unit_path, 'org_unit_path'));
@@ -462,6 +478,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       title: 'Delete group',
       description: 'Delete a group and its memberships.',
       kind: 'destructive',
+      scopes: googleScopes('admin.directory.group'),
       inputSchema: { group_key: groupKeyField },
       async preview({ group_key }) {
         const g = (await (await api()).groups.get({ groupKey: requireText(group_key, 'group_key') })).data;
@@ -483,6 +500,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       title: 'Remove group member',
       description: 'Remove a user or group from a group.',
       kind: 'destructive',
+      scopes: googleScopes('admin.directory.group', 'admin.directory.group.member'),
       inputSchema: { group_key: groupKeyField, member_key: z.string().min(1).describe('Member email, alias, or unique ID.') },
       async preview({ group_key, member_key }) {
         const m = (await (await api()).members.get({
@@ -500,9 +518,3 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
     }),
   ];
 }
-
-await runServer({
-  name: 'gws-admin',
-  version: '0.1.0',
-  buildTools: async (cfg) => [...(await buildTools(cfg)), ...(await discoveryToolsFor('gws-admin', cfg))],
-});

@@ -7,10 +7,13 @@ import type { RuntimeConfig } from './config.js';
  * One auth group per token file. Each group maps to one or more MCP servers
  * (see config/servers.json). Tokens are stored per group, so a user can log in
  * to Search Console without granting Cloud access, and a logout removes only
- * one group's credentials. Scopes are not defined here: they come from the
- * server map, through the registry.
+ * one group's credentials. Which scopes a group asks for is chosen at login
+ * (see core/scopes.ts); the server map does not hold a scope list any more.
+ *
+ * The apikey group is not an AuthKind: it has no token file. Its client is built
+ * by the discovery code (see core/discovery/apikey-client.ts).
  */
-export type AuthKind = 'cloud' | 'workspace-user' | 'workspace-admin' | 'searchconsole' | 'business';
+export type AuthKind = 'cloud' | 'workspace-user' | 'workspace-admin' | 'searchconsole' | 'business' | 'developer';
 
 /** Scope for Application Default Credentials, used by cloud servers when no OAuth token is stored. */
 export const CLOUD_SCOPES = ['https://www.googleapis.com/auth/cloud-platform'];
@@ -21,6 +24,15 @@ export const ADMIN_SCOPES = [
   'https://www.googleapis.com/auth/admin.directory.group',
   'https://www.googleapis.com/auth/admin.directory.orgunit',
 ];
+
+/**
+ * Full scope URLs from short names. "gmail.readonly" becomes
+ * https://www.googleapis.com/auth/gmail.readonly. A name that already starts
+ * with https:// is kept as it is (for example https://mail.google.com/).
+ */
+export function googleScopes(...names: string[]): string[] {
+  return names.map((name) => (name.startsWith('https://') ? name : `https://www.googleapis.com/auth/${name}`));
+}
 
 export class AuthRequiredError extends Error {
   constructor(kind: AuthKind) {
@@ -70,6 +82,46 @@ export function loadUserTokens(kind: AuthKind, cfg: RuntimeConfig): Credentials 
 }
 
 /**
+ * What `gsm setup-admin` stores for the admin group, in <tokenDir>/workspace-admin.scopes.json.
+ * The key file is referenced by path and never copied into the token directory.
+ */
+export interface AdminScopeRecord {
+  subject: string;
+  scopes: string[];
+  profile: string;
+  keyFile: string;
+}
+
+export function adminScopeFileFor(cfg: RuntimeConfig): string {
+  return join(cfg.tokenDir, 'workspace-admin.scopes.json');
+}
+
+/** Returns the stored admin setup, or null when setup-admin has not run or the file is not valid. */
+export function readAdminScopeFile(cfg: RuntimeConfig): AdminScopeRecord | null {
+  const file = adminScopeFileFor(cfg);
+  if (!existsSync(file)) return null;
+  try {
+    const raw = JSON.parse(readFileSync(file, 'utf8')) as Partial<AdminScopeRecord>;
+    if (typeof raw.subject !== 'string' || typeof raw.keyFile !== 'string' || !Array.isArray(raw.scopes)) return null;
+    return {
+      subject: raw.subject,
+      scopes: raw.scopes.filter((s): s is string => typeof s === 'string'),
+      profile: typeof raw.profile === 'string' ? raw.profile : 'custom',
+      keyFile: raw.keyFile,
+    };
+  } catch {
+    return null;
+  }
+}
+
+/** Writes the admin setup with mode 0600. Returns the file path. */
+export function saveAdminScopeFile(cfg: RuntimeConfig, record: AdminScopeRecord): string {
+  const file = adminScopeFileFor(cfg);
+  writeSecureJson(file, record);
+  return file;
+}
+
+/**
  * Builds an authenticated client for a server group. OAuth user tokens refresh
  * automatically; the admin group uses domain-wide delegation with a service
  * account. Throws AuthRequiredError rather than prompting, because MCP servers
@@ -77,15 +129,20 @@ export function loadUserTokens(kind: AuthKind, cfg: RuntimeConfig): Credentials 
  */
 export async function getAuthClient(kind: AuthKind, cfg: RuntimeConfig): Promise<OAuth2Client | JWT> {
   if (kind === 'workspace-admin') {
-    if (!cfg.serviceAccountKeyFile || !cfg.adminSubject) {
+    // A stored setup (gsm setup-admin) wins; the env vars and ADMIN_SCOPES are the fallback.
+    const stored = readAdminScopeFile(cfg);
+    const keyFile = stored?.keyFile ?? cfg.serviceAccountKeyFile;
+    const subject = stored?.subject ?? cfg.adminSubject;
+    if (!keyFile || !subject) {
       throw new Error(
-        'Admin tools need GSM_SERVICE_ACCOUNT_KEY_FILE and GSM_ADMIN_SUBJECT (a super admin email for domain-wide delegation).',
+        'Admin tools need GSM_SERVICE_ACCOUNT_KEY_FILE and GSM_ADMIN_SUBJECT (a super admin email for domain-wide delegation), or run: gsm setup-admin --subject <email> --key-file <file>.',
       );
     }
+    if (!existsSync(keyFile)) throw new Error(`Service account key file not found: ${keyFile}. Run gsm setup-admin again with the right --key-file.`);
     return new JWT({
-      keyFile: cfg.serviceAccountKeyFile,
-      scopes: ADMIN_SCOPES,
-      subject: cfg.adminSubject,
+      keyFile,
+      scopes: stored?.scopes ?? ADMIN_SCOPES,
+      subject,
     });
   }
 
@@ -109,6 +166,26 @@ export async function getCloudAdcClient(): Promise<OAuth2Client | JWT> {
   return (await auth.getClient()) as OAuth2Client | JWT;
 }
 
+/**
+ * The scopes a group actually holds, for runtime tool gating. OAuth groups read
+ * the "scope" field of the stored token. Returns null when the grant is unknown:
+ * not logged in, or a token that does not record its scopes. The admin group
+ * reports its stored setup, or ADMIN_SCOPES when setup-admin has not run. The apikey
+ * group has no OAuth grant, so it is always null (unknown), as a group that is not logged in is.
+ */
+export function grantedScopes(kind: AuthKind | 'apikey', cfg: RuntimeConfig): string[] | null {
+  if (kind === 'apikey') return null;
+  if (kind === 'workspace-admin') return readAdminScopeFile(cfg)?.scopes ?? [...ADMIN_SCOPES];
+  let tokens: Credentials | null;
+  try {
+    tokens = loadUserTokens(kind, cfg);
+  } catch {
+    return null;
+  }
+  if (!tokens?.scope) return null;
+  return tokens.scope.split(' ').filter(Boolean);
+}
+
 export interface TokenStatus {
   kind: AuthKind;
   loggedIn: boolean;
@@ -118,12 +195,21 @@ export interface TokenStatus {
 }
 
 export function tokenStatus(kind: AuthKind, cfg: RuntimeConfig): TokenStatus {
-  const tokens = kind === 'workspace-admin' ? null : loadUserTokens(kind, cfg);
+  if (kind === 'workspace-admin') {
+    const stored = readAdminScopeFile(cfg);
+    return {
+      kind,
+      loggedIn: Boolean((stored?.keyFile ?? cfg.serviceAccountKeyFile) && (stored?.subject ?? cfg.adminSubject)),
+      tokenFile: adminScopeFileFor(cfg),
+      scopes: stored?.scopes ?? ADMIN_SCOPES,
+    };
+  }
+  const tokens = loadUserTokens(kind, cfg);
   return {
     kind,
-    loggedIn: kind === 'workspace-admin' ? Boolean(cfg.serviceAccountKeyFile && cfg.adminSubject) : Boolean(tokens),
+    loggedIn: Boolean(tokens),
     tokenFile: tokenPath(kind, cfg),
-    scopes: kind === 'workspace-admin' ? ADMIN_SCOPES : tokens?.scope?.split(' '),
+    scopes: tokens?.scope?.split(' '),
     expiresAt: tokens?.expiry_date ? new Date(tokens.expiry_date).toISOString() : undefined,
   };
 }

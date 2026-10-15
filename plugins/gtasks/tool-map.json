@@ -1,0 +1,204 @@
+[
+  {
+    "name": "mcp__plugin_gtasks_gtasks__api_methods",
+    "kind": "read",
+    "scopes": [],
+    "title": "gtasks: API methods"
+  },
+  {
+    "name": "mcp__plugin_gtasks_gtasks__keep_media_download",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/keep",
+      "https://www.googleapis.com/auth/keep.readonly"
+    ],
+    "methodId": "keep.media.download",
+    "title": "keep.media.download"
+  },
+  {
+    "name": "mcp__plugin_gtasks_gtasks__keep_notes_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/keep"
+    ],
+    "methodId": "keep.notes.create",
+    "title": "keep.notes.create"
+  },
+  {
+    "name": "mcp__plugin_gtasks_gtasks__keep_notes_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/keep"
+    ],
+    "methodId": "keep.notes.delete",
+    "title": "keep.notes.delete"
+  },
+  {
+    "name": "mcp__plugin_gtasks_gtasks__keep_notes_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/keep",
+      "https://www.googleapis.com/auth/keep.readonly"
+    ],
+    "methodId": "keep.notes.get",
+    "title": "keep.notes.get"
+  },
+  {
+    "name": "mcp__plugin_gtasks_gtasks__keep_notes_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/keep",
+      "https://www.googleapis.com/auth/keep.readonly"
+    ],
+    "methodId": "keep.notes.list",
+    "title": "keep.notes.list"
+  },
+  {
+    "name": "mcp__plugin_gtasks_gtasks__keep_notes_permissions_batch_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/keep"
+    ],
+    "methodId": "keep.notes.permissions.batchCreate",
+    "title": "keep.notes.permissions.batchCreate"
+  },
+  {
+    "name": "mcp__plugin_gtasks_gtasks__keep_notes_permissions_batch_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/keep"
+    ],
+    "methodId": "keep.notes.permissions.batchDelete",
+    "title": "keep.notes.permissions.batchDelete"
+  },
+  {
+    "name": "mcp__plugin_gtasks_gtasks__tasks_tasklists_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/tasks"
+    ],
+    "methodId": "tasks.tasklists.delete",
+    "title": "tasks.tasklists.delete"
+  },
+  {
+    "name": "mcp__plugin_gtasks_gtasks__tasks_tasklists_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/tasks",
+      "https://www.googleapis.com/auth/tasks.readonly"
+    ],
+    "methodId": "tasks.tasklists.get",
+    "title": "tasks.tasklists.get"
+  },
+  {
+    "name": "mcp__plugin_gtasks_gtasks__tasks_tasklists_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tasks"
+    ],
+    "methodId": "tasks.tasklists.insert",
+    "title": "tasks.tasklists.insert"
+  },
+  {
+    "name": "mcp__plugin_gtasks_gtasks__tasks_tasklists_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/tasks",
+      "https://www.googleapis.com/auth/tasks.readonly"
+    ],
+    "methodId": "tasks.tasklists.list",
+    "title": "tasks.tasklists.list"
+  },
+  {
+    "name": "mcp__plugin_gtasks_gtasks__tasks_tasklists_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tasks"
+    ],
+    "methodId": "tasks.tasklists.patch",
+    "title": "tasks.tasklists.patch"
+  },
+  {
+    "name": "mcp__plugin_gtasks_gtasks__tasks_tasklists_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tasks"
+    ],
+    "methodId": "tasks.tasklists.update",
+    "title": "tasks.tasklists.update"
+  },
+  {
+    "name": "mcp__plugin_gtasks_gtasks__tasks_tasks_clear",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/tasks"
+    ],
+    "methodId": "tasks.tasks.clear",
+    "title": "tasks.tasks.clear"
+  },
+  {
+    "name": "mcp__plugin_gtasks_gtasks__tasks_tasks_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/tasks"
+    ],
+    "methodId": "tasks.tasks.delete",
+    "title": "tasks.tasks.delete"
+  },
+  {
+    "name": "mcp__plugin_gtasks_gtasks__tasks_tasks_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/tasks",
+      "https://www.googleapis.com/auth/tasks.readonly"
+    ],
+    "methodId": "tasks.tasks.get",
+    "title": "tasks.tasks.get"
+  },
+  {
+    "name": "mcp__plugin_gtasks_gtasks__tasks_tasks_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tasks"
+    ],
+    "methodId": "tasks.tasks.insert",
+    "title": "tasks.tasks.insert"
+  },
+  {
+    "name": "mcp__plugin_gtasks_gtasks__tasks_tasks_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/tasks",
+      "https://www.googleapis.com/auth/tasks.readonly"
+    ],
+    "methodId": "tasks.tasks.list",
+    "title": "tasks.tasks.list"
+  },
+  {
+    "name": "mcp__plugin_gtasks_gtasks__tasks_tasks_move",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tasks"
+    ],
+    "methodId": "tasks.tasks.move",
+    "title": "tasks.tasks.move"
+  },
+  {
+    "name": "mcp__plugin_gtasks_gtasks__tasks_tasks_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tasks"
+    ],
+    "methodId": "tasks.tasks.patch",
+    "title": "tasks.tasks.patch"
+  },
+  {
+    "name": "mcp__plugin_gtasks_gtasks__tasks_tasks_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tasks"
+    ],
+    "methodId": "tasks.tasks.update",
+    "title": "tasks.tasks.update"
+  }
+]

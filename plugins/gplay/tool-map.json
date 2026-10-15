@@ -1,0 +1,3110 @@
+[
+  {
+    "name": "mcp__plugin_gplay_gplay__androiddev_customers_configurati_create",
+    "kind": "write",
+    "scopes": [],
+    "methodId": "androiddeviceprovisioning.customers.configurations.create",
+    "title": "androiddeviceprovisioning.customers.configurations.create"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androiddev_customers_configurati_delete",
+    "kind": "destructive",
+    "scopes": [],
+    "methodId": "androiddeviceprovisioning.customers.configurations.delete",
+    "title": "androiddeviceprovisioning.customers.configurations.delete"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androiddev_customers_configuratio_patch",
+    "kind": "write",
+    "scopes": [],
+    "methodId": "androiddeviceprovisioning.customers.configurations.patch",
+    "title": "androiddeviceprovisioning.customers.configurations.patch"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androiddev_customers_configuration_list",
+    "kind": "read",
+    "scopes": [],
+    "methodId": "androiddeviceprovisioning.customers.configurations.list",
+    "title": "androiddeviceprovisioning.customers.configurations.list"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androiddev_customers_configurations_get",
+    "kind": "read",
+    "scopes": [],
+    "methodId": "androiddeviceprovisioning.customers.configurations.get",
+    "title": "androiddeviceprovisioning.customers.configurations.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androiddev_customers_devices_apply_conf",
+    "kind": "write",
+    "scopes": [],
+    "methodId": "androiddeviceprovisioning.customers.devices.applyConfiguration",
+    "title": "androiddeviceprovisioning.customers.devices.applyConfiguration"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androiddev_customers_devices_get",
+    "kind": "read",
+    "scopes": [],
+    "methodId": "androiddeviceprovisioning.customers.devices.get",
+    "title": "androiddeviceprovisioning.customers.devices.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androiddev_customers_devices_list",
+    "kind": "read",
+    "scopes": [],
+    "methodId": "androiddeviceprovisioning.customers.devices.list",
+    "title": "androiddeviceprovisioning.customers.devices.list"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androiddev_customers_devices_remove_con",
+    "kind": "write",
+    "scopes": [],
+    "methodId": "androiddeviceprovisioning.customers.devices.removeConfiguration",
+    "title": "androiddeviceprovisioning.customers.devices.removeConfiguration"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androiddev_customers_devices_unclaim",
+    "kind": "write",
+    "scopes": [],
+    "methodId": "androiddeviceprovisioning.customers.devices.unclaim",
+    "title": "androiddeviceprovisioning.customers.devices.unclaim"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androiddev_customers_dpcs_list",
+    "kind": "read",
+    "scopes": [],
+    "methodId": "androiddeviceprovisioning.customers.dpcs.list",
+    "title": "androiddeviceprovisioning.customers.dpcs.list"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androiddev_customers_list",
+    "kind": "read",
+    "scopes": [],
+    "methodId": "androiddeviceprovisioning.customers.list",
+    "title": "androiddeviceprovisioning.customers.list"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androiddev_operations_get",
+    "kind": "read",
+    "scopes": [],
+    "methodId": "androiddeviceprovisioning.operations.get",
+    "title": "androiddeviceprovisioning.operations.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androiddev_packages_package_regis_check",
+    "kind": "read",
+    "scopes": [],
+    "methodId": "androiddeveloperidstatus.packages.packageRegistrationStatus.check",
+    "title": "androiddeveloperidstatus.packages.packageRegistrationStatus.check"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androiddev_partner_vendors_custome_list",
+    "kind": "read",
+    "scopes": [],
+    "methodId": "androiddeviceprovisioning.partners.vendors.customers.list",
+    "title": "androiddeviceprovisioning.partners.vendors.customers.list"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androiddev_partners_customers_create",
+    "kind": "write",
+    "scopes": [],
+    "methodId": "androiddeviceprovisioning.partners.customers.create",
+    "title": "androiddeviceprovisioning.partners.customers.create"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androiddev_partners_customers_list",
+    "kind": "read",
+    "scopes": [],
+    "methodId": "androiddeviceprovisioning.partners.customers.list",
+    "title": "androiddeviceprovisioning.partners.customers.list"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androiddev_partners_devices_claim",
+    "kind": "write",
+    "scopes": [],
+    "methodId": "androiddeviceprovisioning.partners.devices.claim",
+    "title": "androiddeviceprovisioning.partners.devices.claim"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androiddev_partners_devices_claim_async",
+    "kind": "write",
+    "scopes": [],
+    "methodId": "androiddeviceprovisioning.partners.devices.claimAsync",
+    "title": "androiddeviceprovisioning.partners.devices.claimAsync"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androiddev_partners_devices_find_by_ide",
+    "kind": "write",
+    "scopes": [],
+    "methodId": "androiddeviceprovisioning.partners.devices.findByIdentifier",
+    "title": "androiddeviceprovisioning.partners.devices.findByIdentifier"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androiddev_partners_devices_find_by_own",
+    "kind": "write",
+    "scopes": [],
+    "methodId": "androiddeviceprovisioning.partners.devices.findByOwner",
+    "title": "androiddeviceprovisioning.partners.devices.findByOwner"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androiddev_partners_devices_get",
+    "kind": "read",
+    "scopes": [],
+    "methodId": "androiddeviceprovisioning.partners.devices.get",
+    "title": "androiddeviceprovisioning.partners.devices.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androiddev_partners_devices_get_sim_loc",
+    "kind": "read",
+    "scopes": [],
+    "methodId": "androiddeviceprovisioning.partners.devices.getSimLockState",
+    "title": "androiddeviceprovisioning.partners.devices.getSimLockState"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androiddev_partners_devices_metadata",
+    "kind": "write",
+    "scopes": [],
+    "methodId": "androiddeviceprovisioning.partners.devices.metadata",
+    "title": "androiddeviceprovisioning.partners.devices.metadata"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androiddev_partners_devices_unclaim",
+    "kind": "write",
+    "scopes": [],
+    "methodId": "androiddeviceprovisioning.partners.devices.unclaim",
+    "title": "androiddeviceprovisioning.partners.devices.unclaim"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androiddev_partners_devices_unclaim_asy",
+    "kind": "write",
+    "scopes": [],
+    "methodId": "androiddeviceprovisioning.partners.devices.unclaimAsync",
+    "title": "androiddeviceprovisioning.partners.devices.unclaimAsync"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androiddev_partners_devices_update_meta",
+    "kind": "write",
+    "scopes": [],
+    "methodId": "androiddeviceprovisioning.partners.devices.updateMetadataAsync",
+    "title": "androiddeviceprovisioning.partners.devices.updateMetadataAsync"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androiddev_partners_vendors_list",
+    "kind": "read",
+    "scopes": [],
+    "methodId": "androiddeviceprovisioning.partners.vendors.list",
+    "title": "androiddeviceprovisioning.partners.vendors.list"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_devices_force_report_upload",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.devices.forceReportUpload",
+    "title": "androidenterprise.devices.forceReportUpload"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_devices_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.devices.get",
+    "title": "androidenterprise.devices.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_devices_get_state",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.devices.getState",
+    "title": "androidenterprise.devices.getState"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_devices_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.devices.list",
+    "title": "androidenterprise.devices.list"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_devices_set_state",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.devices.setState",
+    "title": "androidenterprise.devices.setState"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_devices_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.devices.update",
+    "title": "androidenterprise.devices.update"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_enrollment_tokens_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.enrollmentTokens.create",
+    "title": "androidenterprise.enrollmentTokens.create"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_enterprises_acknowledge_noti",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.enterprises.acknowledgeNotificationSet",
+    "title": "androidenterprise.enterprises.acknowledgeNotificationSet"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_enterprises_complete_signup",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.enterprises.completeSignup",
+    "title": "androidenterprise.enterprises.completeSignup"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_enterprises_create_web_token",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.enterprises.createWebToken",
+    "title": "androidenterprise.enterprises.createWebToken"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_enterprises_enroll",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.enterprises.enroll",
+    "title": "androidenterprise.enterprises.enroll"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_enterprises_generate_enterpr",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.enterprises.generateEnterpriseUpgradeUrl",
+    "title": "androidenterprise.enterprises.generateEnterpriseUpgradeUrl"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_enterprises_generate_signup",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.enterprises.generateSignupUrl",
+    "title": "androidenterprise.enterprises.generateSignupUrl"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_enterprises_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.enterprises.get",
+    "title": "androidenterprise.enterprises.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_enterprises_get_service_acco",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.enterprises.getServiceAccount",
+    "title": "androidenterprise.enterprises.getServiceAccount"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_enterprises_get_store_layout",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.enterprises.getStoreLayout",
+    "title": "androidenterprise.enterprises.getStoreLayout"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_enterprises_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.enterprises.list",
+    "title": "androidenterprise.enterprises.list"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_enterprises_pull_notificatio",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.enterprises.pullNotificationSet",
+    "title": "androidenterprise.enterprises.pullNotificationSet"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_enterprises_send_test_push_n",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.enterprises.sendTestPushNotification",
+    "title": "androidenterprise.enterprises.sendTestPushNotification"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_enterprises_set_account",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.enterprises.setAccount",
+    "title": "androidenterprise.enterprises.setAccount"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_enterprises_set_store_layout",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.enterprises.setStoreLayout",
+    "title": "androidenterprise.enterprises.setStoreLayout"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_enterprises_unenroll",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.enterprises.unenroll",
+    "title": "androidenterprise.enterprises.unenroll"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_entitlements_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.entitlements.delete",
+    "title": "androidenterprise.entitlements.delete"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_entitlements_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.entitlements.get",
+    "title": "androidenterprise.entitlements.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_entitlements_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.entitlements.list",
+    "title": "androidenterprise.entitlements.list"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_entitlements_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.entitlements.update",
+    "title": "androidenterprise.entitlements.update"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_grouplicenses_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.grouplicenses.get",
+    "title": "androidenterprise.grouplicenses.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_grouplicenses_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.grouplicenses.list",
+    "title": "androidenterprise.grouplicenses.list"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_grouplicenseusers_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.grouplicenseusers.list",
+    "title": "androidenterprise.grouplicenseusers.list"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_installs_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.installs.delete",
+    "title": "androidenterprise.installs.delete"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_installs_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.installs.get",
+    "title": "androidenterprise.installs.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_installs_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.installs.list",
+    "title": "androidenterprise.installs.list"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_installs_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.installs.update",
+    "title": "androidenterprise.installs.update"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_managedconfigura_delete_6d4f",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.managedconfigurationsforuser.delete",
+    "title": "androidenterprise.managedconfigurationsforuser.delete"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_managedconfigura_delete_cbf8",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.managedconfigurationsfordevice.delete",
+    "title": "androidenterprise.managedconfigurationsfordevice.delete"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_managedconfigura_update_9b5d",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.managedconfigurationsforuser.update",
+    "title": "androidenterprise.managedconfigurationsforuser.update"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_managedconfigura_update_e059",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.managedconfigurationsfordevice.update",
+    "title": "androidenterprise.managedconfigurationsfordevice.update"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_managedconfigurati_list_5929",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.managedconfigurationsforuser.list",
+    "title": "androidenterprise.managedconfigurationsforuser.list"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_managedconfigurati_list_c1b3",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.managedconfigurationsfordevice.list",
+    "title": "androidenterprise.managedconfigurationsfordevice.list"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_managedconfiguratio_get_0e5e",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.managedconfigurationsfordevice.get",
+    "title": "androidenterprise.managedconfigurationsfordevice.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_managedconfiguratio_get_ae15",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.managedconfigurationsforuser.get",
+    "title": "androidenterprise.managedconfigurationsforuser.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_managedconfigurationsse_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.managedconfigurationssettings.list",
+    "title": "androidenterprise.managedconfigurationssettings.list"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_permissions_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.permissions.get",
+    "title": "androidenterprise.permissions.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_products_approve",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.products.approve",
+    "title": "androidenterprise.products.approve"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_products_generate_approval_u",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.products.generateApprovalUrl",
+    "title": "androidenterprise.products.generateApprovalUrl"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_products_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.products.get",
+    "title": "androidenterprise.products.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_products_get_app_restriction",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.products.getAppRestrictionsSchema",
+    "title": "androidenterprise.products.getAppRestrictionsSchema"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_products_get_permissions",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.products.getPermissions",
+    "title": "androidenterprise.products.getPermissions"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_products_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.products.list",
+    "title": "androidenterprise.products.list"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_products_unapprove",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.products.unapprove",
+    "title": "androidenterprise.products.unapprove"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_serviceaccountkeys_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.serviceaccountkeys.delete",
+    "title": "androidenterprise.serviceaccountkeys.delete"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_serviceaccountkeys_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.serviceaccountkeys.insert",
+    "title": "androidenterprise.serviceaccountkeys.insert"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_serviceaccountkeys_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.serviceaccountkeys.list",
+    "title": "androidenterprise.serviceaccountkeys.list"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_storelayoutclusters_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.storelayoutclusters.delete",
+    "title": "androidenterprise.storelayoutclusters.delete"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_storelayoutclusters_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.storelayoutclusters.get",
+    "title": "androidenterprise.storelayoutclusters.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_storelayoutclusters_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.storelayoutclusters.insert",
+    "title": "androidenterprise.storelayoutclusters.insert"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_storelayoutclusters_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.storelayoutclusters.list",
+    "title": "androidenterprise.storelayoutclusters.list"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_storelayoutclusters_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.storelayoutclusters.update",
+    "title": "androidenterprise.storelayoutclusters.update"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_storelayoutpages_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.storelayoutpages.delete",
+    "title": "androidenterprise.storelayoutpages.delete"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_storelayoutpages_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.storelayoutpages.get",
+    "title": "androidenterprise.storelayoutpages.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_storelayoutpages_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.storelayoutpages.insert",
+    "title": "androidenterprise.storelayoutpages.insert"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_storelayoutpages_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.storelayoutpages.list",
+    "title": "androidenterprise.storelayoutpages.list"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_storelayoutpages_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.storelayoutpages.update",
+    "title": "androidenterprise.storelayoutpages.update"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_users_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.users.delete",
+    "title": "androidenterprise.users.delete"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_users_generate_authenticatio",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.users.generateAuthenticationToken",
+    "title": "androidenterprise.users.generateAuthenticationToken"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_users_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.users.get",
+    "title": "androidenterprise.users.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_users_get_available_product",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.users.getAvailableProductSet",
+    "title": "androidenterprise.users.getAvailableProductSet"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_users_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.users.insert",
+    "title": "androidenterprise.users.insert"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_users_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.users.list",
+    "title": "androidenterprise.users.list"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_users_revoke_device_access",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.users.revokeDeviceAccess",
+    "title": "androidenterprise.users.revokeDeviceAccess"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_users_set_available_product",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.users.setAvailableProductSet",
+    "title": "androidenterprise.users.setAvailableProductSet"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_users_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.users.update",
+    "title": "androidenterprise.users.update"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_webapps_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.webapps.delete",
+    "title": "androidenterprise.webapps.delete"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_webapps_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.webapps.get",
+    "title": "androidenterprise.webapps.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_webapps_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.webapps.insert",
+    "title": "androidenterprise.webapps.insert"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_webapps_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.webapps.list",
+    "title": "androidenterprise.webapps.list"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androident_webapps_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidenterprise"
+    ],
+    "methodId": "androidenterprise.webapps.update",
+    "title": "androidenterprise.webapps.update"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_applica_tracks_releases_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.applications.tracks.releases.list",
+    "title": "androidpublisher.applications.tracks.releases.list"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_applicatio_device_tie_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.applications.deviceTierConfigs.create",
+    "title": "androidpublisher.applications.deviceTierConfigs.create"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_application_device_tier_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.applications.deviceTierConfigs.list",
+    "title": "androidpublisher.applications.deviceTierConfigs.list"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_applications_data_safety",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.applications.dataSafety",
+    "title": "androidpublisher.applications.dataSafety"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_applications_device_tier_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.applications.deviceTierConfigs.get",
+    "title": "androidpublisher.applications.deviceTierConfigs.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_apprecovery_add_targeting",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.apprecovery.addTargeting",
+    "title": "androidpublisher.apprecovery.addTargeting"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_apprecovery_cancel",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.apprecovery.cancel",
+    "title": "androidpublisher.apprecovery.cancel"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_apprecovery_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.apprecovery.create",
+    "title": "androidpublisher.apprecovery.create"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_apprecovery_deploy",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.apprecovery.deploy",
+    "title": "androidpublisher.apprecovery.deploy"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_apprecovery_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.apprecovery.list",
+    "title": "androidpublisher.apprecovery.list"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_appsigning_enroll_app",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.appsigning.enrollApp",
+    "title": "androidpublisher.appsigning.enrollApp"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_appsigning_rotate_app_signin",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.appsigning.rotateAppSigningKey",
+    "title": "androidpublisher.appsigning.rotateAppSigningKey"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_appstoreapp_updateappst_4937",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.appstoreappsreview.updateappstorehostedapp",
+    "title": "androidpublisher.appstoreappsreview.updateappstorehostedapp"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_appstoreapp_updateappst_927b",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.appstoreappsreview.updateappstorehostedapppublishstatus",
+    "title": "androidpublisher.appstoreappsreview.updateappstorehostedapppublishstatus"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_appstoreappsr_createappstore",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.appstoreappsreview.createappstorehostedapp",
+    "title": "androidpublisher.appstoreappsreview.createappstorehostedapp"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_appstorecat_recentappvie_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.appstorecatalog.recentappviews.get",
+    "title": "androidpublisher.appstorecatalog.recentappviews.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_appstorecat_recentupdat_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.appstorecatalog.recentupdateevents.list",
+    "title": "androidpublisher.appstorecatalog.recentupdateevents.list"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_edits_apks_addexternallyhost",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.edits.apks.addexternallyhosted",
+    "title": "androidpublisher.edits.apks.addexternallyhosted"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_edits_apks_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.edits.apks.list",
+    "title": "androidpublisher.edits.apks.list"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_edits_bundles_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.edits.bundles.list",
+    "title": "androidpublisher.edits.bundles.list"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_edits_commit",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.edits.commit",
+    "title": "androidpublisher.edits.commit"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_edits_countryavailabilit_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.edits.countryavailability.get",
+    "title": "androidpublisher.edits.countryavailability.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_edits_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.edits.delete",
+    "title": "androidpublisher.edits.delete"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_edits_details_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.edits.details.get",
+    "title": "androidpublisher.edits.details.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_edits_details_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.edits.details.patch",
+    "title": "androidpublisher.edits.details.patch"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_edits_details_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.edits.details.update",
+    "title": "androidpublisher.edits.details.update"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_edits_expansionfiles_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.edits.expansionfiles.get",
+    "title": "androidpublisher.edits.expansionfiles.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_edits_expansionfiles_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.edits.expansionfiles.patch",
+    "title": "androidpublisher.edits.expansionfiles.patch"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_edits_expansionfiles_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.edits.expansionfiles.update",
+    "title": "androidpublisher.edits.expansionfiles.update"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_edits_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.edits.get",
+    "title": "androidpublisher.edits.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_edits_images_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.edits.images.delete",
+    "title": "androidpublisher.edits.images.delete"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_edits_images_deleteall",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.edits.images.deleteall",
+    "title": "androidpublisher.edits.images.deleteall"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_edits_images_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.edits.images.list",
+    "title": "androidpublisher.edits.images.list"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_edits_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.edits.insert",
+    "title": "androidpublisher.edits.insert"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_edits_listings_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.edits.listings.delete",
+    "title": "androidpublisher.edits.listings.delete"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_edits_listings_deleteall",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.edits.listings.deleteall",
+    "title": "androidpublisher.edits.listings.deleteall"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_edits_listings_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.edits.listings.get",
+    "title": "androidpublisher.edits.listings.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_edits_listings_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.edits.listings.list",
+    "title": "androidpublisher.edits.listings.list"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_edits_listings_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.edits.listings.patch",
+    "title": "androidpublisher.edits.listings.patch"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_edits_listings_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.edits.listings.update",
+    "title": "androidpublisher.edits.listings.update"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_edits_testers_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.edits.testers.get",
+    "title": "androidpublisher.edits.testers.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_edits_testers_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.edits.testers.patch",
+    "title": "androidpublisher.edits.testers.patch"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_edits_testers_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.edits.testers.update",
+    "title": "androidpublisher.edits.testers.update"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_edits_tracks_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.edits.tracks.create",
+    "title": "androidpublisher.edits.tracks.create"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_edits_tracks_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.edits.tracks.get",
+    "title": "androidpublisher.edits.tracks.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_edits_tracks_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.edits.tracks.list",
+    "title": "androidpublisher.edits.tracks.list"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_edits_tracks_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.edits.tracks.patch",
+    "title": "androidpublisher.edits.tracks.patch"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_edits_tracks_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.edits.tracks.update",
+    "title": "androidpublisher.edits.tracks.update"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_edits_validate",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.edits.validate",
+    "title": "androidpublisher.edits.validate"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_externaltrans_createexternal",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.externaltransactions.createexternaltransaction",
+    "title": "androidpublisher.externaltransactions.createexternaltransaction"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_externaltrans_getexternaltra",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.externaltransactions.getexternaltransaction",
+    "title": "androidpublisher.externaltransactions.getexternaltransaction"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_externaltrans_refundexternal",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.externaltransactions.refundexternaltransaction",
+    "title": "androidpublisher.externaltransactions.refundexternaltransaction"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_generatedapks_download",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.generatedapks.download",
+    "title": "androidpublisher.generatedapks.download"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_generatedapks_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.generatedapks.list",
+    "title": "androidpublisher.generatedapks.list"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_grants_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.grants.create",
+    "title": "androidpublisher.grants.create"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_grants_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.grants.delete",
+    "title": "androidpublisher.grants.delete"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_grants_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.grants.patch",
+    "title": "androidpublisher.grants.patch"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_inappproducts_batch_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.inappproducts.batchDelete",
+    "title": "androidpublisher.inappproducts.batchDelete"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_inappproducts_batch_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.inappproducts.batchGet",
+    "title": "androidpublisher.inappproducts.batchGet"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_inappproducts_batch_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.inappproducts.batchUpdate",
+    "title": "androidpublisher.inappproducts.batchUpdate"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_inappproducts_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.inappproducts.delete",
+    "title": "androidpublisher.inappproducts.delete"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_inappproducts_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.inappproducts.get",
+    "title": "androidpublisher.inappproducts.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_inappproducts_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.inappproducts.insert",
+    "title": "androidpublisher.inappproducts.insert"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_inappproducts_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.inappproducts.list",
+    "title": "androidpublisher.inappproducts.list"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_inappproducts_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.inappproducts.patch",
+    "title": "androidpublisher.inappproducts.patch"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_inappproducts_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.inappproducts.update",
+    "title": "androidpublisher.inappproducts.update"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_mon_onet_purc_offe_batc_55d4",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.monetization.onetimeproducts.purchaseOptions.offers.batchUpdate",
+    "title": "androidpublisher.monetization.onetimeproducts.purchaseOptions.offers.batchUpdate"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_mon_onet_purc_offe_batc_b8dd",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.monetization.onetimeproducts.purchaseOptions.offers.batchUpdateStates",
+    "title": "androidpublisher.monetization.onetimeproducts.purchaseOptions.offers.batchUpdateStates"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_mon_onet_purc_offe_batc_cb12",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.monetization.onetimeproducts.purchaseOptions.offers.batchDelete",
+    "title": "androidpublisher.monetization.onetimeproducts.purchaseOptions.offers.batchDelete"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_mon_onet_purc_offe_batc_ec87",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.monetization.onetimeproducts.purchaseOptions.offers.batchGet",
+    "title": "androidpublisher.monetization.onetimeproducts.purchaseOptions.offers.batchGet"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_mon_subs_base_offe_batc_492b",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.monetization.subscriptions.basePlans.offers.batchUpdateStates",
+    "title": "androidpublisher.monetization.subscriptions.basePlans.offers.batchUpdateStates"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_mon_subs_base_offe_batc_6e72",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.monetization.subscriptions.basePlans.offers.batchGet",
+    "title": "androidpublisher.monetization.subscriptions.basePlans.offers.batchGet"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_mon_subs_base_offe_batc_9d1e",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.monetization.subscriptions.basePlans.offers.batchUpdate",
+    "title": "androidpublisher.monetization.subscriptions.basePlans.offers.batchUpdate"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_mone_oneti_purch_offer_activ",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.monetization.onetimeproducts.purchaseOptions.offers.activate",
+    "title": "androidpublisher.monetization.onetimeproducts.purchaseOptions.offers.activate"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_mone_oneti_purch_offer_cance",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.monetization.onetimeproducts.purchaseOptions.offers.cancel",
+    "title": "androidpublisher.monetization.onetimeproducts.purchaseOptions.offers.cancel"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_mone_oneti_purch_offer_deact",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.monetization.onetimeproducts.purchaseOptions.offers.deactivate",
+    "title": "androidpublisher.monetization.onetimeproducts.purchaseOptions.offers.deactivate"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_monet_oneti_purch_offer_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.monetization.onetimeproducts.purchaseOptions.offers.list",
+    "title": "androidpublisher.monetization.onetimeproducts.purchaseOptions.offers.list"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_monet_subsc_base_offer_activ",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.monetization.subscriptions.basePlans.offers.activate",
+    "title": "androidpublisher.monetization.subscriptions.basePlans.offers.activate"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_monet_subsc_base_offer_creat",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.monetization.subscriptions.basePlans.offers.create",
+    "title": "androidpublisher.monetization.subscriptions.basePlans.offers.create"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_monet_subsc_base_offer_deact",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.monetization.subscriptions.basePlans.offers.deactivate",
+    "title": "androidpublisher.monetization.subscriptions.basePlans.offers.deactivate"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_monet_subsc_base_offer_delet",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.monetization.subscriptions.basePlans.offers.delete",
+    "title": "androidpublisher.monetization.subscriptions.basePlans.offers.delete"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_monet_subsc_base_offer_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.monetization.subscriptions.basePlans.offers.patch",
+    "title": "androidpublisher.monetization.subscriptions.basePlans.offers.patch"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_monet_subsc_base_offers_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.monetization.subscriptions.basePlans.offers.get",
+    "title": "androidpublisher.monetization.subscriptions.basePlans.offers.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_monet_subsc_base_offers_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.monetization.subscriptions.basePlans.offers.list",
+    "title": "androidpublisher.monetization.subscriptions.basePlans.offers.list"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_moneti_onetim_purcha_batch_d",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.monetization.onetimeproducts.purchaseOptions.batchDelete",
+    "title": "androidpublisher.monetization.onetimeproducts.purchaseOptions.batchDelete"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_moneti_onetim_purcha_batch_u",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.monetization.onetimeproducts.purchaseOptions.batchUpdateStates",
+    "title": "androidpublisher.monetization.onetimeproducts.purchaseOptions.batchUpdateStates"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_moneti_subscr_base_p_activat",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.monetization.subscriptions.basePlans.activate",
+    "title": "androidpublisher.monetization.subscriptions.basePlans.activate"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_moneti_subscr_base_p_batch_m",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.monetization.subscriptions.basePlans.batchMigratePrices",
+    "title": "androidpublisher.monetization.subscriptions.basePlans.batchMigratePrices"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_moneti_subscr_base_p_batch_u",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.monetization.subscriptions.basePlans.batchUpdateStates",
+    "title": "androidpublisher.monetization.subscriptions.basePlans.batchUpdateStates"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_moneti_subscr_base_p_deactiv",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.monetization.subscriptions.basePlans.deactivate",
+    "title": "androidpublisher.monetization.subscriptions.basePlans.deactivate"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_moneti_subscr_base_p_migrate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.monetization.subscriptions.basePlans.migratePrices",
+    "title": "androidpublisher.monetization.subscriptions.basePlans.migratePrices"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_moneti_subscr_base_pl_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.monetization.subscriptions.basePlans.delete",
+    "title": "androidpublisher.monetization.subscriptions.basePlans.delete"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_monetiza_onetimepr_batch_del",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.monetization.onetimeproducts.batchDelete",
+    "title": "androidpublisher.monetization.onetimeproducts.batchDelete"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_monetiza_onetimepr_batch_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.monetization.onetimeproducts.batchGet",
+    "title": "androidpublisher.monetization.onetimeproducts.batchGet"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_monetiza_onetimepr_batch_upd",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.monetization.onetimeproducts.batchUpdate",
+    "title": "androidpublisher.monetization.onetimeproducts.batchUpdate"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_monetiza_subscript_batch_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.monetization.subscriptions.batchGet",
+    "title": "androidpublisher.monetization.subscriptions.batchGet"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_monetiza_subscript_batch_upd",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.monetization.subscriptions.batchUpdate",
+    "title": "androidpublisher.monetization.subscriptions.batchUpdate"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_monetizat_subscripti_archive",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.monetization.subscriptions.archive",
+    "title": "androidpublisher.monetization.subscriptions.archive"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_monetizati_onetimepro_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.monetization.onetimeproducts.delete",
+    "title": "androidpublisher.monetization.onetimeproducts.delete"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_monetizati_onetimeprod_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.monetization.onetimeproducts.patch",
+    "title": "androidpublisher.monetization.onetimeproducts.patch"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_monetizati_subscripti_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.monetization.subscriptions.create",
+    "title": "androidpublisher.monetization.subscriptions.create"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_monetizati_subscripti_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.monetization.subscriptions.delete",
+    "title": "androidpublisher.monetization.subscriptions.delete"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_monetizati_subscriptio_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.monetization.subscriptions.patch",
+    "title": "androidpublisher.monetization.subscriptions.patch"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_monetizatio_onetimeprod_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.monetization.onetimeproducts.list",
+    "title": "androidpublisher.monetization.onetimeproducts.list"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_monetizatio_onetimeprodu_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.monetization.onetimeproducts.get",
+    "title": "androidpublisher.monetization.onetimeproducts.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_monetizatio_subscriptio_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.monetization.subscriptions.list",
+    "title": "androidpublisher.monetization.subscriptions.list"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_monetizatio_subscription_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.monetization.subscriptions.get",
+    "title": "androidpublisher.monetization.subscriptions.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_monetization_convert_region",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.monetization.convertRegionPrices",
+    "title": "androidpublisher.monetization.convertRegionPrices"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_orders_batchget",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.orders.batchget",
+    "title": "androidpublisher.orders.batchget"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_orders_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.orders.get",
+    "title": "androidpublisher.orders.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_orders_refund",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.orders.refund",
+    "title": "androidpublisher.orders.refund"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_orders_reviewrefund",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.orders.reviewrefund",
+    "title": "androidpublisher.orders.reviewrefund"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_purchas_subscrip_cancel_07cb",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.purchases.subscriptionsv2.cancel",
+    "title": "androidpublisher.purchases.subscriptionsv2.cancel"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_purchas_subscrip_cancel_0abf",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.purchases.subscriptions.cancel",
+    "title": "androidpublisher.purchases.subscriptions.cancel"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_purchase_productsv_getproduc",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.purchases.productsv2.getproductpurchasev2",
+    "title": "androidpublisher.purchases.productsv2.getproductpurchasev2"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_purchase_subscrip_defer_073c",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.purchases.subscriptions.defer",
+    "title": "androidpublisher.purchases.subscriptions.defer"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_purchase_subscrip_defer_2791",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.purchases.subscriptionsv2.defer",
+    "title": "androidpublisher.purchases.subscriptionsv2.defer"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_purchase_subscript_acknowled",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.purchases.subscriptions.acknowledge",
+    "title": "androidpublisher.purchases.subscriptions.acknowledge"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_purchases_products_acknowled",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.purchases.products.acknowledge",
+    "title": "androidpublisher.purchases.products.acknowledge"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_purchases_products_consume",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.purchases.products.consume",
+    "title": "androidpublisher.purchases.products.consume"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_purchases_products_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.purchases.products.get",
+    "title": "androidpublisher.purchases.products.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_purchases_subscriptio_revoke",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.purchases.subscriptionsv2.revoke",
+    "title": "androidpublisher.purchases.subscriptionsv2.revoke"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_purchases_subscriptionsv_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.purchases.subscriptionsv2.get",
+    "title": "androidpublisher.purchases.subscriptionsv2.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_purchases_voidedpurchas_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.purchases.voidedpurchases.list",
+    "title": "androidpublisher.purchases.voidedpurchases.list"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_reviews_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.reviews.get",
+    "title": "androidpublisher.reviews.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_reviews_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.reviews.list",
+    "title": "androidpublisher.reviews.list"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_reviews_reply",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.reviews.reply",
+    "title": "androidpublisher.reviews.reply"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_systemapks_variants_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.systemapks.variants.create",
+    "title": "androidpublisher.systemapks.variants.create"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_systemapks_variants_download",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.systemapks.variants.download",
+    "title": "androidpublisher.systemapks.variants.download"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_systemapks_variants_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.systemapks.variants.get",
+    "title": "androidpublisher.systemapks.variants.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_systemapks_variants_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.systemapks.variants.list",
+    "title": "androidpublisher.systemapks.variants.list"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_users_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.users.create",
+    "title": "androidpublisher.users.create"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_users_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.users.delete",
+    "title": "androidpublisher.users.delete"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_users_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.users.list",
+    "title": "androidpublisher.users.list"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidpub_users_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "androidpublisher.users.patch",
+    "title": "androidpublisher.users.patch"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__api_call",
+    "kind": "dynamic",
+    "scopes": [],
+    "title": "Call an API method"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__api_describe",
+    "kind": "read",
+    "scopes": [],
+    "title": "Describe an API method"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__api_methods",
+    "kind": "read",
+    "scopes": [],
+    "title": "gplay: API methods"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__api_search",
+    "kind": "read",
+    "scopes": [],
+    "title": "Search API methods"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__chromewebs_publishers_items_cancel_subm",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/chromewebstore"
+    ],
+    "methodId": "chromewebstore.publishers.items.cancelSubmission",
+    "title": "chromewebstore.publishers.items.cancelSubmission"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__chromewebs_publishers_items_fetch_statu",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/chromewebstore",
+      "https://www.googleapis.com/auth/chromewebstore.readonly"
+    ],
+    "methodId": "chromewebstore.publishers.items.fetchStatus",
+    "title": "chromewebstore.publishers.items.fetchStatus"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__chromewebs_publishers_items_publish",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/chromewebstore"
+    ],
+    "methodId": "chromewebstore.publishers.items.publish",
+    "title": "chromewebstore.publishers.items.publish"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__chromewebs_publishers_items_set_publish",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/chromewebstore"
+    ],
+    "methodId": "chromewebstore.publishers.items.setPublishedDeployPercentage",
+    "title": "chromewebstore.publishers.items.setPublishedDeployPercentage"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__games_accesstokens_generate_play_groupi",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/games"
+    ],
+    "methodId": "games.accesstokens.generatePlayGroupingApiToken",
+    "title": "games.accesstokens.generatePlayGroupingApiToken"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__games_accesstokens_generate_recall_play",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "games.accesstokens.generateRecallPlayGroupingApiToken",
+    "title": "games.accesstokens.generateRecallPlayGroupingApiToken"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__games_achievement_definitions_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/games"
+    ],
+    "methodId": "games.achievementDefinitions.list",
+    "title": "games.achievementDefinitions.list"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__games_achievements_increment",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/games"
+    ],
+    "methodId": "games.achievements.increment",
+    "title": "games.achievements.increment"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__games_achievements_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/games"
+    ],
+    "methodId": "games.achievements.list",
+    "title": "games.achievements.list"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__games_achievements_reveal",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/games"
+    ],
+    "methodId": "games.achievements.reveal",
+    "title": "games.achievements.reveal"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__games_achievements_set_steps_at_least",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/games"
+    ],
+    "methodId": "games.achievements.setStepsAtLeast",
+    "title": "games.achievements.setStepsAtLeast"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__games_achievements_unlock",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/games"
+    ],
+    "methodId": "games.achievements.unlock",
+    "title": "games.achievements.unlock"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__games_achievements_update_multiple",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/games"
+    ],
+    "methodId": "games.achievements.updateMultiple",
+    "title": "games.achievements.updateMultiple"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__games_applications_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/games"
+    ],
+    "methodId": "games.applications.get",
+    "title": "games.applications.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__games_applications_get_end_point",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/games"
+    ],
+    "methodId": "games.applications.getEndPoint",
+    "title": "games.applications.getEndPoint"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__games_applications_played",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/games"
+    ],
+    "methodId": "games.applications.played",
+    "title": "games.applications.played"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__games_applications_verify",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/games"
+    ],
+    "methodId": "games.applications.verify",
+    "title": "games.applications.verify"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__games_events_list_by_player",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/games"
+    ],
+    "methodId": "games.events.listByPlayer",
+    "title": "games.events.listByPlayer"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__games_events_list_definitions",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/games"
+    ],
+    "methodId": "games.events.listDefinitions",
+    "title": "games.events.listDefinitions"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__games_events_record",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/games"
+    ],
+    "methodId": "games.events.record",
+    "title": "games.events.record"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__games_game_stats_batch_record_events",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/games"
+    ],
+    "methodId": "games.gameStats.batchRecordEvents",
+    "title": "games.gameStats.batchRecordEvents"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__games_leaderboards_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/games"
+    ],
+    "methodId": "games.leaderboards.get",
+    "title": "games.leaderboards.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__games_leaderboards_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/games"
+    ],
+    "methodId": "games.leaderboards.list",
+    "title": "games.leaderboards.list"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__games_metagame_get_metagame_config",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/games"
+    ],
+    "methodId": "games.metagame.getMetagameConfig",
+    "title": "games.metagame.getMetagameConfig"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__games_metagame_list_categories_by_playe",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/games"
+    ],
+    "methodId": "games.metagame.listCategoriesByPlayer",
+    "title": "games.metagame.listCategoriesByPlayer"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__games_players_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/games"
+    ],
+    "methodId": "games.players.get",
+    "title": "games.players.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__games_players_get_multiple_application",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/games"
+    ],
+    "methodId": "games.players.getMultipleApplicationPlayerIds",
+    "title": "games.players.getMultipleApplicationPlayerIds"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__games_players_get_scoped_player_ids",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/games"
+    ],
+    "methodId": "games.players.getScopedPlayerIds",
+    "title": "games.players.getScopedPlayerIds"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__games_players_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/games"
+    ],
+    "methodId": "games.players.list",
+    "title": "games.players.list"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__games_recall_games_player_tokens",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "games.recall.gamesPlayerTokens",
+    "title": "games.recall.gamesPlayerTokens"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__games_recall_last_token_from_all_develo",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "games.recall.lastTokenFromAllDeveloperGames",
+    "title": "games.recall.lastTokenFromAllDeveloperGames"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__games_recall_link_persona",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "games.recall.linkPersona",
+    "title": "games.recall.linkPersona"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__games_recall_reset_persona",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "games.recall.resetPersona",
+    "title": "games.recall.resetPersona"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__games_recall_retrieve_tokens",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "games.recall.retrieveTokens",
+    "title": "games.recall.retrieveTokens"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__games_recall_unlink_persona",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "games.recall.unlinkPersona",
+    "title": "games.recall.unlinkPersona"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__games_revisions_check",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/games"
+    ],
+    "methodId": "games.revisions.check",
+    "title": "games.revisions.check"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__games_scores_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/games"
+    ],
+    "methodId": "games.scores.get",
+    "title": "games.scores.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__games_scores_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/games"
+    ],
+    "methodId": "games.scores.list",
+    "title": "games.scores.list"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__games_scores_list_window",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/games"
+    ],
+    "methodId": "games.scores.listWindow",
+    "title": "games.scores.listWindow"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__games_scores_submit",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/games"
+    ],
+    "methodId": "games.scores.submit",
+    "title": "games.scores.submit"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__games_scores_submit_multiple",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/games"
+    ],
+    "methodId": "games.scores.submitMultiple",
+    "title": "games.scores.submitMultiple"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__games_snapshots_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive.appdata",
+      "https://www.googleapis.com/auth/games"
+    ],
+    "methodId": "games.snapshots.get",
+    "title": "games.snapshots.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__games_snapshots_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive.appdata",
+      "https://www.googleapis.com/auth/games"
+    ],
+    "methodId": "games.snapshots.list",
+    "title": "games.snapshots.list"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__games_stats_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/games"
+    ],
+    "methodId": "games.stats.get",
+    "title": "games.stats.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__gamesconfi_achievement_configura_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "gamesConfiguration.achievementConfigurations.delete",
+    "title": "gamesConfiguration.achievementConfigurations.delete"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__gamesconfi_achievement_configura_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "gamesConfiguration.achievementConfigurations.insert",
+    "title": "gamesConfiguration.achievementConfigurations.insert"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__gamesconfi_achievement_configura_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "gamesConfiguration.achievementConfigurations.update",
+    "title": "gamesConfiguration.achievementConfigurations.update"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__gamesconfi_achievement_configurati_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "gamesConfiguration.achievementConfigurations.list",
+    "title": "gamesConfiguration.achievementConfigurations.list"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__gamesconfi_achievement_configuratio_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "gamesConfiguration.achievementConfigurations.get",
+    "title": "gamesConfiguration.achievementConfigurations.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__gamesconfi_leaderboard_configura_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "gamesConfiguration.leaderboardConfigurations.delete",
+    "title": "gamesConfiguration.leaderboardConfigurations.delete"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__gamesconfi_leaderboard_configura_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "gamesConfiguration.leaderboardConfigurations.insert",
+    "title": "gamesConfiguration.leaderboardConfigurations.insert"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__gamesconfi_leaderboard_configura_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "gamesConfiguration.leaderboardConfigurations.update",
+    "title": "gamesConfiguration.leaderboardConfigurations.update"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__gamesconfi_leaderboard_configurati_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "gamesConfiguration.leaderboardConfigurations.list",
+    "title": "gamesConfiguration.leaderboardConfigurations.list"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__gamesconfi_leaderboard_configuratio_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "methodId": "gamesConfiguration.leaderboardConfigurations.get",
+    "title": "gamesConfiguration.leaderboardConfigurations.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__gamesmanag_achievements_reset",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/games"
+    ],
+    "methodId": "gamesManagement.achievements.reset",
+    "title": "gamesManagement.achievements.reset"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__gamesmanag_achievements_reset_all",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/games"
+    ],
+    "methodId": "gamesManagement.achievements.resetAll",
+    "title": "gamesManagement.achievements.resetAll"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__gamesmanag_achievements_reset_all_for_a",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/games"
+    ],
+    "methodId": "gamesManagement.achievements.resetAllForAllPlayers",
+    "title": "gamesManagement.achievements.resetAllForAllPlayers"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__gamesmanag_achievements_reset_for_all_p",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/games"
+    ],
+    "methodId": "gamesManagement.achievements.resetForAllPlayers",
+    "title": "gamesManagement.achievements.resetForAllPlayers"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__gamesmanag_achievements_reset_multiple",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/games"
+    ],
+    "methodId": "gamesManagement.achievements.resetMultipleForAllPlayers",
+    "title": "gamesManagement.achievements.resetMultipleForAllPlayers"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__gamesmanag_applications_list_hidden",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/games"
+    ],
+    "methodId": "gamesManagement.applications.listHidden",
+    "title": "gamesManagement.applications.listHidden"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__gamesmanag_events_reset",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/games"
+    ],
+    "methodId": "gamesManagement.events.reset",
+    "title": "gamesManagement.events.reset"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__gamesmanag_events_reset_all",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/games"
+    ],
+    "methodId": "gamesManagement.events.resetAll",
+    "title": "gamesManagement.events.resetAll"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__gamesmanag_events_reset_all_for_all_pla",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/games"
+    ],
+    "methodId": "gamesManagement.events.resetAllForAllPlayers",
+    "title": "gamesManagement.events.resetAllForAllPlayers"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__gamesmanag_events_reset_for_all_players",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/games"
+    ],
+    "methodId": "gamesManagement.events.resetForAllPlayers",
+    "title": "gamesManagement.events.resetForAllPlayers"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__gamesmanag_events_reset_multiple_for_al",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/games"
+    ],
+    "methodId": "gamesManagement.events.resetMultipleForAllPlayers",
+    "title": "gamesManagement.events.resetMultipleForAllPlayers"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__gamesmanag_players_hide",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/games"
+    ],
+    "methodId": "gamesManagement.players.hide",
+    "title": "gamesManagement.players.hide"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__gamesmanag_players_unhide",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/games"
+    ],
+    "methodId": "gamesManagement.players.unhide",
+    "title": "gamesManagement.players.unhide"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__gamesmanag_scores_reset",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/games"
+    ],
+    "methodId": "gamesManagement.scores.reset",
+    "title": "gamesManagement.scores.reset"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__gamesmanag_scores_reset_all",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/games"
+    ],
+    "methodId": "gamesManagement.scores.resetAll",
+    "title": "gamesManagement.scores.resetAll"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__gamesmanag_scores_reset_all_for_all_pla",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/games"
+    ],
+    "methodId": "gamesManagement.scores.resetAllForAllPlayers",
+    "title": "gamesManagement.scores.resetAllForAllPlayers"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__gamesmanag_scores_reset_for_all_players",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/games"
+    ],
+    "methodId": "gamesManagement.scores.resetForAllPlayers",
+    "title": "gamesManagement.scores.resetForAllPlayers"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__gamesmanag_scores_reset_multiple_for_al",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/games"
+    ],
+    "methodId": "gamesManagement.scores.resetMultipleForAllPlayers",
+    "title": "gamesManagement.scores.resetMultipleForAllPlayers"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__playdevelo_anomalies_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/playdeveloperreporting"
+    ],
+    "methodId": "playdeveloperreporting.anomalies.list",
+    "title": "playdeveloperreporting.anomalies.list"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__playdevelo_apps_fetch_release_filter_op",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/playdeveloperreporting"
+    ],
+    "methodId": "playdeveloperreporting.apps.fetchReleaseFilterOptions",
+    "title": "playdeveloperreporting.apps.fetchReleaseFilterOptions"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__playdevelo_apps_search",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/playdeveloperreporting"
+    ],
+    "methodId": "playdeveloperreporting.apps.search",
+    "title": "playdeveloperreporting.apps.search"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__playdevelo_vitals_anonrssandswapm_query",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/playdeveloperreporting"
+    ],
+    "methodId": "playdeveloperreporting.vitals.anonrssandswapmemoryusage.query",
+    "title": "playdeveloperreporting.vitals.anonrssandswapmemoryusage.query"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__playdevelo_vitals_anonrssandswapmem_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/playdeveloperreporting"
+    ],
+    "methodId": "playdeveloperreporting.vitals.anonrssandswapmemoryusage.get",
+    "title": "playdeveloperreporting.vitals.anonrssandswapmemoryusage.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__playdevelo_vitals_anrrate_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/playdeveloperreporting"
+    ],
+    "methodId": "playdeveloperreporting.vitals.anrrate.get",
+    "title": "playdeveloperreporting.vitals.anrrate.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__playdevelo_vitals_anrrate_query",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/playdeveloperreporting"
+    ],
+    "methodId": "playdeveloperreporting.vitals.anrrate.query",
+    "title": "playdeveloperreporting.vitals.anrrate.query"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__playdevelo_vitals_bitmapmemoryusa_query",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/playdeveloperreporting"
+    ],
+    "methodId": "playdeveloperreporting.vitals.bitmapmemoryusage.query",
+    "title": "playdeveloperreporting.vitals.bitmapmemoryusage.query"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__playdevelo_vitals_bitmapmemoryusage_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/playdeveloperreporting"
+    ],
+    "methodId": "playdeveloperreporting.vitals.bitmapmemoryusage.get",
+    "title": "playdeveloperreporting.vitals.bitmapmemoryusage.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__playdevelo_vitals_crashrate_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/playdeveloperreporting"
+    ],
+    "methodId": "playdeveloperreporting.vitals.crashrate.get",
+    "title": "playdeveloperreporting.vitals.crashrate.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__playdevelo_vitals_crashrate_query",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/playdeveloperreporting"
+    ],
+    "methodId": "playdeveloperreporting.vitals.crashrate.query",
+    "title": "playdeveloperreporting.vitals.crashrate.query"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__playdevelo_vitals_errors_counts_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/playdeveloperreporting"
+    ],
+    "methodId": "playdeveloperreporting.vitals.errors.counts.get",
+    "title": "playdeveloperreporting.vitals.errors.counts.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__playdevelo_vitals_errors_counts_query",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/playdeveloperreporting"
+    ],
+    "methodId": "playdeveloperreporting.vitals.errors.counts.query",
+    "title": "playdeveloperreporting.vitals.errors.counts.query"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__playdevelo_vitals_errors_issues_search",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/playdeveloperreporting"
+    ],
+    "methodId": "playdeveloperreporting.vitals.errors.issues.search",
+    "title": "playdeveloperreporting.vitals.errors.issues.search"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__playdevelo_vitals_errors_reports_search",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/playdeveloperreporting"
+    ],
+    "methodId": "playdeveloperreporting.vitals.errors.reports.search",
+    "title": "playdeveloperreporting.vitals.errors.reports.search"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__playdevelo_vitals_excessivewakeup_query",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/playdeveloperreporting"
+    ],
+    "methodId": "playdeveloperreporting.vitals.excessivewakeuprate.query",
+    "title": "playdeveloperreporting.vitals.excessivewakeuprate.query"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__playdevelo_vitals_excessivewakeupra_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/playdeveloperreporting"
+    ],
+    "methodId": "playdeveloperreporting.vitals.excessivewakeuprate.get",
+    "title": "playdeveloperreporting.vitals.excessivewakeuprate.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__playdevelo_vitals_lmkrate_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/playdeveloperreporting"
+    ],
+    "methodId": "playdeveloperreporting.vitals.lmkrate.get",
+    "title": "playdeveloperreporting.vitals.lmkrate.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__playdevelo_vitals_lmkrate_query",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/playdeveloperreporting"
+    ],
+    "methodId": "playdeveloperreporting.vitals.lmkrate.query",
+    "title": "playdeveloperreporting.vitals.lmkrate.query"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__playdevelo_vitals_slowrenderingra_query",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/playdeveloperreporting"
+    ],
+    "methodId": "playdeveloperreporting.vitals.slowrenderingrate.query",
+    "title": "playdeveloperreporting.vitals.slowrenderingrate.query"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__playdevelo_vitals_slowrenderingrate_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/playdeveloperreporting"
+    ],
+    "methodId": "playdeveloperreporting.vitals.slowrenderingrate.get",
+    "title": "playdeveloperreporting.vitals.slowrenderingrate.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__playdevelo_vitals_slowstartrate_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/playdeveloperreporting"
+    ],
+    "methodId": "playdeveloperreporting.vitals.slowstartrate.get",
+    "title": "playdeveloperreporting.vitals.slowstartrate.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__playdevelo_vitals_slowstartrate_query",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/playdeveloperreporting"
+    ],
+    "methodId": "playdeveloperreporting.vitals.slowstartrate.query",
+    "title": "playdeveloperreporting.vitals.slowstartrate.query"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__playdevelo_vitals_stuckbackground_query",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/playdeveloperreporting"
+    ],
+    "methodId": "playdeveloperreporting.vitals.stuckbackgroundwakelockrate.query",
+    "title": "playdeveloperreporting.vitals.stuckbackgroundwakelockrate.query"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__playdevelo_vitals_stuckbackgroundwa_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/playdeveloperreporting"
+    ],
+    "methodId": "playdeveloperreporting.vitals.stuckbackgroundwakelockrate.get",
+    "title": "playdeveloperreporting.vitals.stuckbackgroundwakelockrate.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__playgroupi_apps_tokens_tags_create_or_u",
+    "kind": "write",
+    "scopes": [],
+    "methodId": "playgrouping.apps.tokens.tags.createOrUpdate",
+    "title": "playgrouping.apps.tokens.tags.createOrUpdate"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__playgroupi_apps_tokens_verify",
+    "kind": "write",
+    "scopes": [],
+    "methodId": "playgrouping.apps.tokens.verify",
+    "title": "playgrouping.apps.tokens.verify"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__playintegr_device_recall_write",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/playintegrity"
+    ],
+    "methodId": "playintegrity.deviceRecall.write",
+    "title": "playintegrity.deviceRecall.write"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__playintegr_v1_decode_integrity_token",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/playintegrity"
+    ],
+    "methodId": "playintegrity.decodeIntegrityToken",
+    "title": "playintegrity.decodeIntegrityToken"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__playintegr_v1_decode_pc_integrity_token",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/playintegrity"
+    ],
+    "methodId": "playintegrity.decodePcIntegrityToken",
+    "title": "playintegrity.decodePcIntegrityToken"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__smartdevic_enterpri_structur_rooms_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/sdm.service"
+    ],
+    "methodId": "smartdevicemanagement.enterprises.structures.rooms.list",
+    "title": "smartdevicemanagement.enterprises.structures.rooms.list"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__smartdevic_enterpri_structure_rooms_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/sdm.service"
+    ],
+    "methodId": "smartdevicemanagement.enterprises.structures.rooms.get",
+    "title": "smartdevicemanagement.enterprises.structures.rooms.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__smartdevic_enterpris_devices_execute_co",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/sdm.service"
+    ],
+    "methodId": "smartdevicemanagement.enterprises.devices.executeCommand",
+    "title": "smartdevicemanagement.enterprises.devices.executeCommand"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__smartdevic_enterprises_devices_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/sdm.service"
+    ],
+    "methodId": "smartdevicemanagement.enterprises.devices.get",
+    "title": "smartdevicemanagement.enterprises.devices.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__smartdevic_enterprises_devices_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/sdm.service"
+    ],
+    "methodId": "smartdevicemanagement.enterprises.devices.list",
+    "title": "smartdevicemanagement.enterprises.devices.list"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__smartdevic_enterprises_structures_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/sdm.service"
+    ],
+    "methodId": "smartdevicemanagement.enterprises.structures.get",
+    "title": "smartdevicemanagement.enterprises.structures.get"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__smartdevic_enterprises_structures_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/sdm.service"
+    ],
+    "methodId": "smartdevicemanagement.enterprises.structures.list",
+    "title": "smartdevicemanagement.enterprises.structures.list"
+  }
+]

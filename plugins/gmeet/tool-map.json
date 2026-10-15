@@ -1,0 +1,243 @@
+[
+  {
+    "name": "mcp__plugin_gmeet_gmeet__api_methods",
+    "kind": "read",
+    "scopes": [],
+    "title": "gmeet: API methods"
+  },
+  {
+    "name": "mcp__plugin_gmeet_gmeet__meet_conferenc_participa_participa_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/meetings.space.created",
+      "https://www.googleapis.com/auth/meetings.space.readonly"
+    ],
+    "methodId": "meet.conferenceRecords.participants.participantSessions.list",
+    "title": "meet.conferenceRecords.participants.participantSessions.list"
+  },
+  {
+    "name": "mcp__plugin_gmeet_gmeet__meet_conferenc_participa_participan_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/meetings.space.created",
+      "https://www.googleapis.com/auth/meetings.space.readonly"
+    ],
+    "methodId": "meet.conferenceRecords.participants.participantSessions.get",
+    "title": "meet.conferenceRecords.participants.participantSessions.get"
+  },
+  {
+    "name": "mcp__plugin_gmeet_gmeet__meet_conference_recor_participants_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/meetings.space.created",
+      "https://www.googleapis.com/auth/meetings.space.readonly"
+    ],
+    "methodId": "meet.conferenceRecords.participants.list",
+    "title": "meet.conferenceRecords.participants.list"
+  },
+  {
+    "name": "mcp__plugin_gmeet_gmeet__meet_conference_record_participants_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/meetings.space.created",
+      "https://www.googleapis.com/auth/meetings.space.readonly"
+    ],
+    "methodId": "meet.conferenceRecords.participants.get",
+    "title": "meet.conferenceRecords.participants.get"
+  },
+  {
+    "name": "mcp__plugin_gmeet_gmeet__meet_conference_record_smart_notes_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/meetings.space.created",
+      "https://www.googleapis.com/auth/meetings.space.readonly"
+    ],
+    "methodId": "meet.conferenceRecords.smartNotes.list",
+    "title": "meet.conferenceRecords.smartNotes.list"
+  },
+  {
+    "name": "mcp__plugin_gmeet_gmeet__meet_conference_record_transcripts_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/meetings.space.created",
+      "https://www.googleapis.com/auth/meetings.space.readonly"
+    ],
+    "methodId": "meet.conferenceRecords.transcripts.list",
+    "title": "meet.conferenceRecords.transcripts.list"
+  },
+  {
+    "name": "mcp__plugin_gmeet_gmeet__meet_conference_records_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/meetings.space.created",
+      "https://www.googleapis.com/auth/meetings.space.readonly"
+    ],
+    "methodId": "meet.conferenceRecords.get",
+    "title": "meet.conferenceRecords.get"
+  },
+  {
+    "name": "mcp__plugin_gmeet_gmeet__meet_conference_records_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/meetings.space.created",
+      "https://www.googleapis.com/auth/meetings.space.readonly"
+    ],
+    "methodId": "meet.conferenceRecords.list",
+    "title": "meet.conferenceRecords.list"
+  },
+  {
+    "name": "mcp__plugin_gmeet_gmeet__meet_conference_records_recordings_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/meetings.space.created",
+      "https://www.googleapis.com/auth/meetings.space.readonly"
+    ],
+    "methodId": "meet.conferenceRecords.recordings.get",
+    "title": "meet.conferenceRecords.recordings.get"
+  },
+  {
+    "name": "mcp__plugin_gmeet_gmeet__meet_conference_records_recordings_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/meetings.space.created",
+      "https://www.googleapis.com/auth/meetings.space.readonly"
+    ],
+    "methodId": "meet.conferenceRecords.recordings.list",
+    "title": "meet.conferenceRecords.recordings.list"
+  },
+  {
+    "name": "mcp__plugin_gmeet_gmeet__meet_conference_records_smart_notes_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/meetings.space.created",
+      "https://www.googleapis.com/auth/meetings.space.readonly"
+    ],
+    "methodId": "meet.conferenceRecords.smartNotes.get",
+    "title": "meet.conferenceRecords.smartNotes.get"
+  },
+  {
+    "name": "mcp__plugin_gmeet_gmeet__meet_conference_records_transcripts_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/meetings.space.created",
+      "https://www.googleapis.com/auth/meetings.space.readonly"
+    ],
+    "methodId": "meet.conferenceRecords.transcripts.get",
+    "title": "meet.conferenceRecords.transcripts.get"
+  },
+  {
+    "name": "mcp__plugin_gmeet_gmeet__meet_conference_transcript_entries_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/meetings.space.created",
+      "https://www.googleapis.com/auth/meetings.space.readonly"
+    ],
+    "methodId": "meet.conferenceRecords.transcripts.entries.list",
+    "title": "meet.conferenceRecords.transcripts.entries.list"
+  },
+  {
+    "name": "mcp__plugin_gmeet_gmeet__meet_conference_transcripts_entries_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/meetings.space.created",
+      "https://www.googleapis.com/auth/meetings.space.readonly"
+    ],
+    "methodId": "meet.conferenceRecords.transcripts.entries.get",
+    "title": "meet.conferenceRecords.transcripts.entries.get"
+  },
+  {
+    "name": "mcp__plugin_gmeet_gmeet__meet_spaces_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/meetings.space.created"
+    ],
+    "methodId": "meet.spaces.create",
+    "title": "meet.spaces.create"
+  },
+  {
+    "name": "mcp__plugin_gmeet_gmeet__meet_spaces_end_active_conference",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/meetings.space.created"
+    ],
+    "methodId": "meet.spaces.endActiveConference",
+    "title": "meet.spaces.endActiveConference"
+  },
+  {
+    "name": "mcp__plugin_gmeet_gmeet__meet_spaces_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/meetings.space.created",
+      "https://www.googleapis.com/auth/meetings.space.readonly",
+      "https://www.googleapis.com/auth/meetings.space.settings"
+    ],
+    "methodId": "meet.spaces.get",
+    "title": "meet.spaces.get"
+  },
+  {
+    "name": "mcp__plugin_gmeet_gmeet__meet_spaces_members_batch_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/meetings.space.created"
+    ],
+    "methodId": "meet.spaces.members.batchUpdate",
+    "title": "meet.spaces.members.batchUpdate"
+  },
+  {
+    "name": "mcp__plugin_gmeet_gmeet__meet_spaces_members_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/meetings.space.created"
+    ],
+    "methodId": "meet.spaces.members.create",
+    "title": "meet.spaces.members.create"
+  },
+  {
+    "name": "mcp__plugin_gmeet_gmeet__meet_spaces_members_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/meetings.space.created"
+    ],
+    "methodId": "meet.spaces.members.delete",
+    "title": "meet.spaces.members.delete"
+  },
+  {
+    "name": "mcp__plugin_gmeet_gmeet__meet_spaces_members_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/meetings.space.created",
+      "https://www.googleapis.com/auth/meetings.space.readonly"
+    ],
+    "methodId": "meet.spaces.members.get",
+    "title": "meet.spaces.members.get"
+  },
+  {
+    "name": "mcp__plugin_gmeet_gmeet__meet_spaces_members_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/meetings.space.created",
+      "https://www.googleapis.com/auth/meetings.space.readonly"
+    ],
+    "methodId": "meet.spaces.members.list",
+    "title": "meet.spaces.members.list"
+  },
+  {
+    "name": "mcp__plugin_gmeet_gmeet__meet_spaces_members_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/meetings.space.created"
+    ],
+    "methodId": "meet.spaces.members.patch",
+    "title": "meet.spaces.members.patch"
+  },
+  {
+    "name": "mcp__plugin_gmeet_gmeet__meet_spaces_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/meetings.space.created",
+      "https://www.googleapis.com/auth/meetings.space.settings"
+    ],
+    "methodId": "meet.spaces.patch",
+    "title": "meet.spaces.patch"
+  }
+]

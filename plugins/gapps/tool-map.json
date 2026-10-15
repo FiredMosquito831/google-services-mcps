@@ -1,0 +1,187 @@
+[
+  {
+    "name": "mcp__plugin_gapps_gapps__api_methods",
+    "kind": "read",
+    "scopes": [],
+    "title": "gapps: API methods"
+  },
+  {
+    "name": "mcp__plugin_gapps_gapps__appsmarket_customer_license_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/appsmarketplace.license"
+    ],
+    "methodId": "appsmarket.customerLicense.get",
+    "title": "appsmarket.customerLicense.get"
+  },
+  {
+    "name": "mcp__plugin_gapps_gapps__appsmarket_user_license_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/appsmarketplace.license"
+    ],
+    "methodId": "appsmarket.userLicense.get",
+    "title": "appsmarket.userLicense.get"
+  },
+  {
+    "name": "mcp__plugin_gapps_gapps__appsscript_processes_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/script.processes"
+    ],
+    "methodId": "script.processes.list",
+    "title": "script.processes.list"
+  },
+  {
+    "name": "mcp__plugin_gapps_gapps__appsscript_processes_list_script_proces",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/script.processes"
+    ],
+    "methodId": "script.processes.listScriptProcesses",
+    "title": "script.processes.listScriptProcesses"
+  },
+  {
+    "name": "mcp__plugin_gapps_gapps__appsscript_projects_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/script.projects"
+    ],
+    "methodId": "script.projects.create",
+    "title": "script.projects.create"
+  },
+  {
+    "name": "mcp__plugin_gapps_gapps__appsscript_projects_deployments_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/script.deployments"
+    ],
+    "methodId": "script.projects.deployments.create",
+    "title": "script.projects.deployments.create"
+  },
+  {
+    "name": "mcp__plugin_gapps_gapps__appsscript_projects_deployments_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/script.deployments"
+    ],
+    "methodId": "script.projects.deployments.delete",
+    "title": "script.projects.deployments.delete"
+  },
+  {
+    "name": "mcp__plugin_gapps_gapps__appsscript_projects_deployments_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/script.deployments",
+      "https://www.googleapis.com/auth/script.deployments.readonly"
+    ],
+    "methodId": "script.projects.deployments.get",
+    "title": "script.projects.deployments.get"
+  },
+  {
+    "name": "mcp__plugin_gapps_gapps__appsscript_projects_deployments_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/script.deployments",
+      "https://www.googleapis.com/auth/script.deployments.readonly"
+    ],
+    "methodId": "script.projects.deployments.list",
+    "title": "script.projects.deployments.list"
+  },
+  {
+    "name": "mcp__plugin_gapps_gapps__appsscript_projects_deployments_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/script.deployments"
+    ],
+    "methodId": "script.projects.deployments.update",
+    "title": "script.projects.deployments.update"
+  },
+  {
+    "name": "mcp__plugin_gapps_gapps__appsscript_projects_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/script.projects",
+      "https://www.googleapis.com/auth/script.projects.readonly"
+    ],
+    "methodId": "script.projects.get",
+    "title": "script.projects.get"
+  },
+  {
+    "name": "mcp__plugin_gapps_gapps__appsscript_projects_get_content",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/script.projects",
+      "https://www.googleapis.com/auth/script.projects.readonly"
+    ],
+    "methodId": "script.projects.getContent",
+    "title": "script.projects.getContent"
+  },
+  {
+    "name": "mcp__plugin_gapps_gapps__appsscript_projects_get_metrics",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/script.metrics"
+    ],
+    "methodId": "script.projects.getMetrics",
+    "title": "script.projects.getMetrics"
+  },
+  {
+    "name": "mcp__plugin_gapps_gapps__appsscript_projects_update_content",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/script.projects"
+    ],
+    "methodId": "script.projects.updateContent",
+    "title": "script.projects.updateContent"
+  },
+  {
+    "name": "mcp__plugin_gapps_gapps__appsscript_projects_versions_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/script.projects"
+    ],
+    "methodId": "script.projects.versions.create",
+    "title": "script.projects.versions.create"
+  },
+  {
+    "name": "mcp__plugin_gapps_gapps__appsscript_projects_versions_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/script.projects",
+      "https://www.googleapis.com/auth/script.projects.readonly"
+    ],
+    "methodId": "script.projects.versions.get",
+    "title": "script.projects.versions.get"
+  },
+  {
+    "name": "mcp__plugin_gapps_gapps__appsscript_projects_versions_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/script.projects",
+      "https://www.googleapis.com/auth/script.projects.readonly"
+    ],
+    "methodId": "script.projects.versions.list",
+    "title": "script.projects.versions.list"
+  },
+  {
+    "name": "mcp__plugin_gapps_gapps__appsscript_scripts_run",
+    "kind": "destructive",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.google.com/calendar/feeds",
+      "https://www.google.com/m8/feeds",
+      "https://www.googleapis.com/auth/admin.directory.group",
+      "https://www.googleapis.com/auth/admin.directory.user",
+      "https://www.googleapis.com/auth/documents",
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/forms",
+      "https://www.googleapis.com/auth/forms.currentonly",
+      "https://www.googleapis.com/auth/groups",
+      "https://www.googleapis.com/auth/spreadsheets",
+      "https://www.googleapis.com/auth/userinfo.email"
+    ],
+    "methodId": "script.scripts.run",
+    "title": "script.scripts.run"
+  }
+]

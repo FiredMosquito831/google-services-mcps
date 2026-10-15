@@ -6,6 +6,8 @@ session/
 # Build and dependency output
 node_modules/
 dist/
+# Generated server entries (scripts/bundle.mjs writes build/entries/<server>.ts)
+build/
 # Credentials and tokens must never be committed
 *.token.json
 client_secret*.json
@@ -21,3 +23,6 @@ Thumbs.db
 # Handoff note from the planning session (not part of the product)
 HANDOFF.md
 
+
+# Raw Google Discovery cache written by scripts/build-catalog.mjs (re-downloadable)
+data/cache-discovery/

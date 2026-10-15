@@ -1,0 +1,6 @@
+{
+  "gmailpostmastertools.domains.get": "read",
+  "gmailpostmastertools.domains.list": "read",
+  "gmailpostmastertools.domains.trafficStats.get": "read",
+  "gmailpostmastertools.domains.trafficStats.list": "read"
+}

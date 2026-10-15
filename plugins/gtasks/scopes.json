@@ -1,0 +1,8 @@
+{
+  "gtasks": [
+    "https://www.googleapis.com/auth/keep",
+    "https://www.googleapis.com/auth/keep.readonly",
+    "https://www.googleapis.com/auth/tasks",
+    "https://www.googleapis.com/auth/tasks.readonly"
+  ]
+}

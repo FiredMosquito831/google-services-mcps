@@ -1,0 +1,107 @@
+{
+  "generatedAt": "2026-10-15T12:52:30.872Z",
+  "apiCount": 2,
+  "methodCount": 8,
+  "apis": [
+    {
+      "name": "gmailpostmastertools",
+      "version": "v1",
+      "preferred": false,
+      "title": "Gmail Postmaster Tools API",
+      "description": "The Postmaster Tools API is a RESTful API that provides programmatic access to email traffic metrics (like spam reports, delivery errors etc) otherwise availabl",
+      "documentationLink": "https://developers.google.com/workspace/gmail/postmaster",
+      "labels": [],
+      "deprecated": false,
+      "rootUrl": "https://gmailpostmastertools.googleapis.com/",
+      "servicePath": "",
+      "methods": [
+        [
+          "gmailpostmastertools.domains.list",
+          "GET",
+          "v1/domains",
+          [
+            "https://www.googleapis.com/auth/postmaster.readonly"
+          ],
+          ""
+        ],
+        [
+          "gmailpostmastertools.domains.get",
+          "GET",
+          "v1/{+name}",
+          [
+            "https://www.googleapis.com/auth/postmaster.readonly"
+          ],
+          ""
+        ],
+        [
+          "gmailpostmastertools.domains.trafficStats.list",
+          "GET",
+          "v1/{+parent}/trafficStats",
+          [
+            "https://www.googleapis.com/auth/postmaster.readonly"
+          ],
+          ""
+        ],
+        [
+          "gmailpostmastertools.domains.trafficStats.get",
+          "GET",
+          "v1/{+name}",
+          [
+            "https://www.googleapis.com/auth/postmaster.readonly"
+          ],
+          ""
+        ]
+      ]
+    },
+    {
+      "name": "gmailpostmastertools",
+      "version": "v1beta1",
+      "preferred": false,
+      "title": "Gmail Postmaster Tools API",
+      "description": "The Postmaster Tools API is a RESTful API that provides programmatic access to email traffic metrics (like spam reports, delivery errors etc) otherwise availabl",
+      "documentationLink": "https://developers.google.com/workspace/gmail/postmaster",
+      "labels": [],
+      "deprecated": false,
+      "rootUrl": "https://gmailpostmastertools.googleapis.com/",
+      "servicePath": "",
+      "methods": [
+        [
+          "gmailpostmastertools.domains.get",
+          "GET",
+          "v1beta1/{+name}",
+          [
+            "https://www.googleapis.com/auth/postmaster.readonly"
+          ],
+          ""
+        ],
+        [
+          "gmailpostmastertools.domains.list",
+          "GET",
+          "v1beta1/domains",
+          [
+            "https://www.googleapis.com/auth/postmaster.readonly"
+          ],
+          ""
+        ],
+        [
+          "gmailpostmastertools.domains.trafficStats.get",
+          "GET",
+          "v1beta1/{+name}",
+          [
+            "https://www.googleapis.com/auth/postmaster.readonly"
+          ],
+          ""
+        ],
+        [
+          "gmailpostmastertools.domains.trafficStats.list",
+          "GET",
+          "v1beta1/{+parent}/trafficStats",
+          [
+            "https://www.googleapis.com/auth/postmaster.readonly"
+          ],
+          ""
+        ]
+      ]
+    }
+  ]
+}

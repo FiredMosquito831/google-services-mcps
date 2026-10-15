@@ -6,9 +6,10 @@ import * as agy from './adapters/agy.js';
 import * as claude from './adapters/claude.js';
 import * as codex from './adapters/codex.js';
 import * as opencode from './adapters/opencode.js';
-import { LOGIN_GROUPS, type InstallRequestArgs } from './args.js';
-import { tokenFileFor } from './credentials.js';
-import { ownPlugin, repoRootFor, serverFileFor, type InstallRoots } from './paths.js';
+import { OAUTH_GROUPS, type InstallRequestArgs } from './args.js';
+import { apiKeyFileFor, apiKeyState, tokenFileFor } from './credentials.js';
+import { productIds } from './products.js';
+import { repoRootFor, serverFileFor, type InstallRoots } from './paths.js';
 import { printResult, type Output } from './report.js';
 import {
   AGENTS,
@@ -16,6 +17,7 @@ import {
   type AdapterContext,
   type AdapterResult,
   type AgentId,
+  type PluginChoice,
   type Runner,
 } from './types.js';
 
@@ -40,14 +42,12 @@ interface AdapterModule {
 
 const ADAPTERS: Record<AgentId, AdapterModule> = { claude, codex, opencode, agy };
 
-/** Plugin folders bundle only their own plugin. The repo can install any plugin. */
-export function selectPlugins(choice: string, roots: InstallRoots, known: readonly string[]): string[] {
-  const own = ownPlugin(roots);
-  if (own !== undefined) {
-    if (choice === 'all' || choice === own) return [own];
-    throw new UsageError(`this is the ${own} plugin folder, which bundles only ${own}. To install ${choice}, run gsm from the repo checkout.`);
-  }
-  return choice === 'all' ? [...known] : [choice];
+/**
+ * The plugin ids to act on. --plugin was already checked against `known` (the product ids of this
+ * plugin's servers.json, or of config/products.json in the repo), so the choice is used as it is.
+ */
+export function selectPlugins(choice: PluginChoice, known: readonly string[]): string[] {
+  return choice === 'all' ? [...known] : [...choice];
 }
 
 /** Servers of the selected plugins, or the named servers (each must belong to a selected plugin). */
@@ -71,21 +71,26 @@ export function selectServers(registry: Registry, names: readonly string[] | und
 
 function printLoginHints(servers: readonly ServerSpec[], out: Output): void {
   const cfg = loadConfig();
-  const loginGroups = [...new Set(servers.map((s) => s.group))].filter((g) => (LOGIN_GROUPS as readonly string[]).includes(g));
+  // The group field is typed narrowly in core; apikey is a group of its own.
+  const groups = servers.map((s) => s.group as string);
+  const loginGroups = [...new Set(groups)].filter((g) => (OAUTH_GROUPS as readonly string[]).includes(g));
   const pending = loginGroups.filter((g) => !existsSync(tokenFileFor(g, cfg)));
   if (pending.length > 0) {
     out.log('Login still needed before these servers can call Google:');
     for (const group of pending) out.log(`  gsm login ${group}`);
     if (!existsSync(cfg.clientSecretFile)) out.log('First save the OAuth Desktop client: gsm setup-client <client_secret.json>');
   }
-  if (servers.some((s) => s.group === 'workspace-admin')) {
+  if (groups.includes('apikey') && apiKeyState(apiKeyFileFor(cfg)) !== 'saved') {
+    out.log('The apikey products need an API key. Save it with: gsm setup-apikey (reads GSM_API_KEY_INPUT or stdin)');
+  }
+  if (groups.includes('workspace-admin')) {
     out.log('workspace-admin needs a service account. Run: gsm login workspace-admin (prints the setup steps)');
   }
 }
 
 export async function runInstall(run: InstallRun, env: InstallEnv): Promise<number> {
   const { out } = env;
-  const plugins = selectPlugins(run.plugin, env.roots, Object.keys(env.registry.plugins));
+  const plugins = selectPlugins(run.plugin, productIds(env.registry));
   const servers = selectServers(env.registry, run.servers, plugins);
   const home = run.home ?? env.defaultHome;
 
@@ -142,6 +147,7 @@ export async function runInstall(run: InstallRun, env: InstallEnv): Promise<numb
       serverFile: (s) => serverFileFor(env.roots, s),
       dryRun: run.dryRun,
       allowWrites: run.allowWrites,
+      confirmation: run.confirmation,
       keepData: run.keepData,
       run: env.run,
       platform: env.platform,

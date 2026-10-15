@@ -1,0 +1,1970 @@
+[
+  {
+    "name": "mcp__plugin_gdrive_gdrive__api_call",
+    "kind": "dynamic",
+    "scopes": [],
+    "title": "Call an API method"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__api_describe",
+    "kind": "read",
+    "scopes": [],
+    "title": "Describe an API method"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__api_methods",
+    "kind": "read",
+    "scopes": [],
+    "title": "gdrive: API methods"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__api_search",
+    "kind": "read",
+    "scopes": [],
+    "title": "Search API methods"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_bookshelves_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.bookshelves.get",
+    "title": "books.bookshelves.get"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_bookshelves_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.bookshelves.list",
+    "title": "books.bookshelves.list"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_bookshelves_volumes_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.bookshelves.volumes.list",
+    "title": "books.bookshelves.volumes.list"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_cloudloading_add_book",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.cloudloading.addBook",
+    "title": "books.cloudloading.addBook"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_cloudloading_delete_book",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.cloudloading.deleteBook",
+    "title": "books.cloudloading.deleteBook"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_cloudloading_update_book",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.cloudloading.updateBook",
+    "title": "books.cloudloading.updateBook"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_dictionary_list_offline_metadat",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.dictionary.listOfflineMetadata",
+    "title": "books.dictionary.listOfflineMetadata"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_familysharing_get_family_info",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.familysharing.getFamilyInfo",
+    "title": "books.familysharing.getFamilyInfo"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_familysharing_share",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.familysharing.share",
+    "title": "books.familysharing.share"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_familysharing_unshare",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.familysharing.unshare",
+    "title": "books.familysharing.unshare"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_layers_annotation_data_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.layers.annotationData.get",
+    "title": "books.layers.annotationData.get"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_layers_annotation_data_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.layers.annotationData.list",
+    "title": "books.layers.annotationData.list"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_layers_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.layers.get",
+    "title": "books.layers.get"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_layers_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.layers.list",
+    "title": "books.layers.list"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_layers_volume_annotations_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.layers.volumeAnnotations.get",
+    "title": "books.layers.volumeAnnotations.get"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_layers_volume_annotations_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.layers.volumeAnnotations.list",
+    "title": "books.layers.volumeAnnotations.list"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_myconfig_get_user_settings",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.myconfig.getUserSettings",
+    "title": "books.myconfig.getUserSettings"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_myconfig_release_download_acces",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.myconfig.releaseDownloadAccess",
+    "title": "books.myconfig.releaseDownloadAccess"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_myconfig_request_access",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.myconfig.requestAccess",
+    "title": "books.myconfig.requestAccess"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_myconfig_sync_volume_licenses",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.myconfig.syncVolumeLicenses",
+    "title": "books.myconfig.syncVolumeLicenses"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_myconfig_update_user_settings",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.myconfig.updateUserSettings",
+    "title": "books.myconfig.updateUserSettings"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_mylibrar_bookshelv_volumes_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.mylibrary.bookshelves.volumes.list",
+    "title": "books.mylibrary.bookshelves.volumes.list"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_mylibrary_annotations_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.mylibrary.annotations.delete",
+    "title": "books.mylibrary.annotations.delete"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_mylibrary_annotations_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.mylibrary.annotations.insert",
+    "title": "books.mylibrary.annotations.insert"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_mylibrary_annotations_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.mylibrary.annotations.list",
+    "title": "books.mylibrary.annotations.list"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_mylibrary_annotations_summary",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.mylibrary.annotations.summary",
+    "title": "books.mylibrary.annotations.summary"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_mylibrary_annotations_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.mylibrary.annotations.update",
+    "title": "books.mylibrary.annotations.update"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_mylibrary_bookshelve_add_volume",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.mylibrary.bookshelves.addVolume",
+    "title": "books.mylibrary.bookshelves.addVolume"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_mylibrary_bookshelve_clear_volu",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.mylibrary.bookshelves.clearVolumes",
+    "title": "books.mylibrary.bookshelves.clearVolumes"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_mylibrary_bookshelve_move_volum",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.mylibrary.bookshelves.moveVolume",
+    "title": "books.mylibrary.bookshelves.moveVolume"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_mylibrary_bookshelve_remove_vol",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.mylibrary.bookshelves.removeVolume",
+    "title": "books.mylibrary.bookshelves.removeVolume"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_mylibrary_bookshelves_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.mylibrary.bookshelves.get",
+    "title": "books.mylibrary.bookshelves.get"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_mylibrary_bookshelves_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.mylibrary.bookshelves.list",
+    "title": "books.mylibrary.bookshelves.list"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_mylibrary_readingpos_set_positi",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.mylibrary.readingpositions.setPosition",
+    "title": "books.mylibrary.readingpositions.setPosition"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_mylibrary_readingpositions_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.mylibrary.readingpositions.get",
+    "title": "books.mylibrary.readingpositions.get"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_notification_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.notification.get",
+    "title": "books.notification.get"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_onboarding_list_categories",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.onboarding.listCategories",
+    "title": "books.onboarding.listCategories"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_onboarding_list_category_volume",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.onboarding.listCategoryVolumes",
+    "title": "books.onboarding.listCategoryVolumes"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_personalizedstream_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.personalizedstream.get",
+    "title": "books.personalizedstream.get"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_promooffer_accept",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.promooffer.accept",
+    "title": "books.promooffer.accept"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_promooffer_dismiss",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.promooffer.dismiss",
+    "title": "books.promooffer.dismiss"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_promooffer_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.promooffer.get",
+    "title": "books.promooffer.get"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_series_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.series.get",
+    "title": "books.series.get"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_series_membership_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.series.membership.get",
+    "title": "books.series.membership.get"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_volumes_associated_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.volumes.associated.list",
+    "title": "books.volumes.associated.list"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_volumes_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.volumes.get",
+    "title": "books.volumes.get"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_volumes_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.volumes.list",
+    "title": "books.volumes.list"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_volumes_mybooks_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.volumes.mybooks.list",
+    "title": "books.volumes.mybooks.list"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_volumes_recommended_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.volumes.recommended.list",
+    "title": "books.volumes.recommended.list"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_volumes_recommended_rate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.volumes.recommended.rate",
+    "title": "books.volumes.recommended.rate"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_volumes_useruploaded_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.volumes.useruploaded.list",
+    "title": "books.volumes.useruploaded.list"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__docs_documents_batch_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/documents",
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file"
+    ],
+    "methodId": "docs.documents.batchUpdate",
+    "title": "docs.documents.batchUpdate"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__docs_documents_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/documents",
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file"
+    ],
+    "methodId": "docs.documents.create",
+    "title": "docs.documents.create"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__docs_documents_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/documents",
+      "https://www.googleapis.com/auth/documents.readonly",
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.readonly"
+    ],
+    "methodId": "docs.documents.get",
+    "title": "docs.documents.get"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_about_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.appdata",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.metadata",
+      "https://www.googleapis.com/auth/drive.metadata.readonly",
+      "https://www.googleapis.com/auth/drive.photos.readonly",
+      "https://www.googleapis.com/auth/drive.readonly"
+    ],
+    "methodId": "drive.about.get",
+    "title": "drive.about.get"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_accessproposals_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.metadata",
+      "https://www.googleapis.com/auth/drive.metadata.readonly",
+      "https://www.googleapis.com/auth/drive.readonly"
+    ],
+    "methodId": "drive.accessproposals.get",
+    "title": "drive.accessproposals.get"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_accessproposals_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.metadata",
+      "https://www.googleapis.com/auth/drive.metadata.readonly",
+      "https://www.googleapis.com/auth/drive.readonly"
+    ],
+    "methodId": "drive.accessproposals.list",
+    "title": "drive.accessproposals.list"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_accessproposals_resolve",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file"
+    ],
+    "methodId": "drive.accessproposals.resolve",
+    "title": "drive.accessproposals.resolve"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_approvals_approve",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.metadata"
+    ],
+    "methodId": "drive.approvals.approve",
+    "title": "drive.approvals.approve"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_approvals_cancel",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.metadata"
+    ],
+    "methodId": "drive.approvals.cancel",
+    "title": "drive.approvals.cancel"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_approvals_comment",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.metadata"
+    ],
+    "methodId": "drive.approvals.comment",
+    "title": "drive.approvals.comment"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_approvals_decline",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.metadata"
+    ],
+    "methodId": "drive.approvals.decline",
+    "title": "drive.approvals.decline"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_approvals_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.appdata",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.metadata",
+      "https://www.googleapis.com/auth/drive.metadata.readonly",
+      "https://www.googleapis.com/auth/drive.readonly"
+    ],
+    "methodId": "drive.approvals.get",
+    "title": "drive.approvals.get"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_approvals_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.appdata",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.metadata",
+      "https://www.googleapis.com/auth/drive.metadata.readonly",
+      "https://www.googleapis.com/auth/drive.readonly"
+    ],
+    "methodId": "drive.approvals.list",
+    "title": "drive.approvals.list"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_approvals_reassign",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.metadata"
+    ],
+    "methodId": "drive.approvals.reassign",
+    "title": "drive.approvals.reassign"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_approvals_start",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.metadata"
+    ],
+    "methodId": "drive.approvals.start",
+    "title": "drive.approvals.start"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_apps_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.appdata",
+      "https://www.googleapis.com/auth/drive.apps.readonly",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.metadata",
+      "https://www.googleapis.com/auth/drive.metadata.readonly",
+      "https://www.googleapis.com/auth/drive.readonly"
+    ],
+    "methodId": "drive.apps.get",
+    "title": "drive.apps.get"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_apps_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive.apps.readonly"
+    ],
+    "methodId": "drive.apps.list",
+    "title": "drive.apps.list"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_changes_get_start_page_token",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.appdata",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.meet.readonly",
+      "https://www.googleapis.com/auth/drive.metadata",
+      "https://www.googleapis.com/auth/drive.metadata.readonly",
+      "https://www.googleapis.com/auth/drive.photos.readonly",
+      "https://www.googleapis.com/auth/drive.readonly"
+    ],
+    "methodId": "drive.changes.getStartPageToken",
+    "title": "drive.changes.getStartPageToken"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_changes_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.appdata",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.meet.readonly",
+      "https://www.googleapis.com/auth/drive.metadata",
+      "https://www.googleapis.com/auth/drive.metadata.readonly",
+      "https://www.googleapis.com/auth/drive.photos.readonly",
+      "https://www.googleapis.com/auth/drive.readonly"
+    ],
+    "methodId": "drive.changes.list",
+    "title": "drive.changes.list"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_changes_watch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.appdata",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.meet.readonly",
+      "https://www.googleapis.com/auth/drive.metadata",
+      "https://www.googleapis.com/auth/drive.metadata.readonly",
+      "https://www.googleapis.com/auth/drive.photos.readonly",
+      "https://www.googleapis.com/auth/drive.readonly"
+    ],
+    "methodId": "drive.changes.watch",
+    "title": "drive.changes.watch"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_channels_stop",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.appdata",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.meet.readonly",
+      "https://www.googleapis.com/auth/drive.metadata",
+      "https://www.googleapis.com/auth/drive.metadata.readonly",
+      "https://www.googleapis.com/auth/drive.photos.readonly",
+      "https://www.googleapis.com/auth/drive.readonly"
+    ],
+    "methodId": "drive.channels.stop",
+    "title": "drive.channels.stop"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_comments_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file"
+    ],
+    "methodId": "drive.comments.create",
+    "title": "drive.comments.create"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_comments_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file"
+    ],
+    "methodId": "drive.comments.delete",
+    "title": "drive.comments.delete"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_comments_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.meet.readonly",
+      "https://www.googleapis.com/auth/drive.readonly"
+    ],
+    "methodId": "drive.comments.get",
+    "title": "drive.comments.get"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_comments_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.meet.readonly",
+      "https://www.googleapis.com/auth/drive.readonly"
+    ],
+    "methodId": "drive.comments.list",
+    "title": "drive.comments.list"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_comments_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file"
+    ],
+    "methodId": "drive.comments.update",
+    "title": "drive.comments.update"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_create_folder",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file"
+    ],
+    "title": "Create Drive folder"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_create_text_file",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file"
+    ],
+    "title": "Create Drive text file"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_drives_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive"
+    ],
+    "methodId": "drive.drives.create",
+    "title": "drive.drives.create"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_drives_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive"
+    ],
+    "methodId": "drive.drives.delete",
+    "title": "drive.drives.delete"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_drives_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.readonly"
+    ],
+    "methodId": "drive.drives.get",
+    "title": "drive.drives.get"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_drives_hide",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive"
+    ],
+    "methodId": "drive.drives.hide",
+    "title": "drive.drives.hide"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_drives_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.readonly"
+    ],
+    "methodId": "drive.drives.list",
+    "title": "drive.drives.list"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_drives_unhide",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive"
+    ],
+    "methodId": "drive.drives.unhide",
+    "title": "drive.drives.unhide"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_drives_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive"
+    ],
+    "methodId": "drive.drives.update",
+    "title": "drive.drives.update"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_files_copy",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.appdata",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.photos.readonly"
+    ],
+    "methodId": "drive.files.copy",
+    "title": "drive.files.copy"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_files_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.appdata",
+      "https://www.googleapis.com/auth/drive.file"
+    ],
+    "methodId": "drive.files.delete",
+    "title": "drive.files.delete"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_files_download",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.readonly"
+    ],
+    "methodId": "drive.files.download",
+    "title": "drive.files.download"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_files_empty_trash",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive"
+    ],
+    "methodId": "drive.files.emptyTrash",
+    "title": "drive.files.emptyTrash"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_files_export",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.meet.readonly",
+      "https://www.googleapis.com/auth/drive.readonly"
+    ],
+    "methodId": "drive.files.export",
+    "title": "drive.files.export"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_files_generate_cse_token",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive"
+    ],
+    "methodId": "drive.files.generateCseToken",
+    "title": "drive.files.generateCseToken"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_files_generate_ids",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.appdata",
+      "https://www.googleapis.com/auth/drive.file"
+    ],
+    "methodId": "drive.files.generateIds",
+    "title": "drive.files.generateIds"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_files_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.appdata",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.meet.readonly",
+      "https://www.googleapis.com/auth/drive.metadata",
+      "https://www.googleapis.com/auth/drive.metadata.readonly",
+      "https://www.googleapis.com/auth/drive.photos.readonly",
+      "https://www.googleapis.com/auth/drive.readonly"
+    ],
+    "methodId": "drive.files.get",
+    "title": "drive.files.get"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_files_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.appdata",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.meet.readonly",
+      "https://www.googleapis.com/auth/drive.metadata",
+      "https://www.googleapis.com/auth/drive.metadata.readonly",
+      "https://www.googleapis.com/auth/drive.photos.readonly",
+      "https://www.googleapis.com/auth/drive.readonly"
+    ],
+    "methodId": "drive.files.list",
+    "title": "drive.files.list"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_files_list_labels",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.meet.readonly",
+      "https://www.googleapis.com/auth/drive.metadata",
+      "https://www.googleapis.com/auth/drive.metadata.readonly",
+      "https://www.googleapis.com/auth/drive.readonly"
+    ],
+    "methodId": "drive.files.listLabels",
+    "title": "drive.files.listLabels"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_files_modify_labels",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.metadata"
+    ],
+    "methodId": "drive.files.modifyLabels",
+    "title": "drive.files.modifyLabels"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_files_watch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.appdata",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.meet.readonly",
+      "https://www.googleapis.com/auth/drive.metadata",
+      "https://www.googleapis.com/auth/drive.metadata.readonly",
+      "https://www.googleapis.com/auth/drive.photos.readonly",
+      "https://www.googleapis.com/auth/drive.readonly"
+    ],
+    "methodId": "drive.files.watch",
+    "title": "drive.files.watch"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_get_file",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.metadata",
+      "https://www.googleapis.com/auth/drive.metadata.readonly",
+      "https://www.googleapis.com/auth/drive.readonly"
+    ],
+    "title": "Get Drive file"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_operations_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.meet.readonly",
+      "https://www.googleapis.com/auth/drive.readonly"
+    ],
+    "methodId": "drive.operations.get",
+    "title": "drive.operations.get"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_permissions_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file"
+    ],
+    "methodId": "drive.permissions.create",
+    "title": "drive.permissions.create"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_permissions_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file"
+    ],
+    "methodId": "drive.permissions.delete",
+    "title": "drive.permissions.delete"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_permissions_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.meet.readonly",
+      "https://www.googleapis.com/auth/drive.metadata",
+      "https://www.googleapis.com/auth/drive.metadata.readonly",
+      "https://www.googleapis.com/auth/drive.photos.readonly",
+      "https://www.googleapis.com/auth/drive.readonly"
+    ],
+    "methodId": "drive.permissions.get",
+    "title": "drive.permissions.get"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_permissions_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.meet.readonly",
+      "https://www.googleapis.com/auth/drive.metadata",
+      "https://www.googleapis.com/auth/drive.metadata.readonly",
+      "https://www.googleapis.com/auth/drive.photos.readonly",
+      "https://www.googleapis.com/auth/drive.readonly"
+    ],
+    "methodId": "drive.permissions.list",
+    "title": "drive.permissions.list"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_permissions_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file"
+    ],
+    "methodId": "drive.permissions.update",
+    "title": "drive.permissions.update"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_read_text",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.readonly"
+    ],
+    "title": "Read Drive file as text"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_replies_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file"
+    ],
+    "methodId": "drive.replies.create",
+    "title": "drive.replies.create"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_replies_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file"
+    ],
+    "methodId": "drive.replies.delete",
+    "title": "drive.replies.delete"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_replies_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.meet.readonly",
+      "https://www.googleapis.com/auth/drive.readonly"
+    ],
+    "methodId": "drive.replies.get",
+    "title": "drive.replies.get"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_replies_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.meet.readonly",
+      "https://www.googleapis.com/auth/drive.readonly"
+    ],
+    "methodId": "drive.replies.list",
+    "title": "drive.replies.list"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_replies_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file"
+    ],
+    "methodId": "drive.replies.update",
+    "title": "drive.replies.update"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_revisions_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.appdata",
+      "https://www.googleapis.com/auth/drive.file"
+    ],
+    "methodId": "drive.revisions.delete",
+    "title": "drive.revisions.delete"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_revisions_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.appdata",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.meet.readonly",
+      "https://www.googleapis.com/auth/drive.metadata",
+      "https://www.googleapis.com/auth/drive.metadata.readonly",
+      "https://www.googleapis.com/auth/drive.photos.readonly",
+      "https://www.googleapis.com/auth/drive.readonly"
+    ],
+    "methodId": "drive.revisions.get",
+    "title": "drive.revisions.get"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_revisions_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.appdata",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.meet.readonly",
+      "https://www.googleapis.com/auth/drive.metadata",
+      "https://www.googleapis.com/auth/drive.metadata.readonly",
+      "https://www.googleapis.com/auth/drive.photos.readonly",
+      "https://www.googleapis.com/auth/drive.readonly"
+    ],
+    "methodId": "drive.revisions.list",
+    "title": "drive.revisions.list"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_revisions_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.appdata",
+      "https://www.googleapis.com/auth/drive.file"
+    ],
+    "methodId": "drive.revisions.update",
+    "title": "drive.revisions.update"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_search",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.metadata",
+      "https://www.googleapis.com/auth/drive.metadata.readonly",
+      "https://www.googleapis.com/auth/drive.readonly"
+    ],
+    "title": "Search Drive"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_teamdrives_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive"
+    ],
+    "methodId": "drive.teamdrives.create",
+    "title": "drive.teamdrives.create"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_teamdrives_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive"
+    ],
+    "methodId": "drive.teamdrives.delete",
+    "title": "drive.teamdrives.delete"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_teamdrives_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.readonly"
+    ],
+    "methodId": "drive.teamdrives.get",
+    "title": "drive.teamdrives.get"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_teamdrives_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.readonly"
+    ],
+    "methodId": "drive.teamdrives.list",
+    "title": "drive.teamdrives.list"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_teamdrives_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive"
+    ],
+    "methodId": "drive.teamdrives.update",
+    "title": "drive.teamdrives.update"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_trash_file",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.metadata"
+    ],
+    "title": "Trash Drive file"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__driveactiv_activity_query",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive.activity",
+      "https://www.googleapis.com/auth/drive.activity.readonly"
+    ],
+    "methodId": "driveactivity.activity.query",
+    "title": "driveactivity.activity.query"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drivelabel_labe_revi_permi_batch_52b2",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive.admin.labels",
+      "https://www.googleapis.com/auth/drive.labels"
+    ],
+    "methodId": "drivelabels.labels.revisions.permissions.batchDelete",
+    "title": "drivelabels.labels.revisions.permissions.batchDelete"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drivelabel_labe_revi_permi_batch_b7ee",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive.admin.labels",
+      "https://www.googleapis.com/auth/drive.labels"
+    ],
+    "methodId": "drivelabels.labels.revisions.permissions.batchUpdate",
+    "title": "drivelabels.labels.revisions.permissions.batchUpdate"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drivelabel_label_revisi_permis_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive.admin.labels",
+      "https://www.googleapis.com/auth/drive.labels"
+    ],
+    "methodId": "drivelabels.labels.revisions.permissions.create",
+    "title": "drivelabels.labels.revisions.permissions.create"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drivelabel_label_revisi_permis_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive.admin.labels",
+      "https://www.googleapis.com/auth/drive.labels"
+    ],
+    "methodId": "drivelabels.labels.revisions.permissions.delete",
+    "title": "drivelabels.labels.revisions.permissions.delete"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drivelabel_labels_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive.admin.labels",
+      "https://www.googleapis.com/auth/drive.labels"
+    ],
+    "methodId": "drivelabels.labels.create",
+    "title": "drivelabels.labels.create"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drivelabel_labels_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive.admin.labels",
+      "https://www.googleapis.com/auth/drive.labels"
+    ],
+    "methodId": "drivelabels.labels.delete",
+    "title": "drivelabels.labels.delete"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drivelabel_labels_delta",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive.admin.labels",
+      "https://www.googleapis.com/auth/drive.labels"
+    ],
+    "methodId": "drivelabels.labels.delta",
+    "title": "drivelabels.labels.delta"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drivelabel_labels_disable",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive.admin.labels",
+      "https://www.googleapis.com/auth/drive.labels"
+    ],
+    "methodId": "drivelabels.labels.disable",
+    "title": "drivelabels.labels.disable"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drivelabel_labels_enable",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive.admin.labels",
+      "https://www.googleapis.com/auth/drive.labels"
+    ],
+    "methodId": "drivelabels.labels.enable",
+    "title": "drivelabels.labels.enable"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drivelabel_labels_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive.admin.labels",
+      "https://www.googleapis.com/auth/drive.admin.labels.readonly",
+      "https://www.googleapis.com/auth/drive.labels",
+      "https://www.googleapis.com/auth/drive.labels.readonly"
+    ],
+    "methodId": "drivelabels.labels.get",
+    "title": "drivelabels.labels.get"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drivelabel_labels_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive.admin.labels",
+      "https://www.googleapis.com/auth/drive.admin.labels.readonly",
+      "https://www.googleapis.com/auth/drive.labels",
+      "https://www.googleapis.com/auth/drive.labels.readonly"
+    ],
+    "methodId": "drivelabels.labels.list",
+    "title": "drivelabels.labels.list"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drivelabel_labels_locks_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive.admin.labels",
+      "https://www.googleapis.com/auth/drive.admin.labels.readonly",
+      "https://www.googleapis.com/auth/drive.labels",
+      "https://www.googleapis.com/auth/drive.labels.readonly"
+    ],
+    "methodId": "drivelabels.labels.locks.list",
+    "title": "drivelabels.labels.locks.list"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drivelabel_labels_permissio_batch_del",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive.admin.labels",
+      "https://www.googleapis.com/auth/drive.labels"
+    ],
+    "methodId": "drivelabels.labels.permissions.batchDelete",
+    "title": "drivelabels.labels.permissions.batchDelete"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drivelabel_labels_permissio_batch_upd",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive.admin.labels",
+      "https://www.googleapis.com/auth/drive.labels"
+    ],
+    "methodId": "drivelabels.labels.permissions.batchUpdate",
+    "title": "drivelabels.labels.permissions.batchUpdate"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drivelabel_labels_permissions_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive.admin.labels",
+      "https://www.googleapis.com/auth/drive.labels"
+    ],
+    "methodId": "drivelabels.labels.permissions.create",
+    "title": "drivelabels.labels.permissions.create"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drivelabel_labels_permissions_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive.admin.labels",
+      "https://www.googleapis.com/auth/drive.labels"
+    ],
+    "methodId": "drivelabels.labels.permissions.delete",
+    "title": "drivelabels.labels.permissions.delete"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drivelabel_labels_permissions_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive.admin.labels",
+      "https://www.googleapis.com/auth/drive.admin.labels.readonly",
+      "https://www.googleapis.com/auth/drive.labels",
+      "https://www.googleapis.com/auth/drive.labels.readonly"
+    ],
+    "methodId": "drivelabels.labels.permissions.list",
+    "title": "drivelabels.labels.permissions.list"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drivelabel_labels_publish",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive.admin.labels",
+      "https://www.googleapis.com/auth/drive.labels"
+    ],
+    "methodId": "drivelabels.labels.publish",
+    "title": "drivelabels.labels.publish"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drivelabel_labels_revisi_permiss_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive.admin.labels",
+      "https://www.googleapis.com/auth/drive.admin.labels.readonly",
+      "https://www.googleapis.com/auth/drive.labels",
+      "https://www.googleapis.com/auth/drive.labels.readonly"
+    ],
+    "methodId": "drivelabels.labels.revisions.permissions.list",
+    "title": "drivelabels.labels.revisions.permissions.list"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drivelabel_labels_revision_locks_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive.admin.labels",
+      "https://www.googleapis.com/auth/drive.admin.labels.readonly",
+      "https://www.googleapis.com/auth/drive.labels",
+      "https://www.googleapis.com/auth/drive.labels.readonly"
+    ],
+    "methodId": "drivelabels.labels.revisions.locks.list",
+    "title": "drivelabels.labels.revisions.locks.list"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drivelabel_labels_revisions_update_pe",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive.admin.labels",
+      "https://www.googleapis.com/auth/drive.labels"
+    ],
+    "methodId": "drivelabels.labels.revisions.updatePermissions",
+    "title": "drivelabels.labels.revisions.updatePermissions"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drivelabel_labels_update_label_copy_m",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive.admin.labels",
+      "https://www.googleapis.com/auth/drive.labels"
+    ],
+    "methodId": "drivelabels.labels.updateLabelCopyMode",
+    "title": "drivelabels.labels.updateLabelCopyMode"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drivelabel_labels_update_label_enable",
+    "kind": "write",
+    "scopes": [],
+    "methodId": "drivelabels.labels.updateLabelEnabledAppSettings",
+    "title": "drivelabels.labels.updateLabelEnabledAppSettings"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drivelabel_labels_update_permissions",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive.admin.labels",
+      "https://www.googleapis.com/auth/drive.labels"
+    ],
+    "methodId": "drivelabels.labels.updatePermissions",
+    "title": "drivelabels.labels.updatePermissions"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drivelabel_limits_get_label",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive.admin.labels",
+      "https://www.googleapis.com/auth/drive.admin.labels.readonly",
+      "https://www.googleapis.com/auth/drive.labels",
+      "https://www.googleapis.com/auth/drive.labels.readonly"
+    ],
+    "methodId": "drivelabels.limits.getLabel",
+    "title": "drivelabels.limits.getLabel"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drivelabel_users_get_capabilities",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive.admin.labels",
+      "https://www.googleapis.com/auth/drive.admin.labels.readonly",
+      "https://www.googleapis.com/auth/drive.labels",
+      "https://www.googleapis.com/auth/drive.labels.readonly"
+    ],
+    "methodId": "drivelabels.users.getCapabilities",
+    "title": "drivelabels.users.getCapabilities"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__forms_forms_batch_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/forms.body"
+    ],
+    "methodId": "forms.forms.batchUpdate",
+    "title": "forms.forms.batchUpdate"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__forms_forms_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/forms.body"
+    ],
+    "methodId": "forms.forms.create",
+    "title": "forms.forms.create"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__forms_forms_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.readonly",
+      "https://www.googleapis.com/auth/forms.body",
+      "https://www.googleapis.com/auth/forms.body.readonly"
+    ],
+    "methodId": "forms.forms.get",
+    "title": "forms.forms.get"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__forms_forms_responses_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/forms.responses.readonly"
+    ],
+    "methodId": "forms.forms.responses.get",
+    "title": "forms.forms.responses.get"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__forms_forms_responses_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/forms.responses.readonly"
+    ],
+    "methodId": "forms.forms.responses.list",
+    "title": "forms.forms.responses.list"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__forms_forms_set_publish_settings",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/forms.body"
+    ],
+    "methodId": "forms.forms.setPublishSettings",
+    "title": "forms.forms.setPublishSettings"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__forms_forms_watches_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.readonly",
+      "https://www.googleapis.com/auth/forms.body",
+      "https://www.googleapis.com/auth/forms.body.readonly",
+      "https://www.googleapis.com/auth/forms.responses.readonly"
+    ],
+    "methodId": "forms.forms.watches.create",
+    "title": "forms.forms.watches.create"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__forms_forms_watches_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.readonly",
+      "https://www.googleapis.com/auth/forms.body",
+      "https://www.googleapis.com/auth/forms.body.readonly",
+      "https://www.googleapis.com/auth/forms.responses.readonly"
+    ],
+    "methodId": "forms.forms.watches.delete",
+    "title": "forms.forms.watches.delete"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__forms_forms_watches_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.readonly",
+      "https://www.googleapis.com/auth/forms.body",
+      "https://www.googleapis.com/auth/forms.body.readonly",
+      "https://www.googleapis.com/auth/forms.responses.readonly"
+    ],
+    "methodId": "forms.forms.watches.list",
+    "title": "forms.forms.watches.list"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__forms_forms_watches_renew",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.readonly",
+      "https://www.googleapis.com/auth/forms.body",
+      "https://www.googleapis.com/auth/forms.body.readonly",
+      "https://www.googleapis.com/auth/forms.responses.readonly"
+    ],
+    "methodId": "forms.forms.watches.renew",
+    "title": "forms.forms.watches.renew"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__sheets_spreadsh_values_batch_cle_7bcc",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/spreadsheets"
+    ],
+    "methodId": "sheets.spreadsheets.values.batchClear",
+    "title": "sheets.spreadsheets.values.batchClear"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__sheets_spreadsh_values_batch_cle_c5d4",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/spreadsheets"
+    ],
+    "methodId": "sheets.spreadsheets.values.batchClearByDataFilter",
+    "title": "sheets.spreadsheets.values.batchClearByDataFilter"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__sheets_spreadsh_values_batch_upd_91bd",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/spreadsheets"
+    ],
+    "methodId": "sheets.spreadsheets.values.batchUpdateByDataFilter",
+    "title": "sheets.spreadsheets.values.batchUpdateByDataFilter"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__sheets_spreadsh_values_batch_upd_d329",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/spreadsheets"
+    ],
+    "methodId": "sheets.spreadsheets.values.batchUpdate",
+    "title": "sheets.spreadsheets.values.batchUpdate"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__sheets_spreadsheet_developer_m_search",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/spreadsheets"
+    ],
+    "methodId": "sheets.spreadsheets.developerMetadata.search",
+    "title": "sheets.spreadsheets.developerMetadata.search"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__sheets_spreadsheet_values_batch_get_b",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/spreadsheets"
+    ],
+    "methodId": "sheets.spreadsheets.values.batchGetByDataFilter",
+    "title": "sheets.spreadsheets.values.batchGetByDataFilter"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__sheets_spreadsheets_batch_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/spreadsheets"
+    ],
+    "methodId": "sheets.spreadsheets.batchUpdate",
+    "title": "sheets.spreadsheets.batchUpdate"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__sheets_spreadsheets_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/spreadsheets"
+    ],
+    "methodId": "sheets.spreadsheets.create",
+    "title": "sheets.spreadsheets.create"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__sheets_spreadsheets_developer_met_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/spreadsheets"
+    ],
+    "methodId": "sheets.spreadsheets.developerMetadata.get",
+    "title": "sheets.spreadsheets.developerMetadata.get"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__sheets_spreadsheets_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.readonly",
+      "https://www.googleapis.com/auth/spreadsheets",
+      "https://www.googleapis.com/auth/spreadsheets.readonly"
+    ],
+    "methodId": "sheets.spreadsheets.get",
+    "title": "sheets.spreadsheets.get"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__sheets_spreadsheets_get_by_data_filte",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/spreadsheets"
+    ],
+    "methodId": "sheets.spreadsheets.getByDataFilter",
+    "title": "sheets.spreadsheets.getByDataFilter"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__sheets_spreadsheets_sheets_copy_to",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/spreadsheets"
+    ],
+    "methodId": "sheets.spreadsheets.sheets.copyTo",
+    "title": "sheets.spreadsheets.sheets.copyTo"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__sheets_spreadsheets_values_append",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/spreadsheets"
+    ],
+    "methodId": "sheets.spreadsheets.values.append",
+    "title": "sheets.spreadsheets.values.append"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__sheets_spreadsheets_values_batch_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.readonly",
+      "https://www.googleapis.com/auth/spreadsheets",
+      "https://www.googleapis.com/auth/spreadsheets.readonly"
+    ],
+    "methodId": "sheets.spreadsheets.values.batchGet",
+    "title": "sheets.spreadsheets.values.batchGet"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__sheets_spreadsheets_values_clear",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/spreadsheets"
+    ],
+    "methodId": "sheets.spreadsheets.values.clear",
+    "title": "sheets.spreadsheets.values.clear"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__sheets_spreadsheets_values_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.readonly",
+      "https://www.googleapis.com/auth/spreadsheets",
+      "https://www.googleapis.com/auth/spreadsheets.readonly"
+    ],
+    "methodId": "sheets.spreadsheets.values.get",
+    "title": "sheets.spreadsheets.values.get"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__sheets_spreadsheets_values_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/spreadsheets"
+    ],
+    "methodId": "sheets.spreadsheets.values.update",
+    "title": "sheets.spreadsheets.values.update"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__slides_presentatio_pages_get_thumbnai",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.readonly",
+      "https://www.googleapis.com/auth/presentations",
+      "https://www.googleapis.com/auth/presentations.readonly"
+    ],
+    "methodId": "slides.presentations.pages.getThumbnail",
+    "title": "slides.presentations.pages.getThumbnail"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__slides_presentations_batch_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.readonly",
+      "https://www.googleapis.com/auth/presentations",
+      "https://www.googleapis.com/auth/spreadsheets",
+      "https://www.googleapis.com/auth/spreadsheets.readonly"
+    ],
+    "methodId": "slides.presentations.batchUpdate",
+    "title": "slides.presentations.batchUpdate"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__slides_presentations_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/presentations"
+    ],
+    "methodId": "slides.presentations.create",
+    "title": "slides.presentations.create"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__slides_presentations_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.readonly",
+      "https://www.googleapis.com/auth/presentations",
+      "https://www.googleapis.com/auth/presentations.readonly"
+    ],
+    "methodId": "slides.presentations.get",
+    "title": "slides.presentations.get"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__slides_presentations_pages_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.readonly",
+      "https://www.googleapis.com/auth/presentations",
+      "https://www.googleapis.com/auth/presentations.readonly"
+    ],
+    "methodId": "slides.presentations.pages.get",
+    "title": "slides.presentations.pages.get"
+  }
+]

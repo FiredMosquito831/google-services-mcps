@@ -1,0 +1,7 @@
+{
+  "ganalytics": [
+    "https://www.googleapis.com/auth/analytics",
+    "https://www.googleapis.com/auth/analytics.edit",
+    "https://www.googleapis.com/auth/analytics.readonly"
+  ]
+}

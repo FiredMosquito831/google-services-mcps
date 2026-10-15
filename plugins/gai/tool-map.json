@@ -1,0 +1,3839 @@
+[
+  {
+    "name": "mcp__plugin_gai_gai__api_call",
+    "kind": "dynamic",
+    "scopes": [],
+    "title": "Call an API method"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__api_describe",
+    "kind": "read",
+    "scopes": [],
+    "title": "Describe an API method"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__api_methods",
+    "kind": "read",
+    "scopes": [],
+    "title": "gai: API methods"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__api_search",
+    "kind": "read",
+    "scopes": [],
+    "title": "Search API methods"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_billing_ac_billing_ac_distribute",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.billingAccounts.billingAccountLicenseConfigs.distributeLicenseConfig",
+    "title": "discoveryengine.billingAccounts.billingAccountLicenseConfigs.distributeLicenseConfig"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_billing_ac_billing_ac_retract_li",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.billingAccounts.billingAccountLicenseConfigs.retractLicenseConfig",
+    "title": "discoveryengine.billingAccounts.billingAccountLicenseConfigs.retractLicenseConfig"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_pro_loc_col_dat_sit_tar_ope_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.targetSites.operations.list",
+    "title": "discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.targetSites.operations.list"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_pro_loc_col_dat_sit_tar_oper_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.targetSites.operations.get",
+    "title": "discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.targetSites.operations.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_pro_loc_col_eng_ass_age_a2a_0566",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.assistants.agents.a2a.v1.tasks.subscribe",
+    "title": "discoveryengine.projects.locations.collections.engines.assistants.agents.a2a.v1.tasks.subscribe"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_pro_loc_col_eng_ass_age_a2a_22cd",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.assistants.agents.a2a.v1.tasks.pushNotificationConfigs.create",
+    "title": "discoveryengine.projects.locations.collections.engines.assistants.agents.a2a.v1.tasks.pushNotificationConfigs.create"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_pro_loc_col_eng_ass_age_a2a_41f3",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.assistants.agents.a2a.v1.message.send",
+    "title": "discoveryengine.projects.locations.collections.engines.assistants.agents.a2a.v1.message.send"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_pro_loc_col_eng_ass_age_a2a_70ac",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.assistants.agents.a2a.v1.tasks.get",
+    "title": "discoveryengine.projects.locations.collections.engines.assistants.agents.a2a.v1.tasks.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_pro_loc_col_eng_ass_age_a2a_766a",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.assistants.agents.a2a.v1.tasks.pushNotificationConfigs.list",
+    "title": "discoveryengine.projects.locations.collections.engines.assistants.agents.a2a.v1.tasks.pushNotificationConfigs.list"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_pro_loc_col_eng_ass_age_a2a_9029",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.assistants.agents.a2a.v1.tasks.pushNotificationConfigs.get",
+    "title": "discoveryengine.projects.locations.collections.engines.assistants.agents.a2a.v1.tasks.pushNotificationConfigs.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_pro_loc_col_eng_ass_age_a2a_c691",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.assistants.agents.a2a.v1.tasks.pushNotificationConfigs.delete",
+    "title": "discoveryengine.projects.locations.collections.engines.assistants.agents.a2a.v1.tasks.pushNotificationConfigs.delete"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_pro_loc_col_eng_ass_age_a2a_e1de",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.assistants.agents.a2a.v1.message.stream",
+    "title": "discoveryengine.projects.locations.collections.engines.assistants.agents.a2a.v1.message.stream"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_pro_loc_col_eng_ass_age_a2a_e99b",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.assistants.agents.a2a.v1.getCard",
+    "title": "discoveryengine.projects.locations.collections.engines.assistants.agents.a2a.v1.getCard"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_pro_loc_col_eng_ass_age_a2a_eae2",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.assistants.agents.a2a.v1.tasks.cancel",
+    "title": "discoveryengine.projects.locations.collections.engines.assistants.agents.a2a.v1.tasks.cancel"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_pro_loc_col_eng_ass_age_oper_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.assistants.agents.operations.get",
+    "title": "discoveryengine.projects.locations.collections.engines.assistants.agents.operations.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_pro_loc_coll_data_bran_docu_crea",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.branches.documents.create",
+    "title": "discoveryengine.projects.locations.collections.dataStores.branches.documents.create"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_pro_loc_coll_data_bran_docu_dele",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.branches.documents.delete",
+    "title": "discoveryengine.projects.locations.collections.dataStores.branches.documents.delete"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_pro_loc_coll_data_bran_docu_impo",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.branches.documents.import",
+    "title": "discoveryengine.projects.locations.collections.dataStores.branches.documents.import"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_pro_loc_coll_data_bran_docu_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.branches.documents.list",
+    "title": "discoveryengine.projects.locations.collections.dataStores.branches.documents.list"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_pro_loc_coll_data_bran_docu_patc",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.branches.documents.patch",
+    "title": "discoveryengine.projects.locations.collections.dataStores.branches.documents.patch"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_pro_loc_coll_data_bran_docu_purg",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.branches.documents.purge",
+    "title": "discoveryengine.projects.locations.collections.dataStores.branches.documents.purge"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_pro_loc_coll_data_bran_oper_canc",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.branches.operations.cancel",
+    "title": "discoveryengine.projects.locations.collections.dataStores.branches.operations.cancel"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_pro_loc_coll_data_bran_oper_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.branches.operations.list",
+    "title": "discoveryengine.projects.locations.collections.dataStores.branches.operations.list"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_pro_loc_coll_data_mode_oper_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.models.operations.list",
+    "title": "discoveryengine.projects.locations.collections.dataStores.models.operations.list"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_pro_loc_coll_data_oper_list_2253",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.operations.list",
+    "title": "discoveryengine.projects.locations.collections.dataStores.operations.list"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_pro_loc_coll_data_oper_list_b0c8",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataConnector.operations.list",
+    "title": "discoveryengine.projects.locations.collections.dataConnector.operations.list"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_pro_loc_coll_data_sche_oper_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.schemas.operations.list",
+    "title": "discoveryengine.projects.locations.collections.dataStores.schemas.operations.list"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_pro_loc_coll_data_serv_sear_56e4",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.servingConfigs.search",
+    "title": "discoveryengine.projects.locations.collections.dataStores.servingConfigs.search"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_pro_loc_coll_data_serv_sear_8723",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.servingConfigs.searchLite",
+    "title": "discoveryengine.projects.locations.collections.dataStores.servingConfigs.searchLite"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_pro_loc_coll_data_site_oper_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.operations.list",
+    "title": "discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.operations.list"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_pro_loc_coll_data_site_site_crea",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.sitemaps.create",
+    "title": "discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.sitemaps.create"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_pro_loc_coll_data_site_site_dele",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.sitemaps.delete",
+    "title": "discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.sitemaps.delete"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_pro_loc_coll_data_site_site_fetc",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.sitemaps.fetch",
+    "title": "discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.sitemaps.fetch"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_pro_loc_coll_data_site_targ_batc",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.targetSites.batchCreate",
+    "title": "discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.targetSites.batchCreate"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_pro_loc_coll_data_site_targ_crea",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.targetSites.create",
+    "title": "discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.targetSites.create"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_pro_loc_coll_data_site_targ_dele",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.targetSites.delete",
+    "title": "discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.targetSites.delete"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_pro_loc_coll_data_site_targ_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.targetSites.list",
+    "title": "discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.targetSites.list"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_pro_loc_coll_data_site_targ_patc",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.targetSites.patch",
+    "title": "discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.targetSites.patch"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_pro_loc_coll_engi_serv_sear_3cf0",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.servingConfigs.searchLite",
+    "title": "discoveryengine.projects.locations.collections.engines.servingConfigs.searchLite"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_pro_loc_coll_engi_serv_sear_a054",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.servingConfigs.search",
+    "title": "discoveryengine.projects.locations.collections.engines.servingConfigs.search"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_pro_loca_coll_data_bran_docu_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.branches.documents.get",
+    "title": "discoveryengine.projects.locations.collections.dataStores.branches.documents.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_pro_loca_coll_data_bran_oper_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.branches.operations.get",
+    "title": "discoveryengine.projects.locations.collections.dataStores.branches.operations.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_pro_loca_coll_data_mode_oper_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.models.operations.get",
+    "title": "discoveryengine.projects.locations.collections.dataStores.models.operations.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_pro_loca_coll_data_oper_get_52ea",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataConnector.operations.get",
+    "title": "discoveryengine.projects.locations.collections.dataConnector.operations.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_pro_loca_coll_data_oper_get_f560",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.operations.get",
+    "title": "discoveryengine.projects.locations.collections.dataStores.operations.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_pro_loca_coll_data_sche_oper_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.schemas.operations.get",
+    "title": "discoveryengine.projects.locations.collections.dataStores.schemas.operations.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_pro_loca_coll_data_sess_answ_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.sessions.answers.get",
+    "title": "discoveryengine.projects.locations.collections.dataStores.sessions.answers.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_pro_loca_coll_data_site_oper_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.operations.get",
+    "title": "discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.operations.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_pro_loca_coll_data_site_targ_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.targetSites.get",
+    "title": "discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.targetSites.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_pro_loca_coll_engi_sess_answ_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.sessions.answers.get",
+    "title": "discoveryengine.projects.locations.collections.engines.sessions.answers.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_coll_engin_assis_creat",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.assistants.create",
+    "title": "discoveryengine.projects.locations.collections.engines.assistants.create"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_coll_engin_assis_delet",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.assistants.delete",
+    "title": "discoveryengine.projects.locations.collections.engines.assistants.delete"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_coll_engin_assis_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.assistants.patch",
+    "title": "discoveryengine.projects.locations.collections.engines.assistants.patch"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_coll_engin_assis_strea",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.assistants.streamAssist",
+    "title": "discoveryengine.projects.locations.collections.engines.assistants.streamAssist"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_coll_engin_compl_compl",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud_search.query",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.completionConfig.completeQuery",
+    "title": "discoveryengine.projects.locations.collections.engines.completionConfig.completeQuery"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_coll_engin_contr_creat",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.controls.create",
+    "title": "discoveryengine.projects.locations.collections.engines.controls.create"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_coll_engin_contr_delet",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.controls.delete",
+    "title": "discoveryengine.projects.locations.collections.engines.controls.delete"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_coll_engin_contr_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.controls.patch",
+    "title": "discoveryengine.projects.locations.collections.engines.controls.patch"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_coll_engin_conve_conve",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.conversations.converse",
+    "title": "discoveryengine.projects.locations.collections.engines.conversations.converse"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_coll_engin_conve_creat",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.conversations.create",
+    "title": "discoveryengine.projects.locations.collections.engines.conversations.create"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_coll_engin_conve_delet",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.conversations.delete",
+    "title": "discoveryengine.projects.locations.collections.engines.conversations.delete"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_coll_engin_conve_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.conversations.patch",
+    "title": "discoveryengine.projects.locations.collections.engines.conversations.patch"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_coll_engin_opera_cance",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.operations.cancel",
+    "title": "discoveryengine.projects.locations.collections.engines.operations.cancel"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_coll_engin_servi_answe",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.servingConfigs.answer",
+    "title": "discoveryengine.projects.locations.collections.engines.servingConfigs.answer"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_coll_engin_servi_creat",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.servingConfigs.create",
+    "title": "discoveryengine.projects.locations.collections.engines.servingConfigs.create"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_coll_engin_servi_delet",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.servingConfigs.delete",
+    "title": "discoveryengine.projects.locations.collections.engines.servingConfigs.delete"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_coll_engin_servi_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.servingConfigs.patch",
+    "title": "discoveryengine.projects.locations.collections.engines.servingConfigs.patch"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_coll_engin_servi_recom",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.servingConfigs.recommend",
+    "title": "discoveryengine.projects.locations.collections.engines.servingConfigs.recommend"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_coll_engin_servi_strea",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.servingConfigs.streamAnswer",
+    "title": "discoveryengine.projects.locations.collections.engines.servingConfigs.streamAnswer"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_coll_engin_sessi_creat",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.sessions.create",
+    "title": "discoveryengine.projects.locations.collections.engines.sessions.create"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_coll_engin_sessi_delet",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.sessions.delete",
+    "title": "discoveryengine.projects.locations.collections.engines.sessions.delete"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_coll_engin_sessi_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.sessions.patch",
+    "title": "discoveryengine.projects.locations.collections.engines.sessions.patch"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_coll_engin_widge_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.widgetConfigs.patch",
+    "title": "discoveryengine.projects.locations.collections.engines.widgetConfigs.patch"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_colle_data_branc_batch",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.branches.batchGetDocumentsMetadata",
+    "title": "discoveryengine.projects.locations.collections.dataStores.branches.batchGetDocumentsMetadata"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_colle_data_compl_compl",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud_search.query",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.completionConfig.completeQuery",
+    "title": "discoveryengine.projects.locations.collections.dataStores.completionConfig.completeQuery"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_colle_data_compl_impor",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.completionSuggestions.import",
+    "title": "discoveryengine.projects.locations.collections.dataStores.completionSuggestions.import"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_colle_data_compl_purge",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.completionSuggestions.purge",
+    "title": "discoveryengine.projects.locations.collections.dataStores.completionSuggestions.purge"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_colle_data_contr_creat",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.controls.create",
+    "title": "discoveryengine.projects.locations.collections.dataStores.controls.create"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_colle_data_contr_delet",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.controls.delete",
+    "title": "discoveryengine.projects.locations.collections.dataStores.controls.delete"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_colle_data_contr_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.controls.patch",
+    "title": "discoveryengine.projects.locations.collections.dataStores.controls.patch"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_colle_data_conve_conve",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.conversations.converse",
+    "title": "discoveryengine.projects.locations.collections.dataStores.conversations.converse"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_colle_data_conve_creat",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.conversations.create",
+    "title": "discoveryengine.projects.locations.collections.dataStores.conversations.create"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_colle_data_conve_delet",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.conversations.delete",
+    "title": "discoveryengine.projects.locations.collections.dataStores.conversations.delete"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_colle_data_conve_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.conversations.patch",
+    "title": "discoveryengine.projects.locations.collections.dataStores.conversations.patch"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_colle_data_schem_creat",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.schemas.create",
+    "title": "discoveryengine.projects.locations.collections.dataStores.schemas.create"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_colle_data_schem_delet",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.schemas.delete",
+    "title": "discoveryengine.projects.locations.collections.dataStores.schemas.delete"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_colle_data_schem_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.schemas.patch",
+    "title": "discoveryengine.projects.locations.collections.dataStores.schemas.patch"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_colle_data_servi_answe",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.servingConfigs.answer",
+    "title": "discoveryengine.projects.locations.collections.dataStores.servingConfigs.answer"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_colle_data_servi_creat",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.servingConfigs.create",
+    "title": "discoveryengine.projects.locations.collections.dataStores.servingConfigs.create"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_colle_data_servi_delet",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.servingConfigs.delete",
+    "title": "discoveryengine.projects.locations.collections.dataStores.servingConfigs.delete"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_colle_data_servi_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.servingConfigs.patch",
+    "title": "discoveryengine.projects.locations.collections.dataStores.servingConfigs.patch"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_colle_data_servi_recom",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.servingConfigs.recommend",
+    "title": "discoveryengine.projects.locations.collections.dataStores.servingConfigs.recommend"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_colle_data_servi_strea",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.servingConfigs.streamAnswer",
+    "title": "discoveryengine.projects.locations.collections.dataStores.servingConfigs.streamAnswer"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_colle_data_sessi_creat",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.sessions.create",
+    "title": "discoveryengine.projects.locations.collections.dataStores.sessions.create"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_colle_data_sessi_delet",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.sessions.delete",
+    "title": "discoveryengine.projects.locations.collections.dataStores.sessions.delete"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_colle_data_sessi_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.sessions.patch",
+    "title": "discoveryengine.projects.locations.collections.dataStores.sessions.patch"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_colle_data_sugge_impor",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.suggestionDenyListEntries.import",
+    "title": "discoveryengine.projects.locations.collections.dataStores.suggestionDenyListEntries.import"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_colle_data_sugge_purge",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.suggestionDenyListEntries.purge",
+    "title": "discoveryengine.projects.locations.collections.dataStores.suggestionDenyListEntries.purge"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_colle_data_widge_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.widgetConfigs.patch",
+    "title": "discoveryengine.projects.locations.collections.dataStores.widgetConfigs.patch"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_colle_engin_assis_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.assistants.list",
+    "title": "discoveryengine.projects.locations.collections.engines.assistants.list"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_colle_engin_contr_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.controls.list",
+    "title": "discoveryengine.projects.locations.collections.engines.controls.list"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_colle_engin_conve_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.conversations.list",
+    "title": "discoveryengine.projects.locations.collections.engines.conversations.list"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_colle_engin_opera_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.operations.list",
+    "title": "discoveryengine.projects.locations.collections.engines.operations.list"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_colle_engin_servi_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.servingConfigs.list",
+    "title": "discoveryengine.projects.locations.collections.engines.servingConfigs.list"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_colle_engin_sessi_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.sessions.list",
+    "title": "discoveryengine.projects.locations.collections.engines.sessions.list"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_data_branc_docum_creat",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.branches.documents.create",
+    "title": "discoveryengine.projects.locations.dataStores.branches.documents.create"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_data_branc_docum_delet",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.branches.documents.delete",
+    "title": "discoveryengine.projects.locations.dataStores.branches.documents.delete"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_data_branc_docum_impor",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.branches.documents.import",
+    "title": "discoveryengine.projects.locations.dataStores.branches.documents.import"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_data_branc_docum_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.branches.documents.patch",
+    "title": "discoveryengine.projects.locations.dataStores.branches.documents.patch"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_data_branc_docum_purge",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.branches.documents.purge",
+    "title": "discoveryengine.projects.locations.dataStores.branches.documents.purge"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_loca_data_branc_opera_cance",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.branches.operations.cancel",
+    "title": "discoveryengine.projects.locations.dataStores.branches.operations.cancel"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_locat_colle_data_contr_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.controls.list",
+    "title": "discoveryengine.projects.locations.collections.dataStores.controls.list"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_locat_colle_data_conve_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.conversations.list",
+    "title": "discoveryengine.projects.locations.collections.dataStores.conversations.list"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_locat_colle_data_custo_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.customModels.list",
+    "title": "discoveryengine.projects.locations.collections.dataStores.customModels.list"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_locat_colle_data_schem_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.schemas.list",
+    "title": "discoveryengine.projects.locations.collections.dataStores.schemas.list"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_locat_colle_data_servi_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.servingConfigs.list",
+    "title": "discoveryengine.projects.locations.collections.dataStores.servingConfigs.list"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_locat_colle_data_sessi_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.sessions.list",
+    "title": "discoveryengine.projects.locations.collections.dataStores.sessions.list"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_locat_colle_data_site_batch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.batchVerifyTargetSites",
+    "title": "discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.batchVerifyTargetSites"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_locat_colle_data_site_disab",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.disableAdvancedSiteSearch",
+    "title": "discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.disableAdvancedSiteSearch"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_locat_colle_data_site_enabl",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.enableAdvancedSiteSearch",
+    "title": "discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.enableAdvancedSiteSearch"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_locat_colle_data_site_fetch",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.fetchDomainVerificationStatus",
+    "title": "discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.fetchDomainVerificationStatus"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_locat_colle_data_site_recra",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.recrawlUris",
+    "title": "discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.recrawlUris"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_locat_colle_data_user_colle",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.userEvents.collect",
+    "title": "discoveryengine.projects.locations.collections.dataStores.userEvents.collect"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_locat_colle_data_user_impor",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.userEvents.import",
+    "title": "discoveryengine.projects.locations.collections.dataStores.userEvents.import"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_locat_colle_data_user_purge",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.userEvents.purge",
+    "title": "discoveryengine.projects.locations.collections.dataStores.userEvents.purge"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_locat_colle_data_user_write",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.userEvents.write",
+    "title": "discoveryengine.projects.locations.collections.dataStores.userEvents.write"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_locat_colle_engin_assis_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.assistants.get",
+    "title": "discoveryengine.projects.locations.collections.engines.assistants.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_locat_colle_engin_contr_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.controls.get",
+    "title": "discoveryengine.projects.locations.collections.engines.controls.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_locat_colle_engin_conve_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.conversations.get",
+    "title": "discoveryengine.projects.locations.collections.engines.conversations.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_locat_colle_engin_opera_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.operations.get",
+    "title": "discoveryengine.projects.locations.collections.engines.operations.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_locat_colle_engin_servi_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.servingConfigs.get",
+    "title": "discoveryengine.projects.locations.collections.engines.servingConfigs.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_locat_colle_engin_sessi_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.sessions.get",
+    "title": "discoveryengine.projects.locations.collections.engines.sessions.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_locat_colle_engin_widge_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.widgetConfigs.get",
+    "title": "discoveryengine.projects.locations.collections.engines.widgetConfigs.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_locat_data_branc_docum_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.branches.documents.list",
+    "title": "discoveryengine.projects.locations.dataStores.branches.documents.list"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_locat_data_branc_opera_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.branches.operations.list",
+    "title": "discoveryengine.projects.locations.dataStores.branches.operations.list"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_locat_data_model_opera_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.models.operations.list",
+    "title": "discoveryengine.projects.locations.dataStores.models.operations.list"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_locat_data_servi_searc_6c7a",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.servingConfigs.searchLite",
+    "title": "discoveryengine.projects.locations.dataStores.servingConfigs.searchLite"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_locat_data_servi_searc_b50f",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.servingConfigs.search",
+    "title": "discoveryengine.projects.locations.dataStores.servingConfigs.search"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_locat_data_site_sitem_creat",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.siteSearchEngine.sitemaps.create",
+    "title": "discoveryengine.projects.locations.dataStores.siteSearchEngine.sitemaps.create"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_locat_data_site_sitem_delet",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.siteSearchEngine.sitemaps.delete",
+    "title": "discoveryengine.projects.locations.dataStores.siteSearchEngine.sitemaps.delete"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_locat_data_site_sitem_fetch",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.siteSearchEngine.sitemaps.fetch",
+    "title": "discoveryengine.projects.locations.dataStores.siteSearchEngine.sitemaps.fetch"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_locat_data_site_targe_batch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.siteSearchEngine.targetSites.batchCreate",
+    "title": "discoveryengine.projects.locations.dataStores.siteSearchEngine.targetSites.batchCreate"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_locat_data_site_targe_creat",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.siteSearchEngine.targetSites.create",
+    "title": "discoveryengine.projects.locations.dataStores.siteSearchEngine.targetSites.create"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_locat_data_site_targe_delet",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.siteSearchEngine.targetSites.delete",
+    "title": "discoveryengine.projects.locations.dataStores.siteSearchEngine.targetSites.delete"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proj_locat_data_site_targe_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.siteSearchEngine.targetSites.patch",
+    "title": "discoveryengine.projects.locations.dataStores.siteSearchEngine.targetSites.patch"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locat_colle_data_contr_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.controls.get",
+    "title": "discoveryengine.projects.locations.collections.dataStores.controls.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locat_colle_data_conve_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.conversations.get",
+    "title": "discoveryengine.projects.locations.collections.dataStores.conversations.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locat_colle_data_schem_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.schemas.get",
+    "title": "discoveryengine.projects.locations.collections.dataStores.schemas.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locat_colle_data_servi_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.servingConfigs.get",
+    "title": "discoveryengine.projects.locations.collections.dataStores.servingConfigs.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locat_colle_data_sessi_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.sessions.get",
+    "title": "discoveryengine.projects.locations.collections.dataStores.sessions.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locat_colle_data_widge_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.widgetConfigs.get",
+    "title": "discoveryengine.projects.locations.collections.dataStores.widgetConfigs.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locat_collec_data_s_comple",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.completeQuery",
+    "title": "discoveryengine.projects.locations.collections.dataStores.completeQuery"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locat_collec_data_s_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.create",
+    "title": "discoveryengine.projects.locations.collections.dataStores.create"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locat_collec_data_s_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.delete",
+    "title": "discoveryengine.projects.locations.collections.dataStores.delete"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locat_collec_data_s_get_ia",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.getIamPolicy",
+    "title": "discoveryengine.projects.locations.collections.dataStores.getIamPolicy"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locat_collec_data_s_get_si",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.getSiteSearchEngine",
+    "title": "discoveryengine.projects.locations.collections.dataStores.getSiteSearchEngine"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locat_collec_data_s_set_ia",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.setIamPolicy",
+    "title": "discoveryengine.projects.locations.collections.dataStores.setIamPolicy"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locat_collec_engine_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.create",
+    "title": "discoveryengine.projects.locations.collections.engines.create"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locat_collec_engine_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.delete",
+    "title": "discoveryengine.projects.locations.collections.engines.delete"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locat_collec_engine_get_ia",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.getIamPolicy",
+    "title": "discoveryengine.projects.locations.collections.engines.getIamPolicy"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locat_collec_engine_set_ia",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.setIamPolicy",
+    "title": "discoveryengine.projects.locations.collections.engines.setIamPolicy"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locat_data_branc_docum_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.branches.documents.get",
+    "title": "discoveryengine.projects.locations.dataStores.branches.documents.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locat_data_branc_opera_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.branches.operations.get",
+    "title": "discoveryengine.projects.locations.dataStores.branches.operations.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locat_data_model_opera_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.models.operations.get",
+    "title": "discoveryengine.projects.locations.dataStores.models.operations.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locat_data_s_comple_comple",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud_search.query",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.completionConfig.completeQuery",
+    "title": "discoveryengine.projects.locations.dataStores.completionConfig.completeQuery"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locat_data_s_comple_import",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.completionSuggestions.import",
+    "title": "discoveryengine.projects.locations.dataStores.completionSuggestions.import"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locat_data_s_contro_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.controls.create",
+    "title": "discoveryengine.projects.locations.dataStores.controls.create"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locat_data_s_contro_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.controls.delete",
+    "title": "discoveryengine.projects.locations.dataStores.controls.delete"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locat_data_s_conver_conver",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.conversations.converse",
+    "title": "discoveryengine.projects.locations.dataStores.conversations.converse"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locat_data_s_conver_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.conversations.create",
+    "title": "discoveryengine.projects.locations.dataStores.conversations.create"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locat_data_s_conver_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.conversations.delete",
+    "title": "discoveryengine.projects.locations.dataStores.conversations.delete"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locat_data_s_schema_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.schemas.create",
+    "title": "discoveryengine.projects.locations.dataStores.schemas.create"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locat_data_s_schema_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.schemas.delete",
+    "title": "discoveryengine.projects.locations.dataStores.schemas.delete"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locat_data_s_servin_answer",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.servingConfigs.answer",
+    "title": "discoveryengine.projects.locations.dataStores.servingConfigs.answer"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locat_data_s_servin_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.servingConfigs.create",
+    "title": "discoveryengine.projects.locations.dataStores.servingConfigs.create"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locat_data_s_servin_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.servingConfigs.delete",
+    "title": "discoveryengine.projects.locations.dataStores.servingConfigs.delete"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locat_data_s_servin_recomm",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.servingConfigs.recommend",
+    "title": "discoveryengine.projects.locations.dataStores.servingConfigs.recommend"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locat_data_s_servin_stream",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.servingConfigs.streamAnswer",
+    "title": "discoveryengine.projects.locations.dataStores.servingConfigs.streamAnswer"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locat_data_s_sessio_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.sessions.create",
+    "title": "discoveryengine.projects.locations.dataStores.sessions.create"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locat_data_s_sessio_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.sessions.delete",
+    "title": "discoveryengine.projects.locations.dataStores.sessions.delete"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locat_data_s_site_s_disabl",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.siteSearchEngine.disableAdvancedSiteSearch",
+    "title": "discoveryengine.projects.locations.dataStores.siteSearchEngine.disableAdvancedSiteSearch"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locat_data_s_site_s_enable",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.siteSearchEngine.enableAdvancedSiteSearch",
+    "title": "discoveryengine.projects.locations.dataStores.siteSearchEngine.enableAdvancedSiteSearch"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locat_data_s_site_s_recraw",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.siteSearchEngine.recrawlUris",
+    "title": "discoveryengine.projects.locations.dataStores.siteSearchEngine.recrawlUris"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locat_data_s_sugges_import",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.suggestionDenyListEntries.import",
+    "title": "discoveryengine.projects.locations.dataStores.suggestionDenyListEntries.import"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locat_data_s_user_e_collec",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.userEvents.collect",
+    "title": "discoveryengine.projects.locations.dataStores.userEvents.collect"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locat_data_s_user_e_import",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.userEvents.import",
+    "title": "discoveryengine.projects.locations.dataStores.userEvents.import"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locat_data_sessi_answe_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.sessions.answers.get",
+    "title": "discoveryengine.projects.locations.dataStores.sessions.answers.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locat_data_site_targe_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.siteSearchEngine.targetSites.list",
+    "title": "discoveryengine.projects.locations.dataStores.siteSearchEngine.targetSites.list"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locat_data_site_target_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.siteSearchEngine.targetSites.get",
+    "title": "discoveryengine.projects.locations.dataStores.siteSearchEngine.targetSites.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locati_collec_data_s_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.patch",
+    "title": "discoveryengine.projects.locations.collections.dataStores.patch"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locati_collec_data_s_train",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.trainCustomModel",
+    "title": "discoveryengine.projects.locations.collections.dataStores.trainCustomModel"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locati_collec_engine_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.patch",
+    "title": "discoveryengine.projects.locations.collections.engines.patch"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locati_data_s_branch_batch",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.branches.batchGetDocumentsMetadata",
+    "title": "discoveryengine.projects.locations.dataStores.branches.batchGetDocumentsMetadata"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locati_data_s_comple_purge",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.completionSuggestions.purge",
+    "title": "discoveryengine.projects.locations.dataStores.completionSuggestions.purge"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locati_data_s_contro_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.controls.patch",
+    "title": "discoveryengine.projects.locations.dataStores.controls.patch"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locati_data_s_conver_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.conversations.patch",
+    "title": "discoveryengine.projects.locations.dataStores.conversations.patch"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locati_data_s_schema_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.schemas.patch",
+    "title": "discoveryengine.projects.locations.dataStores.schemas.patch"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locati_data_s_servin_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.servingConfigs.patch",
+    "title": "discoveryengine.projects.locations.dataStores.servingConfigs.patch"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locati_data_s_sessio_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.sessions.patch",
+    "title": "discoveryengine.projects.locations.dataStores.sessions.patch"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locati_data_s_sugges_purge",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.suggestionDenyListEntries.purge",
+    "title": "discoveryengine.projects.locations.dataStores.suggestionDenyListEntries.purge"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locati_data_s_user_e_purge",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.userEvents.purge",
+    "title": "discoveryengine.projects.locations.dataStores.userEvents.purge"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locati_data_s_user_e_write",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.userEvents.write",
+    "title": "discoveryengine.projects.locations.dataStores.userEvents.write"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_proje_locati_data_s_widget_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.widgetConfigs.patch",
+    "title": "discoveryengine.projects.locations.dataStores.widgetConfigs.patch"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_projec_locati_collec_data_co_mcp",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataConnector.mcp",
+    "title": "discoveryengine.projects.locations.collections.dataConnector.mcp"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_projec_locati_collec_data_s_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.list",
+    "title": "discoveryengine.projects.locations.collections.dataStores.list"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_projec_locati_collec_data_st_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.dataStores.get",
+    "title": "discoveryengine.projects.locations.collections.dataStores.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_projec_locati_collec_engine_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.list",
+    "title": "discoveryengine.projects.locations.collections.engines.list"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_projec_locati_collec_engines_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.engines.get",
+    "title": "discoveryengine.projects.locations.collections.engines.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_projec_locati_collec_operat_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.operations.list",
+    "title": "discoveryengine.projects.locations.collections.operations.list"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_projec_locati_collec_operati_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.operations.get",
+    "title": "discoveryengine.projects.locations.collections.operations.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_projec_locati_data_s_contro_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.controls.list",
+    "title": "discoveryengine.projects.locations.dataStores.controls.list"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_projec_locati_data_s_control_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.controls.get",
+    "title": "discoveryengine.projects.locations.dataStores.controls.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_projec_locati_data_s_conver_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.conversations.list",
+    "title": "discoveryengine.projects.locations.dataStores.conversations.list"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_projec_locati_data_s_convers_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.conversations.get",
+    "title": "discoveryengine.projects.locations.dataStores.conversations.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_projec_locati_data_s_operat_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.operations.list",
+    "title": "discoveryengine.projects.locations.dataStores.operations.list"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_projec_locati_data_s_operati_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.operations.get",
+    "title": "discoveryengine.projects.locations.dataStores.operations.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_projec_locati_data_s_schema_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.schemas.list",
+    "title": "discoveryengine.projects.locations.dataStores.schemas.list"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_projec_locati_data_s_schemas_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.schemas.get",
+    "title": "discoveryengine.projects.locations.dataStores.schemas.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_projec_locati_data_s_servin_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.servingConfigs.list",
+    "title": "discoveryengine.projects.locations.dataStores.servingConfigs.list"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_projec_locati_data_s_serving_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.servingConfigs.get",
+    "title": "discoveryengine.projects.locations.dataStores.servingConfigs.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_projec_locati_data_s_sessio_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.sessions.list",
+    "title": "discoveryengine.projects.locations.dataStores.sessions.list"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_projec_locati_data_s_session_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.sessions.get",
+    "title": "discoveryengine.projects.locations.dataStores.sessions.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_projec_locati_data_st_widget_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.widgetConfigs.get",
+    "title": "discoveryengine.projects.locations.dataStores.widgetConfigs.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_projec_locati_identi_operat_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.identityMappingStores.operations.list",
+    "title": "discoveryengine.projects.locations.identityMappingStores.operations.list"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_projec_locati_identi_operati_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.identityMappingStores.operations.get",
+    "title": "discoveryengine.projects.locations.identityMappingStores.operations.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_projec_locati_podcas_operati_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.podcasts.operations.get",
+    "title": "discoveryengine.projects.locations.podcasts.operations.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_projec_locati_user_s_licens_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.userStores.licenseConfigsUsageStats.list",
+    "title": "discoveryengine.projects.locations.userStores.licenseConfigsUsageStats.list"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_projec_locati_user_s_user_l_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.userStores.userLicenses.list",
+    "title": "discoveryengine.projects.locations.userStores.userLicenses.list"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_project_locatio_collect_get_data",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.getDataConnector",
+    "title": "discoveryengine.projects.locations.collections.getDataConnector"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_project_locatio_collect_update_d",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.updateDataConnector",
+    "title": "discoveryengine.projects.locations.collections.updateDataConnector"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_project_locatio_collecti_get_iam",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.getIamPolicy",
+    "title": "discoveryengine.projects.locations.collections.getIamPolicy"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_project_locatio_collecti_set_iam",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.setIamPolicy",
+    "title": "discoveryengine.projects.locations.collections.setIamPolicy"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_project_locatio_data_st_complete",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.completeQuery",
+    "title": "discoveryengine.projects.locations.dataStores.completeQuery"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_project_locatio_data_st_get_site",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.getSiteSearchEngine",
+    "title": "discoveryengine.projects.locations.dataStores.getSiteSearchEngine"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_project_locatio_data_sto_get_iam",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.getIamPolicy",
+    "title": "discoveryengine.projects.locations.dataStores.getIamPolicy"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_project_locatio_data_sto_set_iam",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.setIamPolicy",
+    "title": "discoveryengine.projects.locations.dataStores.setIamPolicy"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_project_locatio_identit_import_i",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.identityMappingStores.importIdentityMappings",
+    "title": "discoveryengine.projects.locations.identityMappingStores.importIdentityMappings"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_project_locatio_identit_list_ide",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.identityMappingStores.listIdentityMappings",
+    "title": "discoveryengine.projects.locations.identityMappingStores.listIdentityMappings"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_project_locatio_identit_purge_id",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.identityMappingStores.purgeIdentityMappings",
+    "title": "discoveryengine.projects.locations.identityMappingStores.purgeIdentityMappings"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_project_locatio_user_eve_collect",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.userEvents.collect",
+    "title": "discoveryengine.projects.locations.userEvents.collect"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_project_locatio_user_st_batch_up",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.userStores.batchUpdateUserLicenses",
+    "title": "discoveryengine.projects.locations.userStores.batchUpdateUserLicenses"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_project_location_cmek_con_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.cmekConfigs.delete",
+    "title": "discoveryengine.projects.locations.cmekConfigs.delete"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_project_location_collecti_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.collections.delete",
+    "title": "discoveryengine.projects.locations.collections.delete"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_project_location_data_sto_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.create",
+    "title": "discoveryengine.projects.locations.dataStores.create"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_project_location_data_sto_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.delete",
+    "title": "discoveryengine.projects.locations.dataStores.delete"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_project_location_identity_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.identityMappingStores.create",
+    "title": "discoveryengine.projects.locations.identityMappingStores.create"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_project_location_identity_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.identityMappingStores.delete",
+    "title": "discoveryengine.projects.locations.identityMappingStores.delete"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_project_location_user_eve_import",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.userEvents.import",
+    "title": "discoveryengine.projects.locations.userEvents.import"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_projects_location_cmek_con_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.cmekConfigs.patch",
+    "title": "discoveryengine.projects.locations.cmekConfigs.patch"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_projects_location_cmek_conf_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.cmekConfigs.list",
+    "title": "discoveryengine.projects.locations.cmekConfigs.list"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_projects_location_data_sto_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.patch",
+    "title": "discoveryengine.projects.locations.dataStores.patch"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_projects_location_data_stor_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.list",
+    "title": "discoveryengine.projects.locations.dataStores.list"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_projects_location_groundin_check",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.groundingConfigs.check",
+    "title": "discoveryengine.projects.locations.groundingConfigs.check"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_projects_location_license_c_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.licenseConfigs.list",
+    "title": "discoveryengine.projects.locations.licenseConfigs.list"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_projects_location_license_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.licenseConfigs.create",
+    "title": "discoveryengine.projects.locations.licenseConfigs.create"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_projects_location_license_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.licenseConfigs.patch",
+    "title": "discoveryengine.projects.locations.licenseConfigs.patch"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_projects_location_operation_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.operations.list",
+    "title": "discoveryengine.projects.locations.operations.list"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_projects_location_ranking_c_rank",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.rankingConfigs.rank",
+    "title": "discoveryengine.projects.locations.rankingConfigs.rank"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_projects_location_set_up_da_57e6",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.setUpDataConnectorV2",
+    "title": "discoveryengine.projects.locations.setUpDataConnectorV2"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_projects_location_set_up_da_ad17",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.setUpDataConnector",
+    "title": "discoveryengine.projects.locations.setUpDataConnector"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_projects_location_user_eve_write",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.assist.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.userEvents.write",
+    "title": "discoveryengine.projects.locations.userEvents.write"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_projects_location_user_sto_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.userStores.patch",
+    "title": "discoveryengine.projects.locations.userStores.patch"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_projects_locations_cmek_conf_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.cmekConfigs.get",
+    "title": "discoveryengine.projects.locations.cmekConfigs.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_projects_locations_data_stor_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.dataStores.get",
+    "title": "discoveryengine.projects.locations.dataStores.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_projects_locations_get_acl_confi",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.getAclConfig",
+    "title": "discoveryengine.projects.locations.getAclConfig"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_projects_locations_get_cmek_conf",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.getCmekConfig",
+    "title": "discoveryengine.projects.locations.getCmekConfig"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_projects_locations_identity_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.identityMappingStores.get",
+    "title": "discoveryengine.projects.locations.identityMappingStores.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_projects_locations_identity_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.identityMappingStores.list",
+    "title": "discoveryengine.projects.locations.identityMappingStores.list"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_projects_locations_license_c_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.licenseConfigs.get",
+    "title": "discoveryengine.projects.locations.licenseConfigs.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_projects_locations_operation_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.operations.get",
+    "title": "discoveryengine.projects.locations.operations.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_projects_locations_provision",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.provision",
+    "title": "discoveryengine.projects.locations.provision"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_projects_locations_update_acl_co",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.updateAclConfig",
+    "title": "discoveryengine.projects.locations.updateAclConfig"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_projects_locations_update_cmek_c",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.updateCmekConfig",
+    "title": "discoveryengine.projects.locations.updateCmekConfig"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_projects_locations_user_stor_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.locations.userStores.get",
+    "title": "discoveryengine.projects.locations.userStores.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_projects_operations_cancel",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.operations.cancel",
+    "title": "discoveryengine.projects.operations.cancel"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_projects_operations_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.operations.get",
+    "title": "discoveryengine.projects.operations.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_projects_operations_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.operations.list",
+    "title": "discoveryengine.projects.operations.list"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__discoverye_projects_provision",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/discoveryengine.readwrite",
+      "https://www.googleapis.com/auth/discoveryengine.serving.readwrite"
+    ],
+    "methodId": "discoveryengine.projects.provision",
+    "title": "discoveryengine.projects.provision"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__language_documents_analyze_entities",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-language",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "language.documents.analyzeEntities",
+    "title": "language.documents.analyzeEntities"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__language_documents_analyze_sentiment",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-language",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "language.documents.analyzeSentiment",
+    "title": "language.documents.analyzeSentiment"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__language_documents_annotate_text",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-language",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "language.documents.annotateText",
+    "title": "language.documents.annotateText"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__language_documents_classify_text",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-language",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "language.documents.classifyText",
+    "title": "language.documents.classifyText"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__language_documents_moderate_text",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-language",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "language.documents.moderateText",
+    "title": "language.documents.moderateText"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__speech_operations_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "speech.operations.get",
+    "title": "speech.operations.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__speech_operations_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "speech.operations.list",
+    "title": "speech.operations.list"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__speech_projects_locations_custom_cla_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "speech.projects.locations.customClasses.create",
+    "title": "speech.projects.locations.customClasses.create"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__speech_projects_locations_custom_cla_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "speech.projects.locations.customClasses.delete",
+    "title": "speech.projects.locations.customClasses.delete"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__speech_projects_locations_custom_clas_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "speech.projects.locations.customClasses.patch",
+    "title": "speech.projects.locations.customClasses.patch"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__speech_projects_locations_custom_class_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "speech.projects.locations.customClasses.list",
+    "title": "speech.projects.locations.customClasses.list"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__speech_projects_locations_custom_classe_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "speech.projects.locations.customClasses.get",
+    "title": "speech.projects.locations.customClasses.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__speech_projects_locations_phrase_set_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "speech.projects.locations.phraseSets.create",
+    "title": "speech.projects.locations.phraseSets.create"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__speech_projects_locations_phrase_set_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "speech.projects.locations.phraseSets.delete",
+    "title": "speech.projects.locations.phraseSets.delete"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__speech_projects_locations_phrase_sets_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "speech.projects.locations.phraseSets.get",
+    "title": "speech.projects.locations.phraseSets.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__speech_projects_locations_phrase_sets_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "speech.projects.locations.phraseSets.list",
+    "title": "speech.projects.locations.phraseSets.list"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__speech_projects_locations_phrase_sets_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "speech.projects.locations.phraseSets.patch",
+    "title": "speech.projects.locations.phraseSets.patch"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__speech_speech_longrunningrecognize",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "speech.speech.longrunningrecognize",
+    "title": "speech.speech.longrunningrecognize"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__speech_speech_recognize",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "speech.speech.recognize",
+    "title": "speech.speech.recognize"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__texttospee_operations_cancel",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "texttospeech.operations.cancel",
+    "title": "texttospeech.operations.cancel"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__texttospee_operations_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "texttospeech.operations.delete",
+    "title": "texttospeech.operations.delete"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__texttospee_projects_location_operation_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "texttospeech.projects.locations.operations.list",
+    "title": "texttospeech.projects.locations.operations.list"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__texttospee_projects_locations_operation_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "texttospeech.projects.locations.operations.get",
+    "title": "texttospeech.projects.locations.operations.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__texttospee_projects_locations_synthesize_lo",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "texttospeech.projects.locations.synthesizeLongAudio",
+    "title": "texttospeech.projects.locations.synthesizeLongAudio"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__texttospee_text_synthesize",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "texttospeech.text.synthesize",
+    "title": "texttospeech.text.synthesize"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__texttospee_voices_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "texttospeech.voices.list",
+    "title": "texttospeech.voices.list"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__videointel_opera_proje_locati_operat_cancel",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "videointelligence.operations.projects.locations.operations.cancel",
+    "title": "videointelligence.operations.projects.locations.operations.cancel"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__videointel_opera_proje_locati_operat_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "videointelligence.operations.projects.locations.operations.delete",
+    "title": "videointelligence.operations.projects.locations.operations.delete"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__videointel_operat_projec_locati_operati_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "videointelligence.operations.projects.locations.operations.get",
+    "title": "videointelligence.operations.projects.locations.operations.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__videointel_project_location_operatio_cancel",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "videointelligence.projects.locations.operations.cancel",
+    "title": "videointelligence.projects.locations.operations.cancel"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__videointel_project_location_operatio_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "videointelligence.projects.locations.operations.delete",
+    "title": "videointelligence.projects.locations.operations.delete"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__videointel_projects_location_operation_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "videointelligence.projects.locations.operations.list",
+    "title": "videointelligence.projects.locations.operations.list"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__videointel_projects_locations_operation_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "videointelligence.projects.locations.operations.get",
+    "title": "videointelligence.projects.locations.operations.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__videointel_videos_annotate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "videointelligence.videos.annotate",
+    "title": "videointelligence.videos.annotate"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__vision_files_annotate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-vision"
+    ],
+    "methodId": "vision.files.annotate",
+    "title": "vision.files.annotate"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__vision_files_async_batch_annotate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-vision"
+    ],
+    "methodId": "vision.files.asyncBatchAnnotate",
+    "title": "vision.files.asyncBatchAnnotate"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__vision_images_annotate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-vision"
+    ],
+    "methodId": "vision.images.annotate",
+    "title": "vision.images.annotate"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__vision_images_async_batch_annotate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-vision"
+    ],
+    "methodId": "vision.images.asyncBatchAnnotate",
+    "title": "vision.images.asyncBatchAnnotate"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__vision_locations_operations_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-vision"
+    ],
+    "methodId": "vision.locations.operations.get",
+    "title": "vision.locations.operations.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__vision_operations_cancel",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-vision"
+    ],
+    "methodId": "vision.operations.cancel",
+    "title": "vision.operations.cancel"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__vision_operations_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-vision"
+    ],
+    "methodId": "vision.operations.delete",
+    "title": "vision.operations.delete"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__vision_operations_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-vision"
+    ],
+    "methodId": "vision.operations.get",
+    "title": "vision.operations.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__vision_operations_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-vision"
+    ],
+    "methodId": "vision.operations.list",
+    "title": "vision.operations.list"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__vision_projec_locati_product_referen_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-vision"
+    ],
+    "methodId": "vision.projects.locations.products.referenceImages.create",
+    "title": "vision.projects.locations.products.referenceImages.create"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__vision_projec_locati_product_referen_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-vision"
+    ],
+    "methodId": "vision.projects.locations.products.referenceImages.delete",
+    "title": "vision.projects.locations.products.referenceImages.delete"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__vision_project_locatio_product_product_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-vision"
+    ],
+    "methodId": "vision.projects.locations.productSets.products.list",
+    "title": "vision.projects.locations.productSets.products.list"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__vision_project_locatio_product_referen_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-vision"
+    ],
+    "methodId": "vision.projects.locations.products.referenceImages.list",
+    "title": "vision.projects.locations.products.referenceImages.list"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__vision_project_locatio_product_referenc_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-vision"
+    ],
+    "methodId": "vision.projects.locations.products.referenceImages.get",
+    "title": "vision.projects.locations.products.referenceImages.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__vision_projects_files_annotate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-vision"
+    ],
+    "methodId": "vision.projects.files.annotate",
+    "title": "vision.projects.files.annotate"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__vision_projects_files_async_batch_annotate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-vision"
+    ],
+    "methodId": "vision.projects.files.asyncBatchAnnotate",
+    "title": "vision.projects.files.asyncBatchAnnotate"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__vision_projects_images_annotate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-vision"
+    ],
+    "methodId": "vision.projects.images.annotate",
+    "title": "vision.projects.images.annotate"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__vision_projects_images_async_batch_annotate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-vision"
+    ],
+    "methodId": "vision.projects.images.asyncBatchAnnotate",
+    "title": "vision.projects.images.asyncBatchAnnotate"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__vision_projects_location_product_add_produ",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-vision"
+    ],
+    "methodId": "vision.projects.locations.productSets.addProduct",
+    "title": "vision.projects.locations.productSets.addProduct"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__vision_projects_location_product_remove_pr",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-vision"
+    ],
+    "methodId": "vision.projects.locations.productSets.removeProduct",
+    "title": "vision.projects.locations.productSets.removeProduct"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__vision_projects_locations_files_annotate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-vision"
+    ],
+    "methodId": "vision.projects.locations.files.annotate",
+    "title": "vision.projects.locations.files.annotate"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__vision_projects_locations_files_async_batch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-vision"
+    ],
+    "methodId": "vision.projects.locations.files.asyncBatchAnnotate",
+    "title": "vision.projects.locations.files.asyncBatchAnnotate"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__vision_projects_locations_images_annotate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-vision"
+    ],
+    "methodId": "vision.projects.locations.images.annotate",
+    "title": "vision.projects.locations.images.annotate"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__vision_projects_locations_images_async_batc",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-vision"
+    ],
+    "methodId": "vision.projects.locations.images.asyncBatchAnnotate",
+    "title": "vision.projects.locations.images.asyncBatchAnnotate"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__vision_projects_locations_operations_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-vision"
+    ],
+    "methodId": "vision.projects.locations.operations.get",
+    "title": "vision.projects.locations.operations.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__vision_projects_locations_product_se_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-vision"
+    ],
+    "methodId": "vision.projects.locations.productSets.create",
+    "title": "vision.projects.locations.productSets.create"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__vision_projects_locations_product_se_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-vision"
+    ],
+    "methodId": "vision.projects.locations.productSets.delete",
+    "title": "vision.projects.locations.productSets.delete"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__vision_projects_locations_product_se_import",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-vision"
+    ],
+    "methodId": "vision.projects.locations.productSets.import",
+    "title": "vision.projects.locations.productSets.import"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__vision_projects_locations_product_set_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-vision"
+    ],
+    "methodId": "vision.projects.locations.productSets.patch",
+    "title": "vision.projects.locations.productSets.patch"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__vision_projects_locations_product_sets_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-vision"
+    ],
+    "methodId": "vision.projects.locations.productSets.get",
+    "title": "vision.projects.locations.productSets.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__vision_projects_locations_product_sets_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-vision"
+    ],
+    "methodId": "vision.projects.locations.productSets.list",
+    "title": "vision.projects.locations.productSets.list"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__vision_projects_locations_products_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-vision"
+    ],
+    "methodId": "vision.projects.locations.products.create",
+    "title": "vision.projects.locations.products.create"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__vision_projects_locations_products_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-vision"
+    ],
+    "methodId": "vision.projects.locations.products.delete",
+    "title": "vision.projects.locations.products.delete"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__vision_projects_locations_products_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-vision"
+    ],
+    "methodId": "vision.projects.locations.products.get",
+    "title": "vision.projects.locations.products.get"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__vision_projects_locations_products_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-vision"
+    ],
+    "methodId": "vision.projects.locations.products.list",
+    "title": "vision.projects.locations.products.list"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__vision_projects_locations_products_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-vision"
+    ],
+    "methodId": "vision.projects.locations.products.patch",
+    "title": "vision.projects.locations.products.patch"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__vision_projects_locations_products_purge",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-vision"
+    ],
+    "methodId": "vision.projects.locations.products.purge",
+    "title": "vision.projects.locations.products.purge"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__vision_projects_operations_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-vision"
+    ],
+    "methodId": "vision.projects.operations.get",
+    "title": "vision.projects.operations.get"
+  }
+]

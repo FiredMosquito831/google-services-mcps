@@ -1,0 +1,819 @@
+[
+  {
+    "name": "mcp__plugin_gchat_gchat__api_methods",
+    "kind": "read",
+    "scopes": [],
+    "title": "gchat: API methods"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_custom_emojis_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.customemojis"
+    ],
+    "methodId": "chat.customEmojis.create",
+    "title": "chat.customEmojis.create"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_custom_emojis_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.customemojis"
+    ],
+    "methodId": "chat.customEmojis.delete",
+    "title": "chat.customEmojis.delete"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_custom_emojis_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.customemojis",
+      "https://www.googleapis.com/auth/chat.customemojis.readonly"
+    ],
+    "methodId": "chat.customEmojis.get",
+    "title": "chat.customEmojis.get"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_custom_emojis_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.customemojis",
+      "https://www.googleapis.com/auth/chat.customemojis.readonly"
+    ],
+    "methodId": "chat.customEmojis.list",
+    "title": "chat.customEmojis.list"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_media_download",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.bot",
+      "https://www.googleapis.com/auth/chat.messages",
+      "https://www.googleapis.com/auth/chat.messages.readonly"
+    ],
+    "methodId": "chat.media.download",
+    "title": "chat.media.download"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_spaces_complete_import",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.import"
+    ],
+    "methodId": "chat.spaces.completeImport",
+    "title": "chat.spaces.completeImport"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_spaces_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.app.spaces",
+      "https://www.googleapis.com/auth/chat.app.spaces.create",
+      "https://www.googleapis.com/auth/chat.import",
+      "https://www.googleapis.com/auth/chat.spaces",
+      "https://www.googleapis.com/auth/chat.spaces.create"
+    ],
+    "methodId": "chat.spaces.create",
+    "title": "chat.spaces.create"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_spaces_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.admin.delete",
+      "https://www.googleapis.com/auth/chat.app.delete",
+      "https://www.googleapis.com/auth/chat.delete",
+      "https://www.googleapis.com/auth/chat.import"
+    ],
+    "methodId": "chat.spaces.delete",
+    "title": "chat.spaces.delete"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_spaces_find_direct_message",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.bot",
+      "https://www.googleapis.com/auth/chat.spaces",
+      "https://www.googleapis.com/auth/chat.spaces.readonly"
+    ],
+    "methodId": "chat.spaces.findDirectMessage",
+    "title": "chat.spaces.findDirectMessage"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_spaces_find_group_chats",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.memberships",
+      "https://www.googleapis.com/auth/chat.memberships.readonly"
+    ],
+    "methodId": "chat.spaces.findGroupChats",
+    "title": "chat.spaces.findGroupChats"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_spaces_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.admin.spaces",
+      "https://www.googleapis.com/auth/chat.admin.spaces.readonly",
+      "https://www.googleapis.com/auth/chat.app.spaces",
+      "https://www.googleapis.com/auth/chat.bot",
+      "https://www.googleapis.com/auth/chat.spaces",
+      "https://www.googleapis.com/auth/chat.spaces.readonly"
+    ],
+    "methodId": "chat.spaces.get",
+    "title": "chat.spaces.get"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_spaces_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.bot",
+      "https://www.googleapis.com/auth/chat.spaces",
+      "https://www.googleapis.com/auth/chat.spaces.readonly"
+    ],
+    "methodId": "chat.spaces.list",
+    "title": "chat.spaces.list"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_spaces_members_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.admin.memberships",
+      "https://www.googleapis.com/auth/chat.app.memberships",
+      "https://www.googleapis.com/auth/chat.import",
+      "https://www.googleapis.com/auth/chat.memberships",
+      "https://www.googleapis.com/auth/chat.memberships.app"
+    ],
+    "methodId": "chat.spaces.members.create",
+    "title": "chat.spaces.members.create"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_spaces_members_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.admin.memberships",
+      "https://www.googleapis.com/auth/chat.app.memberships",
+      "https://www.googleapis.com/auth/chat.import",
+      "https://www.googleapis.com/auth/chat.memberships",
+      "https://www.googleapis.com/auth/chat.memberships.app"
+    ],
+    "methodId": "chat.spaces.members.delete",
+    "title": "chat.spaces.members.delete"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_spaces_members_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.admin.memberships",
+      "https://www.googleapis.com/auth/chat.admin.memberships.readonly",
+      "https://www.googleapis.com/auth/chat.app.memberships",
+      "https://www.googleapis.com/auth/chat.bot",
+      "https://www.googleapis.com/auth/chat.memberships",
+      "https://www.googleapis.com/auth/chat.memberships.readonly"
+    ],
+    "methodId": "chat.spaces.members.get",
+    "title": "chat.spaces.members.get"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_spaces_members_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.admin.memberships",
+      "https://www.googleapis.com/auth/chat.admin.memberships.readonly",
+      "https://www.googleapis.com/auth/chat.app.memberships",
+      "https://www.googleapis.com/auth/chat.bot",
+      "https://www.googleapis.com/auth/chat.import",
+      "https://www.googleapis.com/auth/chat.memberships",
+      "https://www.googleapis.com/auth/chat.memberships.readonly"
+    ],
+    "methodId": "chat.spaces.members.list",
+    "title": "chat.spaces.members.list"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_spaces_members_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.admin.memberships",
+      "https://www.googleapis.com/auth/chat.app.memberships",
+      "https://www.googleapis.com/auth/chat.import",
+      "https://www.googleapis.com/auth/chat.memberships"
+    ],
+    "methodId": "chat.spaces.members.patch",
+    "title": "chat.spaces.members.patch"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_spaces_message_pins_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.spaces",
+      "https://www.googleapis.com/auth/chat.spaces.pins"
+    ],
+    "methodId": "chat.spaces.messagePins.create",
+    "title": "chat.spaces.messagePins.create"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_spaces_message_pins_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.spaces",
+      "https://www.googleapis.com/auth/chat.spaces.pins"
+    ],
+    "methodId": "chat.spaces.messagePins.delete",
+    "title": "chat.spaces.messagePins.delete"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_spaces_message_pins_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.spaces",
+      "https://www.googleapis.com/auth/chat.spaces.pins",
+      "https://www.googleapis.com/auth/chat.spaces.pins.readonly",
+      "https://www.googleapis.com/auth/chat.spaces.readonly"
+    ],
+    "methodId": "chat.spaces.messagePins.list",
+    "title": "chat.spaces.messagePins.list"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_spaces_messages_attachments_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.bot"
+    ],
+    "methodId": "chat.spaces.messages.attachments.get",
+    "title": "chat.spaces.messages.attachments.get"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_spaces_messages_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.bot",
+      "https://www.googleapis.com/auth/chat.import",
+      "https://www.googleapis.com/auth/chat.messages",
+      "https://www.googleapis.com/auth/chat.messages.create"
+    ],
+    "methodId": "chat.spaces.messages.create",
+    "title": "chat.spaces.messages.create"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_spaces_messages_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.bot",
+      "https://www.googleapis.com/auth/chat.import",
+      "https://www.googleapis.com/auth/chat.messages"
+    ],
+    "methodId": "chat.spaces.messages.delete",
+    "title": "chat.spaces.messages.delete"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_spaces_messages_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.app.messages.readonly",
+      "https://www.googleapis.com/auth/chat.bot",
+      "https://www.googleapis.com/auth/chat.messages",
+      "https://www.googleapis.com/auth/chat.messages.readonly"
+    ],
+    "methodId": "chat.spaces.messages.get",
+    "title": "chat.spaces.messages.get"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_spaces_messages_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.app.messages.readonly",
+      "https://www.googleapis.com/auth/chat.import",
+      "https://www.googleapis.com/auth/chat.messages",
+      "https://www.googleapis.com/auth/chat.messages.readonly"
+    ],
+    "methodId": "chat.spaces.messages.list",
+    "title": "chat.spaces.messages.list"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_spaces_messages_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.bot",
+      "https://www.googleapis.com/auth/chat.import",
+      "https://www.googleapis.com/auth/chat.messages"
+    ],
+    "methodId": "chat.spaces.messages.patch",
+    "title": "chat.spaces.messages.patch"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_spaces_messages_reactions_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.import",
+      "https://www.googleapis.com/auth/chat.messages",
+      "https://www.googleapis.com/auth/chat.messages.reactions",
+      "https://www.googleapis.com/auth/chat.messages.reactions.create"
+    ],
+    "methodId": "chat.spaces.messages.reactions.create",
+    "title": "chat.spaces.messages.reactions.create"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_spaces_messages_reactions_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.import",
+      "https://www.googleapis.com/auth/chat.messages",
+      "https://www.googleapis.com/auth/chat.messages.reactions"
+    ],
+    "methodId": "chat.spaces.messages.reactions.delete",
+    "title": "chat.spaces.messages.reactions.delete"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_spaces_messages_reactions_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.messages",
+      "https://www.googleapis.com/auth/chat.messages.reactions",
+      "https://www.googleapis.com/auth/chat.messages.reactions.readonly",
+      "https://www.googleapis.com/auth/chat.messages.readonly"
+    ],
+    "methodId": "chat.spaces.messages.reactions.list",
+    "title": "chat.spaces.messages.reactions.list"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_spaces_messages_search",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.messages",
+      "https://www.googleapis.com/auth/chat.messages.readonly"
+    ],
+    "methodId": "chat.spaces.messages.search",
+    "title": "chat.spaces.messages.search"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_spaces_messages_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.bot",
+      "https://www.googleapis.com/auth/chat.import",
+      "https://www.googleapis.com/auth/chat.messages"
+    ],
+    "methodId": "chat.spaces.messages.update",
+    "title": "chat.spaces.messages.update"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_spaces_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.admin.spaces",
+      "https://www.googleapis.com/auth/chat.app.spaces",
+      "https://www.googleapis.com/auth/chat.import",
+      "https://www.googleapis.com/auth/chat.spaces"
+    ],
+    "methodId": "chat.spaces.patch",
+    "title": "chat.spaces.patch"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_spaces_search",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.admin.spaces",
+      "https://www.googleapis.com/auth/chat.admin.spaces.readonly",
+      "https://www.googleapis.com/auth/chat.spaces",
+      "https://www.googleapis.com/auth/chat.spaces.readonly"
+    ],
+    "methodId": "chat.spaces.search",
+    "title": "chat.spaces.search"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_spaces_setup",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.spaces",
+      "https://www.googleapis.com/auth/chat.spaces.create"
+    ],
+    "methodId": "chat.spaces.setup",
+    "title": "chat.spaces.setup"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_spaces_space_events_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.app.all.memberships.readonly",
+      "https://www.googleapis.com/auth/chat.app.all.messages.readonly",
+      "https://www.googleapis.com/auth/chat.app.all.spaces.readonly",
+      "https://www.googleapis.com/auth/chat.app.memberships",
+      "https://www.googleapis.com/auth/chat.app.memberships.readonly",
+      "https://www.googleapis.com/auth/chat.app.messages.readonly",
+      "https://www.googleapis.com/auth/chat.app.spaces",
+      "https://www.googleapis.com/auth/chat.app.spaces.readonly",
+      "https://www.googleapis.com/auth/chat.memberships",
+      "https://www.googleapis.com/auth/chat.memberships.readonly",
+      "https://www.googleapis.com/auth/chat.messages",
+      "https://www.googleapis.com/auth/chat.messages.reactions",
+      "https://www.googleapis.com/auth/chat.messages.reactions.readonly",
+      "https://www.googleapis.com/auth/chat.messages.readonly",
+      "https://www.googleapis.com/auth/chat.spaces",
+      "https://www.googleapis.com/auth/chat.spaces.readonly"
+    ],
+    "methodId": "chat.spaces.spaceEvents.get",
+    "title": "chat.spaces.spaceEvents.get"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_spaces_space_events_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.app.all.memberships.readonly",
+      "https://www.googleapis.com/auth/chat.app.all.messages.readonly",
+      "https://www.googleapis.com/auth/chat.app.all.spaces.readonly",
+      "https://www.googleapis.com/auth/chat.app.memberships",
+      "https://www.googleapis.com/auth/chat.app.memberships.readonly",
+      "https://www.googleapis.com/auth/chat.app.messages.readonly",
+      "https://www.googleapis.com/auth/chat.app.spaces",
+      "https://www.googleapis.com/auth/chat.app.spaces.readonly",
+      "https://www.googleapis.com/auth/chat.memberships",
+      "https://www.googleapis.com/auth/chat.memberships.readonly",
+      "https://www.googleapis.com/auth/chat.messages",
+      "https://www.googleapis.com/auth/chat.messages.reactions",
+      "https://www.googleapis.com/auth/chat.messages.reactions.readonly",
+      "https://www.googleapis.com/auth/chat.messages.readonly",
+      "https://www.googleapis.com/auth/chat.spaces",
+      "https://www.googleapis.com/auth/chat.spaces.readonly"
+    ],
+    "methodId": "chat.spaces.spaceEvents.list",
+    "title": "chat.spaces.spaceEvents.list"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_users_availability_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.users.availability",
+      "https://www.googleapis.com/auth/chat.users.availability.readonly"
+    ],
+    "methodId": "chat.users.availability.get",
+    "title": "chat.users.availability.get"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_users_availability_mark_as_active",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.users.availability"
+    ],
+    "methodId": "chat.users.availability.markAsActive",
+    "title": "chat.users.availability.markAsActive"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_users_availability_mark_as_away",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.users.availability"
+    ],
+    "methodId": "chat.users.availability.markAsAway",
+    "title": "chat.users.availability.markAsAway"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_users_availability_mark_as_do_not",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.users.availability"
+    ],
+    "methodId": "chat.users.availability.markAsDoNotDisturb",
+    "title": "chat.users.availability.markAsDoNotDisturb"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_users_availability_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.users.availability"
+    ],
+    "methodId": "chat.users.availability.patch",
+    "title": "chat.users.availability.patch"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_users_sections_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.users.sections"
+    ],
+    "methodId": "chat.users.sections.create",
+    "title": "chat.users.sections.create"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_users_sections_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.users.sections"
+    ],
+    "methodId": "chat.users.sections.delete",
+    "title": "chat.users.sections.delete"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_users_sections_items_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.users.sections",
+      "https://www.googleapis.com/auth/chat.users.sections.readonly"
+    ],
+    "methodId": "chat.users.sections.items.list",
+    "title": "chat.users.sections.items.list"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_users_sections_items_move",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.users.sections"
+    ],
+    "methodId": "chat.users.sections.items.move",
+    "title": "chat.users.sections.items.move"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_users_sections_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.users.sections",
+      "https://www.googleapis.com/auth/chat.users.sections.readonly"
+    ],
+    "methodId": "chat.users.sections.list",
+    "title": "chat.users.sections.list"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_users_sections_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.users.sections"
+    ],
+    "methodId": "chat.users.sections.patch",
+    "title": "chat.users.sections.patch"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_users_sections_position",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.users.sections"
+    ],
+    "methodId": "chat.users.sections.position",
+    "title": "chat.users.sections.position"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_users_spaces_get_space_read_state",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.users.readstate",
+      "https://www.googleapis.com/auth/chat.users.readstate.readonly"
+    ],
+    "methodId": "chat.users.spaces.getSpaceReadState",
+    "title": "chat.users.spaces.getSpaceReadState"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_users_spaces_space_notificat_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.users.spacesettings"
+    ],
+    "methodId": "chat.users.spaces.spaceNotificationSetting.patch",
+    "title": "chat.users.spaces.spaceNotificationSetting.patch"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_users_spaces_space_notificatio_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.users.spacesettings"
+    ],
+    "methodId": "chat.users.spaces.spaceNotificationSetting.get",
+    "title": "chat.users.spaces.spaceNotificationSetting.get"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_users_spaces_threads_get_thread_re",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.users.readstate",
+      "https://www.googleapis.com/auth/chat.users.readstate.readonly"
+    ],
+    "methodId": "chat.users.spaces.threads.getThreadReadState",
+    "title": "chat.users.spaces.threads.getThreadReadState"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_users_spaces_update_space_read_sta",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.users.readstate"
+    ],
+    "methodId": "chat.users.spaces.updateSpaceReadState",
+    "title": "chat.users.spaces.updateSpaceReadState"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__workspacee_operations_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.bot",
+      "https://www.googleapis.com/auth/chat.memberships",
+      "https://www.googleapis.com/auth/chat.memberships.readonly",
+      "https://www.googleapis.com/auth/chat.messages",
+      "https://www.googleapis.com/auth/chat.messages.reactions",
+      "https://www.googleapis.com/auth/chat.messages.reactions.readonly",
+      "https://www.googleapis.com/auth/chat.messages.readonly",
+      "https://www.googleapis.com/auth/chat.spaces",
+      "https://www.googleapis.com/auth/chat.spaces.readonly",
+      "https://www.googleapis.com/auth/chat.users.availability",
+      "https://www.googleapis.com/auth/chat.users.availability.readonly",
+      "https://www.googleapis.com/auth/chat.users.readstate",
+      "https://www.googleapis.com/auth/chat.users.readstate.readonly",
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.metadata",
+      "https://www.googleapis.com/auth/drive.metadata.readonly",
+      "https://www.googleapis.com/auth/drive.readonly",
+      "https://www.googleapis.com/auth/meetings.space.created",
+      "https://www.googleapis.com/auth/meetings.space.readonly"
+    ],
+    "methodId": "workspaceevents.operations.get",
+    "title": "workspaceevents.operations.get"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__workspacee_subscriptions_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.app.all.memberships.readonly",
+      "https://www.googleapis.com/auth/chat.app.all.messages.readonly",
+      "https://www.googleapis.com/auth/chat.app.all.spaces.readonly",
+      "https://www.googleapis.com/auth/chat.app.all.users.readstate.readonly",
+      "https://www.googleapis.com/auth/chat.app.memberships",
+      "https://www.googleapis.com/auth/chat.app.memberships.readonly",
+      "https://www.googleapis.com/auth/chat.app.messages.readonly",
+      "https://www.googleapis.com/auth/chat.app.spaces",
+      "https://www.googleapis.com/auth/chat.app.spaces.readonly",
+      "https://www.googleapis.com/auth/chat.memberships",
+      "https://www.googleapis.com/auth/chat.memberships.readonly",
+      "https://www.googleapis.com/auth/chat.messages",
+      "https://www.googleapis.com/auth/chat.messages.reactions",
+      "https://www.googleapis.com/auth/chat.messages.reactions.readonly",
+      "https://www.googleapis.com/auth/chat.messages.readonly",
+      "https://www.googleapis.com/auth/chat.spaces",
+      "https://www.googleapis.com/auth/chat.spaces.readonly",
+      "https://www.googleapis.com/auth/chat.users.availability",
+      "https://www.googleapis.com/auth/chat.users.availability.readonly",
+      "https://www.googleapis.com/auth/chat.users.readstate",
+      "https://www.googleapis.com/auth/chat.users.readstate.readonly",
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.metadata",
+      "https://www.googleapis.com/auth/drive.metadata.readonly",
+      "https://www.googleapis.com/auth/drive.readonly",
+      "https://www.googleapis.com/auth/meetings.space.created",
+      "https://www.googleapis.com/auth/meetings.space.readonly"
+    ],
+    "methodId": "workspaceevents.subscriptions.create",
+    "title": "workspaceevents.subscriptions.create"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__workspacee_subscriptions_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.bot",
+      "https://www.googleapis.com/auth/chat.memberships",
+      "https://www.googleapis.com/auth/chat.memberships.readonly",
+      "https://www.googleapis.com/auth/chat.messages",
+      "https://www.googleapis.com/auth/chat.messages.reactions",
+      "https://www.googleapis.com/auth/chat.messages.reactions.readonly",
+      "https://www.googleapis.com/auth/chat.messages.readonly",
+      "https://www.googleapis.com/auth/chat.spaces",
+      "https://www.googleapis.com/auth/chat.spaces.readonly",
+      "https://www.googleapis.com/auth/chat.users.availability",
+      "https://www.googleapis.com/auth/chat.users.availability.readonly",
+      "https://www.googleapis.com/auth/chat.users.readstate",
+      "https://www.googleapis.com/auth/chat.users.readstate.readonly",
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.metadata",
+      "https://www.googleapis.com/auth/drive.metadata.readonly",
+      "https://www.googleapis.com/auth/drive.readonly",
+      "https://www.googleapis.com/auth/meetings.space.created",
+      "https://www.googleapis.com/auth/meetings.space.readonly"
+    ],
+    "methodId": "workspaceevents.subscriptions.delete",
+    "title": "workspaceevents.subscriptions.delete"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__workspacee_subscriptions_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.bot",
+      "https://www.googleapis.com/auth/chat.memberships",
+      "https://www.googleapis.com/auth/chat.memberships.readonly",
+      "https://www.googleapis.com/auth/chat.messages",
+      "https://www.googleapis.com/auth/chat.messages.reactions",
+      "https://www.googleapis.com/auth/chat.messages.reactions.readonly",
+      "https://www.googleapis.com/auth/chat.messages.readonly",
+      "https://www.googleapis.com/auth/chat.spaces",
+      "https://www.googleapis.com/auth/chat.spaces.readonly",
+      "https://www.googleapis.com/auth/chat.users.availability",
+      "https://www.googleapis.com/auth/chat.users.availability.readonly",
+      "https://www.googleapis.com/auth/chat.users.readstate",
+      "https://www.googleapis.com/auth/chat.users.readstate.readonly",
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.metadata",
+      "https://www.googleapis.com/auth/drive.metadata.readonly",
+      "https://www.googleapis.com/auth/drive.readonly",
+      "https://www.googleapis.com/auth/meetings.space.created",
+      "https://www.googleapis.com/auth/meetings.space.readonly"
+    ],
+    "methodId": "workspaceevents.subscriptions.get",
+    "title": "workspaceevents.subscriptions.get"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__workspacee_subscriptions_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.bot",
+      "https://www.googleapis.com/auth/chat.memberships",
+      "https://www.googleapis.com/auth/chat.memberships.readonly",
+      "https://www.googleapis.com/auth/chat.messages",
+      "https://www.googleapis.com/auth/chat.messages.reactions",
+      "https://www.googleapis.com/auth/chat.messages.reactions.readonly",
+      "https://www.googleapis.com/auth/chat.messages.readonly",
+      "https://www.googleapis.com/auth/chat.spaces",
+      "https://www.googleapis.com/auth/chat.spaces.readonly",
+      "https://www.googleapis.com/auth/chat.users.availability",
+      "https://www.googleapis.com/auth/chat.users.availability.readonly",
+      "https://www.googleapis.com/auth/chat.users.readstate",
+      "https://www.googleapis.com/auth/chat.users.readstate.readonly",
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.metadata",
+      "https://www.googleapis.com/auth/drive.metadata.readonly",
+      "https://www.googleapis.com/auth/drive.readonly",
+      "https://www.googleapis.com/auth/meetings.space.created",
+      "https://www.googleapis.com/auth/meetings.space.readonly"
+    ],
+    "methodId": "workspaceevents.subscriptions.list",
+    "title": "workspaceevents.subscriptions.list"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__workspacee_subscriptions_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.app.all.memberships.readonly",
+      "https://www.googleapis.com/auth/chat.app.all.messages.readonly",
+      "https://www.googleapis.com/auth/chat.app.all.spaces.readonly",
+      "https://www.googleapis.com/auth/chat.app.all.users.readstate.readonly",
+      "https://www.googleapis.com/auth/chat.app.memberships",
+      "https://www.googleapis.com/auth/chat.app.memberships.readonly",
+      "https://www.googleapis.com/auth/chat.app.messages.readonly",
+      "https://www.googleapis.com/auth/chat.app.spaces",
+      "https://www.googleapis.com/auth/chat.app.spaces.readonly",
+      "https://www.googleapis.com/auth/chat.memberships",
+      "https://www.googleapis.com/auth/chat.memberships.readonly",
+      "https://www.googleapis.com/auth/chat.messages",
+      "https://www.googleapis.com/auth/chat.messages.reactions",
+      "https://www.googleapis.com/auth/chat.messages.reactions.readonly",
+      "https://www.googleapis.com/auth/chat.messages.readonly",
+      "https://www.googleapis.com/auth/chat.spaces",
+      "https://www.googleapis.com/auth/chat.spaces.readonly",
+      "https://www.googleapis.com/auth/chat.users.availability",
+      "https://www.googleapis.com/auth/chat.users.availability.readonly",
+      "https://www.googleapis.com/auth/chat.users.readstate",
+      "https://www.googleapis.com/auth/chat.users.readstate.readonly",
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.metadata",
+      "https://www.googleapis.com/auth/drive.metadata.readonly",
+      "https://www.googleapis.com/auth/drive.readonly",
+      "https://www.googleapis.com/auth/meetings.space.created",
+      "https://www.googleapis.com/auth/meetings.space.readonly"
+    ],
+    "methodId": "workspaceevents.subscriptions.patch",
+    "title": "workspaceevents.subscriptions.patch"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__workspacee_subscriptions_reactivate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.app.all.memberships.readonly",
+      "https://www.googleapis.com/auth/chat.app.all.messages.readonly",
+      "https://www.googleapis.com/auth/chat.app.all.spaces.readonly",
+      "https://www.googleapis.com/auth/chat.app.all.users.readstate.readonly",
+      "https://www.googleapis.com/auth/chat.app.memberships",
+      "https://www.googleapis.com/auth/chat.app.memberships.readonly",
+      "https://www.googleapis.com/auth/chat.app.messages.readonly",
+      "https://www.googleapis.com/auth/chat.app.spaces",
+      "https://www.googleapis.com/auth/chat.app.spaces.readonly",
+      "https://www.googleapis.com/auth/chat.memberships",
+      "https://www.googleapis.com/auth/chat.memberships.readonly",
+      "https://www.googleapis.com/auth/chat.messages",
+      "https://www.googleapis.com/auth/chat.messages.reactions",
+      "https://www.googleapis.com/auth/chat.messages.reactions.readonly",
+      "https://www.googleapis.com/auth/chat.messages.readonly",
+      "https://www.googleapis.com/auth/chat.spaces",
+      "https://www.googleapis.com/auth/chat.spaces.readonly",
+      "https://www.googleapis.com/auth/chat.users.availability",
+      "https://www.googleapis.com/auth/chat.users.availability.readonly",
+      "https://www.googleapis.com/auth/chat.users.readstate",
+      "https://www.googleapis.com/auth/chat.users.readstate.readonly",
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.metadata",
+      "https://www.googleapis.com/auth/drive.metadata.readonly",
+      "https://www.googleapis.com/auth/drive.readonly",
+      "https://www.googleapis.com/auth/meetings.space.created",
+      "https://www.googleapis.com/auth/meetings.space.readonly"
+    ],
+    "methodId": "workspaceevents.subscriptions.reactivate",
+    "title": "workspaceevents.subscriptions.reactivate"
+  }
+]

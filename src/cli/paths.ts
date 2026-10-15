@@ -5,40 +5,35 @@ import type { ServerRef } from './types.js';
 
 /**
  * Where the CLI is running from.
- *  - repo:   the repo checkout. The CLI is compiled to dist/cli, and the map is config/servers.json.
- *            Bundles live in <root>/plugins/<plugin>/servers/<name>.mjs.
- *  - plugin: a bundled plugin folder, <plugin>/bin/gsm.mjs. The map is <plugin>/servers.json.
+ *  - repo:   the repo checkout. The CLI is compiled to dist/cli, and the product map is config/products.json.
+ *            Bundles live in <root>/plugins/<product>/servers/<name>.mjs.
+ *  - plugin: a bundled plugin folder, <plugin>/bin/gsm.mjs. The map is <plugin>/servers.json (registry format).
  *            Bundles live in <plugin>/servers/<name>.mjs.
  */
 export interface InstallRoots {
   layout: 'repo' | 'plugin';
   /** The repo checkout (repo layout) or the plugin folder (plugin layout). */
   root: string;
-  /** The server map file that was found. */
+  /** The map file that was found: config/products.json (repo) or servers.json (plugin). */
   mapFile: string;
 }
 
 /**
- * Walks up from the module URL and checks each folder for servers.json (plugin
- * layout) and then config/servers.json (repo layout). The same rule as
- * loadRegistry in core/registry.ts.
+ * Walks up from the module URL. Each folder is checked for servers.json (plugin layout), then for
+ * config/products.json (repo layout). This is the same walk as loadRegistry in core/registry.ts, which
+ * is not changed; the repo marker differs because config/products.json is not a registry file.
  */
 export function findRoots(fromUrl: string): InstallRoots {
   let dir = dirname(fileURLToPath(fromUrl));
   for (;;) {
     const pluginMap = join(dir, 'servers.json');
     if (existsSync(pluginMap)) return { layout: 'plugin', root: dir, mapFile: pluginMap };
-    const repoMap = join(dir, 'config', 'servers.json');
+    const repoMap = join(dir, 'config', 'products.json');
     if (existsSync(repoMap)) return { layout: 'repo', root: dir, mapFile: repoMap };
     const parent = dirname(dir);
-    if (parent === dir) throw new Error(`servers.json not found above ${dirname(fileURLToPath(fromUrl))}`);
+    if (parent === dir) throw new Error(`servers.json or config/products.json not found above ${dirname(fileURLToPath(fromUrl))}`);
     dir = parent;
   }
-}
-
-/** The plugin id this folder bundles (plugin layout only). */
-export function ownPlugin(roots: InstallRoots): string | undefined {
-  return roots.layout === 'plugin' ? basename(roots.root) : undefined;
 }
 
 /**

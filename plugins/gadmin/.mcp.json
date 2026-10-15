@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "gadmin": {
+      "command": "node",
+      "args": [
+        "${CLAUDE_PLUGIN_ROOT}/servers/gadmin.mjs"
+      ],
+      "env": {
+        "GSM_ALLOW_WRITES": "${user_config.allow_writes}",
+        "GSM_CONFIRMATION": "${user_config.confirmation}",
+        "GSM_TOKEN_DIR": "${user_config.token_dir}",
+        "GSM_HOOK_ACTIVE": "1",
+        "GSM_ADMIN_SUBJECT": "${user_config.admin_subject}",
+        "GSM_SERVICE_ACCOUNT_KEY_FILE": "${user_config.service_account_key_file}"
+      }
+    }
+  }
+}

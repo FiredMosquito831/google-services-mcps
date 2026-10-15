@@ -1,6 +1,6 @@
-#!/usr/bin/env node
 /**
- * Google Search Console server (MCP name "gsc").
+ * Curated tool definitions for the Google Search Console server (MCP name "gsc").
+ * The Discovery-generated tools are added by the generated entry (scripts/bundle.mjs).
  *
  * Covers: properties (list, get, add, remove), sitemaps (list, get, submit,
  * delete), search analytics queries, and URL inspection (index status of one page).
@@ -15,9 +15,8 @@ import { searchconsole } from '@googleapis/searchconsole';
 import type { JWT, OAuth2Client } from 'google-auth-library';
 import { z } from 'zod';
 import type { RuntimeConfig } from '../core/config.js';
-import { getAuthClient } from '../core/auth.js';
-import { discoveryToolsFor } from '../core/discovery/tools.js';
-import { defineTool, runServer, type ToolDef } from '../core/tools.js';
+import { getAuthClient, googleScopes } from '../core/auth.js';
+import { defineTool, type ToolDef } from '../core/tools.js';
 
 type Auth = OAuth2Client | JWT;
 
@@ -116,6 +115,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       title: 'List Search Console properties',
       description: 'List the Search Console properties this account can access, with the permission level on each.',
       kind: 'read',
+      scopes: googleScopes('webmasters', 'webmasters.readonly'),
       inputSchema: {},
       async handler() {
         const res = await (await wm()).sites.list();
@@ -127,6 +127,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       title: 'Get Search Console property',
       description: 'Get one property with its permission level.',
       kind: 'read',
+      scopes: googleScopes('webmasters', 'webmasters.readonly'),
       inputSchema: { site_url: siteUrlArg },
       async handler({ site_url }) {
         const res = await (await wm()).sites.get({ siteUrl: propertyUrl(site_url) });
@@ -138,6 +139,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       title: 'List sitemaps',
       description: 'List the sitemaps submitted for a property, or the sitemaps listed in a sitemap index.',
       kind: 'read',
+      scopes: googleScopes('webmasters', 'webmasters.readonly'),
       inputSchema: {
         site_url: siteUrlArg,
         sitemap_index: z
@@ -159,6 +161,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       title: 'Get sitemap',
       description: 'Get one submitted sitemap with its status, error and warning counts, and indexed URL counts.',
       kind: 'read',
+      scopes: googleScopes('webmasters', 'webmasters.readonly'),
       inputSchema: { site_url: siteUrlArg, feedpath: feedpathArg },
       async handler({ site_url, feedpath }) {
         const res = await (await wm()).sitemaps.get({
@@ -174,6 +177,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       description:
         'Query search performance (clicks, impressions, CTR, position) for a property, grouped by the chosen dimensions. Dates are Pacific time per Google. The response rows are in the order of the dimensions.',
       kind: 'read',
+      scopes: googleScopes('webmasters', 'webmasters.readonly'),
       inputSchema: {
         site_url: siteUrlArg,
         start_date: z.string().describe('Start date, YYYY-MM-DD, inclusive.'),
@@ -218,6 +222,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       description:
         'Inspect one page as Google sees it in its index: index status, coverage state, last crawl, robots and canonical details. The page must belong to the property.',
       kind: 'read',
+      scopes: googleScopes('webmasters', 'webmasters.readonly'),
       inputSchema: {
         site_url: siteUrlArg,
         inspection_url: z.string().describe('Full URL of the page to inspect, for example https://example.com/blog/post'),
@@ -242,6 +247,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       title: 'Add Search Console property',
       description: 'Add a property to this account. Adding does not verify ownership; verification still applies.',
       kind: 'write',
+      scopes: googleScopes('webmasters'),
       inputSchema: { site_url: siteUrlArg },
       async handler({ site_url }) {
         const property = propertyUrl(site_url);
@@ -254,6 +260,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       title: 'Submit sitemap',
       description: 'Submit or resubmit a sitemap for a property.',
       kind: 'write',
+      scopes: googleScopes('webmasters'),
       inputSchema: { site_url: siteUrlArg, feedpath: feedpathArg },
       async handler({ site_url, feedpath }) {
         const target = { siteUrl: propertyUrl(site_url), feedpath: httpUrl(feedpath, 'feedpath', EX_SITEMAP) };
@@ -262,13 +269,14 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       },
     }),
 
-    // ---- destructive (needs confirm=true) ----
+    // ---- destructive (asks for approval before each call) ----
     defineTool({
       name: 'sc_site_delete',
       title: 'Remove Search Console property',
       description:
         'Remove a property from this account. Its Search Console data and history can no longer be accessed through this account.',
       kind: 'destructive',
+      scopes: googleScopes('webmasters'),
       inputSchema: { site_url: siteUrlArg },
       preview: ({ site_url }) => ({
         property: propertyUrl(site_url),
@@ -286,6 +294,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       title: 'Delete sitemap',
       description: 'Remove a sitemap from Search Console. The sitemap file on the site is not touched.',
       kind: 'destructive',
+      scopes: googleScopes('webmasters'),
       inputSchema: { site_url: siteUrlArg, feedpath: feedpathArg },
       preview: ({ site_url, feedpath }) => ({
         property: propertyUrl(site_url),
@@ -301,9 +310,3 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
     }),
   ];
 }
-
-await runServer({
-  name: 'gsc',
-  version: '0.1.0',
-  buildTools: async (cfg) => [...(await buildTools(cfg)), ...(await discoveryToolsFor('gsc', cfg))],
-});

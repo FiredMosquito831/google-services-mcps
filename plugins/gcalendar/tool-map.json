@@ -1,0 +1,549 @@
+[
+  {
+    "name": "mcp__plugin_gcalendar_gcalendar__api_methods",
+    "kind": "read",
+    "scopes": [],
+    "title": "gcalendar: API methods"
+  },
+  {
+    "name": "mcp__plugin_gcalendar_gcalendar__calendar_acl_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/calendar",
+      "https://www.googleapis.com/auth/calendar.acls"
+    ],
+    "methodId": "calendar.acl.delete",
+    "title": "calendar.acl.delete"
+  },
+  {
+    "name": "mcp__plugin_gcalendar_gcalendar__calendar_acl_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/calendar",
+      "https://www.googleapis.com/auth/calendar.acls",
+      "https://www.googleapis.com/auth/calendar.acls.readonly",
+      "https://www.googleapis.com/auth/calendar.readonly"
+    ],
+    "methodId": "calendar.acl.get",
+    "title": "calendar.acl.get"
+  },
+  {
+    "name": "mcp__plugin_gcalendar_gcalendar__calendar_acl_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/calendar",
+      "https://www.googleapis.com/auth/calendar.acls"
+    ],
+    "methodId": "calendar.acl.insert",
+    "title": "calendar.acl.insert"
+  },
+  {
+    "name": "mcp__plugin_gcalendar_gcalendar__calendar_acl_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/calendar",
+      "https://www.googleapis.com/auth/calendar.acls",
+      "https://www.googleapis.com/auth/calendar.acls.readonly"
+    ],
+    "methodId": "calendar.acl.list",
+    "title": "calendar.acl.list"
+  },
+  {
+    "name": "mcp__plugin_gcalendar_gcalendar__calendar_acl_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/calendar",
+      "https://www.googleapis.com/auth/calendar.acls"
+    ],
+    "methodId": "calendar.acl.patch",
+    "title": "calendar.acl.patch"
+  },
+  {
+    "name": "mcp__plugin_gcalendar_gcalendar__calendar_acl_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/calendar",
+      "https://www.googleapis.com/auth/calendar.acls"
+    ],
+    "methodId": "calendar.acl.update",
+    "title": "calendar.acl.update"
+  },
+  {
+    "name": "mcp__plugin_gcalendar_gcalendar__calendar_acl_watch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/calendar",
+      "https://www.googleapis.com/auth/calendar.acls",
+      "https://www.googleapis.com/auth/calendar.acls.readonly"
+    ],
+    "methodId": "calendar.acl.watch",
+    "title": "calendar.acl.watch"
+  },
+  {
+    "name": "mcp__plugin_gcalendar_gcalendar__calendar_calendar_list_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/calendar",
+      "https://www.googleapis.com/auth/calendar.app.created",
+      "https://www.googleapis.com/auth/calendar.calendarlist"
+    ],
+    "methodId": "calendar.calendarList.delete",
+    "title": "calendar.calendarList.delete"
+  },
+  {
+    "name": "mcp__plugin_gcalendar_gcalendar__calendar_calendar_list_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/calendar",
+      "https://www.googleapis.com/auth/calendar.app.created",
+      "https://www.googleapis.com/auth/calendar.calendarlist",
+      "https://www.googleapis.com/auth/calendar.calendarlist.readonly",
+      "https://www.googleapis.com/auth/calendar.readonly"
+    ],
+    "methodId": "calendar.calendarList.get",
+    "title": "calendar.calendarList.get"
+  },
+  {
+    "name": "mcp__plugin_gcalendar_gcalendar__calendar_calendar_list_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/calendar",
+      "https://www.googleapis.com/auth/calendar.calendarlist"
+    ],
+    "methodId": "calendar.calendarList.insert",
+    "title": "calendar.calendarList.insert"
+  },
+  {
+    "name": "mcp__plugin_gcalendar_gcalendar__calendar_calendar_list_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/calendar",
+      "https://www.googleapis.com/auth/calendar.calendarlist",
+      "https://www.googleapis.com/auth/calendar.calendarlist.readonly",
+      "https://www.googleapis.com/auth/calendar.readonly"
+    ],
+    "methodId": "calendar.calendarList.list",
+    "title": "calendar.calendarList.list"
+  },
+  {
+    "name": "mcp__plugin_gcalendar_gcalendar__calendar_calendar_list_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/calendar",
+      "https://www.googleapis.com/auth/calendar.app.created",
+      "https://www.googleapis.com/auth/calendar.calendarlist"
+    ],
+    "methodId": "calendar.calendarList.patch",
+    "title": "calendar.calendarList.patch"
+  },
+  {
+    "name": "mcp__plugin_gcalendar_gcalendar__calendar_calendar_list_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/calendar",
+      "https://www.googleapis.com/auth/calendar.app.created",
+      "https://www.googleapis.com/auth/calendar.calendarlist"
+    ],
+    "methodId": "calendar.calendarList.update",
+    "title": "calendar.calendarList.update"
+  },
+  {
+    "name": "mcp__plugin_gcalendar_gcalendar__calendar_calendar_list_watch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/calendar",
+      "https://www.googleapis.com/auth/calendar.calendarlist",
+      "https://www.googleapis.com/auth/calendar.calendarlist.readonly",
+      "https://www.googleapis.com/auth/calendar.readonly"
+    ],
+    "methodId": "calendar.calendarList.watch",
+    "title": "calendar.calendarList.watch"
+  },
+  {
+    "name": "mcp__plugin_gcalendar_gcalendar__calendar_calendars_clear",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/calendar",
+      "https://www.googleapis.com/auth/calendar.calendars"
+    ],
+    "methodId": "calendar.calendars.clear",
+    "title": "calendar.calendars.clear"
+  },
+  {
+    "name": "mcp__plugin_gcalendar_gcalendar__calendar_calendars_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/calendar",
+      "https://www.googleapis.com/auth/calendar.app.created",
+      "https://www.googleapis.com/auth/calendar.calendars"
+    ],
+    "methodId": "calendar.calendars.delete",
+    "title": "calendar.calendars.delete"
+  },
+  {
+    "name": "mcp__plugin_gcalendar_gcalendar__calendar_calendars_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/calendar",
+      "https://www.googleapis.com/auth/calendar.app.created",
+      "https://www.googleapis.com/auth/calendar.calendars",
+      "https://www.googleapis.com/auth/calendar.calendars.readonly",
+      "https://www.googleapis.com/auth/calendar.readonly"
+    ],
+    "methodId": "calendar.calendars.get",
+    "title": "calendar.calendars.get"
+  },
+  {
+    "name": "mcp__plugin_gcalendar_gcalendar__calendar_calendars_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/calendar",
+      "https://www.googleapis.com/auth/calendar.app.created",
+      "https://www.googleapis.com/auth/calendar.calendars"
+    ],
+    "methodId": "calendar.calendars.insert",
+    "title": "calendar.calendars.insert"
+  },
+  {
+    "name": "mcp__plugin_gcalendar_gcalendar__calendar_calendars_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/calendar",
+      "https://www.googleapis.com/auth/calendar.app.created",
+      "https://www.googleapis.com/auth/calendar.calendars"
+    ],
+    "methodId": "calendar.calendars.patch",
+    "title": "calendar.calendars.patch"
+  },
+  {
+    "name": "mcp__plugin_gcalendar_gcalendar__calendar_calendars_transfer_own",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/calendar",
+      "https://www.googleapis.com/auth/calendar.calendars"
+    ],
+    "methodId": "calendar.calendars.transferOwnership",
+    "title": "calendar.calendars.transferOwnership"
+  },
+  {
+    "name": "mcp__plugin_gcalendar_gcalendar__calendar_calendars_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/calendar",
+      "https://www.googleapis.com/auth/calendar.app.created",
+      "https://www.googleapis.com/auth/calendar.calendars"
+    ],
+    "methodId": "calendar.calendars.update",
+    "title": "calendar.calendars.update"
+  },
+  {
+    "name": "mcp__plugin_gcalendar_gcalendar__calendar_channels_stop",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/calendar",
+      "https://www.googleapis.com/auth/calendar.acls",
+      "https://www.googleapis.com/auth/calendar.acls.readonly",
+      "https://www.googleapis.com/auth/calendar.app.created",
+      "https://www.googleapis.com/auth/calendar.calendarlist",
+      "https://www.googleapis.com/auth/calendar.calendarlist.readonly",
+      "https://www.googleapis.com/auth/calendar.events",
+      "https://www.googleapis.com/auth/calendar.events.freebusy",
+      "https://www.googleapis.com/auth/calendar.events.owned",
+      "https://www.googleapis.com/auth/calendar.events.owned.readonly",
+      "https://www.googleapis.com/auth/calendar.events.public.readonly",
+      "https://www.googleapis.com/auth/calendar.events.readonly",
+      "https://www.googleapis.com/auth/calendar.readonly",
+      "https://www.googleapis.com/auth/calendar.settings",
+      "https://www.googleapis.com/auth/calendar.settings.readonly"
+    ],
+    "methodId": "calendar.channels.stop",
+    "title": "calendar.channels.stop"
+  },
+  {
+    "name": "mcp__plugin_gcalendar_gcalendar__calendar_colors_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/calendar",
+      "https://www.googleapis.com/auth/calendar.app.created",
+      "https://www.googleapis.com/auth/calendar.calendarlist",
+      "https://www.googleapis.com/auth/calendar.calendarlist.readonly",
+      "https://www.googleapis.com/auth/calendar.events.freebusy",
+      "https://www.googleapis.com/auth/calendar.events.owned",
+      "https://www.googleapis.com/auth/calendar.events.owned.readonly",
+      "https://www.googleapis.com/auth/calendar.events.public.readonly",
+      "https://www.googleapis.com/auth/calendar.readonly"
+    ],
+    "methodId": "calendar.colors.get",
+    "title": "calendar.colors.get"
+  },
+  {
+    "name": "mcp__plugin_gcalendar_gcalendar__calendar_create_event",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/calendar",
+      "https://www.googleapis.com/auth/calendar.events"
+    ],
+    "title": "Create calendar event"
+  },
+  {
+    "name": "mcp__plugin_gcalendar_gcalendar__calendar_delete_event",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/calendar",
+      "https://www.googleapis.com/auth/calendar.events"
+    ],
+    "title": "Delete calendar event"
+  },
+  {
+    "name": "mcp__plugin_gcalendar_gcalendar__calendar_events_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/calendar",
+      "https://www.googleapis.com/auth/calendar.app.created",
+      "https://www.googleapis.com/auth/calendar.events",
+      "https://www.googleapis.com/auth/calendar.events.owned"
+    ],
+    "methodId": "calendar.events.delete",
+    "title": "calendar.events.delete"
+  },
+  {
+    "name": "mcp__plugin_gcalendar_gcalendar__calendar_events_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/calendar",
+      "https://www.googleapis.com/auth/calendar.app.created",
+      "https://www.googleapis.com/auth/calendar.events",
+      "https://www.googleapis.com/auth/calendar.events.freebusy",
+      "https://www.googleapis.com/auth/calendar.events.owned",
+      "https://www.googleapis.com/auth/calendar.events.owned.readonly",
+      "https://www.googleapis.com/auth/calendar.events.public.readonly",
+      "https://www.googleapis.com/auth/calendar.events.readonly",
+      "https://www.googleapis.com/auth/calendar.readonly"
+    ],
+    "methodId": "calendar.events.get",
+    "title": "calendar.events.get"
+  },
+  {
+    "name": "mcp__plugin_gcalendar_gcalendar__calendar_events_import",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/calendar",
+      "https://www.googleapis.com/auth/calendar.app.created",
+      "https://www.googleapis.com/auth/calendar.events",
+      "https://www.googleapis.com/auth/calendar.events.owned"
+    ],
+    "methodId": "calendar.events.import",
+    "title": "calendar.events.import"
+  },
+  {
+    "name": "mcp__plugin_gcalendar_gcalendar__calendar_events_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/calendar",
+      "https://www.googleapis.com/auth/calendar.app.created",
+      "https://www.googleapis.com/auth/calendar.events",
+      "https://www.googleapis.com/auth/calendar.events.owned"
+    ],
+    "methodId": "calendar.events.insert",
+    "title": "calendar.events.insert"
+  },
+  {
+    "name": "mcp__plugin_gcalendar_gcalendar__calendar_events_instances",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/calendar",
+      "https://www.googleapis.com/auth/calendar.app.created",
+      "https://www.googleapis.com/auth/calendar.events",
+      "https://www.googleapis.com/auth/calendar.events.freebusy",
+      "https://www.googleapis.com/auth/calendar.events.owned",
+      "https://www.googleapis.com/auth/calendar.events.owned.readonly",
+      "https://www.googleapis.com/auth/calendar.events.public.readonly",
+      "https://www.googleapis.com/auth/calendar.events.readonly",
+      "https://www.googleapis.com/auth/calendar.readonly"
+    ],
+    "methodId": "calendar.events.instances",
+    "title": "calendar.events.instances"
+  },
+  {
+    "name": "mcp__plugin_gcalendar_gcalendar__calendar_events_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/calendar",
+      "https://www.googleapis.com/auth/calendar.app.created",
+      "https://www.googleapis.com/auth/calendar.events",
+      "https://www.googleapis.com/auth/calendar.events.freebusy",
+      "https://www.googleapis.com/auth/calendar.events.owned",
+      "https://www.googleapis.com/auth/calendar.events.owned.readonly",
+      "https://www.googleapis.com/auth/calendar.events.public.readonly",
+      "https://www.googleapis.com/auth/calendar.events.readonly",
+      "https://www.googleapis.com/auth/calendar.readonly"
+    ],
+    "methodId": "calendar.events.list",
+    "title": "calendar.events.list"
+  },
+  {
+    "name": "mcp__plugin_gcalendar_gcalendar__calendar_events_move",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/calendar",
+      "https://www.googleapis.com/auth/calendar.events",
+      "https://www.googleapis.com/auth/calendar.events.owned"
+    ],
+    "methodId": "calendar.events.move",
+    "title": "calendar.events.move"
+  },
+  {
+    "name": "mcp__plugin_gcalendar_gcalendar__calendar_events_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/calendar",
+      "https://www.googleapis.com/auth/calendar.app.created",
+      "https://www.googleapis.com/auth/calendar.events",
+      "https://www.googleapis.com/auth/calendar.events.owned"
+    ],
+    "methodId": "calendar.events.patch",
+    "title": "calendar.events.patch"
+  },
+  {
+    "name": "mcp__plugin_gcalendar_gcalendar__calendar_events_quick_add",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/calendar",
+      "https://www.googleapis.com/auth/calendar.app.created",
+      "https://www.googleapis.com/auth/calendar.events",
+      "https://www.googleapis.com/auth/calendar.events.owned"
+    ],
+    "methodId": "calendar.events.quickAdd",
+    "title": "calendar.events.quickAdd"
+  },
+  {
+    "name": "mcp__plugin_gcalendar_gcalendar__calendar_events_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/calendar",
+      "https://www.googleapis.com/auth/calendar.app.created",
+      "https://www.googleapis.com/auth/calendar.events",
+      "https://www.googleapis.com/auth/calendar.events.owned"
+    ],
+    "methodId": "calendar.events.update",
+    "title": "calendar.events.update"
+  },
+  {
+    "name": "mcp__plugin_gcalendar_gcalendar__calendar_events_watch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/calendar",
+      "https://www.googleapis.com/auth/calendar.app.created",
+      "https://www.googleapis.com/auth/calendar.events",
+      "https://www.googleapis.com/auth/calendar.events.freebusy",
+      "https://www.googleapis.com/auth/calendar.events.owned",
+      "https://www.googleapis.com/auth/calendar.events.owned.readonly",
+      "https://www.googleapis.com/auth/calendar.events.public.readonly",
+      "https://www.googleapis.com/auth/calendar.events.readonly",
+      "https://www.googleapis.com/auth/calendar.readonly"
+    ],
+    "methodId": "calendar.events.watch",
+    "title": "calendar.events.watch"
+  },
+  {
+    "name": "mcp__plugin_gcalendar_gcalendar__calendar_freebusy",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/calendar",
+      "https://www.googleapis.com/auth/calendar.events.freebusy",
+      "https://www.googleapis.com/auth/calendar.freebusy",
+      "https://www.googleapis.com/auth/calendar.readonly"
+    ],
+    "title": "Check free/busy"
+  },
+  {
+    "name": "mcp__plugin_gcalendar_gcalendar__calendar_freebusy_query",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/calendar",
+      "https://www.googleapis.com/auth/calendar.events.freebusy",
+      "https://www.googleapis.com/auth/calendar.freebusy",
+      "https://www.googleapis.com/auth/calendar.readonly"
+    ],
+    "methodId": "calendar.freebusy.query",
+    "title": "calendar.freebusy.query"
+  },
+  {
+    "name": "mcp__plugin_gcalendar_gcalendar__calendar_get_event",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/calendar",
+      "https://www.googleapis.com/auth/calendar.events",
+      "https://www.googleapis.com/auth/calendar.events.readonly",
+      "https://www.googleapis.com/auth/calendar.readonly"
+    ],
+    "title": "Get calendar event"
+  },
+  {
+    "name": "mcp__plugin_gcalendar_gcalendar__calendar_list_calendars",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/calendar",
+      "https://www.googleapis.com/auth/calendar.calendarlist",
+      "https://www.googleapis.com/auth/calendar.calendarlist.readonly",
+      "https://www.googleapis.com/auth/calendar.readonly"
+    ],
+    "title": "List calendars"
+  },
+  {
+    "name": "mcp__plugin_gcalendar_gcalendar__calendar_list_events",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/calendar",
+      "https://www.googleapis.com/auth/calendar.events",
+      "https://www.googleapis.com/auth/calendar.events.readonly",
+      "https://www.googleapis.com/auth/calendar.readonly"
+    ],
+    "title": "List calendar events"
+  },
+  {
+    "name": "mcp__plugin_gcalendar_gcalendar__calendar_settings_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/calendar",
+      "https://www.googleapis.com/auth/calendar.readonly",
+      "https://www.googleapis.com/auth/calendar.settings",
+      "https://www.googleapis.com/auth/calendar.settings.readonly"
+    ],
+    "methodId": "calendar.settings.get",
+    "title": "calendar.settings.get"
+  },
+  {
+    "name": "mcp__plugin_gcalendar_gcalendar__calendar_settings_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/calendar",
+      "https://www.googleapis.com/auth/calendar.readonly",
+      "https://www.googleapis.com/auth/calendar.settings",
+      "https://www.googleapis.com/auth/calendar.settings.readonly"
+    ],
+    "methodId": "calendar.settings.list",
+    "title": "calendar.settings.list"
+  },
+  {
+    "name": "mcp__plugin_gcalendar_gcalendar__calendar_settings_watch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/calendar",
+      "https://www.googleapis.com/auth/calendar.readonly",
+      "https://www.googleapis.com/auth/calendar.settings",
+      "https://www.googleapis.com/auth/calendar.settings.readonly"
+    ],
+    "methodId": "calendar.settings.watch",
+    "title": "calendar.settings.watch"
+  },
+  {
+    "name": "mcp__plugin_gcalendar_gcalendar__calendar_update_event",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/calendar",
+      "https://www.googleapis.com/auth/calendar.events"
+    ],
+    "title": "Update calendar event"
+  }
+]

@@ -1,0 +1,3512 @@
+[
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_activities_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.reports.audit.readonly"
+    ],
+    "methodId": "reports.activities.list",
+    "title": "reports.activities.list"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_activities_watch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.reports.audit.readonly"
+    ],
+    "methodId": "reports.activities.watch",
+    "title": "reports.activities.watch"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_applications_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.datatransfer",
+      "https://www.googleapis.com/auth/admin.datatransfer.readonly"
+    ],
+    "methodId": "datatransfer.applications.get",
+    "title": "datatransfer.applications.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_applications_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.datatransfer",
+      "https://www.googleapis.com/auth/admin.datatransfer.readonly"
+    ],
+    "methodId": "datatransfer.applications.list",
+    "title": "datatransfer.applications.list"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_asps_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.user.security"
+    ],
+    "methodId": "directory.asps.delete",
+    "title": "directory.asps.delete"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_asps_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.user.security"
+    ],
+    "methodId": "directory.asps.get",
+    "title": "directory.asps.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_asps_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.user.security"
+    ],
+    "methodId": "directory.asps.list",
+    "title": "directory.asps.list"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_channels_stop_9bac",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.user",
+      "https://www.googleapis.com/auth/admin.directory.user.alias",
+      "https://www.googleapis.com/auth/admin.directory.user.alias.readonly",
+      "https://www.googleapis.com/auth/admin.directory.user.readonly",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "admin.channels.stop",
+    "title": "admin.channels.stop"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_channels_stop_9bac_2",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.reports.audit.readonly"
+    ],
+    "methodId": "admin.channels.stop",
+    "title": "admin.channels.stop"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_chromeosdevices_action",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.device.chromeos"
+    ],
+    "methodId": "directory.chromeosdevices.action",
+    "title": "directory.chromeosdevices.action"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_chromeosdevices_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.device.chromeos",
+      "https://www.googleapis.com/auth/admin.directory.device.chromeos.readonly"
+    ],
+    "methodId": "directory.chromeosdevices.get",
+    "title": "directory.chromeosdevices.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_chromeosdevices_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.device.chromeos",
+      "https://www.googleapis.com/auth/admin.directory.device.chromeos.readonly"
+    ],
+    "methodId": "directory.chromeosdevices.list",
+    "title": "directory.chromeosdevices.list"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_chromeosdevices_move_devices_to",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.device.chromeos"
+    ],
+    "methodId": "directory.chromeosdevices.moveDevicesToOu",
+    "title": "directory.chromeosdevices.moveDevicesToOu"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_chromeosdevices_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.device.chromeos"
+    ],
+    "methodId": "directory.chromeosdevices.patch",
+    "title": "directory.chromeosdevices.patch"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_chromeosdevices_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.device.chromeos"
+    ],
+    "methodId": "directory.chromeosdevices.update",
+    "title": "directory.chromeosdevices.update"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_custom_device_chrome_comman_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.device.chromeos",
+      "https://www.googleapis.com/auth/admin.directory.device.chromeos.readonly"
+    ],
+    "methodId": "admin.customer.devices.chromeos.commands.get",
+    "title": "admin.customer.devices.chromeos.commands.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_custome_chrome_print_s_batch_cr",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.chrome.printers"
+    ],
+    "methodId": "admin.customers.chrome.printServers.batchCreatePrintServers",
+    "title": "admin.customers.chrome.printServers.batchCreatePrintServers"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_custome_chrome_print_s_batch_de",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.chrome.printers"
+    ],
+    "methodId": "admin.customers.chrome.printServers.batchDeletePrintServers",
+    "title": "admin.customers.chrome.printServers.batchDeletePrintServers"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_custome_chrome_printer_batch_cr",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.chrome.printers"
+    ],
+    "methodId": "admin.customers.chrome.printers.batchCreatePrinters",
+    "title": "admin.customers.chrome.printers.batchCreatePrinters"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_custome_chrome_printer_batch_de",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.chrome.printers"
+    ],
+    "methodId": "admin.customers.chrome.printers.batchDeletePrinters",
+    "title": "admin.customers.chrome.printers.batchDeletePrinters"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_custome_chrome_printer_list_pri",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.chrome.printers",
+      "https://www.googleapis.com/auth/admin.chrome.printers.readonly"
+    ],
+    "methodId": "admin.customers.chrome.printers.listPrinterModels",
+    "title": "admin.customers.chrome.printers.listPrinterModels"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_custome_devices_chromeo_batch_c",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.device.chromeos"
+    ],
+    "methodId": "admin.customer.devices.chromeos.batchChangeStatus",
+    "title": "admin.customer.devices.chromeos.batchChangeStatus"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_custome_devices_chromeo_count_c",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.device.chromeos",
+      "https://www.googleapis.com/auth/admin.directory.device.chromeos.readonly"
+    ],
+    "methodId": "admin.customer.devices.chromeos.countChromeOsDevices",
+    "title": "admin.customer.devices.chromeos.countChromeOsDevices"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_custome_devices_chromeo_issue_c",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.device.chromeos"
+    ],
+    "methodId": "admin.customer.devices.chromeos.issueCommand",
+    "title": "admin.customer.devices.chromeos.issueCommand"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_customer_chrome_print_se_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.chrome.printers"
+    ],
+    "methodId": "admin.customers.chrome.printServers.create",
+    "title": "admin.customers.chrome.printServers.create"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_customer_chrome_print_se_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.chrome.printers"
+    ],
+    "methodId": "admin.customers.chrome.printServers.delete",
+    "title": "admin.customers.chrome.printServers.delete"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_customer_chrome_print_ser_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.chrome.printers"
+    ],
+    "methodId": "admin.customers.chrome.printServers.patch",
+    "title": "admin.customers.chrome.printServers.patch"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_customer_chrome_printers_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.chrome.printers"
+    ],
+    "methodId": "admin.customers.chrome.printers.create",
+    "title": "admin.customers.chrome.printers.create"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_customer_chrome_printers_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.chrome.printers"
+    ],
+    "methodId": "admin.customers.chrome.printers.delete",
+    "title": "admin.customers.chrome.printers.delete"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_customer_usage_reports_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.reports.usage.readonly"
+    ],
+    "methodId": "reports.customerUsageReports.get",
+    "title": "reports.customerUsageReports.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_customers_chrome_print_ser_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.chrome.printers",
+      "https://www.googleapis.com/auth/admin.chrome.printers.readonly"
+    ],
+    "methodId": "admin.customers.chrome.printServers.list",
+    "title": "admin.customers.chrome.printServers.list"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_customers_chrome_print_serv_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.chrome.printers",
+      "https://www.googleapis.com/auth/admin.chrome.printers.readonly"
+    ],
+    "methodId": "admin.customers.chrome.printServers.get",
+    "title": "admin.customers.chrome.printServers.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_customers_chrome_printers_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.chrome.printers",
+      "https://www.googleapis.com/auth/admin.chrome.printers.readonly"
+    ],
+    "methodId": "admin.customers.chrome.printers.get",
+    "title": "admin.customers.chrome.printers.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_customers_chrome_printers_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.chrome.printers",
+      "https://www.googleapis.com/auth/admin.chrome.printers.readonly"
+    ],
+    "methodId": "admin.customers.chrome.printers.list",
+    "title": "admin.customers.chrome.printers.list"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_customers_chrome_printers_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.chrome.printers"
+    ],
+    "methodId": "admin.customers.chrome.printers.patch",
+    "title": "admin.customers.chrome.printers.patch"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_customers_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.customer",
+      "https://www.googleapis.com/auth/admin.directory.customer.readonly"
+    ],
+    "methodId": "directory.customers.get",
+    "title": "directory.customers.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_customers_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.customer"
+    ],
+    "methodId": "directory.customers.patch",
+    "title": "directory.customers.patch"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_customers_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.customer"
+    ],
+    "methodId": "directory.customers.update",
+    "title": "directory.customers.update"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_domain_aliases_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.domain"
+    ],
+    "methodId": "directory.domainAliases.delete",
+    "title": "directory.domainAliases.delete"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_domain_aliases_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.domain",
+      "https://www.googleapis.com/auth/admin.directory.domain.readonly"
+    ],
+    "methodId": "directory.domainAliases.get",
+    "title": "directory.domainAliases.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_domain_aliases_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.domain"
+    ],
+    "methodId": "directory.domainAliases.insert",
+    "title": "directory.domainAliases.insert"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_domain_aliases_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.domain",
+      "https://www.googleapis.com/auth/admin.directory.domain.readonly"
+    ],
+    "methodId": "directory.domainAliases.list",
+    "title": "directory.domainAliases.list"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_domains_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.domain"
+    ],
+    "methodId": "directory.domains.delete",
+    "title": "directory.domains.delete"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_domains_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.domain",
+      "https://www.googleapis.com/auth/admin.directory.domain.readonly"
+    ],
+    "methodId": "directory.domains.get",
+    "title": "directory.domains.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_domains_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.domain"
+    ],
+    "methodId": "directory.domains.insert",
+    "title": "directory.domains.insert"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_domains_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.domain",
+      "https://www.googleapis.com/auth/admin.directory.domain.readonly"
+    ],
+    "title": "List domains"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_domains_list_5673",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.domain",
+      "https://www.googleapis.com/auth/admin.directory.domain.readonly"
+    ],
+    "methodId": "directory.domains.list",
+    "title": "directory.domains.list"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_entity_usage_reports_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.reports.usage.readonly"
+    ],
+    "methodId": "reports.entityUsageReports.get",
+    "title": "reports.entityUsageReports.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_group_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.group"
+    ],
+    "title": "Create group"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_group_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.group"
+    ],
+    "title": "Delete group"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_group_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.group",
+      "https://www.googleapis.com/auth/admin.directory.group.readonly"
+    ],
+    "title": "Get group"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_group_member_add",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.group",
+      "https://www.googleapis.com/auth/admin.directory.group.member"
+    ],
+    "title": "Add group member"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_group_members_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.group",
+      "https://www.googleapis.com/auth/admin.directory.group.readonly",
+      "https://www.googleapis.com/auth/admin.directory.group.member",
+      "https://www.googleapis.com/auth/admin.directory.group.member.readonly"
+    ],
+    "title": "List group members"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_groups_aliases_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.group"
+    ],
+    "methodId": "directory.groups.aliases.delete",
+    "title": "directory.groups.aliases.delete"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_groups_aliases_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.group"
+    ],
+    "methodId": "directory.groups.aliases.insert",
+    "title": "directory.groups.aliases.insert"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_groups_aliases_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.group",
+      "https://www.googleapis.com/auth/admin.directory.group.readonly"
+    ],
+    "methodId": "directory.groups.aliases.list",
+    "title": "directory.groups.aliases.list"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_groups_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.group"
+    ],
+    "methodId": "directory.groups.delete",
+    "title": "directory.groups.delete"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_groups_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.group",
+      "https://www.googleapis.com/auth/admin.directory.group.readonly"
+    ],
+    "methodId": "directory.groups.get",
+    "title": "directory.groups.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_groups_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.group"
+    ],
+    "methodId": "directory.groups.insert",
+    "title": "directory.groups.insert"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_groups_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.group",
+      "https://www.googleapis.com/auth/admin.directory.group.readonly"
+    ],
+    "title": "List groups"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_groups_list_20ea",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.group",
+      "https://www.googleapis.com/auth/admin.directory.group.readonly"
+    ],
+    "methodId": "directory.groups.list",
+    "title": "directory.groups.list"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_groups_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.group"
+    ],
+    "methodId": "directory.groups.patch",
+    "title": "directory.groups.patch"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_groups_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.group"
+    ],
+    "methodId": "directory.groups.update",
+    "title": "directory.groups.update"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_member_remove",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.group",
+      "https://www.googleapis.com/auth/admin.directory.group.member"
+    ],
+    "title": "Remove group member"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_members_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.group",
+      "https://www.googleapis.com/auth/admin.directory.group.member"
+    ],
+    "methodId": "directory.members.delete",
+    "title": "directory.members.delete"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_members_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.group",
+      "https://www.googleapis.com/auth/admin.directory.group.member",
+      "https://www.googleapis.com/auth/admin.directory.group.member.readonly",
+      "https://www.googleapis.com/auth/admin.directory.group.readonly"
+    ],
+    "methodId": "directory.members.get",
+    "title": "directory.members.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_members_has_member",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.group",
+      "https://www.googleapis.com/auth/admin.directory.group.member",
+      "https://www.googleapis.com/auth/admin.directory.group.member.readonly",
+      "https://www.googleapis.com/auth/admin.directory.group.readonly"
+    ],
+    "methodId": "directory.members.hasMember",
+    "title": "directory.members.hasMember"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_members_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.group",
+      "https://www.googleapis.com/auth/admin.directory.group.member"
+    ],
+    "methodId": "directory.members.insert",
+    "title": "directory.members.insert"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_members_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.group",
+      "https://www.googleapis.com/auth/admin.directory.group.member",
+      "https://www.googleapis.com/auth/admin.directory.group.member.readonly",
+      "https://www.googleapis.com/auth/admin.directory.group.readonly"
+    ],
+    "methodId": "directory.members.list",
+    "title": "directory.members.list"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_members_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.group",
+      "https://www.googleapis.com/auth/admin.directory.group.member"
+    ],
+    "methodId": "directory.members.patch",
+    "title": "directory.members.patch"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_members_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.group",
+      "https://www.googleapis.com/auth/admin.directory.group.member"
+    ],
+    "methodId": "directory.members.update",
+    "title": "directory.members.update"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_mobiledevices_action",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.device.mobile",
+      "https://www.googleapis.com/auth/admin.directory.device.mobile.action"
+    ],
+    "methodId": "directory.mobiledevices.action",
+    "title": "directory.mobiledevices.action"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_mobiledevices_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.device.mobile"
+    ],
+    "methodId": "directory.mobiledevices.delete",
+    "title": "directory.mobiledevices.delete"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_mobiledevices_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.device.mobile",
+      "https://www.googleapis.com/auth/admin.directory.device.mobile.action",
+      "https://www.googleapis.com/auth/admin.directory.device.mobile.readonly"
+    ],
+    "methodId": "directory.mobiledevices.get",
+    "title": "directory.mobiledevices.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_mobiledevices_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.device.mobile",
+      "https://www.googleapis.com/auth/admin.directory.device.mobile.action",
+      "https://www.googleapis.com/auth/admin.directory.device.mobile.readonly"
+    ],
+    "methodId": "directory.mobiledevices.list",
+    "title": "directory.mobiledevices.list"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_orgunit_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.orgunit"
+    ],
+    "title": "Create org unit"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_orgunit_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.orgunit"
+    ],
+    "title": "Delete org unit"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_orgunit_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.orgunit",
+      "https://www.googleapis.com/auth/admin.directory.orgunit.readonly"
+    ],
+    "title": "Get org unit"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_orgunit_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.orgunit"
+    ],
+    "title": "Update org unit"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_orgunits_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.orgunit"
+    ],
+    "methodId": "directory.orgunits.delete",
+    "title": "directory.orgunits.delete"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_orgunits_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.orgunit",
+      "https://www.googleapis.com/auth/admin.directory.orgunit.readonly"
+    ],
+    "methodId": "directory.orgunits.get",
+    "title": "directory.orgunits.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_orgunits_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.orgunit"
+    ],
+    "methodId": "directory.orgunits.insert",
+    "title": "directory.orgunits.insert"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_orgunits_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.orgunit",
+      "https://www.googleapis.com/auth/admin.directory.orgunit.readonly"
+    ],
+    "title": "List org units"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_orgunits_list_dd84",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.orgunit",
+      "https://www.googleapis.com/auth/admin.directory.orgunit.readonly"
+    ],
+    "methodId": "directory.orgunits.list",
+    "title": "directory.orgunits.list"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_orgunits_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.orgunit"
+    ],
+    "methodId": "directory.orgunits.patch",
+    "title": "directory.orgunits.patch"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_orgunits_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.orgunit"
+    ],
+    "methodId": "directory.orgunits.update",
+    "title": "directory.orgunits.update"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_privileges_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.rolemanagement",
+      "https://www.googleapis.com/auth/admin.directory.rolemanagement.readonly"
+    ],
+    "methodId": "directory.privileges.list",
+    "title": "directory.privileges.list"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_resources_buildings_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.resource.calendar"
+    ],
+    "methodId": "directory.resources.buildings.delete",
+    "title": "directory.resources.buildings.delete"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_resources_buildings_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.resource.calendar",
+      "https://www.googleapis.com/auth/admin.directory.resource.calendar.readonly"
+    ],
+    "methodId": "directory.resources.buildings.get",
+    "title": "directory.resources.buildings.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_resources_buildings_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.resource.calendar"
+    ],
+    "methodId": "directory.resources.buildings.insert",
+    "title": "directory.resources.buildings.insert"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_resources_buildings_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.resource.calendar",
+      "https://www.googleapis.com/auth/admin.directory.resource.calendar.readonly"
+    ],
+    "methodId": "directory.resources.buildings.list",
+    "title": "directory.resources.buildings.list"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_resources_buildings_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.resource.calendar"
+    ],
+    "methodId": "directory.resources.buildings.patch",
+    "title": "directory.resources.buildings.patch"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_resources_buildings_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.resource.calendar"
+    ],
+    "methodId": "directory.resources.buildings.update",
+    "title": "directory.resources.buildings.update"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_resources_calendars_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.resource.calendar"
+    ],
+    "methodId": "directory.resources.calendars.delete",
+    "title": "directory.resources.calendars.delete"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_resources_calendars_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.resource.calendar",
+      "https://www.googleapis.com/auth/admin.directory.resource.calendar.readonly"
+    ],
+    "methodId": "directory.resources.calendars.get",
+    "title": "directory.resources.calendars.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_resources_calendars_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.resource.calendar"
+    ],
+    "methodId": "directory.resources.calendars.insert",
+    "title": "directory.resources.calendars.insert"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_resources_calendars_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.resource.calendar",
+      "https://www.googleapis.com/auth/admin.directory.resource.calendar.readonly"
+    ],
+    "methodId": "directory.resources.calendars.list",
+    "title": "directory.resources.calendars.list"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_resources_calendars_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.resource.calendar"
+    ],
+    "methodId": "directory.resources.calendars.patch",
+    "title": "directory.resources.calendars.patch"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_resources_calendars_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.resource.calendar"
+    ],
+    "methodId": "directory.resources.calendars.update",
+    "title": "directory.resources.calendars.update"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_resources_features_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.resource.calendar"
+    ],
+    "methodId": "directory.resources.features.delete",
+    "title": "directory.resources.features.delete"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_resources_features_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.resource.calendar",
+      "https://www.googleapis.com/auth/admin.directory.resource.calendar.readonly"
+    ],
+    "methodId": "directory.resources.features.get",
+    "title": "directory.resources.features.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_resources_features_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.resource.calendar"
+    ],
+    "methodId": "directory.resources.features.insert",
+    "title": "directory.resources.features.insert"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_resources_features_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.resource.calendar",
+      "https://www.googleapis.com/auth/admin.directory.resource.calendar.readonly"
+    ],
+    "methodId": "directory.resources.features.list",
+    "title": "directory.resources.features.list"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_resources_features_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.resource.calendar"
+    ],
+    "methodId": "directory.resources.features.patch",
+    "title": "directory.resources.features.patch"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_resources_features_rename",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.resource.calendar"
+    ],
+    "methodId": "directory.resources.features.rename",
+    "title": "directory.resources.features.rename"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_resources_features_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.resource.calendar"
+    ],
+    "methodId": "directory.resources.features.update",
+    "title": "directory.resources.features.update"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_role_assignments_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.rolemanagement"
+    ],
+    "methodId": "directory.roleAssignments.delete",
+    "title": "directory.roleAssignments.delete"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_role_assignments_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.rolemanagement",
+      "https://www.googleapis.com/auth/admin.directory.rolemanagement.readonly"
+    ],
+    "methodId": "directory.roleAssignments.get",
+    "title": "directory.roleAssignments.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_role_assignments_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.rolemanagement"
+    ],
+    "methodId": "directory.roleAssignments.insert",
+    "title": "directory.roleAssignments.insert"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_role_assignments_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.rolemanagement",
+      "https://www.googleapis.com/auth/admin.directory.rolemanagement.readonly"
+    ],
+    "methodId": "directory.roleAssignments.list",
+    "title": "directory.roleAssignments.list"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_roles_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.rolemanagement"
+    ],
+    "methodId": "directory.roles.delete",
+    "title": "directory.roles.delete"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_roles_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.rolemanagement",
+      "https://www.googleapis.com/auth/admin.directory.rolemanagement.readonly"
+    ],
+    "methodId": "directory.roles.get",
+    "title": "directory.roles.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_roles_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.rolemanagement"
+    ],
+    "methodId": "directory.roles.insert",
+    "title": "directory.roles.insert"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_roles_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.rolemanagement",
+      "https://www.googleapis.com/auth/admin.directory.rolemanagement.readonly"
+    ],
+    "methodId": "directory.roles.list",
+    "title": "directory.roles.list"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_roles_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.rolemanagement"
+    ],
+    "methodId": "directory.roles.patch",
+    "title": "directory.roles.patch"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_roles_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.rolemanagement"
+    ],
+    "methodId": "directory.roles.update",
+    "title": "directory.roles.update"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_schemas_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.userschema"
+    ],
+    "methodId": "directory.schemas.delete",
+    "title": "directory.schemas.delete"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_schemas_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.userschema",
+      "https://www.googleapis.com/auth/admin.directory.userschema.readonly"
+    ],
+    "methodId": "directory.schemas.get",
+    "title": "directory.schemas.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_schemas_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.userschema"
+    ],
+    "methodId": "directory.schemas.insert",
+    "title": "directory.schemas.insert"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_schemas_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.userschema",
+      "https://www.googleapis.com/auth/admin.directory.userschema.readonly"
+    ],
+    "methodId": "directory.schemas.list",
+    "title": "directory.schemas.list"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_schemas_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.userschema"
+    ],
+    "methodId": "directory.schemas.patch",
+    "title": "directory.schemas.patch"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_schemas_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.userschema"
+    ],
+    "methodId": "directory.schemas.update",
+    "title": "directory.schemas.update"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_tokens_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.user.security"
+    ],
+    "methodId": "directory.tokens.delete",
+    "title": "directory.tokens.delete"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_tokens_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.user.security"
+    ],
+    "methodId": "directory.tokens.get",
+    "title": "directory.tokens.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_tokens_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.user.security"
+    ],
+    "methodId": "directory.tokens.list",
+    "title": "directory.tokens.list"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_transfers_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.datatransfer",
+      "https://www.googleapis.com/auth/admin.datatransfer.readonly"
+    ],
+    "methodId": "datatransfer.transfers.get",
+    "title": "datatransfer.transfers.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_transfers_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.datatransfer"
+    ],
+    "methodId": "datatransfer.transfers.insert",
+    "title": "datatransfer.transfers.insert"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_transfers_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.datatransfer",
+      "https://www.googleapis.com/auth/admin.datatransfer.readonly"
+    ],
+    "methodId": "datatransfer.transfers.list",
+    "title": "datatransfer.transfers.list"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_two_step_verification_turn_off",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.user.security"
+    ],
+    "methodId": "directory.twoStepVerification.turnOff",
+    "title": "directory.twoStepVerification.turnOff"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_user_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.user"
+    ],
+    "title": "Create user"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_user_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.user"
+    ],
+    "title": "Delete user"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_user_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.user",
+      "https://www.googleapis.com/auth/admin.directory.user.readonly"
+    ],
+    "title": "Get user"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_user_move_org_unit",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.user"
+    ],
+    "title": "Move user to org unit"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_user_set_suspended",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.user"
+    ],
+    "title": "Suspend or restore user"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_user_usage_report_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.reports.usage.readonly"
+    ],
+    "methodId": "reports.userUsageReport.get",
+    "title": "reports.userUsageReport.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_users_aliases_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.user",
+      "https://www.googleapis.com/auth/admin.directory.user.alias"
+    ],
+    "methodId": "directory.users.aliases.delete",
+    "title": "directory.users.aliases.delete"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_users_aliases_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.user",
+      "https://www.googleapis.com/auth/admin.directory.user.alias"
+    ],
+    "methodId": "directory.users.aliases.insert",
+    "title": "directory.users.aliases.insert"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_users_aliases_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.user",
+      "https://www.googleapis.com/auth/admin.directory.user.alias",
+      "https://www.googleapis.com/auth/admin.directory.user.alias.readonly",
+      "https://www.googleapis.com/auth/admin.directory.user.readonly"
+    ],
+    "methodId": "directory.users.aliases.list",
+    "title": "directory.users.aliases.list"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_users_aliases_watch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.user",
+      "https://www.googleapis.com/auth/admin.directory.user.alias",
+      "https://www.googleapis.com/auth/admin.directory.user.alias.readonly",
+      "https://www.googleapis.com/auth/admin.directory.user.readonly"
+    ],
+    "methodId": "directory.users.aliases.watch",
+    "title": "directory.users.aliases.watch"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_users_create_guest",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.user"
+    ],
+    "methodId": "directory.users.createGuest",
+    "title": "directory.users.createGuest"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_users_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.user"
+    ],
+    "methodId": "directory.users.delete",
+    "title": "directory.users.delete"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_users_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.user",
+      "https://www.googleapis.com/auth/admin.directory.user.readonly"
+    ],
+    "methodId": "directory.users.get",
+    "title": "directory.users.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_users_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.user"
+    ],
+    "methodId": "directory.users.insert",
+    "title": "directory.users.insert"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_users_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.user",
+      "https://www.googleapis.com/auth/admin.directory.user.readonly"
+    ],
+    "title": "List users"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_users_list_a3ea",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.user",
+      "https://www.googleapis.com/auth/admin.directory.user.readonly",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "directory.users.list",
+    "title": "directory.users.list"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_users_make_admin",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.user"
+    ],
+    "methodId": "directory.users.makeAdmin",
+    "title": "directory.users.makeAdmin"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_users_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.user"
+    ],
+    "methodId": "directory.users.patch",
+    "title": "directory.users.patch"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_users_photos_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.user"
+    ],
+    "methodId": "directory.users.photos.delete",
+    "title": "directory.users.photos.delete"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_users_photos_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.user",
+      "https://www.googleapis.com/auth/admin.directory.user.readonly"
+    ],
+    "methodId": "directory.users.photos.get",
+    "title": "directory.users.photos.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_users_photos_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.user"
+    ],
+    "methodId": "directory.users.photos.patch",
+    "title": "directory.users.photos.patch"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_users_photos_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.user"
+    ],
+    "methodId": "directory.users.photos.update",
+    "title": "directory.users.photos.update"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_users_sign_out",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.user.security"
+    ],
+    "methodId": "directory.users.signOut",
+    "title": "directory.users.signOut"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_users_undelete",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.user"
+    ],
+    "methodId": "directory.users.undelete",
+    "title": "directory.users.undelete"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_users_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.user"
+    ],
+    "methodId": "directory.users.update",
+    "title": "directory.users.update"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_users_watch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.user",
+      "https://www.googleapis.com/auth/admin.directory.user.readonly",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "directory.users.watch",
+    "title": "directory.users.watch"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_verification_codes_generate",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.user.security"
+    ],
+    "methodId": "directory.verificationCodes.generate",
+    "title": "directory.verificationCodes.generate"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_verification_codes_invalidate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.user.security"
+    ],
+    "methodId": "directory.verificationCodes.invalidate",
+    "title": "directory.verificationCodes.invalidate"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__admin_verification_codes_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/admin.directory.user.security"
+    ],
+    "methodId": "directory.verificationCodes.list",
+    "title": "directory.verificationCodes.list"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__alerts_alerts_batch_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/apps.alerts"
+    ],
+    "methodId": "alertcenter.alerts.batchDelete",
+    "title": "alertcenter.alerts.batchDelete"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__alerts_alerts_batch_undelete",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/apps.alerts"
+    ],
+    "methodId": "alertcenter.alerts.batchUndelete",
+    "title": "alertcenter.alerts.batchUndelete"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__alerts_alerts_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/apps.alerts"
+    ],
+    "methodId": "alertcenter.alerts.delete",
+    "title": "alertcenter.alerts.delete"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__alerts_alerts_feedback_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/apps.alerts"
+    ],
+    "methodId": "alertcenter.alerts.feedback.create",
+    "title": "alertcenter.alerts.feedback.create"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__alerts_alerts_feedback_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/apps.alerts"
+    ],
+    "methodId": "alertcenter.alerts.feedback.list",
+    "title": "alertcenter.alerts.feedback.list"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__alerts_alerts_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/apps.alerts"
+    ],
+    "methodId": "alertcenter.alerts.get",
+    "title": "alertcenter.alerts.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__alerts_alerts_get_metadata",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/apps.alerts"
+    ],
+    "methodId": "alertcenter.alerts.getMetadata",
+    "title": "alertcenter.alerts.getMetadata"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__alerts_alerts_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/apps.alerts"
+    ],
+    "methodId": "alertcenter.alerts.list",
+    "title": "alertcenter.alerts.list"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__alerts_alerts_undelete",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/apps.alerts"
+    ],
+    "methodId": "alertcenter.alerts.undelete",
+    "title": "alertcenter.alerts.undelete"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__alerts_v1beta1_get_settings",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/apps.alerts"
+    ],
+    "methodId": "alertcenter.getSettings",
+    "title": "alertcenter.getSettings"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__alerts_v1beta1_update_settings",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/apps.alerts"
+    ],
+    "methodId": "alertcenter.updateSettings",
+    "title": "alertcenter.updateSettings"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__api_call",
+    "kind": "dynamic",
+    "scopes": [],
+    "title": "Call an API method"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__api_describe",
+    "kind": "read",
+    "scopes": [],
+    "title": "Describe an API method"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__api_methods",
+    "kind": "read",
+    "scopes": [],
+    "title": "gadmin: API methods"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__api_search",
+    "kind": "read",
+    "scopes": [],
+    "title": "Search API methods"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__chromepoli_cust_poli_group_batch_862a",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/chrome.management.policy"
+    ],
+    "methodId": "chromepolicy.customers.policies.groups.batchDelete",
+    "title": "chromepolicy.customers.policies.groups.batchDelete"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__chromepoli_cust_poli_group_batch_c498",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/chrome.management.policy"
+    ],
+    "methodId": "chromepolicy.customers.policies.groups.batchModify",
+    "title": "chromepolicy.customers.policies.groups.batchModify"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__chromepoli_cust_poli_netwo_defin_020b",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/chrome.management.policy"
+    ],
+    "methodId": "chromepolicy.customers.policies.networks.defineNetwork",
+    "title": "chromepolicy.customers.policies.networks.defineNetwork"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__chromepoli_cust_poli_netwo_defin_84ef",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/chrome.management.policy"
+    ],
+    "methodId": "chromepolicy.customers.policies.networks.defineCertificate",
+    "title": "chromepolicy.customers.policies.networks.defineCertificate"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__chromepoli_cust_poli_netwo_remov_5af6",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/chrome.management.policy"
+    ],
+    "methodId": "chromepolicy.customers.policies.networks.removeNetwork",
+    "title": "chromepolicy.customers.policies.networks.removeNetwork"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__chromepoli_cust_poli_netwo_remov_dd3a",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/chrome.management.policy"
+    ],
+    "methodId": "chromepolicy.customers.policies.networks.removeCertificate",
+    "title": "chromepolicy.customers.policies.networks.removeCertificate"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__chromepoli_cust_poli_orgun_batch_74a0",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/chrome.management.policy"
+    ],
+    "methodId": "chromepolicy.customers.policies.orgunits.batchInherit",
+    "title": "chromepolicy.customers.policies.orgunits.batchInherit"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__chromepoli_cust_poli_orgun_batch_aaa3",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/chrome.management.policy"
+    ],
+    "methodId": "chromepolicy.customers.policies.orgunits.batchModify",
+    "title": "chromepolicy.customers.policies.orgunits.batchModify"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__chromepoli_custo_polici_groups_list_g",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/chrome.management.policy",
+      "https://www.googleapis.com/auth/chrome.management.policy.readonly"
+    ],
+    "methodId": "chromepolicy.customers.policies.groups.listGroupPriorityOrdering",
+    "title": "chromepolicy.customers.policies.groups.listGroupPriorityOrdering"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__chromepoli_custo_polici_groups_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/chrome.management.policy"
+    ],
+    "methodId": "chromepolicy.customers.policies.groups.updateGroupPriorityOrdering",
+    "title": "chromepolicy.customers.policies.groups.updateGroupPriorityOrdering"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__chromepoli_customers_policies_resolve",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/chrome.management.policy",
+      "https://www.googleapis.com/auth/chrome.management.policy.readonly"
+    ],
+    "methodId": "chromepolicy.customers.policies.resolve",
+    "title": "chromepolicy.customers.policies.resolve"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__chromepoli_customers_policy_sche_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/chrome.management.policy",
+      "https://www.googleapis.com/auth/chrome.management.policy.readonly"
+    ],
+    "methodId": "chromepolicy.customers.policySchemas.list",
+    "title": "chromepolicy.customers.policySchemas.list"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__chromepoli_customers_policy_schem_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/chrome.management.policy",
+      "https://www.googleapis.com/auth/chrome.management.policy.readonly"
+    ],
+    "methodId": "chromepolicy.customers.policySchemas.get",
+    "title": "chromepolicy.customers.policySchemas.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_allowlisted_domains_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.allowlisteddomains"
+    ],
+    "methodId": "cloudidentity.allowlistedDomains.create",
+    "title": "cloudidentity.allowlistedDomains.create"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_allowlisted_domains_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.allowlisteddomains"
+    ],
+    "methodId": "cloudidentity.allowlistedDomains.delete",
+    "title": "cloudidentity.allowlistedDomains.delete"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_allowlisted_domains_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.allowlisteddomains",
+      "https://www.googleapis.com/auth/cloud-identity.allowlisteddomains.readonly"
+    ],
+    "methodId": "cloudidentity.allowlistedDomains.get",
+    "title": "cloudidentity.allowlistedDomains.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_allowlisted_domains_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.allowlisteddomains",
+      "https://www.googleapis.com/auth/cloud-identity.allowlisteddomains.readonly"
+    ],
+    "methodId": "cloudidentity.allowlistedDomains.list",
+    "title": "cloudidentity.allowlistedDomains.list"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_customers_userinvit_is_invita",
+    "kind": "read",
+    "scopes": [],
+    "methodId": "cloudidentity.customers.userinvitations.isInvitableUser",
+    "title": "cloudidentity.customers.userinvitations.isInvitableUser"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_customers_userinvitati_cancel",
+    "kind": "destructive",
+    "scopes": [],
+    "methodId": "cloudidentity.customers.userinvitations.cancel",
+    "title": "cloudidentity.customers.userinvitations.cancel"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_customers_userinvitation_list",
+    "kind": "read",
+    "scopes": [],
+    "methodId": "cloudidentity.customers.userinvitations.list",
+    "title": "cloudidentity.customers.userinvitations.list"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_customers_userinvitation_send",
+    "kind": "destructive",
+    "scopes": [],
+    "methodId": "cloudidentity.customers.userinvitations.send",
+    "title": "cloudidentity.customers.userinvitations.send"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_customers_userinvitations_get",
+    "kind": "read",
+    "scopes": [],
+    "methodId": "cloudidentity.customers.userinvitations.get",
+    "title": "cloudidentity.customers.userinvitations.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_devices_cancel_wipe",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.devices"
+    ],
+    "methodId": "cloudidentity.devices.cancelWipe",
+    "title": "cloudidentity.devices.cancelWipe"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_devices_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.devices"
+    ],
+    "methodId": "cloudidentity.devices.create",
+    "title": "cloudidentity.devices.create"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_devices_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.devices"
+    ],
+    "methodId": "cloudidentity.devices.delete",
+    "title": "cloudidentity.devices.delete"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_devices_device_client_s_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.devices",
+      "https://www.googleapis.com/auth/cloud-identity.devices.readonly"
+    ],
+    "methodId": "cloudidentity.devices.deviceUsers.clientStates.list",
+    "title": "cloudidentity.devices.deviceUsers.clientStates.list"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_devices_device_client_s_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.devices"
+    ],
+    "methodId": "cloudidentity.devices.deviceUsers.clientStates.patch",
+    "title": "cloudidentity.devices.deviceUsers.clientStates.patch"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_devices_device_u_client_s_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.devices",
+      "https://www.googleapis.com/auth/cloud-identity.devices.readonly"
+    ],
+    "methodId": "cloudidentity.devices.deviceUsers.clientStates.get",
+    "title": "cloudidentity.devices.deviceUsers.clientStates.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_devices_device_use_cancel_wip",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.devices"
+    ],
+    "methodId": "cloudidentity.devices.deviceUsers.cancelWipe",
+    "title": "cloudidentity.devices.deviceUsers.cancelWipe"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_devices_device_users_approve",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.devices"
+    ],
+    "methodId": "cloudidentity.devices.deviceUsers.approve",
+    "title": "cloudidentity.devices.deviceUsers.approve"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_devices_device_users_block",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.devices"
+    ],
+    "methodId": "cloudidentity.devices.deviceUsers.block",
+    "title": "cloudidentity.devices.deviceUsers.block"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_devices_device_users_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.devices"
+    ],
+    "methodId": "cloudidentity.devices.deviceUsers.delete",
+    "title": "cloudidentity.devices.deviceUsers.delete"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_devices_device_users_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.devices",
+      "https://www.googleapis.com/auth/cloud-identity.devices.readonly"
+    ],
+    "methodId": "cloudidentity.devices.deviceUsers.get",
+    "title": "cloudidentity.devices.deviceUsers.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_devices_device_users_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.devices",
+      "https://www.googleapis.com/auth/cloud-identity.devices.readonly"
+    ],
+    "methodId": "cloudidentity.devices.deviceUsers.list",
+    "title": "cloudidentity.devices.deviceUsers.list"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_devices_device_users_lookup",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.devices.lookup"
+    ],
+    "methodId": "cloudidentity.devices.deviceUsers.lookup",
+    "title": "cloudidentity.devices.deviceUsers.lookup"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_devices_device_users_wipe",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.devices"
+    ],
+    "methodId": "cloudidentity.devices.deviceUsers.wipe",
+    "title": "cloudidentity.devices.deviceUsers.wipe"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_devices_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.devices",
+      "https://www.googleapis.com/auth/cloud-identity.devices.readonly"
+    ],
+    "methodId": "cloudidentity.devices.get",
+    "title": "cloudidentity.devices.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_devices_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.devices",
+      "https://www.googleapis.com/auth/cloud-identity.devices.readonly"
+    ],
+    "methodId": "cloudidentity.devices.list",
+    "title": "cloudidentity.devices.list"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_devices_wipe",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.devices"
+    ],
+    "methodId": "cloudidentity.devices.wipe",
+    "title": "cloudidentity.devices.wipe"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_groups_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.groups",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "cloudidentity.groups.create",
+    "title": "cloudidentity.groups.create"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_groups_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.groups",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "cloudidentity.groups.delete",
+    "title": "cloudidentity.groups.delete"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_groups_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.groups",
+      "https://www.googleapis.com/auth/cloud-identity.groups.readonly",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "cloudidentity.groups.get",
+    "title": "cloudidentity.groups.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_groups_get_security_settings",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.groups",
+      "https://www.googleapis.com/auth/cloud-identity.groups.readonly",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "cloudidentity.groups.getSecuritySettings",
+    "title": "cloudidentity.groups.getSecuritySettings"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_groups_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.groups",
+      "https://www.googleapis.com/auth/cloud-identity.groups.readonly",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "cloudidentity.groups.list",
+    "title": "cloudidentity.groups.list"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_groups_lookup",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.groups",
+      "https://www.googleapis.com/auth/cloud-identity.groups.readonly",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "cloudidentity.groups.lookup",
+    "title": "cloudidentity.groups.lookup"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_groups_membersh_search_t_0765",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.groups",
+      "https://www.googleapis.com/auth/cloud-identity.groups.readonly",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "cloudidentity.groups.memberships.searchTransitiveGroups",
+    "title": "cloudidentity.groups.memberships.searchTransitiveGroups"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_groups_membersh_search_t_50d2",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.groups",
+      "https://www.googleapis.com/auth/cloud-identity.groups.readonly",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "cloudidentity.groups.memberships.searchTransitiveMemberships",
+    "title": "cloudidentity.groups.memberships.searchTransitiveMemberships"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_groups_membership_check_trans",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.groups",
+      "https://www.googleapis.com/auth/cloud-identity.groups.readonly",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "cloudidentity.groups.memberships.checkTransitiveMembership",
+    "title": "cloudidentity.groups.memberships.checkTransitiveMembership"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_groups_membership_get_members",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.groups",
+      "https://www.googleapis.com/auth/cloud-identity.groups.readonly",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "cloudidentity.groups.memberships.getMembershipGraph",
+    "title": "cloudidentity.groups.memberships.getMembershipGraph"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_groups_membership_modify_memb",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.groups",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "cloudidentity.groups.memberships.modifyMembershipRoles",
+    "title": "cloudidentity.groups.memberships.modifyMembershipRoles"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_groups_membership_search_dire",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.groups",
+      "https://www.googleapis.com/auth/cloud-identity.groups.readonly",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "cloudidentity.groups.memberships.searchDirectGroups",
+    "title": "cloudidentity.groups.memberships.searchDirectGroups"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_groups_memberships_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.groups",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "cloudidentity.groups.memberships.create",
+    "title": "cloudidentity.groups.memberships.create"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_groups_memberships_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.groups",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "cloudidentity.groups.memberships.delete",
+    "title": "cloudidentity.groups.memberships.delete"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_groups_memberships_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.groups",
+      "https://www.googleapis.com/auth/cloud-identity.groups.readonly",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "cloudidentity.groups.memberships.get",
+    "title": "cloudidentity.groups.memberships.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_groups_memberships_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.groups",
+      "https://www.googleapis.com/auth/cloud-identity.groups.readonly",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "cloudidentity.groups.memberships.list",
+    "title": "cloudidentity.groups.memberships.list"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_groups_memberships_lookup",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.groups",
+      "https://www.googleapis.com/auth/cloud-identity.groups.readonly",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "cloudidentity.groups.memberships.lookup",
+    "title": "cloudidentity.groups.memberships.lookup"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_groups_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.groups",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "cloudidentity.groups.patch",
+    "title": "cloudidentity.groups.patch"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_groups_search",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.groups",
+      "https://www.googleapis.com/auth/cloud-identity.groups.readonly",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "cloudidentity.groups.search",
+    "title": "cloudidentity.groups.search"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_groups_update_security_settin",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.groups",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "cloudidentity.groups.updateSecuritySettings",
+    "title": "cloudidentity.groups.updateSecuritySettings"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_inbound_oidc_sso_profi_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.inboundsso",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "cloudidentity.inboundOidcSsoProfiles.create",
+    "title": "cloudidentity.inboundOidcSsoProfiles.create"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_inbound_oidc_sso_profi_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.inboundsso",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "cloudidentity.inboundOidcSsoProfiles.delete",
+    "title": "cloudidentity.inboundOidcSsoProfiles.delete"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_inbound_oidc_sso_profil_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.inboundsso",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "cloudidentity.inboundOidcSsoProfiles.patch",
+    "title": "cloudidentity.inboundOidcSsoProfiles.patch"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_inbound_oidc_sso_profile_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.inboundsso",
+      "https://www.googleapis.com/auth/cloud-identity.inboundsso.readonly",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "cloudidentity.inboundOidcSsoProfiles.list",
+    "title": "cloudidentity.inboundOidcSsoProfiles.list"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_inbound_oidc_sso_profiles_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.inboundsso",
+      "https://www.googleapis.com/auth/cloud-identity.inboundsso.readonly",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "cloudidentity.inboundOidcSsoProfiles.get",
+    "title": "cloudidentity.inboundOidcSsoProfiles.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_inbound_sa_idp_credent_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.inboundsso",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "cloudidentity.inboundSamlSsoProfiles.idpCredentials.delete",
+    "title": "cloudidentity.inboundSamlSsoProfiles.idpCredentials.delete"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_inbound_sam_idp_credenti_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.inboundsso",
+      "https://www.googleapis.com/auth/cloud-identity.inboundsso.readonly",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "cloudidentity.inboundSamlSsoProfiles.idpCredentials.list",
+    "title": "cloudidentity.inboundSamlSsoProfiles.idpCredentials.list"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_inbound_saml_idp_credenti_add",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.inboundsso",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "cloudidentity.inboundSamlSsoProfiles.idpCredentials.add",
+    "title": "cloudidentity.inboundSamlSsoProfiles.idpCredentials.add"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_inbound_saml_idp_credenti_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.inboundsso",
+      "https://www.googleapis.com/auth/cloud-identity.inboundsso.readonly",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "cloudidentity.inboundSamlSsoProfiles.idpCredentials.get",
+    "title": "cloudidentity.inboundSamlSsoProfiles.idpCredentials.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_inbound_saml_sso_profi_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.inboundsso",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "cloudidentity.inboundSamlSsoProfiles.create",
+    "title": "cloudidentity.inboundSamlSsoProfiles.create"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_inbound_saml_sso_profi_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.inboundsso",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "cloudidentity.inboundSamlSsoProfiles.delete",
+    "title": "cloudidentity.inboundSamlSsoProfiles.delete"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_inbound_saml_sso_profil_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.inboundsso",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "cloudidentity.inboundSamlSsoProfiles.patch",
+    "title": "cloudidentity.inboundSamlSsoProfiles.patch"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_inbound_saml_sso_profile_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.inboundsso",
+      "https://www.googleapis.com/auth/cloud-identity.inboundsso.readonly",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "cloudidentity.inboundSamlSsoProfiles.list",
+    "title": "cloudidentity.inboundSamlSsoProfiles.list"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_inbound_saml_sso_profiles_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.inboundsso",
+      "https://www.googleapis.com/auth/cloud-identity.inboundsso.readonly",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "cloudidentity.inboundSamlSsoProfiles.get",
+    "title": "cloudidentity.inboundSamlSsoProfiles.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_inbound_sso_assignment_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.inboundsso",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "cloudidentity.inboundSsoAssignments.create",
+    "title": "cloudidentity.inboundSsoAssignments.create"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_inbound_sso_assignment_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.inboundsso",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "cloudidentity.inboundSsoAssignments.delete",
+    "title": "cloudidentity.inboundSsoAssignments.delete"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_inbound_sso_assignments_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.inboundsso",
+      "https://www.googleapis.com/auth/cloud-identity.inboundsso.readonly",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "cloudidentity.inboundSsoAssignments.get",
+    "title": "cloudidentity.inboundSsoAssignments.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_inbound_sso_assignments_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.inboundsso",
+      "https://www.googleapis.com/auth/cloud-identity.inboundsso.readonly",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "cloudidentity.inboundSsoAssignments.list",
+    "title": "cloudidentity.inboundSsoAssignments.list"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_inbound_sso_assignments_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.inboundsso",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "cloudidentity.inboundSsoAssignments.patch",
+    "title": "cloudidentity.inboundSsoAssignments.patch"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_policies_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.policies"
+    ],
+    "methodId": "cloudidentity.policies.create",
+    "title": "cloudidentity.policies.create"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_policies_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.policies"
+    ],
+    "methodId": "cloudidentity.policies.delete",
+    "title": "cloudidentity.policies.delete"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_policies_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.policies",
+      "https://www.googleapis.com/auth/cloud-identity.policies.readonly"
+    ],
+    "methodId": "cloudidentity.policies.get",
+    "title": "cloudidentity.policies.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_policies_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.policies",
+      "https://www.googleapis.com/auth/cloud-identity.policies.readonly"
+    ],
+    "methodId": "cloudidentity.policies.list",
+    "title": "cloudidentity.policies.list"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudid_policies_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-identity.policies"
+    ],
+    "methodId": "cloudidentity.policies.patch",
+    "title": "cloudidentity.policies.patch"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudsearc_debu_data_items_unmap_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud_search",
+      "https://www.googleapis.com/auth/cloud_search.debug"
+    ],
+    "methodId": "cloudsearch.debug.datasources.items.unmappedids.list",
+    "title": "cloudsearch.debug.datasources.items.unmappedids.list"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudsearc_debug_dataso_items_check_a",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud_search",
+      "https://www.googleapis.com/auth/cloud_search.debug"
+    ],
+    "methodId": "cloudsearch.debug.datasources.items.checkAccess",
+    "title": "cloudsearch.debug.datasources.items.checkAccess"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudsearc_debug_datasou_items_search",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud_search",
+      "https://www.googleapis.com/auth/cloud_search.debug"
+    ],
+    "methodId": "cloudsearch.debug.datasources.items.searchByViewUrl",
+    "title": "cloudsearch.debug.datasources.items.searchByViewUrl"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudsearc_debug_identi_items_list_fo",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud_search",
+      "https://www.googleapis.com/auth/cloud_search.debug"
+    ],
+    "methodId": "cloudsearch.debug.identitysources.items.listForunmappedidentity",
+    "title": "cloudsearch.debug.identitysources.items.listForunmappedidentity"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudsearc_debug_identit_unmappe_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud_search",
+      "https://www.googleapis.com/auth/cloud_search.debug"
+    ],
+    "methodId": "cloudsearch.debug.identitysources.unmappedids.list",
+    "title": "cloudsearch.debug.identitysources.unmappedids.list"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudsearc_inde_data_items_delet_3223",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud_search",
+      "https://www.googleapis.com/auth/cloud_search.indexing"
+    ],
+    "methodId": "cloudsearch.indexing.datasources.items.deleteQueueItems",
+    "title": "cloudsearch.indexing.datasources.items.deleteQueueItems"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudsearc_inde_data_items_delet_8e25",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud_search",
+      "https://www.googleapis.com/auth/cloud_search.indexing"
+    ],
+    "methodId": "cloudsearch.indexing.datasources.items.delete",
+    "title": "cloudsearch.indexing.datasources.items.delete"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudsearc_indexi_dataso_items_unrese",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud_search",
+      "https://www.googleapis.com/auth/cloud_search.indexing"
+    ],
+    "methodId": "cloudsearch.indexing.datasources.items.unreserve",
+    "title": "cloudsearch.indexing.datasources.items.unreserve"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudsearc_indexi_dataso_items_upload",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud_search",
+      "https://www.googleapis.com/auth/cloud_search.indexing"
+    ],
+    "methodId": "cloudsearch.indexing.datasources.items.upload",
+    "title": "cloudsearch.indexing.datasources.items.upload"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudsearc_indexi_datasou_items_index",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud_search",
+      "https://www.googleapis.com/auth/cloud_search.indexing"
+    ],
+    "methodId": "cloudsearch.indexing.datasources.items.index",
+    "title": "cloudsearch.indexing.datasources.items.index"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudsearc_indexin_datasou_items_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud_search",
+      "https://www.googleapis.com/auth/cloud_search.indexing"
+    ],
+    "methodId": "cloudsearch.indexing.datasources.items.list",
+    "title": "cloudsearch.indexing.datasources.items.list"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudsearc_indexin_datasou_items_poll",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud_search",
+      "https://www.googleapis.com/auth/cloud_search.indexing"
+    ],
+    "methodId": "cloudsearch.indexing.datasources.items.poll",
+    "title": "cloudsearch.indexing.datasources.items.poll"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudsearc_indexin_datasou_items_push",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud_search",
+      "https://www.googleapis.com/auth/cloud_search.indexing"
+    ],
+    "methodId": "cloudsearch.indexing.datasources.items.push",
+    "title": "cloudsearch.indexing.datasources.items.push"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudsearc_indexin_datasour_items_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud_search",
+      "https://www.googleapis.com/auth/cloud_search.indexing"
+    ],
+    "methodId": "cloudsearch.indexing.datasources.items.get",
+    "title": "cloudsearch.indexing.datasources.items.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudsearc_indexing_datasour_delete_s",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud_search",
+      "https://www.googleapis.com/auth/cloud_search.settings",
+      "https://www.googleapis.com/auth/cloud_search.settings.indexing"
+    ],
+    "methodId": "cloudsearch.indexing.datasources.deleteSchema",
+    "title": "cloudsearch.indexing.datasources.deleteSchema"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudsearc_indexing_datasour_get_sche",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud_search",
+      "https://www.googleapis.com/auth/cloud_search.settings",
+      "https://www.googleapis.com/auth/cloud_search.settings.indexing"
+    ],
+    "methodId": "cloudsearch.indexing.datasources.getSchema",
+    "title": "cloudsearch.indexing.datasources.getSchema"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudsearc_indexing_datasour_update_s",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud_search",
+      "https://www.googleapis.com/auth/cloud_search.settings",
+      "https://www.googleapis.com/auth/cloud_search.settings.indexing"
+    ],
+    "methodId": "cloudsearch.indexing.datasources.updateSchema",
+    "title": "cloudsearch.indexing.datasources.updateSchema"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudsearc_operations_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud_search",
+      "https://www.googleapis.com/auth/cloud_search.debug",
+      "https://www.googleapis.com/auth/cloud_search.indexing",
+      "https://www.googleapis.com/auth/cloud_search.settings",
+      "https://www.googleapis.com/auth/cloud_search.settings.indexing",
+      "https://www.googleapis.com/auth/cloud_search.settings.query"
+    ],
+    "methodId": "cloudsearch.operations.get",
+    "title": "cloudsearch.operations.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudsearc_operations_lro_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud_search",
+      "https://www.googleapis.com/auth/cloud_search.debug",
+      "https://www.googleapis.com/auth/cloud_search.indexing",
+      "https://www.googleapis.com/auth/cloud_search.settings",
+      "https://www.googleapis.com/auth/cloud_search.settings.indexing",
+      "https://www.googleapis.com/auth/cloud_search.settings.query"
+    ],
+    "methodId": "cloudsearch.operations.lro.list",
+    "title": "cloudsearch.operations.lro.list"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudsearc_query_remove_activity",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud_search",
+      "https://www.googleapis.com/auth/cloud_search.query"
+    ],
+    "methodId": "cloudsearch.query.removeActivity",
+    "title": "cloudsearch.query.removeActivity"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudsearc_query_search",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud_search",
+      "https://www.googleapis.com/auth/cloud_search.query"
+    ],
+    "methodId": "cloudsearch.query.search",
+    "title": "cloudsearch.query.search"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudsearc_query_sources_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud_search",
+      "https://www.googleapis.com/auth/cloud_search.query"
+    ],
+    "methodId": "cloudsearch.query.sources.list",
+    "title": "cloudsearch.query.sources.list"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudsearc_query_suggest",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud_search",
+      "https://www.googleapis.com/auth/cloud_search.query"
+    ],
+    "methodId": "cloudsearch.query.suggest",
+    "title": "cloudsearch.query.suggest"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudsearc_settings_datasource_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud_search",
+      "https://www.googleapis.com/auth/cloud_search.settings",
+      "https://www.googleapis.com/auth/cloud_search.settings.indexing"
+    ],
+    "methodId": "cloudsearch.settings.datasources.create",
+    "title": "cloudsearch.settings.datasources.create"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudsearc_settings_datasource_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud_search",
+      "https://www.googleapis.com/auth/cloud_search.settings",
+      "https://www.googleapis.com/auth/cloud_search.settings.indexing"
+    ],
+    "methodId": "cloudsearch.settings.datasources.delete",
+    "title": "cloudsearch.settings.datasources.delete"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudsearc_settings_datasource_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud_search",
+      "https://www.googleapis.com/auth/cloud_search.settings",
+      "https://www.googleapis.com/auth/cloud_search.settings.indexing"
+    ],
+    "methodId": "cloudsearch.settings.datasources.update",
+    "title": "cloudsearch.settings.datasources.update"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudsearc_settings_datasources_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud_search",
+      "https://www.googleapis.com/auth/cloud_search.settings",
+      "https://www.googleapis.com/auth/cloud_search.settings.indexing"
+    ],
+    "methodId": "cloudsearch.settings.datasources.get",
+    "title": "cloudsearch.settings.datasources.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudsearc_settings_datasources_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud_search",
+      "https://www.googleapis.com/auth/cloud_search.settings",
+      "https://www.googleapis.com/auth/cloud_search.settings.indexing"
+    ],
+    "methodId": "cloudsearch.settings.datasources.list",
+    "title": "cloudsearch.settings.datasources.list"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudsearc_settings_datasources_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud_search",
+      "https://www.googleapis.com/auth/cloud_search.settings",
+      "https://www.googleapis.com/auth/cloud_search.settings.indexing"
+    ],
+    "methodId": "cloudsearch.settings.datasources.patch",
+    "title": "cloudsearch.settings.datasources.patch"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudsearc_settings_get_customer",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud_search",
+      "https://www.googleapis.com/auth/cloud_search.settings",
+      "https://www.googleapis.com/auth/cloud_search.settings.indexing"
+    ],
+    "methodId": "cloudsearch.settings.getCustomer",
+    "title": "cloudsearch.settings.getCustomer"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudsearc_settings_searchappl_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud_search",
+      "https://www.googleapis.com/auth/cloud_search.settings",
+      "https://www.googleapis.com/auth/cloud_search.settings.query"
+    ],
+    "methodId": "cloudsearch.settings.searchapplications.create",
+    "title": "cloudsearch.settings.searchapplications.create"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudsearc_settings_searchappl_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud_search",
+      "https://www.googleapis.com/auth/cloud_search.settings",
+      "https://www.googleapis.com/auth/cloud_search.settings.query"
+    ],
+    "methodId": "cloudsearch.settings.searchapplications.delete",
+    "title": "cloudsearch.settings.searchapplications.delete"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudsearc_settings_searchappl_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud_search",
+      "https://www.googleapis.com/auth/cloud_search.settings",
+      "https://www.googleapis.com/auth/cloud_search.settings.query"
+    ],
+    "methodId": "cloudsearch.settings.searchapplications.update",
+    "title": "cloudsearch.settings.searchapplications.update"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudsearc_settings_searchappli_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud_search",
+      "https://www.googleapis.com/auth/cloud_search.settings",
+      "https://www.googleapis.com/auth/cloud_search.settings.query"
+    ],
+    "methodId": "cloudsearch.settings.searchapplications.patch",
+    "title": "cloudsearch.settings.searchapplications.patch"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudsearc_settings_searchappli_reset",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud_search",
+      "https://www.googleapis.com/auth/cloud_search.settings",
+      "https://www.googleapis.com/auth/cloud_search.settings.query"
+    ],
+    "methodId": "cloudsearch.settings.searchapplications.reset",
+    "title": "cloudsearch.settings.searchapplications.reset"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudsearc_settings_searchapplic_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud_search",
+      "https://www.googleapis.com/auth/cloud_search.settings",
+      "https://www.googleapis.com/auth/cloud_search.settings.query"
+    ],
+    "methodId": "cloudsearch.settings.searchapplications.list",
+    "title": "cloudsearch.settings.searchapplications.list"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudsearc_settings_searchapplica_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud_search",
+      "https://www.googleapis.com/auth/cloud_search.settings",
+      "https://www.googleapis.com/auth/cloud_search.settings.query"
+    ],
+    "methodId": "cloudsearch.settings.searchapplications.get",
+    "title": "cloudsearch.settings.searchapplications.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudsearc_settings_update_customer",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud_search",
+      "https://www.googleapis.com/auth/cloud_search.settings",
+      "https://www.googleapis.com/auth/cloud_search.settings.indexing"
+    ],
+    "methodId": "cloudsearch.settings.updateCustomer",
+    "title": "cloudsearch.settings.updateCustomer"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudsearc_stats_get_index",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud_search",
+      "https://www.googleapis.com/auth/cloud_search.stats",
+      "https://www.googleapis.com/auth/cloud_search.stats.indexing"
+    ],
+    "methodId": "cloudsearch.stats.getIndex",
+    "title": "cloudsearch.stats.getIndex"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudsearc_stats_get_query",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud_search",
+      "https://www.googleapis.com/auth/cloud_search.stats",
+      "https://www.googleapis.com/auth/cloud_search.stats.indexing"
+    ],
+    "methodId": "cloudsearch.stats.getQuery",
+    "title": "cloudsearch.stats.getQuery"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudsearc_stats_get_searchapplicatio",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud_search",
+      "https://www.googleapis.com/auth/cloud_search.stats",
+      "https://www.googleapis.com/auth/cloud_search.stats.indexing"
+    ],
+    "methodId": "cloudsearch.stats.getSearchapplication",
+    "title": "cloudsearch.stats.getSearchapplication"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudsearc_stats_get_session",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud_search",
+      "https://www.googleapis.com/auth/cloud_search.stats",
+      "https://www.googleapis.com/auth/cloud_search.stats.indexing"
+    ],
+    "methodId": "cloudsearch.stats.getSession",
+    "title": "cloudsearch.stats.getSession"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudsearc_stats_get_user",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud_search",
+      "https://www.googleapis.com/auth/cloud_search.stats",
+      "https://www.googleapis.com/auth/cloud_search.stats.indexing"
+    ],
+    "methodId": "cloudsearch.stats.getUser",
+    "title": "cloudsearch.stats.getUser"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudsearc_stats_index_datasource_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud_search",
+      "https://www.googleapis.com/auth/cloud_search.stats",
+      "https://www.googleapis.com/auth/cloud_search.stats.indexing"
+    ],
+    "methodId": "cloudsearch.stats.index.datasources.get",
+    "title": "cloudsearch.stats.index.datasources.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudsearc_stats_query_searchappl_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud_search",
+      "https://www.googleapis.com/auth/cloud_search.stats",
+      "https://www.googleapis.com/auth/cloud_search.stats.indexing"
+    ],
+    "methodId": "cloudsearch.stats.query.searchapplications.get",
+    "title": "cloudsearch.stats.query.searchapplications.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudsearc_stats_session_searchap_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud_search",
+      "https://www.googleapis.com/auth/cloud_search.stats",
+      "https://www.googleapis.com/auth/cloud_search.stats.indexing"
+    ],
+    "methodId": "cloudsearch.stats.session.searchapplications.get",
+    "title": "cloudsearch.stats.session.searchapplications.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudsearc_stats_user_searchappli_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud_search",
+      "https://www.googleapis.com/auth/cloud_search.stats",
+      "https://www.googleapis.com/auth/cloud_search.stats.indexing"
+    ],
+    "methodId": "cloudsearch.stats.user.searchapplications.get",
+    "title": "cloudsearch.stats.user.searchapplications.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__cloudsearc_v1_initialize_customer",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud_search",
+      "https://www.googleapis.com/auth/cloud_search.settings",
+      "https://www.googleapis.com/auth/cloud_search.settings.indexing"
+    ],
+    "methodId": "cloudsearch.initializeCustomer",
+    "title": "cloudsearch.initializeCustomer"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__groupset_groups_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/apps.groups.settings"
+    ],
+    "methodId": "groupsSettings.groups.get",
+    "title": "groupsSettings.groups.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__groupset_groups_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/apps.groups.settings"
+    ],
+    "methodId": "groupsSettings.groups.patch",
+    "title": "groupsSettings.groups.patch"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__groupset_groups_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/apps.groups.settings"
+    ],
+    "methodId": "groupsSettings.groups.update",
+    "title": "groupsSettings.groups.update"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__license_license_ass_list_for_pro_17d9",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/apps.licensing"
+    ],
+    "methodId": "licensing.licenseAssignments.listForProduct",
+    "title": "licensing.licenseAssignments.listForProduct"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__license_license_ass_list_for_pro_9489",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/apps.licensing"
+    ],
+    "methodId": "licensing.licenseAssignments.listForProductAndSku",
+    "title": "licensing.licenseAssignments.listForProductAndSku"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__license_license_assignments_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/apps.licensing"
+    ],
+    "methodId": "licensing.licenseAssignments.delete",
+    "title": "licensing.licenseAssignments.delete"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__license_license_assignments_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/apps.licensing"
+    ],
+    "methodId": "licensing.licenseAssignments.get",
+    "title": "licensing.licenseAssignments.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__license_license_assignments_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/apps.licensing"
+    ],
+    "methodId": "licensing.licenseAssignments.insert",
+    "title": "licensing.licenseAssignments.insert"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__license_license_assignments_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/apps.licensing"
+    ],
+    "methodId": "licensing.licenseAssignments.patch",
+    "title": "licensing.licenseAssignments.patch"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__license_license_assignments_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/apps.licensing"
+    ],
+    "methodId": "licensing.licenseAssignments.update",
+    "title": "licensing.licenseAssignments.update"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__reseller_customers_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/apps.order",
+      "https://www.googleapis.com/auth/apps.order.readonly"
+    ],
+    "methodId": "reseller.customers.get",
+    "title": "reseller.customers.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__reseller_customers_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/apps.order"
+    ],
+    "methodId": "reseller.customers.insert",
+    "title": "reseller.customers.insert"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__reseller_customers_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/apps.order"
+    ],
+    "methodId": "reseller.customers.patch",
+    "title": "reseller.customers.patch"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__reseller_customers_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/apps.order"
+    ],
+    "methodId": "reseller.customers.update",
+    "title": "reseller.customers.update"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__reseller_resellernotif_getwatchdetail",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/apps.order",
+      "https://www.googleapis.com/auth/apps.order.readonly"
+    ],
+    "methodId": "reseller.resellernotify.getwatchdetails",
+    "title": "reseller.resellernotify.getwatchdetails"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__reseller_resellernotify_register",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/apps.order"
+    ],
+    "methodId": "reseller.resellernotify.register",
+    "title": "reseller.resellernotify.register"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__reseller_resellernotify_unregister",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/apps.order"
+    ],
+    "methodId": "reseller.resellernotify.unregister",
+    "title": "reseller.resellernotify.unregister"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__reseller_subscriptions_activate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/apps.order"
+    ],
+    "methodId": "reseller.subscriptions.activate",
+    "title": "reseller.subscriptions.activate"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__reseller_subscriptions_change_plan",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/apps.order"
+    ],
+    "methodId": "reseller.subscriptions.changePlan",
+    "title": "reseller.subscriptions.changePlan"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__reseller_subscriptions_change_renewal",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/apps.order"
+    ],
+    "methodId": "reseller.subscriptions.changeRenewalSettings",
+    "title": "reseller.subscriptions.changeRenewalSettings"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__reseller_subscriptions_change_seats",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/apps.order"
+    ],
+    "methodId": "reseller.subscriptions.changeSeats",
+    "title": "reseller.subscriptions.changeSeats"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__reseller_subscriptions_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/apps.order"
+    ],
+    "methodId": "reseller.subscriptions.delete",
+    "title": "reseller.subscriptions.delete"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__reseller_subscriptions_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/apps.order",
+      "https://www.googleapis.com/auth/apps.order.readonly"
+    ],
+    "methodId": "reseller.subscriptions.get",
+    "title": "reseller.subscriptions.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__reseller_subscriptions_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/apps.order"
+    ],
+    "methodId": "reseller.subscriptions.insert",
+    "title": "reseller.subscriptions.insert"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__reseller_subscriptions_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/apps.order",
+      "https://www.googleapis.com/auth/apps.order.readonly"
+    ],
+    "methodId": "reseller.subscriptions.list",
+    "title": "reseller.subscriptions.list"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__reseller_subscriptions_start_paid_ser",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/apps.order"
+    ],
+    "methodId": "reseller.subscriptions.startPaidService",
+    "title": "reseller.subscriptions.startPaidService"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__reseller_subscriptions_suspend",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/apps.order"
+    ],
+    "methodId": "reseller.subscriptions.suspend",
+    "title": "reseller.subscriptions.suspend"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__vault_matters_add_permissions",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/ediscovery"
+    ],
+    "methodId": "vault.matters.addPermissions",
+    "title": "vault.matters.addPermissions"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__vault_matters_close",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/ediscovery"
+    ],
+    "methodId": "vault.matters.close",
+    "title": "vault.matters.close"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__vault_matters_count",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/ediscovery"
+    ],
+    "methodId": "vault.matters.count",
+    "title": "vault.matters.count"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__vault_matters_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/ediscovery"
+    ],
+    "methodId": "vault.matters.create",
+    "title": "vault.matters.create"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__vault_matters_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/ediscovery"
+    ],
+    "methodId": "vault.matters.delete",
+    "title": "vault.matters.delete"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__vault_matters_exports_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/ediscovery"
+    ],
+    "methodId": "vault.matters.exports.create",
+    "title": "vault.matters.exports.create"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__vault_matters_exports_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/ediscovery"
+    ],
+    "methodId": "vault.matters.exports.delete",
+    "title": "vault.matters.exports.delete"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__vault_matters_exports_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/ediscovery",
+      "https://www.googleapis.com/auth/ediscovery.readonly"
+    ],
+    "methodId": "vault.matters.exports.get",
+    "title": "vault.matters.exports.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__vault_matters_exports_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/ediscovery",
+      "https://www.googleapis.com/auth/ediscovery.readonly"
+    ],
+    "methodId": "vault.matters.exports.list",
+    "title": "vault.matters.exports.list"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__vault_matters_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/ediscovery",
+      "https://www.googleapis.com/auth/ediscovery.readonly"
+    ],
+    "methodId": "vault.matters.get",
+    "title": "vault.matters.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__vault_matters_holds_accounts_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/ediscovery"
+    ],
+    "methodId": "vault.matters.holds.accounts.create",
+    "title": "vault.matters.holds.accounts.create"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__vault_matters_holds_accounts_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/ediscovery"
+    ],
+    "methodId": "vault.matters.holds.accounts.delete",
+    "title": "vault.matters.holds.accounts.delete"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__vault_matters_holds_accounts_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/ediscovery",
+      "https://www.googleapis.com/auth/ediscovery.readonly"
+    ],
+    "methodId": "vault.matters.holds.accounts.list",
+    "title": "vault.matters.holds.accounts.list"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__vault_matters_holds_add_held_accounts",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/ediscovery"
+    ],
+    "methodId": "vault.matters.holds.addHeldAccounts",
+    "title": "vault.matters.holds.addHeldAccounts"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__vault_matters_holds_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/ediscovery"
+    ],
+    "methodId": "vault.matters.holds.create",
+    "title": "vault.matters.holds.create"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__vault_matters_holds_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/ediscovery"
+    ],
+    "methodId": "vault.matters.holds.delete",
+    "title": "vault.matters.holds.delete"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__vault_matters_holds_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/ediscovery",
+      "https://www.googleapis.com/auth/ediscovery.readonly"
+    ],
+    "methodId": "vault.matters.holds.get",
+    "title": "vault.matters.holds.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__vault_matters_holds_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/ediscovery",
+      "https://www.googleapis.com/auth/ediscovery.readonly"
+    ],
+    "methodId": "vault.matters.holds.list",
+    "title": "vault.matters.holds.list"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__vault_matters_holds_remove_held_accou",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/ediscovery"
+    ],
+    "methodId": "vault.matters.holds.removeHeldAccounts",
+    "title": "vault.matters.holds.removeHeldAccounts"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__vault_matters_holds_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/ediscovery"
+    ],
+    "methodId": "vault.matters.holds.update",
+    "title": "vault.matters.holds.update"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__vault_matters_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/ediscovery",
+      "https://www.googleapis.com/auth/ediscovery.readonly"
+    ],
+    "methodId": "vault.matters.list",
+    "title": "vault.matters.list"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__vault_matters_remove_permissions",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/ediscovery"
+    ],
+    "methodId": "vault.matters.removePermissions",
+    "title": "vault.matters.removePermissions"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__vault_matters_reopen",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/ediscovery"
+    ],
+    "methodId": "vault.matters.reopen",
+    "title": "vault.matters.reopen"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__vault_matters_saved_queries_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/ediscovery"
+    ],
+    "methodId": "vault.matters.savedQueries.create",
+    "title": "vault.matters.savedQueries.create"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__vault_matters_saved_queries_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/ediscovery"
+    ],
+    "methodId": "vault.matters.savedQueries.delete",
+    "title": "vault.matters.savedQueries.delete"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__vault_matters_saved_queries_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/ediscovery",
+      "https://www.googleapis.com/auth/ediscovery.readonly"
+    ],
+    "methodId": "vault.matters.savedQueries.get",
+    "title": "vault.matters.savedQueries.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__vault_matters_saved_queries_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/ediscovery",
+      "https://www.googleapis.com/auth/ediscovery.readonly"
+    ],
+    "methodId": "vault.matters.savedQueries.list",
+    "title": "vault.matters.savedQueries.list"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__vault_matters_undelete",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/ediscovery"
+    ],
+    "methodId": "vault.matters.undelete",
+    "title": "vault.matters.undelete"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__vault_matters_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/ediscovery"
+    ],
+    "methodId": "vault.matters.update",
+    "title": "vault.matters.update"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__vault_operations_cancel",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/ediscovery"
+    ],
+    "methodId": "vault.operations.cancel",
+    "title": "vault.operations.cancel"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__vault_operations_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/ediscovery"
+    ],
+    "methodId": "vault.operations.delete",
+    "title": "vault.operations.delete"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__vault_operations_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/ediscovery",
+      "https://www.googleapis.com/auth/ediscovery.readonly"
+    ],
+    "methodId": "vault.operations.get",
+    "title": "vault.operations.get"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__vault_operations_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/ediscovery",
+      "https://www.googleapis.com/auth/ediscovery.readonly"
+    ],
+    "methodId": "vault.operations.list",
+    "title": "vault.operations.list"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__verifiedac_challenge_generate",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/verifiedaccess"
+    ],
+    "methodId": "verifiedaccess.challenge.generate",
+    "title": "verifiedaccess.challenge.generate"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__verifiedac_challenge_verify",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/verifiedaccess"
+    ],
+    "methodId": "verifiedaccess.challenge.verify",
+    "title": "verifiedaccess.challenge.verify"
+  }
+]

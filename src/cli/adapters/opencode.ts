@@ -5,7 +5,8 @@
  * folder <path>/opencode.json.
  *
  * Entries: mcp["gsm-<name>"] = { type: "local", command: ["node", "<absolute .mjs>"],
- * environment?: { GSM_ALLOW_WRITES: "true" }, enabled: true }.
+ * environment?: { GSM_ALLOW_WRITES: "true", GSM_CONFIRMATION: "<mode>" }, enabled: true }.
+ * environment holds only the keys whose flags were given (--allow-writes, --confirmation).
  * The schema is {"$schema": "https://opencode.ai/config.json", "mcp": {...}}.
  * A new file gets $schema. An existing file never gets it added.
  *
@@ -18,6 +19,7 @@ import { join } from 'node:path';
 import { readText, commitChanges } from '../fsutil.js';
 import { folderDir } from '../paths.js';
 import { planJsonMap, isPlainObject } from './json-map.js';
+import { envObject, serverEnvironment, type EnvPairs } from '../settings.js';
 import { SERVER_PREFIX, type AdapterContext, type AdapterResult } from '../types.js';
 
 const SCHEMA_URL = 'https://opencode.ai/config.json';
@@ -33,11 +35,11 @@ export function opencodeConfigPath(ctx: AdapterContext): string {
   }
 }
 
-export function opencodeEntry(serverFile: string, allowWrites: boolean): Record<string, unknown> {
+export function opencodeEntry(serverFile: string, env: EnvPairs): Record<string, unknown> {
   return {
     type: 'local',
     command: ['node', serverFile],
-    ...(allowWrites ? { environment: { GSM_ALLOW_WRITES: 'true' } } : {}),
+    ...(env.length > 0 ? { environment: envObject(env) } : {}),
     enabled: true,
   };
 }
@@ -46,7 +48,8 @@ export async function install(ctx: AdapterContext): Promise<AdapterResult> {
   const file = opencodeConfigPath(ctx);
   const set = new Map<string, unknown>();
   for (const server of ctx.servers) {
-    set.set(`${SERVER_PREFIX}${server.name}`, opencodeEntry(ctx.serverFile(server), ctx.allowWrites));
+    const env = serverEnvironment(ctx.allowWrites, ctx.confirmation);
+    set.set(`${SERVER_PREFIX}${server.name}`, opencodeEntry(ctx.serverFile(server), env));
   }
   const change = planJsonMap({
     file,
@@ -58,6 +61,7 @@ export async function install(ctx: AdapterContext): Promise<AdapterResult> {
   const changed = change.before !== change.after;
   const notes = changed ? ['Restart OpenCode to load the servers.'] : [];
   if (ctx.allowWrites) notes.push('GSM_ALLOW_WRITES=true is set: write tools are enabled for these servers.');
+  if (ctx.confirmation !== undefined) notes.push(`GSM_CONFIRMATION=${ctx.confirmation} is set for these servers.`);
   return {
     agent: 'opencode',
     action: 'install',

@@ -1,0 +1,280 @@
+[
+  {
+    "name": "mcp__plugin_gsc_gsc__api_methods",
+    "kind": "read",
+    "scopes": [],
+    "title": "gsc: API methods"
+  },
+  {
+    "name": "mcp__plugin_gsc_gsc__indexing_url_notifications_get_metadata",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/indexing"
+    ],
+    "methodId": "indexing.urlNotifications.getMetadata",
+    "title": "indexing.urlNotifications.getMetadata"
+  },
+  {
+    "name": "mcp__plugin_gsc_gsc__indexing_url_notifications_publish",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/indexing"
+    ],
+    "methodId": "indexing.urlNotifications.publish",
+    "title": "indexing.urlNotifications.publish"
+  },
+  {
+    "name": "mcp__plugin_gsc_gsc__sc_search_analytics_query",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/webmasters",
+      "https://www.googleapis.com/auth/webmasters.readonly"
+    ],
+    "title": "Query search analytics"
+  },
+  {
+    "name": "mcp__plugin_gsc_gsc__sc_site_add",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/webmasters"
+    ],
+    "title": "Add Search Console property"
+  },
+  {
+    "name": "mcp__plugin_gsc_gsc__sc_site_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/webmasters"
+    ],
+    "title": "Remove Search Console property"
+  },
+  {
+    "name": "mcp__plugin_gsc_gsc__sc_site_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/webmasters",
+      "https://www.googleapis.com/auth/webmasters.readonly"
+    ],
+    "title": "Get Search Console property"
+  },
+  {
+    "name": "mcp__plugin_gsc_gsc__sc_sitemap_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/webmasters"
+    ],
+    "title": "Delete sitemap"
+  },
+  {
+    "name": "mcp__plugin_gsc_gsc__sc_sitemap_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/webmasters",
+      "https://www.googleapis.com/auth/webmasters.readonly"
+    ],
+    "title": "Get sitemap"
+  },
+  {
+    "name": "mcp__plugin_gsc_gsc__sc_sitemap_submit",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/webmasters"
+    ],
+    "title": "Submit sitemap"
+  },
+  {
+    "name": "mcp__plugin_gsc_gsc__sc_sitemaps_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/webmasters",
+      "https://www.googleapis.com/auth/webmasters.readonly"
+    ],
+    "title": "List sitemaps"
+  },
+  {
+    "name": "mcp__plugin_gsc_gsc__sc_sites_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/webmasters",
+      "https://www.googleapis.com/auth/webmasters.readonly"
+    ],
+    "title": "List Search Console properties"
+  },
+  {
+    "name": "mcp__plugin_gsc_gsc__sc_url_inspect",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/webmasters",
+      "https://www.googleapis.com/auth/webmasters.readonly"
+    ],
+    "title": "Inspect URL"
+  },
+  {
+    "name": "mcp__plugin_gsc_gsc__searchcons_searchanalytics_query",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/webmasters",
+      "https://www.googleapis.com/auth/webmasters.readonly"
+    ],
+    "methodId": "webmasters.searchanalytics.query",
+    "title": "webmasters.searchanalytics.query"
+  },
+  {
+    "name": "mcp__plugin_gsc_gsc__searchcons_sitemaps_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/webmasters"
+    ],
+    "methodId": "webmasters.sitemaps.delete",
+    "title": "webmasters.sitemaps.delete"
+  },
+  {
+    "name": "mcp__plugin_gsc_gsc__searchcons_sitemaps_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/webmasters",
+      "https://www.googleapis.com/auth/webmasters.readonly"
+    ],
+    "methodId": "webmasters.sitemaps.get",
+    "title": "webmasters.sitemaps.get"
+  },
+  {
+    "name": "mcp__plugin_gsc_gsc__searchcons_sitemaps_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/webmasters",
+      "https://www.googleapis.com/auth/webmasters.readonly"
+    ],
+    "methodId": "webmasters.sitemaps.list",
+    "title": "webmasters.sitemaps.list"
+  },
+  {
+    "name": "mcp__plugin_gsc_gsc__searchcons_sitemaps_submit",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/webmasters"
+    ],
+    "methodId": "webmasters.sitemaps.submit",
+    "title": "webmasters.sitemaps.submit"
+  },
+  {
+    "name": "mcp__plugin_gsc_gsc__searchcons_sites_add",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/webmasters"
+    ],
+    "methodId": "webmasters.sites.add",
+    "title": "webmasters.sites.add"
+  },
+  {
+    "name": "mcp__plugin_gsc_gsc__searchcons_sites_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/webmasters"
+    ],
+    "methodId": "webmasters.sites.delete",
+    "title": "webmasters.sites.delete"
+  },
+  {
+    "name": "mcp__plugin_gsc_gsc__searchcons_sites_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/webmasters",
+      "https://www.googleapis.com/auth/webmasters.readonly"
+    ],
+    "methodId": "webmasters.sites.get",
+    "title": "webmasters.sites.get"
+  },
+  {
+    "name": "mcp__plugin_gsc_gsc__searchcons_sites_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/webmasters",
+      "https://www.googleapis.com/auth/webmasters.readonly"
+    ],
+    "methodId": "webmasters.sites.list",
+    "title": "webmasters.sites.list"
+  },
+  {
+    "name": "mcp__plugin_gsc_gsc__searchcons_url_inspection_index_inspect",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/webmasters",
+      "https://www.googleapis.com/auth/webmasters.readonly"
+    ],
+    "methodId": "searchconsole.urlInspection.index.inspect",
+    "title": "searchconsole.urlInspection.index.inspect"
+  },
+  {
+    "name": "mcp__plugin_gsc_gsc__searchcons_url_testing_t_mobile_friendl_run",
+    "kind": "read",
+    "scopes": [],
+    "methodId": "searchconsole.urlTestingTools.mobileFriendlyTest.run",
+    "title": "searchconsole.urlTestingTools.mobileFriendlyTest.run"
+  },
+  {
+    "name": "mcp__plugin_gsc_gsc__siteverif_web_resource_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/siteverification"
+    ],
+    "methodId": "siteVerification.webResource.delete",
+    "title": "siteVerification.webResource.delete"
+  },
+  {
+    "name": "mcp__plugin_gsc_gsc__siteverif_web_resource_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/siteverification"
+    ],
+    "methodId": "siteVerification.webResource.get",
+    "title": "siteVerification.webResource.get"
+  },
+  {
+    "name": "mcp__plugin_gsc_gsc__siteverif_web_resource_get_token",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/siteverification",
+      "https://www.googleapis.com/auth/siteverification.verify_only"
+    ],
+    "methodId": "siteVerification.webResource.getToken",
+    "title": "siteVerification.webResource.getToken"
+  },
+  {
+    "name": "mcp__plugin_gsc_gsc__siteverif_web_resource_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/siteverification",
+      "https://www.googleapis.com/auth/siteverification.verify_only"
+    ],
+    "methodId": "siteVerification.webResource.insert",
+    "title": "siteVerification.webResource.insert"
+  },
+  {
+    "name": "mcp__plugin_gsc_gsc__siteverif_web_resource_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/siteverification"
+    ],
+    "methodId": "siteVerification.webResource.list",
+    "title": "siteVerification.webResource.list"
+  },
+  {
+    "name": "mcp__plugin_gsc_gsc__siteverif_web_resource_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/siteverification"
+    ],
+    "methodId": "siteVerification.webResource.patch",
+    "title": "siteVerification.webResource.patch"
+  },
+  {
+    "name": "mcp__plugin_gsc_gsc__siteverif_web_resource_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/siteverification"
+    ],
+    "methodId": "siteVerification.webResource.update",
+    "title": "siteVerification.webResource.update"
+  }
+]

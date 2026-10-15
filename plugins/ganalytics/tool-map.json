@@ -1,0 +1,654 @@
+[
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__api_call",
+    "kind": "dynamic",
+    "scopes": [],
+    "title": "Call an API method"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__api_describe",
+    "kind": "read",
+    "scopes": [],
+    "title": "Describe an API method"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__api_methods",
+    "kind": "read",
+    "scopes": [],
+    "title": "ganalytics: API methods"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__api_search",
+    "kind": "read",
+    "scopes": [],
+    "title": "Search API methods"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_account_summarie_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit",
+      "https://www.googleapis.com/auth/analytics.readonly"
+    ],
+    "methodId": "analyticsadmin.accountSummaries.list",
+    "title": "analyticsadmin.accountSummaries.list"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_accounts_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit"
+    ],
+    "methodId": "analyticsadmin.accounts.delete",
+    "title": "analyticsadmin.accounts.delete"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_accounts_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit",
+      "https://www.googleapis.com/auth/analytics.readonly"
+    ],
+    "methodId": "analyticsadmin.accounts.get",
+    "title": "analyticsadmin.accounts.get"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_accounts_get_data_sha",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit",
+      "https://www.googleapis.com/auth/analytics.readonly"
+    ],
+    "methodId": "analyticsadmin.accounts.getDataSharingSettings",
+    "title": "analyticsadmin.accounts.getDataSharingSettings"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_accounts_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit",
+      "https://www.googleapis.com/auth/analytics.readonly"
+    ],
+    "methodId": "analyticsadmin.accounts.list",
+    "title": "analyticsadmin.accounts.list"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_accounts_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit"
+    ],
+    "methodId": "analyticsadmin.accounts.patch",
+    "title": "analyticsadmin.accounts.patch"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_accounts_provision_ac",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit"
+    ],
+    "methodId": "analyticsadmin.accounts.provisionAccountTicket",
+    "title": "analyticsadmin.accounts.provisionAccountTicket"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_accounts_run_access_r",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit",
+      "https://www.googleapis.com/auth/analytics.readonly"
+    ],
+    "methodId": "analyticsadmin.accounts.runAccessReport",
+    "title": "analyticsadmin.accounts.runAccessReport"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_accounts_search_chang",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit"
+    ],
+    "methodId": "analyticsadmin.accounts.searchChangeHistoryEvents",
+    "title": "analyticsadmin.accounts.searchChangeHistoryEvents"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_prop_custo_archi_7523",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit"
+    ],
+    "methodId": "analyticsadmin.properties.customDimensions.archive",
+    "title": "analyticsadmin.properties.customDimensions.archive"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_prop_custo_archi_b061",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit"
+    ],
+    "methodId": "analyticsadmin.properties.customMetrics.archive",
+    "title": "analyticsadmin.properties.customMetrics.archive"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_prop_custo_creat_0335",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit"
+    ],
+    "methodId": "analyticsadmin.properties.customDimensions.create",
+    "title": "analyticsadmin.properties.customDimensions.create"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_prop_custo_creat_b4ea",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit"
+    ],
+    "methodId": "analyticsadmin.properties.customMetrics.create",
+    "title": "analyticsadmin.properties.customMetrics.create"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_prop_custo_patch_232f",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit"
+    ],
+    "methodId": "analyticsadmin.properties.customDimensions.patch",
+    "title": "analyticsadmin.properties.customDimensions.patch"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_prop_custo_patch_92c7",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit"
+    ],
+    "methodId": "analyticsadmin.properties.customMetrics.patch",
+    "title": "analyticsadmin.properties.customMetrics.patch"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_prop_data_measu_creat",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit"
+    ],
+    "methodId": "analyticsadmin.properties.dataStreams.measurementProtocolSecrets.create",
+    "title": "analyticsadmin.properties.dataStreams.measurementProtocolSecrets.create"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_prop_data_measu_delet",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit"
+    ],
+    "methodId": "analyticsadmin.properties.dataStreams.measurementProtocolSecrets.delete",
+    "title": "analyticsadmin.properties.dataStreams.measurementProtocolSecrets.delete"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_prop_data_measu_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit"
+    ],
+    "methodId": "analyticsadmin.properties.dataStreams.measurementProtocolSecrets.patch",
+    "title": "analyticsadmin.properties.dataStreams.measurementProtocolSecrets.patch"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_prope_data_measu_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit",
+      "https://www.googleapis.com/auth/analytics.readonly"
+    ],
+    "methodId": "analyticsadmin.properties.dataStreams.measurementProtocolSecrets.list",
+    "title": "analyticsadmin.properties.dataStreams.measurementProtocolSecrets.list"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_prope_data_measur_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit",
+      "https://www.googleapis.com/auth/analytics.readonly"
+    ],
+    "methodId": "analyticsadmin.properties.dataStreams.measurementProtocolSecrets.get",
+    "title": "analyticsadmin.properties.dataStreams.measurementProtocolSecrets.get"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_proper_convers_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit"
+    ],
+    "methodId": "analyticsadmin.properties.conversionEvents.create",
+    "title": "analyticsadmin.properties.conversionEvents.create"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_proper_convers_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit"
+    ],
+    "methodId": "analyticsadmin.properties.conversionEvents.delete",
+    "title": "analyticsadmin.properties.conversionEvents.delete"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_proper_data_st_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit"
+    ],
+    "methodId": "analyticsadmin.properties.dataStreams.create",
+    "title": "analyticsadmin.properties.dataStreams.create"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_proper_data_st_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit"
+    ],
+    "methodId": "analyticsadmin.properties.dataStreams.delete",
+    "title": "analyticsadmin.properties.dataStreams.delete"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_proper_firebas_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit"
+    ],
+    "methodId": "analyticsadmin.properties.firebaseLinks.create",
+    "title": "analyticsadmin.properties.firebaseLinks.create"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_proper_firebas_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit"
+    ],
+    "methodId": "analyticsadmin.properties.firebaseLinks.delete",
+    "title": "analyticsadmin.properties.firebaseLinks.delete"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_proper_key_eve_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit"
+    ],
+    "methodId": "analyticsadmin.properties.keyEvents.create",
+    "title": "analyticsadmin.properties.keyEvents.create"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_proper_key_eve_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit"
+    ],
+    "methodId": "analyticsadmin.properties.keyEvents.delete",
+    "title": "analyticsadmin.properties.keyEvents.delete"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_propert_convers_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit"
+    ],
+    "methodId": "analyticsadmin.properties.conversionEvents.patch",
+    "title": "analyticsadmin.properties.conversionEvents.patch"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_propert_conversi_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit",
+      "https://www.googleapis.com/auth/analytics.readonly"
+    ],
+    "methodId": "analyticsadmin.properties.conversionEvents.list",
+    "title": "analyticsadmin.properties.conversionEvents.list"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_propert_custom_d_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit",
+      "https://www.googleapis.com/auth/analytics.readonly"
+    ],
+    "methodId": "analyticsadmin.properties.customDimensions.list",
+    "title": "analyticsadmin.properties.customDimensions.list"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_propert_custom_m_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit",
+      "https://www.googleapis.com/auth/analytics.readonly"
+    ],
+    "methodId": "analyticsadmin.properties.customMetrics.list",
+    "title": "analyticsadmin.properties.customMetrics.list"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_propert_data_st_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit"
+    ],
+    "methodId": "analyticsadmin.properties.dataStreams.patch",
+    "title": "analyticsadmin.properties.dataStreams.patch"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_propert_data_str_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit",
+      "https://www.googleapis.com/auth/analytics.readonly"
+    ],
+    "methodId": "analyticsadmin.properties.dataStreams.list",
+    "title": "analyticsadmin.properties.dataStreams.list"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_propert_firebase_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit",
+      "https://www.googleapis.com/auth/analytics.readonly"
+    ],
+    "methodId": "analyticsadmin.properties.firebaseLinks.list",
+    "title": "analyticsadmin.properties.firebaseLinks.list"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_propert_google_a_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit",
+      "https://www.googleapis.com/auth/analytics.readonly"
+    ],
+    "methodId": "analyticsadmin.properties.googleAdsLinks.list",
+    "title": "analyticsadmin.properties.googleAdsLinks.list"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_propert_google_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit"
+    ],
+    "methodId": "analyticsadmin.properties.googleAdsLinks.create",
+    "title": "analyticsadmin.properties.googleAdsLinks.create"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_propert_google_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit"
+    ],
+    "methodId": "analyticsadmin.properties.googleAdsLinks.delete",
+    "title": "analyticsadmin.properties.googleAdsLinks.delete"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_propert_google_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit"
+    ],
+    "methodId": "analyticsadmin.properties.googleAdsLinks.patch",
+    "title": "analyticsadmin.properties.googleAdsLinks.patch"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_propert_key_eve_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit"
+    ],
+    "methodId": "analyticsadmin.properties.keyEvents.patch",
+    "title": "analyticsadmin.properties.keyEvents.patch"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_propert_key_even_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit",
+      "https://www.googleapis.com/auth/analytics.readonly"
+    ],
+    "methodId": "analyticsadmin.properties.keyEvents.list",
+    "title": "analyticsadmin.properties.keyEvents.list"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_properti_conversi_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit",
+      "https://www.googleapis.com/auth/analytics.readonly"
+    ],
+    "methodId": "analyticsadmin.properties.conversionEvents.get",
+    "title": "analyticsadmin.properties.conversionEvents.get"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_properti_custom_d_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit",
+      "https://www.googleapis.com/auth/analytics.readonly"
+    ],
+    "methodId": "analyticsadmin.properties.customDimensions.get",
+    "title": "analyticsadmin.properties.customDimensions.get"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_properti_custom_m_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit",
+      "https://www.googleapis.com/auth/analytics.readonly"
+    ],
+    "methodId": "analyticsadmin.properties.customMetrics.get",
+    "title": "analyticsadmin.properties.customMetrics.get"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_properti_data_str_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit",
+      "https://www.googleapis.com/auth/analytics.readonly"
+    ],
+    "methodId": "analyticsadmin.properties.dataStreams.get",
+    "title": "analyticsadmin.properties.dataStreams.get"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_properti_key_even_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit",
+      "https://www.googleapis.com/auth/analytics.readonly"
+    ],
+    "methodId": "analyticsadmin.properties.keyEvents.get",
+    "title": "analyticsadmin.properties.keyEvents.get"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_properties_acknowledg",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit"
+    ],
+    "methodId": "analyticsadmin.properties.acknowledgeUserDataCollection",
+    "title": "analyticsadmin.properties.acknowledgeUserDataCollection"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_properties_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit"
+    ],
+    "methodId": "analyticsadmin.properties.create",
+    "title": "analyticsadmin.properties.create"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_properties_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit"
+    ],
+    "methodId": "analyticsadmin.properties.delete",
+    "title": "analyticsadmin.properties.delete"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_properties_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit",
+      "https://www.googleapis.com/auth/analytics.readonly"
+    ],
+    "methodId": "analyticsadmin.properties.get",
+    "title": "analyticsadmin.properties.get"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_properties_get_data_r",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit",
+      "https://www.googleapis.com/auth/analytics.readonly"
+    ],
+    "methodId": "analyticsadmin.properties.getDataRetentionSettings",
+    "title": "analyticsadmin.properties.getDataRetentionSettings"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_properties_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit",
+      "https://www.googleapis.com/auth/analytics.readonly"
+    ],
+    "methodId": "analyticsadmin.properties.list",
+    "title": "analyticsadmin.properties.list"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_properties_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit"
+    ],
+    "methodId": "analyticsadmin.properties.patch",
+    "title": "analyticsadmin.properties.patch"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_properties_run_access",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit",
+      "https://www.googleapis.com/auth/analytics.readonly"
+    ],
+    "methodId": "analyticsadmin.properties.runAccessReport",
+    "title": "analyticsadmin.properties.runAccessReport"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_properties_update_dat",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit"
+    ],
+    "methodId": "analyticsadmin.properties.updateDataRetentionSettings",
+    "title": "analyticsadmin.properties.updateDataRetentionSettings"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gadata_propert_audienc_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics",
+      "https://www.googleapis.com/auth/analytics.readonly"
+    ],
+    "methodId": "analyticsdata.properties.audienceExports.create",
+    "title": "analyticsdata.properties.audienceExports.create"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gadata_propert_audience_query",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics",
+      "https://www.googleapis.com/auth/analytics.readonly"
+    ],
+    "methodId": "analyticsdata.properties.audienceExports.query",
+    "title": "analyticsdata.properties.audienceExports.query"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gadata_properti_audience_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics",
+      "https://www.googleapis.com/auth/analytics.readonly"
+    ],
+    "methodId": "analyticsdata.properties.audienceExports.list",
+    "title": "analyticsdata.properties.audienceExports.list"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gadata_propertie_audience_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics",
+      "https://www.googleapis.com/auth/analytics.readonly"
+    ],
+    "methodId": "analyticsdata.properties.audienceExports.get",
+    "title": "analyticsdata.properties.audienceExports.get"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gadata_properties_batch_run_p",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics",
+      "https://www.googleapis.com/auth/analytics.readonly"
+    ],
+    "methodId": "analyticsdata.properties.batchRunPivotReports",
+    "title": "analyticsdata.properties.batchRunPivotReports"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gadata_properties_batch_run_r",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics",
+      "https://www.googleapis.com/auth/analytics.readonly"
+    ],
+    "methodId": "analyticsdata.properties.batchRunReports",
+    "title": "analyticsdata.properties.batchRunReports"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gadata_properties_check_compa",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics",
+      "https://www.googleapis.com/auth/analytics.readonly"
+    ],
+    "methodId": "analyticsdata.properties.checkCompatibility",
+    "title": "analyticsdata.properties.checkCompatibility"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gadata_properties_get_metadat",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics",
+      "https://www.googleapis.com/auth/analytics.readonly"
+    ],
+    "methodId": "analyticsdata.properties.getMetadata",
+    "title": "analyticsdata.properties.getMetadata"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gadata_properties_run_pivot_r",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics",
+      "https://www.googleapis.com/auth/analytics.readonly"
+    ],
+    "methodId": "analyticsdata.properties.runPivotReport",
+    "title": "analyticsdata.properties.runPivotReport"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gadata_properties_run_realtim",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics",
+      "https://www.googleapis.com/auth/analytics.readonly"
+    ],
+    "methodId": "analyticsdata.properties.runRealtimeReport",
+    "title": "analyticsdata.properties.runRealtimeReport"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__gadata_properties_run_report",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics",
+      "https://www.googleapis.com/auth/analytics.readonly"
+    ],
+    "methodId": "analyticsdata.properties.runReport",
+    "title": "analyticsdata.properties.runReport"
+  }
+]

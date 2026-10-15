@@ -1,0 +1,1021 @@
+[
+  {
+    "name": "mcp__plugin_gtm_gtm__api_call",
+    "kind": "dynamic",
+    "scopes": [],
+    "title": "Call an API method"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__api_describe",
+    "kind": "read",
+    "scopes": [],
+    "title": "Describe an API method"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__api_methods",
+    "kind": "read",
+    "scopes": [],
+    "title": "gtm: API methods"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__api_search",
+    "kind": "read",
+    "scopes": [],
+    "title": "Search API methods"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accoun_contai_worksp_folders_entitie",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers",
+      "https://www.googleapis.com/auth/tagmanager.readonly"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.folders.entities",
+    "title": "tagmanager.accounts.containers.workspaces.folders.entities"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accoun_contai_worksp_folders_move_en",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.folders.move_entities_to_folder",
+    "title": "tagmanager.accounts.containers.workspaces.folders.move_entities_to_folder"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accoun_contai_workspa_built_i_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.built_in_variables.create",
+    "title": "tagmanager.accounts.containers.workspaces.built_in_variables.create"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accoun_contai_workspa_built_i_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.built_in_variables.delete",
+    "title": "tagmanager.accounts.containers.workspaces.built_in_variables.delete"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accoun_contai_workspa_built_i_revert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.built_in_variables.revert",
+    "title": "tagmanager.accounts.containers.workspaces.built_in_variables.revert"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accoun_contai_workspa_clients_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.clients.create",
+    "title": "tagmanager.accounts.containers.workspaces.clients.create"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accoun_contai_workspa_clients_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.clients.delete",
+    "title": "tagmanager.accounts.containers.workspaces.clients.delete"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accoun_contai_workspa_clients_revert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.clients.revert",
+    "title": "tagmanager.accounts.containers.workspaces.clients.revert"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accoun_contai_workspa_clients_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.clients.update",
+    "title": "tagmanager.accounts.containers.workspaces.clients.update"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accoun_contai_workspa_folders_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.folders.create",
+    "title": "tagmanager.accounts.containers.workspaces.folders.create"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accoun_contai_workspa_folders_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.folders.delete",
+    "title": "tagmanager.accounts.containers.workspaces.folders.delete"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accoun_contai_workspa_folders_revert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.folders.revert",
+    "title": "tagmanager.accounts.containers.workspaces.folders.revert"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accoun_contai_workspa_folders_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.folders.update",
+    "title": "tagmanager.accounts.containers.workspaces.folders.update"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accoun_contai_workspa_gtag_co_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.gtag_config.create",
+    "title": "tagmanager.accounts.containers.workspaces.gtag_config.create"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accoun_contai_workspa_gtag_co_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.gtag_config.delete",
+    "title": "tagmanager.accounts.containers.workspaces.gtag_config.delete"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accoun_contai_workspa_gtag_co_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.gtag_config.update",
+    "title": "tagmanager.accounts.containers.workspaces.gtag_config.update"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accoun_contai_workspa_templat_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.templates.create",
+    "title": "tagmanager.accounts.containers.workspaces.templates.create"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accoun_contai_workspa_templat_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.templates.delete",
+    "title": "tagmanager.accounts.containers.workspaces.templates.delete"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accoun_contai_workspa_templat_import",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.templates.import_from_gallery",
+    "title": "tagmanager.accounts.containers.workspaces.templates.import_from_gallery"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accoun_contai_workspa_templat_revert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.templates.revert",
+    "title": "tagmanager.accounts.containers.workspaces.templates.revert"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accoun_contai_workspa_templat_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.templates.update",
+    "title": "tagmanager.accounts.containers.workspaces.templates.update"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accoun_contai_workspa_transfo_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.transformations.create",
+    "title": "tagmanager.accounts.containers.workspaces.transformations.create"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accoun_contai_workspa_transfo_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.transformations.delete",
+    "title": "tagmanager.accounts.containers.workspaces.transformations.delete"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accoun_contai_workspa_transfo_revert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.transformations.revert",
+    "title": "tagmanager.accounts.containers.workspaces.transformations.revert"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accoun_contai_workspa_transfo_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.transformations.update",
+    "title": "tagmanager.accounts.containers.workspaces.transformations.update"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accoun_contai_workspa_trigger_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.triggers.create",
+    "title": "tagmanager.accounts.containers.workspaces.triggers.create"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accoun_contai_workspa_trigger_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.triggers.delete",
+    "title": "tagmanager.accounts.containers.workspaces.triggers.delete"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accoun_contai_workspa_trigger_revert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.triggers.revert",
+    "title": "tagmanager.accounts.containers.workspaces.triggers.revert"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accoun_contai_workspa_trigger_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.triggers.update",
+    "title": "tagmanager.accounts.containers.workspaces.triggers.update"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accoun_contai_workspa_variabl_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.variables.create",
+    "title": "tagmanager.accounts.containers.workspaces.variables.create"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accoun_contai_workspa_variabl_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.variables.delete",
+    "title": "tagmanager.accounts.containers.workspaces.variables.delete"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accoun_contai_workspa_variabl_revert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.variables.revert",
+    "title": "tagmanager.accounts.containers.workspaces.variables.revert"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accoun_contai_workspa_variabl_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.variables.update",
+    "title": "tagmanager.accounts.containers.workspaces.variables.update"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_account_contain_workspa_built_i_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers",
+      "https://www.googleapis.com/auth/tagmanager.readonly"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.built_in_variables.list",
+    "title": "tagmanager.accounts.containers.workspaces.built_in_variables.list"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_account_contain_workspa_clients_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers",
+      "https://www.googleapis.com/auth/tagmanager.readonly"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.clients.list",
+    "title": "tagmanager.accounts.containers.workspaces.clients.list"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_account_contain_workspa_folders_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers",
+      "https://www.googleapis.com/auth/tagmanager.readonly"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.folders.list",
+    "title": "tagmanager.accounts.containers.workspaces.folders.list"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_account_contain_workspa_gtag_co_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers",
+      "https://www.googleapis.com/auth/tagmanager.readonly"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.gtag_config.list",
+    "title": "tagmanager.accounts.containers.workspaces.gtag_config.list"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_account_contain_workspa_gtag_con_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers",
+      "https://www.googleapis.com/auth/tagmanager.readonly"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.gtag_config.get",
+    "title": "tagmanager.accounts.containers.workspaces.gtag_config.get"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_account_contain_workspa_templat_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers",
+      "https://www.googleapis.com/auth/tagmanager.readonly"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.templates.list",
+    "title": "tagmanager.accounts.containers.workspaces.templates.list"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_account_contain_workspa_template_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers",
+      "https://www.googleapis.com/auth/tagmanager.readonly"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.templates.get",
+    "title": "tagmanager.accounts.containers.workspaces.templates.get"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_account_contain_workspa_transfo_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers",
+      "https://www.googleapis.com/auth/tagmanager.readonly"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.transformations.list",
+    "title": "tagmanager.accounts.containers.workspaces.transformations.list"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_account_contain_workspa_transfor_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers",
+      "https://www.googleapis.com/auth/tagmanager.readonly"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.transformations.get",
+    "title": "tagmanager.accounts.containers.workspaces.transformations.get"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_account_contain_workspa_trigger_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers",
+      "https://www.googleapis.com/auth/tagmanager.readonly"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.triggers.list",
+    "title": "tagmanager.accounts.containers.workspaces.triggers.list"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_account_contain_workspa_triggers_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers",
+      "https://www.googleapis.com/auth/tagmanager.readonly"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.triggers.get",
+    "title": "tagmanager.accounts.containers.workspaces.triggers.get"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_account_contain_workspa_variabl_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers",
+      "https://www.googleapis.com/auth/tagmanager.readonly"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.variables.list",
+    "title": "tagmanager.accounts.containers.workspaces.variables.list"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_account_contain_workspa_variable_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers",
+      "https://www.googleapis.com/auth/tagmanager.readonly"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.variables.get",
+    "title": "tagmanager.accounts.containers.workspaces.variables.get"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_account_contain_workspa_zones_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.zones.create",
+    "title": "tagmanager.accounts.containers.workspaces.zones.create"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_account_contain_workspa_zones_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.zones.delete",
+    "title": "tagmanager.accounts.containers.workspaces.zones.delete"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_account_contain_workspa_zones_revert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.zones.revert",
+    "title": "tagmanager.accounts.containers.workspaces.zones.revert"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_account_contain_workspa_zones_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.zones.update",
+    "title": "tagmanager.accounts.containers.workspaces.zones.update"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_account_contain_workspac_clients_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers",
+      "https://www.googleapis.com/auth/tagmanager.readonly"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.clients.get",
+    "title": "tagmanager.accounts.containers.workspaces.clients.get"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_account_contain_workspac_folders_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers",
+      "https://www.googleapis.com/auth/tagmanager.readonly"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.folders.get",
+    "title": "tagmanager.accounts.containers.workspaces.folders.get"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_account_contain_workspac_tags_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.tags.create",
+    "title": "tagmanager.accounts.containers.workspaces.tags.create"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_account_contain_workspac_tags_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.tags.delete",
+    "title": "tagmanager.accounts.containers.workspaces.tags.delete"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_account_contain_workspac_tags_revert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.tags.revert",
+    "title": "tagmanager.accounts.containers.workspaces.tags.revert"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_account_contain_workspac_tags_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.tags.update",
+    "title": "tagmanager.accounts.containers.workspaces.tags.update"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_account_containe_workspac_zones_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers",
+      "https://www.googleapis.com/auth/tagmanager.readonly"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.zones.list",
+    "title": "tagmanager.accounts.containers.workspaces.zones.list"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accounts_containe_environm_reauthori",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.publish"
+    ],
+    "methodId": "tagmanager.accounts.containers.environments.reauthorize",
+    "title": "tagmanager.accounts.containers.environments.reauthorize"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accounts_containe_versions_set_lates",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.versions.set_latest",
+    "title": "tagmanager.accounts.containers.versions.set_latest"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accounts_containe_workspac_bulk_upda",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.bulk_update",
+    "title": "tagmanager.accounts.containers.workspaces.bulk_update"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accounts_containe_workspac_create_ve",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containerversions"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.create_version",
+    "title": "tagmanager.accounts.containers.workspaces.create_version"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accounts_containe_workspac_get_statu",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers",
+      "https://www.googleapis.com/auth/tagmanager.readonly"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.getStatus",
+    "title": "tagmanager.accounts.containers.workspaces.getStatus"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accounts_containe_workspac_quick_pre",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containerversions"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.quick_preview",
+    "title": "tagmanager.accounts.containers.workspaces.quick_preview"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accounts_containe_workspac_resolve_c",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.resolve_conflict",
+    "title": "tagmanager.accounts.containers.workspaces.resolve_conflict"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accounts_containe_workspac_tags_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers",
+      "https://www.googleapis.com/auth/tagmanager.readonly"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.tags.list",
+    "title": "tagmanager.accounts.containers.workspaces.tags.list"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accounts_containe_workspac_zones_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers",
+      "https://www.googleapis.com/auth/tagmanager.readonly"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.zones.get",
+    "title": "tagmanager.accounts.containers.workspaces.zones.get"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accounts_containe_workspace_tags_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers",
+      "https://www.googleapis.com/auth/tagmanager.readonly"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.tags.get",
+    "title": "tagmanager.accounts.containers.workspaces.tags.get"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accounts_container_environmen_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.environments.create",
+    "title": "tagmanager.accounts.containers.environments.create"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accounts_container_environmen_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.environments.delete",
+    "title": "tagmanager.accounts.containers.environments.delete"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accounts_container_environmen_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.environments.update",
+    "title": "tagmanager.accounts.containers.environments.update"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accounts_container_version_he_latest",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers",
+      "https://www.googleapis.com/auth/tagmanager.readonly"
+    ],
+    "methodId": "tagmanager.accounts.containers.version_headers.latest",
+    "title": "tagmanager.accounts.containers.version_headers.latest"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accounts_container_versions_undelete",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containerversions"
+    ],
+    "methodId": "tagmanager.accounts.containers.versions.undelete",
+    "title": "tagmanager.accounts.containers.versions.undelete"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accounts_container_workspaces_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.create",
+    "title": "tagmanager.accounts.containers.workspaces.create"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accounts_container_workspaces_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.delete.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.delete",
+    "title": "tagmanager.accounts.containers.workspaces.delete"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accounts_container_workspaces_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.update",
+    "title": "tagmanager.accounts.containers.workspaces.update"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accounts_containers_combine",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.combine",
+    "title": "tagmanager.accounts.containers.combine"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accounts_containers_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.create",
+    "title": "tagmanager.accounts.containers.create"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accounts_containers_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.delete.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.delete",
+    "title": "tagmanager.accounts.containers.delete"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accounts_containers_destination_link",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.destinations.link",
+    "title": "tagmanager.accounts.containers.destinations.link"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accounts_containers_destination_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers",
+      "https://www.googleapis.com/auth/tagmanager.readonly"
+    ],
+    "methodId": "tagmanager.accounts.containers.destinations.list",
+    "title": "tagmanager.accounts.containers.destinations.list"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accounts_containers_destinations_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers",
+      "https://www.googleapis.com/auth/tagmanager.readonly"
+    ],
+    "methodId": "tagmanager.accounts.containers.destinations.get",
+    "title": "tagmanager.accounts.containers.destinations.get"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accounts_containers_environment_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers",
+      "https://www.googleapis.com/auth/tagmanager.readonly"
+    ],
+    "methodId": "tagmanager.accounts.containers.environments.list",
+    "title": "tagmanager.accounts.containers.environments.list"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accounts_containers_environments_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers",
+      "https://www.googleapis.com/auth/tagmanager.readonly"
+    ],
+    "methodId": "tagmanager.accounts.containers.environments.get",
+    "title": "tagmanager.accounts.containers.environments.get"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accounts_containers_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers",
+      "https://www.googleapis.com/auth/tagmanager.readonly"
+    ],
+    "methodId": "tagmanager.accounts.containers.get",
+    "title": "tagmanager.accounts.containers.get"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accounts_containers_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers",
+      "https://www.googleapis.com/auth/tagmanager.readonly"
+    ],
+    "methodId": "tagmanager.accounts.containers.list",
+    "title": "tagmanager.accounts.containers.list"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accounts_containers_lookup",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers",
+      "https://www.googleapis.com/auth/tagmanager.readonly"
+    ],
+    "methodId": "tagmanager.accounts.containers.lookup",
+    "title": "tagmanager.accounts.containers.lookup"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accounts_containers_move_tag_id",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.move_tag_id",
+    "title": "tagmanager.accounts.containers.move_tag_id"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accounts_containers_snippet",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers",
+      "https://www.googleapis.com/auth/tagmanager.readonly"
+    ],
+    "methodId": "tagmanager.accounts.containers.snippet",
+    "title": "tagmanager.accounts.containers.snippet"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accounts_containers_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.update",
+    "title": "tagmanager.accounts.containers.update"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accounts_containers_version_hea_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers",
+      "https://www.googleapis.com/auth/tagmanager.edit.containerversions",
+      "https://www.googleapis.com/auth/tagmanager.readonly"
+    ],
+    "methodId": "tagmanager.accounts.containers.version_headers.list",
+    "title": "tagmanager.accounts.containers.version_headers.list"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accounts_containers_versions_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containerversions"
+    ],
+    "methodId": "tagmanager.accounts.containers.versions.delete",
+    "title": "tagmanager.accounts.containers.versions.delete"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accounts_containers_versions_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers",
+      "https://www.googleapis.com/auth/tagmanager.edit.containerversions",
+      "https://www.googleapis.com/auth/tagmanager.readonly"
+    ],
+    "methodId": "tagmanager.accounts.containers.versions.get",
+    "title": "tagmanager.accounts.containers.versions.get"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accounts_containers_versions_live",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers",
+      "https://www.googleapis.com/auth/tagmanager.readonly"
+    ],
+    "methodId": "tagmanager.accounts.containers.versions.live",
+    "title": "tagmanager.accounts.containers.versions.live"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accounts_containers_versions_publish",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.publish"
+    ],
+    "methodId": "tagmanager.accounts.containers.versions.publish",
+    "title": "tagmanager.accounts.containers.versions.publish"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accounts_containers_versions_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containerversions"
+    ],
+    "methodId": "tagmanager.accounts.containers.versions.update",
+    "title": "tagmanager.accounts.containers.versions.update"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accounts_containers_workspaces_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers",
+      "https://www.googleapis.com/auth/tagmanager.readonly"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.get",
+    "title": "tagmanager.accounts.containers.workspaces.get"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accounts_containers_workspaces_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers",
+      "https://www.googleapis.com/auth/tagmanager.readonly"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.list",
+    "title": "tagmanager.accounts.containers.workspaces.list"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accounts_containers_workspaces_sync",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers"
+    ],
+    "methodId": "tagmanager.accounts.containers.workspaces.sync",
+    "title": "tagmanager.accounts.containers.workspaces.sync"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accounts_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers",
+      "https://www.googleapis.com/auth/tagmanager.manage.accounts",
+      "https://www.googleapis.com/auth/tagmanager.readonly"
+    ],
+    "methodId": "tagmanager.accounts.get",
+    "title": "tagmanager.accounts.get"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accounts_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.edit.containers",
+      "https://www.googleapis.com/auth/tagmanager.manage.accounts",
+      "https://www.googleapis.com/auth/tagmanager.readonly"
+    ],
+    "methodId": "tagmanager.accounts.list",
+    "title": "tagmanager.accounts.list"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accounts_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.manage.accounts"
+    ],
+    "methodId": "tagmanager.accounts.update",
+    "title": "tagmanager.accounts.update"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accounts_user_permissions_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.manage.users"
+    ],
+    "methodId": "tagmanager.accounts.user_permissions.create",
+    "title": "tagmanager.accounts.user_permissions.create"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accounts_user_permissions_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.manage.users"
+    ],
+    "methodId": "tagmanager.accounts.user_permissions.delete",
+    "title": "tagmanager.accounts.user_permissions.delete"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accounts_user_permissions_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.manage.users"
+    ],
+    "methodId": "tagmanager.accounts.user_permissions.get",
+    "title": "tagmanager.accounts.user_permissions.get"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accounts_user_permissions_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.manage.users"
+    ],
+    "methodId": "tagmanager.accounts.user_permissions.list",
+    "title": "tagmanager.accounts.user_permissions.list"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__tagmgr_accounts_user_permissions_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.manage.users"
+    ],
+    "methodId": "tagmanager.accounts.user_permissions.update",
+    "title": "tagmanager.accounts.user_permissions.update"
+  }
+]

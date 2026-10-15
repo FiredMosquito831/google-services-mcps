@@ -1,0 +1,1030 @@
+[
+  {
+    "name": "mcp__plugin_gmail_gmail__api_call",
+    "kind": "dynamic",
+    "scopes": [],
+    "title": "Call an API method"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__api_describe",
+    "kind": "read",
+    "scopes": [],
+    "title": "Describe an API method"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__api_methods",
+    "kind": "read",
+    "scopes": [],
+    "title": "gmail: API methods"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__api_search",
+    "kind": "read",
+    "scopes": [],
+    "title": "Search API methods"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_create_draft",
+    "kind": "write",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.compose",
+      "https://www.googleapis.com/auth/gmail.modify"
+    ],
+    "title": "Create Gmail draft"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_get_message",
+    "kind": "read",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.metadata",
+      "https://www.googleapis.com/auth/gmail.modify",
+      "https://www.googleapis.com/auth/gmail.readonly"
+    ],
+    "title": "Get Gmail message"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_list_drafts",
+    "kind": "read",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.compose",
+      "https://www.googleapis.com/auth/gmail.modify",
+      "https://www.googleapis.com/auth/gmail.readonly"
+    ],
+    "title": "List Gmail drafts"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_list_labels",
+    "kind": "read",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.labels",
+      "https://www.googleapis.com/auth/gmail.metadata",
+      "https://www.googleapis.com/auth/gmail.modify",
+      "https://www.googleapis.com/auth/gmail.readonly"
+    ],
+    "title": "List Gmail labels"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_search",
+    "kind": "read",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.metadata",
+      "https://www.googleapis.com/auth/gmail.modify",
+      "https://www.googleapis.com/auth/gmail.readonly"
+    ],
+    "title": "Search Gmail"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_send_draft",
+    "kind": "destructive",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.compose",
+      "https://www.googleapis.com/auth/gmail.modify"
+    ],
+    "title": "Send Gmail draft"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_drafts_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.addons.current.action.compose",
+      "https://www.googleapis.com/auth/gmail.compose",
+      "https://www.googleapis.com/auth/gmail.modify"
+    ],
+    "methodId": "gmail.users.drafts.delete",
+    "title": "gmail.users.drafts.delete"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_drafts_get",
+    "kind": "read",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.compose",
+      "https://www.googleapis.com/auth/gmail.modify",
+      "https://www.googleapis.com/auth/gmail.readonly"
+    ],
+    "methodId": "gmail.users.drafts.get",
+    "title": "gmail.users.drafts.get"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_drafts_list",
+    "kind": "read",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.compose",
+      "https://www.googleapis.com/auth/gmail.modify",
+      "https://www.googleapis.com/auth/gmail.readonly"
+    ],
+    "methodId": "gmail.users.drafts.list",
+    "title": "gmail.users.drafts.list"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_get_profile",
+    "kind": "read",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.compose",
+      "https://www.googleapis.com/auth/gmail.metadata",
+      "https://www.googleapis.com/auth/gmail.modify",
+      "https://www.googleapis.com/auth/gmail.readonly"
+    ],
+    "methodId": "gmail.users.getProfile",
+    "title": "gmail.users.getProfile"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_history_list",
+    "kind": "read",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.metadata",
+      "https://www.googleapis.com/auth/gmail.modify",
+      "https://www.googleapis.com/auth/gmail.readonly"
+    ],
+    "methodId": "gmail.users.history.list",
+    "title": "gmail.users.history.list"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_labels_create",
+    "kind": "write",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.labels",
+      "https://www.googleapis.com/auth/gmail.modify"
+    ],
+    "methodId": "gmail.users.labels.create",
+    "title": "gmail.users.labels.create"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_labels_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.labels",
+      "https://www.googleapis.com/auth/gmail.modify"
+    ],
+    "methodId": "gmail.users.labels.delete",
+    "title": "gmail.users.labels.delete"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_labels_get",
+    "kind": "read",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.labels",
+      "https://www.googleapis.com/auth/gmail.metadata",
+      "https://www.googleapis.com/auth/gmail.modify",
+      "https://www.googleapis.com/auth/gmail.readonly"
+    ],
+    "methodId": "gmail.users.labels.get",
+    "title": "gmail.users.labels.get"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_labels_list",
+    "kind": "read",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.labels",
+      "https://www.googleapis.com/auth/gmail.metadata",
+      "https://www.googleapis.com/auth/gmail.modify",
+      "https://www.googleapis.com/auth/gmail.readonly"
+    ],
+    "methodId": "gmail.users.labels.list",
+    "title": "gmail.users.labels.list"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_labels_patch",
+    "kind": "write",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.labels",
+      "https://www.googleapis.com/auth/gmail.modify"
+    ],
+    "methodId": "gmail.users.labels.patch",
+    "title": "gmail.users.labels.patch"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_labels_update",
+    "kind": "write",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.labels",
+      "https://www.googleapis.com/auth/gmail.modify"
+    ],
+    "methodId": "gmail.users.labels.update",
+    "title": "gmail.users.labels.update"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_messages_attachments_get",
+    "kind": "read",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.addons.current.message.action",
+      "https://www.googleapis.com/auth/gmail.addons.current.message.readonly",
+      "https://www.googleapis.com/auth/gmail.modify",
+      "https://www.googleapis.com/auth/gmail.readonly"
+    ],
+    "methodId": "gmail.users.messages.attachments.get",
+    "title": "gmail.users.messages.attachments.get"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_messages_batch_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://mail.google.com/"
+    ],
+    "methodId": "gmail.users.messages.batchDelete",
+    "title": "gmail.users.messages.batchDelete"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_messages_batch_modify",
+    "kind": "write",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.modify"
+    ],
+    "methodId": "gmail.users.messages.batchModify",
+    "title": "gmail.users.messages.batchModify"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_messages_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://mail.google.com/"
+    ],
+    "methodId": "gmail.users.messages.delete",
+    "title": "gmail.users.messages.delete"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_messages_get",
+    "kind": "read",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.addons.current.message.action",
+      "https://www.googleapis.com/auth/gmail.addons.current.message.metadata",
+      "https://www.googleapis.com/auth/gmail.addons.current.message.readonly",
+      "https://www.googleapis.com/auth/gmail.metadata",
+      "https://www.googleapis.com/auth/gmail.modify",
+      "https://www.googleapis.com/auth/gmail.readonly"
+    ],
+    "methodId": "gmail.users.messages.get",
+    "title": "gmail.users.messages.get"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_messages_list",
+    "kind": "read",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.metadata",
+      "https://www.googleapis.com/auth/gmail.modify",
+      "https://www.googleapis.com/auth/gmail.readonly"
+    ],
+    "methodId": "gmail.users.messages.list",
+    "title": "gmail.users.messages.list"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_messages_modify",
+    "kind": "write",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.modify"
+    ],
+    "methodId": "gmail.users.messages.modify",
+    "title": "gmail.users.messages.modify"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_messages_trash",
+    "kind": "destructive",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.modify"
+    ],
+    "methodId": "gmail.users.messages.trash",
+    "title": "gmail.users.messages.trash"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_messages_untrash",
+    "kind": "write",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.modify"
+    ],
+    "methodId": "gmail.users.messages.untrash",
+    "title": "gmail.users.messages.untrash"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_settin_send_a_smime_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/gmail.settings.basic",
+      "https://www.googleapis.com/auth/gmail.settings.sharing"
+    ],
+    "methodId": "gmail.users.settings.sendAs.smimeInfo.delete",
+    "title": "gmail.users.settings.sendAs.smimeInfo.delete"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_settin_send_a_smime_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/gmail.settings.basic",
+      "https://www.googleapis.com/auth/gmail.settings.sharing"
+    ],
+    "methodId": "gmail.users.settings.sendAs.smimeInfo.insert",
+    "title": "gmail.users.settings.sendAs.smimeInfo.insert"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_settin_send_a_smime_set_def",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/gmail.settings.basic",
+      "https://www.googleapis.com/auth/gmail.settings.sharing"
+    ],
+    "methodId": "gmail.users.settings.sendAs.smimeInfo.setDefault",
+    "title": "gmail.users.settings.sendAs.smimeInfo.setDefault"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_settin_send_as_smime_i_list",
+    "kind": "read",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.modify",
+      "https://www.googleapis.com/auth/gmail.readonly",
+      "https://www.googleapis.com/auth/gmail.settings.basic",
+      "https://www.googleapis.com/auth/gmail.settings.sharing"
+    ],
+    "methodId": "gmail.users.settings.sendAs.smimeInfo.list",
+    "title": "gmail.users.settings.sendAs.smimeInfo.list"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_setting_cse_identiti_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/gmail.settings.basic",
+      "https://www.googleapis.com/auth/gmail.settings.sharing"
+    ],
+    "methodId": "gmail.users.settings.cse.identities.create",
+    "title": "gmail.users.settings.cse.identities.create"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_setting_cse_identiti_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/gmail.settings.basic",
+      "https://www.googleapis.com/auth/gmail.settings.sharing"
+    ],
+    "methodId": "gmail.users.settings.cse.identities.delete",
+    "title": "gmail.users.settings.cse.identities.delete"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_setting_cse_keypair_disable",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/gmail.settings.basic",
+      "https://www.googleapis.com/auth/gmail.settings.sharing"
+    ],
+    "methodId": "gmail.users.settings.cse.keypairs.disable",
+    "title": "gmail.users.settings.cse.keypairs.disable"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_setting_cse_keypair_obliter",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/gmail.settings.basic",
+      "https://www.googleapis.com/auth/gmail.settings.sharing"
+    ],
+    "methodId": "gmail.users.settings.cse.keypairs.obliterate",
+    "title": "gmail.users.settings.cse.keypairs.obliterate"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_setting_cse_keypairs_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/gmail.settings.basic",
+      "https://www.googleapis.com/auth/gmail.settings.sharing"
+    ],
+    "methodId": "gmail.users.settings.cse.keypairs.create",
+    "title": "gmail.users.settings.cse.keypairs.create"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_setting_cse_keypairs_enable",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/gmail.settings.basic",
+      "https://www.googleapis.com/auth/gmail.settings.sharing"
+    ],
+    "methodId": "gmail.users.settings.cse.keypairs.enable",
+    "title": "gmail.users.settings.cse.keypairs.enable"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_setting_send_as_smime_i_get",
+    "kind": "read",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.modify",
+      "https://www.googleapis.com/auth/gmail.readonly",
+      "https://www.googleapis.com/auth/gmail.settings.basic",
+      "https://www.googleapis.com/auth/gmail.settings.sharing"
+    ],
+    "methodId": "gmail.users.settings.sendAs.smimeInfo.get",
+    "title": "gmail.users.settings.sendAs.smimeInfo.get"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_settings_cse_identiti_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/gmail.settings.basic",
+      "https://www.googleapis.com/auth/gmail.settings.sharing"
+    ],
+    "methodId": "gmail.users.settings.cse.identities.patch",
+    "title": "gmail.users.settings.cse.identities.patch"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_settings_cse_identitie_list",
+    "kind": "read",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.modify",
+      "https://www.googleapis.com/auth/gmail.readonly",
+      "https://www.googleapis.com/auth/gmail.settings.basic",
+      "https://www.googleapis.com/auth/gmail.settings.sharing"
+    ],
+    "methodId": "gmail.users.settings.cse.identities.list",
+    "title": "gmail.users.settings.cse.identities.list"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_settings_cse_identities_get",
+    "kind": "read",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.modify",
+      "https://www.googleapis.com/auth/gmail.readonly",
+      "https://www.googleapis.com/auth/gmail.settings.basic",
+      "https://www.googleapis.com/auth/gmail.settings.sharing"
+    ],
+    "methodId": "gmail.users.settings.cse.identities.get",
+    "title": "gmail.users.settings.cse.identities.get"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_settings_cse_keypairs_get",
+    "kind": "read",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.modify",
+      "https://www.googleapis.com/auth/gmail.readonly",
+      "https://www.googleapis.com/auth/gmail.settings.basic",
+      "https://www.googleapis.com/auth/gmail.settings.sharing"
+    ],
+    "methodId": "gmail.users.settings.cse.keypairs.get",
+    "title": "gmail.users.settings.cse.keypairs.get"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_settings_cse_keypairs_list",
+    "kind": "read",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.modify",
+      "https://www.googleapis.com/auth/gmail.readonly",
+      "https://www.googleapis.com/auth/gmail.settings.basic",
+      "https://www.googleapis.com/auth/gmail.settings.sharing"
+    ],
+    "methodId": "gmail.users.settings.cse.keypairs.list",
+    "title": "gmail.users.settings.cse.keypairs.list"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_settings_delegates_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/gmail.settings.sharing"
+    ],
+    "methodId": "gmail.users.settings.delegates.create",
+    "title": "gmail.users.settings.delegates.create"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_settings_delegates_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/gmail.settings.sharing"
+    ],
+    "methodId": "gmail.users.settings.delegates.delete",
+    "title": "gmail.users.settings.delegates.delete"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_settings_delegates_get",
+    "kind": "read",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.modify",
+      "https://www.googleapis.com/auth/gmail.readonly",
+      "https://www.googleapis.com/auth/gmail.settings.basic"
+    ],
+    "methodId": "gmail.users.settings.delegates.get",
+    "title": "gmail.users.settings.delegates.get"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_settings_delegates_list",
+    "kind": "read",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.modify",
+      "https://www.googleapis.com/auth/gmail.readonly",
+      "https://www.googleapis.com/auth/gmail.settings.basic"
+    ],
+    "methodId": "gmail.users.settings.delegates.list",
+    "title": "gmail.users.settings.delegates.list"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_settings_filters_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/gmail.settings.basic"
+    ],
+    "methodId": "gmail.users.settings.filters.create",
+    "title": "gmail.users.settings.filters.create"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_settings_filters_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/gmail.settings.basic"
+    ],
+    "methodId": "gmail.users.settings.filters.delete",
+    "title": "gmail.users.settings.filters.delete"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_settings_filters_get",
+    "kind": "read",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.modify",
+      "https://www.googleapis.com/auth/gmail.readonly",
+      "https://www.googleapis.com/auth/gmail.settings.basic"
+    ],
+    "methodId": "gmail.users.settings.filters.get",
+    "title": "gmail.users.settings.filters.get"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_settings_filters_list",
+    "kind": "read",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.modify",
+      "https://www.googleapis.com/auth/gmail.readonly",
+      "https://www.googleapis.com/auth/gmail.settings.basic"
+    ],
+    "methodId": "gmail.users.settings.filters.list",
+    "title": "gmail.users.settings.filters.list"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_settings_forwarding_ad_list",
+    "kind": "read",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.modify",
+      "https://www.googleapis.com/auth/gmail.readonly",
+      "https://www.googleapis.com/auth/gmail.settings.basic"
+    ],
+    "methodId": "gmail.users.settings.forwardingAddresses.list",
+    "title": "gmail.users.settings.forwardingAddresses.list"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_settings_forwarding_add_get",
+    "kind": "read",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.modify",
+      "https://www.googleapis.com/auth/gmail.readonly",
+      "https://www.googleapis.com/auth/gmail.settings.basic"
+    ],
+    "methodId": "gmail.users.settings.forwardingAddresses.get",
+    "title": "gmail.users.settings.forwardingAddresses.get"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_settings_forwarding_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/gmail.settings.sharing"
+    ],
+    "methodId": "gmail.users.settings.forwardingAddresses.create",
+    "title": "gmail.users.settings.forwardingAddresses.create"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_settings_forwarding_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/gmail.settings.sharing"
+    ],
+    "methodId": "gmail.users.settings.forwardingAddresses.delete",
+    "title": "gmail.users.settings.forwardingAddresses.delete"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_settings_get_auto_forwardin",
+    "kind": "read",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.modify",
+      "https://www.googleapis.com/auth/gmail.readonly",
+      "https://www.googleapis.com/auth/gmail.settings.basic"
+    ],
+    "methodId": "gmail.users.settings.getAutoForwarding",
+    "title": "gmail.users.settings.getAutoForwarding"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_settings_get_imap",
+    "kind": "read",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.modify",
+      "https://www.googleapis.com/auth/gmail.readonly",
+      "https://www.googleapis.com/auth/gmail.settings.basic"
+    ],
+    "methodId": "gmail.users.settings.getImap",
+    "title": "gmail.users.settings.getImap"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_settings_get_language",
+    "kind": "read",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.modify",
+      "https://www.googleapis.com/auth/gmail.readonly",
+      "https://www.googleapis.com/auth/gmail.settings.basic"
+    ],
+    "methodId": "gmail.users.settings.getLanguage",
+    "title": "gmail.users.settings.getLanguage"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_settings_get_pop",
+    "kind": "read",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.modify",
+      "https://www.googleapis.com/auth/gmail.readonly",
+      "https://www.googleapis.com/auth/gmail.settings.basic"
+    ],
+    "methodId": "gmail.users.settings.getPop",
+    "title": "gmail.users.settings.getPop"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_settings_get_vacation",
+    "kind": "read",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.modify",
+      "https://www.googleapis.com/auth/gmail.readonly",
+      "https://www.googleapis.com/auth/gmail.settings.basic"
+    ],
+    "methodId": "gmail.users.settings.getVacation",
+    "title": "gmail.users.settings.getVacation"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_settings_send_as_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/gmail.settings.sharing"
+    ],
+    "methodId": "gmail.users.settings.sendAs.create",
+    "title": "gmail.users.settings.sendAs.create"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_settings_send_as_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/gmail.settings.sharing"
+    ],
+    "methodId": "gmail.users.settings.sendAs.delete",
+    "title": "gmail.users.settings.sendAs.delete"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_settings_send_as_get",
+    "kind": "read",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.modify",
+      "https://www.googleapis.com/auth/gmail.readonly",
+      "https://www.googleapis.com/auth/gmail.settings.basic"
+    ],
+    "methodId": "gmail.users.settings.sendAs.get",
+    "title": "gmail.users.settings.sendAs.get"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_settings_send_as_list",
+    "kind": "read",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.modify",
+      "https://www.googleapis.com/auth/gmail.readonly",
+      "https://www.googleapis.com/auth/gmail.settings.basic"
+    ],
+    "methodId": "gmail.users.settings.sendAs.list",
+    "title": "gmail.users.settings.sendAs.list"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_settings_send_as_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/gmail.settings.basic",
+      "https://www.googleapis.com/auth/gmail.settings.sharing"
+    ],
+    "methodId": "gmail.users.settings.sendAs.patch",
+    "title": "gmail.users.settings.sendAs.patch"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_settings_send_as_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/gmail.settings.basic",
+      "https://www.googleapis.com/auth/gmail.settings.sharing"
+    ],
+    "methodId": "gmail.users.settings.sendAs.update",
+    "title": "gmail.users.settings.sendAs.update"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_settings_send_as_verify",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/gmail.settings.sharing"
+    ],
+    "methodId": "gmail.users.settings.sendAs.verify",
+    "title": "gmail.users.settings.sendAs.verify"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_settings_update_auto_forwar",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/gmail.settings.sharing"
+    ],
+    "methodId": "gmail.users.settings.updateAutoForwarding",
+    "title": "gmail.users.settings.updateAutoForwarding"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_settings_update_imap",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/gmail.settings.basic"
+    ],
+    "methodId": "gmail.users.settings.updateImap",
+    "title": "gmail.users.settings.updateImap"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_settings_update_language",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/gmail.settings.basic"
+    ],
+    "methodId": "gmail.users.settings.updateLanguage",
+    "title": "gmail.users.settings.updateLanguage"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_settings_update_pop",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/gmail.settings.basic"
+    ],
+    "methodId": "gmail.users.settings.updatePop",
+    "title": "gmail.users.settings.updatePop"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_settings_update_vacation",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/gmail.settings.basic"
+    ],
+    "methodId": "gmail.users.settings.updateVacation",
+    "title": "gmail.users.settings.updateVacation"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_stop",
+    "kind": "destructive",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.metadata",
+      "https://www.googleapis.com/auth/gmail.modify",
+      "https://www.googleapis.com/auth/gmail.readonly"
+    ],
+    "methodId": "gmail.users.stop",
+    "title": "gmail.users.stop"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_threads_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://mail.google.com/"
+    ],
+    "methodId": "gmail.users.threads.delete",
+    "title": "gmail.users.threads.delete"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_threads_get",
+    "kind": "read",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.addons.current.message.action",
+      "https://www.googleapis.com/auth/gmail.addons.current.message.metadata",
+      "https://www.googleapis.com/auth/gmail.addons.current.message.readonly",
+      "https://www.googleapis.com/auth/gmail.metadata",
+      "https://www.googleapis.com/auth/gmail.modify",
+      "https://www.googleapis.com/auth/gmail.readonly"
+    ],
+    "methodId": "gmail.users.threads.get",
+    "title": "gmail.users.threads.get"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_threads_list",
+    "kind": "read",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.metadata",
+      "https://www.googleapis.com/auth/gmail.modify",
+      "https://www.googleapis.com/auth/gmail.readonly"
+    ],
+    "methodId": "gmail.users.threads.list",
+    "title": "gmail.users.threads.list"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_threads_modify",
+    "kind": "write",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.modify"
+    ],
+    "methodId": "gmail.users.threads.modify",
+    "title": "gmail.users.threads.modify"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_threads_trash",
+    "kind": "destructive",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.modify"
+    ],
+    "methodId": "gmail.users.threads.trash",
+    "title": "gmail.users.threads.trash"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_threads_untrash",
+    "kind": "write",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.modify"
+    ],
+    "methodId": "gmail.users.threads.untrash",
+    "title": "gmail.users.threads.untrash"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_users_watch",
+    "kind": "write",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.metadata",
+      "https://www.googleapis.com/auth/gmail.modify",
+      "https://www.googleapis.com/auth/gmail.readonly"
+    ],
+    "methodId": "gmail.users.watch",
+    "title": "gmail.users.watch"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmailpostm_domain_stats_batch_query",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/postmaster",
+      "https://www.googleapis.com/auth/postmaster.traffic.readonly"
+    ],
+    "methodId": "gmailpostmastertools.domainStats.batchQuery",
+    "title": "gmailpostmastertools.domainStats.batchQuery"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmailpostm_domains_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/postmaster",
+      "https://www.googleapis.com/auth/postmaster.domain"
+    ],
+    "methodId": "gmailpostmastertools.domains.create",
+    "title": "gmailpostmastertools.domains.create"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmailpostm_domains_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/postmaster",
+      "https://www.googleapis.com/auth/postmaster.domain"
+    ],
+    "methodId": "gmailpostmastertools.domains.delete",
+    "title": "gmailpostmastertools.domains.delete"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmailpostm_domains_domain_stats_query",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/postmaster",
+      "https://www.googleapis.com/auth/postmaster.traffic.readonly"
+    ],
+    "methodId": "gmailpostmastertools.domains.domainStats.query",
+    "title": "gmailpostmastertools.domains.domainStats.query"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmailpostm_domains_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/postmaster",
+      "https://www.googleapis.com/auth/postmaster.domain"
+    ],
+    "methodId": "gmailpostmastertools.domains.get",
+    "title": "gmailpostmastertools.domains.get"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmailpostm_domains_get_compliance_statu",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/postmaster",
+      "https://www.googleapis.com/auth/postmaster.traffic.readonly"
+    ],
+    "methodId": "gmailpostmastertools.domains.getComplianceStatus",
+    "title": "gmailpostmastertools.domains.getComplianceStatus"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmailpostm_domains_get_verification_tok",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/postmaster",
+      "https://www.googleapis.com/auth/postmaster.domain"
+    ],
+    "methodId": "gmailpostmastertools.domains.getVerificationToken",
+    "title": "gmailpostmastertools.domains.getVerificationToken"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmailpostm_domains_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/postmaster",
+      "https://www.googleapis.com/auth/postmaster.domain"
+    ],
+    "methodId": "gmailpostmastertools.domains.list",
+    "title": "gmailpostmastertools.domains.list"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmailpostm_domains_users_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/postmaster",
+      "https://www.googleapis.com/auth/postmaster.user"
+    ],
+    "methodId": "gmailpostmastertools.domains.users.create",
+    "title": "gmailpostmastertools.domains.users.create"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmailpostm_domains_users_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/postmaster",
+      "https://www.googleapis.com/auth/postmaster.user"
+    ],
+    "methodId": "gmailpostmastertools.domains.users.delete",
+    "title": "gmailpostmastertools.domains.users.delete"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmailpostm_domains_users_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/postmaster",
+      "https://www.googleapis.com/auth/postmaster.user"
+    ],
+    "methodId": "gmailpostmastertools.domains.users.get",
+    "title": "gmailpostmastertools.domains.users.get"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmailpostm_domains_users_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/postmaster",
+      "https://www.googleapis.com/auth/postmaster.user"
+    ],
+    "methodId": "gmailpostmastertools.domains.users.list",
+    "title": "gmailpostmastertools.domains.users.list"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmailpostm_domains_users_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/postmaster",
+      "https://www.googleapis.com/auth/postmaster.user"
+    ],
+    "methodId": "gmailpostmastertools.domains.users.patch",
+    "title": "gmailpostmastertools.domains.users.patch"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmailpostm_domains_verify",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/postmaster",
+      "https://www.googleapis.com/auth/postmaster.domain"
+    ],
+    "methodId": "gmailpostmastertools.domains.verify",
+    "title": "gmailpostmastertools.domains.verify"
+  }
+]

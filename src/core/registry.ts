@@ -8,7 +8,11 @@ import { existsSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-export type AuthGroup = 'cloud' | 'workspace-user' | 'workspace-admin' | 'searchconsole' | 'business';
+/**
+ * One auth group per token file, or 'apikey' for products that take an API key
+ * instead of an OAuth login (no token file).
+ */
+export type AuthGroup = 'cloud' | 'workspace-user' | 'workspace-admin' | 'searchconsole' | 'business' | 'developer' | 'apikey';
 
 export interface ApiRef {
   api: string;
@@ -21,7 +25,10 @@ export interface ServerSpec {
   group: AuthGroup;
   kind: 'curated' | 'discovery' | 'curated+discovery';
   curated?: string;
+  /** APIs with per-method tools: every method of each one becomes a tool. */
   apis?: ApiRef[];
+  /** APIs reached through the gateway tools (api_search, api_describe, api_call) of this server, not per-method tools. */
+  gatewayApis?: ApiRef[];
   /** Scopes the curated tools need, in addition to the discovery method scopes. */
   scopes?: string[];
   label: string;

@@ -1,15 +1,35 @@
 import { existsSync, mkdirSync, readFileSync, unlinkSync } from 'node:fs';
 import { join, resolve } from 'node:path';
-import { ADMIN_SCOPES } from '../core/auth.js';
+import { ADMIN_SCOPES, adminScopeFileFor, readAdminScopeFile } from '../core/auth.js';
 import { loadConfig, type RuntimeConfig } from '../core/config.js';
-import { ALL_GROUPS, LOGIN_GROUPS, type CliGroup } from './args.js';
+import { ALL_GROUPS, OAUTH_GROUPS, type CliGroup } from './args.js';
 import { backupFile, writeAtomic } from './fsutil.js';
+import { postureLine } from './posture.js';
 import type { Output } from './report.js';
 import { UsageError } from './types.js';
 
 /** The per-group token file. The name matches what core/auth.ts reads: <group>.token.json. */
 export function tokenFileFor(group: string, cfg: RuntimeConfig): string {
   return join(cfg.tokenDir, `${group}.token.json`);
+}
+
+/** The saved API key for the apikey group: {"apiKey": "<key>"}, mode 0600, in the token directory. */
+export function apiKeyFileFor(cfg: RuntimeConfig): string {
+  return join(cfg.tokenDir, 'apikey.json');
+}
+
+export type ApiKeyState = 'missing' | 'saved' | 'unreadable';
+
+/** Whether a key is saved. The key value is read only to check it is a non-empty string, and is never returned. */
+export function apiKeyState(file: string): ApiKeyState {
+  if (!existsSync(file)) return 'missing';
+  try {
+    const parsed: unknown = JSON.parse(readFileSync(file, 'utf8'));
+    const saved = typeof parsed === 'object' && parsed !== null ? (parsed as { apiKey?: unknown }).apiKey : undefined;
+    return typeof saved === 'string' && saved.trim() !== '' ? 'saved' : 'unreadable';
+  } catch {
+    return 'unreadable';
+  }
 }
 
 export interface StoredToken {
@@ -43,22 +63,46 @@ function formatExpiry(expiryMs: number | undefined): string {
   return expiryMs < Date.now() ? `${iso} (access token expired; it refreshes automatically when a refresh token exists)` : iso;
 }
 
-/** Prints per-group login state, the token file, scopes and expiry. Never prints token values. */
-export function runStatus(out: Output): number {
-  const cfg = loadConfig();
+/**
+ * Prints per-group login state, the token file, scopes, expiry and the security posture.
+ * Never prints token values or the API key.
+ */
+export function runStatus(out: Output, env: NodeJS.ProcessEnv = process.env): number {
+  const cfg = loadConfig(env);
   out.log(`token directory: ${cfg.tokenDir}`);
   out.log(
     `OAuth client file: ${existsSync(cfg.clientSecretFile) ? cfg.clientSecretFile : 'missing (run: gsm setup-client <client_secret.json>)'}`,
   );
 
   for (const group of ALL_GROUPS) {
+    if (group === 'apikey') {
+      const file = apiKeyFileFor(cfg);
+      const state = apiKeyState(file);
+      if (state === 'saved') out.log(`apikey: API key saved in ${file} (the value is not shown)`);
+      else if (state === 'missing') out.log('apikey: not set (run: gsm setup-apikey)');
+      else out.log(`apikey: ${file} is unreadable or holds no key (run: gsm setup-apikey --force)`);
+      continue;
+    }
+
     if (group === 'workspace-admin') {
+      const stored = readAdminScopeFile(cfg);
+      if (stored) {
+        const keyFound = existsSync(stored.keyFile);
+        out.log(`${group}: set up with gsm setup-admin (service account, domain-wide delegation)`);
+        out.log(`  setup file: ${adminScopeFileFor(cfg)}`);
+        out.log(`  subject: ${stored.subject}`);
+        out.log(`  key file: ${stored.keyFile}${keyFound ? '' : ' (NOT found)'}`);
+        out.log(`  profile: ${stored.profile}`);
+        out.log(`  scopes (${stored.scopes.length}):`);
+        for (const scope of stored.scopes) out.log(`    ${scope}`);
+        continue;
+      }
       const keyFound = cfg.serviceAccountKeyFile !== undefined && existsSync(cfg.serviceAccountKeyFile);
       const configured = keyFound && cfg.adminSubject !== undefined;
-      out.log(`${group}: ${configured ? 'configured (service account, domain-wide delegation)' : 'not configured (no interactive login)'}`);
+      out.log(`${group}: ${configured ? 'configured by environment variables (service account, domain-wide delegation)' : 'not configured (run: gsm setup-admin)'}`);
       out.log(`  GSM_SERVICE_ACCOUNT_KEY_FILE: ${cfg.serviceAccountKeyFile ? (keyFound ? 'set, file found' : 'set, file NOT found') : 'not set'}`);
       out.log(`  GSM_ADMIN_SUBJECT: ${cfg.adminSubject ? 'set' : 'not set'}`);
-      out.log(`  scopes: ${ADMIN_SCOPES.length} (see: gsm login workspace-admin)`);
+      out.log(`  scopes: ${ADMIN_SCOPES.length} default (gsm setup-admin stores a longer list)`);
       continue;
     }
 
@@ -79,6 +123,7 @@ export function runStatus(out: Output): number {
     out.log(`  refresh token: ${token.refresh_token ? 'yes' : 'no'}`);
     out.log(`  scopes (${scopes.length}):`);
     for (const scope of scopes) out.log(`    ${scope}`);
+    out.log(`  ${postureLine(scopes, env)}`);
   }
   return 0;
 }
@@ -90,6 +135,10 @@ export function runLogout(group: CliGroup, out: Output): number {
     return 0;
   }
   const cfg = loadConfig();
+  if (group === 'apikey') {
+    out.log(`apikey has no login. The saved key is ${apiKeyFileFor(cfg)}: delete that file to remove it.`);
+    return 0;
+  }
   const file = tokenFileFor(group, cfg);
   if (!existsSync(file)) {
     out.log(`${group}: not logged in (no token file)`);
@@ -137,6 +186,6 @@ export function runSetupClient(sourceArg: string, force: boolean, out: Output): 
   writeAtomic(dest, text, 0o600);
   out.log(`OAuth client saved: ${dest} (mode 0600). The client secret was not printed.`);
   if (backup) out.log(`backup: ${backup}`);
-  out.log(`Next: gsm login ${LOGIN_GROUPS.join(' | ')}`);
+  out.log(`Next: gsm login ${OAUTH_GROUPS.join(' | ')}`);
   return 0;
 }

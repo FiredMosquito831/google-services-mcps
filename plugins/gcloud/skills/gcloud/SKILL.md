@@ -1,0 +1,310 @@
+---
+name: gcloud
+description: Google Cloud console APIs: projects, service enablement, API keys, billing, monitoring, storage, BigQuery and IAM, plus the rest of the infrastructure, data, devops, networking, security and governance APIs. Served by the gcloud MCP server with 374 tools. Use for requests about these Google APIs.
+---
+
+# Google Cloud
+
+Google Cloud console APIs: projects, service enablement, API keys, billing, monitoring, storage, BigQuery and IAM, plus the rest of the infrastructure, data, devops, networking, security and governance APIs.
+
+The `gcloud` MCP server exposes 374 tools. Per-method tools cover the Discovery APIs listed below. Gateway APIs are reached through three generic tools: api_search finds a method, api_describe shows its parameters, and api_call runs it.
+
+## Log in
+
+Replace `<plugin>` with this plugin's folder, the one that holds `bin/gsm.mjs`. Sign in with the OAuth desktop client, once: `node <plugin>/bin/gsm.mjs setup-client <client_secret.json>`, then `node <plugin>/bin/gsm.mjs login cloud`. Application Default Credentials also work for this group.
+
+## Safety
+
+Reads never ask for approval. Changes and deletions ask first, unless the user has set the confirmation option to off in the plugin settings. Deny, ask and allow rules in the policy file (policy.json in the token directory) apply on top of this.
+
+## APIs
+
+- Service Usage API (serviceusage v1)
+- Cloud Resource Manager API (cloudresourcemanager v3)
+- API Keys API (apikeys v2)
+- Cloud Billing API (cloudbilling v1)
+- Cloud Monitoring API (monitoring v3)
+- Cloud Storage JSON API (storage v1)
+- BigQuery API (bigquery v2)
+- Identity and Access Management (IAM) API (iam v2)
+- Cloud Asset API (cloudasset v1)
+- Cloud Trace API (cloudtrace v2)
+- Cloud Profiler API (cloudprofiler v2)
+- Policy Troubleshooter API (policytroubleshooter v3)
+- Cloud Logging API (logging v2), reached through api_search, api_describe and api_call
+- Compute Engine API (compute v1), reached through api_search, api_describe and api_call
+- Cloud Run Admin API (run v2), reached through api_search, api_describe and api_call
+- Kubernetes Engine API (container v1), reached through api_search, api_describe and api_call
+- Cloud Key Management Service (KMS) API (cloudkms v1), reached through api_search, api_describe and api_call
+- Sensitive Data Protection (DLP) (dlp v2), reached through api_search, api_describe and api_call
+- Security Command Center API (securitycenter v1), reached through api_search, api_describe and api_call
+- Organization Policy API (orgpolicy v2), reached through api_search, api_describe and api_call
+- Access Context Manager API (accesscontextmanager v1), reached through api_search, api_describe and api_call
+- Secret Manager API (secretmanager v1), reached through api_search, api_describe and api_call
+- Cloud Pub/Sub API (pubsub v1), reached through api_search, api_describe and api_call
+- Cloud Spanner API (spanner v1), reached through api_search, api_describe and api_call
+- Cloud SQL Admin API (sqladmin v1), reached through api_search, api_describe and api_call
+- Cloud Firestore API (firestore v1), reached through api_search, api_describe and api_call
+- Cloud Functions API (cloudfunctions v2), reached through api_search, api_describe and api_call
+- Cloud Scheduler API (cloudscheduler v1), reached through api_search, api_describe and api_call
+- Cloud Tasks API (cloudtasks v2), reached through api_search, api_describe and api_call
+- Cloud DNS API (dns v1), reached through api_search, api_describe and api_call
+- Cloud Build API (cloudbuild v2), reached through api_search, api_describe and api_call
+- Artifact Registry API (artifactregistry v1), reached through api_search, api_describe and api_call
+- Error Reporting API (clouderrorreporting v1beta1), reached through api_search, api_describe and api_call
+- Cloud Shell API (cloudshell v1), reached through api_search, api_describe and api_call
+- Essential Contacts API (essentialcontacts v1), reached through api_search, api_describe and api_call
+- Public Certificate Authority API (publicca v1), reached through api_search, api_describe and api_call
+- Traffic Director API (trafficdirector v3), reached through api_search, api_describe and api_call
+- API Discovery Service (discovery v1), reached through api_search, api_describe and api_call
+- Service Control API (servicecontrol v2), reached through api_search, api_describe and api_call
+- Policy Analyzer API (policyanalyzer v1), reached through api_search, api_describe and api_call
+- Cloud Runtime Configuration API (runtimeconfig v1), reached through api_search, api_describe and api_call
+- KMS Inventory API (kmsinventory v1), reached through api_search, api_describe and api_call
+- Cloud Billing Budget API (billingbudgets v1), reached through api_search, api_describe and api_call
+- Cloud Location Finder API (cloudlocationfinder v1), reached through api_search, api_describe and api_call
+- Security Token Service API (sts v1), reached through api_search, api_describe and api_call
+- IAM Service Account Credentials API (iamcredentials v1), reached through api_search, api_describe and api_call
+- On-Demand Scanning API (ondemandscanning v1), reached through api_search, api_describe and api_call
+- Advisory Notifications API (advisorynotifications v1), reached through api_search, api_describe and api_call
+- BigQuery Connection API (bigqueryconnection v1), reached through api_search, api_describe and api_call
+- Database Center API (databasecenter v1beta), reached through api_search, api_describe and api_call
+- Data pipelines API (datapipelines v1), reached through api_search, api_describe and api_call
+- Transcoder API (transcoder v1), reached through api_search, api_describe and api_call
+- Serverless VPC Access API (vpcaccess v1), reached through api_search, api_describe and api_call
+- Cloud Product Registry API (cloudproductregistry v1), reached through api_search, api_describe and api_call
+- Cloud OS Login API (oslogin v1), reached through api_search, api_describe and api_call
+- BigQuery Data Policy API (bigquerydatapolicy v2), reached through api_search, api_describe and api_call
+- GKE Hub API (gkehub v2), reached through api_search, api_describe and api_call
+- Application Integration API (integrations v2), reached through api_search, api_describe and api_call
+- Workflow Executions API (workflowexecutions v1), reached through api_search, api_describe and api_call
+- Blockchain Node Engine API (blockchainnodeengine v1), reached through api_search, api_describe and api_call
+- Cluster Director API (hypercomputecluster v1), reached through api_search, api_describe and api_call
+- Cloud IDS API (ids v1), reached through api_search, api_describe and api_call
+- Workflows API (workflows v1), reached through api_search, api_describe and api_call
+- Cloud Commerce Partner Procurement API (cloudcommerceprocurement v1), reached through api_search, api_describe and api_call
+- Cloud Controls Partner API (cloudcontrolspartner v1), reached through api_search, api_describe and api_call
+- Parallelstore API (parallelstore v1), reached through api_search, api_describe and api_call
+- Storage Batch Operations API (storagebatchoperations v1), reached through api_search, api_describe and api_call
+- Web Security Scanner API (websecurityscanner v1), reached through api_search, api_describe and api_call
+- Batch API (batch v1), reached through api_search, api_describe and api_call
+- Service Consumer Management API (serviceconsumermanagement v1), reached through api_search, api_describe and api_call
+- Rapid Migration Assessment API (rapidmigrationassessment v1), reached through api_search, api_describe and api_call
+- Cloud Memorystore for Memcached API (memcache v1), reached through api_search, api_describe and api_call
+- Storage Transfer API (storagetransfer v1), reached through api_search, api_describe and api_call
+- Cloud Datastore API (datastore v1), reached through api_search, api_describe and api_call
+- Cloud Deployment Manager V2 API (deploymentmanager v2), reached through api_search, api_describe and api_call
+- Cloud FTP API (ftp v1), reached through api_search, api_describe and api_call
+- Cloud Data Fusion API (datafusion v1), reached through api_search, api_describe and api_call
+- Cloud Identity-Aware Proxy API (iap v1), reached through api_search, api_describe and api_call
+- Looker (Google Cloud core) API (looker v1), reached through api_search, api_describe and api_call
+- Binary Authorization API (binaryauthorization v1), reached through api_search, api_describe and api_call
+- Google Cloud Support API (cloudsupport v2), reached through api_search, api_describe and api_call
+- Service Management API (servicemanagement v1), reached through api_search, api_describe and api_call
+- Threat Intelligence API (threatintelligence v1beta), reached through api_search, api_describe and api_call
+- API Management API (apim v1alpha), reached through api_search, api_describe and api_call
+- Security Posture API (securityposture v1), reached through api_search, api_describe and api_call
+- Parameter Manager API (parametermanager v1), reached through api_search, api_describe and api_call
+- reCAPTCHA Enterprise API (recaptchaenterprise v1), reached through api_search, api_describe and api_call
+- Service Directory API (servicedirectory v1), reached through api_search, api_describe and api_call
+- Cloud TPU API (tpu v2), reached through api_search, api_describe and api_call
+- Connectors API (connectors v2), reached through api_search, api_describe and api_call
+- Cloud Filestore API (file v1), reached through api_search, api_describe and api_call
+- Access Approval API (accessapproval v1), reached through api_search, api_describe and api_call
+- Lakehouse API (biglake v1), reached through api_search, api_describe and api_call
+- OS Config API (osconfig v2), reached through api_search, api_describe and api_call
+- Policy Simulator API (policysimulator v1), reached through api_search, api_describe and api_call
+- Data Lineage API (datalineage v1), reached through api_search, api_describe and api_call
+- Cloud Domains API (domains v1), reached through api_search, api_describe and api_call
+- Pub/Sub Lite API (pubsublite v1), reached through api_search, api_describe and api_call
+- Cloud Composer API (composer v1), reached through api_search, api_describe and api_call
+- Service Networking API (servicenetworking v1), reached through api_search, api_describe and api_call
+- API Gateway API (apigateway v1), reached through api_search, api_describe and api_call
+- Workload Manager API (workloadmanager v1), reached through api_search, api_describe and api_call
+- Assured Workloads API (assuredworkloads v1), reached through api_search, api_describe and api_call
+- Datastream API (datastream v1), reached through api_search, api_describe and api_call
+- BigQuery Reservation API (bigqueryreservation v1), reached through api_search, api_describe and api_call
+- Cloud Workstations API (workstations v1), reached through api_search, api_describe and api_call
+- Analytics Hub API (analyticshub v1), reached through api_search, api_describe and api_call
+- Certificate Manager API (certificatemanager v1), reached through api_search, api_describe and api_call
+- BigQuery Data Transfer API (bigquerydatatransfer v1), reached through api_search, api_describe and api_call
+- AlloyDB API (alloydb v1), reached through api_search, api_describe and api_call
+- App Hub API (apphub v1), reached through api_search, api_describe and api_call
+- App Lifecycle Manager API (saasservicemgmt v1), reached through api_search, api_describe and api_call
+- Cloud Number Registry API (cloudnumberregistry v1alpha), reached through api_search, api_describe and api_call
+- Container Analysis API (containeranalysis v1), reached through api_search, api_describe and api_call
+- Observability API (observability v1), reached through api_search, api_describe and api_call
+- Certificate Authority API (privateca v1), reached through api_search, api_describe and api_call
+- Developer Connect API (developerconnect v1), reached through api_search, api_describe and api_call
+- Managed Service for Microsoft Active Directory API (managedidentities v1), reached through api_search, api_describe and api_call
+- Infrastructure Manager API (config v1), reached through api_search, api_describe and api_call
+- Google Cloud Memorystore for Redis API (redis v1), reached through api_search, api_describe and api_call
+- Dataproc Metastore API (metastore v1), reached through api_search, api_describe and api_call
+- Network Management API (networkmanagement v1), reached through api_search, api_describe and api_call
+- Recommender API (recommender v1), reached through api_search, api_describe and api_call
+- Audit Manager API (auditmanager v1), reached through api_search, api_describe and api_call
+- Bare Metal Solution API (baremetalsolution v2), reached through api_search, api_describe and api_call
+- BeyondCorp API (beyondcorp v1), reached through api_search, api_describe and api_call
+- Dataflow API (dataflow v1b3), reached through api_search, api_describe and api_call
+- App Engine Admin API (appengine v1), reached through api_search, api_describe and api_call
+- Backup and DR Service API (backupdr v1), reached through api_search, api_describe and api_call
+- Cloud Deploy API (clouddeploy v1), reached through api_search, api_describe and api_call
+- Secure Source Manager API (securesourcemanager v1), reached through api_search, api_describe and api_call
+- Cloud Channel API (cloudchannel v1), reached through api_search, api_describe and api_call
+- Eventarc API (eventarc v1), reached through api_search, api_describe and api_call
+- Backup for GKE API (gkebackup v1), reached through api_search, api_describe and api_call
+- Migration Center API (migrationcenter v1), reached through api_search, api_describe and api_call
+- VM Migration API (vmmigration v1), reached through api_search, api_describe and api_call
+- Database Migration API (datamigration v1), reached through api_search, api_describe and api_call
+- Google Cloud Data Catalog API (datacatalog v1), reached through api_search, api_describe and api_call
+- GKE On-Prem API (gkeonprem v1), reached through api_search, api_describe and api_call
+- Cloud Bigtable Admin API (bigtableadmin v2), reached through api_search, api_describe and api_call
+- NetApp API (netapp v1), reached through api_search, api_describe and api_call
+- SAS Portal API (sasportal v1alpha1), reached through api_search, api_describe and api_call
+- Dataform API (dataform v1), reached through api_search, api_describe and api_call
+- Managed Service for Apache Kafka API (managedkafka v1), reached through api_search, api_describe and api_call
+- Oracle Database@Google Cloud API (oracledatabase v1), reached through api_search, api_describe and api_call
+- API hub API (apihub v1), reached through api_search, api_describe and api_call
+- VMware Engine API (vmwareengine v1), reached through api_search, api_describe and api_call
+- Network Connectivity API (networkconnectivity v1), reached through api_search, api_describe and api_call
+- Network Services API (networkservices v1), reached through api_search, api_describe and api_call
+- Cloud Dataproc API (dataproc v1), reached through api_search, api_describe and api_call
+- Cloud Healthcare API (healthcare v1), reached through api_search, api_describe and api_call
+- Network Security API (networksecurity v1), reached through api_search, api_describe and api_call
+- Cloud Dataplex API (dataplex v1), reached through api_search, api_describe and api_call
+- Apigee API (apigee v1), reached through api_search, api_describe and api_call
+- AlloyDB API (alloydb v1alpha), reached through api_search, api_describe and api_call
+- AlloyDB API (alloydb v1beta), reached through api_search, api_describe and api_call
+- Analytics Hub API (analyticshub v1beta1), reached through api_search, api_describe and api_call
+- API Gateway API (apigateway v1beta), reached through api_search, api_describe and api_call
+- App Engine Admin API (appengine v1alpha), reached through api_search, api_describe and api_call
+- App Engine Admin API (appengine v1beta), reached through api_search, api_describe and api_call
+- App Hub API (apphub v1alpha), reached through api_search, api_describe and api_call
+- Artifact Registry API (artifactregistry v1beta1), reached through api_search, api_describe and api_call
+- Artifact Registry API (artifactregistry v1beta2), reached through api_search, api_describe and api_call
+- Assured Workloads API (assuredworkloads v1beta1), reached through api_search, api_describe and api_call
+- Backup and DR Service API (backupdr v1beta), reached through api_search, api_describe and api_call
+- BeyondCorp API (beyondcorp v1alpha), reached through api_search, api_describe and api_call
+- BigQuery Connection API (bigqueryconnection v1beta1), reached through api_search, api_describe and api_call
+- BigQuery Data Policy API (bigquerydatapolicy v1), reached through api_search, api_describe and api_call
+- Cloud Billing Budget API (billingbudgets v1beta1), reached through api_search, api_describe and api_call
+- Binary Authorization API (binaryauthorization v1beta1), reached through api_search, api_describe and api_call
+- Cloud Asset API (cloudasset v1beta1), reached through api_search, api_describe and api_call
+- Cloud Asset API (cloudasset v1p1beta1), reached through api_search, api_describe and api_call
+- Cloud Asset API (cloudasset v1p5beta1), reached through api_search, api_describe and api_call
+- Cloud Asset API (cloudasset v1p7beta1), reached through api_search, api_describe and api_call
+- Cloud Billing API (cloudbilling v1beta), reached through api_search, api_describe and api_call
+- Cloud Build API (cloudbuild v1), reached through api_search, api_describe and api_call
+- Cloud Controls Partner API (cloudcontrolspartner v1beta), reached through api_search, api_describe and api_call
+- Cloud Functions API (cloudfunctions v1), reached through api_search, api_describe and api_call
+- Cloud Functions API (cloudfunctions v2alpha), reached through api_search, api_describe and api_call
+- Cloud Functions API (cloudfunctions v2beta), reached through api_search, api_describe and api_call
+- Cloud Location Finder API (cloudlocationfinder v1alpha), reached through api_search, api_describe and api_call
+- Cloud Quotas API (cloudquotas v1), reached through api_search, api_describe and api_call
+- Cloud Quotas API (cloudquotas v1beta), reached through api_search, api_describe and api_call
+- Cloud Resource Manager API (cloudresourcemanager v1), reached through api_search, api_describe and api_call
+- Cloud Resource Manager API (cloudresourcemanager v1beta1), reached through api_search, api_describe and api_call
+- Cloud Resource Manager API (cloudresourcemanager v2), reached through api_search, api_describe and api_call
+- Cloud Resource Manager API (cloudresourcemanager v2beta1), reached through api_search, api_describe and api_call
+- Cloud Scheduler API (cloudscheduler v1beta1), reached through api_search, api_describe and api_call
+- Google Cloud Support API (cloudsupport v2beta), reached through api_search, api_describe and api_call
+- Cloud Tasks API (cloudtasks v2beta2), reached through api_search, api_describe and api_call
+- Cloud Tasks API (cloudtasks v2beta3), reached through api_search, api_describe and api_call
+- Cloud Trace API (cloudtrace v1), reached through api_search, api_describe and api_call
+- Cloud Trace API (cloudtrace v2beta1), reached through api_search, api_describe and api_call
+- Cloud Composer API (composer v1beta1), reached through api_search, api_describe and api_call
+- Compute Engine API (compute 2026-09-01), reached through api_search, api_describe and api_call
+- Compute Engine API (compute 2026-10-01-preview), reached through api_search, api_describe and api_call
+- Compute Engine API (compute alpha), reached through api_search, api_describe and api_call
+- Compute Engine API (compute beta), reached through api_search, api_describe and api_call
+- Compute Engine API (compute preview), reached through api_search, api_describe and api_call
+- Compute Engine API (compute stable), reached through api_search, api_describe and api_call
+- Connectors API (connectors v1), reached through api_search, api_describe and api_call
+- Kubernetes Engine API (container v1beta1), reached through api_search, api_describe and api_call
+- Container Analysis API (containeranalysis v1alpha1), reached through api_search, api_describe and api_call
+- Container Analysis API (containeranalysis v1beta1), reached through api_search, api_describe and api_call
+- Google Cloud Data Catalog API (datacatalog v1beta1), reached through api_search, api_describe and api_call
+- Dataform API (dataform v1beta1), reached through api_search, api_describe and api_call
+- Cloud Data Fusion API (datafusion v1beta1), reached through api_search, api_describe and api_call
+- Database Migration API (datamigration v1beta1), reached through api_search, api_describe and api_call
+- Cloud Datastore API (datastore v1beta1), reached through api_search, api_describe and api_call
+- Cloud Datastore API (datastore v1beta3), reached through api_search, api_describe and api_call
+- Datastream API (datastream v1alpha1), reached through api_search, api_describe and api_call
+- Cloud Deployment Manager V2 API (deploymentmanager alpha), reached through api_search, api_describe and api_call
+- Cloud Deployment Manager V2 API (deploymentmanager v2beta), reached through api_search, api_describe and api_call
+- Cloud DNS API (dns v1beta2), reached through api_search, api_describe and api_call
+- Cloud Domains API (domains v1alpha2), reached through api_search, api_describe and api_call
+- Cloud Domains API (domains v1beta1), reached through api_search, api_describe and api_call
+- Cloud Filestore API (file v1beta1), reached through api_search, api_describe and api_call
+- Cloud Firestore API (firestore v1beta1), reached through api_search, api_describe and api_call
+- Cloud Firestore API (firestore v1beta2), reached through api_search, api_describe and api_call
+- Cloud FTP API (ftp v1alpha), reached through api_search, api_describe and api_call
+- GKE Hub API (gkehub v1), reached through api_search, api_describe and api_call
+- GKE Hub API (gkehub v1alpha), reached through api_search, api_describe and api_call
+- GKE Hub API (gkehub v1beta), reached through api_search, api_describe and api_call
+- GKE Hub API (gkehub v1beta1), reached through api_search, api_describe and api_call
+- GKE Hub API (gkehub v2alpha), reached through api_search, api_describe and api_call
+- GKE Hub API (gkehub v2beta), reached through api_search, api_describe and api_call
+- Cloud Healthcare API (healthcare v1beta1), reached through api_search, api_describe and api_call
+- Identity and Access Management (IAM) API (iam v1), reached through api_search, api_describe and api_call
+- Identity and Access Management (IAM) API (iam v2beta), reached through api_search, api_describe and api_call
+- Cloud Identity-Aware Proxy API (iap v1beta1), reached through api_search, api_describe and api_call
+- Application Integration API (integrations v1), reached through api_search, api_describe and api_call
+- Managed Service for Microsoft Active Directory API (managedidentities v1alpha1), reached through api_search, api_describe and api_call
+- Managed Service for Microsoft Active Directory API (managedidentities v1beta1), reached through api_search, api_describe and api_call
+- Cloud Memorystore for Memcached API (memcache v1beta2), reached through api_search, api_describe and api_call
+- Dataproc Metastore API (metastore v1alpha), reached through api_search, api_describe and api_call
+- Dataproc Metastore API (metastore v1beta), reached through api_search, api_describe and api_call
+- Migration Center API (migrationcenter v1alpha1), reached through api_search, api_describe and api_call
+- Cloud Monitoring API (monitoring v1), reached through api_search, api_describe and api_call
+- NetApp API (netapp v1beta1), reached through api_search, api_describe and api_call
+- Network Connectivity API (networkconnectivity v1alpha1), reached through api_search, api_describe and api_call
+- Network Management API (networkmanagement v1beta1), reached through api_search, api_describe and api_call
+- Network Security API (networksecurity v1beta1), reached through api_search, api_describe and api_call
+- Network Services API (networkservices v1beta1), reached through api_search, api_describe and api_call
+- On-Demand Scanning API (ondemandscanning v1beta1), reached through api_search, api_describe and api_call
+- OS Config API (osconfig v1), reached through api_search, api_describe and api_call
+- OS Config API (osconfig v1alpha), reached through api_search, api_describe and api_call
+- OS Config API (osconfig v1beta), reached through api_search, api_describe and api_call
+- OS Config API (osconfig v2beta), reached through api_search, api_describe and api_call
+- Cloud OS Login API (oslogin v1alpha), reached through api_search, api_describe and api_call
+- Cloud OS Login API (oslogin v1beta), reached through api_search, api_describe and api_call
+- Parallelstore API (parallelstore v1beta), reached through api_search, api_describe and api_call
+- Policy Analyzer API (policyanalyzer v1beta1), reached through api_search, api_describe and api_call
+- Policy Simulator API (policysimulator v1alpha), reached through api_search, api_describe and api_call
+- Policy Simulator API (policysimulator v1beta), reached through api_search, api_describe and api_call
+- Policy Troubleshooter API (policytroubleshooter v1), reached through api_search, api_describe and api_call
+- Policy Troubleshooter API (policytroubleshooter v1beta), reached through api_search, api_describe and api_call
+- Policy Troubleshooter API (policytroubleshooter v3beta), reached through api_search, api_describe and api_call
+- Certificate Authority API (privateca v1beta1), reached through api_search, api_describe and api_call
+- Public Certificate Authority API (publicca v1alpha1), reached through api_search, api_describe and api_call
+- Public Certificate Authority API (publicca v1beta1), reached through api_search, api_describe and api_call
+- Cloud Pub/Sub API (pubsub v1beta1a), reached through api_search, api_describe and api_call
+- Cloud Pub/Sub API (pubsub v1beta2), reached through api_search, api_describe and api_call
+- Recommender API (recommender v1beta1), reached through api_search, api_describe and api_call
+- Google Cloud Memorystore for Redis API (redis v1beta1), reached through api_search, api_describe and api_call
+- Cloud Run Admin API (run v1), reached through api_search, api_describe and api_call
+- Cloud Runtime Configuration API (runtimeconfig v1beta1), reached through api_search, api_describe and api_call
+- App Lifecycle Manager API (saasservicemgmt v1beta1), reached through api_search, api_describe and api_call
+- Secret Manager API (secretmanager v1beta1), reached through api_search, api_describe and api_call
+- Secret Manager API (secretmanager v1beta2), reached through api_search, api_describe and api_call
+- Security Command Center API (securitycenter v1beta1), reached through api_search, api_describe and api_call
+- Security Command Center API (securitycenter v1beta2), reached through api_search, api_describe and api_call
+- Service Consumer Management API (serviceconsumermanagement v1beta1), reached through api_search, api_describe and api_call
+- Service Control API (servicecontrol v1), reached through api_search, api_describe and api_call
+- Service Directory API (servicedirectory v1beta1), reached through api_search, api_describe and api_call
+- Service Networking API (servicenetworking v1beta), reached through api_search, api_describe and api_call
+- Service Usage API (serviceusage v1beta1), reached through api_search, api_describe and api_call
+- Cloud SQL Admin API (sqladmin v1beta4), reached through api_search, api_describe and api_call
+- Security Token Service API (sts v1beta), reached through api_search, api_describe and api_call
+- Cloud TPU API (tpu v1), reached through api_search, api_describe and api_call
+- Cloud TPU API (tpu v1alpha1), reached through api_search, api_describe and api_call
+- Cloud TPU API (tpu v2alpha1), reached through api_search, api_describe and api_call
+- Traffic Director API (trafficdirector v2), reached through api_search, api_describe and api_call
+- VM Migration API (vmmigration v1alpha1), reached through api_search, api_describe and api_call
+- Serverless VPC Access API (vpcaccess v1beta1), reached through api_search, api_describe and api_call
+- Web Security Scanner API (websecurityscanner v1alpha), reached through api_search, api_describe and api_call
+- Web Security Scanner API (websecurityscanner v1beta), reached through api_search, api_describe and api_call
+- Workflow Executions API (workflowexecutions v1beta), reached through api_search, api_describe and api_call
+- Workflows API (workflows v1beta), reached through api_search, api_describe and api_call
+- Cloud Workstations API (workstations v1beta), reached through api_search, api_describe and api_call

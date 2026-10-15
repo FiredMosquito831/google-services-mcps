@@ -1,0 +1,9 @@
+{
+  "gfirebase": [
+    "https://www.googleapis.com/auth/cloud-platform",
+    "https://www.googleapis.com/auth/cloud-platform.read-only",
+    "https://www.googleapis.com/auth/firebase",
+    "https://www.googleapis.com/auth/firebase.messaging",
+    "https://www.googleapis.com/auth/firebase.readonly"
+  ]
+}

@@ -1,0 +1,1412 @@
+[
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__api_call",
+    "kind": "dynamic",
+    "scopes": [],
+    "title": "Call an API method"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__api_describe",
+    "kind": "read",
+    "scopes": [],
+    "title": "Describe an API method"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__api_methods",
+    "kind": "read",
+    "scopes": [],
+    "title": "gmerchant: API methods"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__api_search",
+    "kind": "read",
+    "scopes": [],
+    "title": "Search API methods"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__css_accounts_css_product_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "css.accounts.cssProductInputs.delete",
+    "title": "css.accounts.cssProductInputs.delete"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__css_accounts_css_product_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "css.accounts.cssProductInputs.insert",
+    "title": "css.accounts.cssProductInputs.insert"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__css_accounts_css_product_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "css.accounts.cssProductInputs.patch",
+    "title": "css.accounts.cssProductInputs.patch"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__css_accounts_css_products_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "css.accounts.cssProducts.get",
+    "title": "css.accounts.cssProducts.get"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__css_accounts_css_products_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "css.accounts.cssProducts.list",
+    "title": "css.accounts.cssProducts.list"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__css_accounts_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "css.accounts.get",
+    "title": "css.accounts.get"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__css_accounts_labels_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "css.accounts.labels.create",
+    "title": "css.accounts.labels.create"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__css_accounts_labels_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "css.accounts.labels.delete",
+    "title": "css.accounts.labels.delete"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__css_accounts_labels_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "css.accounts.labels.list",
+    "title": "css.accounts.labels.list"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__css_accounts_labels_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "css.accounts.labels.patch",
+    "title": "css.accounts.labels.patch"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__css_accounts_list_child_account",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "css.accounts.listChildAccounts",
+    "title": "css.accounts.listChildAccounts"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__css_accounts_quotas_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "css.accounts.quotas.list",
+    "title": "css.accounts.quotas.list"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__css_accounts_update_labels",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "css.accounts.updateLabels",
+    "title": "css.accounts.updateLabels"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__manufactur_acco_lang_prod_delet",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/manufacturercenter"
+    ],
+    "methodId": "manufacturers.accounts.languages.productCertifications.delete",
+    "title": "manufacturers.accounts.languages.productCertifications.delete"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__manufactur_acco_lang_prod_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/manufacturercenter"
+    ],
+    "methodId": "manufacturers.accounts.languages.productCertifications.patch",
+    "title": "manufacturers.accounts.languages.productCertifications.patch"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__manufactur_acco_lang_produ_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/manufacturercenter"
+    ],
+    "methodId": "manufacturers.accounts.languages.productCertifications.list",
+    "title": "manufacturers.accounts.languages.productCertifications.list"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__manufactur_acco_langu_produ_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/manufacturercenter"
+    ],
+    "methodId": "manufacturers.accounts.languages.productCertifications.get",
+    "title": "manufacturers.accounts.languages.productCertifications.get"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__manufactur_accoun_produc_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/manufacturercenter"
+    ],
+    "methodId": "manufacturers.accounts.products.delete",
+    "title": "manufacturers.accounts.products.delete"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__manufactur_accoun_produc_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/manufacturercenter"
+    ],
+    "methodId": "manufacturers.accounts.products.update",
+    "title": "manufacturers.accounts.products.update"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__manufactur_account_product_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/manufacturercenter"
+    ],
+    "methodId": "manufacturers.accounts.products.list",
+    "title": "manufacturers.accounts.products.list"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__manufactur_account_products_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/manufacturercenter"
+    ],
+    "methodId": "manufacturers.accounts.products.get",
+    "title": "manufacturers.accounts.products.get"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_acco_busi_get_b_4cc3",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.businessInfo.getBusinessInfo",
+    "title": "merchantapi.accounts.businessInfo.getBusinessInfo"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_acco_busi_get_b_be3b",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.businessIdentity.getBusinessIdentity",
+    "title": "merchantapi.accounts.businessIdentity.getBusinessIdentity"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_acco_busi_updat_0b6b",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.businessIdentity.updateBusinessIdentity",
+    "title": "merchantapi.accounts.businessIdentity.updateBusinessIdentity"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_acco_busi_updat_20a4",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.businessInfo.updateBusinessInfo",
+    "title": "merchantapi.accounts.businessInfo.updateBusinessInfo"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_acco_omni_lfp_p_find",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.omnichannelSettings.lfpProviders.find",
+    "title": "merchantapi.accounts.omnichannelSettings.lfpProviders.find"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_acco_omni_lfp_p_link",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.omnichannelSettings.lfpProviders.linkLfpProvider",
+    "title": "merchantapi.accounts.omnichannelSettings.lfpProviders.linkLfpProvider"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_acco_prod_delet_223a",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.productReviews.delete",
+    "title": "merchantapi.accounts.productReviews.delete"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_acco_prod_delet_82b3",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.productInputs.delete",
+    "title": "merchantapi.accounts.productInputs.delete"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_acco_prod_inser_0ed9",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.productReviews.insert",
+    "title": "merchantapi.accounts.productReviews.insert"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_acco_prod_inser_aba3",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.productInputs.insert",
+    "title": "merchantapi.accounts.productInputs.insert"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_acco_prod_loca_delet",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.products.localInventories.delete",
+    "title": "merchantapi.accounts.products.localInventories.delete"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_acco_prod_loca_inser",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.products.localInventories.insert",
+    "title": "merchantapi.accounts.products.localInventories.insert"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_acco_prod_local_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.products.localInventories.list",
+    "title": "merchantapi.accounts.products.localInventories.list"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_acco_prod_regi_delet",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.products.regionalInventories.delete",
+    "title": "merchantapi.accounts.products.regionalInventories.delete"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_acco_prod_regi_inser",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.products.regionalInventories.insert",
+    "title": "merchantapi.accounts.products.regionalInventories.insert"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_acco_prod_regio_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.products.regionalInventories.list",
+    "title": "merchantapi.accounts.products.regionalInventories.list"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_acco_produ_list_6080",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.productReviews.list",
+    "title": "merchantapi.accounts.productReviews.list"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_acco_produ_list_6ad8",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.products.list",
+    "title": "merchantapi.accounts.products.list"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_acco_prog_chec_creat",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.programs.checkoutSettings.create",
+    "title": "merchantapi.accounts.programs.checkoutSettings.create"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_acco_prog_chec_delet",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.programs.checkoutSettings.deleteCheckoutSettings",
+    "title": "merchantapi.accounts.programs.checkoutSettings.deleteCheckoutSettings"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_acco_prog_chec_get_c",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.programs.checkoutSettings.getCheckoutSettings",
+    "title": "merchantapi.accounts.programs.checkoutSettings.getCheckoutSettings"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_acco_prog_chec_updat",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.programs.checkoutSettings.updateCheckoutSettings",
+    "title": "merchantapi.accounts.programs.checkoutSettings.updateCheckoutSettings"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_acco_regi_batch_a27e",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.regions.batchCreate",
+    "title": "merchantapi.accounts.regions.batchCreate"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_acco_regi_batch_a8e1",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.regions.batchDelete",
+    "title": "merchantapi.accounts.regions.batchDelete"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_acco_regi_batch_bf9d",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.regions.batchUpdate",
+    "title": "merchantapi.accounts.regions.batchUpdate"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accou_data_file_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.dataSources.fileUploads.get",
+    "title": "merchantapi.accounts.dataSources.fileUploads.get"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accou_users_me_verif",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.users.me.verifySelf",
+    "title": "merchantapi.accounts.users.me.verifySelf"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_autofe_get_au",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.autofeedSettings.getAutofeedSettings",
+    "title": "merchantapi.accounts.autofeedSettings.getAutofeedSettings"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_autofe_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.autofeedSettings.updateAutofeedSettings",
+    "title": "merchantapi.accounts.autofeedSettings.updateAutofeedSettings"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_automa_get_au",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.automaticImprovements.getAutomaticImprovements",
+    "title": "merchantapi.accounts.automaticImprovements.getAutomaticImprovements"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_automa_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.automaticImprovements.updateAutomaticImprovements",
+    "title": "merchantapi.accounts.automaticImprovements.updateAutomaticImprovements"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_conver_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.conversionSources.create",
+    "title": "merchantapi.accounts.conversionSources.create"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_conver_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.conversionSources.delete",
+    "title": "merchantapi.accounts.conversionSources.delete"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_conver_undele",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.conversionSources.undelete",
+    "title": "merchantapi.accounts.conversionSources.undelete"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_convers_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.conversionSources.patch",
+    "title": "merchantapi.accounts.conversionSources.patch"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_data_s_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.dataSources.create",
+    "title": "merchantapi.accounts.dataSources.create"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_data_s_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.dataSources.delete",
+    "title": "merchantapi.accounts.dataSources.delete"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_data_so_fetch",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.dataSources.fetch",
+    "title": "merchantapi.accounts.dataSources.fetch"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_data_so_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.dataSources.patch",
+    "title": "merchantapi.accounts.dataSources.patch"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_develo_get_ac",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.developerRegistration.getAccountForGcpRegistration",
+    "title": "merchantapi.accounts.developerRegistration.getAccountForGcpRegistration"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_develo_get_de",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.developerRegistration.getDeveloperRegistration",
+    "title": "merchantapi.accounts.developerRegistration.getDeveloperRegistration"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_develo_regist",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.developerRegistration.registerGcp",
+    "title": "merchantapi.accounts.developerRegistration.registerGcp"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_develo_unregi",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.developerRegistration.unregisterGcp",
+    "title": "merchantapi.accounts.developerRegistration.unregisterGcp"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_email_get_ema",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.emailPreferences.getEmailPreferences",
+    "title": "merchantapi.accounts.emailPreferences.getEmailPreferences"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_email_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.emailPreferences.updateEmailPreferences",
+    "title": "merchantapi.accounts.emailPreferences.updateEmailPreferences"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_gbp_ac_link_g",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.gbpAccounts.linkGbpAccount",
+    "title": "merchantapi.accounts.gbpAccounts.linkGbpAccount"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_homepa_get_ho",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.homepage.getHomepage",
+    "title": "merchantapi.accounts.homepage.getHomepage"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_homepa_unclai",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.homepage.unclaim",
+    "title": "merchantapi.accounts.homepage.unclaim"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_homepa_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.homepage.updateHomepage",
+    "title": "merchantapi.accounts.homepage.updateHomepage"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_homepag_claim",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.homepage.claim",
+    "title": "merchantapi.accounts.homepage.claim"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_lfp_in_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.lfpInventories.insert",
+    "title": "merchantapi.accounts.lfpInventories.insert"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_lfp_sa_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.lfpSales.insert",
+    "title": "merchantapi.accounts.lfpSales.insert"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_lfp_st_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.lfpStores.delete",
+    "title": "merchantapi.accounts.lfpStores.delete"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_lfp_st_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.lfpStores.insert",
+    "title": "merchantapi.accounts.lfpStores.insert"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_loyalt_manage",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.loyaltyCustomers.manage",
+    "title": "merchantapi.accounts.loyaltyCustomers.manage"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_mercha_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.merchantReviews.delete",
+    "title": "merchantapi.accounts.merchantReviews.delete"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_mercha_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.merchantReviews.insert",
+    "title": "merchantapi.accounts.merchantReviews.insert"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_notifi_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.notificationsubscriptions.create",
+    "title": "merchantapi.accounts.notificationsubscriptions.create"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_notifi_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.notificationsubscriptions.delete",
+    "title": "merchantapi.accounts.notificationsubscriptions.delete"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_notific_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.notificationsubscriptions.patch",
+    "title": "merchantapi.accounts.notificationsubscriptions.patch"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_omnich_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.omnichannelSettings.create",
+    "title": "merchantapi.accounts.omnichannelSettings.create"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_omnich_reques",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.omnichannelSettings.requestInventoryVerification",
+    "title": "merchantapi.accounts.omnichannelSettings.requestInventoryVerification"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_omnicha_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.omnichannelSettings.patch",
+    "title": "merchantapi.accounts.omnichannelSettings.patch"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_online_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.onlineReturnPolicies.create",
+    "title": "merchantapi.accounts.onlineReturnPolicies.create"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_online_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.onlineReturnPolicies.delete",
+    "title": "merchantapi.accounts.onlineReturnPolicies.delete"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_order_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.orderTrackingSignals.create",
+    "title": "merchantapi.accounts.orderTrackingSignals.create"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_product_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.productInputs.patch",
+    "title": "merchantapi.accounts.productInputs.patch"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_progra_disabl",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.programs.disable",
+    "title": "merchantapi.accounts.programs.disable"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_progra_enable",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.programs.enable",
+    "title": "merchantapi.accounts.programs.enable"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_promot_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.promotions.insert",
+    "title": "merchantapi.accounts.promotions.insert"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_region_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.regions.create",
+    "title": "merchantapi.accounts.regions.create"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_region_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.regions.delete",
+    "title": "merchantapi.accounts.regions.delete"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_regions_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.regions.patch",
+    "title": "merchantapi.accounts.regions.patch"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_relatio_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.relationships.patch",
+    "title": "merchantapi.accounts.relationships.patch"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_report_search",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.reports.search",
+    "title": "merchantapi.accounts.reports.search"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_servic_approv",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.services.approve",
+    "title": "merchantapi.accounts.services.approve"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_servic_propos",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.services.propose",
+    "title": "merchantapi.accounts.services.propose"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_servic_reject",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.services.reject",
+    "title": "merchantapi.accounts.services.reject"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_shippi_get_sh",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.shippingSettings.getShippingSettings",
+    "title": "merchantapi.accounts.shippingSettings.getShippingSettings"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_shippi_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.shippingSettings.insert",
+    "title": "merchantapi.accounts.shippingSettings.insert"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_terms_retriev",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.termsOfServiceAgreementStates.retrieveForApplication",
+    "title": "merchantapi.accounts.termsOfServiceAgreementStates.retrieveForApplication"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_account_aggrega_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.aggregateProductStatuses.list",
+    "title": "merchantapi.accounts.aggregateProductStatuses.list"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_account_convers_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.conversionSources.list",
+    "title": "merchantapi.accounts.conversionSources.list"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_account_conversi_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.conversionSources.get",
+    "title": "merchantapi.accounts.conversionSources.get"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_account_data_so_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.dataSources.list",
+    "title": "merchantapi.accounts.dataSources.list"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_account_data_sou_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.dataSources.get",
+    "title": "merchantapi.accounts.dataSources.get"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_account_gbp_acc_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.gbpAccounts.list",
+    "title": "merchantapi.accounts.gbpAccounts.list"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_account_lfp_merc_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.lfpMerchantStates.get",
+    "title": "merchantapi.accounts.lfpMerchantStates.get"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_account_lfp_sto_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.lfpStores.list",
+    "title": "merchantapi.accounts.lfpStores.list"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_account_lfp_stor_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.lfpStores.get",
+    "title": "merchantapi.accounts.lfpStores.get"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_account_merchan_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.merchantReviews.list",
+    "title": "merchantapi.accounts.merchantReviews.list"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_account_merchant_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.merchantReviews.get",
+    "title": "merchantapi.accounts.merchantReviews.get"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_account_notific_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.notificationsubscriptions.list",
+    "title": "merchantapi.accounts.notificationsubscriptions.list"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_account_notifica_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.notificationsubscriptions.get",
+    "title": "merchantapi.accounts.notificationsubscriptions.get"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_account_omnicha_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.omnichannelSettings.list",
+    "title": "merchantapi.accounts.omnichannelSettings.list"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_account_omnichan_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.omnichannelSettings.get",
+    "title": "merchantapi.accounts.omnichannelSettings.get"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_account_online_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.onlineReturnPolicies.list",
+    "title": "merchantapi.accounts.onlineReturnPolicies.list"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_account_online_r_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.onlineReturnPolicies.get",
+    "title": "merchantapi.accounts.onlineReturnPolicies.get"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_account_products_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.products.get",
+    "title": "merchantapi.accounts.products.get"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_account_program_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.programs.list",
+    "title": "merchantapi.accounts.programs.list"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_account_programs_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.programs.get",
+    "title": "merchantapi.accounts.programs.get"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_account_promoti_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.promotions.list",
+    "title": "merchantapi.accounts.promotions.list"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_account_promotio_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.promotions.get",
+    "title": "merchantapi.accounts.promotions.get"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_account_regions_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.regions.list",
+    "title": "merchantapi.accounts.regions.list"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_account_relatio_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.relationships.list",
+    "title": "merchantapi.accounts.relationships.list"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_account_relation_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.relationships.get",
+    "title": "merchantapi.accounts.relationships.get"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_account_service_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.services.list",
+    "title": "merchantapi.accounts.services.list"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_account_services_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.services.get",
+    "title": "merchantapi.accounts.services.get"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_account_terms_of_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.termsOfServiceAgreementStates.get",
+    "title": "merchantapi.accounts.termsOfServiceAgreementStates.get"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_account_users_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.users.create",
+    "title": "merchantapi.accounts.users.create"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_account_users_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.users.delete",
+    "title": "merchantapi.accounts.users.delete"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accounts_create_and",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.createAndConfigure",
+    "title": "merchantapi.accounts.createAndConfigure"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accounts_create_test",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.createTestAccount",
+    "title": "merchantapi.accounts.createTestAccount"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accounts_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.delete",
+    "title": "merchantapi.accounts.delete"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accounts_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.get",
+    "title": "merchantapi.accounts.get"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accounts_issues_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.issues.list",
+    "title": "merchantapi.accounts.issues.list"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accounts_limits_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.limits.get",
+    "title": "merchantapi.accounts.limits.get"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accounts_limits_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.limits.list",
+    "title": "merchantapi.accounts.limits.list"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accounts_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.list",
+    "title": "merchantapi.accounts.list"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accounts_list_subacc",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.listSubaccounts",
+    "title": "merchantapi.accounts.listSubaccounts"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accounts_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.patch",
+    "title": "merchantapi.accounts.patch"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accounts_product_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.productReviews.get",
+    "title": "merchantapi.accounts.productReviews.get"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accounts_quotas_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.quotas.list",
+    "title": "merchantapi.accounts.quotas.list"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accounts_regions_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.regions.get",
+    "title": "merchantapi.accounts.regions.get"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accounts_users_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.users.get",
+    "title": "merchantapi.accounts.users.get"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accounts_users_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.users.list",
+    "title": "merchantapi.accounts.users.list"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accounts_users_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.accounts.users.patch",
+    "title": "merchantapi.accounts.users.patch"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_issuereso_renderacco",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.issueresolution.renderaccountissues",
+    "title": "merchantapi.issueresolution.renderaccountissues"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_issuereso_renderprod",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.issueresolution.renderproductissues",
+    "title": "merchantapi.issueresolution.renderproductissues"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_issuereso_triggeract",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.issueresolution.triggeraction",
+    "title": "merchantapi.issueresolution.triggeraction"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_terms_of_retrieve_l",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.termsOfService.retrieveLatest",
+    "title": "merchantapi.termsOfService.retrieveLatest"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_terms_of_serv_accept",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.termsOfService.accept",
+    "title": "merchantapi.termsOfService.accept"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__merchantap_terms_of_service_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/content"
+    ],
+    "methodId": "merchantapi.termsOfService.get",
+    "title": "merchantapi.termsOfService.get"
+  }
+]

@@ -1,0 +1,1288 @@
+[
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__api_methods",
+    "kind": "read",
+    "scopes": [],
+    "title": "gyoutube: API methods"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__blogger_blog_user_infos_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/blogger",
+      "https://www.googleapis.com/auth/blogger.readonly"
+    ],
+    "methodId": "blogger.blogUserInfos.get",
+    "title": "blogger.blogUserInfos.get"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__blogger_blogs_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/blogger",
+      "https://www.googleapis.com/auth/blogger.readonly"
+    ],
+    "methodId": "blogger.blogs.get",
+    "title": "blogger.blogs.get"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__blogger_blogs_get_by_url",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/blogger",
+      "https://www.googleapis.com/auth/blogger.readonly"
+    ],
+    "methodId": "blogger.blogs.getByUrl",
+    "title": "blogger.blogs.getByUrl"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__blogger_blogs_list_by_user",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/blogger",
+      "https://www.googleapis.com/auth/blogger.readonly"
+    ],
+    "methodId": "blogger.blogs.listByUser",
+    "title": "blogger.blogs.listByUser"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__blogger_comments_approve",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/blogger"
+    ],
+    "methodId": "blogger.comments.approve",
+    "title": "blogger.comments.approve"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__blogger_comments_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/blogger"
+    ],
+    "methodId": "blogger.comments.delete",
+    "title": "blogger.comments.delete"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__blogger_comments_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/blogger",
+      "https://www.googleapis.com/auth/blogger.readonly"
+    ],
+    "methodId": "blogger.comments.get",
+    "title": "blogger.comments.get"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__blogger_comments_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/blogger",
+      "https://www.googleapis.com/auth/blogger.readonly"
+    ],
+    "methodId": "blogger.comments.list",
+    "title": "blogger.comments.list"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__blogger_comments_list_by_blog",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/blogger",
+      "https://www.googleapis.com/auth/blogger.readonly"
+    ],
+    "methodId": "blogger.comments.listByBlog",
+    "title": "blogger.comments.listByBlog"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__blogger_comments_mark_as_spam",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/blogger"
+    ],
+    "methodId": "blogger.comments.markAsSpam",
+    "title": "blogger.comments.markAsSpam"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__blogger_comments_remove_content",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/blogger"
+    ],
+    "methodId": "blogger.comments.removeContent",
+    "title": "blogger.comments.removeContent"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__blogger_page_views_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/blogger"
+    ],
+    "methodId": "blogger.pageViews.get",
+    "title": "blogger.pageViews.get"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__blogger_pages_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/blogger"
+    ],
+    "methodId": "blogger.pages.delete",
+    "title": "blogger.pages.delete"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__blogger_pages_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/blogger",
+      "https://www.googleapis.com/auth/blogger.readonly"
+    ],
+    "methodId": "blogger.pages.get",
+    "title": "blogger.pages.get"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__blogger_pages_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/blogger"
+    ],
+    "methodId": "blogger.pages.insert",
+    "title": "blogger.pages.insert"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__blogger_pages_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/blogger",
+      "https://www.googleapis.com/auth/blogger.readonly"
+    ],
+    "methodId": "blogger.pages.list",
+    "title": "blogger.pages.list"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__blogger_pages_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/blogger"
+    ],
+    "methodId": "blogger.pages.patch",
+    "title": "blogger.pages.patch"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__blogger_pages_publish",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/blogger"
+    ],
+    "methodId": "blogger.pages.publish",
+    "title": "blogger.pages.publish"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__blogger_pages_revert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/blogger"
+    ],
+    "methodId": "blogger.pages.revert",
+    "title": "blogger.pages.revert"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__blogger_pages_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/blogger"
+    ],
+    "methodId": "blogger.pages.update",
+    "title": "blogger.pages.update"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__blogger_post_user_infos_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/blogger",
+      "https://www.googleapis.com/auth/blogger.readonly"
+    ],
+    "methodId": "blogger.postUserInfos.get",
+    "title": "blogger.postUserInfos.get"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__blogger_post_user_infos_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/blogger",
+      "https://www.googleapis.com/auth/blogger.readonly"
+    ],
+    "methodId": "blogger.postUserInfos.list",
+    "title": "blogger.postUserInfos.list"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__blogger_posts_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/blogger"
+    ],
+    "methodId": "blogger.posts.delete",
+    "title": "blogger.posts.delete"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__blogger_posts_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/blogger",
+      "https://www.googleapis.com/auth/blogger.readonly"
+    ],
+    "methodId": "blogger.posts.get",
+    "title": "blogger.posts.get"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__blogger_posts_get_by_path",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/blogger",
+      "https://www.googleapis.com/auth/blogger.readonly"
+    ],
+    "methodId": "blogger.posts.getByPath",
+    "title": "blogger.posts.getByPath"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__blogger_posts_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/blogger"
+    ],
+    "methodId": "blogger.posts.insert",
+    "title": "blogger.posts.insert"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__blogger_posts_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/blogger",
+      "https://www.googleapis.com/auth/blogger.readonly"
+    ],
+    "methodId": "blogger.posts.list",
+    "title": "blogger.posts.list"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__blogger_posts_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/blogger"
+    ],
+    "methodId": "blogger.posts.patch",
+    "title": "blogger.posts.patch"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__blogger_posts_publish",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/blogger"
+    ],
+    "methodId": "blogger.posts.publish",
+    "title": "blogger.posts.publish"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__blogger_posts_revert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/blogger"
+    ],
+    "methodId": "blogger.posts.revert",
+    "title": "blogger.posts.revert"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__blogger_posts_search",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/blogger",
+      "https://www.googleapis.com/auth/blogger.readonly"
+    ],
+    "methodId": "blogger.posts.search",
+    "title": "blogger.posts.search"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__blogger_posts_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/blogger"
+    ],
+    "methodId": "blogger.posts.update",
+    "title": "blogger.posts.update"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__blogger_users_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/blogger",
+      "https://www.googleapis.com/auth/blogger.readonly"
+    ],
+    "methodId": "blogger.users.get",
+    "title": "blogger.users.get"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_abuse_reports_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl"
+    ],
+    "methodId": "youtube.abuseReports.insert",
+    "title": "youtube.abuseReports.insert"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_activities_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl",
+      "https://www.googleapis.com/auth/youtube.readonly"
+    ],
+    "methodId": "youtube.activities.list",
+    "title": "youtube.activities.list"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_captions_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube.force-ssl",
+      "https://www.googleapis.com/auth/youtubepartner"
+    ],
+    "methodId": "youtube.captions.delete",
+    "title": "youtube.captions.delete"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_captions_download",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube.force-ssl",
+      "https://www.googleapis.com/auth/youtubepartner"
+    ],
+    "methodId": "youtube.captions.download",
+    "title": "youtube.captions.download"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_captions_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube.force-ssl",
+      "https://www.googleapis.com/auth/youtubepartner"
+    ],
+    "methodId": "youtube.captions.list",
+    "title": "youtube.captions.list"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_channel_sections_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl",
+      "https://www.googleapis.com/auth/youtubepartner"
+    ],
+    "methodId": "youtube.channelSections.delete",
+    "title": "youtube.channelSections.delete"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_channel_sections_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl",
+      "https://www.googleapis.com/auth/youtubepartner"
+    ],
+    "methodId": "youtube.channelSections.insert",
+    "title": "youtube.channelSections.insert"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_channel_sections_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl",
+      "https://www.googleapis.com/auth/youtube.readonly",
+      "https://www.googleapis.com/auth/youtubepartner"
+    ],
+    "methodId": "youtube.channelSections.list",
+    "title": "youtube.channelSections.list"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_channel_sections_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl",
+      "https://www.googleapis.com/auth/youtubepartner"
+    ],
+    "methodId": "youtube.channelSections.update",
+    "title": "youtube.channelSections.update"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_channels_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl",
+      "https://www.googleapis.com/auth/youtube.readonly",
+      "https://www.googleapis.com/auth/youtubepartner",
+      "https://www.googleapis.com/auth/youtubepartner-channel-audit"
+    ],
+    "methodId": "youtube.channels.list",
+    "title": "youtube.channels.list"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_channels_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl",
+      "https://www.googleapis.com/auth/youtubepartner"
+    ],
+    "methodId": "youtube.channels.update",
+    "title": "youtube.channels.update"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_comment_threads_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube.force-ssl"
+    ],
+    "methodId": "youtube.commentThreads.insert",
+    "title": "youtube.commentThreads.insert"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_comment_threads_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube.force-ssl"
+    ],
+    "methodId": "youtube.commentThreads.list",
+    "title": "youtube.commentThreads.list"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_comments_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube.force-ssl"
+    ],
+    "methodId": "youtube.comments.delete",
+    "title": "youtube.comments.delete"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_comments_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube.force-ssl"
+    ],
+    "methodId": "youtube.comments.insert",
+    "title": "youtube.comments.insert"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_comments_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube.force-ssl"
+    ],
+    "methodId": "youtube.comments.list",
+    "title": "youtube.comments.list"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_comments_mark_as_spam",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube.force-ssl"
+    ],
+    "methodId": "youtube.comments.markAsSpam",
+    "title": "youtube.comments.markAsSpam"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_comments_set_moderation_s",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube.force-ssl"
+    ],
+    "methodId": "youtube.comments.setModerationStatus",
+    "title": "youtube.comments.setModerationStatus"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_comments_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube.force-ssl"
+    ],
+    "methodId": "youtube.comments.update",
+    "title": "youtube.comments.update"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_i18n_languages_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl",
+      "https://www.googleapis.com/auth/youtube.readonly",
+      "https://www.googleapis.com/auth/youtubepartner"
+    ],
+    "methodId": "youtube.i18nLanguages.list",
+    "title": "youtube.i18nLanguages.list"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_i18n_regions_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl",
+      "https://www.googleapis.com/auth/youtube.readonly",
+      "https://www.googleapis.com/auth/youtubepartner"
+    ],
+    "methodId": "youtube.i18nRegions.list",
+    "title": "youtube.i18nRegions.list"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_live_broadca_insert_cuepo",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl",
+      "https://www.googleapis.com/auth/youtubepartner"
+    ],
+    "methodId": "youtube.liveBroadcasts.insertCuepoint",
+    "title": "youtube.liveBroadcasts.insertCuepoint"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_live_broadcast_transition",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl"
+    ],
+    "methodId": "youtube.liveBroadcasts.transition",
+    "title": "youtube.liveBroadcasts.transition"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_live_broadcasts_bind",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl"
+    ],
+    "methodId": "youtube.liveBroadcasts.bind",
+    "title": "youtube.liveBroadcasts.bind"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_live_broadcasts_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl"
+    ],
+    "methodId": "youtube.liveBroadcasts.delete",
+    "title": "youtube.liveBroadcasts.delete"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_live_broadcasts_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl"
+    ],
+    "methodId": "youtube.liveBroadcasts.insert",
+    "title": "youtube.liveBroadcasts.insert"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_live_broadcasts_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl",
+      "https://www.googleapis.com/auth/youtube.readonly"
+    ],
+    "methodId": "youtube.liveBroadcasts.list",
+    "title": "youtube.liveBroadcasts.list"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_live_broadcasts_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl"
+    ],
+    "methodId": "youtube.liveBroadcasts.update",
+    "title": "youtube.liveBroadcasts.update"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_live_chat_bans_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl"
+    ],
+    "methodId": "youtube.liveChatBans.delete",
+    "title": "youtube.liveChatBans.delete"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_live_chat_bans_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl"
+    ],
+    "methodId": "youtube.liveChatBans.insert",
+    "title": "youtube.liveChatBans.insert"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_live_chat_mess_transition",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl"
+    ],
+    "methodId": "youtube.liveChatMessages.transition",
+    "title": "youtube.liveChatMessages.transition"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_live_chat_messages_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl"
+    ],
+    "methodId": "youtube.liveChatMessages.delete",
+    "title": "youtube.liveChatMessages.delete"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_live_chat_messages_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl"
+    ],
+    "methodId": "youtube.liveChatMessages.insert",
+    "title": "youtube.liveChatMessages.insert"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_live_chat_messages_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl",
+      "https://www.googleapis.com/auth/youtube.readonly"
+    ],
+    "methodId": "youtube.liveChatMessages.list",
+    "title": "youtube.liveChatMessages.list"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_live_chat_moderato_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl"
+    ],
+    "methodId": "youtube.liveChatModerators.delete",
+    "title": "youtube.liveChatModerators.delete"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_live_chat_moderato_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl"
+    ],
+    "methodId": "youtube.liveChatModerators.insert",
+    "title": "youtube.liveChatModerators.insert"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_live_chat_moderators_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl",
+      "https://www.googleapis.com/auth/youtube.readonly"
+    ],
+    "methodId": "youtube.liveChatModerators.list",
+    "title": "youtube.liveChatModerators.list"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_live_streams_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl"
+    ],
+    "methodId": "youtube.liveStreams.delete",
+    "title": "youtube.liveStreams.delete"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_live_streams_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl"
+    ],
+    "methodId": "youtube.liveStreams.insert",
+    "title": "youtube.liveStreams.insert"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_live_streams_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl",
+      "https://www.googleapis.com/auth/youtube.readonly"
+    ],
+    "methodId": "youtube.liveStreams.list",
+    "title": "youtube.liveStreams.list"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_live_streams_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl"
+    ],
+    "methodId": "youtube.liveStreams.update",
+    "title": "youtube.liveStreams.update"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_members_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube.channel-memberships.creator"
+    ],
+    "methodId": "youtube.members.list",
+    "title": "youtube.members.list"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_memberships_levels_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube.channel-memberships.creator"
+    ],
+    "methodId": "youtube.membershipsLevels.list",
+    "title": "youtube.membershipsLevels.list"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_playlist_images_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl",
+      "https://www.googleapis.com/auth/youtubepartner"
+    ],
+    "methodId": "youtube.playlistImages.delete",
+    "title": "youtube.playlistImages.delete"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_playlist_images_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl",
+      "https://www.googleapis.com/auth/youtube.readonly",
+      "https://www.googleapis.com/auth/youtubepartner"
+    ],
+    "methodId": "youtube.playlistImages.list",
+    "title": "youtube.playlistImages.list"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_playlist_items_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl",
+      "https://www.googleapis.com/auth/youtubepartner"
+    ],
+    "methodId": "youtube.playlistItems.delete",
+    "title": "youtube.playlistItems.delete"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_playlist_items_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl",
+      "https://www.googleapis.com/auth/youtubepartner"
+    ],
+    "methodId": "youtube.playlistItems.insert",
+    "title": "youtube.playlistItems.insert"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_playlist_items_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl",
+      "https://www.googleapis.com/auth/youtube.readonly",
+      "https://www.googleapis.com/auth/youtubepartner"
+    ],
+    "methodId": "youtube.playlistItems.list",
+    "title": "youtube.playlistItems.list"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_playlist_items_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl",
+      "https://www.googleapis.com/auth/youtubepartner"
+    ],
+    "methodId": "youtube.playlistItems.update",
+    "title": "youtube.playlistItems.update"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_playlists_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl",
+      "https://www.googleapis.com/auth/youtubepartner"
+    ],
+    "methodId": "youtube.playlists.delete",
+    "title": "youtube.playlists.delete"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_playlists_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl",
+      "https://www.googleapis.com/auth/youtubepartner"
+    ],
+    "methodId": "youtube.playlists.insert",
+    "title": "youtube.playlists.insert"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_playlists_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl",
+      "https://www.googleapis.com/auth/youtube.readonly",
+      "https://www.googleapis.com/auth/youtubepartner"
+    ],
+    "methodId": "youtube.playlists.list",
+    "title": "youtube.playlists.list"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_playlists_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl",
+      "https://www.googleapis.com/auth/youtubepartner"
+    ],
+    "methodId": "youtube.playlists.update",
+    "title": "youtube.playlists.update"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_search_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl",
+      "https://www.googleapis.com/auth/youtube.readonly",
+      "https://www.googleapis.com/auth/youtubepartner"
+    ],
+    "methodId": "youtube.search.list",
+    "title": "youtube.search.list"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_subscriptions_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl",
+      "https://www.googleapis.com/auth/youtubepartner"
+    ],
+    "methodId": "youtube.subscriptions.delete",
+    "title": "youtube.subscriptions.delete"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_subscriptions_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl",
+      "https://www.googleapis.com/auth/youtubepartner"
+    ],
+    "methodId": "youtube.subscriptions.insert",
+    "title": "youtube.subscriptions.insert"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_subscriptions_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl",
+      "https://www.googleapis.com/auth/youtube.readonly",
+      "https://www.googleapis.com/auth/youtubepartner"
+    ],
+    "methodId": "youtube.subscriptions.list",
+    "title": "youtube.subscriptions.list"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_super_chat_events_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl",
+      "https://www.googleapis.com/auth/youtube.readonly"
+    ],
+    "methodId": "youtube.superChatEvents.list",
+    "title": "youtube.superChatEvents.list"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_tests_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube.readonly"
+    ],
+    "methodId": "youtube.tests.insert",
+    "title": "youtube.tests.insert"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_third_party_links_delete",
+    "kind": "destructive",
+    "scopes": [],
+    "methodId": "youtube.thirdPartyLinks.delete",
+    "title": "youtube.thirdPartyLinks.delete"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_third_party_links_insert",
+    "kind": "write",
+    "scopes": [],
+    "methodId": "youtube.thirdPartyLinks.insert",
+    "title": "youtube.thirdPartyLinks.insert"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_third_party_links_list",
+    "kind": "read",
+    "scopes": [],
+    "methodId": "youtube.thirdPartyLinks.list",
+    "title": "youtube.thirdPartyLinks.list"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_third_party_links_update",
+    "kind": "write",
+    "scopes": [],
+    "methodId": "youtube.thirdPartyLinks.update",
+    "title": "youtube.thirdPartyLinks.update"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_video_abuse_report_r_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl",
+      "https://www.googleapis.com/auth/youtube.readonly"
+    ],
+    "methodId": "youtube.videoAbuseReportReasons.list",
+    "title": "youtube.videoAbuseReportReasons.list"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_video_categories_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl",
+      "https://www.googleapis.com/auth/youtube.readonly",
+      "https://www.googleapis.com/auth/youtubepartner"
+    ],
+    "methodId": "youtube.videoCategories.list",
+    "title": "youtube.videoCategories.list"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_video_trainability_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl",
+      "https://www.googleapis.com/auth/youtube.readonly",
+      "https://www.googleapis.com/auth/youtubepartner"
+    ],
+    "methodId": "youtube.videoTrainability.get",
+    "title": "youtube.videoTrainability.get"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_videos_batch_get_stats",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl",
+      "https://www.googleapis.com/auth/youtube.readonly",
+      "https://www.googleapis.com/auth/youtubepartner"
+    ],
+    "methodId": "youtube.videos.batchGetStats",
+    "title": "youtube.videos.batchGetStats"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_videos_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl",
+      "https://www.googleapis.com/auth/youtubepartner"
+    ],
+    "methodId": "youtube.videos.delete",
+    "title": "youtube.videos.delete"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_videos_get_rating",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl",
+      "https://www.googleapis.com/auth/youtube.readonly",
+      "https://www.googleapis.com/auth/youtubepartner"
+    ],
+    "methodId": "youtube.videos.getRating",
+    "title": "youtube.videos.getRating"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_videos_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl",
+      "https://www.googleapis.com/auth/youtube.readonly",
+      "https://www.googleapis.com/auth/youtubepartner"
+    ],
+    "methodId": "youtube.videos.list",
+    "title": "youtube.videos.list"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_videos_rate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl",
+      "https://www.googleapis.com/auth/youtubepartner"
+    ],
+    "methodId": "youtube.videos.rate",
+    "title": "youtube.videos.rate"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_videos_report_abuse",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl",
+      "https://www.googleapis.com/auth/youtubepartner"
+    ],
+    "methodId": "youtube.videos.reportAbuse",
+    "title": "youtube.videos.reportAbuse"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_videos_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl",
+      "https://www.googleapis.com/auth/youtubepartner"
+    ],
+    "methodId": "youtube.videos.update",
+    "title": "youtube.videos.update"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_watermarks_unset",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl",
+      "https://www.googleapis.com/auth/youtubepartner"
+    ],
+    "methodId": "youtube.watermarks.unset",
+    "title": "youtube.watermarks.unset"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_youtu_v3_live_messa_strea",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl",
+      "https://www.googleapis.com/auth/youtube.readonly"
+    ],
+    "methodId": "youtube.youtube.v3.liveChat.messages.stream",
+    "title": "youtube.youtube.v3.liveChat.messages.stream"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtuberep_jobs_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/yt-analytics-monetary.readonly",
+      "https://www.googleapis.com/auth/yt-analytics.readonly"
+    ],
+    "methodId": "youtubereporting.jobs.create",
+    "title": "youtubereporting.jobs.create"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtuberep_jobs_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/yt-analytics-monetary.readonly",
+      "https://www.googleapis.com/auth/yt-analytics.readonly"
+    ],
+    "methodId": "youtubereporting.jobs.delete",
+    "title": "youtubereporting.jobs.delete"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtuberep_jobs_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/yt-analytics-monetary.readonly",
+      "https://www.googleapis.com/auth/yt-analytics.readonly"
+    ],
+    "methodId": "youtubereporting.jobs.get",
+    "title": "youtubereporting.jobs.get"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtuberep_jobs_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/yt-analytics-monetary.readonly",
+      "https://www.googleapis.com/auth/yt-analytics.readonly"
+    ],
+    "methodId": "youtubereporting.jobs.list",
+    "title": "youtubereporting.jobs.list"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtuberep_jobs_reports_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/yt-analytics-monetary.readonly",
+      "https://www.googleapis.com/auth/yt-analytics.readonly"
+    ],
+    "methodId": "youtubereporting.jobs.reports.get",
+    "title": "youtubereporting.jobs.reports.get"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtuberep_jobs_reports_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/yt-analytics-monetary.readonly",
+      "https://www.googleapis.com/auth/yt-analytics.readonly"
+    ],
+    "methodId": "youtubereporting.jobs.reports.list",
+    "title": "youtubereporting.jobs.reports.list"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtuberep_media_download",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/yt-analytics-monetary.readonly",
+      "https://www.googleapis.com/auth/yt-analytics.readonly"
+    ],
+    "methodId": "youtubereporting.media.download",
+    "title": "youtubereporting.media.download"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtuberep_report_types_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/yt-analytics-monetary.readonly",
+      "https://www.googleapis.com/auth/yt-analytics.readonly"
+    ],
+    "methodId": "youtubereporting.reportTypes.list",
+    "title": "youtubereporting.reportTypes.list"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__ytanalyt_group_items_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.readonly",
+      "https://www.googleapis.com/auth/youtubepartner",
+      "https://www.googleapis.com/auth/yt-analytics-monetary.readonly",
+      "https://www.googleapis.com/auth/yt-analytics.readonly"
+    ],
+    "methodId": "youtubeAnalytics.groupItems.delete",
+    "title": "youtubeAnalytics.groupItems.delete"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__ytanalyt_group_items_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.readonly",
+      "https://www.googleapis.com/auth/youtubepartner",
+      "https://www.googleapis.com/auth/yt-analytics-monetary.readonly",
+      "https://www.googleapis.com/auth/yt-analytics.readonly"
+    ],
+    "methodId": "youtubeAnalytics.groupItems.insert",
+    "title": "youtubeAnalytics.groupItems.insert"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__ytanalyt_group_items_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.readonly",
+      "https://www.googleapis.com/auth/youtubepartner",
+      "https://www.googleapis.com/auth/yt-analytics-monetary.readonly",
+      "https://www.googleapis.com/auth/yt-analytics.readonly"
+    ],
+    "methodId": "youtubeAnalytics.groupItems.list",
+    "title": "youtubeAnalytics.groupItems.list"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__ytanalyt_groups_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.readonly",
+      "https://www.googleapis.com/auth/youtubepartner",
+      "https://www.googleapis.com/auth/yt-analytics-monetary.readonly",
+      "https://www.googleapis.com/auth/yt-analytics.readonly"
+    ],
+    "methodId": "youtubeAnalytics.groups.delete",
+    "title": "youtubeAnalytics.groups.delete"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__ytanalyt_groups_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.readonly",
+      "https://www.googleapis.com/auth/youtubepartner",
+      "https://www.googleapis.com/auth/yt-analytics-monetary.readonly",
+      "https://www.googleapis.com/auth/yt-analytics.readonly"
+    ],
+    "methodId": "youtubeAnalytics.groups.insert",
+    "title": "youtubeAnalytics.groups.insert"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__ytanalyt_groups_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.readonly",
+      "https://www.googleapis.com/auth/youtubepartner",
+      "https://www.googleapis.com/auth/yt-analytics-monetary.readonly",
+      "https://www.googleapis.com/auth/yt-analytics.readonly"
+    ],
+    "methodId": "youtubeAnalytics.groups.list",
+    "title": "youtubeAnalytics.groups.list"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__ytanalyt_groups_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.readonly",
+      "https://www.googleapis.com/auth/youtubepartner",
+      "https://www.googleapis.com/auth/yt-analytics-monetary.readonly",
+      "https://www.googleapis.com/auth/yt-analytics.readonly"
+    ],
+    "methodId": "youtubeAnalytics.groups.update",
+    "title": "youtubeAnalytics.groups.update"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__ytanalyt_reports_query",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.readonly",
+      "https://www.googleapis.com/auth/youtubepartner",
+      "https://www.googleapis.com/auth/yt-analytics-monetary.readonly",
+      "https://www.googleapis.com/auth/yt-analytics.readonly"
+    ],
+    "methodId": "youtubeAnalytics.reports.query",
+    "title": "youtubeAnalytics.reports.query"
+  }
+]

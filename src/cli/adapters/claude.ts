@@ -10,6 +10,9 @@
  * Scope mapping: global -> user, project -> project, folder -> local (run inside --path).
  * Every call goes through ctx.run with shell: false and an argument array. On
  * Windows the program is tried as "claude", then "claude.cmd". Dry-run only plans.
+ *
+ * --confirmation is not written here. It is the plugin user option "confirmation", which the user
+ * sets with `claude plugin configure`; install prints that instruction as a note.
  */
 import { displayCommand } from '../exec.js';
 import {
@@ -132,6 +135,12 @@ async function run(ctx: AdapterContext, action: 'install' | 'uninstall'): Promis
     }
   }
 
+  if (action === 'install' && ctx.confirmation !== undefined) {
+    const ids = ctx.plugins.map(claudePluginId).join(', ');
+    result.notes.push(
+      `confirmation is a plugin user option, so gsm does not write it. Set the option "confirmation" to ${ctx.confirmation} with claude plugin configure (plugins: ${ids}).`,
+    );
+  }
   if (action === 'install' && !ctx.dryRun && result.errors.length === 0) {
     result.notes.push('restart Claude Code (or start a new session) to load the plugins');
   }

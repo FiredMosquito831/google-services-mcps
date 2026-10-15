@@ -1,0 +1,327 @@
+[
+  {
+    "name": "mcp__plugin_gmaps_gmaps__addressval_v1_provide_validation_feedba",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/maps-platform.addressvalidation"
+    ],
+    "methodId": "addressvalidation.provideValidationFeedback",
+    "title": "addressvalidation.provideValidationFeedback"
+  },
+  {
+    "name": "mcp__plugin_gmaps_gmaps__addressval_v1_validate_address",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/maps-platform.addressvalidation"
+    ],
+    "methodId": "addressvalidation.validateAddress",
+    "title": "addressvalidation.validateAddress"
+  },
+  {
+    "name": "mcp__plugin_gmaps_gmaps__airquality_current_conditions_lookup",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "airquality.currentConditions.lookup",
+    "title": "airquality.currentConditions.lookup"
+  },
+  {
+    "name": "mcp__plugin_gmaps_gmaps__airquality_forecast_lookup",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "airquality.forecast.lookup",
+    "title": "airquality.forecast.lookup"
+  },
+  {
+    "name": "mcp__plugin_gmaps_gmaps__airquality_history_lookup",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "airquality.history.lookup",
+    "title": "airquality.history.lookup"
+  },
+  {
+    "name": "mcp__plugin_gmaps_gmaps__airquality_map_type_heatmap_t_lookup_he",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "airquality.mapTypes.heatmapTiles.lookupHeatmapTile",
+    "title": "airquality.mapTypes.heatmapTiles.lookupHeatmapTile"
+  },
+  {
+    "name": "mcp__plugin_gmaps_gmaps__api_methods",
+    "kind": "read",
+    "scopes": [],
+    "title": "gmaps: API methods"
+  },
+  {
+    "name": "mcp__plugin_gmaps_gmaps__areainsigh_v1_compute_insights",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "areainsights.computeInsights",
+    "title": "areainsights.computeInsights"
+  },
+  {
+    "name": "mcp__plugin_gmaps_gmaps__places_places_autocomplete",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/maps-platform.places",
+      "https://www.googleapis.com/auth/maps-platform.places.autocomplete"
+    ],
+    "methodId": "places.places.autocomplete",
+    "title": "places.places.autocomplete"
+  },
+  {
+    "name": "mcp__plugin_gmaps_gmaps__places_places_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/maps-platform.places",
+      "https://www.googleapis.com/auth/maps-platform.places.details"
+    ],
+    "methodId": "places.places.get",
+    "title": "places.places.get"
+  },
+  {
+    "name": "mcp__plugin_gmaps_gmaps__places_places_photos_get_media",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/maps-platform.places",
+      "https://www.googleapis.com/auth/maps-platform.places.getphotomedia"
+    ],
+    "methodId": "places.places.photos.getMedia",
+    "title": "places.places.photos.getMedia"
+  },
+  {
+    "name": "mcp__plugin_gmaps_gmaps__places_places_search_nearby",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/maps-platform.places",
+      "https://www.googleapis.com/auth/maps-platform.places.nearbysearch"
+    ],
+    "methodId": "places.places.searchNearby",
+    "title": "places.places.searchNearby"
+  },
+  {
+    "name": "mcp__plugin_gmaps_gmaps__places_places_search_text",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/maps-platform.places",
+      "https://www.googleapis.com/auth/maps-platform.places.textsearch"
+    ],
+    "methodId": "places.places.searchText",
+    "title": "places.places.searchText"
+  },
+  {
+    "name": "mcp__plugin_gmaps_gmaps__pollen_forecast_lookup",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "pollen.forecast.lookup",
+    "title": "pollen.forecast.lookup"
+  },
+  {
+    "name": "mcp__plugin_gmaps_gmaps__pollen_map_types_heatmap_ti_lookup_heat",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "pollen.mapTypes.heatmapTiles.lookupHeatmapTile",
+    "title": "pollen.mapTypes.heatmapTiles.lookupHeatmapTile"
+  },
+  {
+    "name": "mcp__plugin_gmaps_gmaps__solar_building_insights_find_closest",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "solar.buildingInsights.findClosest",
+    "title": "solar.buildingInsights.findClosest"
+  },
+  {
+    "name": "mcp__plugin_gmaps_gmaps__solar_data_layers_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "solar.dataLayers.get",
+    "title": "solar.dataLayers.get"
+  },
+  {
+    "name": "mcp__plugin_gmaps_gmaps__solar_geo_tiff_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "solar.geoTiff.get",
+    "title": "solar.geoTiff.get"
+  },
+  {
+    "name": "mcp__plugin_gmaps_gmaps__streetview_photo_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/streetviewpublish"
+    ],
+    "methodId": "streetviewpublish.photo.create",
+    "title": "streetviewpublish.photo.create"
+  },
+  {
+    "name": "mcp__plugin_gmaps_gmaps__streetview_photo_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/streetviewpublish"
+    ],
+    "methodId": "streetviewpublish.photo.delete",
+    "title": "streetviewpublish.photo.delete"
+  },
+  {
+    "name": "mcp__plugin_gmaps_gmaps__streetview_photo_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/streetviewpublish"
+    ],
+    "methodId": "streetviewpublish.photo.get",
+    "title": "streetviewpublish.photo.get"
+  },
+  {
+    "name": "mcp__plugin_gmaps_gmaps__streetview_photo_sequence_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/streetviewpublish"
+    ],
+    "methodId": "streetviewpublish.photoSequence.create",
+    "title": "streetviewpublish.photoSequence.create"
+  },
+  {
+    "name": "mcp__plugin_gmaps_gmaps__streetview_photo_sequence_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/streetviewpublish"
+    ],
+    "methodId": "streetviewpublish.photoSequence.delete",
+    "title": "streetviewpublish.photoSequence.delete"
+  },
+  {
+    "name": "mcp__plugin_gmaps_gmaps__streetview_photo_sequence_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/streetviewpublish"
+    ],
+    "methodId": "streetviewpublish.photoSequence.get",
+    "title": "streetviewpublish.photoSequence.get"
+  },
+  {
+    "name": "mcp__plugin_gmaps_gmaps__streetview_photo_sequence_start_upload",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/streetviewpublish"
+    ],
+    "methodId": "streetviewpublish.photoSequence.startUpload",
+    "title": "streetviewpublish.photoSequence.startUpload"
+  },
+  {
+    "name": "mcp__plugin_gmaps_gmaps__streetview_photo_sequences_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/streetviewpublish"
+    ],
+    "methodId": "streetviewpublish.photoSequences.list",
+    "title": "streetviewpublish.photoSequences.list"
+  },
+  {
+    "name": "mcp__plugin_gmaps_gmaps__streetview_photo_start_upload",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/streetviewpublish"
+    ],
+    "methodId": "streetviewpublish.photo.startUpload",
+    "title": "streetviewpublish.photo.startUpload"
+  },
+  {
+    "name": "mcp__plugin_gmaps_gmaps__streetview_photo_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/streetviewpublish"
+    ],
+    "methodId": "streetviewpublish.photo.update",
+    "title": "streetviewpublish.photo.update"
+  },
+  {
+    "name": "mcp__plugin_gmaps_gmaps__streetview_photos_batch_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/streetviewpublish"
+    ],
+    "methodId": "streetviewpublish.photos.batchDelete",
+    "title": "streetviewpublish.photos.batchDelete"
+  },
+  {
+    "name": "mcp__plugin_gmaps_gmaps__streetview_photos_batch_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/streetviewpublish"
+    ],
+    "methodId": "streetviewpublish.photos.batchGet",
+    "title": "streetviewpublish.photos.batchGet"
+  },
+  {
+    "name": "mcp__plugin_gmaps_gmaps__streetview_photos_batch_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/streetviewpublish"
+    ],
+    "methodId": "streetviewpublish.photos.batchUpdate",
+    "title": "streetviewpublish.photos.batchUpdate"
+  },
+  {
+    "name": "mcp__plugin_gmaps_gmaps__streetview_photos_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/streetviewpublish"
+    ],
+    "methodId": "streetviewpublish.photos.list",
+    "title": "streetviewpublish.photos.list"
+  },
+  {
+    "name": "mcp__plugin_gmaps_gmaps__travelimpa_flights_compute_detailed_fli",
+    "kind": "write",
+    "scopes": [],
+    "methodId": "travelimpactmodel.flights.computeDetailedFlightEmissions",
+    "title": "travelimpactmodel.flights.computeDetailedFlightEmissions"
+  },
+  {
+    "name": "mcp__plugin_gmaps_gmaps__travelimpa_flights_compute_flight_emiss",
+    "kind": "write",
+    "scopes": [],
+    "methodId": "travelimpactmodel.flights.computeFlightEmissions",
+    "title": "travelimpactmodel.flights.computeFlightEmissions"
+  },
+  {
+    "name": "mcp__plugin_gmaps_gmaps__travelimpa_flights_compute_scope3_fligh",
+    "kind": "write",
+    "scopes": [],
+    "methodId": "travelimpactmodel.flights.computeScope3FlightEmissions",
+    "title": "travelimpactmodel.flights.computeScope3FlightEmissions"
+  },
+  {
+    "name": "mcp__plugin_gmaps_gmaps__travelimpa_flights_compute_typical_flig",
+    "kind": "write",
+    "scopes": [],
+    "methodId": "travelimpactmodel.flights.computeTypicalFlightEmissions",
+    "title": "travelimpactmodel.flights.computeTypicalFlightEmissions"
+  }
+]

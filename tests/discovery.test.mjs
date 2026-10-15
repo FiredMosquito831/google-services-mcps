@@ -258,17 +258,62 @@ test('generate: a body field named body collides with a query parameter, so it b
   assert.ok(create.inputSchema.requestBody, 'the request body is requestBody');
 });
 
-test('real snapshot: gcloud-ops tools are unique, short and carry a working preview', async (t) => {
+/** A one-API demo document with two methods: demo.things.list (GET) and demo.things.delete (DELETE). */
+const demoDoc = () => ({
+  name: 'demo',
+  version: 'v1',
+  rootUrl: 'https://demo.googleapis.com/',
+  servicePath: '',
+  schemas: {},
+  resources: {
+    things: {
+      methods: {
+        list: { id: 'demo.things.list', path: 'v1/things', httpMethod: 'GET' },
+        delete: {
+          id: 'demo.things.delete',
+          path: 'v1/things/{thingId}',
+          httpMethod: 'DELETE',
+          parameters: [{ name: 'thingId', location: 'path', type: 'string' }],
+        },
+      },
+    },
+  },
+});
+
+test('generate: every generated tool carries its Discovery method id, which the consent text and hook show', () => {
+  const { tools } = generateDiscoveryTools('demo-server', 'cloud', [{ apiName: 'demo', apiVersion: 'v1', doc: demoDoc() }], { overrides: {}, notes: {} }, testConfig());
+  const generated = tools.filter((t) => t.name !== 'api_methods');
+  assert.equal(generated.length, 2);
+  for (const t of generated) assert.equal(t.methodId, t.title, `${t.name} carries its method id`);
+  assert.equal(generated.find((t) => t.title === 'demo.things.delete').methodId, 'demo.things.delete');
+});
+
+test('generate: a generated tool never takes a reserved (curated) name, and gets the hashed form instead', () => {
+  const sources = [{ apiName: 'demo', apiVersion: 'v1', doc: demoDoc() }];
+  const kinds = { overrides: {}, notes: {} };
+  const plain = generateDiscoveryTools('demo-server', 'cloud', sources, kinds, testConfig()).tools.find((t) => t.title === 'demo.things.list');
+  assert.equal(plain.name, 'demo_things_list');
+
+  const { tools } = generateDiscoveryTools('demo-server', 'cloud', sources, kinds, testConfig(), MAX_TOOL_NAME, ['demo_things_list']);
+  const list = tools.find((t) => t.title === 'demo.things.list');
+  assert.match(list.name, /^demo_things_list_[0-9a-f]{4}$/, 'the reserved name is taken, so the method gets its hash');
+  assert.equal(new Set(tools.map((t) => t.name)).size, tools.length, 'names stay unique');
+  // The delete method does not clash, so it keeps its plain name.
+  assert.equal(tools.find((t) => t.title === 'demo.things.delete').name, 'demo_things_delete');
+});
+
+test('real snapshot: gcloud tools are unique, short and carry a working preview', async (t) => {
   if (!existsSync(join(ROOT, 'data', 'discovery', 'monitoring.v3.json'))) {
     t.skip('data/discovery is missing. Run: node scripts/snapshot-discovery.mjs');
     return;
   }
-  const tools = await discoveryToolsFor('gcloud-ops', testConfig());
+  // The gcloud server (config/servers.json) with its generated Discovery APIs.
+  const tools = await discoveryToolsFor('gcloud', testConfig());
   assert.ok(tools.length > 300, `expected several hundred tools, got ${tools.length}`);
   const names = tools.map((x) => x.name);
   assert.equal(new Set(names).size, names.length, 'tool names are unique');
   // The full Claude name is mcp__plugin_<plugin>_<server>__<tool>, and it must fit in 64 characters.
-  const budget = nameBudget('google-cloud', 'gcloud-ops');
+  const budget = nameBudget('gcloud', 'gcloud');
   for (const n of names) assert.ok(n.length <= budget, `${n} exceeds the budget of ${budget}`);
   assert.ok(names.includes('api_methods'));
 
@@ -287,7 +332,7 @@ test('registry: group scopes come from the discovery snapshots', (t) => {
   }
   const reg = loadRegistry(new URL('../dist/core/registry.js', import.meta.url).href);
   assert.equal(reg.dataRoot, ROOT);
-  const scopes = scopesForGroup(reg, 'cloud', ['gcloud-ops']);
+  const scopes = scopesForGroup(reg, 'cloud', ['gcloud']);
   assert.ok(scopes.length > 0);
   assert.deepEqual(scopes, [...new Set(scopes)].sort(), 'scopes are sorted and unique');
   assert.ok(scopes.includes('https://www.googleapis.com/auth/cloud-platform'));

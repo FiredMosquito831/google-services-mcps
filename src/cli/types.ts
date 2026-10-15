@@ -3,8 +3,15 @@
 export const AGENTS = ['claude', 'codex', 'opencode', 'agy'] as const;
 export type AgentId = (typeof AGENTS)[number];
 
-export const PLUGINS = ['google-cloud', 'google-workspace', 'google-search', 'google-business'] as const;
-export type PluginId = (typeof PLUGINS)[number];
+/**
+ * Plugin ids are product ids from config/products.json. The valid list is not fixed here: it is
+ * read at run time from the plugin's own servers.json, or from config/products.json in the repo.
+ */
+export type PluginChoice = string[] | 'all';
+
+/** Values of --confirmation. The servers read the same values from GSM_CONFIRMATION. */
+export const CONFIRMATION_MODES = ['every-change', 'destructive-only', 'off'] as const;
+export type ConfirmationMode = (typeof CONFIRMATION_MODES)[number];
 
 export const SCOPES = ['global', 'project', 'folder'] as const;
 export type Scope = (typeof SCOPES)[number];
@@ -53,6 +60,8 @@ export interface AdapterContext {
   repoRoot?: string;
   /** Plugin ids to install or uninstall (used by the claude adapter). */
   plugins: string[];
+  /** --confirmation, when given on install. Undefined means nothing is written, so the plugin default applies. */
+  confirmation?: ConfirmationMode;
   /** Servers to write (used by the config-file adapters). */
   servers: readonly ServerRef[];
   /** Absolute path of the bundled .mjs file for a server. */

@@ -1,0 +1,27 @@
+[
+  {
+    "name": "area120tables",
+    "version": "v1alpha1",
+    "error": "not in cache; run without --offline to fetch it"
+  },
+  {
+    "name": "contentwarehouse",
+    "version": "v1",
+    "error": "not in cache; run without --offline to fetch it"
+  },
+  {
+    "name": "datalabeling",
+    "version": "v1beta1",
+    "error": "not in cache; run without --offline to fetch it"
+  },
+  {
+    "name": "mybusinessqanda",
+    "version": "v1",
+    "error": "not in cache; run without --offline to fetch it"
+  },
+  {
+    "name": "poly",
+    "version": "v1",
+    "error": "not in cache; run without --offline to fetch it"
+  }
+]

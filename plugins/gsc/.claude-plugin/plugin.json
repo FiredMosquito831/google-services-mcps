@@ -1,0 +1,40 @@
+{
+  "name": "gsc",
+  "displayName": "Search Console",
+  "version": "0.1.0",
+  "description": "Search Console sites, sitemaps, search analytics, URL indexing and site verification.",
+  "author": {
+    "name": "FiredMosquito831"
+  },
+  "keywords": [
+    "google",
+    "mcp",
+    "gsc",
+    "searchconsole"
+  ],
+  "userConfig": {
+    "allow_writes": {
+      "type": "boolean",
+      "title": "Allow write tools",
+      "description": "Modifying and deleting tools are listed only when this is on, and every change still asks first unless confirmation is off.",
+      "default": false
+    },
+    "confirmation": {
+      "type": "string",
+      "title": "Confirm before changes",
+      "description": "every-change asks before any change or delete (recommended). destructive-only asks only before deleting or sending. off asks for nothing; deny rules still apply. Change it here at any time.",
+      "options": [
+        "every-change",
+        "destructive-only",
+        "off"
+      ],
+      "default": "every-change"
+    },
+    "token_dir": {
+      "type": "string",
+      "title": "Token directory (optional)",
+      "description": "Where OAuth tokens are stored. Leave empty for ~/.google-services-mcps.",
+      "required": false
+    }
+  }
+}

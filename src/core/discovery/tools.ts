@@ -19,6 +19,7 @@ import type { ToolDef, ToolKind } from '../tools.js';
 import { loadRegistry, serverByName, type ApiRef, type AuthGroup, type ServerSpec } from '../registry.js';
 import { assignToolNames, flattenMethods, MAX_TOOL_NAME, nameBudget, type DiscoveryDoc, type MethodRecord } from './methods.js';
 import { clipText, paramToZod, schemaToZod, PARAM_DESC_MAX } from './schema.js';
+import { ApiKeyClient } from './apikey-client.js';
 
 /**
  * Name of the per-server list tool. It is unique within its server, and short,
@@ -26,7 +27,10 @@ import { clipText, paramToZod, schemaToZod, PARAM_DESC_MAX } from './schema.js';
  */
 export const LIST_METHODS_SUFFIX = 'api_methods';
 
-/** runServer adds a confirm flag to destructive tools, so no API parameter may use this name. */
+/**
+ * Argument names the generated tools reserve. An API parameter with one of these names is renamed
+ * (confirm becomes confirmParam), so it cannot be mistaken for a tool's own argument.
+ */
 const RESERVED_ARGS = ['confirm'];
 
 type HttpMethodName = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'HEAD' | 'OPTIONS';
@@ -132,27 +136,59 @@ export function loadToolKinds(dataRoot: string): ToolKindsFile {
 // ---------------------------------------------------------------------------
 // Auth
 
-type Auth = OAuth2Client | JWT;
+type Auth = OAuth2Client | JWT | ApiKeyClient;
 const authCache = new Map<AuthGroup, Promise<Auth>>();
 
 /**
- * One authorized client per auth group, cached for the life of the process. The
- * cloud group falls back to Application Default Credentials when no OAuth token
- * is stored, as the curated cloud server does.
+ * One client per auth group, cached for the life of the process. The cloud group
+ * falls back to Application Default Credentials when no OAuth token is stored, as
+ * the curated cloud server does. The apikey group gets an ApiKeyClient, which adds
+ * the key to each request. Every other group gets its OAuth client.
  */
 export function authFor(group: AuthGroup, cfg: RuntimeConfig): Promise<Auth> {
   const cached = authCache.get(group);
   if (cached) return cached;
 
   const pending = (async (): Promise<Auth> => {
+    if (group === 'apikey') return new ApiKeyClient(cfg);
     if (group === 'cloud' && !loadUserTokens('cloud', cfg)) return getCloudAdcClient();
-    // 'business' is not yet a member of AuthKind in core/auth.ts (core change requested).
     return getAuthClient(group as AuthKind, cfg);
   })();
   authCache.set(group, pending);
   // A failed attempt (for example, not logged in yet) is not cached.
   pending.catch(() => authCache.delete(group));
   return pending;
+}
+
+/** One request for an auth group. The apikey group's client adds the key itself, so callers never put it in the URL. */
+export interface AuthorizedRequest {
+  url: string;
+  method: HttpMethodName;
+  params?: Record<string, unknown>;
+  data?: unknown;
+}
+
+/**
+ * Sends one request through the client of its auth group (see authFor). OAuth
+ * clients serialize repeated query keys with serializeQuery. Used by the per-method
+ * tools and by the gateway's api_call, so both take the same path.
+ */
+export async function sendAuthorized(
+  group: AuthGroup,
+  cfg: RuntimeConfig,
+  req: AuthorizedRequest,
+): Promise<{ status: number; data: unknown }> {
+  const client = await authFor(group, cfg);
+  if (client instanceof ApiKeyClient) return client.request(req);
+  const hasParams = req.params !== undefined && Object.keys(req.params).length > 0;
+  const res = await client.request({
+    url: req.url,
+    method: req.method,
+    params: hasParams ? req.params : undefined,
+    paramsSerializer: serializeQuery,
+    data: req.data,
+  });
+  return { status: res.status, data: res.data };
 }
 
 // ---------------------------------------------------------------------------
@@ -274,20 +310,16 @@ function buildMethodTool(
   const tool: ToolDef = {
     name,
     title: m.fullId,
+    // The Discovery method id, so the consent text and the hook can name the method.
+    methodId: m.fullId,
     description: parts.join(' '),
     kind: m.kind,
+    // The method's own scope list from the Discovery document (any one of them grants it).
+    scopes: m.scopes.length > 0 ? [...m.scopes] : undefined,
     inputSchema: shape,
     async handler(args) {
       const req = buildRequest(plan, args as Record<string, unknown>);
-      const client = await authFor(group, cfg);
-      const hasParams = Object.keys(req.params).length > 0;
-      const res = await client.request({
-        url: req.url,
-        method: req.method,
-        params: hasParams ? req.params : undefined,
-        paramsSerializer: serializeQuery,
-        data: req.data,
-      });
+      const res = await sendAuthorized(group, cfg, req);
       return res.data;
     },
   };
@@ -332,7 +364,9 @@ function buildListTool(name: string, serverName: string, rows: ListRow[]): ToolD
 
 /**
  * Pure generation step: no file or network access beyond what the inputs hold.
- * The server's name sets the list tool's name.
+ * The server's name sets the list tool's name. `reserved` names (the curated tools of
+ * the same server) are never given to a generated tool: a generated method that would
+ * take one gets its hashed form instead, so the curated name stays the same.
  */
 export function generateDiscoveryTools(
   serverName: string,
@@ -341,6 +375,7 @@ export function generateDiscoveryTools(
   kinds: ToolKindsFile,
   cfg: RuntimeConfig,
   maxNameLength: number = MAX_TOOL_NAME,
+  reserved: readonly string[] = [],
 ): GeneratedTools {
   const entries: Array<{ method: MethodRecord; doc: DiscoveryDoc }> = [];
   const skippedUploads: string[] = [];
@@ -365,7 +400,7 @@ export function generateDiscoveryTools(
   const listName = LIST_METHODS_SUFFIX;
   const names = assignToolNames(
     entries.map((e) => e.method),
-    [listName],
+    [listName, ...reserved],
     maxNameLength,
   );
 
@@ -395,11 +430,21 @@ function uniqueApis(apis: ApiRef[]): ApiRef[] {
 }
 
 /**
+ * Names of a server's curated tools. Pass them to discoveryToolsFor as `reserved`, so the
+ * generated tools never take a curated name. Kept free of the curated modules, so the
+ * bundled entries can call it without bundling every curated module.
+ */
+export function toolNamesOf(tools: ReadonlyArray<{ name: string }>): string[] {
+  return tools.map((tool) => tool.name);
+}
+
+/**
  * Tools for one server: every method of its discovery APIs plus the list tool.
  * Returns [] for a server without discovery APIs. Missing snapshots are
- * reported on stderr and skipped, so the server still starts.
+ * reported on stderr and skipped, so the server still starts. `reserved` holds
+ * the names of the server's curated tools (see toolNamesOf).
  */
-export async function discoveryToolsFor(serverName: string, cfg: RuntimeConfig): Promise<ToolDef[]> {
+export async function discoveryToolsFor(serverName: string, cfg: RuntimeConfig, reserved: readonly string[] = []): Promise<ToolDef[]> {
   const reg = loadRegistry();
   const server: ServerSpec = serverByName(reg, serverName);
   const apis = uniqueApis(server.apis ?? []);
@@ -426,7 +471,7 @@ export async function discoveryToolsFor(serverName: string, cfg: RuntimeConfig):
   }
 
   const kinds = loadToolKinds(reg.dataRoot);
-  const generated = generateDiscoveryTools(serverName, server.group, sources, kinds, cfg, nameBudget(server.plugin, serverName));
+  const generated = generateDiscoveryTools(serverName, server.group, sources, kinds, cfg, nameBudget(server.plugin, serverName), reserved);
   if (generated.skippedUploads.length > 0) {
     process.stderr.write(
       `[${serverName}] skipped ${generated.skippedUploads.length} media-upload method(s): ${generated.skippedUploads.join(', ')}\n`,

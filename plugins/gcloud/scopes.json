@@ -1,0 +1,21 @@
+{
+  "gcloud": [
+    "https://www.googleapis.com/auth/apikeys",
+    "https://www.googleapis.com/auth/apikeys.readonly",
+    "https://www.googleapis.com/auth/bigquery",
+    "https://www.googleapis.com/auth/bigquery.insertdata",
+    "https://www.googleapis.com/auth/cloud-billing",
+    "https://www.googleapis.com/auth/cloud-billing.readonly",
+    "https://www.googleapis.com/auth/cloud-platform",
+    "https://www.googleapis.com/auth/cloud-platform.read-only",
+    "https://www.googleapis.com/auth/cloudasset",
+    "https://www.googleapis.com/auth/devstorage.full_control",
+    "https://www.googleapis.com/auth/devstorage.read_only",
+    "https://www.googleapis.com/auth/devstorage.read_write",
+    "https://www.googleapis.com/auth/monitoring",
+    "https://www.googleapis.com/auth/monitoring.read",
+    "https://www.googleapis.com/auth/monitoring.write",
+    "https://www.googleapis.com/auth/service.management",
+    "https://www.googleapis.com/auth/trace.append"
+  ]
+}

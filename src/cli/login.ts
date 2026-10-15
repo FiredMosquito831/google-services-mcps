@@ -2,7 +2,8 @@
  * Interactive OAuth login ("installed app", loopback redirect) for one auth group.
  *
  * This is the CLI's own copy of core's loginInteractive. It differs in two ways:
- *  - the scopes are computed per group (and optionally per server) with scopesForGroup;
+ *  - the scopes come from a profile (core/scopes.ts) or an explicit --scopes list,
+ *    never from a fixed list;
  *  - the redirect port is read while the server is still listening. Core reads
  *    server.address() after server.close(), which returns null and throws, so the
  *    login never completes. Core is not changed here; see the report.
@@ -17,10 +18,13 @@ import { resolve } from 'node:path';
 import { OAuth2Client, type Credentials } from 'google-auth-library';
 import { ADMIN_SCOPES, readClientSecret } from '../core/auth.js';
 import { loadConfig } from '../core/config.js';
-import { scopesForGroup, serverByName, type AuthGroup, type Registry } from '../core/registry.js';
-import { LOGIN_GROUPS, type CliGroup } from './args.js';
+import { type AuthGroup, type Registry } from '../core/registry.js';
+import { PROFILE_TEXT, requirementsFor, resolveScopes, type Profile } from '../core/scopes.js';
+import { OAUTH_GROUPS, type CliGroup } from './args.js';
 import { tokenFileFor } from './credentials.js';
 import { writeAtomic } from './fsutil.js';
+import { postureLine } from './posture.js';
+import { coverageOf, formatCoverage, selectGroupServers } from './scopes.js';
 import type { Output } from './report.js';
 import { UsageError } from './types.js';
 
@@ -30,6 +34,9 @@ export interface LoginRequest {
   group: CliGroup;
   servers?: string[];
   clientSecretFile?: string;
+  /** readonly, readwrite or full. "custom" means exactly customScopes. */
+  profile: Profile | 'custom';
+  customScopes?: string[];
 }
 
 /** `loadRegistry` is passed as a function so that workspace-admin guidance needs no registry. */
@@ -38,7 +45,11 @@ export async function runLogin(req: LoginRequest, loadRegistryFn: () => Registry
     printAdminGuidance(out);
     return 0;
   }
-  if (!(LOGIN_GROUPS as readonly string[]).includes(req.group)) {
+  if (req.group === 'apikey') {
+    printApiKeyAlias(out);
+    return 0;
+  }
+  if (!(OAUTH_GROUPS as readonly string[]).includes(req.group)) {
     throw new UsageError(`group "${req.group}" has no interactive login`);
   }
   const group = req.group as AuthGroup;
@@ -51,22 +62,25 @@ export async function runLogin(req: LoginRequest, loadRegistryFn: () => Registry
   };
   const { clientId, clientSecret } = readClientSecret(secretCfg);
 
-  const onlyServers = req.servers && req.servers.length > 0 ? req.servers : undefined;
-  if (onlyServers) {
-    for (const name of onlyServers) {
-      const spec = serverByName(registry, name);
-      if (spec.group !== group) {
-        throw new UsageError(`server "${name}" uses the ${spec.group} login. Run: gsm login ${spec.group}`);
-      }
-    }
+  // --servers narrows the group; every name must belong to it (checked with the same message as before).
+  const servers = selectGroupServers(registry, group, req.servers && req.servers.length > 0 ? req.servers : undefined);
+  const requirements = await requirementsFor(servers, cfg);
+
+  let scopes: string[];
+  if (req.profile === 'custom') {
+    scopes = [...new Set(req.customScopes ?? [])].sort();
+    out.log(`Using the ${scopes.length} scope(s) given with --scopes. Nothing else is added.`);
+  } else {
+    scopes = resolveScopes(requirements, req.profile).scopes;
+    out.log(`Profile ${req.profile}: ${PROFILE_TEXT[req.profile]}.`);
   }
+  if (scopes.length === 0) throw new Error(`no OAuth scopes resolved for group "${group}"`);
 
-  const scopes = scopesForGroup(registry, group, onlyServers);
-  if (scopes.length === 0) throw new Error(`no OAuth scopes are defined for group "${group}"`);
-
+  out.log(`Servers: ${servers.join(', ')}`);
+  out.log(`This token runs ${formatCoverage(coverageOf(requirements, scopes))}.`);
   out.log(`Logging in for group "${group}" with ${scopes.length} scope(s):`);
   for (const scope of scopes) out.log(`  ${scope}`);
-  if (onlyServers) {
+  if (req.servers && req.servers.length > 0) {
     out.log('Note: --servers stores a token that covers only those servers, and it replaces the group token.');
   }
 
@@ -76,12 +90,22 @@ export async function runLogin(req: LoginRequest, loadRegistryFn: () => Registry
   writeAtomic(file, JSON.stringify(tokens, null, 2) + '\n', 0o600);
   out.log(`Saved token: ${file} (mode 0600)`);
   out.log(`Granted scopes: ${tokens.scope ?? '(not reported by Google)'}`);
+  const granted = (tokens.scope ?? '').split(' ').filter(Boolean);
+  out.log(postureLine(granted.length > 0 ? granted : scopes, process.env));
   return 0;
+}
+
+/** `gsm login apikey` does no login. The API key is saved by setup-apikey. */
+function printApiKeyAlias(out: Output): void {
+  out.log('apikey: no login is needed. The products in this group read a saved API key instead.');
+  out.log('Save the key with: gsm setup-apikey  (it reads GSM_API_KEY_INPUT or stdin, never an argument)');
 }
 
 function printAdminGuidance(out: Output): void {
   out.log('workspace-admin uses a service account with domain-wide delegation. It has no interactive login.');
-  out.log('Set these environment variables for the gws-admin server. Keep the key file outside the repo.');
+  out.log('Set it up with: gsm setup-admin --subject <super admin email> --key-file <service account JSON> [--profile readonly|readwrite|full]');
+  out.log('That stores the subject and the scope list the server uses. The key file stays where it is.');
+  out.log('Or set these environment variables for the gws-admin server (used when setup-admin has not run):');
   out.log('  GSM_SERVICE_ACCOUNT_KEY_FILE  path to the service account JSON key');
   out.log('  GSM_ADMIN_SUBJECT             super admin email to impersonate');
   out.log('In the Google Admin console, under API controls > Domain-wide delegation, authorize the service account client ID for:');

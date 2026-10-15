@@ -1,0 +1,1255 @@
+{
+  "generatedAt": "2026-10-15T12:52:30.872Z",
+  "apiCount": 12,
+  "methodCount": 120,
+  "apis": [
+    {
+      "name": "merchantapi",
+      "version": "accounts_v1beta",
+      "preferred": false,
+      "title": "Merchant API",
+      "description": "Programmatically manage your Merchant Center Accounts.",
+      "documentationLink": "https://developers.google.com/merchant/api",
+      "labels": [],
+      "deprecated": false,
+      "rootUrl": "https://merchantapi.googleapis.com/",
+      "servicePath": "",
+      "methods": [
+        [
+          "merchantapi.accounts.createTestAccount",
+          "POST",
+          "accounts/v1beta/{+parent}:createTestAccount",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.delete",
+          "DELETE",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.listSubaccounts",
+          "GET",
+          "accounts/v1beta/{+provider}:listSubaccounts",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.list",
+          "GET",
+          "accounts/v1beta/accounts",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.patch",
+          "PATCH",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.get",
+          "GET",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.createAndConfigure",
+          "POST",
+          "accounts/v1beta/accounts:createAndConfigure",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.emailPreferences.getEmailPreferences",
+          "GET",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.emailPreferences.updateEmailPreferences",
+          "PATCH",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.businessIdentity.getBusinessIdentity",
+          "GET",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.businessIdentity.updateBusinessIdentity",
+          "PATCH",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.users.list",
+          "GET",
+          "accounts/v1beta/{+parent}/users",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.users.get",
+          "GET",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.users.delete",
+          "DELETE",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.users.patch",
+          "PATCH",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.users.create",
+          "POST",
+          "accounts/v1beta/{+parent}/users",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.users.me.verifySelf",
+          "PATCH",
+          "accounts/v1beta/{+account}/users/me:verifySelf",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.regions.list",
+          "GET",
+          "accounts/v1beta/{+parent}/regions",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.regions.delete",
+          "DELETE",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.regions.get",
+          "GET",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.regions.create",
+          "POST",
+          "accounts/v1beta/{+parent}/regions",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.regions.patch",
+          "PATCH",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.automaticImprovements.getAutomaticImprovements",
+          "GET",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.automaticImprovements.updateAutomaticImprovements",
+          "PATCH",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.issues.list",
+          "GET",
+          "accounts/v1beta/{+parent}/issues",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.programs.enable",
+          "POST",
+          "accounts/v1beta/{+name}:enable",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.programs.get",
+          "GET",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.programs.disable",
+          "POST",
+          "accounts/v1beta/{+name}:disable",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.programs.list",
+          "GET",
+          "accounts/v1beta/{+parent}/programs",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.programs.checkoutSettings.create",
+          "POST",
+          "accounts/v1beta/{+parent}/checkoutSettings",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.programs.checkoutSettings.getCheckoutSettings",
+          "GET",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.programs.checkoutSettings.updateCheckoutSettings",
+          "PATCH",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.programs.checkoutSettings.deleteCheckoutSettings",
+          "DELETE",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.autofeedSettings.updateAutofeedSettings",
+          "PATCH",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.autofeedSettings.getAutofeedSettings",
+          "GET",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.gbpAccounts.list",
+          "GET",
+          "accounts/v1beta/{+parent}/gbpAccounts",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.gbpAccounts.linkGbpAccount",
+          "POST",
+          "accounts/v1beta/{+parent}/gbpAccounts:linkGbpAccount",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.services.list",
+          "GET",
+          "accounts/v1beta/{+parent}/services",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.services.get",
+          "GET",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.services.propose",
+          "POST",
+          "accounts/v1beta/{+parent}/services:propose",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.services.reject",
+          "POST",
+          "accounts/v1beta/{+name}:reject",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.services.approve",
+          "POST",
+          "accounts/v1beta/{+name}:approve",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.relationships.patch",
+          "PATCH",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.relationships.list",
+          "GET",
+          "accounts/v1beta/{+parent}/relationships",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.relationships.get",
+          "GET",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.omnichannelSettings.patch",
+          "PATCH",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.omnichannelSettings.create",
+          "POST",
+          "accounts/v1beta/{+parent}/omnichannelSettings",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.omnichannelSettings.get",
+          "GET",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.omnichannelSettings.requestInventoryVerification",
+          "POST",
+          "accounts/v1beta/{+name}:requestInventoryVerification",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.omnichannelSettings.list",
+          "GET",
+          "accounts/v1beta/{+parent}/omnichannelSettings",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.omnichannelSettings.lfpProviders.linkLfpProvider",
+          "POST",
+          "accounts/v1beta/{+name}:linkLfpProvider",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.omnichannelSettings.lfpProviders.find",
+          "GET",
+          "accounts/v1beta/{+parent}/lfpProviders:find",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.termsOfServiceAgreementStates.get",
+          "GET",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.termsOfServiceAgreementStates.retrieveForApplication",
+          "GET",
+          "accounts/v1beta/{+parent}/termsOfServiceAgreementStates:retrieveForApplication",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.onlineReturnPolicies.list",
+          "GET",
+          "accounts/v1beta/{+parent}/onlineReturnPolicies",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.onlineReturnPolicies.get",
+          "GET",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.onlineReturnPolicies.delete",
+          "DELETE",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.onlineReturnPolicies.patch",
+          "PATCH",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.onlineReturnPolicies.create",
+          "POST",
+          "accounts/v1beta/{+parent}/onlineReturnPolicies",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.businessInfo.updateBusinessInfo",
+          "PATCH",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.businessInfo.getBusinessInfo",
+          "GET",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.shippingSettings.insert",
+          "POST",
+          "accounts/v1beta/{+parent}/shippingSettings:insert",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.shippingSettings.getShippingSettings",
+          "GET",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.homepage.claim",
+          "POST",
+          "accounts/v1beta/{+name}:claim",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.homepage.unclaim",
+          "POST",
+          "accounts/v1beta/{+name}:unclaim",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.homepage.updateHomepage",
+          "PATCH",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.homepage.getHomepage",
+          "GET",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.developerRegistration.getDeveloperRegistration",
+          "GET",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.developerRegistration.getAccountForGcpRegistration",
+          "GET",
+          "accounts/v1beta/accounts:getAccountForGcpRegistration",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.developerRegistration.unregisterGcp",
+          "POST",
+          "accounts/v1beta/{+name}:unregisterGcp",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.developerRegistration.registerGcp",
+          "POST",
+          "accounts/v1beta/{+name}:registerGcp",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.termsOfService.retrieveLatest",
+          "GET",
+          "accounts/v1beta/termsOfService:retrieveLatest",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.termsOfService.get",
+          "GET",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.termsOfService.accept",
+          "POST",
+          "accounts/v1beta/{+name}:accept",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ]
+      ]
+    },
+    {
+      "name": "merchantapi",
+      "version": "conversions_v1beta",
+      "preferred": false,
+      "title": "Merchant API",
+      "description": "Programmatically manage your Merchant Center Accounts.",
+      "documentationLink": "https://developers.google.com/merchant/api",
+      "labels": [],
+      "deprecated": false,
+      "rootUrl": "https://merchantapi.googleapis.com/",
+      "servicePath": "",
+      "methods": [
+        [
+          "merchantapi.accounts.conversionSources.delete",
+          "DELETE",
+          "conversions/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.conversionSources.list",
+          "GET",
+          "conversions/v1beta/{+parent}/conversionSources",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.conversionSources.get",
+          "GET",
+          "conversions/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.conversionSources.patch",
+          "PATCH",
+          "conversions/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.conversionSources.undelete",
+          "POST",
+          "conversions/v1beta/{+name}:undelete",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.conversionSources.create",
+          "POST",
+          "conversions/v1beta/{+parent}/conversionSources",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ]
+      ]
+    },
+    {
+      "name": "merchantapi",
+      "version": "datasources_v1beta",
+      "preferred": false,
+      "title": "Merchant API",
+      "description": "Programmatically manage your Merchant Center Accounts.",
+      "documentationLink": "https://developers.google.com/merchant/api",
+      "labels": [],
+      "deprecated": false,
+      "rootUrl": "https://merchantapi.googleapis.com/",
+      "servicePath": "",
+      "methods": [
+        [
+          "merchantapi.accounts.dataSources.list",
+          "GET",
+          "datasources/v1beta/{+parent}/dataSources",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.dataSources.delete",
+          "DELETE",
+          "datasources/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.dataSources.fetch",
+          "POST",
+          "datasources/v1beta/{+name}:fetch",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.dataSources.create",
+          "POST",
+          "datasources/v1beta/{+parent}/dataSources",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.dataSources.get",
+          "GET",
+          "datasources/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.dataSources.patch",
+          "PATCH",
+          "datasources/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.dataSources.fileUploads.get",
+          "GET",
+          "datasources/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ]
+      ]
+    },
+    {
+      "name": "merchantapi",
+      "version": "inventories_v1beta",
+      "preferred": false,
+      "title": "Merchant API",
+      "description": "Programmatically manage your Merchant Center Accounts.",
+      "documentationLink": "https://developers.google.com/merchant/api",
+      "labels": [],
+      "deprecated": false,
+      "rootUrl": "https://merchantapi.googleapis.com/",
+      "servicePath": "",
+      "methods": [
+        [
+          "merchantapi.accounts.products.regionalInventories.delete",
+          "DELETE",
+          "inventories/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.products.regionalInventories.list",
+          "GET",
+          "inventories/v1beta/{+parent}/regionalInventories",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.products.regionalInventories.insert",
+          "POST",
+          "inventories/v1beta/{+parent}/regionalInventories:insert",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.products.localInventories.delete",
+          "DELETE",
+          "inventories/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.products.localInventories.insert",
+          "POST",
+          "inventories/v1beta/{+parent}/localInventories:insert",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.products.localInventories.list",
+          "GET",
+          "inventories/v1beta/{+parent}/localInventories",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ]
+      ]
+    },
+    {
+      "name": "merchantapi",
+      "version": "issueresolution_v1beta",
+      "preferred": false,
+      "title": "Merchant API",
+      "description": "Programmatically manage your Merchant Center Accounts.",
+      "documentationLink": "https://developers.google.com/merchant/api",
+      "labels": [],
+      "deprecated": false,
+      "rootUrl": "https://merchantapi.googleapis.com/",
+      "servicePath": "",
+      "methods": [
+        [
+          "merchantapi.issueresolution.renderaccountissues",
+          "POST",
+          "issueresolution/v1beta/{+name}:renderaccountissues",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.issueresolution.triggeraction",
+          "POST",
+          "issueresolution/v1beta/{+name}:triggeraction",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.issueresolution.renderproductissues",
+          "POST",
+          "issueresolution/v1beta/{+name}:renderproductissues",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.aggregateProductStatuses.list",
+          "GET",
+          "issueresolution/v1beta/{+parent}/aggregateProductStatuses",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ]
+      ]
+    },
+    {
+      "name": "merchantapi",
+      "version": "lfp_v1beta",
+      "preferred": false,
+      "title": "Merchant API",
+      "description": "Programmatically manage your Merchant Center Accounts.",
+      "documentationLink": "https://developers.google.com/merchant/api",
+      "labels": [],
+      "deprecated": false,
+      "rootUrl": "https://merchantapi.googleapis.com/",
+      "servicePath": "",
+      "methods": [
+        [
+          "merchantapi.accounts.lfpStores.insert",
+          "POST",
+          "lfp/v1beta/{+parent}/lfpStores:insert",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.lfpStores.delete",
+          "DELETE",
+          "lfp/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.lfpStores.get",
+          "GET",
+          "lfp/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.lfpStores.list",
+          "GET",
+          "lfp/v1beta/{+parent}/lfpStores",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.lfpMerchantStates.get",
+          "GET",
+          "lfp/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.lfpInventories.insert",
+          "POST",
+          "lfp/v1beta/{+parent}/lfpInventories:insert",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.lfpSales.insert",
+          "POST",
+          "lfp/v1beta/{+parent}/lfpSales:insert",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ]
+      ]
+    },
+    {
+      "name": "merchantapi",
+      "version": "notifications_v1beta",
+      "preferred": false,
+      "title": "Merchant API",
+      "description": "Programmatically manage your Merchant Center Accounts.",
+      "documentationLink": "https://developers.google.com/merchant/api",
+      "labels": [],
+      "deprecated": false,
+      "rootUrl": "https://merchantapi.googleapis.com/",
+      "servicePath": "",
+      "methods": [
+        [
+          "merchantapi.accounts.notificationsubscriptions.list",
+          "GET",
+          "notifications/v1beta/{+parent}/notificationsubscriptions",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.notificationsubscriptions.get",
+          "GET",
+          "notifications/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.notificationsubscriptions.delete",
+          "DELETE",
+          "notifications/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.notificationsubscriptions.create",
+          "POST",
+          "notifications/v1beta/{+parent}/notificationsubscriptions",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.notificationsubscriptions.patch",
+          "PATCH",
+          "notifications/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ]
+      ]
+    },
+    {
+      "name": "merchantapi",
+      "version": "ordertracking_v1beta",
+      "preferred": false,
+      "title": "Merchant API",
+      "description": "Programmatically manage your Merchant Center Accounts.",
+      "documentationLink": "https://developers.google.com/merchant/api",
+      "labels": [],
+      "deprecated": false,
+      "rootUrl": "https://merchantapi.googleapis.com/",
+      "servicePath": "",
+      "methods": [
+        [
+          "merchantapi.accounts.orderTrackingSignals.create",
+          "POST",
+          "ordertracking/v1beta/{+parent}/orderTrackingSignals",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ]
+      ]
+    },
+    {
+      "name": "merchantapi",
+      "version": "products_v1beta",
+      "preferred": false,
+      "title": "Merchant API",
+      "description": "Programmatically manage your Merchant Center Accounts.",
+      "documentationLink": "https://developers.google.com/merchant/api",
+      "labels": [],
+      "deprecated": false,
+      "rootUrl": "https://merchantapi.googleapis.com/",
+      "servicePath": "",
+      "methods": [
+        [
+          "merchantapi.accounts.products.list",
+          "GET",
+          "products/v1beta/{+parent}/products",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.products.get",
+          "GET",
+          "products/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.productInputs.delete",
+          "DELETE",
+          "products/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.productInputs.insert",
+          "POST",
+          "products/v1beta/{+parent}/productInputs:insert",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.productInputs.patch",
+          "PATCH",
+          "products/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ]
+      ]
+    },
+    {
+      "name": "merchantapi",
+      "version": "promotions_v1beta",
+      "preferred": false,
+      "title": "Merchant API",
+      "description": "Programmatically manage your Merchant Center Accounts.",
+      "documentationLink": "https://developers.google.com/merchant/api",
+      "labels": [],
+      "deprecated": false,
+      "rootUrl": "https://merchantapi.googleapis.com/",
+      "servicePath": "",
+      "methods": [
+        [
+          "merchantapi.accounts.promotions.insert",
+          "POST",
+          "promotions/v1beta/{+parent}/promotions:insert",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.promotions.list",
+          "GET",
+          "promotions/v1beta/{+parent}/promotions",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.promotions.get",
+          "GET",
+          "promotions/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ]
+      ]
+    },
+    {
+      "name": "merchantapi",
+      "version": "quota_v1beta",
+      "preferred": false,
+      "title": "Merchant API",
+      "description": "Programmatically manage your Merchant Center Accounts.",
+      "documentationLink": "https://developers.google.com/merchant/api",
+      "labels": [],
+      "deprecated": false,
+      "rootUrl": "https://merchantapi.googleapis.com/",
+      "servicePath": "",
+      "methods": [
+        [
+          "merchantapi.accounts.quotas.list",
+          "GET",
+          "quota/v1beta/{+parent}/quotas",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ]
+      ]
+    },
+    {
+      "name": "merchantapi",
+      "version": "reports_v1beta",
+      "preferred": false,
+      "title": "Merchant API",
+      "description": "Programmatically manage your Merchant Center Accounts.",
+      "documentationLink": "https://developers.google.com/merchant/api",
+      "labels": [],
+      "deprecated": false,
+      "rootUrl": "https://merchantapi.googleapis.com/",
+      "servicePath": "",
+      "methods": [
+        [
+          "merchantapi.accounts.reports.search",
+          "POST",
+          "reports/v1beta/{+parent}/reports:search",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ]
+      ]
+    }
+  ]
+}

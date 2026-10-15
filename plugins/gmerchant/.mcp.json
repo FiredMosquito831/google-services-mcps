@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "gmerchant": {
+      "command": "node",
+      "args": [
+        "${CLAUDE_PLUGIN_ROOT}/servers/gmerchant.mjs"
+      ],
+      "env": {
+        "GSM_ALLOW_WRITES": "${user_config.allow_writes}",
+        "GSM_CONFIRMATION": "${user_config.confirmation}",
+        "GSM_TOKEN_DIR": "${user_config.token_dir}",
+        "GSM_HOOK_ACTIVE": "1"
+      }
+    }
+  }
+}

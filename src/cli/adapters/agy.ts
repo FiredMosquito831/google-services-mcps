@@ -16,7 +16,8 @@
  *    from `agy mcp add --env`.
  *
  * Entries: mcpServers["gsm-<name>"] = { command: "node", args: ["<absolute .mjs>"], disabled: false }
- * (plus env: { GSM_ALLOW_WRITES: "true" } with --allow-writes). Other keys are preserved.
+ * (plus env with GSM_ALLOW_WRITES: "true" for --allow-writes and GSM_CONFIRMATION for --confirmation,
+ * each only when its flag is given). Other keys are preserved.
  * Uninstall removes only the exact gsm- keys it installs. An empty "mcpServers"
  * object is left in place (same reasoning as OpenCode).
  */
@@ -24,6 +25,7 @@ import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { readText, commitChanges } from '../fsutil.js';
 import { planJsonMap } from './json-map.js';
+import { envObject, serverEnvironment, type EnvPairs } from '../settings.js';
 import { SERVER_PREFIX, type AdapterContext, type AdapterResult } from '../types.js';
 
 export function agyConfigDir(home: string): string {
@@ -34,12 +36,12 @@ export function agyConfigPath(home: string): string {
   return join(agyConfigDir(home), 'mcp_config.json');
 }
 
-function agyEntry(serverFile: string, allowWrites: boolean): Record<string, unknown> {
+function agyEntry(serverFile: string, env: EnvPairs): Record<string, unknown> {
   return {
     command: 'node',
     args: [serverFile],
     disabled: false,
-    ...(allowWrites ? { env: { GSM_ALLOW_WRITES: 'true' } } : {}),
+    ...(env.length > 0 ? { env: envObject(env) } : {}),
   };
 }
 
@@ -55,14 +57,16 @@ export async function install(ctx: AdapterContext): Promise<AdapterResult> {
   }
   const file = agyConfigPath(ctx.home);
   const set = new Map<string, unknown>();
+  const env = serverEnvironment(ctx.allowWrites, ctx.confirmation);
   for (const server of ctx.servers) {
-    set.set(`${SERVER_PREFIX}${server.name}`, agyEntry(ctx.serverFile(server), ctx.allowWrites));
+    set.set(`${SERVER_PREFIX}${server.name}`, agyEntry(ctx.serverFile(server), env));
   }
   const change = planJsonMap({ file, before: readText(file), containerKey: 'mcpServers', template: {}, set });
   const changed = change.before !== change.after;
   const notes = ['Verify with: agy mcp list (the gsm- servers should be listed).'];
   if (changed) notes.push('Restart agy to load the servers.');
   if (ctx.allowWrites) notes.push('GSM_ALLOW_WRITES=true is set: write tools are enabled for these servers.');
+  if (ctx.confirmation !== undefined) notes.push(`GSM_CONFIRMATION=${ctx.confirmation} is set for these servers.`);
   return {
     agent: 'agy',
     action: 'install',
