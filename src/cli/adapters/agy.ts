@@ -2,7 +2,7 @@
  * Google Antigravity CLI (agy) adapter. GLOBAL SCOPE ONLY in this build.
  *
  * Findings from read-only checks on this machine (agy.exe at
- * C:\Users\fgghk\AppData\Local\agy\bin\agy.exe):
+ * <your user folder>\AppData\Local\agy\bin\agy.exe):
  *  - `agy --help` lists the subcommand `mcp` (add, remove, list, enable, disable).
  *    `agy mcp add --help` documents no config path and no project or scope option.
  *    No project-level MCP config is documented, so project and folder scope are refused.
