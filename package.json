@@ -1,9 +1,37 @@
 {
-  "name": "google-services-mcps",
+  "name": "@firedmosquito831/google-services-mcps",
   "version": "0.1.0",
-  "description": "MCP servers for Google Cloud console, Google Workspace (user data and admin), and Google Search Console, packaged as a Claude Code plugin and installable into Codex, OpenCode and Antigravity (agy).",
-  "private": true,
+  "description": "MCP servers for Google Workspace (Gmail, Drive, Calendar, Admin), Google Cloud, Search Console, Google Ads and more, as Claude Code plugins, with installers for Codex, OpenCode and Antigravity.",
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "claude-code",
+    "claude-code-plugin",
+    "codex",
+    "opencode",
+    "antigravity",
+    "google-workspace",
+    "google-cloud",
+    "gmail",
+    "google-drive",
+    "google-calendar",
+    "google-search-console",
+    "google-ads",
+    "google-analytics",
+    "google-apis",
+    "ai-agents",
+    "oauth"
+  ],
+  "author": "FiredMosquito831 (https://github.com/FiredMosquito831)",
   "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FiredMosquito831/google-services-mcps.git"
+  },
+  "homepage": "https://firedmosquito831.github.io/google-services-mcps/",
+  "bugs": {
+    "url": "https://github.com/FiredMosquito831/google-services-mcps/issues"
+  },
   "type": "module",
   "engines": {
     "node": ">=20"
@@ -11,14 +39,31 @@
   "bin": {
     "gsm": "gsm.mjs"
   },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "gsm.mjs",
+    "plugins/",
+    "config/",
+    "scripts/install.cmd",
+    "scripts/install.ps1",
+    "scripts/install.sh",
+    "README.md",
+    "LICENSE",
+    "NOTICE",
+    "docs/TUTORIAL.md"
+  ],
   "scripts": {
     "typecheck": "tsc --noEmit",
     "test": "npm run compile && node --test \"tests/*.test.mjs\"",
     "build": "node scripts/bundle.mjs",
     "compile": "tsc -p tsconfig.json",
-    "surfaces": "node scripts/gen-surfaces.mjs"
+    "surfaces": "node scripts/gen-surfaces.mjs",
+    "pack:check": "npm pack --dry-run",
+    "prepublishOnly": "npm run build && npm test"
   },
-  "dependencies": {
+  "devDependencies": {
     "@googleapis/admin": "^37.0.2",
     "@googleapis/apikeys": "^13.0.1",
     "@googleapis/calendar": "^20.1.0",
@@ -30,9 +75,7 @@
     "@googleapis/webmasters": "^9.0.1",
     "@modelcontextprotocol/sdk": "^1.29.0",
     "google-auth-library": "^11.3.0",
-    "zod": "^3.25.76"
-  },
-  "devDependencies": {
+    "zod": "^3.25.76",
     "@types/node": "^24.19.2",
     "esbuild": "^0.28.2",
     "typescript": "~5.9.3"

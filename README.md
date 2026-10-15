@@ -2,14 +2,14 @@
 
 ![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue)
 ![Status: beta](https://img.shields.io/badge/status-beta-orange)
-![Tests: 430 passing](https://img.shields.io/badge/tests-408%20passing-brightgreen)
+![Tests: 463 passing](https://img.shields.io/badge/tests-463%20passing-brightgreen)
 ![Plugins: 23](https://img.shields.io/badge/plugins-23-blue)
 ![Model Context Protocol](https://img.shields.io/badge/Model%20Context%20Protocol-server-6f42c1)
 ![Claude Code plugin](https://img.shields.io/badge/Claude%20Code-plugin-d97757)
 
 **google-services-mcps** is a Google Workspace MCP, Google Cloud MCP and Search Console MCP suite. It includes a Gmail MCP, a Google Drive MCP, a Google Calendar MCP and a Google Ads MCP, plus 19 more Google products. Each product is one **Model Context Protocol** server, packaged as a **Claude Code plugin** in one marketplace. An installer adds the same servers to a Codex MCP, an OpenCode MCP and an Antigravity MCP setup. Use it to let an AI agent read your Google data and, when you allow it, change that data.
 
-> **Status: beta.** Built and tested offline: 430 tests, a smoke test over all 23 servers, and Claude plugin validation. Not yet tested against live Google accounts. The repository is public. Licensed under Apache-2.0.
+> **Status: beta.** Built and tested offline: 463 passing tests (one more downloads from GitHub and runs only with `GSM_NETWORK_TESTS=1`), a smoke test over all 23 servers, and Claude plugin validation. Not yet tested against live Google accounts. The repository is public. Licensed under Apache-2.0.
 
 ## At a glance
 
@@ -19,11 +19,31 @@
 
 ### Quick start
 
-Run these commands from a clone of this repository. No build is needed. This example sets up Gmail (`gmail`).
+One line installs the suite and Gmail (`gmail`) for Claude Code. No clone and no build are needed. Pick the line for your shell:
+
+Windows PowerShell:
+
+```powershell
+& ([scriptblock]::Create((irm "https://raw.githubusercontent.com/FiredMosquito831/google-services-mcps/main/scripts/install.ps1"))) install --agent claude --plugin gmail
+```
+
+Windows Command Prompt:
+
+```bat
+curl -fsSL -o "%TEMP%\install-gsm.cmd" https://raw.githubusercontent.com/FiredMosquito831/google-services-mcps/main/scripts/install.cmd && "%TEMP%\install-gsm.cmd" install --agent claude --plugin gmail
+```
+
+Linux, macOS and WSL:
 
 ```sh
-git clone https://github.com/FiredMosquito831/google-services-mcps && cd google-services-mcps
-node gsm.mjs install --agent claude --plugin gmail
+curl -fsSL "https://raw.githubusercontent.com/FiredMosquito831/google-services-mcps/main/scripts/install.sh" | sh -s -- install --agent claude --plugin gmail
+```
+
+The line downloads the suite to `google-services-mcps` in your home folder and runs the installer from there. Add `--dry-run` at the end to see the agent changes without making them; the download and the folder are written either way.
+
+Sign in from that folder (Windows: `%USERPROFILE%\google-services-mcps`; Linux and macOS: `~/google-services-mcps`):
+
+```sh
 node gsm.mjs setup-client path/to/client_secret.json && node gsm.mjs login workspace-user
 ```
 
@@ -132,7 +152,11 @@ The login groups are `cloud`, `searchconsole`, `workspace-user`, `workspace-admi
 
 ## Install
 
-Install with one command, from the repository folder. No build is needed.
+Install with one command. Three ways, all with the same install command:
+
+1. **One line, no clone.** The Quick start above. The line downloads the suite to `google-services-mcps` in your home folder and runs the installer there.
+2. **npm.** `npx @firedmosquito831/google-services-mcps install --agent <agent> --plugin <product>`. Or install once with `npm install -g @firedmosquito831/google-services-mcps`, then run `gsm install --agent <agent> --plugin <product>`.
+3. **From a clone**, from the repository folder. No build is needed:
 
 ```
 node gsm.mjs install --agent <agent> --plugin <product>

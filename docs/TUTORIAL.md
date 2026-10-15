@@ -34,6 +34,8 @@ You do not need `npm`, and there is no build step for the installer.
 
 ## 4. Get the code
 
+The steps below use a clone, so the paths match the ones you see. You can skip the clone: the one-line installer in the README's Quick start downloads the suite to `google-services-mcps` in your home folder. See [INSTALL.md](INSTALL.md), "Without a clone".
+
 ```
 git clone https://github.com/FiredMosquito831/google-services-mcps.git
 cd google-services-mcps

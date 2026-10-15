@@ -12,7 +12,7 @@ Each command in this guide is marked with how it was checked:
 
 - **Node.js 20 or newer.** `package.json` requires `>=20`. The checks ran on Node v24.6.0.
 - **Claude Code** on your PATH, if you use it. The `claude plugin` commands in this guide were checked against Claude Code 2.1.300.
-- **A copy of this repository.** The installer and the marketplace are both in it.
+- **A copy of this repository, or the one-line installer,** which downloads it (see "Without a clone" below). The installer and the marketplace are both in it.
 - **No build step.** `gsm.mjs` in the repository root is the installer, and it runs without `npm install` or `npm run build`. **Checked.**
 
 ### One command for every agent
@@ -24,6 +24,16 @@ node gsm.mjs install --agent <agent> --plugin <product>
 ```
 
 In the rest of this guide, `node gsm.mjs` means `node gsm.mjs`, run from the repository folder. `<agent>` is `claude`, `codex`, `opencode` or `agy`. `<product>` is a product id such as `gmail`, a comma list such as `gmail,gcalendar`, or `all`. Only the agent name changes between agents. The same file works from any folder when you give its full path, for example `node D:\Projects2\Google-services-mcps\gsm.mjs ...`. **Checked.**
+
+**Without a clone.** The same command, with the download done for you. Each line is for one shell: Windows PowerShell, Windows Command Prompt, and Linux, macOS or WSL. Add `--dry-run` at the end to check first.
+
+```
+& ([scriptblock]::Create((irm "https://raw.githubusercontent.com/FiredMosquito831/google-services-mcps/main/scripts/install.ps1"))) install --agent <agent> --plugin <product>
+curl -fsSL -o "%TEMP%\install-gsm.cmd" https://raw.githubusercontent.com/FiredMosquito831/google-services-mcps/main/scripts/install.cmd && "%TEMP%\install-gsm.cmd" install --agent <agent> --plugin <product>
+curl -fsSL "https://raw.githubusercontent.com/FiredMosquito831/google-services-mcps/main/scripts/install.sh" | sh -s -- install --agent <agent> --plugin <product>
+```
+
+Each run downloads the repository again and replaces the folder `google-services-mcps` in your home folder. `GSM_DIR` changes that folder, and `GSM_REF` picks a branch, tag or commit (default `main`). Tokens and logins live in the token folder, not in that folder, so a new download does not touch them. Uninstalling does not delete the download; remove the folder yourself when you no longer need it. Sign in from that folder with `node gsm.mjs login <group>`.
 
 Scopes:
 

@@ -405,7 +405,11 @@
 <section id="install" aria-labelledby="install-title">
   <div class="wrap">
     <h2 id="install-title">Install</h2>
-    <p class="section-lead">Each plugin needs its login group before its tools can run. Run the installer, <code>node gsm.mjs</code>, from the root of a clone of the repository. No build is needed. Replace <code>&lt;id&gt;</code> with a product id such as <code>gmail</code>. The scope is <code>--scope global</code> by default, which installs for your user account.</p>
+    <p class="section-lead">Each plugin needs its login group before its tools can run. Run one of the lines below with no clone, or run <code>node gsm.mjs</code> from the root of a clone of the repository. No build is needed. Replace <code>&lt;id&gt;</code> with a product id such as <code>gmail</code>. The scope is <code>--scope global</code> by default, which installs for your user account.</p>
+    <p><strong>No clone needed.</strong> One line downloads the suite into <code>google-services-mcps</code> in your home folder, then installs <code>gmail</code> for Claude Code. Use the line for your shell.</p>
+    <div class="codeblock"><pre><code>&amp; ([scriptblock]::Create((irm "https://raw.githubusercontent.com/FiredMosquito831/google-services-mcps/main/scripts/install.ps1"))) install --agent claude --plugin gmail</code></pre></div>
+    <div class="codeblock"><pre><code>curl -fsSL -o "%TEMP%\install-gsm.cmd" https://raw.githubusercontent.com/FiredMosquito831/google-services-mcps/main/scripts/install.cmd &amp;&amp; "%TEMP%\install-gsm.cmd" install --agent claude --plugin gmail</code></pre></div>
+    <div class="codeblock"><pre><code>curl -fsSL "https://raw.githubusercontent.com/FiredMosquito831/google-services-mcps/main/scripts/install.sh" | sh -s -- install --agent claude --plugin gmail</code></pre></div>
     <div class="install-grid">
       <div class="card">
         <h3>Claude Code</h3>
