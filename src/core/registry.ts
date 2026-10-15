@@ -17,6 +17,11 @@ export type AuthGroup = 'cloud' | 'workspace-user' | 'workspace-admin' | 'search
 export interface ApiRef {
   api: string;
   version: string;
+  /**
+   * Generated APIs only: the resource or method paths whose methods become tools (see DiscoverySource.include).
+   * Absent means every method of the API.
+   */
+  include?: string[];
 }
 
 export interface ServerSpec {

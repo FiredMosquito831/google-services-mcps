@@ -30,8 +30,20 @@ const key = (name, version) => `${name}@${version}`;
 const catalogApis = new Map(catalog.apis.map((a) => [key(a.name, a.version), a]));
 const errorKeys = new Set(catalogErrors.map((e) => key(e.name, e.version)));
 
-// A tool exists for every method whose flags do not contain "u" (media upload).
-const toolCount = (api) => api.methods.filter((m) => !m[4].includes('u')).length;
+/**
+ * A generated entry may carry "include": resource paths (every method of the resource) or method paths (one method),
+ * relative to the API name, as the generator reads them (see DiscoverySource.include). A method is included when its
+ * resource path or its full path (resource and method) is in the list.
+ */
+const isIncluded = (methodId, include) => {
+  if (!include) return true;
+  const rest = methodId.slice(methodId.indexOf('.') + 1);
+  const chain = rest.split('.').slice(0, -1).join('.');
+  return include.some((path) => path === chain || path === rest);
+};
+
+// A tool exists for every method of the entry that is not a media upload (flags contain "u").
+const toolCount = (api, include) => api.methods.filter((m) => isIncluded(m[0], include) && !m[4].includes('u')).length;
 
 const productIds = Object.keys(map.products);
 
@@ -91,7 +103,7 @@ test('generatedToolCount is at most 350 and equals the recomputed tool total', (
     for (const entry of p.generated) {
       const api = catalogApis.get(key(entry.api, entry.version));
       assert.ok(api, `${id}: generated ${key(entry.api, entry.version)} is not in catalog.json`);
-      recomputed += toolCount(api);
+      recomputed += toolCount(api, entry.include);
     }
     assert.equal(p.generatedToolCount, recomputed, `${id}: generatedToolCount is stale`);
     assert.ok(p.generatedToolCount <= CAP, `${id}: ${p.generatedToolCount} generated tools exceeds ${CAP}`);
@@ -102,7 +114,7 @@ test('an entry with zero per-method tools is never generated', () => {
   for (const id of productIds) {
     for (const entry of map.products[id].generated) {
       const k = key(entry.api, entry.version);
-      assert.ok(toolCount(catalogApis.get(k)) > 0, `${id}: ${k} has no per-method tools`);
+      assert.ok(toolCount(catalogApis.get(k), entry.include) > 0, `${id}: ${k} has no per-method tools`);
     }
   }
 });
@@ -131,8 +143,19 @@ test('every catalog entry appears exactly once across generated, gateway and una
     note(k, 'unassigned');
   }
 
+  // A generated entry with an include list is a subset of its API (googleads in gads). Its gateway entry is the whole
+  // API, so such an entry appears once in generated and at most once in gateway, and nowhere else.
+  const subsetKeys = new Set(
+    productIds.flatMap((id) => map.products[id].generated.filter((e) => e.include).map((e) => key(e.api, e.version))),
+  );
   for (const k of catalogApis.keys()) {
     const places = seen.get(k) ?? [];
+    if (subsetKeys.has(k)) {
+      const generated = places.filter((p) => p.endsWith('.generated')).length;
+      const gateway = places.filter((p) => p.endsWith('.gateway')).length;
+      assert.ok(generated === 1 && gateway <= 1 && places.length === generated + gateway, `${k} appears ${places.join(', ') || 'nowhere'}`);
+      continue;
+    }
     assert.equal(places.length, 1, `${k} appears ${places.length} times: ${places.join(', ') || 'nowhere'}`);
   }
 });

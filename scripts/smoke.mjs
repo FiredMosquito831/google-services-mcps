@@ -94,7 +94,8 @@ function staticChecks(id) {
   if (existsSync(join(dir, 'method-kinds.json'))) {
     const kinds = readJson(join(dir, 'method-kinds.json'));
     for (const [method, kind] of Object.entries(kinds)) {
-      if (!['read', 'write', 'destructive'].includes(kind)) fail(`${id}: method ${method} has kind ${kind}`);
+      // dynamic: the kind is decided per call from the body (the Google Ads mutate methods).
+      if (!['read', 'write', 'destructive', 'dynamic'].includes(kind)) fail(`${id}: method ${method} has kind ${kind}`);
     }
   }
 

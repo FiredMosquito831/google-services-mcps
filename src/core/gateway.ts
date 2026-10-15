@@ -28,7 +28,10 @@
  *    appears in an error message.
  *
  * api_call is kind 'dynamic': runServer registers it always and does not gate it, so
- * the handler gates each write or destructive call itself. Reads are not gated.
+ * the handler gates each write or destructive call itself. Reads are not gated. A method
+ * whose kind is dynamic (the Google Ads mutate methods) is classed per call from its body
+ * (core/dynamic.ts), so a validate-only call is a read. A Google Ads call also carries the
+ * developer-token header (core/ads.ts), and a missing token is refused before the gate.
  */
 import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -39,6 +42,8 @@ import type { AuthGroup } from './registry.js';
 import { classifyMethod } from './discovery/methods.js';
 import { buildUrl, loadToolKinds, sendAuthorized } from './discovery/tools.js';
 import type { GateFn } from './approval.js';
+import { adsHeaders, isGoogleAdsUrl } from './ads.js';
+import { resolveDynamicKind } from './dynamic.js';
 import { describeError, scopeHint, type ActionKind, type ToolContext, type ToolDef, type ToolKind } from './tools.js';
 
 // ---------------------------------------------------------------------------
@@ -114,9 +119,9 @@ const searchShape = {
   query: z.string().min(1).max(200).describe('Text to find in the method id, HTTP path, API name or API title. Case-insensitive.'),
   api: z.string().min(1).max(100).optional().describe('Restrict to one API by name, for example "gmail".'),
   kind: z
-    .enum(['read', 'write', 'destructive'])
+    .enum(['read', 'write', 'destructive', 'dynamic'])
     .optional()
-    .describe('Keep only methods of this safety kind.'),
+    .describe('Keep only methods of this safety kind. dynamic is decided per call from the body (Google Ads mutate).'),
   limit: z.number().int().min(1).max(100).optional().describe('Maximum results to return (default 25).'),
 };
 
@@ -179,6 +184,8 @@ interface CatalogApi {
   description: string;
   rootUrl: string;
   servicePath: string;
+  /** Where the full Discovery document is served, when it is not the directory path (for example googleads). */
+  discoveryRestUrl?: string;
   methods: CatalogMethod[];
 }
 
@@ -231,6 +238,7 @@ function parseCatalogApis(raw: unknown, file: string): CatalogApi[] {
       description: str(a.description),
       rootUrl: str(a.rootUrl),
       servicePath: str(a.servicePath),
+      discoveryRestUrl: str(a.discoveryRestUrl).startsWith('https://') ? str(a.discoveryRestUrl) : undefined,
       methods: methods.flatMap(parseMethod),
     };
   });
@@ -268,7 +276,8 @@ interface IndexEntry {
   id: string;
   api: CatalogApi;
   method: CatalogMethod;
-  kind: ActionKind;
+  /** read, write, destructive, or dynamic (decided per call from the body; see callKindOf). */
+  kind: ToolKind;
 }
 
 interface ProductIndex {
@@ -294,8 +303,7 @@ function buildIndex(input: GatewayInput, catalog: Catalog): ProductIndex {
     for (const method of api.methods) {
       if (byId.has(method.id)) continue;
       const methodName = method.id.slice(method.id.lastIndexOf('.') + 1);
-      // classifyMethod returns read, write or destructive for a method; dynamic is only for tools.
-      const kind = classifyMethod(method.httpMethod, methodName, method.id, overrides) as ActionKind;
+      const kind = classifyMethod(method.httpMethod, methodName, method.id, overrides);
       byId.set(method.id, { id: method.id, api, method, kind });
     }
   }
@@ -390,7 +398,7 @@ function parseDiscovery(text: string, api: string, version: string): RawDiscover
 /** The Discovery document, from <tokenDir>/discovery-cache when it is under seven days old, else fetched and cached. */
 let fetchOverride: typeof fetch | undefined;
 
-async function loadRawDiscovery(api: string, version: string, cfg: RuntimeConfig): Promise<RawDiscovery> {
+async function loadRawDiscovery(api: string, version: string, cfg: RuntimeConfig, discoveryRestUrl?: string): Promise<RawDiscovery> {
   if (!SAFE_NAME.test(api) || !SAFE_NAME.test(version)) {
     throw new Error(`The catalog has an unexpected API name or version: ${api}.${version}.`);
   }
@@ -404,7 +412,7 @@ async function loadRawDiscovery(api: string, version: string, cfg: RuntimeConfig
     }
   }
 
-  const url = `https://www.googleapis.com/discovery/v1/apis/${encodeURIComponent(api)}/${encodeURIComponent(version)}/rest`;
+  const url = discoveryRestUrl ?? `https://www.googleapis.com/discovery/v1/apis/${encodeURIComponent(api)}/${encodeURIComponent(version)}/rest`;
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), DISCOVERY_TIMEOUT_MS);
   let text: string;
@@ -446,7 +454,7 @@ function findRawMethod(doc: RawDiscovery, id: string): RawMethod | undefined {
 }
 
 async function rawMethodFor(entry: IndexEntry, cfg: RuntimeConfig): Promise<{ doc: RawDiscovery; raw: RawMethod }> {
-  const doc = await loadRawDiscovery(entry.api.name, entry.api.version, cfg);
+  const doc = await loadRawDiscovery(entry.api.name, entry.api.version, cfg, entry.api.discoveryRestUrl);
   const raw = findRawMethod(doc, entry.id);
   if (!raw) {
     throw new Error(
@@ -687,6 +695,15 @@ function sendRequest(cfg: RuntimeConfig, group: string, req: WireRequest): Promi
 
 let requestOverride: TestRequest | undefined;
 
+/**
+ * The safety kind of one call. A method of kind dynamic is classed from its request body (resolveDynamicKind).
+ * A dynamic method with no rule for its API is destructive, so the call asks.
+ */
+function callKindOf(entry: IndexEntry, body: unknown): ActionKind {
+  if (entry.kind !== 'dynamic') return entry.kind;
+  return resolveDynamicKind(entry.id, body) ?? 'destructive';
+}
+
 async function runCall(core: Core, args: CallArgs, ctx: ToolContext | undefined): Promise<unknown> {
   const { input } = core;
   const entry = resolveMethod(core, args.method);
@@ -720,10 +737,14 @@ async function runCall(core: Core, args: CallArgs, ctx: ToolContext | undefined)
   checkUrl(url, api.rootUrl, api.servicePath);
   const data = method.httpMethod === 'GET' ? undefined : args.body;
 
-  if (entry.kind !== 'read') {
+  // A Google Ads call with no developer token is refused here, before any approval is asked.
+  if (isGoogleAdsUrl(url)) adsHeaders(input.cfg);
+
+  const kind = callKindOf(entry, args.body);
+  if (kind !== 'read') {
     // The gate sees the arguments with secrets redacted. The request below uses the real values.
     await gateOf(ctx)({
-      kind: entry.kind,
+      kind,
       target: entry.id,
       methodId: entry.id,
       args: redactValue({ method: args.method, pathParams: args.pathParams, query: args.query, body: args.body }),

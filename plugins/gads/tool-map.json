@@ -331,42 +331,6 @@
     "title": "displayvideo.advertisers.negativeKeywordLists.negativeKeywords.list"
   },
   {
-    "name": "mcp__plugin_gads_gads__displayvid_adverti_reach_fo_retrieve_4336",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.advertisers.reachForecast.retrievePlannableLocations",
-    "title": "displayvideo.advertisers.reachForecast.retrievePlannableLocations"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_adverti_reach_fo_retrieve_575f",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.advertisers.reachForecast.retrievePlannableProducts",
-    "title": "displayvideo.advertisers.reachForecast.retrievePlannableProducts"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_adverti_reach_fo_retrieve_d4d4",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.advertisers.reachForecast.retrievePlannableUserLists",
-    "title": "displayvideo.advertisers.reachForecast.retrievePlannableUserLists"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_adverti_reach_fo_retrieve_fec7",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.advertisers.reachForecast.retrievePlannableUserInterests",
-    "title": "displayvideo.advertisers.reachForecast.retrievePlannableUserInterests"
-  },
-  {
     "name": "mcp__plugin_gads_gads__displayvid_adverti_targeti_assigne_create",
     "kind": "write",
     "scopes": [
@@ -464,15 +428,6 @@
     ],
     "methodId": "displayvideo.advertisers.lineItems.duplicate",
     "title": "displayvideo.advertisers.lineItems.duplicate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_advertise_reach_for_generate_r",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.advertisers.reachForecast.generateReachForecast",
-    "title": "displayvideo.advertisers.reachForecast.generateReachForecast"
   },
   {
     "name": "mcp__plugin_gads_gads__displayvid_advertiser_ad_groups_bulk_edit",
@@ -1040,114 +995,6 @@
     "title": "displayvideo.combinedAudiences.list"
   },
   {
-    "name": "mcp__plugin_gads_gads__displayvid_custom_bidding_a_upload_script",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.customBiddingAlgorithms.uploadScript",
-    "title": "displayvideo.customBiddingAlgorithms.uploadScript"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_custom_bidding_al_rules_create",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.customBiddingAlgorithms.rules.create",
-    "title": "displayvideo.customBiddingAlgorithms.rules.create"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_custom_bidding_al_scripts_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.customBiddingAlgorithms.scripts.list",
-    "title": "displayvideo.customBiddingAlgorithms.scripts.list"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_custom_bidding_al_upload_rules",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.customBiddingAlgorithms.uploadRules",
-    "title": "displayvideo.customBiddingAlgorithms.uploadRules"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_custom_bidding_alg_scripts_get",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.customBiddingAlgorithms.scripts.get",
-    "title": "displayvideo.customBiddingAlgorithms.scripts.get"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_custom_bidding_algo_rules_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.customBiddingAlgorithms.rules.list",
-    "title": "displayvideo.customBiddingAlgorithms.rules.list"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_custom_bidding_algor_rules_get",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.customBiddingAlgorithms.rules.get",
-    "title": "displayvideo.customBiddingAlgorithms.rules.get"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_custom_bidding_algorith_create",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.customBiddingAlgorithms.create",
-    "title": "displayvideo.customBiddingAlgorithms.create"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_custom_bidding_algorithm_patch",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.customBiddingAlgorithms.patch",
-    "title": "displayvideo.customBiddingAlgorithms.patch"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_custom_bidding_algorithms_get",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.customBiddingAlgorithms.get",
-    "title": "displayvideo.customBiddingAlgorithms.get"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_custom_bidding_algorithms_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.customBiddingAlgorithms.list",
-    "title": "displayvideo.customBiddingAlgorithms.list"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_custom_bidding_scripts_create",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.customBiddingAlgorithms.scripts.create",
-    "title": "displayvideo.customBiddingAlgorithms.scripts.create"
-  },
-  {
     "name": "mcp__plugin_gads_gads__displayvid_custom_lists_get",
     "kind": "read",
     "scopes": [
@@ -1265,331 +1112,6 @@
     "title": "displayvideo.googleAudiences.list"
   },
   {
-    "name": "mcp__plugin_gads_gads__displayvid_guaranteed_ord_edit_guaranteed",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.guaranteedOrders.editGuaranteedOrderReadAccessors",
-    "title": "displayvideo.guaranteedOrders.editGuaranteedOrderReadAccessors"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_guaranteed_orders_create",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.guaranteedOrders.create",
-    "title": "displayvideo.guaranteedOrders.create"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_guaranteed_orders_get",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.guaranteedOrders.get",
-    "title": "displayvideo.guaranteedOrders.get"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_guaranteed_orders_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.guaranteedOrders.list",
-    "title": "displayvideo.guaranteedOrders.list"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_guaranteed_orders_patch",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.guaranteedOrders.patch",
-    "title": "displayvideo.guaranteedOrders.patch"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_inventory_assigned_i_bulk_edit",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.inventorySourceGroups.assignedInventorySources.bulkEdit",
-    "title": "displayvideo.inventorySourceGroups.assignedInventorySources.bulkEdit"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_inventory_s_assigned_in_create",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.inventorySourceGroups.assignedInventorySources.create",
-    "title": "displayvideo.inventorySourceGroups.assignedInventorySources.create"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_inventory_s_assigned_in_delete",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.inventorySourceGroups.assignedInventorySources.delete",
-    "title": "displayvideo.inventorySourceGroups.assignedInventorySources.delete"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_inventory_so_assigned_inv_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.inventorySourceGroups.assignedInventorySources.list",
-    "title": "displayvideo.inventorySourceGroups.assignedInventorySources.list"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_inventory_sourc_edit_inventory",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.inventorySources.editInventorySourceReadWriteAccessors",
-    "title": "displayvideo.inventorySources.editInventorySourceReadWriteAccessors"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_inventory_source_groups_create",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.inventorySourceGroups.create",
-    "title": "displayvideo.inventorySourceGroups.create"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_inventory_source_groups_delete",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.inventorySourceGroups.delete",
-    "title": "displayvideo.inventorySourceGroups.delete"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_inventory_source_groups_get",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.inventorySourceGroups.get",
-    "title": "displayvideo.inventorySourceGroups.get"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_inventory_source_groups_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.inventorySourceGroups.list",
-    "title": "displayvideo.inventorySourceGroups.list"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_inventory_source_groups_patch",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.inventorySourceGroups.patch",
-    "title": "displayvideo.inventorySourceGroups.patch"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_inventory_sources_create",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.inventorySources.create",
-    "title": "displayvideo.inventorySources.create"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_inventory_sources_get",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.inventorySources.get",
-    "title": "displayvideo.inventorySources.get"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_inventory_sources_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.inventorySources.list",
-    "title": "displayvideo.inventorySources.list"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_inventory_sources_patch",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.inventorySources.patch",
-    "title": "displayvideo.inventorySources.patch"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_media_download",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video",
-      "https://www.googleapis.com/auth/doubleclickbidmanager"
-    ],
-    "methodId": "displayvideo.media.download",
-    "title": "displayvideo.media.download"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_partner_channel_sites_bulk_edi",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.partners.channels.sites.bulkEdit",
-    "title": "displayvideo.partners.channels.sites.bulkEdit"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_partner_channels_sites_replace",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.partners.channels.sites.replace",
-    "title": "displayvideo.partners.channels.sites.replace"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_partner_targeti_assigne_create",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.partners.targetingTypes.assignedTargetingOptions.create",
-    "title": "displayvideo.partners.targetingTypes.assignedTargetingOptions.create"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_partner_targeti_assigne_delete",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.partners.targetingTypes.assignedTargetingOptions.delete",
-    "title": "displayvideo.partners.targetingTypes.assignedTargetingOptions.delete"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_partner_targetin_assigned_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.partners.targetingTypes.assignedTargetingOptions.list",
-    "title": "displayvideo.partners.targetingTypes.assignedTargetingOptions.list"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_partners_channels_create",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.partners.channels.create",
-    "title": "displayvideo.partners.channels.create"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_partners_channels_get",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.partners.channels.get",
-    "title": "displayvideo.partners.channels.get"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_partners_channels_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.partners.channels.list",
-    "title": "displayvideo.partners.channels.list"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_partners_channels_patch",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.partners.channels.patch",
-    "title": "displayvideo.partners.channels.patch"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_partners_channels_sites_create",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.partners.channels.sites.create",
-    "title": "displayvideo.partners.channels.sites.create"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_partners_channels_sites_delete",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.partners.channels.sites.delete",
-    "title": "displayvideo.partners.channels.sites.delete"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_partners_channels_sites_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.partners.channels.sites.list",
-    "title": "displayvideo.partners.channels.sites.list"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_partners_edit_assigned_targeti",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.partners.editAssignedTargetingOptions",
-    "title": "displayvideo.partners.editAssignedTargetingOptions"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_partners_get",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.partners.get",
-    "title": "displayvideo.partners.get"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_partners_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.partners.list",
-    "title": "displayvideo.partners.list"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_partners_targetin_assigned_get",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.partners.targetingTypes.assignedTargetingOptions.get",
-    "title": "displayvideo.partners.targetingTypes.assignedTargetingOptions.get"
-  },
-  {
     "name": "mcp__plugin_gads_gads__displayvid_sdfdownloadtask_operations_get",
     "kind": "read",
     "scopes": [
@@ -1607,16 +1129,6 @@
     ],
     "methodId": "displayvideo.sdfdownloadtasks.create",
     "title": "displayvideo.sdfdownloadtasks.create"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_sdfuploadtasks_operations_get",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video",
-      "https://www.googleapis.com/auth/doubleclickbidmanager"
-    ],
-    "methodId": "displayvideo.sdfuploadtasks.operations.get",
-    "title": "displayvideo.sdfuploadtasks.operations.get"
   },
   {
     "name": "mcp__plugin_gads_gads__displayvid_targeting_t_targeting_o_search",
@@ -1644,60 +1156,6 @@
     ],
     "methodId": "displayvideo.targetingTypes.targetingOptions.get",
     "title": "displayvideo.targetingTypes.targetingOptions.get"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_users_bulk_edit_assigned_user",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video-user-management"
-    ],
-    "methodId": "displayvideo.users.bulkEditAssignedUserRoles",
-    "title": "displayvideo.users.bulkEditAssignedUserRoles"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_users_create",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video-user-management"
-    ],
-    "methodId": "displayvideo.users.create",
-    "title": "displayvideo.users.create"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_users_delete",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video-user-management"
-    ],
-    "methodId": "displayvideo.users.delete",
-    "title": "displayvideo.users.delete"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_users_get",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video-user-management"
-    ],
-    "methodId": "displayvideo.users.get",
-    "title": "displayvideo.users.get"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_users_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video-user-management"
-    ],
-    "methodId": "displayvideo.users.list",
-    "title": "displayvideo.users.list"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_users_patch",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video-user-management"
-    ],
-    "methodId": "displayvideo.users.patch",
-    "title": "displayvideo.users.patch"
   },
   {
     "name": "mcp__plugin_gads_gads__doubleclic_queries_create",
@@ -1761,6 +1219,303 @@
     ],
     "methodId": "doubleclickbidmanager.queries.run",
     "title": "doubleclickbidmanager.queries.run"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__googleads_customers_account_budget_mutate",
+    "kind": "dynamic",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "methodId": "googleads.customers.accountBudgetProposals.mutate",
+    "title": "googleads.customers.accountBudgetProposals.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__googleads_customers_ad_group_a_remove_aut",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "methodId": "googleads.customers.adGroupAds.removeAutomaticallyCreatedAssets",
+    "title": "googleads.customers.adGroupAds.removeAutomaticallyCreatedAssets"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__googleads_customers_ad_group_ads_mutate",
+    "kind": "dynamic",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "methodId": "googleads.customers.adGroupAds.mutate",
+    "title": "googleads.customers.adGroupAds.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__googleads_customers_ad_group_asset_mutate",
+    "kind": "dynamic",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "methodId": "googleads.customers.adGroupAssets.mutate",
+    "title": "googleads.customers.adGroupAssets.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__googleads_customers_ad_group_crite_mutate",
+    "kind": "dynamic",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "methodId": "googleads.customers.adGroupCriteria.mutate",
+    "title": "googleads.customers.adGroupCriteria.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__googleads_customers_ad_groups_mutate",
+    "kind": "dynamic",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "methodId": "googleads.customers.adGroups.mutate",
+    "title": "googleads.customers.adGroups.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__googleads_customers_ads_mutate",
+    "kind": "dynamic",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "methodId": "googleads.customers.ads.mutate",
+    "title": "googleads.customers.ads.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__googleads_customers_asset_group_as_mutate",
+    "kind": "dynamic",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "methodId": "googleads.customers.assetGroupAssets.mutate",
+    "title": "googleads.customers.assetGroupAssets.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__googleads_customers_asset_groups_mutate",
+    "kind": "dynamic",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "methodId": "googleads.customers.assetGroups.mutate",
+    "title": "googleads.customers.assetGroups.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__googleads_customers_asset_sets_mutate",
+    "kind": "dynamic",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "methodId": "googleads.customers.assetSets.mutate",
+    "title": "googleads.customers.assetSets.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__googleads_customers_assets_mutate",
+    "kind": "dynamic",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "methodId": "googleads.customers.assets.mutate",
+    "title": "googleads.customers.assets.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__googleads_customers_bidding_strate_mutate",
+    "kind": "dynamic",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "methodId": "googleads.customers.biddingStrategies.mutate",
+    "title": "googleads.customers.biddingStrategies.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__googleads_customers_campaign_asset_mutate",
+    "kind": "dynamic",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "methodId": "googleads.customers.campaignAssets.mutate",
+    "title": "googleads.customers.campaignAssets.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__googleads_customers_campaign_budge_mutate",
+    "kind": "dynamic",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "methodId": "googleads.customers.campaignBudgets.mutate",
+    "title": "googleads.customers.campaignBudgets.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__googleads_customers_campaign_conve_mutate",
+    "kind": "dynamic",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "methodId": "googleads.customers.campaignConversionGoals.mutate",
+    "title": "googleads.customers.campaignConversionGoals.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__googleads_customers_campaign_crite_mutate",
+    "kind": "dynamic",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "methodId": "googleads.customers.campaignCriteria.mutate",
+    "title": "googleads.customers.campaignCriteria.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__googleads_customers_campaigns_enable_p_ma",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "methodId": "googleads.customers.campaigns.enablePMaxBrandGuidelines",
+    "title": "googleads.customers.campaigns.enablePMaxBrandGuidelines"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__googleads_customers_campaigns_mutate",
+    "kind": "dynamic",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "methodId": "googleads.customers.campaigns.mutate",
+    "title": "googleads.customers.campaigns.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__googleads_customers_conversion_act_mutate",
+    "kind": "dynamic",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "methodId": "googleads.customers.conversionActions.mutate",
+    "title": "googleads.customers.conversionActions.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__googleads_customers_create_customer_clien",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "methodId": "googleads.customers.createCustomerClient",
+    "title": "googleads.customers.createCustomerClient"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__googleads_customers_custom_convers_mutate",
+    "kind": "dynamic",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "methodId": "googleads.customers.customConversionGoals.mutate",
+    "title": "googleads.customers.customConversionGoals.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__googleads_customers_customer_asset_mutate",
+    "kind": "dynamic",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "methodId": "googleads.customers.customerAssets.mutate",
+    "title": "googleads.customers.customerAssets.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__googleads_customers_customer_negat_mutate",
+    "kind": "dynamic",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "methodId": "googleads.customers.customerNegativeCriteria.mutate",
+    "title": "googleads.customers.customerNegativeCriteria.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__googleads_customers_generate_keyword_idea",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "methodId": "googleads.customers.generateKeywordIdeas",
+    "title": "googleads.customers.generateKeywordIdeas"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__googleads_customers_google_ads_mutate",
+    "kind": "dynamic",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "methodId": "googleads.customers.googleAds.mutate",
+    "title": "googleads.customers.googleAds.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__googleads_customers_google_ads_search",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "methodId": "googleads.customers.googleAds.search",
+    "title": "googleads.customers.googleAds.search"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__googleads_customers_google_ads_search_str",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "methodId": "googleads.customers.googleAds.searchStream",
+    "title": "googleads.customers.googleAds.searchStream"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__googleads_customers_list_accessible_custo",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "methodId": "googleads.customers.listAccessibleCustomers",
+    "title": "googleads.customers.listAccessibleCustomers"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__googleads_customers_mutate",
+    "kind": "dynamic",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "methodId": "googleads.customers.mutate",
+    "title": "googleads.customers.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__googleads_geo_target_constants_suggest",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "methodId": "googleads.geoTargetConstants.suggest",
+    "title": "googleads.geoTargetConstants.suggest"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__googleads_google_ads_fields_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "methodId": "googleads.googleAdsFields.get",
+    "title": "googleads.googleAdsFields.get"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__googleads_google_ads_fields_search",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "methodId": "googleads.googleAdsFields.search",
+    "title": "googleads.googleAdsFields.search"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__googleads_keyword_theme_constants_suggest",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "methodId": "googleads.keywordThemeConstants.suggest",
+    "title": "googleads.keywordThemeConstants.suggest"
   },
   {
     "name": "mcp__plugin_gads_gads__searchads3_audience_insig_list_insights_e",

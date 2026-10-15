@@ -44,6 +44,8 @@ function fakePlugin({ toolMap = TOOL_MAP, policy, folder = 'google-cloud' } = {}
   writeFileSync(join(plugin, 'package.json'), '{"type":"module"}\n');
   copyFileSync(dist('hook/pretooluse.js'), join(plugin, 'bin', 'gsm-hook.mjs'));
   copyFileSync(dist('core/policy.js'), join(plugin, 'core', 'policy.js'));
+  // The hook also imports the dynamic-risk rule (resolveDynamicKind) for dynamic tools.
+  copyFileSync(dist('core/dynamic.js'), join(plugin, 'core', 'dynamic.js'));
   if (toolMap !== null) writeFileSync(join(plugin, 'tool-map.json'), JSON.stringify(toolMap, null, 2));
   if (policy !== undefined) {
     writeFileSync(join(tokenDir, 'policy.json'), typeof policy === 'string' ? policy : JSON.stringify(policy));

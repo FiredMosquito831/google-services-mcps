@@ -14,7 +14,7 @@
  *      tool-kinds.json            safety overrides for Discovery methods (config/tool-kinds.json)
  *      discovery/<api>.<v>.json   the Discovery snapshots of the product's generated APIs
  *      catalog.json               the catalog subset of the product's gateway APIs
- *      method-kinds.json          read, write or destructive for every gateway method (used by the hook)
+ *      method-kinds.json          read, write, dynamic or destructive for every gateway method (used by the hook)
  *      tool-map.json              every tool of the server, from --dump-tools, with its full Claude name
  *      servers.json, scopes.json, .mcp.json, hooks/hooks.json, .claude-plugin/plugin.json, skills/<id>/SKILL.md
  *   4. .claude-plugin/marketplace.json, one entry per product.
@@ -35,7 +35,8 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const AUTHOR = { name: 'FiredMosquito831' };
 const MANIFEST_VERSION = '0.1.0';
 const TOOL_NAME_MAX = 64;
-const RANK = { read: 0, write: 1, destructive: 2 };
+/** When two API versions give one method two kinds, the riskier one is kept. A dynamic method is kept as dynamic (decided per call). */
+const RANK = { read: 0, write: 1, dynamic: 2, destructive: 3 };
 
 const readJson = (file) => {
   if (!existsSync(file)) throw new Error(`Missing ${file}`);
@@ -255,7 +256,8 @@ function toolMapFrom(plugin, server, dumped) {
 /**
  * Kind of every gateway method of a product, keyed by method id. The gateway keeps the first catalog
  * entry of an id, and the hook must never be looser than the gateway, so when API versions disagree
- * the riskier kind is kept.
+ * the riskier kind is kept. A dynamic method is written as dynamic: the hook decides it per call from
+ * the request body (src/core/dynamic.ts), and a dynamic method is never forced to read or write.
  */
 function methodKindsFor(gatewayApis, methods) {
   const table = {};

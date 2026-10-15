@@ -191,7 +191,9 @@ test('ads_mutate with a remove operation calls the gate as destructive, with the
   assert.equal(gateCalls.length, 1);
   assert.equal(gateCalls[0].kind, 'destructive');
   assert.equal(gateCalls[0].target, 'ads_mutate');
-  assert.equal(gateCalls[0].methodId, 'googleads.customers.mutate');
+  // Changed on purpose: the gate names the real Discovery id of googleAds:mutate (it was googleads.customers.mutate),
+  // so policy rules and the audit log match the same id as the generated and gateway mutate methods.
+  assert.equal(gateCalls[0].methodId, 'googleads.customers.googleAds.mutate');
   assert.deepEqual(gateCalls[0].args.operations, operations, 'the gate sees the exact operations');
   assert.deepEqual(log, ['gate', 'request'], 'the gate ran before the request');
   assert.equal(calls[0].body.validateOnly, false);

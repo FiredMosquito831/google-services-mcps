@@ -134,9 +134,34 @@ const normalizeName = (s: string): string => s.replace(/[-_]/g, '').toLowerCase(
 const DESTRUCTIVE_SET = new Set(DESTRUCTIVE_NAMES.map(normalizeName));
 
 /**
- * Safety class of one method. An explicit override (from config/tool-kinds.json,
- * keyed by fullId) wins. Then DELETE and the destructive names. Then GET, and
- * POST methods with a read-only name. Everything else is a write.
+ * Escapes a pattern and joins its "*" parts with ".+", so "*" stands for one or more characters.
+ * A pattern with no "*" matches only itself.
+ */
+export function patternMatches(pattern: string, fullId: string): boolean {
+  const body = pattern
+    .split('*')
+    .map((part) => part.replace(/[.+?^${}()|[\]\\]/g, '\\$&'))
+    .join('.+');
+  return new RegExp(`^${body}$`).test(fullId);
+}
+
+/**
+ * The override for a method, from config/tool-kinds.json. An exact method id wins. Otherwise the first
+ * key with a "*" that matches the id gives the kind, so "googleads.*.mutate" covers every Google Ads mutate method.
+ */
+export function overrideKind(overrides: Readonly<Record<string, ToolKind>>, fullId: string): ToolKind | undefined {
+  const exact = overrides[fullId];
+  if (exact) return exact;
+  for (const [pattern, kind] of Object.entries(overrides)) {
+    if (pattern.includes('*') && patternMatches(pattern, fullId)) return kind;
+  }
+  return undefined;
+}
+
+/**
+ * Safety class of one method. An override (from config/tool-kinds.json, by exact id or by pattern) wins.
+ * Then DELETE and the destructive names. Then GET, and POST methods with a read-only name. Everything else is a write.
+ * A dynamic override means the kind is decided per call (see core/dynamic.ts).
  */
 export function classifyMethod(
   httpMethod: string,
@@ -144,7 +169,7 @@ export function classifyMethod(
   fullId: string,
   overrides: Readonly<Record<string, ToolKind>> = {},
 ): ToolKind {
-  const override = overrides[fullId];
+  const override = overrideKind(overrides, fullId);
   if (override) return override;
 
   const http = httpMethod.toUpperCase();

@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 /**
- * Downloads Google Discovery documents for every {api, version} listed in
- * config/servers.json and writes compacted copies to data/discovery/.
+ * Downloads Google Discovery documents for every {api, version} in the "generated" lists of
+ * config/products.json and writes compacted copies to data/discovery/. The "include" subset of a
+ * generated entry is not applied here: the snapshot holds the whole document, and the subset is
+ * applied when the tools are built.
  * Also writes data/scopes.json: per server, the union of the method scopes of
  * its discovery APIs.
  *
@@ -14,7 +16,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const SERVERS_FILE = join(ROOT, 'config', 'servers.json');
+const PRODUCTS_FILE = join(ROOT, 'config', 'products.json');
 const OUT_DIR = join(ROOT, 'data', 'discovery');
 const SCOPES_FILE = join(ROOT, 'data', 'scopes.json');
 const ERRORS_FILE = join(OUT_DIR, '_errors.json');
@@ -164,7 +166,9 @@ async function readExistingDoc(key) {
 }
 
 async function main() {
-  const { servers } = JSON.parse(await readFile(SERVERS_FILE, 'utf8'));
+  // One server per product: its name and its generated APIs (config/products.json is the source of truth).
+  const { products } = JSON.parse(await readFile(PRODUCTS_FILE, 'utf8'));
+  const servers = Object.values(products).map((p) => ({ name: p.server.name, apis: p.generated }));
 
   const wanted = new Map();
   for (const server of servers) {

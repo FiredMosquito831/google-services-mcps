@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-15T14:39:45.289Z",
+  "generatedAt": "2026-10-15T15:08:21.313Z",
   "apiCount": 47,
   "methodCount": 5574,
   "apis": [
@@ -48302,6 +48302,7 @@
       "deprecated": false,
       "rootUrl": "https://generativelanguage.googleapis.com/",
       "servicePath": "",
+      "discoveryRestUrl": "https://generativelanguage.googleapis.com/$discovery/rest?version=v1",
       "methods": [
         [
           "generativelanguage.corpora.operations.get",
@@ -48659,6 +48660,7 @@
       "deprecated": false,
       "rootUrl": "https://generativelanguage.googleapis.com/",
       "servicePath": "",
+      "discoveryRestUrl": "https://generativelanguage.googleapis.com/$discovery/rest?version=v1beta",
       "methods": [
         [
           "generativelanguage.cachedContents.get",

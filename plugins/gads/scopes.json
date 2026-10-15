@@ -2,6 +2,7 @@
   "gads": [
     "https://www.googleapis.com/auth/admob.readonly",
     "https://www.googleapis.com/auth/admob.report",
+    "https://www.googleapis.com/auth/adwords",
     "https://www.googleapis.com/auth/display-video",
     "https://www.googleapis.com/auth/display-video-mediaplanning",
     "https://www.googleapis.com/auth/display-video-user-management",

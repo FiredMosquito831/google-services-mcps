@@ -1712,7 +1712,7 @@
     },
     "gads": {
       "title": "Ads and Publisher",
-      "description": "Google Ads API (account list, GAQL search and gated mutations), plus advertising and publisher APIs: Search Ads 360, Display & Video 360, Campaign Manager, Ad Exchange, AdSense, AdMob, Real-time Bidding and more.",
+      "description": "Google Ads API (accounts, campaigns, ad groups, ads, keywords, budgets, conversions, assets and GAQL reporting, with every other method through the gateway), plus advertising and publisher APIs: Search Ads 360, Display & Video 360, Campaign Manager, Ad Exchange, AdSense, AdMob, Real-time Bidding and more.",
       "group": "business",
       "server": {
         "name": "gads",
@@ -1720,12 +1720,77 @@
       },
       "generated": [
         {
+          "api": "googleads",
+          "version": "v26",
+          "include": [
+            "customers.googleAds",
+            "customers.campaigns",
+            "customers.campaignBudgets",
+            "customers.accountBudgetProposals",
+            "customers.adGroups",
+            "customers.adGroupAds",
+            "customers.ads",
+            "customers.adGroupCriteria",
+            "customers.campaignCriteria",
+            "customers.customerNegativeCriteria",
+            "customers.conversionActions",
+            "customers.customConversionGoals",
+            "customers.campaignConversionGoals",
+            "customers.assets",
+            "customers.customerAssets",
+            "customers.campaignAssets",
+            "customers.adGroupAssets",
+            "customers.assetGroups",
+            "customers.assetGroupAssets",
+            "customers.assetSets",
+            "customers.biddingStrategies",
+            "googleAdsFields",
+            "keywordThemeConstants",
+            "geoTargetConstants",
+            "customers.listAccessibleCustomers",
+            "customers.mutate",
+            "customers.createCustomerClient",
+            "customers.generateKeywordIdeas"
+          ]
+        },
+        {
           "api": "searchads360",
           "version": "v23"
         },
         {
           "api": "displayvideo",
-          "version": "v4"
+          "version": "v4",
+          "include": [
+            "advertisers",
+            "advertisers.campaigns",
+            "advertisers.insertionOrders",
+            "advertisers.lineItems",
+            "advertisers.adGroups",
+            "advertisers.adGroupAds",
+            "advertisers.creatives",
+            "advertisers.adAssets",
+            "advertisers.negativeKeywordLists",
+            "advertisers.negativeKeywordLists.negativeKeywords",
+            "advertisers.channels",
+            "advertisers.channels.sites",
+            "advertisers.locationLists",
+            "advertisers.locationLists.assignedLocations",
+            "advertisers.targetingTypes.assignedTargetingOptions",
+            "advertisers.lineItems.targetingTypes.assignedTargetingOptions",
+            "advertisers.adGroups.targetingTypes.assignedTargetingOptions",
+            "targetingTypes.targetingOptions",
+            "firstPartyAndPartnerAudiences",
+            "customLists",
+            "combinedAudiences",
+            "googleAudiences",
+            "advertisers.invoices",
+            "sdfdownloadtasks",
+            "sdfdownloadtasks.operations",
+            "floodlightGroups",
+            "floodlightGroups.floodlightActivities",
+            "advertisers.lineItems.youtubeAssetTypes.youtubeAssetAssociations",
+            "advertisers.adGroups.youtubeAssetTypes.youtubeAssetAssociations"
+          ]
         },
         {
           "api": "admob",
@@ -1828,9 +1893,17 @@
         {
           "api": "searchads360",
           "version": "v0"
+        },
+        {
+          "api": "displayvideo",
+          "version": "v4"
+        },
+        {
+          "api": "googleads",
+          "version": "v26"
         }
       ],
-      "generatedToolCount": 350
+      "generatedToolCount": 323
     },
     "gmerchant": {
       "title": "Merchant Center",
@@ -2603,6 +2676,8 @@
     "vmmigration": "Gateway only: 68 per-method tools do not fit under the 350 cap after the higher-priority APIs.",
     "vmwareengine": "Gateway only: 102 per-method tools do not fit under the 350 cap after the higher-priority APIs.",
     "walletobjects": "Google Wallet is in the Google Pay family; placed in gplay, gateway only because of the cap.",
-    "webcontentpublisher": "Google News publisher web content API; placed with publisher APIs in gads."
+    "webcontentpublisher": "Google News publisher web content API; placed with publisher APIs in gads.",
+    "googleads": "Generated: 33 per-method tools for the core Google Ads resources, in this order: accounts (listAccessibleCustomers, mutate, createCustomerClient), GAQL search and searchStream, googleAdsFields, campaigns and campaign budgets, account budget proposals, ad groups, ads and ad group ads, keywords (ad group and campaign criteria, negative keywords, keyword ideas, keyword theme and geo target suggestions), conversion actions and goals, bidding strategies, and assets (asset groups, asset sets, and the account, campaign and ad group asset links). The include list is a list of resource or method paths: a path names every method of a resource, or one method. The other 141 methods (reporting forecasts, audiences, experiments, labels, batch jobs and so on) are reached through the gateway with api_search, api_describe and api_call. Media upload is not supported by the gateway. Every mutate method is dynamic: validateOnly true is a read, a remove operation is destructive, and any other change is a write.",
+    "displayvideo@v4": "Generated subset: 116 per-method tools for the advertiser workflow (advertisers, campaigns, insertion orders, line items, ad groups and ad group ads, creatives, ad assets, negative keywords, channels, location lists, targeting options, audiences, invoices, floodlight groups, SDF download tasks and YouTube asset associations). The other 60 methods (partners, users, inventory sources, guaranteed orders, custom bidding, reach forecasts and so on) are reached through the gateway. The whole document is still snapshotted, so every OAuth scope of the API is granted at login."
   }
 }

@@ -1,13 +1,13 @@
 ---
 name: gads
-description: Google Ads API (account list, GAQL search and gated mutations), plus advertising and publisher APIs: Search Ads 360, Display & Video 360, Campaign Manager, Ad Exchange, AdSense, AdMob, Real-time Bidding and more. Served by the gads MCP server with 357 tools. Use for requests about these Google APIs.
+description: Google Ads API (accounts, campaigns, ad groups, ads, keywords, budgets, conversions, assets and GAQL reporting, with every other method through the gateway), plus advertising and publisher APIs: Search Ads 360, Display & Video 360, Campaign Manager, Ad Exchange, AdSense, AdMob, Real-time Bidding and more. Served by the gads MCP server with 330 tools. Use for requests about these Google APIs.
 ---
 
 # Ads and Publisher
 
-Google Ads API (account list, GAQL search and gated mutations), plus advertising and publisher APIs: Search Ads 360, Display & Video 360, Campaign Manager, Ad Exchange, AdSense, AdMob, Real-time Bidding and more.
+Google Ads API (accounts, campaigns, ad groups, ads, keywords, budgets, conversions, assets and GAQL reporting, with every other method through the gateway), plus advertising and publisher APIs: Search Ads 360, Display & Video 360, Campaign Manager, Ad Exchange, AdSense, AdMob, Real-time Bidding and more.
 
-The `gads` MCP server exposes 357 tools. Per-method tools cover the Discovery APIs listed below. Gateway APIs are reached through three generic tools: api_search finds a method, api_describe shows its parameters, and api_call runs it.
+The `gads` MCP server exposes 330 tools. Per-method tools cover the Discovery APIs listed below. Gateway APIs are reached through three generic tools: api_search finds a method, api_describe shows its parameters, and api_call runs it.
 
 ## Log in
 
@@ -19,6 +19,7 @@ Reads never ask for approval. Changes and deletions ask first, unless the user h
 
 ## APIs
 
+- Google Ads API (googleads v26)
 - Search Ads 360 Reporting API (searchads360 v23)
 - Display & Video 360 API (displayvideo v4)
 - AdMob API (admob v1)
@@ -46,3 +47,5 @@ Reads never ask for approval. Changes and deletions ask first, unless the user h
 - Display & Video 360 API (displayvideo v2), reached through api_search, api_describe and api_call
 - Display & Video 360 API (displayvideo v3), reached through api_search, api_describe and api_call
 - Search Ads 360 Reporting API (searchads360 v0), reached through api_search, api_describe and api_call
+- Display & Video 360 API (displayvideo v4), reached through api_search, api_describe and api_call
+- Google Ads API (googleads v26), reached through api_search, api_describe and api_call

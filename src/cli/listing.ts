@@ -4,7 +4,6 @@
  */
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import type { ActionKind } from '../core/tools.js';
 import type { Registry } from '../core/registry.js';
 import { loadCatalog, loadKindOverrides, type Catalog, type CatalogApi } from './catalog.js';
 import type { InstallRoots } from './paths.js';
@@ -200,8 +199,8 @@ export async function runMethods(env: ListingEnv, req: MethodsRequest): Promise<
   const needle = req.search?.toLowerCase();
   const matched = needle ? all.filter((m) => m.id.toLowerCase().includes(needle) || m.path.toLowerCase().includes(needle)) : all;
   const shown = matched.slice(0, req.limit ?? METHODS_DEFAULT_LIMIT);
-  const counts: Record<ActionKind, number> = { read: 0, write: 0, destructive: 0 };
-  for (const m of matched) counts[m.kind] += 1;
+  const counts: Record<string, number> = { read: 0, write: 0, destructive: 0 };
+  for (const m of matched) counts[m.kind] = (counts[m.kind] ?? 0) + 1;
 
   if (req.json) {
     env.out.log(

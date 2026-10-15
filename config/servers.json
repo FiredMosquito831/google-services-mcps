@@ -18,7 +18,7 @@
     "gtm": "Google Tag Manager accounts, containers, tags, triggers and variables.",
     "gyoutube": "YouTube Data, YouTube Analytics and YouTube Reporting APIs, plus Blogger.",
     "gbusiness": "Business Profile accounts, locations, verifications, lodging, place actions, notifications and performance.",
-    "gads": "Google Ads API (account list, GAQL search and gated mutations), plus advertising and publisher APIs: Search Ads 360, Display & Video 360, Campaign Manager, Ad Exchange, AdSense, AdMob, Real-time Bidding and more.",
+    "gads": "Google Ads API (accounts, campaigns, ad groups, ads, keywords, budgets, conversions, assets and GAQL reporting, with every other method through the gateway), plus advertising and publisher APIs: Search Ads 360, Display & Video 360, Campaign Manager, Ad Exchange, AdSense, AdMob, Real-time Bidding and more.",
     "gmerchant": "Merchant Center: Merchant API, Comparison Shopping Service and Manufacturer Center.",
     "gplay": "Google Play developer publishing and reporting, Play Games Services, Android Enterprise and Management, Play Integrity and device APIs.",
     "gfirebase": "Firebase management, App Check, App Distribution, Crashlytics, Hosting, Data Connect, Rules, Test Lab, FCM and Identity Toolkit.",
@@ -1709,12 +1709,77 @@
       "curated": "src/servers/gads.ts",
       "apis": [
         {
+          "api": "googleads",
+          "version": "v26",
+          "include": [
+            "customers.googleAds",
+            "customers.campaigns",
+            "customers.campaignBudgets",
+            "customers.accountBudgetProposals",
+            "customers.adGroups",
+            "customers.adGroupAds",
+            "customers.ads",
+            "customers.adGroupCriteria",
+            "customers.campaignCriteria",
+            "customers.customerNegativeCriteria",
+            "customers.conversionActions",
+            "customers.customConversionGoals",
+            "customers.campaignConversionGoals",
+            "customers.assets",
+            "customers.customerAssets",
+            "customers.campaignAssets",
+            "customers.adGroupAssets",
+            "customers.assetGroups",
+            "customers.assetGroupAssets",
+            "customers.assetSets",
+            "customers.biddingStrategies",
+            "googleAdsFields",
+            "keywordThemeConstants",
+            "geoTargetConstants",
+            "customers.listAccessibleCustomers",
+            "customers.mutate",
+            "customers.createCustomerClient",
+            "customers.generateKeywordIdeas"
+          ]
+        },
+        {
           "api": "searchads360",
           "version": "v23"
         },
         {
           "api": "displayvideo",
-          "version": "v4"
+          "version": "v4",
+          "include": [
+            "advertisers",
+            "advertisers.campaigns",
+            "advertisers.insertionOrders",
+            "advertisers.lineItems",
+            "advertisers.adGroups",
+            "advertisers.adGroupAds",
+            "advertisers.creatives",
+            "advertisers.adAssets",
+            "advertisers.negativeKeywordLists",
+            "advertisers.negativeKeywordLists.negativeKeywords",
+            "advertisers.channels",
+            "advertisers.channels.sites",
+            "advertisers.locationLists",
+            "advertisers.locationLists.assignedLocations",
+            "advertisers.targetingTypes.assignedTargetingOptions",
+            "advertisers.lineItems.targetingTypes.assignedTargetingOptions",
+            "advertisers.adGroups.targetingTypes.assignedTargetingOptions",
+            "targetingTypes.targetingOptions",
+            "firstPartyAndPartnerAudiences",
+            "customLists",
+            "combinedAudiences",
+            "googleAudiences",
+            "advertisers.invoices",
+            "sdfdownloadtasks",
+            "sdfdownloadtasks.operations",
+            "floodlightGroups",
+            "floodlightGroups.floodlightActivities",
+            "advertisers.lineItems.youtubeAssetTypes.youtubeAssetAssociations",
+            "advertisers.adGroups.youtubeAssetTypes.youtubeAssetAssociations"
+          ]
         },
         {
           "api": "admob",
@@ -1817,9 +1882,17 @@
         {
           "api": "searchads360",
           "version": "v0"
+        },
+        {
+          "api": "displayvideo",
+          "version": "v4"
+        },
+        {
+          "api": "googleads",
+          "version": "v26"
         }
       ],
-      "label": "Ads and Publisher: Google Ads API (account list, GAQL search and gated mutations), plus advertising and publisher APIs: Search Ads 360, Display & Video 360, Campaign Manager, Ad Exchange, AdSense, AdMob, Real-time Bidding and more."
+      "label": "Ads and Publisher: Google Ads API (accounts, campaigns, ad groups, ads, keywords, budgets, conversions, assets and GAQL reporting, with every other method through the gateway), plus advertising and publisher APIs: Search Ads 360, Display & Video 360, Campaign Manager, Ad Exchange, AdSense, AdMob, Real-time Bidding and more."
     },
     {
       "name": "gmerchant",

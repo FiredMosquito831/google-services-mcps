@@ -1,0 +1,1 @@
+v26: the Google Ads API version used by the gads product (probed 2026-10-15: v22 to v26 answer, v27 to v29 return 404; discovery at https://googleads.googleapis.com/$discovery/rest?version=v26).

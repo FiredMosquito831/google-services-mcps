@@ -5,7 +5,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import type { ActionKind } from '../core/tools.js';
+import type { ToolKind } from '../core/tools.js';
 
 export interface CatalogMethod {
   /** Discovery method id, for example storage.objects.list. */
@@ -75,16 +75,16 @@ export function loadCatalog(fromUrl: string): Catalog {
  * tool-kinds.json, looked up beside the catalog and then one level up. Only read, write and destructive values
  * count; the "notes" block is skipped.
  */
-export function loadKindOverrides(catalogFile: string): Record<string, ActionKind> {
+export function loadKindOverrides(catalogFile: string): Record<string, ToolKind> {
   const dir = dirname(catalogFile);
   for (const root of [dir, dirname(dir)]) {
     const file = [join(root, 'config', 'tool-kinds.json'), join(root, 'tool-kinds.json')].find((p) => existsSync(p));
     if (!file) continue;
-    const overrides: Record<string, ActionKind> = {};
+    const overrides: Record<string, ToolKind> = {};
     const raw = JSON.parse(readFileSync(file, 'utf8')) as Record<string, unknown>;
     for (const [key, value] of Object.entries(raw)) {
       if (key === 'notes') continue;
-      if (value === 'read' || value === 'write' || value === 'destructive') overrides[key] = value;
+      if (value === 'read' || value === 'write' || value === 'destructive' || value === 'dynamic') overrides[key] = value;
     }
     if (Object.keys(overrides).length > 0) return overrides;
   }

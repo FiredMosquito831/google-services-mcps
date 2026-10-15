@@ -7,14 +7,14 @@
  */
 import { existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import type { ActionKind } from '../core/tools.js';
+import type { ToolKind } from '../core/tools.js';
 
 export type KindClassifier = (
   httpMethod: string,
   methodName: string,
   fullId: string,
-  overrides: Readonly<Record<string, ActionKind>>,
-) => ActionKind;
+  overrides: Readonly<Record<string, ToolKind>>,
+) => ToolKind;
 
 export interface LoadedClassifier {
   /** Where the rules came from, shown in the output. */
@@ -87,9 +87,20 @@ export const FALLBACK_DESTRUCTIVE_NAMES = [
 const normalizeName = (s: string): string => s.replace(/[-_]/g, '').toLowerCase();
 const DESTRUCTIVE_SET = new Set(FALLBACK_DESTRUCTIVE_NAMES.map(normalizeName));
 
+/** Same as patternMatches in core/discovery/methods.ts: "*" stands for one or more characters of the method id. */
+function patternMatches(pattern: string, fullId: string): boolean {
+  const body = pattern
+    .split('*')
+    .map((part) => part.replace(/[.+?^${}()|[\]\\]/g, '\\$&'))
+    .join('.+');
+  return new RegExp(`^${body}$`).test(fullId);
+}
+
 /** The verb and name rules, the same as classifyMethod in core/discovery/methods.ts. */
 export const fallbackClassify: KindClassifier = (httpMethod, methodName, fullId, overrides) => {
-  const override = overrides[fullId];
+  const exact = overrides[fullId];
+  const pattern = Object.entries(overrides).find(([key]) => key.includes('*') && patternMatches(key, fullId));
+  const override = exact ?? pattern?.[1];
   if (override) return override;
   const http = httpMethod.toUpperCase();
   if (http === 'DELETE') return 'destructive';

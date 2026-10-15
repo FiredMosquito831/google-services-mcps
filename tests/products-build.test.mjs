@@ -23,7 +23,8 @@ const marketplace = load('.claude-plugin', 'marketplace.json');
 
 const GROUPS = ['cloud', 'workspace-user', 'workspace-admin', 'searchconsole', 'business', 'developer', 'apikey'];
 const TOOL_KINDS = new Set(['read', 'write', 'destructive', 'dynamic']);
-const METHOD_KINDS = new Set(['read', 'write', 'destructive']);
+// A method-kinds entry is read, write, destructive, or dynamic (decided per call from the body, for the Google Ads mutate methods).
+const METHOD_KINDS = new Set(['read', 'write', 'destructive', 'dynamic']);
 const TOOL_NAME_MAX = 64;
 const sameList = (a, b) => JSON.stringify([...a].sort()) === JSON.stringify([...b].sort());
 const apiKey = (a) => `${a.api}.${a.version}`;
@@ -219,20 +220,22 @@ test('every generated method id reaches tool-map.json, and matches its Discovery
     if (apis.length === 0) continue;
 
     // The method ids the Discovery snapshots list, without media-upload methods (skipped by the generator).
+    // An API with an include list (a subset, see config/products.json) expects only the methods the list names.
     const expected = new Set();
-    const walk = (doc, resources, chain) => {
+    const walk = (doc, resources, chain, include) => {
       for (const [resourceName, resource] of Object.entries(resources ?? {})) {
         const here = [...chain, resourceName];
         for (const [methodName, m] of Object.entries(resource.methods ?? {})) {
           if (m.supportsMediaUpload || m.mediaUpload) continue;
-          expected.add(m.id ?? [doc.name, ...here, methodName].join('.'));
+          const inSubset = !include || include.some((path) => path === here.join('.') || path === [...here, methodName].join('.'));
+          if (inSubset) expected.add(m.id ?? [doc.name, ...here, methodName].join('.'));
         }
-        walk(doc, resource.resources, here);
+        walk(doc, resource.resources, here, include);
       }
     };
     for (const a of apis) {
       const doc = load('data', 'discovery', `${apiKey(a)}.json`);
-      walk(doc, doc.resources, []);
+      walk(doc, doc.resources, [], a.include);
     }
 
     const toolMap = load('plugins', server.plugin, 'tool-map.json');

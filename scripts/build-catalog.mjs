@@ -80,6 +80,14 @@ const SUPPLEMENTAL_ENTRIES = [
     preferred: false,
     discoveryRestUrl: 'https://generativelanguage.googleapis.com/$discovery/rest?version=v1',
   },
+  // Google Ads. v26 is the version used by the gads product: the newest that answers, probed 2026-10-15
+  // (v22 to v26 answer, v27 to v29 return 404). Recorded in docs/ads-version.txt; bump both together.
+  {
+    name: 'googleads',
+    version: 'v26',
+    preferred: false,
+    discoveryRestUrl: 'https://googleads.googleapis.com/$discovery/rest?version=v26',
+  },
 ];
 
 const stats = { cached: 0, downloaded: 0 };
@@ -208,6 +216,8 @@ function collectMethods(container, out) {
 
 function buildApi(entry, doc, descriptionMax) {
   const labels = Array.isArray(doc.labels) ? doc.labels : [];
+  // A supplemental document is served from its own URL, which the gateway needs to describe its methods.
+  const supplemental = SUPPLEMENTAL_ENTRIES.includes(entry) ? { discoveryRestUrl: entry.discoveryRestUrl } : {};
   return {
     name: entry.name,
     version: entry.version,
@@ -219,6 +229,7 @@ function buildApi(entry, doc, descriptionMax) {
     deprecated: entry.deprecated === true || doc.deprecated === true || labels.includes('deprecated'),
     rootUrl: doc.rootUrl,
     servicePath: doc.servicePath,
+    ...supplemental,
     methods: collectMethods(doc, []),
   };
 }

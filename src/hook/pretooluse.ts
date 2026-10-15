@@ -14,27 +14,46 @@ import { homedir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { decide, describeAction, loadPolicyFile, riskFromKind, type Policy } from '../core/policy.js';
+import { resolveDynamicKind } from '../core/dynamic.js';
 import type { ToolMapEntry, ToolMapKind } from '../core/dump.js';
 
 const TOOL_MAP_FILE = 'tool-map.json';
-/** Written by the build: method id -> read, write or destructive, for every gateway method of this plugin. */
+/** Written by the build: method id -> read, write, dynamic or destructive, for every gateway method of this plugin. */
 const METHOD_KIND_FILE = 'method-kinds.json';
 const DEFAULT_TOKEN_DIR_NAME = '.google-services-mcps';
 const KINDS: ReadonlySet<string> = new Set(['read', 'write', 'destructive', 'dynamic']);
 const CONCRETE_KINDS: ReadonlySet<string> = new Set(['read', 'write', 'destructive']);
 
-/**
- * Kind and method for one call of a dynamic tool, read from the method named in its input.
- * Returns null when the method is missing or not in this plugin's table, so the caller asks.
- */
-function kindOfDynamicCall(root: string, input: unknown): { kind: ToolMapKind; methodId: string } | null {
-  const method = typeof input === 'object' && input !== null ? (input as { method?: unknown }).method : undefined;
-  if (typeof method !== 'string' || method.length === 0) return null;
+/** The method-kinds table of this plugin, or null when the file does not exist. */
+function readMethodKinds(root: string): Record<string, unknown> | null {
   const file = join(root, METHOD_KIND_FILE);
   if (!existsSync(file)) return null;
-  const table = JSON.parse(readFileSync(file, 'utf8').replace(/^﻿/, '')) as Record<string, unknown>;
-  const kind = table[method];
-  return typeof kind === 'string' && CONCRETE_KINDS.has(kind) ? { kind: kind as ToolMapKind, methodId: method } : null;
+  return JSON.parse(readFileSync(file, 'utf8').replace(/^﻿/, '')) as Record<string, unknown>;
+}
+
+/**
+ * Kind and method of one call of a dynamic tool.
+ *  - A per-method tool names its method in the tool map (entry.methodId). Its kind is decided by the body.
+ *  - The gateway's api_call names its method in tool_input.method. The method must be in this plugin's table:
+ *    a concrete kind is used as it is, and a dynamic one is decided by the body.
+ * The body is tool_input.body in both cases. resolveDynamicKind returns null for a method with no rule, and then
+ * the caller asks. A method missing from the table, or with no method at all, returns null too.
+ */
+function kindOfDynamicCall(root: string, entry: ToolMapEntry, input: unknown): { kind: ToolMapKind; methodId: string } | null {
+  const obj = typeof input === 'object' && input !== null ? (input as Record<string, unknown>) : {};
+  const named = typeof obj.method === 'string' && obj.method.length > 0 ? obj.method : undefined;
+  const methodId = entry.methodId ?? named;
+  if (methodId === undefined) return null;
+
+  if (entry.methodId === undefined) {
+    const tabled = readMethodKinds(root)?.[methodId];
+    if (typeof tabled !== 'string') return null;
+    if (CONCRETE_KINDS.has(tabled)) return { kind: tabled as ToolMapKind, methodId };
+    if (tabled !== 'dynamic') return null;
+  }
+
+  const kind = resolveDynamicKind(methodId, obj.body);
+  return kind === null ? null : { kind, methodId };
 }
 
 type HookDecision = 'ask' | 'deny';
@@ -143,11 +162,12 @@ function check(event: HookEvent, root: string): void {
     return;
   }
 
-  // A dynamic tool (the gateway's api_call) is classified per call from the method it names.
+  // A dynamic tool is classified per call: the gateway's api_call from the method it names, a per-method
+  // tool from its fixed method and body (see kindOfDynamicCall).
   let kind: ToolMapKind;
   let methodId = entry.methodId;
   if (entry.kind === 'dynamic') {
-    const resolved = kindOfDynamicCall(root, event.tool_input);
+    const resolved = kindOfDynamicCall(root, entry, event.tool_input);
     if (!resolved) {
       emit(
         'ask',
@@ -155,7 +175,7 @@ function check(event: HookEvent, root: string): void {
           toolName,
           risk: 'destructive',
           args: event.tool_input,
-          reason: 'The method of this call is missing or not known to this plugin, so asking to be safe.',
+          reason: 'The method of this call is missing, is not known to this plugin, or has no dynamic rule, so asking to be safe.',
         }),
       );
       return;

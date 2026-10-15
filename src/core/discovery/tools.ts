@@ -15,11 +15,13 @@ import type { JWT, OAuth2Client } from 'google-auth-library';
 import { z, type ZodRawShape } from 'zod';
 import type { RuntimeConfig } from '../config.js';
 import { getAuthClient, getCloudAdcClient, loadUserTokens, type AuthKind } from '../auth.js';
-import type { ToolDef, ToolKind } from '../tools.js';
+import type { ToolContext, ToolDef, ToolKind } from '../tools.js';
 import { loadRegistry, serverByName, type ApiRef, type AuthGroup, type ServerSpec } from '../registry.js';
 import { assignToolNames, flattenMethods, MAX_TOOL_NAME, nameBudget, type DiscoveryDoc, type MethodRecord } from './methods.js';
 import { clipText, paramToZod, schemaToZod, PARAM_DESC_MAX } from './schema.js';
 import { ApiKeyClient } from './apikey-client.js';
+import { adsHeaders, isGoogleAdsUrl, redactedError } from '../ads.js';
+import { resolveDynamicKind } from '../dynamic.js';
 
 /**
  * Name of the per-server list tool. It is unique within its server, and short,
@@ -36,6 +38,7 @@ const RESERVED_ARGS = ['confirm'];
 type HttpMethodName = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'HEAD' | 'OPTIONS';
 
 export interface ToolKindsFile {
+  /** Exact method ids, or patterns with "*" (see overrideKind in methods.ts). */
   overrides: Record<string, ToolKind>;
   notes: Record<string, string>;
 }
@@ -69,6 +72,20 @@ export interface DiscoverySource {
   apiName: string;
   apiVersion: string;
   doc: DiscoveryDoc;
+  /**
+   * Optional subset of the API's methods. Each entry is a resource path such as "customers.campaigns" (every
+   * method of that resource) or a method path such as "customers.mutate" (one method). Paths are relative to
+   * the API, without its name. Absent means every method.
+   */
+  include?: readonly string[];
+}
+
+/** True when the method is in the subset (see DiscoverySource.include). */
+export function methodIncluded(m: Pick<MethodRecord, 'resource' | 'methodName'>, include: readonly string[] | undefined): boolean {
+  if (!include) return true;
+  const chain = m.resource.join('.');
+  const full = [...m.resource, m.methodName].join('.');
+  return include.some((path) => path === chain || path === full);
 }
 
 export interface GeneratedTools {
@@ -124,10 +141,10 @@ export function loadToolKinds(dataRoot: string): ToolKindsFile {
       }
       continue;
     }
-    if (value === 'read' || value === 'write' || value === 'destructive') {
+    if (value === 'read' || value === 'write' || value === 'destructive' || value === 'dynamic') {
       result.overrides[key] = value;
     } else {
-      process.stderr.write(`[tool-kinds] ignored ${key}: ${JSON.stringify(value)} (expected read, write or destructive)\n`);
+      process.stderr.write(`[tool-kinds] ignored ${key}: ${JSON.stringify(value)} (expected read, write, destructive or dynamic)\n`);
     }
   }
   return result;
@@ -172,23 +189,34 @@ export interface AuthorizedRequest {
  * Sends one request through the client of its auth group (see authFor). OAuth
  * clients serialize repeated query keys with serializeQuery. Used by the per-method
  * tools and by the gateway's api_call, so both take the same path.
+ *
+ * A request to the Google Ads host carries the developer-token header, and the
+ * login-customer-id header when it is set (see core/ads.ts). Its token is checked
+ * before any request is sent, and it is removed from any error that comes back.
  */
 export async function sendAuthorized(
   group: AuthGroup,
   cfg: RuntimeConfig,
   req: AuthorizedRequest,
 ): Promise<{ status: number; data: unknown }> {
+  const headers = isGoogleAdsUrl(req.url) ? adsHeaders(cfg) : undefined;
   const client = await authFor(group, cfg);
   if (client instanceof ApiKeyClient) return client.request(req);
   const hasParams = req.params !== undefined && Object.keys(req.params).length > 0;
-  const res = await client.request({
-    url: req.url,
-    method: req.method,
-    params: hasParams ? req.params : undefined,
-    paramsSerializer: serializeQuery,
-    data: req.data,
-  });
-  return { status: res.status, data: res.data };
+  try {
+    const res = await client.request({
+      url: req.url,
+      method: req.method,
+      params: hasParams ? req.params : undefined,
+      paramsSerializer: serializeQuery,
+      data: req.data,
+      ...(headers ? { headers } : {}),
+    });
+    return { status: res.status, data: res.data };
+  } catch (err) {
+    if (headers) throw redactedError(err, headers['developer-token'] ?? '');
+    throw err;
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -317,8 +345,20 @@ function buildMethodTool(
     // The method's own scope list from the Discovery document (any one of them grants it).
     scopes: m.scopes.length > 0 ? [...m.scopes] : undefined,
     inputSchema: shape,
-    async handler(args) {
+    async handler(args, ctx) {
       const req = buildRequest(plan, args as Record<string, unknown>);
+      if (m.kind === 'dynamic') {
+        // The kind depends on the request body. A call that changes something goes through the gate first.
+        // Read calls (validateOnly) are not gated. A method with no dynamic rule asks, as destructive.
+        if (isGoogleAdsUrl(req.url)) adsHeaders(cfg); // a missing developer token fails before any approval is asked
+        const kind = resolveDynamicKind(m.fullId, req.data) ?? 'destructive';
+        if (kind !== 'read') {
+          if (typeof ctx?.gate !== 'function') {
+            throw new Error(`${name} needs the approval gate, which is not wired for this call, so it was not run.`);
+          }
+          await ctx.gate({ kind, target: name, methodId: m.fullId, args: req.data });
+        }
+      }
       const res = await sendAuthorized(group, cfg, req);
       return res.data;
     },
@@ -382,6 +422,7 @@ export function generateDiscoveryTools(
 
   for (const src of sources) {
     for (const method of flattenMethods(src.doc, src.apiName, src.apiVersion, kinds.overrides)) {
+      if (!methodIncluded(method, src.include)) continue;
       if (method.uploadable) {
         skippedUploads.push(method.fullId);
         continue;
@@ -464,7 +505,12 @@ export async function discoveryToolsFor(serverName: string, cfg: RuntimeConfig, 
       missing.push(`${a.api}.${a.version}`);
       continue;
     }
-    sources.push({ apiName: a.api, apiVersion: a.version, doc: JSON.parse(readFileSync(file, 'utf8')) as DiscoveryDoc });
+    sources.push({
+      apiName: a.api,
+      apiVersion: a.version,
+      doc: JSON.parse(readFileSync(file, 'utf8')) as DiscoveryDoc,
+      include: a.include,
+    });
   }
   if (missing.length > 0) {
     process.stderr.write(`[${serverName}] no discovery snapshot for: ${missing.join(', ')}. Run: node scripts/snapshot-discovery.mjs\n`);

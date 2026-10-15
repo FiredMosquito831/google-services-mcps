@@ -57,13 +57,24 @@ function readJson(file) {
   return JSON.parse(readFileSync(file, 'utf8'));
 }
 
-function apiRefs(list, where) {
+/**
+ * API references of one list. A generated entry may carry "include": the resource or method paths whose
+ * methods become tools (see DiscoverySource.include in src/core/discovery/tools.ts). A gateway entry may not.
+ */
+function apiRefs(list, where, allowInclude = false) {
   if (!Array.isArray(list)) fail(`${where} must be a list`);
   return list.map((entry) => {
     if (typeof entry?.api !== 'string' || typeof entry?.version !== 'string') {
       fail(`${where} has an entry without api and version: ${JSON.stringify(entry)}`);
     }
-    return { api: entry.api, version: entry.version };
+    const ref = { api: entry.api, version: entry.version };
+    if (entry.include !== undefined) {
+      const ok = Array.isArray(entry.include) && entry.include.length > 0 && entry.include.every((p) => typeof p === 'string' && p !== '');
+      if (!allowInclude) fail(`${where}: ${entry.api}.${entry.version} may not have include (only generated entries can)`);
+      if (!ok) fail(`${where}: ${entry.api}.${entry.version} include must be a non-empty list of paths`);
+      ref.include = entry.include;
+    }
+    return ref;
   });
 }
 
@@ -95,7 +106,7 @@ function main() {
       curated = file;
     }
 
-    const apis = apiRefs(p.generated, `product ${id} generated`);
+    const apis = apiRefs(p.generated, `product ${id} generated`, true);
     const gatewayApis = apiRefs(p.gateway ?? [], `product ${id} gateway`);
     for (const a of apis) {
       const key = `${a.api}.${a.version}`;

@@ -7,8 +7,10 @@
     "script": "scripts.run executes Apps Script code with the project's authority, so it is classified destructive.",
     "compute": "Methods that remove, detach, stop or suspend resources are classified write unless listed as destructive. Check the effect first.",
     "cloudidentity": "devices.wipe factory-resets the device and is destructive.",
-    "sqladmin": "instances.export writes a dump file to Cloud Storage. It is classified write."
+    "sqladmin": "instances.export writes a dump file to Cloud Storage. It is classified write.",
+    "googleads": "Every mutate method is dynamic, so the risk is decided per call from the body. validateOnly true is a read and is not gated; a remove operation is destructive; any other operation is a write. The rule is the same in the per-method tools, the gateway and the hook (src/core/dynamic.ts)."
   },
+  "googleads.*.mutate": "dynamic",
   "bigquery.jobs.query": "write",
   "cloudasset.exportAssets": "write",
   "firestore.projects.databases.exportDocuments": "write",
