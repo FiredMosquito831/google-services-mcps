@@ -63,7 +63,8 @@ set "STAGE=%INSTALL_DIR%.partial"
 for %%P in ("%INSTALL_DIR%\..") do set "INSTALL_PARENT=%%~fP"
 md "%INSTALL_PARENT%" >nul 2>&1
 if exist "%STAGE%" rd /s /q "%STAGE%"
-move "%GSM_SRC%" "%STAGE%" >nul
+rem xcopy, not move: a folder move from %TEMP% to another drive (GSM_DIR on D:, say) fails with "Access is denied".
+xcopy "%GSM_SRC%" "%STAGE%\" /e /i /q /y >nul
 if errorlevel 1 goto :fail_move
 if exist "%INSTALL_DIR%" rd /s /q "%INSTALL_DIR%"
 if exist "%INSTALL_DIR%" goto :fail_move

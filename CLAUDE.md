@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 google-services-mcps is a set of MCP servers for Google products, packaged as Claude Code plugins in one marketplace, with an installer (`gsm`) for Codex, OpenCode and Antigravity (`agy`). One plugin per product (23 in total), and each plugin runs one MCP server with the same name as the plugin. Public repository: https://github.com/FiredMosquito831/google-services-mcps (owner FiredMosquito831). Licence Apache-2.0 with NOTICE. The website is GitHub Pages from `site/`.
 
-Status: built and tested offline (463 passing tests, 1 opt-in network test, smoke test over all servers, plugin validation). Not yet run against live Google accounts. Treat any claim about live behaviour as unverified until a live test has run.
+Status: built and tested offline (464 passing tests, 1 opt-in network test, smoke test over all servers, plugin validation). Not yet run against live Google accounts. Treat any claim about live behaviour as unverified until a live test has run.
 
 ## Stack and versions
 
@@ -78,6 +78,7 @@ Append a dated bullet whenever you learn something non-obvious about this reposi
 - 2026-10-16: in Git Bash on Windows, `curl` can resolve to `C:\Windows\System32\curl.exe`, which cannot write to a `/tmp` path. `scripts/install.sh` passes curl a `cygpath -w` path for that reason. Regression test `4c` puts System32 first on PATH.
 - 2026-10-16: `.gitattributes` has `* text=auto eol=lf`. The owner's Windows git has `core.autocrlf=true`, and `install.sh` must stay LF for Linux `sh`.
 - 2026-10-16: `npx <file.tgz> ...` exits 0 and runs nothing. Test a tarball with `npm install -g --prefix <dir> <tgz>` (then `<dir>\gsm.cmd`) or `npm exec --package=<tgz> -- gsm ...`.
+- 2026-10-16: in `cmd`, `move` of a folder from `%TEMP%` to another drive fails with "Access is denied". `scripts/install.cmd` uses `xcopy` for that step. Test `5. cmd: ... another drive` runs when a second drive exists.
 - 2026-10-16: npm trusted publishing is set on the package's page on npmjs.com, so the package must exist first. The first publish is manual (from the owner's terminal, with two-factor). The `npm.yml` workflow (copied from ase-moodle-mcp) publishes later versions only when `package.json` has a new version.
 
 ## Preferences (the owner)

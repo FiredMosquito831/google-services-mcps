@@ -92,6 +92,10 @@ const NEEDS_SH = SH_BIN ? false : 'no sh on PATH (Git for Windows ships one in u
 const NEEDS_WINDOWS = WINDOWS ? false : 'Windows only';
 const GIT_USR_BIN = join(process.env.ProgramFiles || 'C:\\Program Files', 'Git', 'usr', 'bin');
 const SYSTEM32 = join(process.env.SystemRoot || 'C:\\Windows', 'System32');
+// A drive other than the temporary folder's, for the cross-drive test. Null on a machine with one drive.
+const OTHER_DRIVE = WINDOWS
+  ? ['D', 'E', 'F', 'G', 'H', 'I'].map((d) => `${d}:\\`).find((root) => existsSync(root) && root[0].toLowerCase() !== tmpdir()[0].toLowerCase()) ?? null
+  : null;
 
 function hasExe(exe) {
   return spawnSync(exe, ['-NoProfile', '-Command', 'exit 0'], { stdio: 'ignore', timeout: 60000 }).status === 0;
@@ -332,6 +336,25 @@ test('4c. sh: the download works when the Windows curl comes first on PATH (Git 
   assert.match(r.stdout, /dry-run/);
   assert.ok(existsSync(join(installDir, 'gsm.mjs')), 'gsm.mjs is in the install folder');
   assert.deepEqual(readdirSync(tempDir), [], 'the temp folder is cleaned up');
+});
+
+test('5. cmd: the install folder on another drive from %TEMP% (copied across drives, not moved)', {
+  skip: NEEDS_WINDOWS || (OTHER_DRIVE ? false : 'needs a second drive'),
+}, () => {
+  const dir = fresh('cmd-other-drive');
+  const script = copyScript(dir, 'install-gsm.cmd', readFileSync(CMD, 'utf8'));
+  const tempDir = fresh('cmd-other-drive-temp');
+  const far = mkdtempSync(join(OTHER_DRIVE, 'gsm-boot-'));
+  try {
+    const installDir = join(far, 'nested', 'google-services-mcps');
+    const home = join(dir, 'home');
+    mkdirSync(home);
+    const env = envWith({ TEMP: tempDir, TMP: tempDir, GSM_ARCHIVE_URL: archive(), GSM_DIR: installDir });
+    const r = runCmd(script, DRY(home), env);
+    assertDryRunInstalled(r, { installDir, home, tempDir });
+  } finally {
+    rmSync(far, { recursive: true, force: true });
+  }
 });
 
 // ---- 5. cmd and PowerShell, offline -----------------------------------------------------------------------------------
