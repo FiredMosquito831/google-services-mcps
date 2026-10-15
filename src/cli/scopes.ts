@@ -131,7 +131,7 @@ export function hasGatewayApis(reg: Registry, servers: readonly string[]): boole
 export async function runScopes(req: ScopesRequest, reg: Registry, out: Output): Promise<number> {
   if (req.group === 'apikey') {
     // No OAuth scopes here, but --json still prints JSON (products and servers) like the other groups do.
-    const note = 'the products in this group use an API key, not OAuth scopes. Save the key with: gsm setup-apikey';
+    const note = 'the products in this group use an API key, not OAuth scopes. Save the key with: node gsm.mjs setup-apikey';
     if (!req.json) {
       out.log(`apikey: ${note}`);
       return 0;

@@ -2,7 +2,7 @@
 
 Each product plugin has one login group. Log in once per group, with the list of products you use. A login merges with the scopes already stored for its group, so logging in for one product keeps the others. Use `--replace` to drop the stored scopes and keep only what this login requests. A merge can leave write scopes from an earlier readwrite login in place: when you want a readonly token again, log in with `--replace`. See [INSTALL.md](INSTALL.md#two-command-lines).
 
-The commands in this guide use the full CLI, `node dist/cli/gsm.js`, from the repository folder. It needs `npm install` and `npm run build` first. Without a build, `node plugins/<id>/bin/gsm.mjs` works for one product only.
+The commands in this guide use the installer, `node gsm.mjs`, from the repository folder. No build is needed. Each plugin folder also has its own copy of the installer, which knows only its own product.
 
 | Product (plugin) | Login group | Setup |
 |---|---|---|
@@ -23,9 +23,9 @@ The commands in this guide use the full CLI, `node dist/cli/gsm.js`, from the re
 5. Save the file into the token directory, then log in:
 
    ```
-   node dist/cli/gsm.js setup-client C:\path\to\client_secret.json
-   node dist/cli/gsm.js login workspace-user --profile readonly --servers gmail,gcalendar
-   node dist/cli/gsm.js status
+   node gsm.mjs setup-client C:\path\to\client_secret.json
+   node gsm.mjs login workspace-user --profile readonly --servers gmail,gcalendar
+   node gsm.mjs status
    ```
 
    `setup-client` copies the file into the token directory as `client_secret.json`, with mode 0600. If that file already exists, the command stops. Run it again with `--force` to replace it. The old file is backed up first.
@@ -34,7 +34,7 @@ The commands in this guide use the full CLI, `node dist/cli/gsm.js`, from the re
 
 ### Login options
 
-These options are checked against `gsm --help`:
+These options are checked against `node gsm.mjs --help`:
 
 | Option | Meaning |
 |---|---|
@@ -58,13 +58,13 @@ Domain-wide delegation needs a super admin and a Google Cloud service account.
 2. In the Google Admin console, under **Security**, **API controls**, **Domain-wide delegation**, add the service account's client ID with the scopes the profile lists. To print the scopes, run:
 
    ```
-   node dist/cli/gsm.js scopes workspace-admin --profile readonly
+   node gsm.mjs scopes workspace-admin --profile readonly
    ```
 
 3. Record the super admin and the key file:
 
    ```
-   node dist/cli/gsm.js setup-admin --subject admin@example.com --key-file C:\path\to\key.json --profile readonly
+   node gsm.mjs setup-admin --subject admin@example.com --key-file C:\path\to\key.json --profile readonly
    ```
 
 The command checks that the file is a service account key (JSON with a `client_email`). It never prints the file. The key file is not copied. The suite reads it from where you put it, so do not move it. The admin's email and the key file can also be set as plugin options (`admin_subject` and `service_account_key_file`).
@@ -87,13 +87,13 @@ Google Ads is part of the `business` group. Log in with `login business`, as abo
 Public search and web-quality APIs take a key, not OAuth. There is no login.
 
 ```
-node dist/cli/gsm.js setup-apikey
+node gsm.mjs setup-apikey
 ```
 
 The command does **not** ask for the key. It reads the key from one of two places:
 
 - the environment variable `GSM_API_KEY_INPUT`, or
-- stdin, when you pipe the key in. For example, in Git Bash or another POSIX shell: `printf '%s' "$KEY" | node dist/cli/gsm.js setup-apikey`. In PowerShell, pipe the text directly, for example `'your-key' | node dist/cli/gsm.js setup-apikey`.
+- stdin, when you pipe the key in. For example, in Git Bash or another POSIX shell: `printf '%s' "$KEY" | node gsm.mjs setup-apikey`. In PowerShell, pipe the text directly, for example `'your-key' | node gsm.mjs setup-apikey`.
 
 If neither is given, the command stops with an error and writes nothing. The key is never a command-line argument, and it is never printed. It is saved as `apikey.json` in the token directory, with mode 0600. An existing file is replaced only with `--force`, and no backup is kept.
 
@@ -111,7 +111,7 @@ Confirmations are on by default (`every-change`). To change them:
 - **Codex, OpenCode and Antigravity.** Pass `--confirmation destructive-only` or `--confirmation off` when you install:
 
   ```
-  node dist/cli/gsm.js install --agent codex --plugin gmail --scope global --confirmation destructive-only --dry-run
+  node gsm.mjs install --agent codex --plugin gmail --scope global --confirmation destructive-only --dry-run
   ```
 
   For Claude Code, `--confirmation` does not write the option. The install prints how to set it.
@@ -129,9 +129,9 @@ The suite retries throttled requests (HTTP 429 and 503, and some rate-limit 403s
 ## Checking a setup
 
 ```
-node dist/cli/gsm.js status
-node dist/cli/gsm.js scopes workspace-user --servers gmail
-node dist/cli/gsm.js doctor --plugin gmail
+node gsm.mjs status
+node gsm.mjs scopes workspace-user --servers gmail
+node gsm.mjs doctor --plugin gmail
 ```
 
 - `status` shows the token directory, each group's login, the API key and the admin setup. It prints no secret.

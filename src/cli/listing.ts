@@ -176,7 +176,7 @@ const lastSegment = (id: string): string => id.slice(id.lastIndexOf('.') + 1);
 export async function runMethods(env: ListingEnv, req: MethodsRequest): Promise<number> {
   const catalog = loadCatalog(env.moduleUrl);
   const candidates = catalog.apis.filter((a) => a.name === req.api);
-  if (candidates.length === 0) throw new UsageError(`unknown API "${req.api}". Find the name with: gsm apis --search ${req.api}`);
+  if (candidates.length === 0) throw new UsageError(`unknown API "${req.api}". Find the name with: node gsm.mjs apis --search ${req.api}`);
   const versions = candidates.map((a) => a.version).join(', ');
 
   let api: CatalogApi | undefined;
@@ -247,8 +247,8 @@ export async function runMethods(env: ListingEnv, req: MethodsRequest): Promise<
   }
   env.out.log(
     classifier.source === 'core'
-      ? 'kind: classifyMethod from dist/core/discovery/methods.js (config/tool-kinds.json overrides applied)'
-      : 'kind: built-in copy of the classification rules (dist/core/discovery/methods.js not found beside this CLI)',
+      ? 'kind: the suite\'s classification rules (config/tool-kinds.json overrides applied)'
+      : 'kind: built-in copy of the classification rules (the suite\'s compiled rules were not found beside this CLI)',
   );
   return 0;
 }

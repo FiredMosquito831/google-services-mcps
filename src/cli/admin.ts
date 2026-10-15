@@ -71,6 +71,6 @@ export async function runSetupAdmin(req: SetupAdminRequest, reg: Registry, out: 
   out.log(`The server for ${servers.join(', ')} runs ${formatCoverage(coverageOf(requirements, merge.scopes))}.`);
   out.log('Authorize these scopes for the service account client ID under Google Admin console > Security > API controls > Domain-wide delegation:');
   for (const scope of merge.scopes) out.log(`  ${scope}`);
-  out.log('Restart the gws-admin server so it reads the new setup. Write tools also need GSM_ALLOW_WRITES=true.');
+  out.log('Restart the gadmin server so it reads the new setup. Write tools also need GSM_ALLOW_WRITES=true.');
   return 0;
 }

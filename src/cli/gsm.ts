@@ -34,16 +34,16 @@ import { UsageError } from './types.js';
 export const HELP = `gsm: install the Google services MCP suite into an agent, and manage it
 
 Examples:
-  gsm install --agent codex --plugin gmail                        Gmail for Codex, for this user (global is the default)
-  gsm install --agent claude --plugin gcalendar --scope project   Google Calendar for Claude Code, in this project only
-  gsm list                                                        Show every install gsm made, and where
-  gsm uninstall --agent codex --plugin gmail --dry-run            Preview the removal of the Gmail entry
+  node gsm.mjs install --agent codex --plugin gmail                        Gmail for Codex, for this user (global is the default)
+  node gsm.mjs install --agent claude --plugin gcalendar --scope project   Google Calendar for Claude Code, in this project only
+  node gsm.mjs list                                                        Show every install gsm made, and where
+  node gsm.mjs uninstall --agent codex --plugin gmail --dry-run            Preview the removal of the Gmail entry
 
 Commands:
   install       Install product plugins for an agent: claude, codex, opencode, agy, or all
   uninstall     Remove product plugins again, or every install with --all. Only gsm's own entries are removed
   list          Show every install gsm made: agent, scope, folder, products, and whether it is still in place
-  login         Log in one OAuth group. "gsm login apikey" only explains the API key step
+  login         Log in one OAuth group. "node gsm.mjs login apikey" only explains the API key step
   scopes        Show each profile's scopes, the products of a group and their tool counts
   setup-client  Save the OAuth Desktop client file (client_secret.json)
   setup-apikey  Save the API key for the apikey group (reads GSM_API_KEY_INPUT or stdin)
@@ -58,25 +58,25 @@ Commands:
   --help        Show this help
 
 Usage:
-  gsm install   --agent <claude|codex|opencode|agy|all> --plugin <id[,id...]|all> [--scope global|project|local]
-                [--path <dir>] [--allow-writes] [--confirmation <every-change|destructive-only|off>] [--dry-run]
-  gsm uninstall --agent <claude|codex|opencode|agy|all> --plugin <id[,id...]|all> [--scope global|project|local]
-                [--path <dir>] [--dry-run]
-  gsm uninstall --all [--dry-run] [--yes]
-  gsm list [--json] [--home <dir>]
-  gsm login <group> [--profile readonly|readwrite|full] [--scopes <url,url>] [--servers <a,b>] [--client-secret <file>] [--no-browser] [--replace]
-  gsm scopes <group> [--profile readonly|readwrite|full] [--servers <a,b>] [--json]
-  gsm setup-client <path-to-client_secret.json> [--force]
-  gsm setup-apikey [--force]
-  gsm setup-admin --subject <admin email> --key-file <service account JSON> [--profile readonly|readwrite|full] [--servers <a,b>] [--replace]
-  gsm status
-  gsm logout <group>
-  gsm products [--json]
-  gsm apis [<product>] [--search <text>] [--json] [--limit <n>]
-  gsm methods <api> [<version>] [--search <text>] [--json] [--limit <n>]
-  gsm doctor [--plugin <id>] [--token-dir <dir>]
-  gsm version
-  gsm --help
+  node gsm.mjs install   --agent <claude|codex|opencode|agy|all> --plugin <id[,id...]|all> [--scope global|project|local]
+                         [--path <dir>] [--allow-writes] [--confirmation <every-change|destructive-only|off>] [--dry-run]
+  node gsm.mjs uninstall --agent <claude|codex|opencode|agy|all> --plugin <id[,id...]|all> [--scope global|project|local]
+                         [--path <dir>] [--dry-run]
+  node gsm.mjs uninstall --all [--dry-run] [--yes]
+  node gsm.mjs list [--json] [--home <dir>]
+  node gsm.mjs login <group> [--profile readonly|readwrite|full] [--scopes <url,url>] [--servers <a,b>] [--client-secret <file>] [--no-browser] [--replace]
+  node gsm.mjs scopes <group> [--profile readonly|readwrite|full] [--servers <a,b>] [--json]
+  node gsm.mjs setup-client <path-to-client_secret.json> [--force]
+  node gsm.mjs setup-apikey [--force]
+  node gsm.mjs setup-admin --subject <admin email> --key-file <service account JSON> [--profile readonly|readwrite|full] [--servers <a,b>] [--replace]
+  node gsm.mjs status
+  node gsm.mjs logout <group>
+  node gsm.mjs products [--json]
+  node gsm.mjs apis [<product>] [--search <text>] [--json] [--limit <n>]
+  node gsm.mjs methods <api> [<version>] [--search <text>] [--json] [--limit <n>]
+  node gsm.mjs doctor [--plugin <id>] [--token-dir <dir>]
+  node gsm.mjs version
+  node gsm.mjs --help
 
 Install and uninstall:
   --agent       claude (the claude CLI), codex (config.toml), opencode (opencode.json), agy (global only), or all.
@@ -207,14 +207,14 @@ async function dispatch(argv: string[]): Promise<number> {
     }
 
     case 'list': {
-      noPositionals(parsed.positionals, 'usage: gsm list [--json] [--home <dir>]');
+      noPositionals(parsed.positionals, 'usage: node gsm.mjs list [--json] [--home <dir>]');
       const home = optionalString(parsed.values.home, 'home');
       if (home !== undefined) requireDirectory(resolvePath(home), '--home');
       return runList({ home: home === undefined ? homedir() : resolvePath(home), json: parsed.values.json === true }, out);
     }
 
     case 'login': {
-      const group = parseGroup(parsed.positionals, 'usage: gsm login <group> [--profile readonly|readwrite|full] [--scopes <urls>] [--servers a,b] [--client-secret <file>] [--no-browser] [--replace]');
+      const group = parseGroup(parsed.positionals, 'usage: node gsm.mjs login <group> [--profile readonly|readwrite|full] [--scopes <urls>] [--servers a,b] [--client-secret <file>] [--no-browser] [--replace]');
       const choice = parseLoginScopes(parsed.values);
       const servers = parseServers(parsed.values);
       const clientSecretFile = typeof parsed.values['client-secret'] === 'string' ? parsed.values['client-secret'] : undefined;
@@ -224,7 +224,7 @@ async function dispatch(argv: string[]): Promise<number> {
     }
 
     case 'scopes': {
-      const group = parseGroup(parsed.positionals, 'usage: gsm scopes <group> [--profile readonly|readwrite|full] [--servers a,b] [--json]');
+      const group = parseGroup(parsed.positionals, 'usage: node gsm.mjs scopes <group> [--profile readonly|readwrite|full] [--servers a,b] [--json]');
       return runScopes(
         {
           group,
@@ -239,20 +239,20 @@ async function dispatch(argv: string[]): Promise<number> {
 
     case 'setup-admin': {
       if (parsed.positionals.length !== 0) {
-        throw new UsageError('usage: gsm setup-admin --subject <admin email> --key-file <service account JSON> [--profile readonly|readwrite|full] [--servers a,b] [--replace]');
+        throw new UsageError('usage: node gsm.mjs setup-admin --subject <admin email> --key-file <service account JSON> [--profile readonly|readwrite|full] [--servers a,b] [--replace]');
       }
       return runSetupAdmin(parseSetupAdminArgs(parsed.values), registryFor(), out);
     }
 
     case 'setup-client': {
-      if (parsed.positionals.length !== 1) throw new UsageError('usage: gsm setup-client <path-to-client_secret.json> [--force]');
+      if (parsed.positionals.length !== 1) throw new UsageError('usage: node gsm.mjs setup-client <path-to-client_secret.json> [--force]');
       return runSetupClient(parsed.positionals[0] ?? '', parsed.values.force === true, out);
     }
 
     case 'setup-apikey': {
       // A positional argument could be the key itself, so the error does not repeat it.
       if (parsed.positionals.length !== 0) {
-        throw new UsageError('usage: gsm setup-apikey [--force]. The key is read from GSM_API_KEY_INPUT or stdin, never from an argument.');
+        throw new UsageError('usage: node gsm.mjs setup-apikey [--force]. The key is read from GSM_API_KEY_INPUT or stdin, never from an argument.');
       }
       return runSetupApiKey({ force: parsed.values.force === true, env: process.env, readStdin }, out);
     }
@@ -261,17 +261,17 @@ async function dispatch(argv: string[]): Promise<number> {
       return runStatus(out);
 
     case 'logout': {
-      const group = parseGroup(parsed.positionals, 'usage: gsm logout <group>');
+      const group = parseGroup(parsed.positionals, 'usage: node gsm.mjs logout <group>');
       return runLogout(group, out);
     }
 
     case 'products':
-      noPositionals(parsed.positionals, 'usage: gsm products [--json]');
+      noPositionals(parsed.positionals, 'usage: node gsm.mjs products [--json]');
       return runProducts(listingEnv(), parsed.values.json === true);
 
     case 'apis': {
       if (parsed.positionals.length > 1) {
-        throw new UsageError('usage: gsm apis [<product>] [--search <text>] [--json] [--limit <n>]');
+        throw new UsageError('usage: node gsm.mjs apis [<product>] [--search <text>] [--json] [--limit <n>]');
       }
       return runApis(listingEnv(), {
         product: parsed.positionals[0],
@@ -283,7 +283,7 @@ async function dispatch(argv: string[]): Promise<number> {
 
     case 'methods': {
       if (parsed.positionals.length < 1 || parsed.positionals.length > 2) {
-        throw new UsageError('usage: gsm methods <api> [<version>] [--search <text>] [--json] [--limit <n>]');
+        throw new UsageError('usage: node gsm.mjs methods <api> [<version>] [--search <text>] [--json] [--limit <n>]');
       }
       return runMethods(listingEnv(), {
         api: parsed.positionals[0] ?? '',
@@ -295,7 +295,7 @@ async function dispatch(argv: string[]): Promise<number> {
     }
 
     case 'doctor': {
-      noPositionals(parsed.positionals, 'usage: gsm doctor [--plugin <id>] [--token-dir <dir>]');
+      noPositionals(parsed.positionals, 'usage: node gsm.mjs doctor [--plugin <id>] [--token-dir <dir>]');
       const roots = findRoots(moduleUrl);
       const tokenDir = optionalString(parsed.values['token-dir'], 'token-dir');
       return runDoctor(
@@ -311,7 +311,7 @@ async function dispatch(argv: string[]): Promise<number> {
     }
 
     case 'version':
-      noPositionals(parsed.positionals, 'usage: gsm version');
+      noPositionals(parsed.positionals, 'usage: node gsm.mjs version');
       return runVersion({ roots: findRoots(moduleUrl), out });
   }
 }
@@ -321,7 +321,7 @@ try {
 } catch (err) {
   if (err instanceof UsageError) {
     console.error(`gsm: ${err.message}`);
-    console.error('Run gsm --help for usage.');
+    console.error('Run node gsm.mjs --help for usage.');
     process.exitCode = 2;
   } else {
     console.error(`gsm: ${(err as Error).message}`);

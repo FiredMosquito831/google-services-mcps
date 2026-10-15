@@ -1,5 +1,7 @@
 # Business Profile (`gbusiness`)
 
+Install with the simplest command: `node gsm.mjs install --agent claude --plugin <id>` (see docs/TUTORIAL.md).
+
 Google Business Profile accounts, locations, admins, verifications, lodging, place actions, notifications and performance metrics. It reads and edits the public listing of a business you manage. It has 52 tools and no gateway. Reviews and local posts are not covered.
 
 ## When to install it

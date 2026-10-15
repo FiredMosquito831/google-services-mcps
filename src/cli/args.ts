@@ -101,7 +101,7 @@ export function parseCliArgs(argv: readonly string[]): ParsedArgs {
   } catch (err) {
     // parseArgs quotes the offending argument. For setup-apikey that argument may be the key itself, so it is not repeated.
     if (command === 'setup-apikey') {
-      throw new UsageError('usage: gsm setup-apikey [--force]. The key is read from GSM_API_KEY_INPUT or stdin, never from an argument.');
+      throw new UsageError('usage: node gsm.mjs setup-apikey [--force]. The key is read from GSM_API_KEY_INPUT or stdin, never from an argument.');
     }
     throw new UsageError((err as Error).message);
   }
@@ -128,10 +128,10 @@ export interface InstallRequestArgs {
 }
 
 /** The usage lines of install and uninstall. A missing required flag prints them, with the valid values. */
-export const INSTALL_USAGE = 'usage: gsm install --agent <claude|codex|opencode|agy|all> --plugin <id,...|all> [--scope global|project|local] [--path <dir>] [--dry-run]';
+export const INSTALL_USAGE = 'usage: node gsm.mjs install --agent <claude|codex|opencode|agy|all> --plugin <id,...|all> [--scope global|project|local] [--path <dir>] [--dry-run]';
 export const UNINSTALL_USAGE =
-  'usage: gsm uninstall --agent <claude|codex|opencode|agy|all> --plugin <id,...|all> [--scope global|project|local] [--path <dir>] [--dry-run]\n' +
-  '       gsm uninstall --all [--dry-run] [--yes]';
+  'usage: node gsm.mjs uninstall --agent <claude|codex|opencode|agy|all> --plugin <id,...|all> [--scope global|project|local] [--path <dir>] [--dry-run]\n' +
+  '       node gsm.mjs uninstall --all [--dry-run] [--yes]';
 
 /**
  * --scope: global (the default), project or local. `folder` is an alias of local, accepted with no warning.

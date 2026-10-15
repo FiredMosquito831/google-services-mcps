@@ -1,5 +1,7 @@
 # Workspace Admin (`gadmin`)
 
+Install with the simplest command: `node gsm.mjs install --agent claude --plugin <id>` (see docs/TUTORIAL.md).
+
 Google Workspace administration for your domain: users, groups, org units, domains, Cloud Identity, Chrome management and policy, Groups Settings, licensing, reports, alerts, Vault, reseller, data transfer and Cloud Search admin. It acts as a super admin through a service account with domain-wide delegation. It has 366 tools.
 
 ## When to install it

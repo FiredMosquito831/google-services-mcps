@@ -45,7 +45,7 @@ export async function runSetupApiKey(req: SetupApiKeyRequest, out: Output): Prom
   const raw = fromEnv !== undefined ? fromEnv : await req.readStdin();
   if (raw === undefined || (fromEnv === undefined && raw.trim() === '')) {
     throw new UsageError(
-      `no API key given. Set ${API_KEY_ENV}, or pipe the key on stdin, for example: printf '%s' "$KEY" | gsm setup-apikey`,
+      `no API key given. Set ${API_KEY_ENV}, or pipe the key on stdin, for example: printf '%s' "$KEY" | node gsm.mjs setup-apikey`,
     );
   }
   const key = checkApiKey(raw);

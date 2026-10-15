@@ -115,8 +115,8 @@ test('help: login and setup-admin list --replace, and the merge rule is one line
   for (const args of [['--help'], ['login', '--help']]) {
     const res = spawnSync(process.execPath, [GSM, ...args], { encoding: 'utf8' });
     assert.equal(res.status, 0, res.stderr);
-    assert.match(res.stdout, /gsm login <group> .*\[--replace\]/);
-    assert.match(res.stdout, /gsm setup-admin .*\[--replace\]/);
+    assert.match(res.stdout, /node gsm\.mjs login <group> .*\[--replace\]/);
+    assert.match(res.stdout, /node gsm\.mjs setup-admin .*\[--replace\]/);
     const rule = res.stdout.split(/\r?\n/).filter((line) => line.includes('--replace (login, setup-admin)'));
     assert.equal(rule.length, 1, 'one help line states the merge rule');
     assert.match(rule[0], /merges the requested scopes with the stored ones; --replace drops the stored ones\./);

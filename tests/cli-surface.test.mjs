@@ -535,11 +535,11 @@ test('gsm --help lists products, apis, methods, doctor and version on their own 
     for (const name of ['products', 'apis', 'methods', 'doctor', 'version']) {
       assert.ok(new RegExp(`^  ${name}\\s{2,}\\S`, 'm').test(res.stdout), `help must list "${name}" with a one-line description`);
     }
-    assert.ok(res.stdout.includes('gsm products [--json]'));
-    assert.ok(res.stdout.includes('gsm apis [<product>] [--search <text>] [--json] [--limit <n>]'));
-    assert.ok(res.stdout.includes('gsm methods <api> [<version>] [--search <text>] [--json] [--limit <n>]'));
-    assert.ok(res.stdout.includes('gsm doctor [--plugin <id>] [--token-dir <dir>]'));
-    assert.ok(res.stdout.includes('gsm version'));
+    assert.ok(res.stdout.includes('node gsm.mjs products [--json]'));
+    assert.ok(res.stdout.includes('node gsm.mjs apis [<product>] [--search <text>] [--json] [--limit <n>]'));
+    assert.ok(res.stdout.includes('node gsm.mjs methods <api> [<version>] [--search <text>] [--json] [--limit <n>]'));
+    assert.ok(res.stdout.includes('node gsm.mjs doctor [--plugin <id>] [--token-dir <dir>]'));
+    assert.ok(res.stdout.includes('node gsm.mjs version'));
     // The existing help text is still there.
     assert.ok(res.stdout.includes('--confirmation <every-change|destructive-only|off>'));
     assert.ok(res.stdout.includes('Install product plugins for an agent'));

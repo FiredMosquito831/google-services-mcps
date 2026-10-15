@@ -26,7 +26,7 @@ const SITE_URL = 'https://firedmosquito831.github.io/google-services-mcps/';
 const REPO_URL = 'https://github.com/FiredMosquito831/google-services-mcps';
 const BLOB = `${REPO_URL}/blob/main/`;
 const KINDS = ['read', 'write', 'destructive', 'dynamic'];
-const GUIDES = ['INSTALL', 'SETUP', 'CHOOSING', 'USING', 'SECURITY', 'LIMITS-AND-COSTS', 'GUIDE', 'SURFACES', 'CAPABILITIES'];
+const GUIDES = ['INSTALL', 'TUTORIAL', 'SETUP', 'CHOOSING', 'USING', 'SECURITY', 'LIMITS-AND-COSTS', 'GUIDE', 'SURFACES', 'CAPABILITIES'];
 const HERO_NAMED = ['gmail', 'gdrive', 'gcalendar', 'gcloud', 'gsc', 'gads']; // named in the hero sub-headline
 const EXAMPLE_PRODUCT = 'gmail'; // used by the install commands written in index.html
 const GROUP_LABELS = {
@@ -165,7 +165,7 @@ const products = ids.map((id) => {
     kinds,
     generated,
     gateway,
-    install: `claude plugin install ${id}@${marketplace.name} --scope user`,
+    install: `node gsm.mjs install --agent claude --plugin ${id}`,
     detailPage: exists(`docs/capabilities/${id}.md`),
   };
 });

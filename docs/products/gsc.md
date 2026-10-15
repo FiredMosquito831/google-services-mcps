@@ -1,5 +1,7 @@
 # Search Console (`gsc`)
 
+Install with the simplest command: `node gsm.mjs install --agent claude --plugin <id>` (see docs/TUTORIAL.md).
+
 Google Search Console for the sites you verify. It lists and adds properties, queries search analytics, inspects URLs and manages sitemaps. It also covers the Indexing API and the Site Verification API.
 
 ## When to install it

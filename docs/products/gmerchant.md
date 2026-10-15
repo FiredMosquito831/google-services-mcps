@@ -1,5 +1,7 @@
 # Merchant Center (`gmerchant`)
 
+Install with the simplest command: `node gsm.mjs install --agent claude --plugin <id>` (see docs/TUTORIAL.md).
+
 Merchant Center accounts through the Merchant API, the Comparison Shopping Service (CSS) API and the Manufacturer Center API. It reads and changes product data, inventories, promotions, data sources, business information and account settings. It has 158 tools and no hand-written tools.
 
 ## When to install it

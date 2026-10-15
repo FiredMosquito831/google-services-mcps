@@ -1,5 +1,7 @@
 # Maps and Location (`gmaps`)
 
+Install with the simplest command: `node gsm.mjs install --agent claude --plugin <id>` (see docs/TUTORIAL.md).
+
 Maps Platform and location APIs: Places (New), Address Validation, Air Quality, Pollen, Solar, Street View Publish, Places Aggregate and Travel Impact Model. It looks up places and addresses, reads environmental and solar data for a location, and uploads Street View imagery. It has 36 tools and no gateway.
 
 ## When to install it

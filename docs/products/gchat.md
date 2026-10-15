@@ -1,5 +1,7 @@
 # Google Chat (`gchat`)
 
+Install with the simplest command: `node gsm.mjs install --agent claude --plugin <id>` (see docs/TUTORIAL.md).
+
 Google Chat spaces, messages, reactions, pins, members and sections, plus Workspace Events subscriptions. It reads and posts messages in Chat spaces, manages space membership, and subscribes to space events so changes arrive without polling. It has no gateway.
 
 ## When to install it

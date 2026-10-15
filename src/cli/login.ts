@@ -129,14 +129,14 @@ export async function runLogin(req: LoginRequest, loadRegistryFn: () => Registry
 /** `gsm login apikey` does no login. The API key is saved by setup-apikey. */
 function printApiKeyAlias(out: Output): void {
   out.log('apikey: no login is needed. The products in this group read a saved API key instead.');
-  out.log('Save the key with: gsm setup-apikey  (it reads GSM_API_KEY_INPUT or stdin, never an argument)');
+  out.log('Save the key with: node gsm.mjs setup-apikey  (it reads GSM_API_KEY_INPUT or stdin, never an argument)');
 }
 
 function printAdminGuidance(out: Output): void {
   out.log('workspace-admin uses a service account with domain-wide delegation. It has no interactive login.');
-  out.log('Set it up with: gsm setup-admin --subject <super admin email> --key-file <service account JSON> [--profile readonly|readwrite|full]');
+  out.log('Set it up with: node gsm.mjs setup-admin --subject <super admin email> --key-file <service account JSON> [--profile readonly|readwrite|full]');
   out.log('That stores the subject and the scope list the server uses. The key file stays where it is.');
-  out.log('Or set these environment variables for the gws-admin server (used when setup-admin has not run):');
+  out.log('Or set these environment variables for the gadmin server (used when setup-admin has not run):');
   out.log('  GSM_SERVICE_ACCOUNT_KEY_FILE  path to the service account JSON key');
   out.log('  GSM_ADMIN_SUBJECT             super admin email to impersonate');
   out.log('In the Google Admin console, under API controls > Domain-wide delegation, authorize the service account client ID for:');

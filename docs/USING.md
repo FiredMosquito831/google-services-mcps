@@ -22,7 +22,7 @@ mcp__plugin_gmail_gmail__gmail_users_messages_list
 - `gmail` (second) is the server.
 - `gmail_users_messages_list` is the tool. It is the method `gmail.users.messages.list` with dots turned into underscores.
 
-Tool names are at most 64 characters. `gsm doctor` checks this. Some long names are shortened; the full method is always in `docs/capabilities/<id>.md`.
+Tool names are at most 64 characters. `node gsm.mjs doctor` checks this. Some long names are shortened; the full method is always in `docs/capabilities/<id>.md`.
 
 Products with gateway APIs have the same three gateway tools:
 
@@ -109,7 +109,7 @@ Three rules apply in every mode:
 | Agent | How |
 |---|---|
 | Claude Code | The plugin option **Confirm before changes**. Use `/plugin`, then **Configure options**, or see [INSTALL.md](INSTALL.md#3-set-the-plugin-options). |
-| Codex, OpenCode, Antigravity | `gsm install --confirmation <mode>`. It writes `GSM_CONFIRMATION` into the server's environment. |
+| Codex, OpenCode, Antigravity | `node gsm.mjs install --agent <agent> --plugin <id> --confirmation <mode>`, for example with `codex`. It writes `GSM_CONFIRMATION` into the server's environment. See [TUTORIAL.md](TUTORIAL.md). |
 
 **Which value wins.** The hook reads the plugin option first, from `CLAUDE_PLUGIN_OPTION_CONFIRMATION`. The server reads `GSM_CONFIRMATION`. If one of these is set to a valid mode, it wins over the `confirmation` field in `policy.json`. The plugin option has a default, so Claude Code normally passes a value. In that case the `confirmation` field in `policy.json` has no effect. **UNVERIFIED** for your version. Set the mode in the plugin option, and use the policy file for rules.
 
@@ -140,7 +140,7 @@ The policy file lets you set rules for tool names and method ids.
 - A plain `match` is a glob. `*` matches any run of characters. `?` matches one character. Everything else is literal, and the whole name must match. For example, `mcp__plugin_gmail_gmail__*_delete` matches `mcp__plugin_gmail_gmail__gmail_users_messages_delete`.
 - A `match` that starts with `re:` is a JavaScript regular expression. It is not anchored unless you anchor it with `^` or `$`.
 
-**Method ids.** For a per-method tool, the method id is in `plugins/<id>/tool-map.json`, in the `methodId` field. For a gateway method, use `gsm methods <api> <version> --search <text>`. Method ids look like `gmail.users.messages.delete`.
+**Method ids.** For a per-method tool, the method id is in `plugins/<id>/tool-map.json`, in the `methodId` field. For a gateway method, use `node gsm.mjs methods <api> <version> --search <text>`. Method ids look like `gmail.users.messages.delete`.
 
 **Order.** The checks run in this order:
 
@@ -242,7 +242,7 @@ A **profile** decides which Google scopes the login asks for. The token's scopes
 **To compare profiles** for a group, run this (**checked**):
 
 ```
-node dist/cli/gsm.js scopes workspace-user --servers gmail
+node gsm.mjs scopes workspace-user --servers gmail
 ```
 
 It prints how many tools each profile covers, and the scopes it asks for.
@@ -250,7 +250,7 @@ It prints how many tools each profile covers, and the scopes it asks for.
 **To switch to readwrite** for Gmail, from the repository folder:
 
 ```
-node dist/cli/gsm.js login workspace-user --profile readwrite --servers gmail
+node gsm.mjs login workspace-user --profile readwrite --servers gmail
 ```
 
 A login merges with the scopes already stored for its group, so logging in for one product keeps the others. Use `--replace` to drop the stored scopes and keep only what this login requests. A merge can leave write scopes from an earlier readwrite login in place: when you want a readonly token again, log in with `--replace`. Then restart the server: `/mcp` in Claude Code, or restart the agent.
@@ -289,7 +289,7 @@ This uses the `ganalytics` product. Its gateway API `analyticsadmin` (version `v
 
 This method has no path parameters, so the call needs no more fields. For a method with path values, the call needs `pathParams`. For a list method with optional query values, the call can add `query`, such as `{"pageSize": 10}`, if `api_describe` lists it as a parameter.
 
-**Checked:** the method id, its verb (`GET`), its path (`v1alpha/accountSummaries`), its kind (read) and its scopes come from `plugins/ganalytics/catalog.json` and `gsm methods`. The three tool calls were not run inside Claude Code.
+**Checked:** the method id, its verb (`GET`), its path (`v1alpha/accountSummaries`), its kind (read) and its scopes come from `plugins/ganalytics/catalog.json` and `node gsm.mjs methods`. The three tool calls were not run inside Claude Code.
 
 **Errors from the gateway** (from `src/core/gateway.ts`):
 
@@ -355,12 +355,12 @@ The messages below are the exact text from the code. The fix is what to do next.
 | `You declined this action. Nothing was changed.` | You declined the second approval. | Nothing to fix. Run the action again if you want it. |
 | `This client cannot ask for confirmation, so the action was not run. ...` | The client has no approval step. | Use Claude Code for changes. Turning confirmation off to get past this is not recommended. See [SECURITY.md](SECURITY.md). |
 | `Not logged in for "<group>". Run: node <plugin>/bin/gsm.mjs login <group> ...` | No token for the group. | Set up the client, then log in. See [SETUP.md](SETUP.md). |
-| `HTTP 403 \| reason=insufficientPermissions \| ... \| The token lacks a scope for this tool. Log in again with a broader profile: ...` | The token does not have the scope for this tool. | Log in again with `--profile readwrite`, and restart the server. For `workspace-admin`, use `gsm setup-admin --profile readwrite`. |
+| `HTTP 403 \| reason=insufficientPermissions \| ... \| The token lacks a scope for this tool. Log in again with a broader profile: ...` | The token does not have the scope for this tool. | Log in again with `--profile readwrite`, and restart the server. For `workspace-admin`, use `node gsm.mjs setup-admin --profile readwrite`. |
 | `HTTP 429 \| ...` or `HTTP 503 \| ...` | Google is throttling the call. The suite retried it, and it still failed. | Wait, then try again. Check the quota in the Cloud console. See [LIMITS-AND-COSTS.md](LIMITS-AND-COSTS.md). |
 | `[truncated: <n> more characters. Narrow the query or raise GSM_MAX_RESULT_CHARS.]` | The result was more than 50,000 characters. | Narrow the query: fewer fields, a smaller page size or a filter. The plugin does not set `GSM_MAX_RESULT_CHARS`. |
 | `"<name>" is not a query parameter of this method. Allowed: ...` | `api_call` was given a query name the method does not declare. | Use one of the allowed names from `api_describe`. |
-| `This plugin could not be identified (no readable plugin.json and no tool map), so asking to be safe.` | The hook cannot find its plugin files. | Reinstall the plugin. Run `gsm doctor --plugin <id>`. |
-| `Unknown tool, asking to be safe.` | The tool is not in this plugin's tool map. | Reinstall or update the plugin. Run `gsm doctor --plugin <id>`. |
+| `This plugin could not be identified (no readable plugin.json and no tool map), so asking to be safe.` | The hook cannot find its plugin files. | Reinstall the plugin. Run `node gsm.mjs doctor --plugin <id>`. |
+| `Unknown tool, asking to be safe.` | The tool is not in this plugin's tool map. | Reinstall or update the plugin. Run `node gsm.mjs doctor --plugin <id>`. |
 | `Could not check this action, so asking to be safe. ...` | The hook could not read its tool map or policy. | Read the error after the message. Fix the file it names. |
 | `The method of this call is missing, is not known to this plugin, or has no dynamic rule, so asking to be safe.` | `api_call` named a method this plugin does not know. | Search for the method with `api_search`. Use only methods listed for this product. |
 

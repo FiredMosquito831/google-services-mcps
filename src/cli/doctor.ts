@@ -240,7 +240,7 @@ export function runDoctor(req: DoctorRequest, out: Output): number {
     const exists = existsSync(file);
     tally.check(exists, exists
       ? `OAuth client file exists: ${file} (needed by ${list(oauthIds)})`
-      : `OAuth client file missing: ${file} (needed by ${list(oauthIds)}). Run: gsm setup-client <client_secret.json>`);
+      : `OAuth client file missing: ${file} (needed by ${list(oauthIds)}). Run: node gsm.mjs setup-client <client_secret.json>`);
   }
 
   const keyIds = active.filter((id) => groupOf(id) === 'apikey');
@@ -249,8 +249,8 @@ export function runDoctor(req: DoctorRequest, out: Output): number {
     const state = apiKeyState(file);
     // The key itself is never read into a message: only its state is reported.
     if (state === 'saved') tally.check(true, `API key file holds a key: ${file} (needed by ${list(keyIds)})`);
-    else if (state === 'missing') tally.check(false, `API key file missing: ${file} (needed by ${list(keyIds)}). Run: gsm setup-apikey`);
-    else tally.check(false, `API key file is unreadable or holds no key: ${file}. Run: gsm setup-apikey --force`);
+    else if (state === 'missing') tally.check(false, `API key file missing: ${file} (needed by ${list(keyIds)}). Run: node gsm.mjs setup-apikey`);
+    else tally.check(false, `API key file is unreadable or holds no key: ${file}. Run: node gsm.mjs setup-apikey --force`);
   }
 
   // Google Ads no longer needs a developer token: access belongs to the Cloud project of the OAuth client, and the
@@ -268,7 +268,7 @@ export function runDoctor(req: DoctorRequest, out: Output): number {
     const stored = existsSync(file);
     tally.check(stored || fromEnv, stored || fromEnv
       ? `workspace-admin is set up (needed by ${list(adminIds)}): ${stored ? file : 'GSM_ADMIN_SUBJECT and GSM_SERVICE_ACCOUNT_KEY_FILE are set'}`
-      : `workspace-admin is not set up (needed by ${list(adminIds)}): no ${file}, and GSM_ADMIN_SUBJECT and GSM_SERVICE_ACCOUNT_KEY_FILE are not both set. Run: gsm setup-admin --subject <email> --key-file <file>`);
+      : `workspace-admin is not set up (needed by ${list(adminIds)}): no ${file}, and GSM_ADMIN_SUBJECT and GSM_SERVICE_ACCOUNT_KEY_FILE are not both set. Run: node gsm.mjs setup-admin --subject <email> --key-file <file>`);
   }
 
   out.log(`doctor: ${tally.passed} passed, ${tally.failed} failed`);

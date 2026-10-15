@@ -101,7 +101,7 @@ function buildBlock() {
     totalTools += tools.count;
     totalGateway += gateway;
     rows.push(
-      `| [\`${id}\`](${docPath}) | ${cell(summary(p.description))} | \`${p.group}\` | ${tools.count} | ${gateway} | \`claude plugin install ${id}@google-services-mcps\` |`,
+      `| [\`${id}\`](${docPath}) | ${cell(summary(p.description))} | \`${p.group}\` | ${tools.count} | ${gateway} | \`node gsm.mjs install --agent claude --plugin ${id}\` |`,
     );
   }
   const lines = [

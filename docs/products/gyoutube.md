@@ -1,5 +1,7 @@
 # YouTube and Blogger (`gyoutube`)
 
+Install with the simplest command: `node gsm.mjs install --agent claude --plugin <id>` (see docs/TUTORIAL.md).
+
 YouTube Data API, YouTube Analytics API, YouTube Reporting API and Blogger. It searches and reads videos, channels, playlists and comments, manages captions and playlists, handles live chat moderation, and reads or publishes blog posts. It has 125 tools and no gateway.
 
 ## When to install it

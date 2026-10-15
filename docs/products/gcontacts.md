@@ -1,5 +1,7 @@
 # Contacts and Profile (`gcontacts`)
 
+Install with the simplest command: `node gsm.mjs install --agent claude --plugin <id>` (see docs/TUTORIAL.md).
+
 Google Contacts and People, the Google Health API (personal health metrics), Data Portability, and the OAuth2 userinfo endpoints. It searches, reads, creates and updates contacts and groups, reads your profile, and reads or writes health data points. It also starts Data Portability export jobs.
 
 ## When to install it

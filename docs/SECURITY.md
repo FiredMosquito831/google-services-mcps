@@ -82,7 +82,7 @@ The read rule for `POST` is a name prefix. It is not a check of what the method 
 
 - **Other clients.** A client with neither hooks nor elicitation cannot run modifying or destructive tools. That is the intended fail-closed behaviour. Codex, OpenCode and Antigravity have no hook in this suite. Their approval behaviour is **UNVERIFIED** in a live session.
 
-- **Install flag for Claude Code.** `gsm install --agent claude --allow-writes` does not set the plugin's write option, although its summary line says `writes: enabled`. Set **Allow write tools** in the plugin options instead.
+- **Install flag for Claude Code.** `node gsm.mjs install --agent claude --allow-writes` does not set the plugin's write option, although its summary line says `writes: enabled`. Set **Allow write tools** in the plugin options instead.
 
 - **One login per group.** A login merges with the scopes already stored for its group, so a login from one product's folder keeps the scopes of the other products. Use `--replace` to drop the stored scopes and keep only what this login requests. A merge can leave write scopes from an earlier readwrite login in place: when you want a readonly token again, log in with `--replace`. See [INSTALL.md](INSTALL.md#two-command-lines).
 

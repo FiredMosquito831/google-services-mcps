@@ -97,17 +97,17 @@ export function loginSteps(servers: readonly ServerSpec[]): string[] {
   const pending = groups.filter((g) => (OAUTH_GROUPS as readonly string[]).includes(g) && !existsSync(tokenFileFor(g, cfg)));
   const steps: string[] = [];
   if (pending.length > 0 && !existsSync(cfg.clientSecretFile)) {
-    steps.push('gsm setup-client <client_secret.json>   (once: the OAuth desktop client)');
+    steps.push('node gsm.mjs setup-client <client_secret.json>   (once: the OAuth desktop client)');
   }
   for (const group of pending) {
     const names = servers.filter((s) => s.group === group).map((s) => s.name);
-    steps.push(`gsm login ${group} --profile readonly --servers ${names.join(',')}`);
+    steps.push(`node gsm.mjs login ${group} --profile readonly --servers ${names.join(',')}`);
   }
   if (groups.includes('apikey') && apiKeyState(apiKeyFileFor(cfg)) !== 'saved') {
-    steps.push('gsm setup-apikey   (reads GSM_API_KEY_INPUT or stdin)');
+    steps.push('node gsm.mjs setup-apikey   (reads GSM_API_KEY_INPUT or stdin)');
   }
   if (groups.includes('workspace-admin')) {
-    steps.push('gsm setup-admin --subject <super admin email> --key-file <service account JSON>');
+    steps.push('node gsm.mjs setup-admin --subject <super admin email> --key-file <service account JSON>');
   }
   return steps;
 }

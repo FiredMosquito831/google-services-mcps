@@ -71,7 +71,7 @@ export function runStatus(out: Output, env: NodeJS.ProcessEnv = process.env): nu
   const cfg = loadConfig(env);
   out.log(`token directory: ${cfg.tokenDir}`);
   out.log(
-    `OAuth client file: ${existsSync(cfg.clientSecretFile) ? cfg.clientSecretFile : 'missing (run: gsm setup-client <client_secret.json>)'}`,
+    `OAuth client file: ${existsSync(cfg.clientSecretFile) ? cfg.clientSecretFile : 'missing (run: node gsm.mjs setup-client <client_secret.json>)'}`,
   );
 
   for (const group of ALL_GROUPS) {
@@ -79,8 +79,8 @@ export function runStatus(out: Output, env: NodeJS.ProcessEnv = process.env): nu
       const file = apiKeyFileFor(cfg);
       const state = apiKeyState(file);
       if (state === 'saved') out.log(`apikey: API key saved in ${file} (the value is not shown)`);
-      else if (state === 'missing') out.log('apikey: not set (run: gsm setup-apikey)');
-      else out.log(`apikey: ${file} is unreadable or holds no key (run: gsm setup-apikey --force)`);
+      else if (state === 'missing') out.log('apikey: not set (run: node gsm.mjs setup-apikey)');
+      else out.log(`apikey: ${file} is unreadable or holds no key (run: node gsm.mjs setup-apikey --force)`);
       continue;
     }
 
@@ -88,7 +88,7 @@ export function runStatus(out: Output, env: NodeJS.ProcessEnv = process.env): nu
       const stored = readAdminScopeFile(cfg);
       if (stored) {
         const keyFound = existsSync(stored.keyFile);
-        out.log(`${group}: set up with gsm setup-admin (service account, domain-wide delegation)`);
+        out.log(`${group}: set up with node gsm.mjs setup-admin (service account, domain-wide delegation)`);
         out.log(`  setup file: ${adminScopeFileFor(cfg)}`);
         out.log(`  subject: ${stored.subject}`);
         out.log(`  key file: ${stored.keyFile}${keyFound ? '' : ' (NOT found)'}`);
@@ -99,21 +99,21 @@ export function runStatus(out: Output, env: NodeJS.ProcessEnv = process.env): nu
       }
       const keyFound = cfg.serviceAccountKeyFile !== undefined && existsSync(cfg.serviceAccountKeyFile);
       const configured = keyFound && cfg.adminSubject !== undefined;
-      out.log(`${group}: ${configured ? 'configured by environment variables (service account, domain-wide delegation)' : 'not configured (run: gsm setup-admin)'}`);
+      out.log(`${group}: ${configured ? 'configured by environment variables (service account, domain-wide delegation)' : 'not configured (run: node gsm.mjs setup-admin)'}`);
       out.log(`  GSM_SERVICE_ACCOUNT_KEY_FILE: ${cfg.serviceAccountKeyFile ? (keyFound ? 'set, file found' : 'set, file NOT found') : 'not set'}`);
       out.log(`  GSM_ADMIN_SUBJECT: ${cfg.adminSubject ? 'set' : 'not set'}`);
-      out.log(`  scopes: ${ADMIN_SCOPES.length} default (gsm setup-admin stores a longer list)`);
+      out.log(`  scopes: ${ADMIN_SCOPES.length} default (node gsm.mjs setup-admin stores a longer list)`);
       continue;
     }
 
     const file = tokenFileFor(group, cfg);
     const { token, error } = readStoredToken(file);
     if (error) {
-      out.log(`${group}: token file unreadable (${error}). Run: gsm logout ${group}, then gsm login ${group}`);
+      out.log(`${group}: token file unreadable (${error}). Run: node gsm.mjs logout ${group}, then node gsm.mjs login ${group}`);
       continue;
     }
     if (!token || !(token.refresh_token || token.access_token)) {
-      out.log(`${group}: not logged in (run: gsm login ${group})`);
+      out.log(`${group}: not logged in (run: node gsm.mjs login ${group})`);
       continue;
     }
     const scopes = (token.scope ?? '').split(' ').filter(Boolean);
@@ -186,6 +186,6 @@ export function runSetupClient(sourceArg: string, force: boolean, out: Output): 
   writeAtomic(dest, text, 0o600);
   out.log(`OAuth client saved: ${dest} (mode 0600). The client secret was not printed.`);
   if (backup) out.log(`backup: ${backup}`);
-  out.log(`Next: gsm login ${OAUTH_GROUPS.join(' | ')}`);
+  out.log(`Next: node gsm.mjs login ${OAUTH_GROUPS.join(' | ')}`);
   return 0;
 }

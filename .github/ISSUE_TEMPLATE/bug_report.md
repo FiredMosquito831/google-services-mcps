@@ -10,7 +10,7 @@ labels: bug
 - Product id (for example `gmail`):
 - Agent and version (Claude Code, Codex, OpenCode or Antigravity):
 - Operating system and Node version (`node --version`):
-- Suite version (`node dist/cli/gsm.js version`):
+- Suite version (`node node gsm.mjs version`):
 
 **What happened**
 
@@ -26,5 +26,5 @@ Remove tokens, client secrets, API keys, account data, and mail or file content 
 
 **Checks**
 
-- [ ] `node dist/cli/gsm.js doctor --plugin <id>` output (Claude Code: `/mcp` status too)
+- [ ] `node node gsm.mjs doctor --plugin <id>` output (Claude Code: `/mcp` status too)
 - [ ] I looked at the matching page in `docs/` (for example `docs/USING.md` or `docs/SETUP.md`)

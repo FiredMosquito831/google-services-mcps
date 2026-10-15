@@ -21,7 +21,7 @@ export const GROUP_TEXT: Record<string, string> = {
   searchconsole: 'OAuth user token with webmasters scope',
   business: 'OAuth user token with the scopes of the business APIs',
   developer: 'OAuth user token with the scopes of the developer APIs',
-  apikey: 'API key saved with gsm setup-apikey (no OAuth login)',
+  apikey: 'API key saved with node gsm.mjs setup-apikey (no OAuth login)',
 };
 
 /** One API of a product: the Discovery name and version, for example monitoring v3. */

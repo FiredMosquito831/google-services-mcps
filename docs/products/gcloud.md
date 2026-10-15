@@ -1,5 +1,7 @@
 # Google Cloud (`gcloud`)
 
+Install with the simplest command: `node gsm.mjs install --agent claude --plugin <id>` (see docs/TUTORIAL.md).
+
 Google Cloud console APIs for projects, service enablement, API keys, billing, monitoring, storage, BigQuery and IAM. Through the gateway it also reaches Compute Engine, Cloud Logging, Cloud Run, Kubernetes Engine, Pub/Sub, Spanner, Cloud SQL, Secret Manager and about 277 other Google Cloud APIs.
 
 ## When to install it

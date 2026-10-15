@@ -1,39 +1,40 @@
 # Install, update, check and remove
 
-This guide gives the exact steps for each agent and scope. Read [GUIDE.md](GUIDE.md) first for the big picture.
+This guide gives the exact steps for each agent and scope. For the full walkthrough, with the reasons for each step, see [TUTORIAL.md](TUTORIAL.md). Read [GUIDE.md](GUIDE.md) first for the big picture.
 
 Each command in this guide is marked with how it was checked:
 
-- **Checked** means the command was run, or run in `--dry-run` mode, and the output matched.
+- **Checked** means the command was run, or run in `--dry-run` mode, and the output matched. Runs used temporary folders and temporary homes, and no real account.
 - **Help only** means the flag or command is in the CLI's own `--help` text, but was not run here.
 - **UNVERIFIED** means it could not be checked here. The reason is given.
 
 ## Before you start
 
-- **Node.js 20 or newer.** `package.json` requires `>=20`. This machine runs Node v24.6.0.
-- **Claude Code** on your PATH. The `claude plugin` commands in this guide were checked against Claude Code 2.1.300.
-- **A copy of this repository.** The marketplace is the repository. You can also use its GitHub address (`<owner>/<repo>`).
-- **A build, for the full CLI.** Run these from the repository folder:
+- **Node.js 20 or newer.** `package.json` requires `>=20`. The checks ran on Node v24.6.0.
+- **Claude Code** on your PATH, if you use it. The `claude plugin` commands in this guide were checked against Claude Code 2.1.300.
+- **A copy of this repository.** The installer and the marketplace are both in it.
+- **No build step.** `gsm.mjs` in the repository root is the installer, and it runs without `npm install` or `npm run build`. **Checked.**
 
-  ```
-  npm install
-  npm run build
-  ```
+### One command for every agent
 
-  `npm run build` compiles the source into `dist/` and bundles the 23 plugins into `plugins/<id>/`. `dist/` is not in git, so a fresh clone needs this step. (`npm run build` is checked from `package.json` and `scripts/bundle.mjs`. Running it was not part of this check.)
+Run this from the repository folder:
 
-### Two command lines
+```
+node gsm.mjs install --agent <agent> --plugin <product>
+```
 
-The suite has one installer, `gsm`. It comes in two forms:
+In the rest of this guide, `node gsm.mjs` means `node gsm.mjs`, run from the repository folder. `<agent>` is `claude`, `codex`, `opencode` or `agy`. `<product>` is a product id such as `gmail`, a comma list such as `gmail,gcalendar`, or `all`. Only the agent name changes between agents. The same file works from any folder when you give its full path, for example `node D:\Projects2\Google-services-mcps\gsm.mjs ...`. **Checked.**
 
-| Form | Run from | Knows | Use it for |
+Scopes:
+
+| Agent | `global` (default) | `project` | `local` |
 |---|---|---|---|
-| `node dist/cli/gsm.js <command>` | The repository folder, after the build | All 23 products | Installing several products. Logging in a whole group. |
-| `node plugins/<id>/bin/gsm.mjs <command>` | The repository folder, no build needed | Only the product `<id>` | Working with one product when you have not built. |
+| `claude` | `--scope user` | `.claude/settings.json` in `--path` | `.claude/settings.local.json` in `--path` |
+| `codex` | `~/.codex/config.toml` | `.codex/config.toml` in `--path` | same file as `project` |
+| `opencode` | `~/.config/opencode/opencode.json` | `opencode.json` in `--path` | same file as `project` |
+| `agy` | `~/.gemini/config/mcp_config.json` | refused, exit code 2 | refused, exit code 2 |
 
-**Warning.** A login from a plugin folder requests only that product's scopes. A login merges with the scopes already stored for its group, so logging in for one product keeps the others. Use `--replace` to drop the stored scopes and keep only what this login requests. A merge can leave write scopes from an earlier readwrite login in place: when you want a readonly token again, log in with `--replace`. Use `dist/cli/gsm.js` for logins.
-
-In the rest of this guide, `gsm` means `node dist/cli/gsm.js`, run from the repository folder.
+`--path` is the folder for `project` and `local`. It defaults to the folder you run the command in. `folder` is an alias of `local`. **Checked.**
 
 ---
 
@@ -41,47 +42,53 @@ In the rest of this guide, `gsm` means `node dist/cli/gsm.js`, run from the repo
 
 ### 1. Add the marketplace (once)
 
+The first `node gsm.mjs install --agent claude` adds the marketplace for you, if `google-services-mcps` is not registered yet. **Checked** (the dry run prints `marketplace add runs only if google-services-mcps is not registered yet`, and a real run printed `ran: claude plugin marketplace add`).
+
+To do it yourself:
+
 ```
 claude plugin marketplace add D:\Projects2\Google-services-mcps
 claude plugin marketplace list
 ```
 
-For a GitHub copy, use `claude plugin marketplace add <owner>/<repo>` instead. **Checked:** `add` accepts a local path or a GitHub owner and repo (from `claude plugin marketplace add --help`). **Checked:** `list` runs and shows configured marketplaces. The marketplace name is `google-services-mcps`.
-
-`--scope` decides where the marketplace is declared: `user` (the default), `project` or `local` (**help only**).
-
-The `gsm install --agent claude` command adds the marketplace for you, but only if `google-services-mcps` is not registered yet. You can use either route.
+A GitHub copy works too: `claude plugin marketplace add FiredMosquito831/google-services-mcps`. **UNVERIFIED:** the GitHub form was not run, because the repository was not cloned for this check. The `add` and `list` commands with a folder path **checked**.
 
 ### 2. Install a product
+
+```
+node gsm.mjs install --agent claude --plugin gmail
+```
+
+This runs `claude plugin install gmail@google-services-mcps --scope user`. **Checked.** For a project or a folder:
+
+```
+node gsm.mjs install --agent claude --plugin gmail --scope project --path "C:\work\my-project"
+node gsm.mjs install --agent claude --plugin gmail --scope local --path "C:\work\my-project"
+```
+
+| Scope | Records the install in | Shared with others? |
+|---|---|---|
+| `global` (`--scope user`) | Claude Code's user settings. The default. | No |
+| `project` | `.claude/settings.json` in the `--path` folder. **Checked.** | Only if you commit that file |
+| `local` | `.claude/settings.local.json` in the `--path` folder. **Checked.** | No |
+
+Run `claude plugin list` from inside the project folder to see a project or local install. From another folder, it shows as disabled. **Checked.**
+
+Install other products the same way, one at a time or as a comma list:
+
+```
+node gsm.mjs install --agent claude --plugin gcalendar,gchat
+```
+
+The product ids are in [SURFACES.md](SURFACES.md).
+
+The manual route, with the `claude` command only:
 
 ```
 claude plugin install gmail@google-services-mcps --scope user
 ```
 
-Scope choices:
-
-| `--scope` | Applies to | Shared with others? |
-|---|---|---|
-| `user` | All your projects. This is the default. | No |
-| `project` | The project. It is written to the project's `.claude/settings.json`. | Yes, through the project's settings file |
-| `local` | This folder only. | No |
-
-Install other products the same way, one at a time:
-
-```
-claude plugin install gcalendar@google-services-mcps --scope user
-claude plugin install gchat@google-services-mcps --scope user
-```
-
-The product ids are listed in [SURFACES.md](SURFACES.md).
-
-**Help only:** you can set options during install with `--config`:
-
-```
-claude plugin install gmail@google-services-mcps --scope user --config confirmation=destructive-only
-```
-
-`--config` takes `key=value` for any option the plugin declares. Values are checked against the plugin's schema. This form was not run here.
+**Checked** (with `--scope user`). Add `--config KEY=VALUE` to set an option at install time, for example `--config confirmation=destructive-only`. **Checked.**
 
 ### 3. Set the plugin options
 
@@ -90,56 +97,53 @@ Every plugin has these options:
 | Option | Default | What it does |
 |---|---|---|
 | **Allow write tools** (`allow_writes`) | Off | Lists the tools that change or delete data. Off means only reads are listed. |
-| **Confirm before changes** (`confirmation`) | `every-change` | When to ask. Values: `every-change`, `destructive-only`, `off`. See [USING.md](USING.md). |
+| **Confirm before changes** (`confirmation`) | `every-change` | When to ask: `every-change`, `destructive-only` or `off`. See [USING.md](USING.md). |
 | **Token directory** (`token_dir`) | Empty | Where logins are kept. Empty means `~/.google-services-mcps`. |
 
-Two products have more options:
+`gadmin` also has **Workspace super admin email** (`admin_subject`) and **Service account key file** (`service_account_key_file`). `gads` has **Google Ads developer token** (`ads_developer_token`, optional) and **Manager (login) customer ID** (`ads_login_customer_id`, optional). See [SETUP.md](SETUP.md).
 
-- `gadmin`: **Workspace super admin email** (`admin_subject`) and **Service account key file** (`service_account_key_file`).
-- `gads`: **Google Ads developer token** (`ads_developer_token`, optional, sensitive) and **Manager (login) customer ID** (`ads_login_customer_id`, optional). See [SETUP.md](SETUP.md).
+Change them in either of these ways:
 
-You can change options in either of these ways:
-
-1. **In Claude Code.** Run `/plugin`, open the **Installed** tab, select the plugin and choose **Configure options**. The `/config` panel also lists each option. (**Checked against the Claude Code docs, not run here.**)
-2. **From the shell.** Show the options and which are unset:
+1. **In Claude Code.** Run `/plugin`, open **Installed**, select the plugin and choose **Configure options**. **UNVERIFIED** in a live session.
+2. **From a terminal.** Show the options and which are set:
 
    ```
    claude plugin configure gmail@google-services-mcps
    ```
 
-   Save values from stdin. Pass a JSON object of single-line strings. Options you leave out keep their values:
+   Save values from standard input. The input is a JSON object whose values are strings. Options you leave out keep their values. **Checked.**
 
    ```
    printf '%s' '{"confirmation":"destructive-only"}' | claude plugin configure gmail@google-services-mcps --values-stdin
    ```
 
-   In PowerShell, pipe the same text directly: `'{"confirmation":"destructive-only"}' | claude plugin configure gmail@google-services-mcps --values-stdin`.
+   PowerShell: `'{"confirmation":"destructive-only"}' | claude plugin configure gmail@google-services-mcps --values-stdin`. **Checked.**
 
-   **Help only** for `configure` and `--values-stdin`. `configure` only works once the plugin is installed. Writing a true or false value this way is **UNVERIFIED**. Use the `/plugin` dialog for **Allow write tools**.
+   Turn writes on with the string `"true"`: `{"allow_writes":"true"}`. A JSON boolean such as `true` is refused. **Checked.**
 
-After you change an option, apply it with `/reload-plugins`, or restart Claude Code. The dialog says which one applies.
+After a change, the CLI says to restart Claude Code to apply it. **Checked** (the text is printed). A restart itself is **UNVERIFIED** in a live session.
+
+**Not applied by gsm.** `--allow-writes` and `--confirmation` do not set these options for Claude Code. The install prints the `claude plugin configure` command to run instead, and the summary says `writes: set the plugin option allow_writes with ...`. **Checked.**
 
 ### 4. Check the install
 
 ```
 claude plugin list
-claude plugin list --json
-claude plugin details gmail@google-services-mcps
-claude plugin validate ./plugins/gmail
+node gsm.mjs list
+node gsm.mjs doctor --plugin gmail
 ```
 
-- `list` shows each plugin with its scope and status, such as `Status: enabled` (the output may show a check mark before the word). Look for the id ending in `@google-services-mcps`. **Checked.**
-- `list --json` prints the same data as JSON. **Help only.**
-- `details` shows the plugin's components and its projected token cost. **Help only.**
-- `validate` checks a manifest. Run it from the repository folder. **Checked:** `./plugins/gmail` passes, and the marketplace manifest at `.` passes.
+- `claude plugin list` shows each plugin with its scope and status, such as `Status: ✔ enabled`. Look for the id ending in `@google-services-mcps`. **Checked.**
+- `claude plugin details gmail@google-services-mcps` shows the plugin's parts and its token cost. **Checked.**
+- `claude plugin validate` checks a manifest. Run `claude plugin validate D:\Projects2\Google-services-mcps\plugins\gmail` for the plugin, or give the repository folder for the marketplace. **Checked:** both print `Validation passed`.
+- `node gsm.mjs list` shows the install and where it is. **Checked.**
+- `node gsm.mjs doctor --plugin gmail` checks the plugin folder and the credentials. **Checked** (sample below).
 
-After an install, `gsm install` also prints the login steps that are still missing. It only reads the token directory to check this. It does not change it.
-
-Then, inside Claude Code, run `/mcp`. The `gmail` server should show as connected. (`/mcp` lists the servers and lets you reconnect or turn one off for the session. **Checked against the Claude Code docs.**)
+Then, inside Claude Code, run `/mcp`. The `gmail` server should show as connected. **UNVERIFIED** in a live session.
 
 ### 5. Update
 
-1. Pull the new code, or rebuild with `npm run build`.
+1. Pull the new code. There is nothing to build.
 2. Refresh the marketplace and update the plugin:
 
    ```
@@ -147,11 +151,9 @@ Then, inside Claude Code, run `/mcp`. The `gmail` server should show as connecte
    claude plugin update gmail@google-services-mcps --scope user
    ```
 
-   **Help only.** `update` says that a restart is needed to apply the change.
+   **Checked.** The plugin is read from its folder in the repository, so an update picks up edits there. `update` reports `nothing to update` when the version is unchanged.
 
-3. If the plugin still shows the old version, uninstall it and install it again. Logins are kept, because uninstall does not touch the token directory (see [Remove everything](#remove-everything)).
-
-**UNVERIFIED:** whether `update` picks up a change when the version number stays the same. All plugins in this repository are at version `0.1.0`.
+3. If the plugin still shows an old state, uninstall it and install it again. Logins are kept, because uninstall does not touch the token directory (see [Remove everything](#remove-everything)).
 
 ### 6. Turn a plugin off without removing it
 
@@ -160,111 +162,115 @@ claude plugin disable gmail@google-services-mcps --scope user
 claude plugin enable gmail@google-services-mcps --scope user
 ```
 
-**Help only.** For one session only, use `/mcp` instead. It does not change the install.
+**Checked.** For one session only, use `/mcp` instead. It does not change the install.
 
 ---
 
 ## Other agents: Codex, OpenCode, Antigravity
 
-Use the `gsm install` command. It writes the server entries into the agent's own config file. It does not change the plugins.
+`node gsm.mjs install` writes the server entries into the agent's own config file. It changes nothing else.
 
 ### Install
 
 Always run a dry run first. It prints every change and writes nothing.
 
 ```
-node dist/cli/gsm.js install --agent codex --plugin gmail --scope global --dry-run
-node dist/cli/gsm.js install --agent codex --plugin gmail --scope global
+node gsm.mjs install --agent codex --plugin gmail --dry-run
+node gsm.mjs install --agent codex --plugin gmail
 ```
 
-**Checked (dry-run).** The dry run for `codex` printed:
+**Checked.** The dry run printed:
 
 ```
+dry-run: nothing will be written or run.
+would copy runtime: D:\Projects2\Google-services-mcps\plugins\gmail -> ...\.google-services-mcps\runtime\gmail
 [codex] install (dry-run)
-  file: <home>\.codex\config.toml (create)
+  file: ...\.codex\config.toml (create)
     added keys: gsm-gmail
-  note: Restart Codex to load the servers.
 summary: would install 1 products, 1 servers, 97 tools; confirmation: not set (plugin default every-change); writes: not set (write tools stay off)
 ```
 
-For several products, list them with commas:
+For a project or a folder, add the scope and the folder:
 
 ```
-node dist/cli/gsm.js install --agent opencode --plugin gmail,gcalendar,gcontacts --scope global --dry-run
+node gsm.mjs install --agent opencode --plugin gmail,gcalendar,gcontacts --scope project --path "C:\work\my-project"
 ```
 
-`--plugin all` installs all 23 products. Use it only if you need them all.
+`--plugin all` installs all 23 products. Use it only if you need them all. **Checked:** 23 products, 3,334 tools.
 
 ### Where each agent reads its config
 
-| Agent | `--scope global` | `--scope project` | `--scope folder --path <dir>` | Restart |
-|---|---|---|---|---|
-| Codex | `~/.codex/config.toml` | `./.codex/config.toml` in the current folder | `<dir>/.codex/config.toml` | Restart Codex |
-| OpenCode | `~/.config/opencode/opencode.json` | `./opencode.json` | `<dir>/opencode.json` | Restart OpenCode |
-| Antigravity (`agy`) | `~/.gemini/config/mcp_config.json` | Not supported | Not supported | Restart `agy` |
+| Agent | `--scope global` | `--scope project` or `local` | Restart |
+|---|---|---|---|
+| Codex | `~/.codex/config.toml` | `.codex/config.toml` in `--path` (same file for both) | Restart Codex |
+| OpenCode | `~/.config/opencode/opencode.json` | `opencode.json` in `--path` (same file for both) | Restart OpenCode |
+| Antigravity (`agy`) | `~/.gemini/config/mcp_config.json` | **Refused**, exit code 2 | Restart `agy` |
 
-On Windows, `~` is `C:\Users\<you>`. **Checked (dry runs):** all three paths. `agy` only accepts `--scope global`, and `--scope project` returns `agy supports only global scope in this build`.
+On Windows, `~` is `C:\Users\<you>`. **Checked** (dry runs and real runs in temporary homes), for all three paths, and for the refusal:
+
+```
+gsm: agy supports only --scope global: no project or local MCP config file is verified for agy. Use --scope global.
+```
 
 Notes for each agent:
 
-- **Codex.** All gsm entries live in one managed block, between `# >>> google-services-mcps (managed by gsm) >>>` and `# <<< ... <<<`. Text outside the block is not touched. Codex reads a project `.codex/config.toml` only in trusted projects. Trust the folder in Codex, or the servers stay off.
-- **OpenCode.** Each entry is under `mcp` with the key `gsm-<name>`. The file must be plain JSON. A file with comments or trailing commas is refused.
-- **Antigravity (`agy`).** The config folder `~/.gemini/config` must already exist. Run `agy` once so that it creates the folder. Then check with `agy mcp list`. The `agy` adapter notes that the file it writes was **not** verified end to end. Confirm with `agy mcp list` after you install.
-
-### Known gap: `--allow-writes` and Claude Code
-
-**Found while writing this guide.** With `--agent claude`, `--allow-writes` is not applied. The install writes no option. The install summary still says `writes: enabled`. For Claude Code, set **Allow write tools** in the plugin options instead (see [Set the plugin options](#3-set-the-plugin-options)). `--confirmation` is also not written for Claude. The install prints a note that tells you to use `claude plugin configure`.
-
-For Codex, OpenCode and Antigravity, both flags work. They write `GSM_ALLOW_WRITES` and `GSM_CONFIRMATION` into each server's environment.
+- **Codex.** All gsm entries live in one managed block, between `# >>> google-services-mcps (managed by gsm) >>>` and `# <<< google-services-mcps (managed by gsm) <<<`. Text outside the block is not touched. Codex reads a project `.codex/config.toml` only in trusted projects. Trust the folder in Codex, or its servers stay off. **Checked** (the installer prints this note).
+- **OpenCode.** Each entry is under `mcp` with the key `gsm-<name>`. The file must be plain JSON. A file with comments or trailing commas is refused and not changed. **Checked.**
+- **Antigravity (`agy`).** The folder `~/.gemini/config` must already exist. Without it the install stops with `agy config folder not found ... Run agy once so it creates its folder, then retry.` **Checked.** Run `agy` once to create it. **UNVERIFIED:** how `agy` creates the folder, because `agy` was not run. Then check with `agy mcp list` (**UNVERIFIED:** not run here).
+- **Project and local files hold absolute paths.** The entries point at server files on your machine. Do not commit a project or local config file for a team. **Checked** (the paths appear in the file).
 
 ### Uninstall
 
 ```
-node dist/cli/gsm.js uninstall --agent codex --plugin gmail --scope global --dry-run
-node dist/cli/gsm.js uninstall --agent codex --plugin gmail --scope global
+node gsm.mjs uninstall --agent codex --plugin gmail --scope global --dry-run
+node gsm.mjs uninstall --agent codex --plugin gmail --scope global
 ```
 
-Uninstall removes only the gsm entries. Your other config is kept.
+**Checked.** Uninstall removes only the gsm entries, and the runtime copy when no other install uses it. Your other config is kept. A `*.gsm-backup-<date-time>` copy of the changed file is left behind. **Checked.**
 
 ---
 
-## Flags of `gsm install` and `gsm uninstall`
+## Flags of `node gsm.mjs install` and `node gsm.mjs uninstall`
 
-**Checked:** every flag below appears in `gsm --help`. The behaviour notes come from the same help text and from a dry run.
+**Checked:** every flag below is accepted by the parser. The behaviour notes come from the help text and from runs.
 
 | Flag | Meaning |
 |---|---|
-| `--agent claude\|codex\|opencode\|agy\|all` | The agent to write to. |
-| `--plugin <id[,id...]>\|all` | Product ids. An unknown id is refused, and the error lists the valid ids. |
-| `--scope global\|project\|folder` | `global` is your home config. `project` is the current folder. `folder` needs `--path`. |
-| `--path <dir>` | The folder for `--scope folder`. It must exist. |
-| `--servers <a,b>` | Keep only these servers from the chosen products. Each product has one server, with the same name as the product. |
-| `--allow-writes` | Set `GSM_ALLOW_WRITES=true` for Codex, OpenCode and Antigravity. **Not applied to Claude Code.** See the known gap above. |
-| `--confirmation every-change\|destructive-only\|off` | Set `GSM_CONFIRMATION` for Codex, OpenCode and Antigravity. For Claude Code, it prints how to set the option. |
+| `--agent claude\|codex\|opencode\|agy\|all` | The agent to write to. With `all`, an agent that cannot take the scope is skipped with a note. **Checked.** |
+| `--plugin <id[,id...]>\|all` | Product ids. An unknown id is refused, and the error lists the valid ids. **Checked.** |
+| `--scope global\|project\|local` | `global` (default) is your user-wide config. `project` and `local` act on the folder of `--path`. `folder` is an alias of `local`. |
+| `--path <dir>` | The folder for `project` and `local`. Defaults to the current folder. It must exist. **Checked.** |
+| `--servers <a,b>` | Keep only these servers from the chosen products. Each product has one server, with the same name as the product. **Checked.** |
+| `--allow-writes` | Set `GSM_ALLOW_WRITES=true` for Codex, OpenCode and Antigravity. **Not applied to Claude Code**, which uses the plugin option. **Checked.** |
+| `--confirmation every-change\|destructive-only\|off` | Set `GSM_CONFIRMATION` for Codex, OpenCode and Antigravity. **Not applied to Claude Code.** **Checked.** |
+| `--marketplace <path or owner/repo>` | Claude Code only. Default: this checkout, else `FiredMosquito831/google-services-mcps`. **Checked** (the default was printed from a temporary folder). |
 | `--dry-run` | Print every planned change and command. Write nothing. |
-| `--home <dir>` | Use another home folder for Codex, OpenCode and Antigravity. **Does not apply to Claude Code.** Passing it with `--agent claude` stops with an error. |
-| `--keep-data` | Uninstall only. Keep Claude Code's plugin data folder, `~/.claude/plugins/data/<id>/`. |
+| `--home <dir>` | Use another home folder, for Codex, OpenCode and Antigravity. **Does not apply to Claude Code**: `--home` with `--agent claude` stops with an error. **Checked.** |
+| `--all` | `uninstall` only. Removes every install in the list, after printing it. **Checked** (`--dry-run` and `--yes`). |
+| `--yes` | `uninstall --all` only. Skips the question. |
+| `--keep-data` | `uninstall` with Claude Code only. Keeps the plugin's data folder. **Checked:** accepted. The effect was not seen, because no data folder existed. |
 
-Scope mapping for Claude Code: `global` becomes `--scope user`, `project` becomes `--scope project`, and `folder` becomes `--scope local`. The local scope applies only inside the `--path` folder.
+Scope mapping for Claude Code: `global` becomes `--scope user`, `project` becomes `--scope project`, and `local` (or `folder`) becomes `--scope local`.
 
 Other commands:
 
 | Command | Purpose |
 |---|---|
-| `gsm login <group> [--profile readonly\|readwrite\|full] [--scopes <urls>] [--servers <a,b>] [--client-secret <file>] [--no-browser] [--replace]` | Log in one group. Merges with the scopes already stored, unless `--replace` drops them. Help only. |
-| `gsm scopes <group> [--profile ...] [--servers ...] [--json]` | Show what each profile would enable. Checked. |
-| `gsm setup-client <client_secret.json> [--force]` | Save the OAuth desktop client file. Help only. |
-| `gsm setup-apikey [--force]` | Save the API key. Help only. |
-| `gsm setup-admin --subject <email> --key-file <json> [--profile ...] [--servers ...] [--replace]` | Set up the workspace admin group. Merges with the stored scopes, unless `--replace` drops them. Help only. |
-| `gsm status` | Show logins, the API key and the setup of each group. Checked. |
-| `gsm logout <group>` | Remove one group's token file. Help only. |
-| `gsm products [--json]` | List the products. Checked. |
-| `gsm apis [<product>] [--search <text>] [--json] [--limit <n>]` | List the APIs of a product. Checked. |
-| `gsm methods <api> [<version>] [--search <text>] [--json] [--limit <n>]` | List the methods of one gateway API. Checked. |
-| `gsm doctor [--plugin <id>] [--token-dir <dir>]` | Check the plugin folders, hooks, tool names and credentials. Checked. |
-| `gsm version` | Show the suite version and the Node version. Checked. |
+| `node gsm.mjs list [--json] [--home <dir>]` | Show every install gsm made: agent, scope, folder, products and state. **Checked.** |
+| `node gsm.mjs login <group> [--profile readonly\|readwrite\|full] [--scopes <urls>] [--servers <a,b>] [--client-secret <file>] [--no-browser] [--replace]` | Log in one group. Merges with the scopes already stored, unless `--replace` drops them. **UNVERIFIED:** not run, because it starts Google's sign-in. Help text checked. |
+| `node gsm.mjs scopes <group> [--profile ...] [--servers ...] [--json]` | Show what each profile would enable. **Checked.** |
+| `node gsm.mjs setup-client <client_secret.json> [--force]` | Save the OAuth desktop client file. **Checked** with a test file. |
+| `node gsm.mjs setup-apikey [--force]` | Save the API key. The key comes from `GSM_API_KEY_INPUT` or standard input. **Checked** with a test key. |
+| `node gsm.mjs setup-admin --subject <email> --key-file <json> [--profile ...] [--servers ...] [--replace]` | Set up the workspace-admin group. **Checked** with a test service account file. |
+| `node gsm.mjs status` | Show logins, the API key and the setup of each group. **Checked.** |
+| `node gsm.mjs logout <group>` | Remove one group's token file. **Checked** (no token case). |
+| `node gsm.mjs products [--json]` | List the products. **Checked.** |
+| `node gsm.mjs apis [<product>] [--search <text>] [--json] [--limit <n>]` | List the APIs of a product. **Checked.** |
+| `node gsm.mjs methods <api> [<version>] [--search <text>] [--json] [--limit <n>]` | List the methods of one API. **Checked.** |
+| `node gsm.mjs doctor [--plugin <id>] [--token-dir <dir>]` | Check the plugin folders, hooks, tool names and credentials. **Checked.** |
+| `node gsm.mjs version` | Show the suite version and the Node version. **Checked.** |
 
-`gsm login` and `gsm setup-*` run in a terminal. They open a browser or ask for a key. Read [SETUP.md](SETUP.md) before you run them.
+`node gsm.mjs login` and `node gsm.mjs setup-*` run in a terminal. They open a browser or read a key. Read [SETUP.md](SETUP.md) before you run them.
 
 ---
 
@@ -275,18 +281,24 @@ For Claude Code, see [4. Check the install](#4-check-the-install).
 For the suite itself:
 
 ```
-node dist/cli/gsm.js doctor --plugin gmail
-node dist/cli/gsm.js status
+node gsm.mjs doctor --plugin gmail
+node gsm.mjs status
 ```
 
-`doctor` checks each plugin folder: the required files, the hook, the server files and the tool names. It prints `PASS` or `FAIL` for each check. It exits with code 1 if any check fails. It creates nothing. **Checked output:**
+`doctor` checks each plugin folder: the required files, the hook, the server files and the tool names. It prints `PASS` or `FAIL` for each check. It exits with code 1 if any check fails. It creates nothing. **Checked output**, with a test client file in a temporary token directory:
 
 ```
+doctor: repo checkout D:\Projects2\Google-services-mcps, 1 product(s), token directory ...\.google-services-mcps
+PASS gmail: plugin folder has the 9 required files
 PASS gmail: hooks/hooks.json matches ^mcp__plugin_gmail_ and runs bin/gsm-hook.mjs
+PASS gmail: every server in .mcp.json (gmail) has a file under servers/
 PASS gmail: tool-map.json has 97 tools, all named mcp__plugin_gmail_* and at most 64 characters
-FAIL OAuth client file missing: C:\Users\<you>\.google-services-mcps\client_secret.json (needed by gmail). Run: gsm setup-client <client_secret.json>
-doctor: 5 passed, 1 failed
+PASS token directory exists: ...\.google-services-mcps
+PASS OAuth client file exists: ...\.google-services-mcps\client_secret.json (needed by gmail)
+doctor: 6 passed, 0 failed
 ```
+
+Without a client file, the last check shows `FAIL OAuth client file missing ... Run: gsm setup-client <client_secret.json>`. **Checked** (the wording is from the source; the check is the same one).
 
 `doctor` does not read the agent config files. For Codex, OpenCode or Antigravity, restart the agent and look for the `gsm-` servers in its MCP list. For `agy`, use `agy mcp list`.
 
@@ -296,22 +308,25 @@ doctor: 5 passed, 1 failed
 
 | What | Where | Written by |
 |---|---|---|
-| Claude Code plugin registry and the plugin copy | Managed by Claude Code. The exact folder on your machine is **UNVERIFIED**. | `claude plugin` commands. `gsm` does not edit Claude's settings files. |
-| Claude Code plugin data | `~/.claude/plugins/data/<id>/` (the folder that `--keep-data` keeps) | Claude Code |
-| Codex config | `~/.codex/config.toml` (global) | `gsm install --agent codex` |
-| OpenCode config | `~/.config/opencode/opencode.json` (global) | `gsm install --agent opencode` |
-| Antigravity config | `~/.gemini/config/mcp_config.json` (global) | `gsm install --agent agy` |
-| Token directory | `~/.google-services-mcps` (Windows: `C:\Users\<you>\.google-services-mcps`) | `setup-client`, `login`, `setup-apikey`, `setup-admin`. Also `audit.log` when the suite runs. |
+| Claude Code plugin registry | Managed by Claude Code. | `claude plugin` commands. `node gsm.mjs` does not edit Claude's settings files. |
+| Claude Code project and local settings | `.claude/settings.json` and `.claude/settings.local.json` in `--path`. | Claude Code, through `node gsm.mjs install --agent claude --scope project` or `local`. **Checked.** |
+| Codex config | `~/.codex/config.toml`, or `.codex/config.toml` in `--path`. | `node gsm.mjs install --agent codex` |
+| OpenCode config | `~/.config/opencode/opencode.json`, or `opencode.json` in `--path`. | `node gsm.mjs install --agent opencode` |
+| Antigravity config | `~/.gemini/config/mcp_config.json` (global only). | `node gsm.mjs install --agent agy` |
+| Runtime copy | `~/.google-services-mcps/runtime/<product>/`. Codex, OpenCode and Antigravity point here. | `node gsm.mjs install` (not for Claude Code, which reads the repository). **Checked.** |
+| Install record | `~/.google-services-mcps/runtime/installs.json`. Read by `node gsm.mjs list`. | `node gsm.mjs install` and `node gsm.mjs uninstall`, also for Claude Code. **Checked.** |
+| Token directory | `~/.google-services-mcps` (Windows: `C:\Users\<you>\.google-services-mcps`). | `setup-client`, `login`, `setup-apikey`, `setup-admin`. Also `audit.log` when the suite runs. |
 
-**Install never writes to the token directory.** Each agent install writes only its own config file. The installer reads the token directory only to print the login steps that are still missing (`src/cli/install.ts`).
+**Install and uninstall never write to the token directory.** Each agent install writes only its own config file, plus the runtime copy and the install record. The installer reads the token directory only to print the login steps that are still missing (`src/cli/install.ts`). **Checked** (the token folder was unchanged by install and uninstall in the runs).
 
-The server files used by Codex, OpenCode and Antigravity are inside your checkout, for example `D:\Projects2\Google-services-mcps\plugins\gmail\servers\gmail.mjs`. **Checked (dry run).** If you move or delete the checkout, these entries stop working. Run `gsm install` again from the new location.
+The server files that Codex, OpenCode and Antigravity use are in `~/.google-services-mcps/runtime/<product>/`, a copy made at install time. Run `node gsm.mjs install` again after you update the repository, so the copy is refreshed. **Checked** (the copy is made by the install).
 
 ## Backups
 
-- Before `gsm` changes an existing agent config file, it copies the file to `<file>.gsm-backup-<YYYYMMDD-HHMMSS>` (**help text**). The dry run shows which files would be created or changed.
-- `gsm` does not back up Claude Code's files, because it does not edit them.
-- `gsm setup-client --force` backs up the old client file first. `gsm setup-apikey --force` replaces the saved key and keeps no backup (**help text and code**).
+- Before `node gsm.mjs` changes an existing agent config file, it copies the file to `<file>.gsm-backup-<YYYYMMDD-HHMMSS>`. **Checked** (on uninstall). A dry run shows which files would be created or changed.
+- `node gsm.mjs` does not back up Claude Code's files, because it does not edit them.
+- `node gsm.mjs setup-client --force` backs up the old client file first. **Checked.** `node gsm.mjs setup-apikey --force` replaces the saved key and keeps no backup.
+- Uninstall leaves the `*.gsm-backup-*` files in place. **Checked.**
 
 ---
 
@@ -322,30 +337,38 @@ Work through these steps in order.
 ### 1. Log out of each login group
 
 ```
-node dist/cli/gsm.js status
-node dist/cli/gsm.js logout workspace-user
-node dist/cli/gsm.js logout cloud
+node gsm.mjs status
+node gsm.mjs logout workspace-user
+node gsm.mjs logout cloud
 ```
 
-Use the groups you actually logged in to: `cloud`, `searchconsole`, `workspace-user`, `business` or `developer`. `logout` removes that group's token file only. It does not revoke the access at Google. The command prints the link to revoke it: `https://myaccount.google.com/permissions`.
+Use the groups you actually logged in to: `cloud`, `searchconsole`, `workspace-user`, `business`, `developer` or `workspace-admin`. `logout` removes that group's token file only. It does not revoke the access at Google. `logout` prints the page where you can revoke it: `https://myaccount.google.com/permissions`. **Checked** (the message, with no token). **UNVERIFIED:** removing a real token, because no login was run.
 
-`logout` does not remove the API key. `gsm logout apikey` tells you where the key file is. Delete that file yourself.
+`logout` does not remove the API key. `node gsm.mjs logout apikey` shows where the key file is. Delete that file yourself. **Checked.**
 
 ### 2. Remove the agent entries
 
-For Claude Code, uninstall each plugin:
+For Claude Code, uninstall each plugin. Preview first, then remove:
 
 ```
-claude plugin uninstall gmail@google-services-mcps --scope user
+node gsm.mjs uninstall --agent claude --plugin gmail --scope global --dry-run
+node gsm.mjs uninstall --agent claude --plugin gmail --scope global
 ```
 
-Add `--keep-data` to keep the plugin's data folder (**help only**). Repeat for each product.
-
-For Codex, OpenCode or Antigravity:
+**Checked.** For a project or local install, use the same `--scope` and `--path` as the install. Add `--keep-data` to keep the plugin's data folder. For Codex, OpenCode or Antigravity:
 
 ```
-node dist/cli/gsm.js uninstall --agent codex --plugin gmail --scope global
+node gsm.mjs uninstall --agent codex --plugin gmail --scope global
 ```
+
+To remove every install at once, preview and then remove:
+
+```
+node gsm.mjs uninstall --all --dry-run
+node gsm.mjs uninstall --all --yes
+```
+
+**Checked** (the dry run lists the installs and removes nothing; `--yes` removes them). Without `--yes`, gsm asks first, according to the help text. **UNVERIFIED:** the question was not run.
 
 ### 3. Remove the marketplace
 
@@ -355,11 +378,11 @@ Remove the plugins first. Then remove the marketplace:
 claude plugin marketplace remove google-services-mcps
 ```
 
-**Help only.** The effect on plugins that are still installed is **UNVERIFIED**.
+**Checked.**
 
 ### 4. Delete the token directory
 
-Delete `~/.google-services-mcps` by hand. It holds `client_secret.json`, the login tokens, `policy.json` and `audit.log`. Keep `audit.log` if you need the record. No `gsm` command deletes this folder.
+Delete `~/.google-services-mcps` by hand. It holds `client_secret.json`, the login tokens, `apikey.json`, `workspace-admin.scopes.json`, `policy.json` and `audit.log`. Keep `audit.log` if you need the record. No `node gsm.mjs` command deletes this folder. **Checked:** uninstall leaves it in place.
 
 ### 5. Delete the OAuth client (optional)
 
@@ -369,8 +392,7 @@ In the Google Cloud console, delete the Desktop OAuth client if you no longer ne
 
 ## Troubleshooting: install and login
 
-**"Marketplace not found" when you install a plugin.**
-Claude Code cannot find `google-services-mcps`. Add the marketplace first:
+**"Marketplace not found" when you install a plugin.** Claude Code cannot find `google-services-mcps`. Run the install again, which adds the marketplace, or add it by hand:
 
 ```
 claude plugin marketplace add D:\Projects2\Google-services-mcps
@@ -381,10 +403,10 @@ The exact error text is **UNVERIFIED**.
 
 **The plugin is installed but its tools do not appear.**
 
-1. Run `claude plugin list`. If the status is `disabled`, enable it: `claude plugin enable gmail@google-services-mcps --scope user`.
-2. Run `claude plugin validate D:\Projects2\Google-services-mcps\plugins\gmail`.
-3. Run `/mcp` in Claude Code. If the server shows as failed, read the message there.
-4. Run `gsm doctor --plugin gmail` and fix each `FAIL` line.
+1. Run `claude plugin list`. If the status is `disabled`, enable it: `claude plugin enable gmail@google-services-mcps --scope user`. **Checked.**
+2. Run `claude plugin validate D:\Projects2\Google-services-mcps\plugins\gmail`. **Checked.**
+3. Run `/mcp` in Claude Code. If the server shows as failed, read the message there. **UNVERIFIED** in a live session.
+4. Run `node gsm.mjs doctor --plugin gmail` and fix each `FAIL` line. **Checked.**
 
 **The server shows no tools.** Check these causes in order:
 
@@ -397,36 +419,42 @@ The exact error text is **UNVERIFIED**.
   Not logged in for "workspace-user". Run: node <plugin>/bin/gsm.mjs login workspace-user (after setting up the OAuth desktop client with setup-client).
   ```
 
-  Set up the client, then log in. See [SETUP.md](SETUP.md).
+  The server prints the plugin-folder form of the command. The same login is `node gsm.mjs login workspace-user` from the repository folder. Set up the client, then log in. See [SETUP.md](SETUP.md). **Checked** (the text is from the source; the message was not triggered in a live session).
 
-**`setup-client` says the file already exists.** Use `--force`. The old client file is backed up first.
+**`setup-client` says the file already exists.** Use `--force`. The old client file is backed up first. **Checked.**
 
-**`gsm doctor` says the OAuth client file is missing.** Run `gsm setup-client <client_secret.json>` with the file you downloaded from the Google Cloud console.
+**`node gsm.mjs doctor` says the OAuth client file is missing.** Run `node gsm.mjs setup-client <client_secret.json>` with the file you downloaded from the Google Cloud console. **Checked** (the message).
 
-**The browser does not open for `login`.** Run the same login with `--no-browser`. The command prints the URL. Open that URL in a browser on the same machine. The redirect goes to `127.0.0.1`, so the browser must run on the machine where the login command runs.
+**The browser does not open for `login`.** Run the same login with `--no-browser`. The command prints the URL. Open that URL in a browser on the same machine. The redirect goes to `127.0.0.1`, so the browser must run on the machine where the login command runs. **Help text.** **UNVERIFIED:** not run.
 
 **Login works, but the tools still fail.** Restart the server in `/mcp`, or restart Claude Code. A new login needs a restart to apply the new scopes.
 
 **Earlier scopes are still in the token.** A login merges with the scopes already stored for its group, so logging in for one product keeps the others. Use `--replace` to drop the stored scopes and keep only what this login requests. A merge can leave write scopes from an earlier readwrite login in place: when you want a readonly token again, log in with `--replace`. For example:
 
 ```
-node dist/cli/gsm.js login workspace-user --profile readonly --replace --servers gmail,gcalendar,gdrive
+node gsm.mjs login workspace-user --profile readonly --replace --servers gmail,gcalendar,gdrive
 ```
 
-**`HTTP 403 | reason=insufficientPermissions | ... | The token lacks a scope for this tool.`** The login does not cover this tool. Log in again with a wider profile, then restart the server:
+**UNVERIFIED:** not run, because it starts a sign-in.
+
+**`The token lacks a scope for this tool.`** The login does not cover this tool. Log in again with a wider profile, then restart the server:
 
 ```
-node dist/cli/gsm.js login <group> --profile readwrite --servers <list>
+node gsm.mjs login <group> --profile readwrite --servers <list>
 ```
 
-For the workspace admin group, run `gsm setup-admin --subject <email> --key-file <file> --profile readwrite`. The error format and the rest of the errors are in [USING.md](USING.md#10-common-errors).
+For the workspace admin group, run `node gsm.mjs setup-admin --subject <email> --key-file <file> --profile readwrite`. The error text is **checked** against the source. The rest of the errors are in [USING.md](USING.md#10-common-errors).
 
-**Rate limits and quota errors.** The suite retries throttled requests on its own. It makes up to three attempts in all. The waits are about 0.5 seconds and then about 1 second, with jitter. A `Retry-After` header is used instead, up to 60 seconds. After the last attempt, the error text is returned. A quota that is used up resets on Google's schedule. See [LIMITS-AND-COSTS.md](LIMITS-AND-COSTS.md). Do not run a loop that retries on its own.
+**Rate limits and quota errors.** The suite retries throttled requests on its own. It makes at most three attempts in all. The waits start at 0.5 seconds and double, with jitter. A `Retry-After` header is used instead, up to 60 seconds. After the last attempt, the error text is returned. A quota that is used up resets on Google's schedule. See [LIMITS-AND-COSTS.md](LIMITS-AND-COSTS.md). Do not run a loop that retries on its own. **Checked** (the constants are in `src/core/http.ts`).
 
-**`unknown plugin id`.** Use one of the 23 ids in [SURFACES.md](SURFACES.md). The plugin-folder form of `gsm` knows only its own product.
+**`unknown plugin id`.** Use one of the 23 ids in [SURFACES.md](SURFACES.md). **Checked.**
 
-**`--home does not apply to claude`.** Remove `--home` when you use `--agent claude`.
+**`--home does not apply to claude`.** Remove `--home` when you use `--agent claude`. **Checked.**
 
-**`agy config folder not found`.** Run Antigravity once so that it creates `~/.gemini/config`. Then run the install again.
+**`agy config folder not found`.** Run Antigravity once so that it creates `~/.gemini/config`. Then run the install again. **Checked.**
 
-**Codex ignores a project config.** Codex reads a project `.codex/config.toml` only in trusted projects. Trust the folder in Codex.
+**`--path must be an existing directory`.** Create the folder, or fix the path. **Checked.**
+
+**`is not strict JSON`** (OpenCode). Remove the comments or trailing commas from `opencode.json`, or add the entry by hand. gsm does not change the file. **Checked.**
+
+**Codex ignores a project config.** Codex reads a project `.codex/config.toml` only in trusted projects. Trust the folder in Codex. **Checked** (the installer's note; the trust itself was not tested in Codex).

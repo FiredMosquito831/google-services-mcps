@@ -320,7 +320,7 @@ test('login apikey prints the alias message and does no login', () =>
     const res = runGsm(['login', 'apikey'], { tokenDir: p.tokens });
     assert.equal(res.code, 0, res.stderr);
     assert.match(res.stdout, /no login is needed/);
-    assert.match(res.stdout, /gsm setup-apikey/);
+    assert.match(res.stdout, /node gsm\.mjs setup-apikey/);
   }));
 
 // ---------- groups ----------
@@ -357,7 +357,7 @@ test('status shows the security posture of a token and never prints token values
     const defaults = runGsm(['status'], { tokenDir: p.tokens });
     assert.equal(defaults.code, 0, defaults.stderr);
     assert.match(defaults.stdout, /security: 2 granted scope\(s\), read-only only: yes; confirmation: every-change \(default\); writes: disabled/);
-    assert.match(defaults.stdout, /apikey: not set \(run: gsm setup-apikey\)/);
+    assert.match(defaults.stdout, /apikey: not set \(run: node gsm\.mjs setup-apikey\)/);
     assert.equal(defaults.stdout.includes('SECRET-'), false, 'token values must not be printed');
 
     const set = runGsm(['status'], { tokenDir: p.tokens, env: { GSM_CONFIRMATION: 'off', GSM_ALLOW_WRITES: 'true' } });

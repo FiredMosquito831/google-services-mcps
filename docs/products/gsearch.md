@@ -1,5 +1,7 @@
 # Search and Web Quality (`gsearch`)
 
+Install with the simplest command: `node gsm.mjs install --agent claude --plugin <id>` (see docs/TUTORIAL.md).
+
 Public search and web-quality APIs that take an API key instead of a login. It covers Custom Search, PageSpeed Insights, Chrome UX Report, Safe Browsing, Web Risk, Fact Check Tools, Knowledge Graph, Civic Information, Digital Asset Links, Version History and Developer Knowledge. Use it for public data about sites, URLs and facts. It does not read your own accounts.
 
 ## When to install it
