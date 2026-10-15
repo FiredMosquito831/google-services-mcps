@@ -9,7 +9,7 @@ import * as opencode from './adapters/opencode.js';
 import { OAUTH_GROUPS, type InstallRequestArgs } from './args.js';
 import { apiKeyFileFor, apiKeyState, tokenFileFor } from './credentials.js';
 import { checkInstall, renderInstallList } from './list.js';
-import { repoRootFor, serverFileFor, type InstallRoots } from './paths.js';
+import { checkoutRootFor, serverFileFor, type InstallRoots } from './paths.js';
 import { productIds, productRows } from './products.js';
 import { printInstallResult, printResult, type Output } from './report.js';
 import {
@@ -243,7 +243,7 @@ export async function runInstall(run: InstallRun, env: InstallEnv): Promise<numb
       scope: run.scope,
       pathArg: folder ?? undefined,
       pluginRoot: env.roots.layout === 'plugin' ? env.roots.root : undefined,
-      repoRoot: repoRootFor(env.roots),
+      repoRoot: checkoutRootFor(env.roots),
       marketplace: run.marketplace,
       plugins: agent === 'claude' ? claudePlugins : plugins,
       servers,
@@ -361,7 +361,7 @@ async function uninstallRecords(records: readonly InstallRecord[], run: Uninstal
       scope: record.scope,
       pathArg: record.folder ?? undefined,
       pluginRoot: undefined,
-      repoRoot: repoRootFor(env.roots),
+      repoRoot: checkoutRootFor(env.roots),
       plugins: record.products,
       servers: record.servers.map(toRef),
       serverFile: (s) => runtimeServerFile(home, s),

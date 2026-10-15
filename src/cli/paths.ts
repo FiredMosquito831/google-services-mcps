@@ -53,6 +53,17 @@ export function repoRootFor(roots: InstallRoots): string | undefined {
   return basename(parent) === 'plugins' ? dirname(parent) : undefined;
 }
 
+/**
+ * The folder Claude Code uses as a local marketplace: the repo root, but only when it is a git checkout (it has a
+ * .git folder). An npm package, or a zip download, has the same files but no .git. Claude cannot read a marketplace from
+ * a folder like that (npm's package does not include the root .claude-plugin folder), so those installs use the GitHub
+ * source instead. Undefined means "use the GitHub source".
+ */
+export function checkoutRootFor(roots: InstallRoots): string | undefined {
+  const root = repoRootFor(roots);
+  return root !== undefined && existsSync(join(root, '.git')) ? root : undefined;
+}
+
 /** The folder of project and local scope: --path when given, else the current folder. */
 export function scopeFolder(pathArg: string | undefined, cwd: string): string {
   return pathArg ?? cwd;

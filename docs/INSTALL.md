@@ -48,6 +48,78 @@ Scopes:
 
 ---
 
+## npm and npx commands
+
+The same installer runs in three ways. The commands and flags are the same in each.
+
+| Way | Command |
+|---|---|
+| npx, no install | `npx @firedmosquito831/google-services-mcps <command> [options]` |
+| Global install | `npm install -g @firedmosquito831/google-services-mcps`, then `gsm <command> [options]` |
+| From a clone | `node gsm.mjs <command> [options]` |
+
+With no command, the program prints its help.
+
+The install and uninstall commands:
+
+```
+install    --agent <claude|codex|opencode|agy|all> --plugin <id[,id...]|all> [options]
+uninstall  --agent <claude|codex|opencode|agy|all> --plugin <id[,id...]|all> [options]
+uninstall  --all [--dry-run] [--yes]
+list       [--json] [--home <dir>]
+```
+
+Options:
+
+| Option | Used by | What it does |
+|---|---|---|
+| `--agent` | install, uninstall | `claude` (Claude Code), `codex`, `opencode`, `agy` (Antigravity), or `all`. Required, except with `uninstall --all`. |
+| `--plugin` | install, uninstall | A product id such as `gmail`, a comma list such as `gmail,gcalendar`, or `all`. Required. An unknown id is refused, and the error lists the valid ones. |
+| `--scope` | install, uninstall | `global` (the default: your user account), `project` (the folder given by `--path`, or the current folder), or `local` (that folder only, not shared). `folder` means `local`. |
+| `--path` | install, uninstall | The folder for `project` and `local`. It must exist. Not allowed with `global`. |
+| `--dry-run` | all | Prints every change and command. Writes nothing and runs nothing. Use it first. |
+| `--allow-writes` | install | For `codex`, `opencode` and `agy`: sets `GSM_ALLOW_WRITES=true`. For `claude` the setting is a plugin option, so gsm prints the `claude plugin configure` command instead. |
+| `--confirmation` | install | `every-change` (the default), `destructive-only` or `off`. Set the same way as `--allow-writes`. |
+| `--marketplace` | install (claude) | Where Claude Code gets the marketplace: `owner/repo`, a URL, or a path. The default is the repository folder when it is a git clone. Otherwise (npm package, zip download) it is `FiredMosquito831/google-services-mcps` on GitHub. |
+| `--servers` | install | Keeps only these servers of the chosen products (`a,b`). For `claude`, which installs whole plugins, gsm installs the plugins that contain them. |
+| `--keep-data` | uninstall (claude) | Keeps the plugin's data folder. |
+| `--all` | uninstall | Removes every install gsm recorded, for every agent and scope. It prints the list first. Without `--yes` it asks in a terminal, and outside a terminal it stops and asks you to rerun with `--yes`. It cannot be combined with `--agent`, `--plugin`, `--scope`, `--path` or `--servers`. |
+| `--yes` | uninstall --all | Skips the question. |
+| `--home` | install, uninstall, list | Another home folder, for tests. Not allowed with `claude`. |
+| `--json` | list | Prints JSON. |
+
+What each agent does:
+
+| Agent | Scope and where it writes | Install | Uninstall |
+|---|---|---|---|
+| `claude` | `global` = user, `project` = project, `local` = local. Claude Code writes its own settings files. | Adds the marketplace if `google-services-mcps` is not registered yet, then runs `claude plugin install <id>@google-services-mcps --scope ...`. | Runs `claude plugin uninstall ...`. The marketplace stays registered. Logins are never touched. |
+| `codex` | `global` = `~/.codex/config.toml`. `project` and `local` = `.codex/config.toml` in the folder (Codex reads it only for trusted projects). `local` writes the same file as `project`. | Writes one block that gsm owns, between marker lines. Text outside the block is never changed. | Removes gsm's entries and its block. Keeps a backup of the file. If gsm created the file, it stays behind empty. |
+| `opencode` | `global` = `~/.config/opencode/opencode.json`. `project` and `local` = `opencode.json` in the folder. `local` writes the same file as `project`. | Adds gsm's keys under `mcp`. | Removes those keys. Keeps a backup. |
+| `agy` | `global` only: `~/.gemini/config/mcp_config.json`. A project or local scope is refused (exit code 2). | Adds gsm's keys under `mcpServers`. If the agy config folder is missing, the install stops. With `--agent all` it is skipped with a note. | Removes those keys. Keeps a backup. |
+
+For `codex`, `opencode` and `agy`, install also copies each product's server files to `~/.google-services-mcps/runtime/<product>/`, and the config points there. Uninstall removes a copy when no other install uses it.
+
+Install and uninstall never touch the login tokens. To remove a login, use `logout`.
+
+Examples:
+
+```
+npx @firedmosquito831/google-services-mcps install --agent claude --plugin gmail
+npx @firedmosquito831/google-services-mcps install --agent codex --plugin gmail,gcalendar --dry-run
+npx @firedmosquito831/google-services-mcps install --agent claude --plugin gcalendar --scope project --path "C:\work\my-project"
+npx @firedmosquito831/google-services-mcps install --agent claude --plugin gmail --marketplace FiredMosquito831/google-services-mcps
+npx @firedmosquito831/google-services-mcps uninstall --agent claude --plugin gmail
+npx @firedmosquito831/google-services-mcps uninstall --all --dry-run
+npx @firedmosquito831/google-services-mcps uninstall --all --yes
+npx @firedmosquito831/google-services-mcps list
+```
+
+Known issues:
+
+- **Claude Code with the npm package version 0.1.1 needs `--marketplace FiredMosquito831/google-services-mcps`.** Without it the install tries to use the package folder as the marketplace, and that fails. Checked: the install fails without the option and succeeds with it. The fix is in the repository, and it reaches npm with the next release.
+- Messages printed after an install or a login still show `node gsm.mjs ...`. With npm, write `npx @firedmosquito831/google-services-mcps ...` or `gsm ...` instead.
+- The Claude Code marketplace comes from the `main` branch on GitHub, not from the npm version. The two can differ.
+
 ## Claude Code
 
 ### 1. Add the marketplace (once)

@@ -15,7 +15,7 @@ import { tomlString } from '../dist/cli/adapters/codex.js';
 import { parseCliArgs, parseInstallArgs } from '../dist/cli/args.js';
 import { runInstall, selectPlugins, selectServers } from '../dist/cli/install.js';
 import { backupFile, timestamp } from '../dist/cli/fsutil.js';
-import { findRoots, repoRootFor, serverFileFor } from '../dist/cli/paths.js';
+import { checkoutRootFor, findRoots, repoRootFor, serverFileFor } from '../dist/cli/paths.js';
 import { AGY_GLOBAL_ONLY, CODEX_BEGIN, CODEX_END, UsageError } from '../dist/cli/types.js';
 
 const SERVERS = [
@@ -444,6 +444,18 @@ test('paths: repo layout uses config/products.json, and plugin layout uses serve
     assert.equal(pluginRoots.root, plugin);
     assert.equal(repoRootFor(pluginRoots), repo);
     assert.equal(serverFileFor(pluginRoots, SERVERS[0]), join(plugin, 'servers', 'gcloud.mjs'));
+  }));
+
+test('paths: only a git checkout is used as the marketplace folder; a folder without .git (an npm package, a zip) is not', () =>
+  withTemp((p) => {
+    const repo = join(p.root, 'repo');
+    mkdirSync(join(repo, 'config'), { recursive: true });
+    writeFileSync(join(repo, 'config', 'products.json'), '{}');
+    mkdirSync(join(repo, 'dist', 'cli'), { recursive: true });
+    const roots = findRoots(pathToFileURL(join(repo, 'dist', 'cli', 'gsm.js')).href);
+    assert.equal(checkoutRootFor(roots), undefined, 'no .git: the install uses the GitHub source');
+    mkdirSync(join(repo, '.git'));
+    assert.equal(checkoutRootFor(roots), repo, 'a git checkout is its own marketplace folder');
   }));
 
 // ---------- orchestrator (dry-run only; nothing is executed) ----------
