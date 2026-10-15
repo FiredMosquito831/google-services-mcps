@@ -63,22 +63,22 @@ export interface MethodRecord {
 
 export const MAX_TOOL_NAME = 40;
 
-/** Read-only POST methods are recognised by name prefix. */
+/**
+ * Read-only POST methods are recognised by name prefix. Deliberately narrow: a POST
+ * that runs work, mints credentials, writes an export, runs DML through a query, or
+ * sends a test message is a write, and it asks first. Exceptions go in the exact list
+ * or in config/tool-kinds.json.
+ */
 export const READ_POST_PREFIXES = [
   'get',
   'list',
   'search',
-  'query',
   'batchGet',
   'lookup',
   'check',
-  'test',
   'validate',
   'inspect',
   'fetch',
-  'generate',
-  'run',
-  'export',
   'download',
   'describe',
   'preview',
@@ -89,6 +89,9 @@ export const READ_POST_PREFIXES = [
 
 /** Read-only POST methods that are recognised by exact name. */
 export const READ_POST_EXACT = [
+  // Chrome UX Report: public performance data, read only.
+  'queryRecord',
+  'queryHistoryRecord',
   'getIamPolicy',
   'testIamPermissions',
   'runReport',

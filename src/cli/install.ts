@@ -8,7 +8,7 @@ import * as codex from './adapters/codex.js';
 import * as opencode from './adapters/opencode.js';
 import { OAUTH_GROUPS, type InstallRequestArgs } from './args.js';
 import { apiKeyFileFor, apiKeyState, tokenFileFor } from './credentials.js';
-import { productIds } from './products.js';
+import { productIds, productRows } from './products.js';
 import { repoRootFor, serverFileFor, type InstallRoots } from './paths.js';
 import { printResult, type Output } from './report.js';
 import {
@@ -88,6 +88,33 @@ function printLoginHints(servers: readonly ServerSpec[], out: Output): void {
   }
 }
 
+/**
+ * The last line of an install: the number of products, servers and tools, and the confirmation and write
+ * settings that were set. A product without a tool count (no tool-map.json and no generatedToolCount) is
+ * counted as unknown instead of zero.
+ */
+export function installSummary(run: InstallRun, env: InstallEnv, servers: readonly ServerSpec[]): string {
+  const products = [...new Set(servers.map((s) => s.plugin))];
+  const counts = new Map<string, number | undefined>();
+  try {
+    for (const row of productRows(env.roots, env.registry, products)) counts.set(row.id, row.tools);
+  } catch {
+    // Without a readable product map the tool counts are unknown; the other numbers are still printed.
+  }
+  let tools = 0;
+  let unknown = 0;
+  for (const id of products) {
+    const count = counts.get(id);
+    if (count === undefined) unknown += 1;
+    else tools += count;
+  }
+  const toolText = `${tools} tools${unknown > 0 ? ` (${unknown} product(s) without a tool count)` : ''}`;
+  const confirmation = run.confirmation ?? 'not set (plugin default every-change)';
+  const writes = run.allowWrites ? 'enabled (GSM_ALLOW_WRITES=true)' : 'not set (write tools stay off)';
+  const verb = run.dryRun ? 'would install' : 'installed';
+  return `summary: ${verb} ${products.length} products, ${servers.length} servers, ${toolText}; confirmation: ${confirmation}; writes: ${writes}`;
+}
+
 export async function runInstall(run: InstallRun, env: InstallEnv): Promise<number> {
   const { out } = env;
   const plugins = selectPlugins(run.plugin, productIds(env.registry));
@@ -164,5 +191,6 @@ export async function runInstall(run: InstallRun, env: InstallEnv): Promise<numb
   }
 
   if (run.action === 'install' && !run.dryRun && !failed) printLoginHints(servers, out);
+  if (run.action === 'install') out.log(installSummary(run, env, servers));
   return failed ? 1 : 0;
 }

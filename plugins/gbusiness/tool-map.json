@@ -294,7 +294,7 @@
   },
   {
     "name": "mcp__plugin_gbusiness_gbusiness__mbverify_verification_generate",
-    "kind": "read",
+    "kind": "write",
     "scopes": [],
     "methodId": "mybusinessverifications.verificationTokens.generate",
     "title": "mybusinessverifications.verificationTokens.generate"

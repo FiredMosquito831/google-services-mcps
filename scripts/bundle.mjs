@@ -75,7 +75,7 @@ const GENERATED = [
 ];
 
 /** Per-server environment in .mcp.json. Values come from the plugin's user config. */
-function serverEnv(group) {
+function serverEnv(group, serverName) {
   const env = {
     GSM_ALLOW_WRITES: '${user_config.allow_writes}',
     GSM_CONFIRMATION: '${user_config.confirmation}',
@@ -85,6 +85,11 @@ function serverEnv(group) {
   if (group === 'workspace-admin') {
     env.GSM_ADMIN_SUBJECT = '${user_config.admin_subject}';
     env.GSM_SERVICE_ACCOUNT_KEY_FILE = '${user_config.service_account_key_file}';
+  }
+  // Empty values fall back to the token-directory file, so an unset option is harmless.
+  if (serverName === 'gads') {
+    env.GSM_ADS_DEVELOPER_TOKEN = '${user_config.ads_developer_token}';
+    env.GSM_ADS_LOGIN_CUSTOMER_ID = '${user_config.ads_login_customer_id}';
   }
   return env;
 }
@@ -109,6 +114,23 @@ const CONSENT_CONFIG = {
     type: 'string',
     title: 'Token directory (optional)',
     description: 'Where OAuth tokens are stored. Leave empty for ~/.google-services-mcps.',
+    required: false,
+  },
+};
+
+const ADS_CONFIG = {
+  ads_developer_token: {
+    type: 'string',
+    title: 'Google Ads developer token',
+    description:
+      'Issued by Google Ads for your manager account. Stored in the system credential store, not in a file. Leave empty to use the token-directory file instead.',
+    sensitive: true,
+    required: false,
+  },
+  ads_login_customer_id: {
+    type: 'string',
+    title: 'Manager (login) customer ID (optional)',
+    description: '10-digit ID of the manager account, without dashes, when you reach client accounts through one.',
     required: false,
   },
 };
@@ -270,6 +292,7 @@ async function curatedScopes(curatedFile, dist) {
 function pluginManifest(product, id, group) {
   const userConfig = { ...CONSENT_CONFIG };
   if (group === 'workspace-admin') Object.assign(userConfig, ADMIN_CONFIG);
+  if (id === 'gads') Object.assign(userConfig, ADS_CONFIG);
   return {
     name: id,
     displayName: product.title,
@@ -414,7 +437,7 @@ async function buildPlugin(id, product, ctx) {
       [server.name]: {
         command: 'node',
         args: [`\${CLAUDE_PLUGIN_ROOT}/servers/${server.name}.mjs`],
-        env: serverEnv(server.group),
+        env: serverEnv(server.group, server.name),
       },
     },
   });

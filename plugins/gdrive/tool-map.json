@@ -1305,7 +1305,7 @@
   },
   {
     "name": "mcp__plugin_gdrive_gdrive__driveactiv_activity_query",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/drive.activity",
       "https://www.googleapis.com/auth/drive.activity.readonly"

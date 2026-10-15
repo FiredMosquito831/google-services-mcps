@@ -28,6 +28,11 @@ export type Command =
   | 'logout'
   | 'scopes'
   | 'setup-admin'
+  | 'products'
+  | 'apis'
+  | 'methods'
+  | 'doctor'
+  | 'version'
   | 'help';
 
 type OptionType = 'string' | 'boolean';
@@ -51,6 +56,11 @@ const COMMANDS: Record<Exclude<Command, 'help'>, Record<string, OptionType>> = {
   logout: {},
   scopes: { servers: 'string', profile: 'string', json: 'boolean' },
   'setup-admin': { subject: 'string', 'key-file': 'string', profile: 'string', servers: 'string' },
+  products: { json: 'boolean' },
+  apis: { search: 'string', limit: 'string', json: 'boolean' },
+  methods: { search: 'string', limit: 'string', json: 'boolean' },
+  doctor: { plugin: 'string', 'token-dir': 'string' },
+  version: {},
 };
 
 export interface ParsedArgs {
@@ -189,6 +199,22 @@ export function parseGroup(positionals: readonly string[], usage: string): CliGr
 /** --servers as a list of names, or undefined when not given. */
 export function parseServers(values: ParsedArgs['values']): string[] | undefined {
   return splitList(values.servers, 'servers');
+}
+
+/** --limit: a whole number of at least 1, or undefined when not given. */
+export function parseLimit(value: string | boolean | undefined): number | undefined {
+  if (value === undefined) return undefined;
+  if (typeof value !== 'string' || !/^\d+$/.test(value) || Number(value) < 1) {
+    throw new UsageError('--limit must be a whole number of at least 1');
+  }
+  return Number(value);
+}
+
+/** --search: some text to match, trimmed, or undefined when not given. */
+export function parseSearch(value: string | boolean | undefined): string | undefined {
+  if (value === undefined) return undefined;
+  if (typeof value !== 'string' || value.trim() === '') throw new UsageError('--search needs some text to match');
+  return value.trim();
 }
 
 /** --profile, or undefined when not given. */

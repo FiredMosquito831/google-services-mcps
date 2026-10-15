@@ -18,7 +18,7 @@
     "gtm": "Google Tag Manager accounts, containers, tags, triggers and variables.",
     "gyoutube": "YouTube Data, YouTube Analytics and YouTube Reporting APIs, plus Blogger.",
     "gbusiness": "Business Profile accounts, locations, verifications, lodging, place actions, notifications and performance.",
-    "gads": "Advertising and publisher APIs: Search Ads 360, Display & Video 360, Campaign Manager, Ad Exchange, AdSense, AdMob, Real-time Bidding and more.",
+    "gads": "Google Ads API (account list, GAQL search and gated mutations), plus advertising and publisher APIs: Search Ads 360, Display & Video 360, Campaign Manager, Ad Exchange, AdSense, AdMob, Real-time Bidding and more.",
     "gmerchant": "Merchant Center: Merchant API, Comparison Shopping Service and Manufacturer Center.",
     "gplay": "Google Play developer publishing and reporting, Play Games Services, Android Enterprise and Management, Play Integrity and device APIs.",
     "gfirebase": "Firebase management, App Check, App Distribution, Crashlytics, Hosting, Data Connect, Rules, Test Lab, FCM and Identity Toolkit.",
@@ -1705,8 +1705,8 @@
       "name": "gads",
       "plugin": "gads",
       "group": "business",
-      "kind": "discovery",
-      "curated": null,
+      "kind": "curated+discovery",
+      "curated": "src/servers/gads.ts",
       "apis": [
         {
           "api": "searchads360",
@@ -1819,7 +1819,7 @@
           "version": "v0"
         }
       ],
-      "label": "Ads and Publisher: Advertising and publisher APIs: Search Ads 360, Display & Video 360, Campaign Manager, Ad Exchange, AdSense, AdMob, Real-time Bidding and more."
+      "label": "Ads and Publisher: Google Ads API (account list, GAQL search and gated mutations), plus advertising and publisher APIs: Search Ads 360, Display & Video 360, Campaign Manager, Ad Exchange, AdSense, AdMob, Real-time Bidding and more."
     },
     {
       "name": "gmerchant",
@@ -2403,6 +2403,14 @@
         {
           "api": "vision",
           "version": "v1p2beta1"
+        },
+        {
+          "api": "generativelanguage",
+          "version": "v1beta"
+        },
+        {
+          "api": "generativelanguage",
+          "version": "v1"
         }
       ],
       "label": "AI and ML: Generative and classic AI APIs: Discovery Engine, Vertex AI, Dialogflow, Vision, Speech, Translate, Document AI and agent services."

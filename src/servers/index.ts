@@ -8,6 +8,7 @@ import { discoveryToolsFor, toolNamesOf } from '../core/discovery/tools.js';
 import type { ServerSpec } from '../core/registry.js';
 import type { ToolDef } from '../core/tools.js';
 import { buildTools as buildCloud } from './cloud.js';
+import { buildTools as buildGads } from './gads.js';
 import { buildTools as buildGcalendar } from './gcalendar.js';
 import { buildTools as buildGdrive } from './gdrive.js';
 import { buildTools as buildGmail } from './gmail.js';
@@ -23,6 +24,7 @@ const CURATED: Record<string, Builder> = {
   'src/servers/gcalendar.ts': buildGcalendar,
   'src/servers/workspace-admin.ts': buildWorkspaceAdmin,
   'src/servers/searchconsole.ts': buildSearchConsole,
+  'src/servers/gads.ts': buildGads,
 };
 
 /** Curated tools first, then the discovery tools, as the bundled entry registers them. */

@@ -219,6 +219,14 @@
         {
           "api": "vision",
           "version": "v1p2beta1"
+        },
+        {
+          "api": "generativelanguage",
+          "version": "v1beta"
+        },
+        {
+          "api": "generativelanguage",
+          "version": "v1"
         }
       ],
       "label": "AI and ML: Generative and classic AI APIs: Discovery Engine, Vertex AI, Dialogflow, Vision, Speech, Translate, Document AI and agent services."

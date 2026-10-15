@@ -553,7 +553,7 @@
   },
   {
     "name": "mcp__plugin_ganalytics_ganalytics__gadata_propert_audience_query",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/analytics",
       "https://www.googleapis.com/auth/analytics.readonly"

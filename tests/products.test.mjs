@@ -161,6 +161,16 @@ test('a non-preferred version is in the product of its API name', () => {
   }
 });
 
+test('supplemental generativelanguage entries are in the catalog and in gai gateway', () => {
+  for (const version of ['v1', 'v1beta']) {
+    assert.ok(catalogApis.has(key('generativelanguage', version)), `generativelanguage@${version} is not in the catalog`);
+    assert.ok(
+      map.products.gai.gateway.some((e) => e.api === 'generativelanguage' && e.version === version),
+      `generativelanguage@${version} is not in gai gateway`,
+    );
+  }
+});
+
 test('supplemental cloudquotas entries are in gcloud gateway', () => {
   for (const version of ['v1', 'v1beta']) {
     assert.ok(catalogApis.has(key('cloudquotas', version)), `cloudquotas@${version} is not in the catalog`);

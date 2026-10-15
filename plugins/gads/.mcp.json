@@ -9,7 +9,9 @@
         "GSM_ALLOW_WRITES": "${user_config.allow_writes}",
         "GSM_CONFIRMATION": "${user_config.confirmation}",
         "GSM_TOKEN_DIR": "${user_config.token_dir}",
-        "GSM_HOOK_ACTIVE": "1"
+        "GSM_HOOK_ACTIVE": "1",
+        "GSM_ADS_DEVELOPER_TOKEN": "${user_config.ads_developer_token}",
+        "GSM_ADS_LOGIN_CUSTOMER_ID": "${user_config.ads_login_customer_id}"
       }
     }
   }

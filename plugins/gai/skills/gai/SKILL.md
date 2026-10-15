@@ -70,3 +70,5 @@ Reads never ask for approval. Changes and deletions ask first, unless the user h
 - Cloud Video Intelligence API (videointelligence v1p3beta1), reached through api_search, api_describe and api_call
 - Cloud Vision API (vision v1p1beta1), reached through api_search, api_describe and api_call
 - Cloud Vision API (vision v1p2beta1), reached through api_search, api_describe and api_call
+- Gemini API (generativelanguage v1beta), reached through api_search, api_describe and api_call
+- Gemini API (generativelanguage v1), reached through api_search, api_describe and api_call

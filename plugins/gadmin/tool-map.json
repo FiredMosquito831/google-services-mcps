@@ -1461,7 +1461,7 @@
   },
   {
     "name": "mcp__plugin_gadmin_gadmin__admin_verification_codes_generate",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/admin.directory.user.security"
     ],
@@ -3493,7 +3493,7 @@
   },
   {
     "name": "mcp__plugin_gadmin_gadmin__verifiedac_challenge_generate",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/verifiedaccess"
     ],

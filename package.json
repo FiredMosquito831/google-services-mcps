@@ -11,7 +11,8 @@
     "typecheck": "tsc --noEmit",
     "test": "npm run compile && node --test \"tests/*.test.mjs\"",
     "build": "node scripts/bundle.mjs",
-    "compile": "tsc -p tsconfig.json"
+    "compile": "tsc -p tsconfig.json",
+    "surfaces": "node scripts/gen-surfaces.mjs"
   },
   "dependencies": {
     "@googleapis/admin": "^37.0.2",

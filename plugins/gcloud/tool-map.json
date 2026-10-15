@@ -318,7 +318,7 @@
   },
   {
     "name": "mcp__plugin_gcloud_gcloud__assets_v1_query_assets",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"
     ],
@@ -2576,7 +2576,7 @@
   },
   {
     "name": "mcp__plugin_gcloud_gcloud__monitor_projects_time_series_query",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform",
       "https://www.googleapis.com/auth/monitoring",

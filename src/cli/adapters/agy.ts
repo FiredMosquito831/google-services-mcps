@@ -52,7 +52,9 @@ function assertGlobal(ctx: AdapterContext): void {
 export async function install(ctx: AdapterContext): Promise<AdapterResult> {
   assertGlobal(ctx);
   const dir = agyConfigDir(ctx.home);
-  if (!existsSync(dir)) {
+  const folderExists = existsSync(dir);
+  // A real install stops until agy has created its folder. A dry run plans the change and reports that stop.
+  if (!folderExists && !ctx.dryRun) {
     throw new Error(`agy config folder not found: ${dir}. Run agy once so it creates its folder, then retry.`);
   }
   const file = agyConfigPath(ctx.home);
@@ -64,6 +66,7 @@ export async function install(ctx: AdapterContext): Promise<AdapterResult> {
   const change = planJsonMap({ file, before: readText(file), containerKey: 'mcpServers', template: {}, set });
   const changed = change.before !== change.after;
   const notes = ['Verify with: agy mcp list (the gsm- servers should be listed).'];
+  if (!folderExists) notes.push(`agy config folder not found (${dir}). A real install stops until agy has run once and created it.`);
   if (changed) notes.push('Restart agy to load the servers.');
   if (ctx.allowWrites) notes.push('GSM_ALLOW_WRITES=true is set: write tools are enabled for these servers.');
   if (ctx.confirmation !== undefined) notes.push(`GSM_CONFIRMATION=${ctx.confirmation} is set for these servers.`);

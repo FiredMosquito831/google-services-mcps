@@ -42,6 +42,7 @@ const CURATED_FILES = {
   calendar: 'src/servers/gcalendar.ts',
   admin: 'src/servers/workspace-admin.ts',
   'search-console': 'src/servers/searchconsole.ts',
+  ads: 'src/servers/gads.ts',
 };
 
 const ID_PATTERN = /^[a-z]+$/;

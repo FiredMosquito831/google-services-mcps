@@ -51,7 +51,9 @@ const PLUGIN_KEYS = [
 
 /**
  * Versions the directory does not list, fetched from their own discovery URLs. The directory
- * gives no preferred flag for them, so preferred is false.
+ * gives no preferred flag for them, so preferred is false. Each one is probed before the build
+ * (see probeSupplemental): a URL that does not answer is recorded in catalog-errors.json and its
+ * entry is left out.
  */
 const SUPPLEMENTAL_ENTRIES = [
   {
@@ -65,6 +67,18 @@ const SUPPLEMENTAL_ENTRIES = [
     version: 'v1beta',
     preferred: false,
     discoveryRestUrl: 'https://cloudquotas.googleapis.com/$discovery/rest?version=v1beta',
+  },
+  {
+    name: 'generativelanguage',
+    version: 'v1beta',
+    preferred: false,
+    discoveryRestUrl: 'https://generativelanguage.googleapis.com/$discovery/rest?version=v1beta',
+  },
+  {
+    name: 'generativelanguage',
+    version: 'v1',
+    preferred: false,
+    discoveryRestUrl: 'https://generativelanguage.googleapis.com/$discovery/rest?version=v1',
   },
 ];
 
@@ -124,8 +138,11 @@ async function loadDirectory(offline) {
   return directory;
 }
 
-/** Every directory version, then the supplemental ones, sorted by name and version. Throws on a duplicate. */
-function allEntries(directory) {
+/**
+ * Every directory version, then the supplemental ones that answered the probe, sorted by name and
+ * version. Throws on a duplicate.
+ */
+function allEntries(directory, supplemental) {
   const entries = [
     ...(directory.items ?? []).map((item) => ({
       name: item.name,
@@ -136,7 +153,7 @@ function allEntries(directory) {
       documentationLink: item.documentationLink,
       discoveryRestUrl: item.discoveryRestUrl,
     })),
-    ...SUPPLEMENTAL_ENTRIES,
+    ...supplemental,
   ];
   const seen = new Set();
   for (const entry of entries) {
@@ -267,21 +284,45 @@ function summarize(catalog, plugins) {
   });
 }
 
+/**
+ * Probes each supplemental URL before the build. A URL that does not answer with a discovery
+ * document is recorded in errors and its entry is left out of the catalog. A document that
+ * answers is returned with its entry, so the build reuses it rather than fetching it again.
+ */
+async function probeSupplemental(offline, errors) {
+  const answered = new Map();
+  for (const entry of SUPPLEMENTAL_ENTRIES) {
+    try {
+      const doc = await loadDocument(entry, offline);
+      if (doc?.kind !== 'discovery#restDescription') {
+        throw new Error(`not a discovery document (kind ${doc?.kind ?? 'missing'}) (${entry.discoveryRestUrl})`);
+      }
+      answered.set(entry, doc);
+    } catch (err) {
+      errors.push({ name: entry.name, version: entry.version, error: err.message });
+      console.warn(`  probe failed, entry skipped: ${entry.name}@${entry.version}: ${err.message}`);
+    }
+  }
+  return answered;
+}
+
 async function main() {
   const offline = process.argv.includes('--offline');
   const directory = await loadDirectory(offline);
-  const entries = allEntries(directory);
-  const supplementalCount = SUPPLEMENTAL_ENTRIES.length;
+  const errors = [];
+  const probed = await probeSupplemental(offline, errors);
+  const entries = allEntries(directory, [...probed.keys()]);
+  const supplementalCount = probed.size;
   console.log(
     `${offline ? 'offline' : 'online'}: ${entries.length - supplementalCount} directory versions ` +
-      `(${entries.filter((entry) => entry.preferred).length} preferred) + ${supplementalCount} supplemental`,
+      `(${entries.filter((entry) => entry.preferred).length} preferred) + ${supplementalCount} supplemental ` +
+      `of ${SUPPLEMENTAL_ENTRIES.length} probed`,
   );
 
-  const errors = [];
   let done = 0;
   const built = await mapLimit(entries, CONCURRENCY, async (entry) => {
     try {
-      const doc = await loadDocument(entry, offline);
+      const doc = probed.get(entry) ?? (await loadDocument(entry, offline));
       return buildApi(entry, doc, DESCRIPTION_MAX);
     } catch (err) {
       errors.push({ name: entry.name, version: entry.version, error: err.message });

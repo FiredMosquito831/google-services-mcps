@@ -138,6 +138,19 @@ test('classify: overrides win over the rules', () => {
   assert.equal(classifyMethod('POST', 'emptyTrash', 'drive.files.emptyTrash', { 'drive.files.emptyTrash': 'destructive' }), 'destructive');
 });
 
+test('classify: POST verbs that run work, mint credentials, export, query or test are writes, not reads', () => {
+  // These used to be read by prefix. Each one can change something or start work, so each asks first.
+  assert.equal(classifyMethod('POST', 'run', 'run.projects.locations.jobs.run'), 'write');
+  assert.equal(classifyMethod('POST', 'generateAccessToken', 'iamcredentials.projects.serviceAccounts.generateAccessToken'), 'write');
+  assert.equal(classifyMethod('POST', 'export', 'sql.instances.export'), 'write');
+  assert.equal(classifyMethod('POST', 'query', 'chromeuxreport.records.queryRecord'), 'write');
+  assert.equal(classifyMethod('POST', 'test', 'example.things.test'), 'write');
+  // The reads that stay read: explicit IAM and reporting names, and list-style verbs.
+  assert.equal(classifyMethod('POST', 'testIamPermissions', 'example.things.testIamPermissions'), 'read');
+  assert.equal(classifyMethod('POST', 'batchGet', 'example.things.batchGet'), 'read');
+  assert.equal(classifyMethod('POST', 'validate', 'example.things.validate'), 'read');
+});
+
 // ---------------------------------------------------------------------------
 // URLs and requests
 

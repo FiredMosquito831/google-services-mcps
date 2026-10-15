@@ -684,7 +684,7 @@
   },
   {
     "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_oauth_cli_generate_a",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform",
       "https://www.googleapis.com/auth/firebase"
@@ -1112,7 +1112,7 @@
   },
   {
     "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_proj_apps_gener_10a3",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform",
       "https://www.googleapis.com/auth/firebase"
@@ -1122,7 +1122,7 @@
   },
   {
     "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_proj_apps_gener_928d",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform",
       "https://www.googleapis.com/auth/firebase"
@@ -1763,7 +1763,7 @@
   },
   {
     "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_pro_loc_ser_gen_8f53",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"
     ],
@@ -1772,7 +1772,7 @@
   },
   {
     "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_pro_loc_ser_gen_cf40",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"
     ],
@@ -2253,7 +2253,7 @@
   },
   {
     "name": "mcp__plugin_gfirebase_gfirebase__firebaseru_projects_test",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform",
       "https://www.googleapis.com/auth/firebase",

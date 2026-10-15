@@ -14,7 +14,7 @@ export function tokenFileFor(group: string, cfg: RuntimeConfig): string {
 }
 
 /** The saved API key for the apikey group: {"apiKey": "<key>"}, mode 0600, in the token directory. */
-export function apiKeyFileFor(cfg: RuntimeConfig): string {
+export function apiKeyFileFor(cfg: Pick<RuntimeConfig, 'tokenDir'>): string {
   return join(cfg.tokenDir, 'apikey.json');
 }
 

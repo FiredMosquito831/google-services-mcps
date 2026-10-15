@@ -39,7 +39,7 @@
   },
   {
     "name": "mcp__plugin_gads_gads__admob_accounts_mediation_report_generate",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/admob.readonly",
       "https://www.googleapis.com/auth/admob.report"
@@ -49,13 +49,37 @@
   },
   {
     "name": "mcp__plugin_gads_gads__admob_accounts_network_report_generate",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/admob.readonly",
       "https://www.googleapis.com/auth/admob.report"
     ],
     "methodId": "admob.accounts.networkReport.generate",
     "title": "admob.accounts.networkReport.generate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__ads_list_customers",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "title": "List Google Ads accounts"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__ads_mutate",
+    "kind": "dynamic",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "title": "Change Google Ads resources"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__ads_search",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "title": "Search Google Ads (GAQL)"
   },
   {
     "name": "mcp__plugin_gads_gads__api_call",
@@ -443,7 +467,7 @@
   },
   {
     "name": "mcp__plugin_gads_gads__displayvid_advertise_reach_for_generate_r",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/display-video"
     ],
@@ -1731,7 +1755,7 @@
   },
   {
     "name": "mcp__plugin_gads_gads__doubleclic_queries_run",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/doubleclickbidmanager"
     ],
@@ -2073,7 +2097,7 @@
   },
   {
     "name": "mcp__plugin_gads_gads__searchads3_customers_batch_jobs_run",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/doubleclicksearch"
     ],
@@ -2568,7 +2592,7 @@
   },
   {
     "name": "mcp__plugin_gads_gads__searchads3_customers_generate_ad_group_th",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/doubleclicksearch"
     ],
@@ -2577,7 +2601,7 @@
   },
   {
     "name": "mcp__plugin_gads_gads__searchads3_customers_generate_audience_co",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/doubleclicksearch"
     ],
@@ -2586,7 +2610,7 @@
   },
   {
     "name": "mcp__plugin_gads_gads__searchads3_customers_generate_audience_de",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/doubleclicksearch"
     ],
@@ -2595,7 +2619,7 @@
   },
   {
     "name": "mcp__plugin_gads_gads__searchads3_customers_generate_audience_ov",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/doubleclicksearch"
     ],
@@ -2604,7 +2628,7 @@
   },
   {
     "name": "mcp__plugin_gads_gads__searchads3_customers_generate_benchmarks",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/doubleclicksearch"
     ],
@@ -2613,7 +2637,7 @@
   },
   {
     "name": "mcp__plugin_gads_gads__searchads3_customers_generate_insights_fi",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/doubleclicksearch"
     ],
@@ -2622,7 +2646,7 @@
   },
   {
     "name": "mcp__plugin_gads_gads__searchads3_customers_generate_keyword_for",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/doubleclicksearch"
     ],
@@ -2631,7 +2655,7 @@
   },
   {
     "name": "mcp__plugin_gads_gads__searchads3_customers_generate_keyword_his",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/doubleclicksearch"
     ],
@@ -2640,7 +2664,7 @@
   },
   {
     "name": "mcp__plugin_gads_gads__searchads3_customers_generate_keyword_ide",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/doubleclicksearch"
     ],
@@ -2649,7 +2673,7 @@
   },
   {
     "name": "mcp__plugin_gads_gads__searchads3_customers_generate_reach_forec",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/doubleclicksearch"
     ],
@@ -2658,7 +2682,7 @@
   },
   {
     "name": "mcp__plugin_gads_gads__searchads3_customers_generate_suggested_t",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/doubleclicksearch"
     ],
@@ -2667,7 +2691,7 @@
   },
   {
     "name": "mcp__plugin_gads_gads__searchads3_customers_generate_targeting_s",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/doubleclicksearch"
     ],
@@ -2784,7 +2808,7 @@
   },
   {
     "name": "mcp__plugin_gads_gads__searchads3_customers_offline_user_dat_run",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/doubleclicksearch"
     ],
@@ -2856,7 +2880,7 @@
   },
   {
     "name": "mcp__plugin_gads_gads__searchads3_customers_recommendat_generate",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/doubleclicksearch"
     ],
@@ -3108,7 +3132,7 @@
   },
   {
     "name": "mcp__plugin_gads_gads__searchads3_v23_generate_conversion_rates",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/doubleclicksearch"
     ],

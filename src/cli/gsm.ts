@@ -2,13 +2,15 @@
 import { statSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { resolve } from 'node:path';
-import { parseCliArgs, parseGroup, parseInstallArgs, parseLoginScopes, parseProfile, parseServers, parseSetupAdminArgs } from './args.js';
+import { parseCliArgs, parseGroup, parseInstallArgs, parseLimit, parseLoginScopes, parseProfile, parseSearch, parseServers, parseSetupAdminArgs } from './args.js';
 import { runSetupAdmin } from './admin.js';
 import { runSetupApiKey } from './apikey.js';
 import { runStatus, runLogout, runSetupClient } from './credentials.js';
+import { runDoctor } from './doctor.js';
 import { spawnRunner } from './exec.js';
 import { runInstall } from './install.js';
 import { runLogin } from './login.js';
+import { runApis, runMethods, runProducts, runVersion, type ListingEnv } from './listing.js';
 import { findRoots } from './paths.js';
 import { loadProductRegistry, productIds } from './products.js';
 import type { Output } from './report.js';
@@ -27,6 +29,11 @@ Commands:
   setup-admin   Set up workspace-admin: service account and super admin subject
   status        Show logins, the API key and the security posture of each token
   logout        Remove one group's stored token (apikey: shows where the key file is)
+  products      List the products: id, title, group, tool count, gateway APIs and whether the plugin folder exists
+  apis          List the APIs of a product (generated and gateway), or of the whole catalog, with method counts
+  methods       List the methods of one catalog API: id, HTTP verb, path and kind (read, write or destructive)
+  doctor        Check the plugin folders, hooks, tool names, token directory and credentials: PASS or FAIL per check
+  version       Show the suite version and the Node version
   --help        Show this help
 
 Usage:
@@ -41,6 +48,11 @@ Usage:
   gsm setup-admin --subject <admin email> --key-file <service account JSON> [--profile readonly|readwrite|full] [--servers <a,b>]
   gsm status
   gsm logout <group>
+  gsm products [--json]
+  gsm apis [<product>] [--search <text>] [--json] [--limit <n>]
+  gsm methods <api> [<version>] [--search <text>] [--json] [--limit <n>]
+  gsm doctor [--plugin <id>] [--token-dir <dir>]
+  gsm version
   gsm --help
 
 Plugins: --plugin takes product ids, for example gcloud, gsc, gsearch, gdrive, gmail or gai. An unknown id is refused,
@@ -65,9 +77,27 @@ Flags:   --dry-run prints every planned change and command and writes nothing.
          --json prints gsm scopes output as JSON.
 API key: setup-apikey reads GSM_API_KEY_INPUT or stdin. The key is never a command-line argument and is never printed.
 Backups: an existing config file is copied to <file>.gsm-backup-<YYYYMMDD-HHMMSS> before it changes.
+Listing: products, apis and methods only read the product map and the catalog. --json prints JSON (apis and methods
+         wrap their rows with the totals). --search matches API names and titles (apis), or method ids and paths (methods).
+         --limit caps the rows shown. methods shows 200 rows unless --limit is given.
+Doctor:  --plugin checks one product. Without it, every product of this checkout (or this plugin folder) is checked.
+         --token-dir checks another token directory. Exit 1 when any check FAILs. It creates nothing and prints no secret.
+Summary: install ends with one summary line: products, servers and tools, and the confirmation and write settings.
 `;
 
 const resolvePath = (p: string): string => resolve(process.cwd(), p);
+
+/** A command that takes no positional arguments refuses them. */
+function noPositionals(positionals: readonly string[], usage: string): void {
+  if (positionals.length > 0) throw new UsageError(usage);
+}
+
+/** An optional string option. A flag given without a value is a usage error. */
+function optionalString(value: string | boolean | undefined, flag: string): string | undefined {
+  if (value === undefined) return undefined;
+  if (typeof value !== 'string' || value.trim() === '') throw new UsageError(`--${flag} needs a value`);
+  return value;
+}
 
 function requireDirectory(path: string, label: string): void {
   let isDir = false;
@@ -102,7 +132,11 @@ async function dispatch(argv: string[]): Promise<number> {
   const parsed = parseCliArgs(argv);
   const moduleUrl = import.meta.url;
   // The product map: servers.json next to bin/ in a plugin folder, or config/products.json in the repo.
-  const registryFor = () => loadProductRegistry(findRoots(moduleUrl), moduleUrl);
+  const registryFor = () => loadProductRegistry(findRoots(moduleUrl));
+  const listingEnv = (): ListingEnv => {
+    const roots = findRoots(moduleUrl);
+    return { roots, registry: loadProductRegistry(roots), moduleUrl, out };
+  };
 
   switch (parsed.command) {
     case 'help':
@@ -112,7 +146,7 @@ async function dispatch(argv: string[]): Promise<number> {
     case 'install':
     case 'uninstall': {
       const roots = findRoots(moduleUrl);
-      const registry = loadProductRegistry(roots, moduleUrl);
+      const registry = loadProductRegistry(roots);
       const request = parseInstallArgs(parsed.values, parsed.command, resolvePath, productIds(registry));
       if (request.pathArg !== undefined) requireDirectory(request.pathArg, '--path');
       if (request.home !== undefined) requireDirectory(request.home, '--home');
@@ -179,6 +213,55 @@ async function dispatch(argv: string[]): Promise<number> {
       const group = parseGroup(parsed.positionals, 'usage: gsm logout <group>');
       return runLogout(group, out);
     }
+
+    case 'products':
+      noPositionals(parsed.positionals, 'usage: gsm products [--json]');
+      return runProducts(listingEnv(), parsed.values.json === true);
+
+    case 'apis': {
+      if (parsed.positionals.length > 1) {
+        throw new UsageError('usage: gsm apis [<product>] [--search <text>] [--json] [--limit <n>]');
+      }
+      return runApis(listingEnv(), {
+        product: parsed.positionals[0],
+        search: parseSearch(parsed.values.search),
+        limit: parseLimit(parsed.values.limit),
+        json: parsed.values.json === true,
+      });
+    }
+
+    case 'methods': {
+      if (parsed.positionals.length < 1 || parsed.positionals.length > 2) {
+        throw new UsageError('usage: gsm methods <api> [<version>] [--search <text>] [--json] [--limit <n>]');
+      }
+      return runMethods(listingEnv(), {
+        api: parsed.positionals[0] ?? '',
+        version: parsed.positionals[1],
+        search: parseSearch(parsed.values.search),
+        limit: parseLimit(parsed.values.limit),
+        json: parsed.values.json === true,
+      });
+    }
+
+    case 'doctor': {
+      noPositionals(parsed.positionals, 'usage: gsm doctor [--plugin <id>] [--token-dir <dir>]');
+      const roots = findRoots(moduleUrl);
+      const tokenDir = optionalString(parsed.values['token-dir'], 'token-dir');
+      return runDoctor(
+        {
+          roots,
+          registry: loadProductRegistry(roots),
+          pluginId: optionalString(parsed.values.plugin, 'plugin'),
+          tokenDir: tokenDir === undefined ? undefined : resolvePath(tokenDir),
+          env: process.env,
+        },
+        out,
+      );
+    }
+
+    case 'version':
+      noPositionals(parsed.positionals, 'usage: gsm version');
+      return runVersion({ roots: findRoots(moduleUrl), out });
   }
 }
 

@@ -296,7 +296,7 @@
   },
   {
     "name": "mcp__plugin_gplay_gplay__androident_enterprises_generate_enterpr",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/androidenterprise"
     ],
@@ -305,7 +305,7 @@
   },
   {
     "name": "mcp__plugin_gplay_gplay__androident_enterprises_generate_signup",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/androidenterprise"
     ],
@@ -593,7 +593,7 @@
   },
   {
     "name": "mcp__plugin_gplay_gplay__androident_products_generate_approval_u",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/androidenterprise"
     ],
@@ -773,7 +773,7 @@
   },
   {
     "name": "mcp__plugin_gplay_gplay__androident_users_generate_authenticatio",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/androidenterprise"
     ],
@@ -2166,7 +2166,7 @@
   },
   {
     "name": "mcp__plugin_gplay_gplay__games_accesstokens_generate_play_groupi",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/games"
     ],
@@ -2175,7 +2175,7 @@
   },
   {
     "name": "mcp__plugin_gplay_gplay__games_accesstokens_generate_recall_play",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/androidpublisher"
     ],
@@ -2807,7 +2807,7 @@
   },
   {
     "name": "mcp__plugin_gplay_gplay__playdevelo_vitals_anonrssandswapm_query",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/playdeveloperreporting"
     ],
@@ -2834,7 +2834,7 @@
   },
   {
     "name": "mcp__plugin_gplay_gplay__playdevelo_vitals_anrrate_query",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/playdeveloperreporting"
     ],
@@ -2843,7 +2843,7 @@
   },
   {
     "name": "mcp__plugin_gplay_gplay__playdevelo_vitals_bitmapmemoryusa_query",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/playdeveloperreporting"
     ],
@@ -2870,7 +2870,7 @@
   },
   {
     "name": "mcp__plugin_gplay_gplay__playdevelo_vitals_crashrate_query",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/playdeveloperreporting"
     ],
@@ -2888,7 +2888,7 @@
   },
   {
     "name": "mcp__plugin_gplay_gplay__playdevelo_vitals_errors_counts_query",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/playdeveloperreporting"
     ],
@@ -2915,7 +2915,7 @@
   },
   {
     "name": "mcp__plugin_gplay_gplay__playdevelo_vitals_excessivewakeup_query",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/playdeveloperreporting"
     ],
@@ -2942,7 +2942,7 @@
   },
   {
     "name": "mcp__plugin_gplay_gplay__playdevelo_vitals_lmkrate_query",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/playdeveloperreporting"
     ],
@@ -2951,7 +2951,7 @@
   },
   {
     "name": "mcp__plugin_gplay_gplay__playdevelo_vitals_slowrenderingra_query",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/playdeveloperreporting"
     ],
@@ -2978,7 +2978,7 @@
   },
   {
     "name": "mcp__plugin_gplay_gplay__playdevelo_vitals_slowstartrate_query",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/playdeveloperreporting"
     ],
@@ -2987,7 +2987,7 @@
   },
   {
     "name": "mcp__plugin_gplay_gplay__playdevelo_vitals_stuckbackground_query",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/playdeveloperreporting"
     ],

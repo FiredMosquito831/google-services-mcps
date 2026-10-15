@@ -1712,11 +1712,11 @@
     },
     "gads": {
       "title": "Ads and Publisher",
-      "description": "Advertising and publisher APIs: Search Ads 360, Display & Video 360, Campaign Manager, Ad Exchange, AdSense, AdMob, Real-time Bidding and more.",
+      "description": "Google Ads API (account list, GAQL search and gated mutations), plus advertising and publisher APIs: Search Ads 360, Display & Video 360, Campaign Manager, Ad Exchange, AdSense, AdMob, Real-time Bidding and more.",
       "group": "business",
       "server": {
         "name": "gads",
-        "curated": null
+        "curated": "ads"
       },
       "generated": [
         {
@@ -2425,6 +2425,14 @@
         {
           "api": "vision",
           "version": "v1p2beta1"
+        },
+        {
+          "api": "generativelanguage",
+          "version": "v1beta"
+        },
+        {
+          "api": "generativelanguage",
+          "version": "v1"
         }
       ],
       "generatedToolCount": 350
@@ -2542,6 +2550,7 @@
     "eventarc": "Gateway only: 66 per-method tools do not fit under the 350 cap after the higher-priority APIs.",
     "firestore": "Cloud Firestore is shared with Firebase; placed with GCP data APIs in gcloud. Firebase management APIs are in gfirebase.",
     "ftp": "Cloud FTP is managed SFTP data transfer; placed in gcloud storage.",
+    "generativelanguage": "Gemini API (Generative Language). Not in the Discovery directory, so its documents come from the service discovery URLs in SUPPLEMENTAL_ENTRIES (scripts/build-catalog.mjs). Gateway in gai: gai generated tools are already at the 350 cap.",
     "gkebackup": "Gateway only: 67 per-method tools do not fit under the 350 cap after the higher-priority APIs.",
     "gkeonprem": "Gateway only: 79 per-method tools do not fit under the 350 cap after the higher-priority APIs.",
     "groupsmigration": "Zero per-method tools (the only methods are media uploads); gateway only.",

@@ -2,7 +2,7 @@
   "name": "gads",
   "displayName": "Ads and Publisher",
   "version": "0.1.0",
-  "description": "Advertising and publisher APIs: Search Ads 360, Display & Video 360, Campaign Manager, Ad Exchange, AdSense, AdMob, Real-time Bidding and more.",
+  "description": "Google Ads API (account list, GAQL search and gated mutations), plus advertising and publisher APIs: Search Ads 360, Display & Video 360, Campaign Manager, Ad Exchange, AdSense, AdMob, Real-time Bidding and more.",
   "author": {
     "name": "FiredMosquito831"
   },
@@ -34,6 +34,19 @@
       "type": "string",
       "title": "Token directory (optional)",
       "description": "Where OAuth tokens are stored. Leave empty for ~/.google-services-mcps.",
+      "required": false
+    },
+    "ads_developer_token": {
+      "type": "string",
+      "title": "Google Ads developer token",
+      "description": "Issued by Google Ads for your manager account. Stored in the system credential store, not in a file. Leave empty to use the token-directory file instead.",
+      "sensitive": true,
+      "required": false
+    },
+    "ads_login_customer_id": {
+      "type": "string",
+      "title": "Manager (login) customer ID (optional)",
+      "description": "10-digit ID of the manager account, without dashes, when you reach client accounts through one.",
       "required": false
     }
   }
