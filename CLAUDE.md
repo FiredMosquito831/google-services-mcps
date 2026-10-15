@@ -79,6 +79,8 @@ Append a dated bullet whenever you learn something non-obvious about this reposi
 - 2026-10-16: `.gitattributes` has `* text=auto eol=lf`. The owner's Windows git has `core.autocrlf=true`, and `install.sh` must stay LF for Linux `sh`.
 - 2026-10-16: `npx <file.tgz> ...` exits 0 and runs nothing. Test a tarball with `npm install -g --prefix <dir> <tgz>` (then `<dir>\gsm.cmd`) or `npm exec --package=<tgz> -- gsm ...`.
 - 2026-10-16: in `cmd`, `move` of a folder from `%TEMP%` to another drive fails with "Access is denied". `scripts/install.cmd` uses `xcopy` for that step. Test `5. cmd: ... another drive` runs when a second drive exists.
+- 2026-10-16: `npm publish` from this shell stops at `EOTP` (browser approval). The owner runs `npm publish --access public` in a terminal and approves in the browser. `prepublishOnly` runs the build and the tests first (about 6 minutes).
+- 2026-10-16: on this machine the `sh` on PATH is msys64's, not Git for Windows'. In a test, the `sh` that a piped `curl | sh` starts did not see `USERPROFILE`, `CLAUDE_CONFIG_DIR` or `GSM_DIR` exported by the parent script. The cause was not fully established, and that run wrote a marketplace and folders into the real profile. Before a one-liner test, probe the environment inside the pipeline, and check the real Claude config afterwards with `claude plugin marketplace list`.
 - 2026-10-16: npm trusted publishing is set on the package's page on npmjs.com, so the package must exist first. The first publish is manual (from the owner's terminal, with two-factor). The `npm.yml` workflow (copied from ase-moodle-mcp) publishes later versions only when `package.json` has a new version.
 
 ## Preferences (the owner)
