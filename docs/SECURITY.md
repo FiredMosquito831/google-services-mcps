@@ -90,4 +90,4 @@ The read rule for `POST` is a name prefix. It is not a check of what the method 
 
 ## Reporting
 
-This repository is private. Report problems to the repository owner.
+This repository is public. To report a security problem, open a GitHub issue that does not include secrets, or contact the owner privately through GitHub. Never paste tokens, keys or client secret files into an issue.

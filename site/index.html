@@ -1,0 +1,541 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Google Workspace, Cloud, Search Console, Ads MCP servers for Claude | google-services-mcps</title>
+<meta name="description" content="MCP servers for Google Workspace, Gmail, Drive, Calendar, Cloud, Search Console, Google Ads. Claude Code plugins; Codex, OpenCode and Antigravity installers.">
+<meta name="theme-color" content="#0b1020" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f8fafc" media="(prefers-color-scheme: light)">
+<link rel="canonical" href="https://firedmosquito831.github.io/google-services-mcps/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b1020'/%3E%3Cpath d='M7 16h7M18 16h7' stroke='%237aa2ff' stroke-width='3' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='16' r='4' fill='%23fbbf24'/%3E%3C/svg%3E">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="google-services-mcps">
+<meta property="og:title" content="Google Workspace, Cloud, Search Console, Ads MCP servers for Claude | google-services-mcps">
+<meta property="og:description" content="MCP servers for Google Workspace, Gmail, Drive, Calendar, Cloud, Search Console, Google Ads. Claude Code plugins; Codex, OpenCode and Antigravity installers.">
+<meta property="og:url" content="https://firedmosquito831.github.io/google-services-mcps/">
+<meta property="og:image" content="https://firedmosquito831.github.io/google-services-mcps/assets/og.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="google-services-mcps: MCP servers for Google products, for Claude Code, Codex, OpenCode and Antigravity">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Google Workspace, Cloud, Search Console, Ads MCP servers for Claude | google-services-mcps">
+<meta name="twitter:description" content="MCP servers for Google Workspace, Gmail, Drive, Calendar, Cloud, Search Console, Google Ads. Claude Code plugins; Codex, OpenCode and Antigravity installers.">
+<meta name="twitter:image" content="https://firedmosquito831.github.io/google-services-mcps/assets/og.png">
+<meta name="twitter:image:alt" content="google-services-mcps: MCP servers for Google products, for Claude Code, Codex, OpenCode and Antigravity">
+<link rel="stylesheet" href="assets/site.css">
+<!-- jsonld:start -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "google-services-mcps",
+  "description": "MCP servers for Google Workspace, Gmail, Drive, Calendar, Cloud, Search Console, Google Ads. Claude Code plugins; Codex, OpenCode and Antigravity installers.",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Windows, macOS, Linux",
+  "offers": {
+    "@type": "Offer",
+    "price": 0,
+    "priceCurrency": "USD"
+  },
+  "url": "https://firedmosquito831.github.io/google-services-mcps/",
+  "codeRepository": "https://github.com/FiredMosquito831/google-services-mcps",
+  "programmingLanguage": "TypeScript"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Does it cost money?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The suite is free, and the servers add no charge of their own. Google's quotas, charges and approval rules still apply to every call. Each installed product also adds tool definitions to your Claude sessions, so install only what you use. See limits and costs."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which accounts do I need?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Most products need a Google Cloud project with a Desktop OAuth client, and a Google account that can use the product. For a Workspace domain, use an Internal consent screen. A personal account needs an External consent screen that you publish, because an app left in testing loses its refresh token after 7 days. The workspace admin plugin needs a super admin email and a service account with domain-wide delegation. The search and web-quality plugin needs an API key, not a sign-in."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is my data sent elsewhere?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Not to this project. The suite has no server of its own. Each call goes from your machine straight to Google. Tokens, the OAuth client file and the audit log stay in your token directory, ~/.google-services-mcps. The results you get back go to your AI agent, and from there to its model provider, like any tool output."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does it work with Codex?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. The installer writes the server entries for Codex, OpenCode and Antigravity into each agent's own config file, and a dry run shows every change first. Those agents have no approval hook in this suite, so their approval behaviour is not yet verified in a live session. A client that cannot ask for approval gets an error for each change and delete, and the action does not run."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why do I see approval prompts?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Changes and deletions ask first on purpose. Reads never ask. In Claude Code the prompt is labelled with the plugin, for example [plugin:gmail]. A delete, send or disable also shows an Approve this action? form, so it asks twice. You can change this with the Confirm before changes setting (every-change, destructive-only or off) and with rules in policy.json. A deny rule applies in every mode."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I remove everything?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Log out of each login group with gsm logout \u003cgroup>. Uninstall each plugin with claude plugin uninstall \u003cid>@google-services-mcps --scope user, then remove the marketplace with claude plugin marketplace remove google-services-mcps. Delete the token directory ~/.google-services-mcps by hand, and keep audit.log if you need the record. Logging out does not revoke access at Google, so revoke it at myaccount.google.com/permissions, and delete the OAuth client in the Google Cloud console if you no longer need it."
+      }
+    }
+  ]
+}
+</script>
+<!-- jsonld:end -->
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="./">google-services-mcps</a>
+    <nav class="site-nav" aria-label="Main">
+      <ul>
+        <li><a href="#products">Products</a></li>
+        <li><a href="#install">Install</a></li>
+        <li><a href="#safety">Safety</a></li>
+        <li><a href="#costs">Costs</a></li>
+        <li><a href="#questions">Questions</a></li>
+        <li><a href="https://github.com/FiredMosquito831/google-services-mcps">GitHub</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+<section class="hero" aria-labelledby="hero-title">
+  <div class="wrap">
+    <p class="eyebrow">MCP servers for Google products</p>
+    <h1 id="hero-title">Google products as MCP servers for your AI coding agent</h1>
+    <p class="lead">Gmail, Google Drive, Google Calendar, Google Cloud, Search Console, Google Ads and <!-- n:more -->17<!-- /n:more --> more, as Claude Code plugins. Installers for Codex, OpenCode and Antigravity.</p>
+    <div class="actions">
+      <a class="btn btn-primary" href="#install">Install in 5 minutes</a>
+      <a class="btn" href="https://github.com/FiredMosquito831/google-services-mcps">View on GitHub</a>
+    </div>
+    <p class="status">Built and tested offline. Live testing with real Google accounts is next.</p>
+    <dl class="stats">
+      <div><dt>Plugins</dt><dd><!-- n:products -->23<!-- /n:products --></dd></div>
+      <div><dt>Tools</dt><dd><!-- n:tools -->3,334<!-- /n:tools --></dd></div>
+      <div><dt>Gateway APIs</dt><dd><!-- n:gateway -->391<!-- /n:gateway --></dd></div>
+      <div><dt>Discovery methods catalogued</dt><dd><!-- n:methods -->29,205<!-- /n:methods --></dd></div>
+    </dl>
+  </div>
+</section>
+
+<section id="what-you-get" aria-labelledby="what-title">
+  <div class="wrap">
+    <h2 id="what-title">What you get</h2>
+    <div class="grid">
+      <article class="card">
+        <h3>One plugin per product</h3>
+        <p><!-- n:products -->23<!-- /n:products --> plugins, one for each Google product. Install the ones you use, and turn each server on or off for a session with <code>/mcp</code>.</p>
+      </article>
+      <article class="card">
+        <h3>Safe by default</h3>
+        <p>Reads never ask. Changes and deletions ask first, and write tools stay off until you allow them.</p>
+      </article>
+      <article class="card">
+        <h3>Full API surface</h3>
+        <p><!-- n:toolsFloor -->3,300+<!-- /n:toolsFloor --> tools, generated from Google's Discovery documents. Each method of a generated API is one tool.</p>
+      </article>
+      <article class="card">
+        <h3>Gateway for every API</h3>
+        <p>The other APIs of each product, <!-- n:gateway -->391<!-- /n:gateway --> in all, are reached through three tools: <code>api_search</code>, <code>api_describe</code> and <code>api_call</code>.</p>
+      </article>
+      <article class="card">
+        <h3>Login once per product group</h3>
+        <p>One sign-in covers each login group. A login merges its scopes with the ones already stored; <code>--replace</code> drops them.</p>
+      </article>
+      <article class="card">
+        <h3>Four agents, one suite</h3>
+        <p>Works in Claude Code, Codex, OpenCode and Antigravity. The installers write the server entries for the three other agents.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="products" aria-labelledby="products-title">
+  <div class="wrap">
+    <h2 id="products-title">Products</h2>
+    <p class="section-lead">One plugin per product. Counts come from the build and are split by safety class: read, write, destructive and dynamic. Each install command adds one plugin from the marketplace.</p>
+    <!-- products:start -->
+    <div class="product-group">
+      <h3 id="group-cloud">Cloud and AI <span class="count">(2)</span></h3>
+      <div class="grid">
+        <article class="card product" id="product-gcloud">
+          <h4>Google Cloud</h4>
+          <p class="meta"><code>gcloud</code><span class="pill">374 tools</span><span class="pill">277 gateway APIs</span></p>
+          <p>Google Cloud console APIs: projects, service enablement, API keys, billing, monitoring, storage, BigQuery and IAM, plus the rest of the infrastructure, data, devops, networking, security and governance APIs.</p>
+          <ul class="kinds" role="list"><li><strong>185</strong> read</li><li><strong>137</strong> write</li><li><strong>51</strong> destructive</li><li><strong>1</strong> dynamic</li></ul>
+          <div class="codeblock"><pre><code>claude plugin install gcloud@google-services-mcps --scope user</code></pre></div>
+          <p class="card-links"><a href="https://github.com/FiredMosquito831/google-services-mcps/blob/main/docs/capabilities/gcloud.md">Tools and methods</a></p>
+        </article>
+        <article class="card product" id="product-gai">
+          <h4>AI and ML</h4>
+          <p class="meta"><code>gai</code><span class="pill">354 tools</span><span class="pill">47 gateway APIs</span></p>
+          <p>Generative and classic AI APIs: Discovery Engine, Vertex AI, Dialogflow, Vision, Speech, Translate, Document AI and agent services.</p>
+          <ul class="kinds" role="list"><li><strong>153</strong> read</li><li><strong>143</strong> write</li><li><strong>57</strong> destructive</li><li><strong>1</strong> dynamic</li></ul>
+          <div class="codeblock"><pre><code>claude plugin install gai@google-services-mcps --scope user</code></pre></div>
+          <p class="card-links"><a href="https://github.com/FiredMosquito831/google-services-mcps/blob/main/docs/capabilities/gai.md">Tools and methods</a></p>
+        </article>
+      </div>
+    </div>
+    <div class="product-group">
+      <h3 id="group-searchconsole">Search Console <span class="count">(1)</span></h3>
+      <div class="grid">
+        <article class="card product" id="product-gsc">
+          <h4>Search Console</h4>
+          <p class="meta"><code>gsc</code><span class="pill">31 tools</span></p>
+          <p>Search Console sites, sitemaps, search analytics, URL indexing and site verification.</p>
+          <ul class="kinds" role="list"><li><strong>15</strong> read</li><li><strong>11</strong> write</li><li><strong>5</strong> destructive</li><li><strong>0</strong> dynamic</li></ul>
+          <div class="codeblock"><pre><code>claude plugin install gsc@google-services-mcps --scope user</code></pre></div>
+          <p class="card-links"><a href="https://github.com/FiredMosquito831/google-services-mcps/blob/main/docs/capabilities/gsc.md">Tools and methods</a></p>
+        </article>
+      </div>
+    </div>
+    <div class="product-group">
+      <h3 id="group-apikey">Public APIs (API key) <span class="count">(1)</span></h3>
+      <div class="grid">
+        <article class="card product" id="product-gsearch">
+          <h4>Search and Web Quality</h4>
+          <p class="meta"><code>gsearch</code><span class="pill">51 tools</span><span class="pill">2 gateway APIs</span></p>
+          <p>Public search and web-quality APIs (Custom Search, PageSpeed, CrUX, Safe Browsing, Web Risk, Fact Check) that take an API key instead of OAuth. The Custom Search JSON API is closed to new customers and is scheduled to be discontinued on 2027-01-01.</p>
+          <ul class="kinds" role="list"><li><strong>42</strong> read</li><li><strong>5</strong> write</li><li><strong>3</strong> destructive</li><li><strong>1</strong> dynamic</li></ul>
+          <div class="codeblock"><pre><code>claude plugin install gsearch@google-services-mcps --scope user</code></pre></div>
+          <p class="card-links"><a href="https://github.com/FiredMosquito831/google-services-mcps/blob/main/docs/capabilities/gsearch.md">Tools and methods</a></p>
+        </article>
+      </div>
+    </div>
+    <div class="product-group">
+      <h3 id="group-workspace-user">Workspace users <span class="count">(9)</span></h3>
+      <div class="grid">
+        <article class="card product" id="product-gdrive">
+          <h4>Google Drive and Docs</h4>
+          <p class="meta"><code>gdrive</code><span class="pill">185 tools</span><span class="pill">2 gateway APIs</span></p>
+          <p>Google Drive files, labels and activity, plus Docs, Sheets, Slides, Forms and Books.</p>
+          <ul class="kinds" role="list"><li><strong>87</strong> read</li><li><strong>75</strong> write</li><li><strong>22</strong> destructive</li><li><strong>1</strong> dynamic</li></ul>
+          <div class="codeblock"><pre><code>claude plugin install gdrive@google-services-mcps --scope user</code></pre></div>
+          <p class="card-links"><a href="https://github.com/FiredMosquito831/google-services-mcps/blob/main/docs/capabilities/gdrive.md">Tools and methods</a></p>
+        </article>
+        <article class="card product" id="product-gmail">
+          <h4>Gmail</h4>
+          <p class="meta"><code>gmail</code><span class="pill">97 tools</span><span class="pill">2 gateway APIs</span></p>
+          <p>Gmail mailboxes, messages, labels and settings, plus Gmail Postmaster Tools.</p>
+          <ul class="kinds" role="list"><li><strong>43</strong> read</li><li><strong>35</strong> write</li><li><strong>18</strong> destructive</li><li><strong>1</strong> dynamic</li></ul>
+          <div class="codeblock"><pre><code>claude plugin install gmail@google-services-mcps --scope user</code></pre></div>
+          <p class="card-links"><a href="https://github.com/FiredMosquito831/google-services-mcps/blob/main/docs/capabilities/gmail.md">Tools and methods</a></p>
+        </article>
+        <article class="card product" id="product-gcalendar">
+          <h4>Google Calendar</h4>
+          <p class="meta"><code>gcalendar</code><span class="pill">46 tools</span></p>
+          <p>Google Calendar calendars, events and calendar settings.</p>
+          <ul class="kinds" role="list"><li><strong>16</strong> read</li><li><strong>23</strong> write</li><li><strong>7</strong> destructive</li><li><strong>0</strong> dynamic</li></ul>
+          <div class="codeblock"><pre><code>claude plugin install gcalendar@google-services-mcps --scope user</code></pre></div>
+          <p class="card-links"><a href="https://github.com/FiredMosquito831/google-services-mcps/blob/main/docs/capabilities/gcalendar.md">Tools and methods</a></p>
+        </article>
+        <article class="card product" id="product-gchat">
+          <h4>Google Chat</h4>
+          <p class="meta"><code>gchat</code><span class="pill">61 tools</span></p>
+          <p>Google Chat spaces, messages and members, plus Workspace Events subscriptions.</p>
+          <ul class="kinds" role="list"><li><strong>28</strong> read</li><li><strong>25</strong> write</li><li><strong>8</strong> destructive</li><li><strong>0</strong> dynamic</li></ul>
+          <div class="codeblock"><pre><code>claude plugin install gchat@google-services-mcps --scope user</code></pre></div>
+          <p class="card-links"><a href="https://github.com/FiredMosquito831/google-services-mcps/blob/main/docs/capabilities/gchat.md">Tools and methods</a></p>
+        </article>
+        <article class="card product" id="product-gmeet">
+          <h4>Google Meet</h4>
+          <p class="meta"><code>gmeet</code><span class="pill">25 tools</span></p>
+          <p>Google Meet spaces, conference records, participants and recordings.</p>
+          <ul class="kinds" role="list"><li><strong>18</strong> read</li><li><strong>6</strong> write</li><li><strong>1</strong> destructive</li><li><strong>0</strong> dynamic</li></ul>
+          <div class="codeblock"><pre><code>claude plugin install gmeet@google-services-mcps --scope user</code></pre></div>
+          <p class="card-links"><a href="https://github.com/FiredMosquito831/google-services-mcps/blob/main/docs/capabilities/gmeet.md">Tools and methods</a></p>
+        </article>
+        <article class="card product" id="product-gcontacts">
+          <h4>Contacts and Profile</h4>
+          <p class="meta"><code>gcontacts</code><span class="pill">63 tools</span><span class="pill">2 gateway APIs</span></p>
+          <p>Google Contacts and People, personal health metrics, Data Portability, and the OAuth2 userinfo endpoints.</p>
+          <ul class="kinds" role="list"><li><strong>32</strong> read</li><li><strong>21</strong> write</li><li><strong>9</strong> destructive</li><li><strong>1</strong> dynamic</li></ul>
+          <div class="codeblock"><pre><code>claude plugin install gcontacts@google-services-mcps --scope user</code></pre></div>
+          <p class="card-links"><a href="https://github.com/FiredMosquito831/google-services-mcps/blob/main/docs/capabilities/gcontacts.md">Tools and methods</a></p>
+        </article>
+        <article class="card product" id="product-gtasks">
+          <h4>Tasks and Keep</h4>
+          <p class="meta"><code>gtasks</code><span class="pill">22 tools</span></p>
+          <p>Google Tasks task lists and tasks, plus Google Keep notes.</p>
+          <ul class="kinds" role="list"><li><strong>8</strong> read</li><li><strong>9</strong> write</li><li><strong>5</strong> destructive</li><li><strong>0</strong> dynamic</li></ul>
+          <div class="codeblock"><pre><code>claude plugin install gtasks@google-services-mcps --scope user</code></pre></div>
+          <p class="card-links"><a href="https://github.com/FiredMosquito831/google-services-mcps/blob/main/docs/capabilities/gtasks.md">Tools and methods</a></p>
+        </article>
+        <article class="card product" id="product-gclassroom">
+          <h4>Google Classroom</h4>
+          <p class="meta"><code>gclassroom</code><span class="pill">105 tools</span></p>
+          <p>Google Classroom courses, coursework, submissions, students and teachers.</p>
+          <ul class="kinds" role="list"><li><strong>44</strong> read</li><li><strong>43</strong> write</li><li><strong>18</strong> destructive</li><li><strong>0</strong> dynamic</li></ul>
+          <div class="codeblock"><pre><code>claude plugin install gclassroom@google-services-mcps --scope user</code></pre></div>
+          <p class="card-links"><a href="https://github.com/FiredMosquito831/google-services-mcps/blob/main/docs/capabilities/gclassroom.md">Tools and methods</a></p>
+        </article>
+        <article class="card product" id="product-gapps">
+          <h4>Apps Script</h4>
+          <p class="meta"><code>gapps</code><span class="pill">19 tools</span></p>
+          <p>Apps Script projects and execution, plus the Workspace Marketplace SDK.</p>
+          <ul class="kinds" role="list"><li><strong>12</strong> read</li><li><strong>5</strong> write</li><li><strong>2</strong> destructive</li><li><strong>0</strong> dynamic</li></ul>
+          <div class="codeblock"><pre><code>claude plugin install gapps@google-services-mcps --scope user</code></pre></div>
+          <p class="card-links"><a href="https://github.com/FiredMosquito831/google-services-mcps/blob/main/docs/capabilities/gapps.md">Tools and methods</a></p>
+        </article>
+      </div>
+    </div>
+    <div class="product-group">
+      <h3 id="group-workspace-admin">Workspace admin <span class="count">(1)</span></h3>
+      <div class="grid">
+        <article class="card product" id="product-gadmin">
+          <h4>Workspace Admin</h4>
+          <p class="meta"><code>gadmin</code><span class="pill">366 tools</span><span class="pill">4 gateway APIs</span></p>
+          <p>Google Workspace administration: Cloud Identity, Chrome management and policy, Groups Settings, licensing, reports, alerts, Vault, reseller and Cloud Search admin.</p>
+          <ul class="kinds" role="list"><li><strong>153</strong> read</li><li><strong>152</strong> write</li><li><strong>60</strong> destructive</li><li><strong>1</strong> dynamic</li></ul>
+          <div class="codeblock"><pre><code>claude plugin install gadmin@google-services-mcps --scope user</code></pre></div>
+          <p class="card-links"><a href="https://github.com/FiredMosquito831/google-services-mcps/blob/main/docs/capabilities/gadmin.md">Tools and methods</a></p>
+        </article>
+      </div>
+    </div>
+    <div class="product-group">
+      <h3 id="group-business">Business and advertising <span class="count">(6)</span></h3>
+      <div class="grid">
+        <article class="card product" id="product-ganalytics">
+          <h4>Google Analytics</h4>
+          <p class="meta"><code>ganalytics</code><span class="pill">70 tools</span><span class="pill">1 gateway API</span></p>
+          <p>Google Analytics admin and data APIs for GA4 properties, configuration and reports.</p>
+          <ul class="kinds" role="list"><li><strong>35</strong> read</li><li><strong>24</strong> write</li><li><strong>10</strong> destructive</li><li><strong>1</strong> dynamic</li></ul>
+          <div class="codeblock"><pre><code>claude plugin install ganalytics@google-services-mcps --scope user</code></pre></div>
+          <p class="card-links"><a href="https://github.com/FiredMosquito831/google-services-mcps/blob/main/docs/capabilities/ganalytics.md">Tools and methods</a></p>
+        </article>
+        <article class="card product" id="product-gtm">
+          <h4>Tag Manager</h4>
+          <p class="meta"><code>gtm</code><span class="pill">110 tools</span><span class="pill">1 gateway API</span></p>
+          <p>Google Tag Manager accounts, containers, tags, triggers and variables.</p>
+          <ul class="kinds" role="list"><li><strong>41</strong> read</li><li><strong>53</strong> write</li><li><strong>15</strong> destructive</li><li><strong>1</strong> dynamic</li></ul>
+          <div class="codeblock"><pre><code>claude plugin install gtm@google-services-mcps --scope user</code></pre></div>
+          <p class="card-links"><a href="https://github.com/FiredMosquito831/google-services-mcps/blob/main/docs/capabilities/gtm.md">Tools and methods</a></p>
+        </article>
+        <article class="card product" id="product-gyoutube">
+          <h4>YouTube and Blogger</h4>
+          <p class="meta"><code>gyoutube</code><span class="pill">125 tools</span></p>
+          <p>YouTube Data, YouTube Analytics and YouTube Reporting APIs, plus Blogger.</p>
+          <ul class="kinds" role="list"><li><strong>56</strong> read</li><li><strong>49</strong> write</li><li><strong>20</strong> destructive</li><li><strong>0</strong> dynamic</li></ul>
+          <div class="codeblock"><pre><code>claude plugin install gyoutube@google-services-mcps --scope user</code></pre></div>
+          <p class="card-links"><a href="https://github.com/FiredMosquito831/google-services-mcps/blob/main/docs/capabilities/gyoutube.md">Tools and methods</a></p>
+        </article>
+        <article class="card product" id="product-gbusiness">
+          <h4>Business Profile</h4>
+          <p class="meta"><code>gbusiness</code><span class="pill">52 tools</span></p>
+          <p>Business Profile accounts, locations, verifications, lodging, place actions, notifications and performance.</p>
+          <ul class="kinds" role="list"><li><strong>29</strong> read</li><li><strong>19</strong> write</li><li><strong>4</strong> destructive</li><li><strong>0</strong> dynamic</li></ul>
+          <div class="codeblock"><pre><code>claude plugin install gbusiness@google-services-mcps --scope user</code></pre></div>
+          <p class="card-links"><a href="https://github.com/FiredMosquito831/google-services-mcps/blob/main/docs/capabilities/gbusiness.md">Tools and methods</a></p>
+        </article>
+        <article class="card product" id="product-gads">
+          <h4>Ads and Publisher</h4>
+          <p class="meta"><code>gads</code><span class="pill">330 tools</span><span class="pill">25 gateway APIs</span></p>
+          <p>Google Ads API (accounts, campaigns, ad groups, ads, keywords, budgets, conversions, assets and GAQL reporting, with every other method through the gateway), plus advertising and publisher APIs: Search Ads 360, Display &amp; Video 360, Campaign Manager, Ad Exchange, AdSense, AdMob, Real-time Bidding and more.</p>
+          <ul class="kinds" role="list"><li><strong>96</strong> read</li><li><strong>190</strong> write</li><li><strong>20</strong> destructive</li><li><strong>24</strong> dynamic</li></ul>
+          <div class="codeblock"><pre><code>claude plugin install gads@google-services-mcps --scope user</code></pre></div>
+          <p class="card-links"><a href="https://github.com/FiredMosquito831/google-services-mcps/blob/main/docs/capabilities/gads.md">Tools and methods</a></p>
+        </article>
+        <article class="card product" id="product-gmerchant">
+          <h4>Merchant Center</h4>
+          <p class="meta"><code>gmerchant</code><span class="pill">158 tools</span><span class="pill">12 gateway APIs</span></p>
+          <p>Merchant Center: Merchant API, Comparison Shopping Service and Manufacturer Center.</p>
+          <ul class="kinds" role="list"><li><strong>73</strong> read</li><li><strong>64</strong> write</li><li><strong>20</strong> destructive</li><li><strong>1</strong> dynamic</li></ul>
+          <div class="codeblock"><pre><code>claude plugin install gmerchant@google-services-mcps --scope user</code></pre></div>
+          <p class="card-links"><a href="https://github.com/FiredMosquito831/google-services-mcps/blob/main/docs/capabilities/gmerchant.md">Tools and methods</a></p>
+        </article>
+      </div>
+    </div>
+    <div class="product-group">
+      <h3 id="group-developer">Developer platforms <span class="count">(3)</span></h3>
+      <div class="grid">
+        <article class="card product" id="product-gplay">
+          <h4>Google Play</h4>
+          <p class="meta"><code>gplay</code><span class="pill">353 tools</span><span class="pill">7 gateway APIs</span></p>
+          <p>Google Play developer publishing and reporting, Play Games Services, Android Enterprise and Management, Play Integrity and device APIs.</p>
+          <ul class="kinds" role="list"><li><strong>150</strong> read</li><li><strong>160</strong> write</li><li><strong>42</strong> destructive</li><li><strong>1</strong> dynamic</li></ul>
+          <div class="codeblock"><pre><code>claude plugin install gplay@google-services-mcps --scope user</code></pre></div>
+          <p class="card-links"><a href="https://github.com/FiredMosquito831/google-services-mcps/blob/main/docs/capabilities/gplay.md">Tools and methods</a></p>
+        </article>
+        <article class="card product" id="product-gfirebase">
+          <h4>Firebase</h4>
+          <p class="meta"><code>gfirebase</code><span class="pill">301 tools</span><span class="pill">9 gateway APIs</span></p>
+          <p>Firebase management, App Check, App Distribution, Crashlytics, Hosting, Data Connect, Rules, Test Lab, FCM and Identity Toolkit.</p>
+          <ul class="kinds" role="list"><li><strong>135</strong> read</li><li><strong>121</strong> write</li><li><strong>44</strong> destructive</li><li><strong>1</strong> dynamic</li></ul>
+          <div class="codeblock"><pre><code>claude plugin install gfirebase@google-services-mcps --scope user</code></pre></div>
+          <p class="card-links"><a href="https://github.com/FiredMosquito831/google-services-mcps/blob/main/docs/capabilities/gfirebase.md">Tools and methods</a></p>
+        </article>
+        <article class="card product" id="product-gmaps">
+          <h4>Maps and Location</h4>
+          <p class="meta"><code>gmaps</code><span class="pill">36 tools</span></p>
+          <p>Maps Platform and location APIs: Places, Address Validation, Solar, Air Quality, Pollen, Street View Publish and related datasets.</p>
+          <ul class="kinds" role="list"><li><strong>20</strong> read</li><li><strong>13</strong> write</li><li><strong>3</strong> destructive</li><li><strong>0</strong> dynamic</li></ul>
+          <div class="codeblock"><pre><code>claude plugin install gmaps@google-services-mcps --scope user</code></pre></div>
+          <p class="card-links"><a href="https://github.com/FiredMosquito831/google-services-mcps/blob/main/docs/capabilities/gmaps.md">Tools and methods</a></p>
+        </article>
+      </div>
+    </div>
+<!-- products:end -->
+  </div>
+</section>
+
+<section id="install" aria-labelledby="install-title">
+  <div class="wrap">
+    <h2 id="install-title">Install</h2>
+    <p class="section-lead">Each plugin needs its login group before its tools can run. In the commands below, <code>gsm</code> stands for <code>node plugins/&lt;id&gt;/bin/gsm.mjs</code>, run from a clone of the repository in the folder of the product.</p>
+    <div class="install-grid">
+      <div class="card">
+        <h3>Claude Code</h3>
+        <ol class="steps" role="list">
+          <li>
+            <p><strong>Add the marketplace once.</strong></p>
+            <div class="codeblock"><pre><code>claude plugin marketplace add FiredMosquito831/google-services-mcps</code></pre></div>
+          </li>
+          <li>
+            <p><strong>Install the products you need.</strong> Replace <code>gmail</code> with any product id from the list above.</p>
+            <div class="codeblock"><pre><code>claude plugin install gmail@google-services-mcps --scope user</code></pre></div>
+          </li>
+          <li>
+            <p><strong>Configure the plugin.</strong> In the plugin settings, <em>Allow write tools</em> is off by default and <em>Confirm before changes</em> is <code>every-change</code>. Turn writes on only for the tools you need.</p>
+          </li>
+          <li>
+            <p><strong>Log in once per group.</strong> Store the OAuth client, log in, then restart the agent so the new scopes apply.</p>
+            <div class="codeblock"><pre><code>gsm setup-client C:\path\to\client_secret.json
+gsm login workspace-user
+gsm status</code></pre></div>
+          </li>
+        </ol>
+      </div>
+      <div class="card">
+        <h3>Codex, OpenCode and Antigravity</h3>
+        <ol class="steps" role="list">
+          <li>
+            <p><strong>Dry run first.</strong> It prints every change and writes nothing. Use <code>--agent opencode</code>, or <code>--agent agy</code> for Antigravity.</p>
+            <div class="codeblock"><pre><code>gsm install --agent codex --plugin gmail --scope global --dry-run</code></pre></div>
+          </li>
+          <li>
+            <p><strong>Install.</strong> Each config file is backed up before it changes. Restart the agent to load the servers.</p>
+            <div class="codeblock"><pre><code>gsm install --agent codex --plugin gmail --scope global</code></pre></div>
+          </li>
+        </ol>
+      </div>
+    </div>
+    <h3 class="subhead">Login groups</h3>
+    <!-- groups:start -->
+<ul class="groups" role="list">
+  <li><strong>Cloud and AI</strong> (<code>cloud</code>): <code>gcloud</code>, <code>gai</code>. Desktop OAuth client, then <code>login cloud</code>.</li>
+  <li><strong>Search Console</strong> (<code>searchconsole</code>): <code>gsc</code>. Desktop OAuth client, then <code>login searchconsole</code>.</li>
+  <li><strong>Public APIs (API key)</strong> (<code>apikey</code>): <code>gsearch</code>. API key, then <code>setup-apikey</code> (no login).</li>
+  <li><strong>Workspace users</strong> (<code>workspace-user</code>): <code>gdrive</code>, <code>gmail</code>, <code>gcalendar</code>, <code>gchat</code>, <code>gmeet</code>, <code>gcontacts</code>, <code>gtasks</code>, <code>gclassroom</code>, <code>gapps</code>. Desktop OAuth client, then <code>login workspace-user</code>.</li>
+  <li><strong>Workspace admin</strong> (<code>workspace-admin</code>): <code>gadmin</code>. Service account with domain-wide delegation, then <code>setup-admin</code>.</li>
+  <li><strong>Business and advertising</strong> (<code>business</code>): <code>ganalytics</code>, <code>gtm</code>, <code>gyoutube</code>, <code>gbusiness</code>, <code>gads</code>, <code>gmerchant</code>. Desktop OAuth client, then <code>login business</code>.</li>
+  <li><strong>Developer platforms</strong> (<code>developer</code>): <code>gplay</code>, <code>gfirebase</code>, <code>gmaps</code>. Desktop OAuth client, then <code>login developer</code>.</li>
+</ul>
+<!-- groups:end -->
+  </div>
+</section>
+
+<section id="safety" aria-labelledby="safety-title">
+  <div class="wrap">
+    <h2 id="safety-title">Safety</h2>
+    <p class="section-lead">Six layers, checked in order. A failing layer does not let an action through.</p>
+    <ol class="layers" role="list">
+      <li><strong>Token scopes.</strong> Google enforces them. A read-only login cannot write, whatever the plugin shows.</li>
+      <li><strong>Tool registration.</strong> A tool is listed only if the stored token can run it. Write and destructive tools need <em>Allow write tools</em>.</li>
+      <li><strong>Approval gate.</strong> Each change and delete asks first. The hook only asks or denies, and never allows. A delete, send or disable asks twice.</li>
+      <li><strong>Confirmation setting.</strong> <code>every-change</code> (default), <code>destructive-only</code> or <code>off</code>. Deny rules apply in every mode.</li>
+      <li><strong>Policy file.</strong> A matching deny always wins, then a matching ask, then a matching allow.</li>
+      <li><strong>Audit log.</strong> One line per gated action, holding a hash of the arguments. The arguments are never written.</li>
+    </ol>
+    <p><a href="https://github.com/FiredMosquito831/google-services-mcps/blob/main/docs/SECURITY.md">Read the security model and its known limits</a> before you turn on write tools.</p>
+  </div>
+</section>
+
+<section id="costs" aria-labelledby="costs-title">
+  <div class="wrap">
+    <h2 id="costs-title">Limits and costs</h2>
+    <p class="section-lead">The suite is free. Google's APIs have quotas, some have costs, some need approval.</p>
+    <ul class="bullets">
+      <li>The servers add no charge of their own. Each call goes from your machine to Google, with your own OAuth client, API key or service account, so Google's rules apply to every call.</li>
+      <li>Quotas belong to a Google Cloud project or to an account. Check the Quotas page in the console before you rely on a number.</li>
+      <li>Rate-limit and unavailable responses are retried, up to three attempts in total. A quota that is used up does not clear by retrying.</li>
+      <li>Some APIs are closed or being retired. The Custom Search JSON API is reported closed to new customers.</li>
+    </ul>
+    <p><a href="https://github.com/FiredMosquito831/google-services-mcps/blob/main/docs/LIMITS-AND-COSTS.md">Limits, quotas and approvals for every product</a></p>
+  </div>
+</section>
+
+<section id="questions" aria-labelledby="faq-title">
+  <div class="wrap">
+    <h2 id="faq-title">Questions</h2>
+    <!-- faq:start -->
+    <details class="faq-item">
+      <summary>Does it cost money?</summary>
+      <div class="faq-answer"><p>The suite is free, and the servers add no charge of their own. Google's quotas, charges and approval rules still apply to every call. Each installed product also adds tool definitions to your Claude sessions, so install only what you use. See <a href="https://github.com/FiredMosquito831/google-services-mcps/blob/main/docs/LIMITS-AND-COSTS.md">limits and costs</a>.</p></div>
+    </details>
+    <details class="faq-item">
+      <summary>Which accounts do I need?</summary>
+      <div class="faq-answer"><p>Most products need a Google Cloud project with a Desktop OAuth client, and a Google account that can use the product. For a Workspace domain, use an Internal consent screen. A personal account needs an External consent screen that you publish, because an app left in testing loses its refresh token after 7 days. The workspace admin plugin needs a super admin email and a service account with domain-wide delegation. The search and web-quality plugin needs an API key, not a sign-in.</p></div>
+    </details>
+    <details class="faq-item">
+      <summary>Is my data sent elsewhere?</summary>
+      <div class="faq-answer"><p>Not to this project. The suite has no server of its own. Each call goes from your machine straight to Google. Tokens, the OAuth client file and the audit log stay in your token directory, <code>~/.google-services-mcps</code>. The results you get back go to your AI agent, and from there to its model provider, like any tool output.</p></div>
+    </details>
+    <details class="faq-item">
+      <summary>Does it work with Codex?</summary>
+      <div class="faq-answer"><p>Yes. The installer writes the server entries for Codex, OpenCode and Antigravity into each agent's own config file, and a dry run shows every change first. Those agents have no approval hook in this suite, so their approval behaviour is not yet verified in a live session. A client that cannot ask for approval gets an error for each change and delete, and the action does not run.</p></div>
+    </details>
+    <details class="faq-item">
+      <summary>Why do I see approval prompts?</summary>
+      <div class="faq-answer"><p>Changes and deletions ask first on purpose. Reads never ask. In Claude Code the prompt is labelled with the plugin, for example <code>[plugin:gmail]</code>. A delete, send or disable also shows an <em>Approve this action?</em> form, so it asks twice. You can change this with the <em>Confirm before changes</em> setting (<code>every-change</code>, <code>destructive-only</code> or <code>off</code>) and with rules in <code>policy.json</code>. A deny rule applies in every mode.</p></div>
+    </details>
+    <details class="faq-item">
+      <summary>How do I remove everything?</summary>
+      <div class="faq-answer"><p>Log out of each login group with <code>gsm logout &lt;group&gt;</code>. Uninstall each plugin with <code>claude plugin uninstall &lt;id&gt;@google-services-mcps --scope user</code>, then remove the marketplace with <code>claude plugin marketplace remove google-services-mcps</code>. Delete the token directory <code>~/.google-services-mcps</code> by hand, and keep <code>audit.log</code> if you need the record. Logging out does not revoke access at Google, so revoke it at <a href="https://myaccount.google.com/permissions">myaccount.google.com/permissions</a>, and delete the OAuth client in the Google Cloud console if you no longer need it.</p></div>
+    </details>
+    <!-- faq:end -->
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <ul class="footer-links" role="list">
+      <li><a href="https://github.com/FiredMosquito831/google-services-mcps">Repository</a></li>
+      <li><a href="https://github.com/FiredMosquito831/google-services-mcps/tree/main/docs">Documentation</a></li>
+      <li><a href="https://github.com/FiredMosquito831/google-services-mcps/issues">Issues</a></li>
+      <li><a href="https://github.com/FiredMosquito831/google-services-mcps/blob/main/docs/SECURITY.md">Security</a></li>
+    </ul>
+    <p>Google and the product names are trademarks of Google LLC. This project is not affiliated with or endorsed by Google.</p>
+    <p>Licence: not chosen yet</p>
+  </div>
+</footer>
+
+<p id="copy-status" class="visually-hidden" role="status" aria-live="polite"></p>
+<script src="assets/site.js" defer></script>
+</body>
+</html>
