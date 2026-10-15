@@ -49,6 +49,7 @@ Four layers, and the generated plugin folders are the join point.
 
 ## Rules (repository-specific)
 
+- Release, in this order: bump `version` in `package.json` (and `package-lock.json`, with `npm version X.Y.Z --no-git-tag-version`), push to `main`, then publish a GitHub release `vX.Y.Z` (not a draft). The release starts the npm publish. Plugin manifests keep `MANIFEST_VERSION` in `scripts/bundle.mjs` and change only when plugin content changes.
 - Do not hand-edit generated output: `plugins/**`, `gsm.mjs`, `dist/`, `build/`, `config/servers.json`, `docs/SURFACES.md`, `docs/CAPABILITIES.md`, `docs/capabilities/`, the README products block, the site product section. Change the source (`config/products.json`, `src/**`, `scripts/**`) and regenerate.
 - Tool names must fit 64 characters including the prefix `mcp__plugin_<plugin>_<server>__`. Budget = 49 minus the lengths of the plugin id and the server name. Keep plugin ids short; the generator enforces the budget for generated names.
 - Writes and destructive actions go through `ctx.gate()`. Never call a Google API that changes state from a path that skips the gate.
@@ -83,7 +84,7 @@ Append a dated bullet whenever you learn something non-obvious about this reposi
 - 2026-10-16: on this machine the `sh` on PATH is msys64's, not Git for Windows'. In a test, the `sh` that a piped `curl | sh` starts did not see `USERPROFILE`, `CLAUDE_CONFIG_DIR` or `GSM_DIR` exported by the parent script. The cause was not fully established, and that run wrote a marketplace and folders into the real profile. Before a one-liner test, probe the environment inside the pipeline, and check the real Claude config afterwards with `claude plugin marketplace list`.
 - 2026-10-16: a test that writes an executable fake (such as a fake `node` on PATH) must `chmod` it. Linux skips a non-executable PATH entry, and the test then runs the real program.
 - 2026-10-16: to run the suite on Linux, use WSL (Ubuntu 24.04 here): copy the tree and `.git`, then `npm ci && npm test`. The bootstrap tests call `git archive`, which fails without `.git`.
-- 2026-10-16: the `npm` workflow runs on a push only when `package.json` changes. A commit that changes only tests or docs does not publish. Start it with `gh workflow run npm.yml --ref main` when needed. The version guard stops a re-run for a version that is already on npm.
+- 2026-10-16: a published GitHub release starts the npm publish (`.github/workflows/npm.yml`). A push to `main` does not. The tag must equal the version in `package.json`, and a version already on npm is skipped. A release points at its tag's commit, so a release can only start a workflow file that exists at that commit. The first release that exercises the release trigger is the next version bump, not `v0.1.1`.
 - 2026-10-16: npm trusted publishing is set on the package's page on npmjs.com, so the package must exist first. The first publish is manual (from the owner's terminal, with two-factor). The `npm.yml` workflow (copied from ase-moodle-mcp) publishes later versions only when `package.json` has a new version.
 
 ## Preferences (the owner)
