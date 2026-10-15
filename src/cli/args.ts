@@ -49,13 +49,13 @@ const COMMANDS: Record<Exclude<Command, 'help'>, Record<string, OptionType>> = {
     home: 'string',
   },
   uninstall: { agent: 'string', plugin: 'string', scope: 'string', path: 'string', servers: 'string', 'dry-run': 'boolean', home: 'string', 'keep-data': 'boolean' },
-  login: { servers: 'string', 'client-secret': 'string', profile: 'string', scopes: 'string', 'no-browser': 'boolean' },
+  login: { servers: 'string', 'client-secret': 'string', profile: 'string', scopes: 'string', 'no-browser': 'boolean', replace: 'boolean' },
   'setup-client': { force: 'boolean' },
   'setup-apikey': { force: 'boolean' },
   status: {},
   logout: {},
   scopes: { servers: 'string', profile: 'string', json: 'boolean' },
-  'setup-admin': { subject: 'string', 'key-file': 'string', profile: 'string', servers: 'string' },
+  'setup-admin': { subject: 'string', 'key-file': 'string', profile: 'string', servers: 'string', replace: 'boolean' },
   products: { json: 'boolean' },
   apis: { search: 'string', limit: 'string', json: 'boolean' },
   methods: { search: 'string', limit: 'string', json: 'boolean' },
@@ -249,7 +249,13 @@ export function parseLoginScopes(values: ParsedArgs['values']): LoginScopeChoice
 }
 
 /** Validates gsm setup-admin flags. The key file is checked later, when it is read. */
-export function parseSetupAdminArgs(values: ParsedArgs['values']): { subject: string; keyFile: string; profile: Profile; servers?: string[] } {
+export function parseSetupAdminArgs(values: ParsedArgs['values']): {
+  subject: string;
+  keyFile: string;
+  profile: Profile;
+  servers?: string[];
+  replace: boolean;
+} {
   if (typeof values.subject !== 'string' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.subject.trim())) {
     throw new UsageError('--subject must be the super admin email to impersonate, for example admin@example.com');
   }
@@ -261,5 +267,6 @@ export function parseSetupAdminArgs(values: ParsedArgs['values']): { subject: st
     keyFile: values['key-file'],
     profile: parseProfile(values.profile) ?? 'readonly',
     servers: parseServers(values),
+    replace: values.replace === true,
   };
 }

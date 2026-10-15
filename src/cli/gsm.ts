@@ -41,11 +41,11 @@ Usage:
                 [--path <dir>] [--servers <a,b>] [--allow-writes] [--confirmation <every-change|destructive-only|off>]
                 [--dry-run] [--home <dir>]
   gsm uninstall --agent <...> --plugin <...> --scope <...> [--path <dir>] [--servers <a,b>] [--dry-run] [--home <dir>] [--keep-data]
-  gsm login <group> [--profile readonly|readwrite|full] [--scopes <url,url>] [--servers <a,b>] [--client-secret <file>] [--no-browser]
+  gsm login <group> [--profile readonly|readwrite|full] [--scopes <url,url>] [--servers <a,b>] [--client-secret <file>] [--no-browser] [--replace]
   gsm scopes <group> [--profile readonly|readwrite|full] [--servers <a,b>] [--json]
   gsm setup-client <path-to-client_secret.json> [--force]
   gsm setup-apikey [--force]
-  gsm setup-admin --subject <admin email> --key-file <service account JSON> [--profile readonly|readwrite|full] [--servers <a,b>]
+  gsm setup-admin --subject <admin email> --key-file <service account JSON> [--profile readonly|readwrite|full] [--servers <a,b>] [--replace]
   gsm status
   gsm logout <group>
   gsm products [--json]
@@ -59,7 +59,7 @@ Plugins: --plugin takes product ids, for example gcloud, gsc, gsearch, gdrive, g
          and the error lists the valid ids. Plugin folders bundle only their own product.
 Profiles: readonly (default) covers the read tools with read-only scopes. readwrite adds write and
           destructive tools with the narrowest scopes that cover them. full covers every tool with the
-          broadest listed scope. --scopes gives an exact list instead, and nothing else is added.
+          broadest listed scope. --scopes gives an exact list instead, and nothing else is requested.
           The scope list decides which tools the token can run: a tool whose scopes it lacks is not registered.
           After a login, restart the MCP server (or restart the agent) so the new scopes apply.
 Scopes:  global = your home config, project = the current folder, folder = --path (must exist).
@@ -69,6 +69,7 @@ Groups:  OAuth login: cloud, workspace-user, searchconsole, business, developer.
 Agents:  claude (official plugin CLI), codex (config.toml), opencode (opencode.json), agy (global scope only).
 Flags:   --dry-run prints every planned change and command and writes nothing.
          --no-browser (login) prints the login URL only, and does not open the browser.
+         --replace (login, setup-admin): by default a login merges the requested scopes with the stored ones; --replace drops the stored ones.
          --allow-writes sets GSM_ALLOW_WRITES=true for the installed servers (install only).
          --confirmation sets GSM_CONFIRMATION (every-change, destructive-only or off) for codex, opencode and agy.
                         For claude it is the plugin option "confirmation": the command prints how to set it.
@@ -166,12 +167,13 @@ async function dispatch(argv: string[]): Promise<number> {
     }
 
     case 'login': {
-      const group = parseGroup(parsed.positionals, 'usage: gsm login <group> [--profile readonly|readwrite|full] [--scopes <urls>] [--servers a,b] [--client-secret <file>] [--no-browser]');
+      const group = parseGroup(parsed.positionals, 'usage: gsm login <group> [--profile readonly|readwrite|full] [--scopes <urls>] [--servers a,b] [--client-secret <file>] [--no-browser] [--replace]');
       const choice = parseLoginScopes(parsed.values);
       const servers = parseServers(parsed.values);
       const clientSecretFile = typeof parsed.values['client-secret'] === 'string' ? parsed.values['client-secret'] : undefined;
       const noBrowser = parsed.values['no-browser'] === true;
-      return runLogin({ group, servers, clientSecretFile, profile: choice.profile, customScopes: choice.customScopes, noBrowser }, registryFor, out);
+      const replace = parsed.values.replace === true;
+      return runLogin({ group, servers, clientSecretFile, profile: choice.profile, customScopes: choice.customScopes, noBrowser, replace }, registryFor, out);
     }
 
     case 'scopes': {
@@ -190,7 +192,7 @@ async function dispatch(argv: string[]): Promise<number> {
 
     case 'setup-admin': {
       if (parsed.positionals.length !== 0) {
-        throw new UsageError('usage: gsm setup-admin --subject <admin email> --key-file <service account JSON> [--profile readonly|readwrite|full] [--servers a,b]');
+        throw new UsageError('usage: gsm setup-admin --subject <admin email> --key-file <service account JSON> [--profile readonly|readwrite|full] [--servers a,b] [--replace]');
       }
       return runSetupAdmin(parseSetupAdminArgs(parsed.values), registryFor(), out);
     }

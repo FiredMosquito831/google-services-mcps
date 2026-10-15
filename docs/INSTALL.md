@@ -31,7 +31,7 @@ The suite has one installer, `gsm`. It comes in two forms:
 | `node dist/cli/gsm.js <command>` | The repository folder, after the build | All 23 products | Installing several products. Logging in a whole group. |
 | `node plugins/<id>/bin/gsm.mjs <command>` | The repository folder, no build needed | Only the product `<id>` | Working with one product when you have not built. |
 
-**Warning.** A login from a plugin folder covers only that product's scopes. It also replaces the group's token file. If you log in to `gmail` from `plugins/gmail`, then to `gdrive` from `plugins/gdrive`, the second login removes the Gmail scopes. Use `dist/cli/gsm.js` for logins. Pass `--servers` with every product in the group you use.
+**Warning.** A login from a plugin folder requests only that product's scopes. A login merges with the scopes already stored for its group, so logging in for one product keeps the others. Use `--replace` to drop the stored scopes and keep only what this login requests. A merge can leave write scopes from an earlier readwrite login in place: when you want a readonly token again, log in with `--replace`. Use `dist/cli/gsm.js` for logins.
 
 In the rest of this guide, `gsm` means `node dist/cli/gsm.js`, run from the repository folder.
 
@@ -251,11 +251,11 @@ Other commands:
 
 | Command | Purpose |
 |---|---|
-| `gsm login <group> [--profile readonly\|readwrite\|full] [--scopes <urls>] [--servers <a,b>] [--client-secret <file>] [--no-browser]` | Log in one group. Help only. |
+| `gsm login <group> [--profile readonly\|readwrite\|full] [--scopes <urls>] [--servers <a,b>] [--client-secret <file>] [--no-browser] [--replace]` | Log in one group. Merges with the scopes already stored, unless `--replace` drops them. Help only. |
 | `gsm scopes <group> [--profile ...] [--servers ...] [--json]` | Show what each profile would enable. Checked. |
 | `gsm setup-client <client_secret.json> [--force]` | Save the OAuth desktop client file. Help only. |
 | `gsm setup-apikey [--force]` | Save the API key. Help only. |
-| `gsm setup-admin --subject <email> --key-file <json> [--profile ...] [--servers ...]` | Set up the workspace admin group. Help only. |
+| `gsm setup-admin --subject <email> --key-file <json> [--profile ...] [--servers ...] [--replace]` | Set up the workspace admin group. Merges with the stored scopes, unless `--replace` drops them. Help only. |
 | `gsm status` | Show logins, the API key and the setup of each group. Checked. |
 | `gsm logout <group>` | Remove one group's token file. Help only. |
 | `gsm products [--json]` | List the products. Checked. |
@@ -407,10 +407,10 @@ The exact error text is **UNVERIFIED**.
 
 **Login works, but the tools still fail.** Restart the server in `/mcp`, or restart Claude Code. A new login needs a restart to apply the new scopes.
 
-**Login from another product replaced the earlier scopes.** Each login replaces the group's token. Log in again from `dist/cli/gsm.js` and list every product of the group in `--servers`. For example:
+**Earlier scopes are still in the token.** A login merges with the scopes already stored for its group, so logging in for one product keeps the others. Use `--replace` to drop the stored scopes and keep only what this login requests. A merge can leave write scopes from an earlier readwrite login in place: when you want a readonly token again, log in with `--replace`. For example:
 
 ```
-node dist/cli/gsm.js login workspace-user --profile readonly --servers gmail,gcalendar,gdrive
+node dist/cli/gsm.js login workspace-user --profile readonly --replace --servers gmail,gcalendar,gdrive
 ```
 
 **`HTTP 403 | reason=insufficientPermissions | ... | The token lacks a scope for this tool.`** The login does not cover this tool. Log in again with a wider profile, then restart the server:

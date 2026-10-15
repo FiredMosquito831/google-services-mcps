@@ -21,8 +21,9 @@ import { loadConfig } from '../core/config.js';
 import { serverByName, type AuthGroup, type Registry } from '../core/registry.js';
 import { PROFILE_TEXT, requirementsForSpecs, resolveScopes, type Profile } from '../core/scopes.js';
 import { OAUTH_GROUPS, type CliGroup } from './args.js';
-import { tokenFileFor } from './credentials.js';
+import { readStoredToken, tokenFileFor } from './credentials.js';
 import { writeAtomic } from './fsutil.js';
+import { mergeScopes, describeMerge } from './merge.js';
 import { postureLine } from './posture.js';
 import { coverageOf, formatCoverage, gatewayReachLine, hasGatewayApis, selectGroupServers } from './scopes.js';
 import type { Output } from './report.js';
@@ -39,6 +40,18 @@ export interface LoginRequest {
   customScopes?: string[];
   /** --no-browser: print the login URL only, and do not open the browser. */
   noBrowser?: boolean;
+  /** --replace: keep only the requested scopes and drop the stored ones. Default: merge with the stored scopes. */
+  replace?: boolean;
+}
+
+/** The scopes stored in the group's token file. An unreadable file is noted on stderr and counts as nothing stored. */
+function storedLoginScopes(file: string, out: Output): string[] {
+  const { token, error } = readStoredToken(file);
+  if (error) {
+    out.warn(`note: ${file} is unreadable (${error}); its stored scopes are not merged.`);
+    return [];
+  }
+  return typeof token?.scope === 'string' ? token.scope.split(' ').filter(Boolean) : [];
 }
 
 /** `loadRegistry` is passed as a function so that workspace-admin guidance needs no registry. */
@@ -72,28 +85,39 @@ export async function runLogin(req: LoginRequest, loadRegistryFn: () => Registry
     { warn: (line) => out.warn(line) },
   );
 
-  let scopes: string[];
+  let requested: string[];
   if (req.profile === 'custom') {
-    scopes = [...new Set(req.customScopes ?? [])].sort();
-    out.log(`Using the ${scopes.length} scope(s) given with --scopes. Nothing else is added.`);
+    requested = [...new Set(req.customScopes ?? [])].sort();
+    out.log(`Requesting the ${requested.length} scope(s) given with --scopes. Nothing else is requested by this login.`);
   } else {
-    scopes = resolveScopes(requirements, req.profile).scopes;
+    requested = resolveScopes(requirements, req.profile).scopes;
     out.log(`Profile ${req.profile}: ${PROFILE_TEXT[req.profile]}.`);
   }
+
+  // The rule for stored scopes (merge by default, --replace drops them) is in merge.ts; login and setup-admin share it.
+  const file = tokenFileFor(group, cfg);
+  const replace = req.replace === true;
+  const merge = mergeScopes({ requested, stored: storedLoginScopes(file, out), replace });
+  const scopes = merge.scopes;
   if (scopes.length === 0) throw new Error(`no OAuth scopes resolved for group "${group}"`);
 
   out.log(`Servers: ${servers.join(', ')}`);
   out.log(`This token runs ${formatCoverage(coverageOf(requirements, scopes))}.`);
   if (hasGatewayApis(registry, servers)) out.log(gatewayReachLine(requirements, scopes, req.profile));
+  const mergeLine = describeMerge(merge, replace);
+  if (mergeLine) out.log(mergeLine);
   out.log(`Logging in for group "${group}" with ${scopes.length} scope(s):`);
   for (const scope of scopes) out.log(`  ${scope}`);
   if (req.servers && req.servers.length > 0) {
-    out.log('Note: --servers stores a token that covers only those servers, and it replaces the group token.');
+    out.log(
+      replace
+        ? 'Note: --servers with --replace stores a token that covers only those servers.'
+        : 'Note: --servers requests only those servers. The scopes stored for the group for other servers are kept (merge).',
+    );
   }
 
   const tokens = await loopbackLogin(clientId, clientSecret, scopes, out, { openBrowser: req.noBrowser !== true });
   mkdirSync(cfg.tokenDir, { recursive: true, mode: 0o700 });
-  const file = tokenFileFor(group, cfg);
   writeAtomic(file, JSON.stringify(tokens, null, 2) + '\n', 0o600);
   out.log(`Saved token: ${file} (mode 0600)`);
   out.log(`Granted scopes: ${tokens.scope ?? '(not reported by Google)'}`);

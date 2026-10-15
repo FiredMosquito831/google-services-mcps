@@ -72,7 +72,7 @@ node <plugin folder>/bin/gsm.mjs uninstall --agent codex --plugin gmail --scope 
 
 ## Log in
 
-Each plugin logs in to one auth group, and the login covers only that plugin's server. Run these from the plugin folder (`<plugin folder>` as above).
+Each plugin logs in to one auth group. The login requests the scopes of that plugin's server and merges them with the scopes already stored for the group; `--replace` drops the stored scopes instead. Run these from the plugin folder (`<plugin folder>` as above).
 
 **OAuth desktop client** (groups `cloud`, `workspace-user`, `searchconsole`, `business`, `developer`). Create an OAuth client of type **Desktop app** in the Google Cloud console, download its JSON, then:
 

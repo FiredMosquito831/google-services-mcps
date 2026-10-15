@@ -5,10 +5,11 @@
  */
 import { existsSync, readFileSync, statSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { loadConfig } from '../core/config.js';
-import { saveAdminScopeFile } from '../core/auth.js';
+import { adminScopeFileFor, readAdminScopeFile, saveAdminScopeFile } from '../core/auth.js';
+import { loadConfig, type RuntimeConfig } from '../core/config.js';
 import type { Registry } from '../core/registry.js';
 import { PROFILE_TEXT, requirementsFor, resolveScopes, type Profile } from '../core/scopes.js';
+import { describeMerge, mergeScopes } from './merge.js';
 import { coverageOf, formatCoverage, selectGroupServers } from './scopes.js';
 import type { Output } from './report.js';
 import { UsageError } from './types.js';
@@ -18,6 +19,19 @@ export interface SetupAdminRequest {
   keyFile: string;
   profile: Profile;
   servers?: string[];
+  /** --replace: keep only the requested scopes and drop the stored ones. Default: merge with the stored scopes. */
+  replace?: boolean;
+}
+
+/** The scopes of the stored admin setup. An unreadable setup file is noted on stderr and counts as nothing stored. */
+function storedAdminScopes(cfg: RuntimeConfig, out: Output): string[] {
+  if (!existsSync(adminScopeFileFor(cfg))) return [];
+  const record = readAdminScopeFile(cfg);
+  if (!record) {
+    out.warn(`note: ${adminScopeFileFor(cfg)} is unreadable; its stored scopes are not merged.`);
+    return [];
+  }
+  return record.scopes;
 }
 
 /** Checks that the file is a service account key: JSON with a client_email. Never prints the file content. */
@@ -43,16 +57,20 @@ export async function runSetupAdmin(req: SetupAdminRequest, reg: Registry, out: 
   const servers = selectGroupServers(reg, 'workspace-admin', req.servers);
   const requirements = await requirementsFor(servers, cfg);
   const resolution = resolveScopes(requirements, req.profile);
+  const replace = req.replace === true;
+  const merge = mergeScopes({ requested: resolution.scopes, stored: storedAdminScopes(cfg, out), replace });
+  const mergeLine = describeMerge(merge, replace);
+  if (mergeLine) out.log(mergeLine);
 
-  const file = saveAdminScopeFile(cfg, { subject: req.subject, scopes: resolution.scopes, profile: req.profile, keyFile });
+  const file = saveAdminScopeFile(cfg, { subject: req.subject, scopes: merge.scopes, profile: req.profile, keyFile });
 
   out.log(`Saved admin setup: ${file} (mode 0600).`);
   out.log(`Subject: ${req.subject}`);
   out.log(`Key file: ${keyFile} (referenced, not copied)`);
   out.log(`Profile ${req.profile}: ${PROFILE_TEXT[req.profile]}.`);
-  out.log(`The server for ${servers.join(', ')} runs ${formatCoverage(coverageOf(requirements, resolution.scopes))}.`);
+  out.log(`The server for ${servers.join(', ')} runs ${formatCoverage(coverageOf(requirements, merge.scopes))}.`);
   out.log('Authorize these scopes for the service account client ID under Google Admin console > Security > API controls > Domain-wide delegation:');
-  for (const scope of resolution.scopes) out.log(`  ${scope}`);
+  for (const scope of merge.scopes) out.log(`  ${scope}`);
   out.log('Restart the gws-admin server so it reads the new setup. Write tools also need GSM_ALLOW_WRITES=true.');
   return 0;
 }

@@ -4,7 +4,7 @@ This suite lets an AI agent act on real Google accounts. The controls below are 
 
 ## Controls, in order
 
-1. **Token scopes (Google enforces).** A login asks only for the scopes of a profile: `readonly` (read-only scopes only), `readwrite`, `full`, or an explicit `--scopes` list. A read-only token cannot write, whatever the plugin shows. Google rejects the call. Each login replaces the group's token.
+1. **Token scopes (Google enforces).** A login asks only for the scopes of a profile: `readonly` (read-only scopes only), `readwrite`, `full`, or an explicit `--scopes` list. A read-only token cannot write, whatever the plugin shows. Google rejects the call. A login merges with the scopes already stored for its group, so logging in for one product keeps the others. Use `--replace` to drop the stored scopes and keep only what this login requests. A merge can leave write scopes from an earlier readwrite login in place: when you want a readonly token again, log in with `--replace`.
 
 2. **Tool registration.** The server lists a tool only if the stored token can run it. Fixed write and destructive tools are listed only when **Allow write tools** is on (`GSM_ALLOW_WRITES=true`). It is off by default.
 
@@ -84,7 +84,7 @@ The read rule for `POST` is a name prefix. It is not a check of what the method 
 
 - **Install flag for Claude Code.** `gsm install --agent claude --allow-writes` does not set the plugin's write option, although its summary line says `writes: enabled`. Set **Allow write tools** in the plugin options instead.
 
-- **One login per group.** A login replaces the group's token. A login from one product's folder can drop the scopes of other products in the group. See [INSTALL.md](INSTALL.md#two-command-lines).
+- **One login per group.** A login merges with the scopes already stored for its group, so a login from one product's folder keeps the scopes of the other products. Use `--replace` to drop the stored scopes and keep only what this login requests. A merge can leave write scopes from an earlier readwrite login in place: when you want a readonly token again, log in with `--replace`. See [INSTALL.md](INSTALL.md#two-command-lines).
 
 - **Install paths.** Codex, OpenCode and Antigravity point to the server files inside the checkout. Moving the checkout breaks them until you install again.
 

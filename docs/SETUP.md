@@ -1,6 +1,6 @@
 # Setup per product
 
-Each product plugin has one login group. Log in once per group, with the list of products you use. A login replaces the group's token, so a later login must list every product of the group that you still use. See [INSTALL.md](INSTALL.md#two-command-lines).
+Each product plugin has one login group. Log in once per group, with the list of products you use. A login merges with the scopes already stored for its group, so logging in for one product keeps the others. Use `--replace` to drop the stored scopes and keep only what this login requests. A merge can leave write scopes from an earlier readwrite login in place: when you want a readonly token again, log in with `--replace`. See [INSTALL.md](INSTALL.md#two-command-lines).
 
 The commands in this guide use the full CLI, `node dist/cli/gsm.js`, from the repository folder. It needs `npm install` and `npm run build` first. Without a build, `node plugins/<id>/bin/gsm.mjs` works for one product only.
 
@@ -30,7 +30,7 @@ The commands in this guide use the full CLI, `node dist/cli/gsm.js`, from the re
 
    `setup-client` copies the file into the token directory as `client_secret.json`, with mode 0600. If that file already exists, the command stops. Run it again with `--force` to replace it. The old file is backed up first.
 
-   `readonly` is the default profile. Use `--profile readwrite` only when you need changes. The `--servers` list names the products this token covers. Leave it out only if you want every product of the group. The default covers all of them.
+   `readonly` is the default profile. Use `--profile readwrite` only when you need changes. The `--servers` list names the products this login requests scopes for. The scopes stored for the other products are kept. Leave it out only if you want every product of the group. The default covers all of them.
 
 ### Login options
 

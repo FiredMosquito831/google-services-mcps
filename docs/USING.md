@@ -253,7 +253,7 @@ It prints how many tools each profile covers, and the scopes it asks for.
 node dist/cli/gsm.js login workspace-user --profile readwrite --servers gmail
 ```
 
-A login replaces the group's token. The `--servers` list must name every product of the group that you still use. Then restart the server: `/mcp` in Claude Code, or restart the agent.
+A login merges with the scopes already stored for its group, so logging in for one product keeps the others. Use `--replace` to drop the stored scopes and keep only what this login requests. A merge can leave write scopes from an earlier readwrite login in place: when you want a readonly token again, log in with `--replace`. Then restart the server: `/mcp` in Claude Code, or restart the agent.
 
 ## 7. The gateway workflow
 
