@@ -7,7 +7,7 @@
 import { after, test } from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
+import { chmodSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -301,6 +301,8 @@ test('4b. sh: node older than 20 prints where to get Node and exits 1 before any
   const bin = join(dir, 'bin');
   mkdirSync(bin);
   writeFileSync(join(bin, 'node'), '#!/bin/sh\necho 18\n');
+  // Linux skips a PATH entry that is not executable, so the fake node must be executable to be found first.
+  chmodSync(join(bin, 'node'), 0o755);
   const installDir = join(dir, 'google-services-mcps');
   const env = envWith({
     GSM_ARCHIVE_URL: archive(),
