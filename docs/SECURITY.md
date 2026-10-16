@@ -31,9 +31,10 @@ This suite lets an AI agent act on real Google accounts. The controls below are 
 
 6. **Audit log.** Each gated action writes one JSON line to `audit.log` in the token directory. The line has the time, tool, method id, risk, decision, outcome and a 16-character hash of the arguments. The arguments themselves are never written. Reads are not logged. See [USING.md](USING.md#8-the-audit-log).
 
-7. **Secrets.** Tokens, the client file and the API key live only in the token directory. Files are written with mode 0600 where the platform supports it. The client file is `client_secret.json`. Each login is `<group>.token.json`. The API key is `apikey.json`. The workspace admin's key file is referenced by path and never copied. Nothing secret is written into plugin files or agent config files. Keys that look secret are redacted from prompts, logs and errors. The Google Ads developer token, if set through the plugin option, is a sensitive option. Claude Code stores sensitive options in secure storage, not in `settings.json`.
+7. **Login lifecycle.** A login uses PKCE (S256) with the loopback redirect and a state check. Logout revokes the login at Google before it removes the file (`--local-only` skips that). `gsm status --check` is the only command that asks Google about a stored login: whether it is valid, expired or revoked, which scopes Google grants, and whether the API key is restricted. A login that Google refuses is reported with the command that logs in again. Before a login, the OAuth servers list only the tools that need no scope, plus `auth_status`.
+8. **Secrets.** Tokens, the client file and the API key live only in the token directory. Files are written with mode 0600 where the platform supports it, and on Windows the folder's access list is limited to your user, SYSTEM and Administrators (`gsm doctor` checks it). The client file is `client_secret.json`. Each login is `<group>.token.json`. The API key is `apikey.json`. The workspace admin's key file is referenced by path and never copied. Nothing secret is written into plugin files or agent config files. Keys that look secret are redacted from prompts, logs and errors. The Google Ads developer token, if set through the plugin option, is a sensitive option. Claude Code stores sensitive options in secure storage, not in `settings.json`.
 
-8. **Retries.** The suite retries rate-limit and unavailable responses up to 3 attempts in total, with backoff; after that the error reaches Claude. Only throttled requests are repeated: HTTP 429 and 503 for any method, and rate-limit 403s for reads only (`GET`, `HEAD`, `OPTIONS`). A write is never repeated on a 403. See [LIMITS-AND-COSTS.md](LIMITS-AND-COSTS.md#4-quota-errors-and-what-the-suite-does).
+9. **Retries.** The suite retries rate-limit and unavailable responses up to 3 attempts in total, with backoff; after that the error reaches Claude. Only throttled requests are repeated: HTTP 429 and 503 for any method, and rate-limit 403s for reads only (`GET`, `HEAD`, `OPTIONS`). A write is never repeated on a 403. See [LIMITS-AND-COSTS.md](LIMITS-AND-COSTS.md#4-quota-errors-and-what-the-suite-does).
 
 ## Method classification
 
@@ -56,6 +57,8 @@ The read rule for `POST` is a name prefix. It is not a check of what the method 
 
 ## Known limits
 
+- **Testing apps lose refresh tokens after 7 days.** An app left in Testing in the OAuth consent screen expires its refresh tokens after 7 days. The error says so, and `gsm status --check` reports the login as expired. Publish the app, or log in again each week.
+- **Automation keys have no expiry.** A saved API key (`apikey.json`) keeps working until it is deleted or restricted in Google Cloud console. `gsm status` shows its age, and warns after 90 days. Restrict it to the APIs it needs, and to your servers or addresses. `gsm status --check` reads the restrictions with your cloud login and warns when the key is unrestricted.
 - **Read-named POST methods that may run work or return credentials.** A `POST` method is classed as a read by its name prefix (see Method classification). Some of these names may hide work or credentials. They are classed as reads, so they do not ask. Examples from the build's catalogue, found by a name scan. The scan does not prove what each method does:
   - `gcloud`: `developerconnect.projects.locations.connections.gitRepositoryLinks.fetchReadWriteToken`. Its name suggests it returns a read-write credential. `apigee.organizations.getSyncAuthorization`. Its name suggests a credential. `gkehub.projects.locations.memberships.validateCreate`. Its name includes `Create`.
   - `gai`: `aiplatform.evaluateDataset` and `aiplatform.projects.locations.evaluateDataset`. The `evaluate` prefix is a read prefix, but the method may start an evaluation job.
@@ -70,7 +73,7 @@ The read rule for `POST` is a name prefix. It is not a check of what the method 
 
 - **Policy `allow` rules.** An `allow` rule skips the default question. Match narrowly. A rule for a whole product, such as `mcp__plugin_gcloud_gcloud__*` with `allow`, also skips the prompt for every gcloud change and delete.
 
-- **Windows file modes.** Mode 0600 is not enforced on Windows. Protect the token directory with your account's permissions.
+- **Windows file modes.** Mode 0600 is not enforced on Windows, so the token folder's access list is limited instead (see Controls, item 7). `gsm doctor` fails when another account can read that folder. Other products that run on the same machine as your user account still can read files under your profile; the access list does not stop them.
 
 - **Confirmation off.** Only deny rules protect you then. Use `off` only for accounts you fully control.
 

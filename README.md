@@ -2,14 +2,14 @@
 
 ![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue)
 ![Status: beta](https://img.shields.io/badge/status-beta-orange)
-![Tests: 508 passing](https://img.shields.io/badge/tests-512%20passing-brightgreen)
+![Tests: 508 passing](https://img.shields.io/badge/tests-527%20passing-brightgreen)
 ![Plugins: 23](https://img.shields.io/badge/plugins-23-blue)
 ![Model Context Protocol](https://img.shields.io/badge/Model%20Context%20Protocol-server-6f42c1)
 ![Claude Code plugin](https://img.shields.io/badge/Claude%20Code-plugin-d97757)
 
 **google-services-mcps** is a Google Workspace MCP, Google Cloud MCP and Search Console MCP suite. It includes a Gmail MCP, a Google Drive MCP, a Google Calendar MCP and a Google Ads MCP, plus 19 more Google products. Each product is one **Model Context Protocol** server, packaged as a **Claude Code plugin** in one marketplace. An installer adds the same servers to a Codex MCP, an OpenCode MCP and an Antigravity MCP setup. Use it to let an AI agent read your Google data and, when you allow it, change that data.
 
-> **Status: beta.** Built and tested offline: 512 passing tests (one more downloads from GitHub and runs only with `GSM_NETWORK_TESTS=1`), a smoke test over all 23 servers, and Claude plugin validation. Not yet tested against live Google accounts. The repository is public. Licensed under Apache-2.0.
+> **Status: beta.** Built and tested offline: 527 passing tests (two are skipped: one downloads from GitHub and runs only with `GSM_NETWORK_TESTS=1`, and one checks the Windows folder access list only off Windows), a smoke test over all 23 servers, and Claude plugin validation. Not yet tested against live Google accounts. The repository is public. Licensed under Apache-2.0.
 
 ## At a glance
 
@@ -293,8 +293,8 @@ The command reads the key from the environment variable `GSM_API_KEY_INPUT` or f
 
 ### Token directory and Google rules
 
-- Tokens are stored in `~/.google-services-mcps`, or in the folder set by the plugin option **Token directory** or `GSM_TOKEN_DIR`. Files are written with mode 0600 where the platform supports it. Mode 0600 is not enforced on Windows, so protect the folder with your account's permissions.
-- `npx google-services-mcps logout <group>` removes one group's token. It does not revoke access at Google. Revoke it at [myaccount.google.com/permissions](https://myaccount.google.com/permissions).
+- Tokens are stored in `~/.google-services-mcps`, or in the folder set by the plugin option **Token directory** or `GSM_TOKEN_DIR`. Files are written with mode 0600 where the platform supports it. On Windows the folder's access list is limited to your user, SYSTEM and Administrators, and `status` and `doctor` report it. A login uses PKCE (S256), and the client secret stays in the token folder.
+- `npx google-services-mcps logout <group>` revokes the login at Google, then removes the token file. Add `--local-only` to remove the file without the network call; then revoke it at [myaccount.google.com/permissions](https://myaccount.google.com/permissions) yourself.
 - Restricted scopes (most Gmail and Drive scopes) need Google's verification for public apps. Internal Workspace apps are not affected.
 
 Full setup for each group is in [docs/SETUP.md](docs/SETUP.md).
@@ -411,8 +411,8 @@ The commands are shown here as `npx google-services-mcps <command>`, which runs 
 | `setup-client` | Save the OAuth Desktop client file. |
 | `setup-apikey` | Save the API key for the `apikey` group. |
 | `setup-admin` | Set up the `workspace-admin` group with a service account and a super admin. |
-| `status` | Show logins, the API key and the security posture of each token. |
-| `logout` | Remove one group's stored token. |
+| `status` | Show logins, the API key and the security posture of each token. `--check` asks Google whether each login still works, what it grants, and whether the API key is restricted. |
+| `logout` | Revoke one group's login at Google, then remove its stored token. `--local-only` skips the revoke. |
 | `products` | List the products, with group, tool count and gateway APIs. |
 | `apis` | List the APIs of a product, or of the whole catalog. |
 | `methods` | List the methods of one catalog API, with verb, path and kind. |
@@ -440,8 +440,8 @@ Commands:
   setup-client  Save the OAuth Desktop client file (client_secret.json)
   setup-apikey  Save the API key for the apikey group (reads GSM_API_KEY_INPUT or stdin)
   setup-admin   Set up workspace-admin: service account and super admin subject
-  status        Show logins, the API key and the security posture of each token
-  logout        Remove one group's stored token (apikey: shows where the key file is)
+  status        Show logins, the API key and the security posture of each token (--check asks Google: validity, scopes, key restrictions)
+  logout        Revoke one group's login at Google and remove its token (--local-only: only remove the file; apikey: shows where the key file is)
   products      List the products: id, title, group, tool count, gateway APIs and whether the plugin folder exists
   apis          List the APIs of a product (generated and gateway), or of the whole catalog, with method counts
   methods       List the methods of one catalog API: id, HTTP verb, path and kind (read, write or destructive)

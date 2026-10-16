@@ -4,7 +4,7 @@ Google Cloud console APIs: projects, service enablement, API keys, billing, moni
 
 - Plugin: `gcloud`, MCP server: `gcloud`, login: Desktop OAuth client, then `login cloud`
 - Install: `claude plugin install gcloud@google-services-mcps`
-- Tools: 374 total. Curated 20, per-method 350, gateway 3. Read 185, write 137, destructive 51, dynamic 1.
+- Tools: 374 total. Curated 20, per-method 350, gateway 3. Read 183, write 139, destructive 51, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
@@ -21,7 +21,7 @@ Read tools never ask. Write, destructive and dynamic tools ask before they run, 
 | `cloud_apikey_create` | write | Create API key | apikeys, cloud-platform |
 | `cloud_apikey_delete` | destructive | Delete API key | apikeys, cloud-platform |
 | `cloud_apikey_get` | read | Get API key | apikeys, apikeys.readonly |
-| `cloud_apikey_reveal` | read | Reveal API key string | apikeys, apikeys.readonly |
+| `cloud_apikey_reveal` | write | Reveal API key string | apikeys, apikeys.readonly |
 | `cloud_apikeys_list` | read | List API keys | apikeys, apikeys.readonly |
 | `cloud_operation_get` | read | Get operation status | cloud-platform, cloud-platform.read-only |
 | `cloud_project_create` | write | Create project | cloud-platform |
@@ -131,7 +131,7 @@ Read tools never ask. Write, destructive and dynamic tools ask before they run, 
 | `billing_message_stream` | write | cloudbilling.message.stream | cloud-billing, cloud-billing.readonly |
 | `billing_organizati_billing_acc_create` | write | cloudbilling.organizations.billingAccounts.create | cloud-billing, cloud-platform |
 | `billing_organizatio_billing_acco_list` | read | cloudbilling.organizations.billingAccounts.list | cloud-billing, cloud-billing.readonly |
-| `billing_organizatio_billing_acco_move` | read | cloudbilling.organizations.billingAccounts.move | cloud-billing, cloud-platform |
+| `billing_organizatio_billing_acco_move` | write | cloudbilling.organizations.billingAccounts.move | cloud-billing, cloud-platform |
 | `billing_projects_get_billing_info` | read | cloudbilling.projects.getBillingInfo | cloud-billing, cloud-billing.readonly |
 | `billing_projects_update_billing_info` | write | cloudbilling.projects.updateBillingInfo | cloud-billing, cloud-platform |
 | `billing_services_list` | read | cloudbilling.services.list | cloud-billing, cloud-billing.readonly |

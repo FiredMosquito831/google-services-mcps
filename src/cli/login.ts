@@ -11,11 +11,11 @@
  */
 import { spawn } from 'node:child_process';
 import { randomBytes } from 'node:crypto';
-import { mkdirSync } from 'node:fs';
 import { createServer, type Server } from 'node:http';
 import type { AddressInfo } from 'node:net';
 import { resolve } from 'node:path';
-import { OAuth2Client, type Credentials } from 'google-auth-library';
+import { OAuth2Client, CodeChallengeMethod, type Credentials } from 'google-auth-library';
+import { ensureTokenDir } from '../core/acl.js';
 import { ADMIN_SCOPES, readClientSecret } from '../core/auth.js';
 import { loadConfig } from '../core/config.js';
 import { serverByName, type AuthGroup, type Registry } from '../core/registry.js';
@@ -117,7 +117,7 @@ export async function runLogin(req: LoginRequest, loadRegistryFn: () => Registry
   }
 
   const tokens = await loopbackLogin(clientId, clientSecret, scopes, out, { openBrowser: req.noBrowser !== true });
-  mkdirSync(cfg.tokenDir, { recursive: true, mode: 0o700 });
+  ensureTokenDir(cfg.tokenDir);
   writeAtomic(file, JSON.stringify(tokens, null, 2) + '\n', 0o600);
   out.log(`Saved token: ${file} (mode 0600)`);
   out.log(`Granted scopes: ${tokens.scope ?? '(not reported by Google)'}`);
@@ -175,6 +175,8 @@ export async function loopbackLogin(
 ): Promise<Credentials> {
   const shouldOpen = options.openBrowser !== false;
   const state = randomBytes(16).toString('hex');
+  // PKCE (RFC 7636). The verifier stays in this process; only its S256 challenge goes into the browser URL.
+  const pkce = await new OAuth2Client(clientId, clientSecret).generateCodeVerifierAsync();
 
   const callback = await new Promise<{ redirectUri: string; code: string }>((resolveCallback, rejectCallback) => {
     let settled = false;
@@ -228,6 +230,8 @@ export async function loopbackLogin(
         scope: scopes,
         state,
         include_granted_scopes: true,
+        code_challenge_method: CodeChallengeMethod.S256,
+        code_challenge: pkce.codeChallenge,
       });
       if (shouldOpen) {
         out.log(`\nOpen this URL to log in if the browser does not open:\n${authUrl}\n`);
@@ -239,6 +243,6 @@ export async function loopbackLogin(
   });
 
   const client = new OAuth2Client(clientId, clientSecret, callback.redirectUri);
-  const { tokens } = await client.getToken(callback.code);
+  const { tokens } = await client.getToken({ code: callback.code, codeVerifier: pkce.codeVerifier });
   return tokens;
 }

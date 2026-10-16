@@ -38,6 +38,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { z } from 'zod';
 import type { RuntimeConfig } from './config.js';
+import { invocation } from './invocation.js';
 import type { AuthGroup } from './registry.js';
 import { classifyMethod } from './discovery/methods.js';
 import { buildUrl, loadToolKinds, sendAuthorized } from './discovery/tools.js';
@@ -539,7 +540,9 @@ function redactValue(value: unknown): unknown {
 
 function loginHint(group: string): string {
   if (group === API_KEY_GROUP) return 'set GSM_API_KEY, or put {"apiKey": "..."} in apikey.json in the token folder';
-  return group === 'workspace-admin' ? 'gsm setup-admin --subject <email> --key-file <file>' : `gsm login ${group}`;
+  return group === 'workspace-admin'
+    ? `${invocation()} setup-admin --subject <email> --key-file <file>`
+    : `${invocation()} login ${group}`;
 }
 
 /**

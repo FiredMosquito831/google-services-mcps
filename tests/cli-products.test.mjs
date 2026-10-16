@@ -252,7 +252,7 @@ test('setup-apikey saves the key from GSM_API_KEY_INPUT with mode 0600 and never
     assert.equal(res.code, 0, res.stderr);
     assert.equal(res.stdout.trim(), `API key saved to ${file}`);
     assert.equal(res.stdout.includes(key) || res.stderr.includes(key), false, 'the key must not be printed');
-    assert.deepEqual(JSON.parse(read(file)), { apiKey: key });
+    assert.equal(JSON.parse(read(file)).apiKey, key);
     if (process.platform !== 'win32') {
       assert.equal(statSync(file).mode & 0o777, 0o600, 'the key file must be mode 0600');
     }
@@ -268,14 +268,14 @@ test('setup-apikey refuses to overwrite without --force, and --force replaces th
     const refused = runGsm(['setup-apikey'], { tokenDir: p.tokens, env: { GSM_API_KEY_INPUT: second } });
     assert.equal(refused.code, 2);
     assert.match(refused.stderr, /already exists\. Re-run with --force/);
-    assert.deepEqual(JSON.parse(read(file)), { apiKey: first }, 'a refused run must not change the file');
+    assert.equal(JSON.parse(read(file)).apiKey, first, 'a refused run must not change the file');
     for (const text of [refused.stdout, refused.stderr]) {
       assert.equal(text.includes(first) || text.includes(second), false, 'no key may appear in output');
     }
 
     const forced = runGsm(['setup-apikey', '--force'], { tokenDir: p.tokens, input: `${second}\n` });
     assert.equal(forced.code, 0, forced.stderr);
-    assert.deepEqual(JSON.parse(read(file)), { apiKey: second });
+    assert.equal(JSON.parse(read(file)).apiKey, second);
     assert.equal(forced.stdout.includes(second) || forced.stderr.includes(second), false);
   }));
 
@@ -284,7 +284,7 @@ test('setup-apikey reads stdin when GSM_API_KEY_INPUT is not set, and rejects a 
     const key = 'stdin-key-333';
     const ok = runGsm(['setup-apikey'], { tokenDir: p.tokens, input: `${key}\n` });
     assert.equal(ok.code, 0, ok.stderr);
-    assert.deepEqual(JSON.parse(read(join(p.tokens, 'apikey.json'))), { apiKey: key });
+    assert.equal(JSON.parse(read(join(p.tokens, 'apikey.json'))).apiKey, key);
 
     // A key given as an argument is refused, and the message does not repeat it.
     const argKey = 'arg-key-444';

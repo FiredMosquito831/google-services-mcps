@@ -3,11 +3,11 @@ import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import type { CallToolResult } from '@modelcontextprotocol/sdk/types.js';
 import { z, type ZodRawShape } from 'zod';
 import { loadConfig, verboseOn, type RuntimeConfig } from './config.js';
-import { AuthRequiredError, grantedScopes } from './auth.js';
+import { AuthRequiredError, GrantExpiredError, grantedScopes, isLoggedIn, type AuthKind } from './auth.js';
 import { createGate, type GateFn } from './approval.js';
 import { toolMapFromDefs } from './dump.js';
 import { loadRegistry, serverByName, type AuthGroup } from './registry.js';
-import { invocationFor, setInvocation } from './invocation.js';
+import { invocation, invocationFor, setInvocation } from './invocation.js';
 
 /**
  * read        : safe, always registered and never gated.
@@ -76,9 +76,9 @@ export function asJson(data: unknown, maxChars: number): CallToolResult {
 /** The hint added to a missing-scope error. The admin group is set up with gsm setup-admin, not a login. */
 export function scopeHint(group?: string): string {
   if (group === 'workspace-admin') {
-    return 'The token lacks a scope for this tool. Re-run gsm setup-admin with a broader profile: gsm setup-admin --subject <email> --key-file <file> --profile readwrite.';
+    return `The token lacks a scope for this tool. Re-run ${invocation()} setup-admin with a broader profile: ${invocation()} setup-admin --subject <email> --key-file <file> --profile readwrite.`;
   }
-  return `The token lacks a scope for this tool. Log in again with a broader profile: gsm login ${group ?? '<group>'} --profile readwrite.`;
+  return `The token lacks a scope for this tool. Log in again with a broader profile: ${invocation()} login ${group ?? '<group>'} --profile readwrite.`;
 }
 
 /** A 403 that says the token lacks a scope: reason insufficientPermissions, or a message about insufficient scopes. */
@@ -101,7 +101,7 @@ function causeSuffix(err: unknown): string {
 }
 
 export function describeError(err: unknown, group?: string): string {
-  if (err instanceof AuthRequiredError) return err.message + causeSuffix(err);
+  if (err instanceof AuthRequiredError || err instanceof GrantExpiredError) return err.message + causeSuffix(err);
   // googleapis errors carry status code and a Google-formatted message.
   const e = err as { code?: number; status?: number; message?: string; errors?: Array<{ reason?: string }>; response?: { data?: unknown } };
   const status = e?.code ?? e?.status;
@@ -176,12 +176,17 @@ export async function runServer(opts: {
   // The grant is read at registration, and again on each access to ctx, so a new login is seen without a restart.
   const group = groupOf(opts.name);
   const currentGrant = (): string[] | null => (group ? grantedScopes(group, cfg) : null);
-  const granted = currentGrant();
+
+  // Before a login, the OAuth groups register only the tools that need no scope. auth_status loads the rest after a login.
+  const LOGIN_REQUIRED: ReadonlySet<string> = new Set(['workspace-user', 'searchconsole', 'business', 'developer']);
+  const needsLogin = group !== undefined && LOGIN_REQUIRED.has(group);
+  const loggedIn = (): boolean => !needsLogin || isLoggedIn(group as AuthKind, cfg);
+  const granted = needsLogin && !loggedIn() ? [] : currentGrant();
+  const registered = new Set<string>();
 
   // Only tools the stored grant can run are registered. Writes and destructive tools need GSM_ALLOW_WRITES.
-  const tools = defined.filter(
-    (tool) => isGranted(tool, granted) && (tool.kind === 'read' || tool.kind === 'dynamic' || cfg.allowWrites),
-  );
+  const registerable = (grant: string[] | null, list: ToolDef[]): ToolDef[] =>
+    list.filter((tool) => isGranted(tool, grant) && (tool.kind === 'read' || tool.kind === 'dynamic' || cfg.allowWrites));
 
   const gate: GateFn = createGate({ server, cfg });
   const ctx: ToolContext = {
@@ -192,38 +197,65 @@ export async function runServer(opts: {
     hasScope: (anyOf) => isGranted({ scopes: anyOf }, currentGrant()),
   };
 
-  for (const tool of tools) {
-    server.registerTool(
-      tool.name,
-      {
-        title: tool.title,
-        description: tool.description,
-        inputSchema: tool.inputSchema,
-        annotations: {
-          readOnlyHint: tool.kind === 'read',
-          destructiveHint: tool.kind === 'destructive' || tool.kind === 'dynamic',
+  // Registers tools once each. After the server is connected, the SDK tells the client that the list changed.
+  const register = (list: ToolDef[]): void => {
+    for (const tool of list) {
+      if (registered.has(tool.name)) continue;
+      registered.add(tool.name);
+      server.registerTool(
+        tool.name,
+        {
+          title: tool.title,
+          description: tool.description,
+          inputSchema: tool.inputSchema,
+          annotations: {
+            readOnlyHint: tool.kind === 'read',
+            destructiveHint: tool.kind === 'destructive' || tool.kind === 'dynamic',
+          },
         },
-      },
-      async (rawArgs: Record<string, unknown>): Promise<CallToolResult> => {
-        try {
-          if (tool.kind === 'write' || tool.kind === 'destructive') {
-            // The gate runs before the handler. If it throws, the handler never runs.
-            await gate({ kind: tool.kind, target: tool.name, methodId: tool.methodId, args: rawArgs });
+        async (rawArgs: Record<string, unknown>): Promise<CallToolResult> => {
+          try {
+            if (tool.kind === 'write' || tool.kind === 'destructive') {
+              // The gate runs before the handler. If it throws, the handler never runs.
+              await gate({ kind: tool.kind, target: tool.name, methodId: tool.methodId, args: rawArgs });
+            }
+            const data = await tool.handler(rawArgs as never, ctx);
+            return asJson(data, cfg.maxResultChars);
+          } catch (err) {
+            return { isError: true, content: [{ type: 'text', text: describeError(err, group) }] };
           }
-          const data = await tool.handler(rawArgs as never, ctx);
-          return asJson(data, cfg.maxResultChars);
-        } catch (err) {
-          return { isError: true, content: [{ type: 'text', text: describeError(err, group) }] };
+        },
+      );
+    }
+  };
+  register(registerable(granted, defined));
+
+  if (needsLogin) {
+    server.registerTool(
+      'auth_status',
+      {
+        title: 'Login status',
+        description:
+          'Says whether this server has a Google login, and the command that logs in. Call it after a login: the tools of this server load then, without a restart.',
+        annotations: { readOnlyHint: true },
+      },
+      async (): Promise<CallToolResult> => {
+        if (!loggedIn()) {
+          return { content: [{ type: 'text', text: `Not logged in for "${group}". Run: ${invocation()} login ${group}` }] };
         }
+        const before = registered.size;
+        register(registerable(currentGrant(), defined));
+        return { content: [{ type: 'text', text: `Logged in for "${group}". ${registered.size - before} tool(s) loaded now.` }] };
       },
     );
   }
 
   await server.connect(new StdioServerTransport());
-  const hidden = defined.length - defined.filter((tool) => isGranted(tool, granted)).length;
+  const hidden = defined.length - registered.size;
   process.stderr.write(
-    `[${opts.name}] ready, ${tools.length} tool(s) registered, writes ${cfg.allowWrites ? 'enabled' : 'disabled'}` +
-      (hidden > 0 ? `, ${hidden} hidden because the stored grant lacks their scopes` : '') +
+    `[${opts.name}] ready, ${registered.size} tool(s) registered, writes ${cfg.allowWrites ? 'enabled' : 'disabled'}` +
+      (needsLogin && !loggedIn() ? `, not logged in: run ${invocation()} login ${group}` : '') +
+      (hidden > 0 ? `, ${hidden} hidden (they need a login, or the stored grant lacks their scopes)` : '') +
       '\n',
   );
 }

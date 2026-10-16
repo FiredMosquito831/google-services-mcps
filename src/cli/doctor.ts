@@ -11,6 +11,7 @@ import { accessSync, constants as fsConstants, existsSync, readFileSync, statSyn
 import { dirname, join } from 'node:path';
 import type { Registry } from '../core/registry.js';
 import { loadConfig } from '../core/config.js';
+import { aclExtras } from '../core/acl.js';
 import { adminScopeFileFor } from '../core/auth.js';
 import { OAUTH_GROUPS } from './args.js';
 import { apiKeyFileFor, apiKeyState } from './credentials.js';
@@ -186,9 +187,31 @@ function checkPluginFolder(tally: Tally, id: string, folder: string): void {
 }
 
 /** Token directory: it exists, or it does not yet and a folder above it can be written to. Nothing is created. */
+/**
+ * On Windows the token folder must be limited to you, SYSTEM and Administrators (core/acl.ts). The modes do not apply
+ * there. Other systems use the 0700 and 0600 modes, and this check is skipped.
+ */
+function checkFolderAccess(tally: Tally, dir: string): void {
+  try {
+    const acl = aclExtras(dir);
+    if (!acl.supported) return;
+    if (acl.extra.length === 0) {
+      tally.check(true, 'token folder is limited to you, SYSTEM and Administrators');
+    } else {
+      tally.check(
+        false,
+        `token folder can also be read by ${acl.extra.join(', ')}. Limit it: icacls "${dir}" /inheritance:r /grant:r "%USERNAME%:(OI)(CI)F" "*S-1-5-18:(OI)(CI)F" "*S-1-5-32-544:(OI)(CI)F". New files then inherit that list. Existing files keep their entries: log in again so the token files are rewritten.`,
+      );
+    }
+  } catch (err) {
+    tally.check(false, `could not read the token folder's access list: ${(err as Error).message.split('\n')[0]}`);
+  }
+}
+
 function checkTokenDir(tally: Tally, dir: string): void {
   if (isDirectory(dir)) {
     tally.check(true, `token directory exists: ${dir}`);
+    checkFolderAccess(tally, dir);
     return;
   }
   if (existsSync(dir)) {

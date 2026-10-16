@@ -1,6 +1,7 @@
-import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync, chmodSync } from 'node:fs';
+import { existsSync, readFileSync, rmSync, writeFileSync, chmodSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { OAuth2Client, GoogleAuth, JWT, type Credentials } from 'google-auth-library';
+import { ensureTokenDir } from './acl.js';
 import type { RuntimeConfig } from './config.js';
 import { invocation } from './invocation.js';
 import { isIdempotentMethod, requestWithRetry, type HttpResult } from './http.js';
@@ -48,6 +49,33 @@ export class AuthRequiredError extends Error {
 }
 
 /**
+ * The stored login was refused: Google rejected the refresh token, or the access token it was asked for. The message
+ * says how to log in again, so the model can tell the person what to do.
+ */
+export class GrantExpiredError extends Error {
+  constructor(kind: AuthKind, options?: { cause?: unknown }) {
+    super(
+      `The login for "${kind}" has expired or was revoked. Log in again: ${invocation()} login ${kind}. An app left in Testing loses its refresh tokens after 7 days.`,
+      options,
+    );
+    this.name = 'GrantExpiredError';
+  }
+}
+
+/** google-auth-library reports a refused refresh token as invalid_grant, in the message or in the response body. */
+export function isInvalidGrant(err: unknown): boolean {
+  const e = err as { message?: unknown; response?: { data?: unknown } } | null;
+  const message = typeof e?.message === 'string' ? e.message : '';
+  const data = e?.response?.data as { error?: unknown } | undefined;
+  return message.includes('invalid_grant') || data?.error === 'invalid_grant';
+}
+
+function httpStatus(err: unknown): number {
+  const e = err as { code?: unknown; status?: unknown; response?: { status?: unknown } } | null;
+  return Number(e?.response?.status ?? e?.code ?? e?.status);
+}
+
+/**
  * Makes every request of an OAuth, service account or ADC client go through requestWithRetry (core/http.ts). The
  * generated googleapis clients send their requests through the auth client's request method, and so do the curated
  * tools that call it directly, so one wrap here covers them all. A GET, HEAD or OPTIONS request may repeat a 403
@@ -57,13 +85,20 @@ export class AuthRequiredError extends Error {
  * gaxios, the HTTP layer under these clients, retries 429 and 5xx on its own by default. That would multiply the
  * attempts, so retry is switched off for each request here, and the attempts are counted in one place only.
  */
-function withRetry<C extends OAuth2Client | JWT>(client: C): C {
+function withRetry<C extends OAuth2Client | JWT>(client: C, group?: AuthKind): C {
   const target = client as unknown as { request: (opts: { method?: string }) => Promise<HttpResult> };
-  target.request = (opts) =>
-    requestWithRetry(
-      () => Reflect.apply(Object.getPrototypeOf(client).request, client, [{ ...opts, retry: false }]) as Promise<HttpResult>,
-      { idempotent: isIdempotentMethod(String(opts.method ?? 'GET')) },
-    );
+  target.request = async (opts) => {
+    try {
+      return await requestWithRetry(
+        () => Reflect.apply(Object.getPrototypeOf(client).request, client, [{ ...opts, retry: false }]) as Promise<HttpResult>,
+        { idempotent: isIdempotentMethod(String(opts.method ?? 'GET')) },
+      );
+    } catch (err) {
+      // Only a stored login has a grant that can expire. A refused token gets the message that says how to log in again.
+      if (group && (isInvalidGrant(err) || httpStatus(err) === 401)) throw new GrantExpiredError(group, { cause: err });
+      throw err;
+    }
+  };
   return client;
 }
 
@@ -72,7 +107,7 @@ function tokenPath(kind: AuthKind, cfg: RuntimeConfig): string {
 }
 
 function writeSecureJson(path: string, data: unknown): void {
-  mkdirSync(dirname(path), { recursive: true });
+  ensureTokenDir(dirname(path));
   writeFileSync(path, JSON.stringify(data, null, 2), { encoding: 'utf8', mode: 0o600 });
   try {
     chmodSync(path, 0o600);
@@ -103,6 +138,19 @@ export function loadUserTokens(kind: AuthKind, cfg: RuntimeConfig): Credentials 
   const path = tokenPath(kind, cfg);
   if (!existsSync(path)) return null;
   return JSON.parse(readFileSync(path, 'utf8')) as Credentials;
+}
+
+/**
+ * True when a token file holds a refresh or an access token. It does not ask Google whether the login still works:
+ * that is checkGrant in grant-check.ts, which only `gsm status --check` and `gsm doctor` run.
+ */
+export function isLoggedIn(kind: AuthKind, cfg: RuntimeConfig): boolean {
+  try {
+    const tokens = loadUserTokens(kind, cfg);
+    return Boolean(tokens && (tokens.refresh_token || tokens.access_token));
+  } catch {
+    return false;
+  }
 }
 
 /**
@@ -183,7 +231,7 @@ export async function getAuthClient(kind: AuthKind, cfg: RuntimeConfig): Promise
     const merged = { ...loadUserTokens(kind, cfg), ...fresh };
     writeSecureJson(tokenPath(kind, cfg), merged);
   });
-  return withRetry(client);
+  return withRetry(client, kind);
 }
 
 /**

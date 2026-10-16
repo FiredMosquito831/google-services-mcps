@@ -378,7 +378,7 @@ test('(j) the gateway refuses a method whose scopes the stored grant lacks, befo
 
   await assert.rejects(tools.api_call.handler({ method: 'demoapi.items.list', pathParams: { projectId: 'p1' } }, ctx), (err) => {
     assert.match(err.message, /holds none of the scopes demoapi\.items\.list needs \(https:\/\/www\.googleapis\.com\/auth\/demo\.readonly\)/);
-    assert.match(err.message, /gsm login workspace-user --profile readwrite/);
+    assert.match(err.message, /node gsm\.mjs login workspace-user --profile readwrite/);
     return true;
   });
   assert.equal(requests.length, 0, 'no API request');

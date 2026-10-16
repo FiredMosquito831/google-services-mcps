@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 google-services-mcps is a set of MCP servers for Google products, packaged as Claude Code plugins in one marketplace, with an installer (`gsm`) for Codex, OpenCode and Antigravity (`agy`). One plugin per product (23 in total), and each plugin runs one MCP server with the same name as the plugin. Public repository: https://github.com/FiredMosquito831/google-services-mcps (owner FiredMosquito831). Licence Apache-2.0 with NOTICE. The website is GitHub Pages from `site/`.
 
-Status: built and tested offline (513 tests on Windows: 512 pass, 1 opt-in test skipped; the Linux count is checked before each release), smoke test over all servers, plugin validation. The npm package is `google-services-mcps`, one package. 0.1.4 is live under that name (GitHub release v0.1.4, published with provenance). The scoped name `@firedmosquito831/google-services-mcps` is deprecated (all five versions, 2026-10-16). The owner ran `npm deprecate` in a terminal, because it needs a one-time password. The `npm` workflow publishes the package when a GitHub release is published (trusted publishing, with provenance). Not yet run against live Google accounts. Treat any claim about live behaviour as unverified until a live test has run.
+Status: built and tested offline (529 tests on Windows: 527 pass, 2 skipped; the Linux count is checked before each release), smoke test over all servers, plugin validation. The npm package is `google-services-mcps`, one package. 0.1.4 is live under that name (GitHub release v0.1.4, published with provenance). The scoped name `@firedmosquito831/google-services-mcps` is deprecated (all five versions, 2026-10-16). The owner ran `npm deprecate` in a terminal, because it needs a one-time password. The `npm` workflow publishes the package when a GitHub release is published (trusted publishing, with provenance). Not yet run against live Google accounts. Treat any claim about live behaviour as unverified until a live test has run.
 
 ## Stack and versions
 
@@ -60,6 +60,10 @@ Four layers, and the generated plugin folders are the join point.
 - Writes and destructive actions go through `ctx.gate()`. Never call a Google API that changes state from a path that skips the gate.
 - Anything that reads a method's kind must use `classifyMethod`. A POST counts as a read only for the narrow verb list and exact names in `src/core/discovery/methods.ts`. Credential names (token, credential, secret, password, authorization, key) are always writes.
 - Scopes merge by default. Never make a login overwrite stored scopes unless the user passes `--replace`.
+- Credentials: only `gsm status --check` and `gsm doctor` ask Google about a stored login (src/core/grant-check.ts). A read tool never does. Logout revokes the grant first (`--local-only` skips that). Every message about a login is redacted with the token and the client secret before it is shown.
+- Pre-login: the OAuth groups (workspace-user, searchconsole, business, developer) register only tools that need no scope, plus `auth_status`, until a token exists (src/core/tools.ts). The cloud and apikey groups keep their own fallbacks (Application Default Credentials, the API key).
+- Curated tools that return a secret are writes, as their generated copies are. config/tool-kinds.json holds the kind of every Discovery method that is not a plain verb, including GET methods that change state. A test checks both.
+- The token folder is created with ensureTokenDir (src/core/acl.ts), never with a bare mkdirSync: on Windows it limits the folder's access list.
 - Installer tests always pass `--home <temp dir>`. Claude tests always set `CLAUDE_CONFIG_DIR`. Never let a test write into the real home folder or the real Claude config.
 - Never commit tokens, client secret files, `HANDOFF.md`, `reference/`, `session/` or `.remember/` (all gitignored). Scan before any push that might expose something new.
 - In user-facing docs (README, `docs/`, `site/`), show the npm command: `npx google-services-mcps <command>`, or `google-services-mcps <command>` after a global install (`gsm` is the same command). Keep `node gsm.mjs <command>` for clone and development instructions only, and for the messages printed from a repository (the code writes `node gsm.mjs`, and `invocationText` replaces it at print time).
@@ -105,6 +109,13 @@ Append a dated bullet whenever you learn something non-obvious about this reposi
 - 2026-10-16: `npm deprecate` needs a one-time password like `npm publish`. From this shell it prints a "deprecating" notice for each version, then stops at `EOTP`, and the registry shows no flag. Check the registry (`versions.<v>.deprecated`) before saying a deprecation happened. The owner runs the command in a terminal.
 - 2026-10-16: `gsm install --home <dir>` is refused for `--agent claude`, which always uses the real Claude Code configuration. A dry run into a temp home must use codex, opencode or agy.
 - 2026-10-16: `git add -A` picked up `bash.exe.stackdump`, an msys crash dump, in a docs commit. `*.stackdump` is in `.gitignore` now. Stage files by name when a crash has happened.
+- 2026-10-16: the curated `cloud_apikey_reveal` was `read` while the generated copy of the same Google method (`getKeyString`) was `write`. Reads never prompt, so the key could leave without a prompt. Keep curated and generated kinds in step, and test both.
+- 2026-10-16: Discovery marks `cloudbilling.organizations.billingAccounts.move` as a GET, and it changes state. A verb-based rule cannot catch that, so list such methods in config/tool-kinds.json.
+- 2026-10-16: `icacls` lists `CREATOR OWNER` for an inherited entry. It is the owner placeholder, not a second reader, so the access check allows it (src/core/acl.ts). Use the well-known SIDs (`*S-1-5-18`, `*S-1-5-32-544`), which keep the names the same in every Windows language.
+- 2026-10-16: google-auth-library reports a refused refresh token as `invalid_grant`, in the message or the response body. isInvalidGrant (src/core/auth.ts) reads both, and the refused login then gets the message that says how to log in again.
+- 2026-10-16: a test that starts a callback must attach its promise handler before the callback is sent. Otherwise Node reports an unhandled rejection before the assertion runs.
+- 2026-10-16: PowerShell string replacement in double quotes breaks template literals with backticks, and it once left `${invocation()}` unquoted in gateway.ts. Edit source with the Edit tool, or use single-quoted strings.
+- 2026-10-16: writing config/tool-kinds.json with ConvertTo-Json drops its blank group lines. Insert a line as text instead.
 
 ## Preferences (the owner)
 
@@ -114,6 +125,7 @@ Append a dated bullet whenever you learn something non-obvious about this reposi
 - Full coverage of Google APIs, with a separate MCP per product so each can be enabled or disabled.
 - Verify before claiming. Say what is unverified.
 - Global is the default scope everywhere.
+- Credential safety comes first. Live checks are explicit (`status --check`), and a read never waits on Google about a login.
 - One npm package, one version, one bump. The owner does not want a second package to keep in step (decided 2026-10-16).
 - Releases are approved by version, for example "approve 1.3 for both". An approval covers that release and the publish it starts, not later steps such as a deprecation or a new version.
 - Keep this file current as the project changes, and write down what is learned.

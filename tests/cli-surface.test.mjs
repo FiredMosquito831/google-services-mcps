@@ -14,6 +14,7 @@ import { classifyMethod } from '../dist/core/discovery/methods.js';
 import { loadCatalog, loadKindOverrides, findCatalogFile } from '../dist/cli/catalog.js';
 import { fallbackClassify, loadClassifier } from '../dist/cli/method-kinds.js';
 import { runDoctor, REQUIRED_PATHS } from '../dist/cli/doctor.js';
+import { ensureTokenDir } from '../dist/core/acl.js';
 import { loadProductRegistry } from '../dist/cli/products.js';
 import { runApis, runMethods, runProducts, versionLines, METHODS_DEFAULT_LIMIT } from '../dist/cli/listing.js';
 import { UsageError } from '../dist/cli/types.js';
@@ -34,7 +35,9 @@ async function withTemp(fn) {
     folder: join(root, 'folder'),
     tokens: join(root, 'tokens'),
   };
-  for (const dir of [paths.home, paths.folder, paths.tokens]) mkdirSync(dir, { recursive: true });
+  for (const dir of [paths.home, paths.folder]) mkdirSync(dir, { recursive: true });
+  // The token folder is made the way a login makes it, so on Windows its access list is limited as well.
+  ensureTokenDir(paths.tokens);
   try {
     return await fn(paths);
   } finally {

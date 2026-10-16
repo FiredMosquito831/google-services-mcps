@@ -445,7 +445,7 @@ test('api_call errors never carry the request config (and so never the token)', 
   await assert.rejects(
     tools.api_call.handler({ method: 'demoapi.items.list', pathParams: { projectId: 'p1' } }, { gate: allowGate().gate }),
     (err) => {
-      assert.match(err.message, /Log in again with a broader profile: gsm login workspace-user --profile readwrite/);
+      assert.match(err.message, /Log in again with a broader profile: node gsm\.mjs login workspace-user --profile readwrite/);
       assert.doesNotMatch(err.message, /LEAKED|ya29/);
       return true;
     },
@@ -459,7 +459,7 @@ test('api_call maps a 401 to a log-in-again message', async () => {
   });
   await assert.rejects(
     tools.api_call.handler({ method: 'demoapi.items.list', pathParams: { projectId: 'p1' } }, { gate: allowGate().gate }),
-    /Log in again: gsm login workspace-user/,
+    /Log in again: node gsm\.mjs login workspace-user/,
   );
 });
 

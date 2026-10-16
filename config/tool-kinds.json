@@ -52,5 +52,6 @@
   "vault.matters.removePermissions": "destructive",
   "sheets.spreadsheets.values.batchClear": "destructive",
   "sheets.spreadsheets.values.batchClearByDataFilter": "destructive",
-  "people.people.batchDeleteContacts": "destructive"
+  "people.people.batchDeleteContacts": "destructive",
+  "cloudbilling.organizations.billingAccounts.move": "write"
 }

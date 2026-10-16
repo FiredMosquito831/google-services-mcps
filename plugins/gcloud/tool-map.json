@@ -988,7 +988,7 @@
   },
   {
     "name": "mcp__plugin_gcloud_gcloud__billing_organizatio_billing_acco_move",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-billing",
       "https://www.googleapis.com/auth/cloud-platform"
@@ -1218,7 +1218,7 @@
   },
   {
     "name": "mcp__plugin_gcloud_gcloud__cloud_apikey_reveal",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/apikeys",
       "https://www.googleapis.com/auth/apikeys.readonly",

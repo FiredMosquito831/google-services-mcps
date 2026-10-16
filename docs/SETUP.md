@@ -134,9 +134,12 @@ npx google-services-mcps scopes workspace-user --servers gmail
 npx google-services-mcps doctor --plugin gmail
 ```
 
-- `status` shows the token directory, each group's login, the API key and the admin setup. It prints no secret.
+- `status` shows the token directory, each group's login, the API key and the admin setup. It prints no secret. It makes no call to Google.
+- `status --check` asks Google whether each login still works (valid, expired or revoked), which scopes Google grants, and whether the API key is restricted. It exits with code 1 when a check needs attention. Run it after a login, and when a tool says the login expired.
 - `scopes` shows what each profile would enable. Read it before you widen a login.
-- `doctor` checks the plugin files, the hook and the tool names. It exits with code 1 if any check fails.
+- `doctor` checks the plugin files, the hook and the tool names. On Windows it also checks that the token folder is limited to you, SYSTEM and Administrators. It exits with code 1 if any check fails.
+- Before a login, a server lists only the tools that need no scope, plus `auth_status`. After `login`, ask the server to call `auth_status`: its tools then load, with no restart.
+- `logout` revokes the login at Google before it removes the token file. Use `logout <group> --local-only` to remove the file only.
 
 Then restart the server (`/mcp` in Claude Code).
 

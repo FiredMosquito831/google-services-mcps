@@ -191,21 +191,21 @@ test('describeError: a 403 with reason insufficientPermissions gets the broader-
   const err = { code: 403, errors: [{ reason: 'insufficientPermissions' }], message: 'Insufficient Permission' };
   const text = describeError(err, 'workspace-user');
   assert.match(text, /HTTP 403 \| reason=insufficientPermissions \| Insufficient Permission/);
-  assert.match(text, /The token lacks a scope for this tool\. Log in again with a broader profile: gsm login workspace-user --profile readwrite\./);
+  assert.match(text, /The token lacks a scope for this tool\. Log in again with a broader profile: node gsm\.mjs login workspace-user --profile readwrite\./);
 });
 
 test('describeError: a 403 whose message says insufficient authentication scopes gets the hint too', () => {
   const text = describeError({ code: 403, message: 'Request had insufficient authentication scopes.' }, 'cloud');
-  assert.match(text, /gsm login cloud --profile readwrite/);
+  assert.match(text, /node gsm\.mjs login cloud --profile readwrite/);
 });
 
 test('describeError: other errors get no hint, and the admin group is pointed at gsm setup-admin', () => {
   assert.doesNotMatch(describeError({ code: 404, message: 'Not found' }, 'cloud'), /lacks a scope/);
   assert.doesNotMatch(describeError({ code: 403, message: 'Forbidden for another reason' }, 'cloud'), /lacks a scope/);
   const admin = describeError({ code: 403, errors: [{ reason: 'insufficientPermissions' }], message: 'x' }, 'workspace-admin');
-  assert.match(admin, /gsm setup-admin/);
+  assert.match(admin, /node gsm\.mjs setup-admin/);
   assert.doesNotMatch(admin, /gsm login workspace-admin/);
-  assert.match(scopeHint(undefined), /gsm login <group> --profile readwrite/);
+  assert.match(scopeHint(undefined), /node gsm\.mjs login <group> --profile readwrite/);
 });
 
 // ---------------------------------------------------------------------------
@@ -333,7 +333,7 @@ test('gsm scopes: prints the three profiles with covered and uncovered counts', 
 // ---------------------------------------------------------------------------
 // The real server: a stored grant filters the tool list
 
-test('runServer: with a stored grant only the tools it can run are registered; without one, all', async (t) => {
+test('runServer: with a stored grant only the tools it can run are registered; without one, only scope-free tools and auth_status', async (t) => {
   if (!existsSync(new URL('data/discovery/gmail.v1.json', repo))) {
     t.skip('data/discovery is missing');
     return;
@@ -375,9 +375,10 @@ test('runServer: with a stored grant only the tools it can run are registered; w
       }
     };
 
-    // No token: every tool registers, so discovery and the "not logged in" message still work.
+    // No token: an OAuth server registers only the tools that need no scope, plus auth_status. Discovery still works.
     const everything = await list(join(dir, 'empty'));
-    assert.ok(everything.includes('gmail_create_draft') && everything.includes('drive_trash_file'));
+    assert.ok(everything.includes('auth_status') && everything.includes('api_methods'));
+    assert.ok(!everything.includes('gmail_search') && !everything.includes('gmail_create_draft') && !everything.includes('drive_trash_file'));
 
     // A token that holds only gmail.readonly: read Gmail tools stay, writes and Drive go.
     const tokenDir = join(dir, 'granted');
@@ -388,7 +389,7 @@ test('runServer: with a stored grant only the tools it can run are registered; w
     assert.ok(limited.includes('api_methods'), 'the list tool has no scopes and always registers');
     assert.ok(!limited.includes('gmail_create_draft'), 'gmail.compose or gmail.modify is needed to create drafts');
     assert.ok(!limited.includes('drive_trash_file'), 'no Drive scope is held');
-    assert.ok(limited.length < everything.length);
+    assert.ok(limited.length > everything.length, 'a login lists more tools than no login');
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }

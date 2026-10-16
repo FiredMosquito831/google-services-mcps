@@ -72,8 +72,8 @@ Commands:
   setup-client  Save the OAuth Desktop client file (client_secret.json)
   setup-apikey  Save the API key for the apikey group (reads GSM_API_KEY_INPUT or stdin)
   setup-admin   Set up workspace-admin: service account and super admin subject
-  status        Show logins, the API key and the security posture of each token
-  logout        Remove one group's stored token (apikey: shows where the key file is)
+  status        Show logins, the API key and the security posture of each token (--check asks Google: validity, scopes, key restrictions)
+  logout        Revoke one group's login at Google and remove its token (--local-only: only remove the file; apikey: shows where the key file is)
   products      List the products: id, title, group, tool count, gateway APIs and whether the plugin folder exists
   apis          List the APIs of a product (generated and gateway), or of the whole catalog, with method counts
   methods       List the methods of one catalog API: id, HTTP verb, path and kind (read, write or destructive)
@@ -93,8 +93,8 @@ Usage:
   npx google-services-mcps setup-client <path-to-client_secret.json> [--force]
   npx google-services-mcps setup-apikey [--force]
   npx google-services-mcps setup-admin --subject <admin email> --key-file <service account JSON> [--profile readonly|readwrite|full] [--servers <a,b>] [--replace]
-  npx google-services-mcps status
-  npx google-services-mcps logout <group>
+  npx google-services-mcps status [--check]
+  npx google-services-mcps logout <group> [--local-only]
   npx google-services-mcps products [--json]
   npx google-services-mcps apis [<product>] [--search <text>] [--json] [--limit <n>]
   npx google-services-mcps methods <api> [<version>] [--search <text>] [--json] [--limit <n>]

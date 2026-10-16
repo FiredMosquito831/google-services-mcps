@@ -110,7 +110,7 @@ What each agent does:
 
 For `codex`, `opencode` and `agy`, install also copies each product's server files to `~/.google-services-mcps/runtime/<product>/`, and the config points there. Uninstall removes a copy when no other install uses it.
 
-Install and uninstall never touch the login tokens. To remove a login, use `logout`.
+Install and uninstall never touch the login tokens. To remove a login, use `logout`, which revokes it at Google first.
 
 **Requirements.** An install checks what it needs on this machine before it writes anything. A missing requirement stops the install, and the message says what to install:
 
@@ -372,7 +372,7 @@ Other commands:
 | `npx google-services-mcps setup-apikey [--force]` | Save the API key. The key comes from `GSM_API_KEY_INPUT` or standard input. **Checked** with a test key. |
 | `npx google-services-mcps setup-admin --subject <email> --key-file <json> [--profile ...] [--servers ...] [--replace]` | Set up the workspace-admin group. **Checked** with a test service account file. |
 | `npx google-services-mcps status` | Show logins, the API key and the setup of each group. **Checked.** |
-| `npx google-services-mcps logout <group>` | Remove one group's token file. **Checked** (no token case). |
+| `npx google-services-mcps logout <group>` | Revoke the login at Google, then remove the token file. `--local-only` removes the file only. **Checked** (no token case). |
 | `npx google-services-mcps products [--json]` | List the products. **Checked.** |
 | `npx google-services-mcps apis [<product>] [--search <text>] [--json] [--limit <n>]` | List the APIs of a product. **Checked.** |
 | `npx google-services-mcps methods <api> [<version>] [--search <text>] [--json] [--limit <n>]` | List the methods of one API. **Checked.** |
@@ -451,7 +451,7 @@ npx google-services-mcps logout workspace-user
 npx google-services-mcps logout cloud
 ```
 
-Use the groups you actually logged in to: `cloud`, `searchconsole`, `workspace-user`, `business`, `developer` or `workspace-admin`. `logout` removes that group's token file only. It does not revoke the access at Google. `logout` prints the page where you can revoke it: `https://myaccount.google.com/permissions`. **Checked** (the message, with no token). **UNVERIFIED:** removing a real token, because no login was run.
+Use the groups you actually logged in to: `cloud`, `searchconsole`, `workspace-user`, `business`, `developer` or `workspace-admin`. `logout` revokes that group's login at Google, then removes its token file. With `--local-only` it only removes the file, and it prints the page where you can revoke the login: `https://myaccount.google.com/permissions`. **Checked** (the message, with no token). **UNVERIFIED:** revoking a real login, because no login was run.
 
 `logout` does not remove the API key. `npx google-services-mcps logout apikey` shows where the key file is. Delete that file yourself. **Checked.**
 

@@ -1,6 +1,8 @@
-import { existsSync, mkdirSync, readFileSync, unlinkSync } from 'node:fs';
+import { existsSync, readFileSync, unlinkSync } from 'node:fs';
 import { join, resolve } from 'node:path';
-import { ADMIN_SCOPES, adminScopeFileFor, readAdminScopeFile } from '../core/auth.js';
+import { ensureTokenDir } from '../core/acl.js';
+import { ADMIN_SCOPES, adminScopeFileFor, readAdminScopeFile, type AuthKind } from '../core/auth.js';
+import { checkGrant, checkKeyRestrictions, revokeGrant, type GrantState } from '../core/grant-check.js';
 import { loadConfig, type RuntimeConfig } from '../core/config.js';
 import { ALL_GROUPS, OAUTH_GROUPS, type CliGroup } from './args.js';
 import { backupFile, writeAtomic } from './fsutil.js';
@@ -29,6 +31,18 @@ export function apiKeyState(file: string): ApiKeyState {
     return typeof saved === 'string' && saved.trim() !== '' ? 'saved' : 'unreadable';
   } catch {
     return 'unreadable';
+  }
+}
+
+/** Days since the API key was saved (the savedAt field), or undefined for a file saved before the field existed. */
+export function apiKeyAgeDays(file: string, now: number = Date.now()): number | undefined {
+  try {
+    const parsed = JSON.parse(readFileSync(file, 'utf8')) as { savedAt?: unknown };
+    if (typeof parsed.savedAt !== 'string') return undefined;
+    const saved = Date.parse(parsed.savedAt);
+    return Number.isFinite(saved) ? Math.floor((now - saved) / 86_400_000) : undefined;
+  } catch {
+    return undefined;
   }
 }
 
@@ -78,7 +92,11 @@ export function runStatus(out: Output, env: NodeJS.ProcessEnv = process.env): nu
     if (group === 'apikey') {
       const file = apiKeyFileFor(cfg);
       const state = apiKeyState(file);
-      if (state === 'saved') out.log(`apikey: API key saved in ${file} (the value is not shown)`);
+      if (state === 'saved') {
+        const age = apiKeyAgeDays(file);
+        out.log(`apikey: API key saved in ${file} (the value is not shown)${age === undefined ? '' : `, saved ${age} day(s) ago`}`);
+        if (age !== undefined && age > 90) out.log('  The key is over 90 days old. Replace it (node gsm.mjs setup-apikey --force) and keep it restricted.');
+      }
       else if (state === 'missing') out.log('apikey: not set (run: node gsm.mjs setup-apikey)');
       else out.log(`apikey: ${file} is unreadable or holds no key (run: node gsm.mjs setup-apikey --force)`);
       continue;
@@ -128,8 +146,60 @@ export function runStatus(out: Output, env: NodeJS.ProcessEnv = process.env): nu
   return 0;
 }
 
-/** Deletes one group's token file. Only that file is removed. */
-export function runLogout(group: CliGroup, out: Output): number {
+const CHECK_LABEL: Record<GrantState, string> = {
+  'not-logged-in': 'not logged in',
+  valid: 'valid',
+  expired: 'EXPIRED',
+  revoked: 'REVOKED',
+  unreachable: 'could not be checked',
+};
+
+/**
+ * `gsm status --check`: asks Google whether each stored login still works, what it grants, and whether the saved API
+ * key is restricted. It is the only status that makes network calls. Never prints a token or the key. Exits 1 when a
+ * check needs attention.
+ */
+export async function runStatusCheck(out: Output, env: NodeJS.ProcessEnv = process.env): Promise<number> {
+  const cfg = loadConfig(env);
+  let problems = 0;
+  for (const group of OAUTH_GROUPS) {
+    const result = await checkGrant(group as AuthKind, cfg);
+    if (result.state !== 'valid') problems += 1;
+    out.log(`${group}: ${CHECK_LABEL[result.state]}. ${result.detail}`);
+    if (result.state === 'valid') {
+      const minutes = result.expiresInSeconds === undefined ? 'unknown' : `${Math.round(result.expiresInSeconds / 60)} min`;
+      out.log(`  access token expires in: ${minutes}`);
+      out.log(`  granted scopes (${result.scopes.length}):`);
+      for (const scope of result.scopes) out.log(`    ${scope}`);
+    }
+  }
+
+  if (cfg.apiKey) {
+    const age = apiKeyAgeDays(apiKeyFileFor(cfg));
+    try {
+      const key = await checkKeyRestrictions(cfg.apiKey, cfg);
+      if (!key.restricted) problems += 1;
+      out.log(`apikey: ${key.restricted ? 'ok' : 'WARNING'}. ${key.detail}`);
+    } catch (err) {
+      out.log(`apikey: the restrictions could not be read (${(err as Error).message.split(cfg.apiKey).join('[redacted]').split('\n')[0]})`);
+    }
+    if (age !== undefined && age > 90) {
+      problems += 1;
+      out.log(`apikey: the key is ${age} days old. Replace it with setup-apikey --force.`);
+    }
+  } else {
+    out.log('apikey: not set, nothing to check');
+  }
+
+  out.log(problems === 0 ? 'All stored logins and keys check out.' : `${problems} check(s) need attention. See the lines above.`);
+  return problems === 0 ? 0 : 1;
+}
+
+/**
+ * Removes one group's token file. Unless localOnly is set, the grant is revoked at Google first, so the refresh token
+ * stops working everywhere, not just on this machine.
+ */
+export async function runLogout(group: CliGroup, out: Output, options: { localOnly?: boolean } = {}): Promise<number> {
   if (group === 'workspace-admin') {
     out.log('workspace-admin has no stored login (it uses GSM_SERVICE_ACCOUNT_KEY_FILE and GSM_ADMIN_SUBJECT). Nothing to remove.');
     return 0;
@@ -144,9 +214,15 @@ export function runLogout(group: CliGroup, out: Output): number {
     out.log(`${group}: not logged in (no token file)`);
     return 0;
   }
+  if (!options.localOnly) {
+    const revoke = await revokeGrant(group as AuthKind, cfg);
+    if (revoke) out.log(`${group}: ${revoke.detail}`);
+  }
   unlinkSync(file);
   out.log(`${group}: removed ${file}`);
-  out.log('This does not revoke the grant at Google. To revoke it, use https://myaccount.google.com/permissions');
+  if (options.localOnly) {
+    out.log('--local-only: the grant was not revoked at Google. To revoke it, use https://myaccount.google.com/permissions');
+  }
   return 0;
 }
 
@@ -181,7 +257,7 @@ export function runSetupClient(sourceArg: string, force: boolean, out: Output): 
     throw new UsageError(`${dest} already exists. Re-run with --force to replace it (the current file is backed up first).`);
   }
 
-  mkdirSync(cfg.tokenDir, { recursive: true, mode: 0o700 });
+  ensureTokenDir(cfg.tokenDir);
   const backup = existsSync(dest) ? backupFile(dest) : undefined;
   writeAtomic(dest, text, 0o600);
   out.log(`OAuth client saved: ${dest} (mode 0600). The client secret was not printed.`);

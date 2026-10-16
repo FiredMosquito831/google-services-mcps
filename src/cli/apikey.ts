@@ -6,7 +6,8 @@
  * {"apiKey": "<key>"}, mode 0600. An existing file is replaced only with --force, and no backup is kept,
  * so no second copy of the key is left behind. The key is never printed, and no error message repeats it.
  */
-import { existsSync, mkdirSync } from 'node:fs';
+import { existsSync } from 'node:fs';
+import { ensureTokenDir } from '../core/acl.js';
 import { loadConfig } from '../core/config.js';
 import { apiKeyFileFor } from './credentials.js';
 import { writeAtomic } from './fsutil.js';
@@ -50,8 +51,8 @@ export async function runSetupApiKey(req: SetupApiKeyRequest, out: Output): Prom
   }
   const key = checkApiKey(raw);
 
-  mkdirSync(cfg.tokenDir, { recursive: true, mode: 0o700 });
-  writeAtomic(file, JSON.stringify({ apiKey: key }, null, 2) + '\n', 0o600);
+  ensureTokenDir(cfg.tokenDir);
+  writeAtomic(file, JSON.stringify({ apiKey: key, savedAt: new Date().toISOString() }, null, 2) + '\n', 0o600);
   out.log(`API key saved to ${file}`);
   return 0;
 }

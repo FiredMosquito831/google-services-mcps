@@ -18,7 +18,7 @@ import {
 } from './args.js';
 import { runSetupAdmin } from './admin.js';
 import { API_KEY_ENV, runSetupApiKey } from './apikey.js';
-import { apiKeyFileFor, apiKeyState, runStatus, runLogout, runSetupClient } from './credentials.js';
+import { apiKeyFileFor, apiKeyState, runStatus, runStatusCheck, runLogout, runSetupClient } from './credentials.js';
 import { guidedInstall, guidedSignIn, guidedUninstall, runMenu, type GuidedEnv, type InstallPrefill } from './guided.js';
 import { checkRequirements } from './requirements.js';
 import { createPrompter, type Prompter } from './prompt.js';
@@ -58,8 +58,8 @@ Commands:
   setup-client  Save the OAuth Desktop client file (client_secret.json)
   setup-apikey  Save the API key for the apikey group (reads GSM_API_KEY_INPUT or stdin)
   setup-admin   Set up workspace-admin: service account and super admin subject
-  status        Show logins, the API key and the security posture of each token
-  logout        Remove one group's stored token (apikey: shows where the key file is)
+  status        Show logins, the API key and the security posture of each token (--check asks Google: validity, scopes, key restrictions)
+  logout        Revoke one group's login at Google and remove its token (--local-only: only remove the file; apikey: shows where the key file is)
   products      List the products: id, title, group, tool count, gateway APIs and whether the plugin folder exists
   apis          List the APIs of a product (generated and gateway), or of the whole catalog, with method counts
   methods       List the methods of one catalog API: id, HTTP verb, path and kind (read, write or destructive)
@@ -79,8 +79,8 @@ Usage:
   node gsm.mjs setup-client <path-to-client_secret.json> [--force]
   node gsm.mjs setup-apikey [--force]
   node gsm.mjs setup-admin --subject <admin email> --key-file <service account JSON> [--profile readonly|readwrite|full] [--servers <a,b>] [--replace]
-  node gsm.mjs status
-  node gsm.mjs logout <group>
+  node gsm.mjs status [--check]
+  node gsm.mjs logout <group> [--local-only]
   node gsm.mjs products [--json]
   node gsm.mjs apis [<product>] [--search <text>] [--json] [--limit <n>]
   node gsm.mjs methods <api> [<version>] [--search <text>] [--json] [--limit <n>]
@@ -333,11 +333,11 @@ async function dispatch(argv: readonly string[]): Promise<number> {
     }
 
     case 'status':
-      return runStatus(out);
+      return parsed.values.check === true ? runStatusCheck(out) : runStatus(out);
 
     case 'logout': {
       const group = parseGroup(parsed.positionals, 'usage: node gsm.mjs logout <group>');
-      return runLogout(group, out);
+      return runLogout(group, out, { localOnly: parsed.values['local-only'] === true });
     }
 
     case 'products':

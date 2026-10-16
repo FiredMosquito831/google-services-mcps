@@ -274,7 +274,8 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       name: 'cloud_apikey_reveal',
       title: 'Reveal API key string',
       description: 'Return the secret key string of an API key. Treat the output as a credential.',
-      kind: 'read',
+      // A credential is a write: hidden unless writes are allowed, and the gate asks before it runs.
+      kind: 'write',
       scopes: googleScopes('apikeys', 'apikeys.readonly', 'cloud-platform', 'cloud-platform.read-only'),
       inputSchema: { key_name: z.string() },
       async handler({ key_name }) {
