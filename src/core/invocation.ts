@@ -43,7 +43,10 @@ export function gsmFileFor(moduleFile: string): string {
  *  - the folder that holds gsm.mjs, when that is the current folder: "node gsm.mjs"
  *  - anywhere else: "node <full path to gsm.mjs>", quoted, so it works from any folder
  */
-export function invocationFor(moduleUrl: string, cwd: string): string {
+export function invocationFor(moduleUrl: string, cwd: string, env: NodeJS.ProcessEnv = process.env): string {
+  // The short package (google-services-mcps) runs this installer, and sets GSM_INVOCATION to the name the user typed.
+  const named = env.GSM_INVOCATION?.trim();
+  if (named) return named;
   const file = gsmFileFor(fileURLToPath(moduleUrl));
   if (file.split(sep).join('/').includes(`/node_modules/${NPM_PACKAGE}/`)) return `npx ${NPM_PACKAGE}`;
   return resolve(cwd) === dirname(file) ? DEFAULT_PREFIX : `node "${file}"`;

@@ -54,15 +54,15 @@ The same installer runs in three ways. The commands and flags are the same in ea
 
 | Way | Command |
 |---|---|
-| npx, no install | `npx @firedmosquito831/google-services-mcps <command> [options]`. The short name `npx google-services-mcps <command>` runs the same program. |
-| Global install | `npm install -g @firedmosquito831/google-services-mcps`, then `gsm <command> [options]` |
+| npx, no install | `npx google-services-mcps <command> [options]`. The same program is also published as `@firedmosquito831/google-services-mcps`, where the global command is `gsm` (`npx @firedmosquito831/google-services-mcps <command>` works the same). |
+| Global install | `npm install -g google-services-mcps`, then `google-services-mcps <command> [options]` |
 | From a clone | `node gsm.mjs <command> [options]` |
 
 With no command, the program prints its help. In a terminal, with no command, it opens a menu instead.
 
 **Interactive or with flags.** In a terminal the program asks questions, and each answer shows the exact command it will run, so you can type that command next time:
 
-- `npx @firedmosquito831/google-services-mcps` (no arguments): the menu. It covers installing, uninstalling, signing in to a Google group (the client file, the profile, the API key, the admin setup), signing out, the install list, the sign-in status, the products, the APIs and methods, the scopes, the checks, the version and the help.
+- `npx google-services-mcps` (no arguments): the menu. It covers installing, uninstalling, signing in to a Google group (the client file, the profile, the API key, the admin setup), signing out, the install list, the sign-in status, the products, the APIs and methods, the scopes, the checks, the version and the help.
 - `install` or `uninstall` without `--agent` or `--plugin`: asks for what is missing, and keeps the flags you gave. The install shows a preview with `--dry-run` first, and changes nothing until you confirm.
 - `login` with no group: starts the sign-in questions.
 
@@ -126,20 +126,20 @@ Antigravity (`agy`) has its own installer, and gsm writes its config only when t
 Examples:
 
 ```
-npx @firedmosquito831/google-services-mcps install --agent claude --plugin gmail
-npx @firedmosquito831/google-services-mcps install --agent codex --plugin gmail,gcalendar --dry-run
-npx @firedmosquito831/google-services-mcps install --agent claude --plugin gcalendar --scope project --path "C:\work\my-project"
-npx @firedmosquito831/google-services-mcps install --agent claude --plugin gmail --marketplace FiredMosquito831/google-services-mcps
-npx @firedmosquito831/google-services-mcps uninstall --agent claude --plugin gmail
-npx @firedmosquito831/google-services-mcps uninstall --all --dry-run
-npx @firedmosquito831/google-services-mcps uninstall --all --yes
-npx @firedmosquito831/google-services-mcps list
+npx google-services-mcps install --agent claude --plugin gmail
+npx google-services-mcps install --agent codex --plugin gmail,gcalendar --dry-run
+npx google-services-mcps install --agent claude --plugin gcalendar --scope project --path "C:\work\my-project"
+npx google-services-mcps install --agent claude --plugin gmail --marketplace FiredMosquito831/google-services-mcps
+npx google-services-mcps uninstall --agent claude --plugin gmail
+npx google-services-mcps uninstall --all --dry-run
+npx google-services-mcps uninstall --all --yes
+npx google-services-mcps list
 ```
 
 Known issues:
 
 - **Version 0.1.1 only:** Claude Code through the npm package needed `--marketplace FiredMosquito831/google-services-mcps`, because the install tried to use the package folder as the marketplace. Version 0.1.2 and later use the GitHub marketplace by default, so the option is not needed.
-- Every message now shows the command for your route: `node gsm.mjs ...` from the repository, `npx @firedmosquito831/google-services-mcps ...` for the npm package, and `node "<full path>\gsm.mjs" ...` from any other folder.
+- Every message now shows the command for your route: `node gsm.mjs ...` from the repository, `npx google-services-mcps ...` for the npm package, and `node "<full path>\gsm.mjs" ...` from any other folder.
 - The Claude Code marketplace comes from the `main` branch on GitHub, not from the npm version. The two can differ.
 
 ## Claude Code
@@ -160,7 +160,7 @@ A folder works too: `claude plugin marketplace add D:\path\to\google-services-mc
 
 ### 2. Install a product
 
-The examples below use `node gsm.mjs`, the older form from a clone. The npm package's form is `npx @firedmosquito831/google-services-mcps`, with the same options.
+The examples below use `node gsm.mjs`, the older form from a clone. The npm package's form is `npx google-services-mcps`, with the same options.
 
 ```
 node gsm.mjs install --agent claude --plugin gmail

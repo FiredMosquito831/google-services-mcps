@@ -33,6 +33,15 @@ const fresh = (label) => {
 // ---- the command prefix for each route -------------------------------------------------------------------------------
 
 describe('invocation: the command to print for each route', () => {
+  test('the short package names the command the user typed (GSM_INVOCATION), and a blank value is ignored', () => {
+    const file = join(fresh('short'), 'node_modules', '@firedmosquito831', 'google-services-mcps', 'gsm.mjs');
+    assert.equal(
+      invocationFor(pathToFileURL(file).href, fresh('elsewhere'), { GSM_INVOCATION: 'npx google-services-mcps' }),
+      'npx google-services-mcps',
+    );
+    assert.equal(invocationFor(REPO_CLI, REPO, { GSM_INVOCATION: '  ' }), 'node gsm.mjs');
+  });
+
   test('an npm package prints npx', () => {
     const file = join(fresh('npm'), 'node_modules', '@firedmosquito831', 'google-services-mcps', 'gsm.mjs');
     assert.equal(invocationFor(pathToFileURL(file).href, fresh('elsewhere')), 'npx @firedmosquito831/google-services-mcps');

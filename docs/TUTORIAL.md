@@ -61,13 +61,13 @@ Examples in this tutorial use Windows paths such as `D:\Projects2\Google-service
 
 ## 5. The install command
 
-Every agent uses the same command. Only the agent name changes. The npm package runs it as `npx @firedmosquito831/google-services-mcps install --agent <agent> --plugin <product>`, and this tutorial uses the older form from the clone, `node gsm.mjs`. The two are identical in what they do.
+Every agent uses the same command. Only the agent name changes. The npm package runs it as `npx google-services-mcps install --agent <agent> --plugin <product>`, and this tutorial uses the older form from the clone, `node gsm.mjs`. The two are identical in what they do.
 
 ```
 node gsm.mjs install --agent <agent> --plugin <product>
 ```
 
-Run `node gsm.mjs` with no arguments in a terminal (or `npx @firedmosquito831/google-services-mcps` with no arguments) for the guided menu. It asks for the agent, the scope, the products and the write settings, shows the command it will run, previews it, and installs after you confirm. Give `install` some flags and the menu asks only for the rest. Scripts always use flags. The full option table is in [INSTALL.md](INSTALL.md#npm-and-npx-commands).
+Run `node gsm.mjs` with no arguments in a terminal (or `npx google-services-mcps` with no arguments) for the guided menu. It asks for the agent, the scope, the products and the write settings, shows the command it will run, previews it, and installs after you confirm. Give `install` some flags and the menu asks only for the rest. Scripts always use flags. The full option table is in [INSTALL.md](INSTALL.md#npm-and-npx-commands).
 
 | Part | What to write | Default |
 |---|---|---|

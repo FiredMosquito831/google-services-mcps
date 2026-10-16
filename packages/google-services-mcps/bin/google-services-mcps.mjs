@@ -15,7 +15,9 @@ try {
   process.exit(1);
 }
 
-const result = spawnSync(process.execPath, [installer, ...process.argv.slice(2)], { stdio: 'inherit' });
+// The installer prints the command the user typed, so its help and messages read "npx google-services-mcps ...".
+const env = { ...process.env, GSM_INVOCATION: 'npx google-services-mcps' };
+const result = spawnSync(process.execPath, [installer, ...process.argv.slice(2)], { stdio: 'inherit', env });
 if (result.error) {
   console.error(`google-services-mcps: could not start the installer: ${result.error.message}`);
   process.exit(1);

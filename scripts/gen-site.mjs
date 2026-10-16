@@ -165,7 +165,7 @@ const products = ids.map((id) => {
     kinds,
     generated,
     gateway,
-    install: `npx @firedmosquito831/google-services-mcps install --agent claude --plugin ${id}`,
+    install: `npx google-services-mcps install --agent claude --plugin ${id}`,
     detailPage: exists(`docs/capabilities/${id}.md`),
   };
 });
