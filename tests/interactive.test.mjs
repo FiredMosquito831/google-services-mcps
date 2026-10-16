@@ -33,18 +33,9 @@ const fresh = (label) => {
 // ---- the command prefix for each route -------------------------------------------------------------------------------
 
 describe('invocation: the command to print for each route', () => {
-  test('the short package names the command the user typed (GSM_INVOCATION), and a blank value is ignored', () => {
-    const file = join(fresh('short'), 'node_modules', '@firedmosquito831', 'google-services-mcps', 'gsm.mjs');
-    assert.equal(
-      invocationFor(pathToFileURL(file).href, fresh('elsewhere'), { GSM_INVOCATION: 'npx google-services-mcps' }),
-      'npx google-services-mcps',
-    );
-    assert.equal(invocationFor(REPO_CLI, REPO, { GSM_INVOCATION: '  ' }), 'node gsm.mjs');
-  });
-
-  test('an npm package prints npx', () => {
-    const file = join(fresh('npm'), 'node_modules', '@firedmosquito831', 'google-services-mcps', 'gsm.mjs');
-    assert.equal(invocationFor(pathToFileURL(file).href, fresh('elsewhere')), 'npx @firedmosquito831/google-services-mcps');
+  test('an npm package prints npx with its one name, google-services-mcps', () => {
+    const file = join(fresh('npm'), 'node_modules', 'google-services-mcps', 'gsm.mjs');
+    assert.equal(invocationFor(pathToFileURL(file).href, fresh('elsewhere')), 'npx google-services-mcps');
   });
 
   test('the repository folder prints node gsm.mjs; any other folder prints the quoted full path', () => {
@@ -62,12 +53,12 @@ describe('invocation: the command to print for each route', () => {
   });
 
   test('invocationText replaces only the prefix, and leaves other text alone', () => {
-    setInvocation('npx @firedmosquito831/google-services-mcps');
+    setInvocation('npx google-services-mcps');
     try {
-      assert.equal(invocation(), 'npx @firedmosquito831/google-services-mcps');
+      assert.equal(invocation(), 'npx google-services-mcps');
       assert.equal(
         invocationText('Run node gsm.mjs login cloud, or node gsm.mjs --help. Node.js 20 is needed.'),
-        'Run npx @firedmosquito831/google-services-mcps login cloud, or npx @firedmosquito831/google-services-mcps --help. Node.js 20 is needed.',
+        'Run npx google-services-mcps login cloud, or npx google-services-mcps --help. Node.js 20 is needed.',
       );
     } finally {
       setInvocation('node gsm.mjs');

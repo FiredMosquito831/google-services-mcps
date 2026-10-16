@@ -54,7 +54,7 @@ The same installer runs in three ways. The commands and flags are the same in ea
 
 | Way | Command |
 |---|---|
-| npx, no install | `npx google-services-mcps <command> [options]`. The same program is also published as `@firedmosquito831/google-services-mcps`, where the global command is `gsm` (`npx @firedmosquito831/google-services-mcps <command>` works the same). |
+| npx, no install | `npx google-services-mcps <command> [options]`. A global install (`npm install -g google-services-mcps`) gives the commands `google-services-mcps` and `gsm`. |
 | Global install | `npm install -g google-services-mcps`, then `google-services-mcps <command> [options]` |
 | From a clone | `node gsm.mjs <command> [options]` |
 

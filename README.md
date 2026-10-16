@@ -2,14 +2,14 @@
 
 ![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue)
 ![Status: beta](https://img.shields.io/badge/status-beta-orange)
-![Tests: 508 passing](https://img.shields.io/badge/tests-508%20passing-brightgreen)
+![Tests: 508 passing](https://img.shields.io/badge/tests-512%20passing-brightgreen)
 ![Plugins: 23](https://img.shields.io/badge/plugins-23-blue)
 ![Model Context Protocol](https://img.shields.io/badge/Model%20Context%20Protocol-server-6f42c1)
 ![Claude Code plugin](https://img.shields.io/badge/Claude%20Code-plugin-d97757)
 
 **google-services-mcps** is a Google Workspace MCP, Google Cloud MCP and Search Console MCP suite. It includes a Gmail MCP, a Google Drive MCP, a Google Calendar MCP and a Google Ads MCP, plus 19 more Google products. Each product is one **Model Context Protocol** server, packaged as a **Claude Code plugin** in one marketplace. An installer adds the same servers to a Codex MCP, an OpenCode MCP and an Antigravity MCP setup. Use it to let an AI agent read your Google data and, when you allow it, change that data.
 
-> **Status: beta.** Built and tested offline: 508 passing tests (one more downloads from GitHub and runs only with `GSM_NETWORK_TESTS=1`), a smoke test over all 23 servers, and Claude plugin validation. Not yet tested against live Google accounts. The repository is public. Licensed under Apache-2.0.
+> **Status: beta.** Built and tested offline: 512 passing tests (one more downloads from GitHub and runs only with `GSM_NETWORK_TESTS=1`), a smoke test over all 23 servers, and Claude plugin validation. Not yet tested against live Google accounts. The repository is public. Licensed under Apache-2.0.
 
 ## At a glance
 
@@ -154,7 +154,7 @@ Every route runs the same installer. Only the way you start it differs:
 | One line, no npm | the line for your shell, below | Node.js 20 or newer |
 | From a clone (older form) | `node gsm.mjs <command>` in the repository folder | Node.js 20 or newer, git |
 
-The same program is also published as `@firedmosquito831/google-services-mcps` (`npx @firedmosquito831/google-services-mcps <command>`, and the command `gsm` after a global install).
+The package is `google-services-mcps`: `npx google-services-mcps <command>`. A global install (`npm install -g google-services-mcps`) gives the commands `google-services-mcps` and `gsm`.
 
 ### Flags or the menu
 

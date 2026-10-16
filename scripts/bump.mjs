@@ -1,17 +1,13 @@
 #!/usr/bin/env node
-// Moves both npm packages to one new version, so they cannot drift:
-//   - the installer, @firedmosquito831/google-services-mcps (package.json and package-lock.json)
-//   - the short name, google-services-mcps (packages/google-services-mcps/package.json), and its exact pin on the installer
+// Moves the npm package (google-services-mcps) to one new version: package.json and package-lock.json.
 //
 // Usage: node scripts/bump.mjs patch|minor|major|X.Y.Z
-// It writes those files and nothing else. Commit the bump with the change it ships.
+// It writes those two files and nothing else. Commit the bump with the change it ships.
 
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
-const INSTALLER = '@firedmosquito831/google-services-mcps';
-const SHORT = join('packages', 'google-services-mcps', 'package.json');
 const SEMVER = /^(\d+)\.(\d+)\.(\d+)$/;
 
 const read = (file) => JSON.parse(readFileSync(file, 'utf8'));
@@ -36,21 +32,13 @@ export function nextVersion(current, spec) {
   return spec;
 }
 
-export function bumpVersions(root, spec) {
-  const installerFile = join(root, 'package.json');
-  const shortFile = join(root, SHORT);
+export function bumpVersion(root, spec) {
+  const pkgFile = join(root, 'package.json');
   const lockFile = join(root, 'package-lock.json');
-  const installer = read(installerFile);
-  const short = read(shortFile);
-  if (short.version !== installer.version || short.dependencies?.[INSTALLER] !== installer.version) {
-    throw new Error('the two packages are not at the same version before the bump; fix that first');
-  }
-  const next = nextVersion(installer.version, spec);
-  installer.version = next;
-  short.version = next;
-  short.dependencies[INSTALLER] = next;
-  write(installerFile, installer);
-  write(shortFile, short);
+  const pkg = read(pkgFile);
+  const next = nextVersion(pkg.version, spec);
+  pkg.version = next;
+  write(pkgFile, pkg);
   if (existsSync(lockFile)) {
     const lock = read(lockFile);
     lock.version = next;
@@ -67,5 +55,5 @@ if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1]
     process.exit(2);
   }
   const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-  console.log(`both packages moved to ${bumpVersions(root, spec)}`);
+  console.log(`google-services-mcps moved to ${bumpVersion(root, spec)}`);
 }

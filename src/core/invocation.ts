@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
  * replaces that with the command that works for the route the program was started by (see invocationFor).
  */
 const DEFAULT_PREFIX = 'node gsm.mjs';
-export const NPM_PACKAGE = '@firedmosquito831/google-services-mcps';
+export const NPM_PACKAGE = 'google-services-mcps';
 
 let prefix = DEFAULT_PREFIX;
 
@@ -15,7 +15,7 @@ export function setInvocation(text: string): void {
   prefix = text;
 }
 
-/** The command to print for this program, for example "npx @firedmosquito831/google-services-mcps". */
+/** The command to print for this program, for example "npx google-services-mcps". */
 export function invocation(): string {
   return prefix;
 }
@@ -39,14 +39,11 @@ export function gsmFileFor(moduleFile: string): string {
 
 /**
  * The command to print for a program that runs from moduleUrl, while the user is in folder cwd:
- *  - an npm package (its files are under node_modules/@firedmosquito831/google-services-mcps): "npx <package>"
+ *  - an npm package (its files are under node_modules/google-services-mcps): "npx <package>"
  *  - the folder that holds gsm.mjs, when that is the current folder: "node gsm.mjs"
  *  - anywhere else: "node <full path to gsm.mjs>", quoted, so it works from any folder
  */
-export function invocationFor(moduleUrl: string, cwd: string, env: NodeJS.ProcessEnv = process.env): string {
-  // The short package (google-services-mcps) runs this installer, and sets GSM_INVOCATION to the name the user typed.
-  const named = env.GSM_INVOCATION?.trim();
-  if (named) return named;
+export function invocationFor(moduleUrl: string, cwd: string): string {
   const file = gsmFileFor(fileURLToPath(moduleUrl));
   if (file.split(sep).join('/').includes(`/node_modules/${NPM_PACKAGE}/`)) return `npx ${NPM_PACKAGE}`;
   return resolve(cwd) === dirname(file) ? DEFAULT_PREFIX : `node "${file}"`;
