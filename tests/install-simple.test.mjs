@@ -120,12 +120,13 @@ test('a missing --agent or --plugin prints the usage and the valid values, and e
     const noAgent = runGsm(['install', '--plugin', 'gmail', '--home', p.home], p);
     assert.equal(noAgent.code, 2, noAgent.stderr);
     assert.match(noAgent.stderr, /--agent is required\. Valid agents: claude, codex, opencode, agy, all/);
-    assert.match(noAgent.stderr, /usage: node gsm\.mjs install --agent/);
+    // From another folder the usage names the full path of gsm.mjs (quoted), and from the repository it is node gsm.mjs.
+    assert.match(noAgent.stderr, /usage: node (gsm\.mjs|"[^"]*gsm\.mjs") install --agent/);
 
     const noPlugin = runGsm(['install', '--agent', 'codex', '--home', p.home], p);
     assert.equal(noPlugin.code, 2, noPlugin.stderr);
     assert.match(noPlugin.stderr, /--plugin is required\. Valid plugin ids: /);
-    assert.match(noPlugin.stderr, /usage: node gsm\.mjs install --agent/);
+    assert.match(noPlugin.stderr, /usage: node (gsm\.mjs|"[^"]*gsm\.mjs") install --agent/);
   }));
 
 // ---------- runtime copies: codex, opencode and agy ----------

@@ -5,6 +5,7 @@ import { resolve } from 'node:path';
 import { createInterface } from 'node:readline/promises';
 import {
   parseCliArgs,
+  type ParsedArgs,
   parseGroup,
   parseInstallArgs,
   parseLimit,
@@ -16,8 +17,12 @@ import {
   parseUninstallAllArgs,
 } from './args.js';
 import { runSetupAdmin } from './admin.js';
-import { runSetupApiKey } from './apikey.js';
-import { runStatus, runLogout, runSetupClient } from './credentials.js';
+import { API_KEY_ENV, runSetupApiKey } from './apikey.js';
+import { apiKeyFileFor, apiKeyState, runStatus, runLogout, runSetupClient } from './credentials.js';
+import { guidedInstall, guidedSignIn, guidedUninstall, runMenu, type GuidedEnv, type InstallPrefill } from './guided.js';
+import { createPrompter, type Prompter } from './prompt.js';
+import { invocationFor, invocationText, setInvocation } from '../core/invocation.js';
+import { loadConfig } from '../core/config.js';
 import { runDoctor } from './doctor.js';
 import { spawnRunner } from './exec.js';
 import { runInstall, runUninstallAll, type InstallEnv } from './install.js';
@@ -32,6 +37,10 @@ import { runScopes } from './scopes.js';
 import { UsageError } from './types.js';
 
 export const HELP = `gsm: install the Google services MCP suite into an agent, and manage it
+
+Interactive: in a terminal, run gsm with no arguments for a menu. Install and uninstall ask for whatever is missing,
+             and sign-in asks for the group, the client file and the profile. Each answer shows the command it runs,
+             so the same steps can be typed later with flags. Scripts (no terminal) always need the flags.
 
 Examples:
   node gsm.mjs install --agent codex --plugin gmail                        Gmail for Codex, for this user (global is the default)
@@ -134,10 +143,58 @@ function requireDirectory(path: string, label: string): void {
   if (!isDir) throw new UsageError(`${label} must be an existing directory: ${path}`);
 }
 
+/** Every printed line uses the command for this route (npx, or node with the path of gsm.mjs). */
 const out: Output = {
-  log: (line) => console.log(line),
-  warn: (line) => console.error(line),
+  log: (line) => console.log(invocationText(line)),
+  warn: (line) => console.error(invocationText(line)),
 };
+
+/** A terminal on both sides: the guided flows run, and the questions are asked. */
+const isInteractive = (): boolean => Boolean(process.stdin.isTTY && process.stdout.isTTY);
+
+async function withPrompter<T>(body: (prompt: Prompter) => Promise<T>): Promise<T> {
+  const prompt = createPrompter(process.stdin, process.stdout, true);
+  try {
+    return await body(prompt);
+  } finally {
+    prompt.close();
+  }
+}
+
+/** What the guided flows need. The API key is saved from the typed value, never from GSM_API_KEY_INPUT. */
+function guidedEnvFor(prompt: Prompter, moduleUrl: string): GuidedEnv {
+  const roots = findRoots(moduleUrl);
+  const registry = loadProductRegistry(roots);
+  const cfg = loadConfig();
+  const environment = { ...process.env };
+  delete environment[API_KEY_ENV];
+  return {
+    prompt,
+    run: (argv) => dispatch(argv),
+    roots,
+    registry,
+    home: homedir(),
+    cwd: process.cwd(),
+    out,
+    clientSecretFile: cfg.clientSecretFile,
+    apiKeySaved: apiKeyState(apiKeyFileFor(cfg)) === 'saved',
+    saveApiKey: (key, force) => runSetupApiKey({ force, env: environment, readStdin: async () => key }, out),
+  };
+}
+
+/** The install options that were already given as flags. An option not given is asked for. */
+function prefillFrom(values: ParsedArgs['values']): InstallPrefill {
+  const text = (value: string | boolean | undefined): string | undefined => (typeof value === 'string' ? value : undefined);
+  const path = text(values.path);
+  return {
+    agent: text(values.agent),
+    plugin: text(values.plugin),
+    scope: text(values.scope),
+    path: path === undefined ? undefined : resolvePath(path),
+    allowWrites: values['allow-writes'] === true ? true : undefined,
+    confirmation: text(values.confirmation),
+  };
+}
 
 /** Reads all of stdin. Resolves undefined when stdin is a terminal, so a key is never typed where it would show. */
 function readStdin(): Promise<string | undefined> {
@@ -167,7 +224,7 @@ function installEnv(roots: InstallRoots, registry: Registry): InstallEnv {
   return { roots, registry, cwd: process.cwd(), defaultHome: homedir(), platform: process.platform, run: spawnRunner, out };
 }
 
-async function dispatch(argv: string[]): Promise<number> {
+async function dispatch(argv: readonly string[]): Promise<number> {
   const parsed = parseCliArgs(argv);
   const moduleUrl = import.meta.url;
   // The product map: servers.json next to bin/ in a plugin folder, or config/products.json in the repo.
@@ -179,10 +236,16 @@ async function dispatch(argv: string[]): Promise<number> {
 
   switch (parsed.command) {
     case 'help':
-      console.log(HELP);
+      if (argv.length === 0 && isInteractive()) return withPrompter((prompt) => runMenu(guidedEnvFor(prompt, moduleUrl)));
+      console.log(invocationText(HELP));
       return 0;
 
     case 'install': {
+      // In a terminal, a missing --agent or --plugin is asked for. Given flags run as before, with no questions.
+      if (isInteractive() && (parsed.values.agent === undefined || parsed.values.plugin === undefined)) {
+        const prefill = prefillFrom(parsed.values);
+        return withPrompter((prompt) => guidedInstall(guidedEnvFor(prompt, moduleUrl), prefill));
+      }
       const roots = findRoots(moduleUrl);
       const registry = loadProductRegistry(roots);
       const request = parseInstallArgs(parsed.values, 'install', resolvePath, productIds(registry));
@@ -192,6 +255,9 @@ async function dispatch(argv: string[]): Promise<number> {
     }
 
     case 'uninstall': {
+      if (parsed.values.all !== true && isInteractive() && (parsed.values.agent === undefined || parsed.values.plugin === undefined)) {
+        return withPrompter((prompt) => guidedUninstall(guidedEnvFor(prompt, moduleUrl)));
+      }
       const roots = findRoots(moduleUrl);
       const registry = loadProductRegistry(roots);
       if (parsed.values.all === true) {
@@ -214,6 +280,8 @@ async function dispatch(argv: string[]): Promise<number> {
     }
 
     case 'login': {
+      // In a terminal, `login` with no group starts the guided sign-in (group, client file, profile, API key, admin).
+      if (parsed.positionals.length === 0 && isInteractive()) return withPrompter((prompt) => guidedSignIn(guidedEnvFor(prompt, moduleUrl)));
       const group = parseGroup(parsed.positionals, 'usage: node gsm.mjs login <group> [--profile readonly|readwrite|full] [--scopes <urls>] [--servers a,b] [--client-secret <file>] [--no-browser] [--replace]');
       const choice = parseLoginScopes(parsed.values);
       const servers = parseServers(parsed.values);
@@ -317,14 +385,15 @@ async function dispatch(argv: string[]): Promise<number> {
 }
 
 try {
+  setInvocation(invocationFor(import.meta.url, process.cwd()));
   process.exitCode = await dispatch(process.argv.slice(2));
 } catch (err) {
   if (err instanceof UsageError) {
-    console.error(`gsm: ${err.message}`);
-    console.error('Run node gsm.mjs --help for usage.');
+    console.error(invocationText(`gsm: ${err.message}`));
+    console.error(invocationText('Run node gsm.mjs --help for usage.'));
     process.exitCode = 2;
   } else {
-    console.error(`gsm: ${(err as Error).message}`);
+    console.error(invocationText(`gsm: ${(err as Error).message}`));
     process.exitCode = 1;
   }
 }

@@ -58,7 +58,7 @@ test('getCloudAdcClient with no ADC throws gsm\'s "Not logged in" message, with 
     env,
   );
   assert.equal(out.name, 'AuthRequiredError');
-  assert.match(out.message, /^Not logged in for "cloud"\. Run: node <plugin>\/bin\/gsm\.mjs login cloud/);
+  assert.match(out.message, /^Not logged in for "cloud"\. Run: node gsm\.mjs login cloud/);
   assert.doesNotMatch(out.message, /Application Default Credentials|Could not load the default credentials/i);
   assert.match(out.cause ?? '', /GOOGLE_APPLICATION_CREDENTIALS|credential/i, 'the ADC failure is kept as the cause');
 });
@@ -72,7 +72,7 @@ test('the cloud discovery path (the gai server too) gets the same message when l
     env,
   );
   assert.equal(out.name, 'AuthRequiredError');
-  assert.match(out.message, /^Not logged in for "cloud"\. Run: node <plugin>\/bin\/gsm\.mjs login cloud/);
+  assert.match(out.message, /^Not logged in for "cloud"\. Run: node gsm\.mjs login cloud/);
 });
 
 test('the cause is shown only with GSM_VERBOSE=1', async () => {

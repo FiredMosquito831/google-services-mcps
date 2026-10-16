@@ -2,6 +2,7 @@ import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync, chmodSync }
 import { dirname, join } from 'node:path';
 import { OAuth2Client, GoogleAuth, JWT, type Credentials } from 'google-auth-library';
 import type { RuntimeConfig } from './config.js';
+import { invocation } from './invocation.js';
 import { isIdempotentMethod, requestWithRetry, type HttpResult } from './http.js';
 
 /**
@@ -39,7 +40,7 @@ export class AuthRequiredError extends Error {
   /** `cause` is the underlying failure, such as google-auth-library's Application Default Credentials error. It is shown only in verbose mode. */
   constructor(kind: AuthKind, options?: { cause?: unknown }) {
     super(
-      `Not logged in for "${kind}". Run: node <plugin>/bin/gsm.mjs login ${kind} (after setting up the OAuth desktop client with setup-client).`,
+      `Not logged in for "${kind}". Run: ${invocation()} login ${kind} (after setting up the OAuth desktop client with setup-client).`,
       options,
     );
     this.name = 'AuthRequiredError';

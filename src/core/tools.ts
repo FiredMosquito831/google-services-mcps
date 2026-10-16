@@ -7,6 +7,7 @@ import { AuthRequiredError, grantedScopes } from './auth.js';
 import { createGate, type GateFn } from './approval.js';
 import { toolMapFromDefs } from './dump.js';
 import { loadRegistry, serverByName, type AuthGroup } from './registry.js';
+import { invocationFor, setInvocation } from './invocation.js';
 
 /**
  * read        : safe, always registered and never gated.
@@ -161,6 +162,8 @@ export async function runServer(opts: {
   version: string;
   buildTools: (cfg: RuntimeConfig) => Promise<ToolDef[]> | ToolDef[];
 }): Promise<void> {
+  // The messages of this server name the command that signs in: the plugin's own bin/gsm.mjs, by its full path.
+  setInvocation(invocationFor(import.meta.url, process.cwd()));
   const cfg = loadConfig();
   if (process.argv.includes('--dump-tools')) {
     await dumpTools(opts.buildTools, cfg);

@@ -58,7 +58,15 @@ The same installer runs in three ways. The commands and flags are the same in ea
 | Global install | `npm install -g @firedmosquito831/google-services-mcps`, then `gsm <command> [options]` |
 | From a clone | `node gsm.mjs <command> [options]` |
 
-With no command, the program prints its help.
+With no command, the program prints its help. In a terminal, with no command, it opens a menu instead.
+
+**Interactive or with flags.** In a terminal the program asks questions, and each answer shows the exact command it will run, so you can type that command next time:
+
+- `npx @firedmosquito831/google-services-mcps` (no arguments): the menu. It covers installing, uninstalling, signing in to a Google group (the client file, the profile, the API key, the admin setup), signing out, the install list, the sign-in status, the products, the APIs and methods, the scopes, the checks, the version and the help.
+- `install` or `uninstall` without `--agent` or `--plugin`: asks for what is missing, and keeps the flags you gave. The install shows a preview with `--dry-run` first, and changes nothing until you confirm.
+- `login` with no group: starts the sign-in questions.
+
+With all the flags given, or with no terminal (a script, a pipe, a CI job), nothing is asked: the command runs as it is written, and a missing flag is a usage error with the valid values. The API key is typed without echo and is never printed or put in a command.
 
 The install and uninstall commands:
 
@@ -117,7 +125,7 @@ npx @firedmosquito831/google-services-mcps list
 Known issues:
 
 - **Claude Code with the npm package version 0.1.1 needs `--marketplace FiredMosquito831/google-services-mcps`.** Without it the install tries to use the package folder as the marketplace, and that fails. Checked: the install fails without the option and succeeds with it. The fix is in the repository, and it reaches npm with the next release.
-- Messages printed after an install or a login still show `node gsm.mjs ...`. With npm, write `npx @firedmosquito831/google-services-mcps ...` or `gsm ...` instead.
+- Every message now shows the command for your route: `node gsm.mjs ...` from the repository, `npx @firedmosquito831/google-services-mcps ...` for the npm package, and `node "<full path>\gsm.mjs" ...` from any other folder.
 - The Claude Code marketplace comes from the `main` branch on GitHub, not from the npm version. The two can differ.
 
 ## Claude Code
