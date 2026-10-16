@@ -26,3 +26,6 @@ HANDOFF.md
 
 # Raw Google Discovery cache written by scripts/build-catalog.mjs (re-downloadable)
 data/cache-discovery/
+
+# crash dumps from msys bash on Windows
+*.stackdump
