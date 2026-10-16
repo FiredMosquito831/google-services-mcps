@@ -1,6 +1,6 @@
 # Gmail (`gmail`)
 
-Install with the simplest command: `node gsm.mjs install --agent claude --plugin <id>` (see docs/TUTORIAL.md).
+Install with the simplest command: `npx google-services-mcps install --agent claude --plugin <id>` (see docs/TUTORIAL.md).
 
 Gmail mailboxes, messages, threads, drafts, labels and settings. The settings include filters, forwarding, delegates, send-as addresses, vacation replies, IMAP and POP. It also reads Gmail Postmaster Tools data for your sending domains.
 

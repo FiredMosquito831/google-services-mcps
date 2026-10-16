@@ -62,7 +62,7 @@ Four layers, and the generated plugin folders are the join point.
 - Scopes merge by default. Never make a login overwrite stored scopes unless the user passes `--replace`.
 - Installer tests always pass `--home <temp dir>`. Claude tests always set `CLAUDE_CONFIG_DIR`. Never let a test write into the real home folder or the real Claude config.
 - Never commit tokens, client secret files, `HANDOFF.md`, `reference/`, `session/` or `.remember/` (all gitignored). Scan before any push that might expose something new.
-- In docs and messages, write commands as `node gsm.mjs ...` from the repository. A bare `gsm` works after `npm install -g google-services-mcps`, which also gives the command `google-services-mcps`.
+- In user-facing docs (README, `docs/`, `site/`), show the npm command: `npx google-services-mcps <command>`, or `google-services-mcps <command>` after a global install (`gsm` is the same command). Keep `node gsm.mjs <command>` for clone and development instructions only, and for the messages printed from a repository (the code writes `node gsm.mjs`, and `invocationText` replaces it at print time).
 - Do not publish to npm, push, force-push, change repository visibility, deprecate a package, or send anything outward without the owner's explicit go-ahead in the current conversation. Committing locally is fine.
 - Commit messages end with `by FiredMosquito831`. Commit author is the GitHub no-reply address (repository-local `user.email`).
 - On Windows, write commit messages to a file and use `git commit -F`. Redirect git's CRLF warnings with `2>$null`.

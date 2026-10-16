@@ -107,7 +107,8 @@ lines.push('');
 lines.push('## Command line (`gsm`)');
 lines.push('');
 lines.push('```');
-lines.push(helpText.trim() || '(build the CLI first: npm run compile)');
+// The published command is npx google-services-mcps; the repo's build prints node gsm.mjs.
+lines.push((helpText.trim() || '(build the CLI first: npm run compile)').split('node gsm.mjs').join('npx google-services-mcps'));
 lines.push('```');
 lines.push('');
 lines.push('Commands in the help text: ' + (commandLines.length ? commandLines.map((c) => c.split(' ')[0]).join(', ') : 'none found'));

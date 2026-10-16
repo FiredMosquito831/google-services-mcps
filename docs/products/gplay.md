@@ -1,6 +1,6 @@
 # Google Play (`gplay`)
 
-Install with the simplest command: `node gsm.mjs install --agent claude --plugin <id>` (see docs/TUTORIAL.md).
+Install with the simplest command: `npx google-services-mcps install --agent claude --plugin <id>` (see docs/TUTORIAL.md).
 
 Google Play developer publishing and reporting, Play Games Services, Android Enterprise and Management, Play Integrity and device APIs. It has 353 tools. The gateway adds Android Management, Google Wallet and Chrome Web Store.
 

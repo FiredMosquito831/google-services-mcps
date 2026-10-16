@@ -9,7 +9,7 @@ This guide explains what the suite is, how its parts fit together, and gets you 
 The suite gives an AI agent tools for Google products. Each Google product has its own MCP server. There are 23 servers, for example Gmail, Google Calendar, Google Drive, Google Cloud, Search Console and Google Ads. The full list is in [SURFACES.md](SURFACES.md).
 
 - Each server is packaged as a Claude Code plugin. There is one plugin per product, all in one marketplace named `google-services-mcps`.
-- The same servers can be installed for Codex, OpenCode and Antigravity (`agy`) with the `node gsm.mjs` installer.
+- The same servers can be installed for Codex, OpenCode and Antigravity (`agy`) with the `npx google-services-mcps` installer.
 - The servers run on your machine, as you. They call Google's APIs with your own OAuth desktop client, API key or service account. The suite has no server of its own.
 - The suite does not charge for anything. Google's quotas, approval rules and prices apply to every call. See [LIMITS-AND-COSTS.md](LIMITS-AND-COSTS.md).
 
@@ -46,14 +46,14 @@ Tool names in Claude Code look like this: `mcp__plugin_gmail_gmail__gmail_users_
 
 ## Quick start (about five minutes)
 
-This example sets up Gmail for Claude Code. You need Node.js 20 or newer, Claude Code, a Google account (a Google Workspace account is best) and a copy of this repository. There is no build step. The full walkthrough, with every option, is in [TUTORIAL.md](TUTORIAL.md).
+This example sets up Gmail for Claude Code. You need Node.js 20 or newer, Claude Code, a Google account (a Google Workspace account is best) and no clone: the commands run with npx. There is no build step. The full walkthrough, with every option, is in [TUTORIAL.md](TUTORIAL.md).
 
-In the examples, the repository folder is `D:\Projects2\Google-services-mcps`. Use your own path. Run the commands from that folder.
+The paths in the examples are from the author's machine. Use your own path.
 
 **1. Install the Gmail plugin for your user account.** The first install also adds the marketplace, so there is no separate step.
 
 ```
-node gsm.mjs install --agent claude --plugin gmail
+npx google-services-mcps install --agent claude --plugin gmail
 ```
 
 Claude Code may ask for the plugin's options. Leave **Allow write tools** off for now. Keep **Confirm before changes** at `every-change`. Leave the token directory empty. Section 6.1 of the tutorial explains each option.
@@ -63,21 +63,21 @@ Claude Code may ask for the plugin's options. Leave **Allow write tools** off fo
 Follow the steps in [SETUP.md](SETUP.md). They cover the Google Cloud project, the consent screen and the client file. Then save the file into the token directory:
 
 ```
-node gsm.mjs setup-client "C:\path\to\client_secret.json"
+npx google-services-mcps setup-client "C:\path\to\client_secret.json"
 ```
 
 **3. Log in with the read-only profile.**
 
 ```
-node gsm.mjs login workspace-user --profile readonly --servers gmail
-node gsm.mjs status
+npx google-services-mcps login workspace-user --profile readonly --servers gmail
+npx google-services-mcps status
 ```
 
 The login opens a browser. Approve the Google consent screen. Then `status` shows the group as logged in. **UNVERIFIED:** the sign-in itself was not run for this guide.
 
 **4. Restart Claude Code and check the server.**
 
-Start Claude Code in your working folder. Run `/mcp` and check that `gmail` shows as connected. If the server was already running before the login, reconnect it there, or restart Claude Code. **UNVERIFIED** in a live session. You can check the install from a terminal with `claude plugin list` and `node gsm.mjs list`.
+Start Claude Code in your working folder. Run `/mcp` and check that `gmail` shows as connected. If the server was already running before the login, reconnect it there, or restart Claude Code. **UNVERIFIED** in a live session. You can check the install from a terminal with `claude plugin list` and `npx google-services-mcps list`.
 
 **5. Run one read.**
 

@@ -154,6 +154,8 @@ Every route runs the same installer. Only the way you start it differs:
 | One line, no npm | the line for your shell, below | Node.js 20 or newer |
 | From a clone (older form) | `node gsm.mjs <command>` in the repository folder | Node.js 20 or newer, git |
 
+The old name `@firedmosquito831/google-services-mcps` is deprecated; use `google-services-mcps`. It is the same installer.
+
 The package is `google-services-mcps`: `npx google-services-mcps <command>`. A global install (`npm install -g google-services-mcps`) gives the commands `google-services-mcps` and `gsm`.
 
 ### Flags or the menu
@@ -248,9 +250,9 @@ Each product belongs to one login group. You log in once per group, with the pro
 4. Save the file and log in. Start with a read-only profile and one group:
 
 ```sh
-node gsm.mjs setup-client path/to/client_secret.json
-node gsm.mjs login workspace-user --profile readonly --servers gmail,gcalendar
-node gsm.mjs status
+npx google-services-mcps setup-client path/to/client_secret.json
+npx google-services-mcps login workspace-user --profile readonly --servers gmail,gcalendar
+npx google-services-mcps status
 ```
 
 After a login, restart the server so the new scopes apply. Run `/mcp` in Claude Code and reconnect, or restart the agent.
@@ -269,8 +271,8 @@ A login merges with the scopes already stored for its group, so one product's lo
 `gadmin` uses a service account with domain-wide delegation, not a user login. You need a super admin and a Google Cloud service account JSON key.
 
 ```sh
-node gsm.mjs scopes workspace-admin --profile readonly
-node gsm.mjs setup-admin --subject admin@example.com --key-file path/to/key.json --profile readonly
+npx google-services-mcps scopes workspace-admin --profile readonly
+npx google-services-mcps setup-admin --subject admin@example.com --key-file path/to/key.json --profile readonly
 ```
 
 The first command prints the scopes to allow in the Google Admin console, under **Domain-wide delegation**. The key file is read where it is and is never copied. Organisations created on or after 2024-05-03 block service account key creation by default. Ask your administrator for an exception, or use another setup.
@@ -284,7 +286,7 @@ Access to the Google Ads API comes from the Google Cloud project of your OAuth c
 `gsearch` takes a key, not a login.
 
 ```sh
-node gsm.mjs setup-apikey
+npx google-services-mcps setup-apikey
 ```
 
 The command reads the key from the environment variable `GSM_API_KEY_INPUT` or from stdin. It never takes the key as an argument and never prints it. The key is saved as `apikey.json` in the token directory. The Custom Search JSON API is reported closed to new customers and discontinued on 2027-01-01. Check that in the Google Cloud console before you rely on it.
@@ -292,7 +294,7 @@ The command reads the key from the environment variable `GSM_API_KEY_INPUT` or f
 ### Token directory and Google rules
 
 - Tokens are stored in `~/.google-services-mcps`, or in the folder set by the plugin option **Token directory** or `GSM_TOKEN_DIR`. Files are written with mode 0600 where the platform supports it. Mode 0600 is not enforced on Windows, so protect the folder with your account's permissions.
-- `node gsm.mjs logout <group>` removes one group's token. It does not revoke access at Google. Revoke it at [myaccount.google.com/permissions](https://myaccount.google.com/permissions).
+- `npx google-services-mcps logout <group>` removes one group's token. It does not revoke access at Google. Revoke it at [myaccount.google.com/permissions](https://myaccount.google.com/permissions).
 - Restricted scopes (most Gmail and Drive scopes) need Google's verification for public apps. Internal Workspace apps are not affected.
 
 Full setup for each group is in [docs/SETUP.md](docs/SETUP.md).
@@ -398,12 +400,12 @@ Read the per-product figures in [docs/LIMITS-AND-COSTS.md](docs/LIMITS-AND-COSTS
 
 ## Command reference
 
-The installer and login tool is shown here as `node gsm.mjs <command>`, run from the root of a clone (no build is needed). The npm package runs the same commands as `npx google-services-mcps <command>`, and after a global install as `google-services-mcps <command>`. Each plugin folder also has its own `bin/gsm.mjs`, which knows only its own product.
+The commands are shown here as `npx google-services-mcps <command>`, which runs from any folder. After a global install the same commands are `google-services-mcps <command>` (and `gsm <command>`). From a clone, use `node gsm.mjs <command>` in the repository folder; no build is needed. Each plugin folder also has its own `bin/gsm.mjs`, which knows only its own product.
 
 | Command | What it does |
 |---|---|
 | `install` | Install product plugins for an agent: `claude`, `codex`, `opencode`, `agy` or `all`. |
-| `uninstall` | Remove the product plugins again. Only the `node gsm.mjs` entries are removed. |
+| `uninstall` | Remove the product plugins again. Only the `npx google-services-mcps` entries are removed. |
 | `login` | Log in one OAuth group. |
 | `scopes` | Show each profile's scopes, the products of a group and their tool counts. |
 | `setup-client` | Save the OAuth Desktop client file. |
@@ -424,16 +426,16 @@ The installer and login tool is shown here as `node gsm.mjs <command>`, run from
 gsm: install the Google services MCP suite into an agent, and manage it
 
 Examples:
-  node gsm.mjs install --agent codex --plugin gmail                        Gmail for Codex, for this user (global is the default)
-  node gsm.mjs install --agent claude --plugin gcalendar --scope project   Google Calendar for Claude Code, in this project only
-  node gsm.mjs list                                                        Show every install gsm made, and where
-  node gsm.mjs uninstall --agent codex --plugin gmail --dry-run            Preview the removal of the Gmail entry
+  npx google-services-mcps install --agent codex --plugin gmail                        Gmail for Codex, for this user (global is the default)
+  npx google-services-mcps install --agent claude --plugin gcalendar --scope project   Google Calendar for Claude Code, in this project only
+  npx google-services-mcps list                                                        Show every install gsm made, and where
+  npx google-services-mcps uninstall --agent codex --plugin gmail --dry-run            Preview the removal of the Gmail entry
 
 Commands:
   install       Install product plugins for an agent: claude, codex, opencode, agy, or all
   uninstall     Remove product plugins again, or every install with --all. Only gsm's own entries are removed
   list          Show every install gsm made: agent, scope, folder, products, and whether it is still in place
-  login         Log in one OAuth group. "node gsm.mjs login apikey" only explains the API key step
+  login         Log in one OAuth group. "npx google-services-mcps login apikey" only explains the API key step
   scopes        Show each profile's scopes, the products of a group and their tool counts
   setup-client  Save the OAuth Desktop client file (client_secret.json)
   setup-apikey  Save the API key for the apikey group (reads GSM_API_KEY_INPUT or stdin)
@@ -448,25 +450,25 @@ Commands:
   --help        Show this help
 
 Usage:
-  node gsm.mjs install   --agent <claude|codex|opencode|agy|all> --plugin <id[,id...]|all> [--scope global|project|local]
+  npx google-services-mcps install   --agent <claude|codex|opencode|agy|all> --plugin <id[,id...]|all> [--scope global|project|local]
                          [--path <dir>] [--allow-writes] [--confirmation <every-change|destructive-only|off>] [--dry-run]
-  node gsm.mjs uninstall --agent <claude|codex|opencode|agy|all> --plugin <id[,id...]|all> [--scope global|project|local]
+  npx google-services-mcps uninstall --agent <claude|codex|opencode|agy|all> --plugin <id[,id...]|all> [--scope global|project|local]
                          [--path <dir>] [--dry-run]
-  node gsm.mjs uninstall --all [--dry-run] [--yes]
-  node gsm.mjs list [--json] [--home <dir>]
-  node gsm.mjs login <group> [--profile readonly|readwrite|full] [--scopes <url,url>] [--servers <a,b>] [--client-secret <file>] [--no-browser] [--replace]
-  node gsm.mjs scopes <group> [--profile readonly|readwrite|full] [--servers <a,b>] [--json]
-  node gsm.mjs setup-client <path-to-client_secret.json> [--force]
-  node gsm.mjs setup-apikey [--force]
-  node gsm.mjs setup-admin --subject <admin email> --key-file <service account JSON> [--profile readonly|readwrite|full] [--servers <a,b>] [--replace]
-  node gsm.mjs status
-  node gsm.mjs logout <group>
-  node gsm.mjs products [--json]
-  node gsm.mjs apis [<product>] [--search <text>] [--json] [--limit <n>]
-  node gsm.mjs methods <api> [<version>] [--search <text>] [--json] [--limit <n>]
-  node gsm.mjs doctor [--plugin <id>] [--token-dir <dir>]
-  node gsm.mjs version
-  node gsm.mjs --help
+  npx google-services-mcps uninstall --all [--dry-run] [--yes]
+  npx google-services-mcps list [--json] [--home <dir>]
+  npx google-services-mcps login <group> [--profile readonly|readwrite|full] [--scopes <url,url>] [--servers <a,b>] [--client-secret <file>] [--no-browser] [--replace]
+  npx google-services-mcps scopes <group> [--profile readonly|readwrite|full] [--servers <a,b>] [--json]
+  npx google-services-mcps setup-client <path-to-client_secret.json> [--force]
+  npx google-services-mcps setup-apikey [--force]
+  npx google-services-mcps setup-admin --subject <admin email> --key-file <service account JSON> [--profile readonly|readwrite|full] [--servers <a,b>] [--replace]
+  npx google-services-mcps status
+  npx google-services-mcps logout <group>
+  npx google-services-mcps products [--json]
+  npx google-services-mcps apis [<product>] [--search <text>] [--json] [--limit <n>]
+  npx google-services-mcps methods <api> [<version>] [--search <text>] [--json] [--limit <n>]
+  npx google-services-mcps doctor [--plugin <id>] [--token-dir <dir>]
+  npx google-services-mcps version
+  npx google-services-mcps --help
 
 Install and uninstall:
   --agent       claude (the claude CLI), codex (config.toml), opencode (opencode.json), agy (global only), or all.
@@ -552,13 +554,13 @@ A Google Workspace account is the main target. Each login group needs a Desktop 
 As far as the source shows, the servers call only Google's API and OAuth endpoints, and the code has no separate telemetry path. Tokens stay in the token directory on your machine. Note that anything a tool returns, such as mail text, becomes part of the agent's conversation, so it goes to that agent's model provider as usual.
 
 **Can I use it with Codex?**
-Yes. Run `node gsm.mjs install --agent codex --plugin <id>`. Codex has no approval hook in this suite, and a client that cannot ask for approval is refused every change. How Codex handles approvals is UNVERIFIED in a live session.
+Yes. Run `npx google-services-mcps install --agent codex --plugin <id>`. Codex has no approval hook in this suite, and a client that cannot ask for approval is refused every change. How Codex handles approvals is UNVERIFIED in a live session.
 
 **Why do I see approval prompts?**
 Changes and deletions ask by default (`every-change`). Deletions and sends also ask a second time. To ask less, set **Confirm before changes** to `destructive-only` or `off`. Deny rules in `policy.json` still apply.
 
 **Why is a tool missing?**
-Usually one of these: **Allow write tools** is off, so write and destructive tools are hidden. The login uses the `readonly` profile, so the token lacks the write scopes and the tool is not registered. The server is switched off in `/mcp`, or the plugin is disabled. If the group is not logged in, the tool is listed but each call fails with a login message. After a login, restart the server. `node gsm.mjs doctor --plugin <id>` checks the install.
+Usually one of these: **Allow write tools** is off, so write and destructive tools are hidden. The login uses the `readonly` profile, so the token lacks the write scopes and the tool is not registered. The server is switched off in `/mcp`, or the plugin is disabled. If the group is not logged in, the tool is listed but each call fails with a login message. After a login, restart the server. `npx google-services-mcps doctor --plugin <id>` checks the install.
 
 **Why are there so many tools?**
 Google's APIs are large. Each plugin has a tool for many of the methods of its APIs, and generated tools are capped at 350 per plugin. Gateway tools reach the methods that have no tool of their own. Install only the products you need. Claude Code's tool search loads definitions when they are needed.
@@ -570,8 +572,8 @@ No. It is not affiliated with or endorsed by Google. See [Acknowledgements and t
 Yes, under the Apache License, Version 2.0 (`Apache-2.0`). Copies you pass on must include the LICENSE and NOTICE files, and changed files must say that they were changed. See [License](#license).
 
 **How do I remove everything?**
-1. Preview the removal of every install: `node gsm.mjs uninstall --all --dry-run`. It prints the list and removes nothing.
-2. Remove every install: `node gsm.mjs uninstall --all --yes`.
+1. Preview the removal of every install: `npx google-services-mcps uninstall --all --dry-run`. It prints the list and removes nothing.
+2. Remove every install: `npx google-services-mcps uninstall --all --yes`.
 3. Delete the token folder `~/.google-services-mcps` by hand. It holds your OAuth client, logins, API key and admin setup. No gsm command deletes it. Keep `audit.log` if you need the record.
 4. Remove the marketplace (Claude Code): `claude plugin marketplace remove google-services-mcps`.
 5. Revoke the suite's access at [myaccount.google.com/permissions](https://myaccount.google.com/permissions), and delete the OAuth client in the Google Cloud console if you no longer need it.

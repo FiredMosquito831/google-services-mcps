@@ -1,6 +1,6 @@
 # AI and ML (`gai`)
 
-Install with the simplest command: `node gsm.mjs install --agent claude --plugin <id>` (see docs/TUTORIAL.md).
+Install with the simplest command: `npx google-services-mcps install --agent claude --plugin <id>` (see docs/TUTORIAL.md).
 
 Generative and classic AI APIs: the Gemini API, Vertex AI (catalogued as the Agent Platform API), Discovery Engine, Dialogflow, Vision, Speech-to-Text, Text-to-Speech, Translate, Natural Language, Video Intelligence, Document AI and agent services. It has 354 tools. The Gemini and Vertex AI methods are reached through the gateway only.
 

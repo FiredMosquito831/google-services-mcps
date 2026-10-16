@@ -1,6 +1,6 @@
 # Google Drive and Docs (`gdrive`)
 
-Install with the simplest command: `node gsm.mjs install --agent claude --plugin <id>` (see docs/TUTORIAL.md).
+Install with the simplest command: `npx google-services-mcps install --agent claude --plugin <id>` (see docs/TUTORIAL.md).
 
 Google Drive files, labels and activity, plus Docs, Sheets, Slides, Forms and Books. It searches and reads files, creates folders and text files, and trashes files. Through the per-method tools and the gateway it also reads and writes Docs, Sheets, Slides and Forms content, and manages sharing and labels.
 

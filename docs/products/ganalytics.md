@@ -1,6 +1,6 @@
 # Google Analytics (`ganalytics`)
 
-Install with the simplest command: `node gsm.mjs install --agent claude --plugin <id>` (see docs/TUTORIAL.md).
+Install with the simplest command: `npx google-services-mcps install --agent claude --plugin <id>` (see docs/TUTORIAL.md).
 
 Google Analytics Admin and Data APIs for GA4 properties: accounts, properties, data streams, conversion events, custom dimensions and metrics, links to Ads and Firebase, and reports. It has 70 tools. The gateway adds the alpha Admin API, with 166 more methods.
 

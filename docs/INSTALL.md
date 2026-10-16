@@ -17,13 +17,13 @@ Each command in this guide is marked with how it was checked:
 
 ### One command for every agent
 
-Run this from the repository folder:
+Run this from any folder:
 
 ```
-node gsm.mjs install --agent <agent> --plugin <product>
+npx google-services-mcps install --agent <agent> --plugin <product>
 ```
 
-In the rest of this guide, `node gsm.mjs` means `node gsm.mjs`, run from the repository folder. `<agent>` is `claude`, `codex`, `opencode` or `agy`. `<product>` is a product id such as `gmail`, a comma list such as `gmail,gcalendar`, or `all`. Only the agent name changes between agents. The same file works from any folder when you give its full path, for example `node D:\Projects2\Google-services-mcps\gsm.mjs ...`. **Checked.**
+In the rest of this guide, `npx google-services-mcps` is the command, and it works from any folder. `<agent>` is `claude`, `codex`, `opencode` or `agy`. `<product>` is a product id such as `gmail`, a comma list such as `gmail,gcalendar`, or `all`. Only the agent name changes between agents. The same file works from any folder when you give its full path, for example `node D:\Projects2\Google-services-mcps\gsm.mjs ...`. **Checked.**
 
 **Without a clone.** The same command, with the download done for you. Each line is for one shell: Windows PowerShell, Windows Command Prompt, and Linux, macOS or WSL. Add `--dry-run` at the end to check first.
 
@@ -33,7 +33,7 @@ curl -fsSL -o "%TEMP%\install-gsm.cmd" https://raw.githubusercontent.com/FiredMo
 curl -fsSL "https://raw.githubusercontent.com/FiredMosquito831/google-services-mcps/main/scripts/install.sh" | sh -s -- install --agent <agent> --plugin <product>
 ```
 
-Each run downloads the repository again and replaces the folder `google-services-mcps` in your home folder. `GSM_DIR` changes that folder, and `GSM_REF` picks a branch, tag or commit (default `main`). Tokens and logins live in the token folder, not in that folder, so a new download does not touch them. Uninstalling does not delete the download; remove the folder yourself when you no longer need it. Sign in from that folder with `node gsm.mjs login <group>`.
+Each run downloads the repository again and replaces the folder `google-services-mcps` in your home folder. `GSM_DIR` changes that folder, and `GSM_REF` picks a branch, tag or commit (default `main`). Tokens and logins live in the token folder, not in that folder, so a new download does not touch them. Uninstalling does not delete the download; remove the folder yourself when you no longer need it. Sign in from that folder with `npx google-services-mcps login <group>`.
 
 Scopes:
 
@@ -50,13 +50,15 @@ Scopes:
 
 ## npm and npx commands
 
+The old name `@firedmosquito831/google-services-mcps` is deprecated. Use `google-services-mcps`: it is the same installer, with the same options. The old name still installs the same version, and npm shows a deprecation message when you use it.
+
 The same installer runs in three ways. The commands and flags are the same in each.
 
 | Way | Command |
 |---|---|
 | npx, no install | `npx google-services-mcps <command> [options]`. A global install (`npm install -g google-services-mcps`) gives the commands `google-services-mcps` and `gsm`. |
 | Global install | `npm install -g google-services-mcps`, then `google-services-mcps <command> [options]` |
-| From a clone | `node gsm.mjs <command> [options]` |
+| From a clone | `node gsm.mjs <command> [options]`, in the repository folder |
 
 With no command, the program prints its help. In a terminal, with no command, it opens a menu instead.
 
@@ -160,17 +162,17 @@ A folder works too: `claude plugin marketplace add D:\path\to\google-services-mc
 
 ### 2. Install a product
 
-The examples below use `node gsm.mjs`, the older form from a clone. The npm package's form is `npx google-services-mcps`, with the same options.
+The examples below use `npx google-services-mcps`. From a clone, the same options work with `node gsm.mjs`.
 
 ```
-node gsm.mjs install --agent claude --plugin gmail
+npx google-services-mcps install --agent claude --plugin gmail
 ```
 
 This declares the marketplace if it is needed, then runs `claude plugin install gmail@google-services-mcps --scope user`. **Checked.** For a project or a folder:
 
 ```
-node gsm.mjs install --agent claude --plugin gmail --scope project --path "C:\work\my-project"
-node gsm.mjs install --agent claude --plugin gmail --scope local --path "C:\work\my-project"
+npx google-services-mcps install --agent claude --plugin gmail --scope project --path "C:\work\my-project"
+npx google-services-mcps install --agent claude --plugin gmail --scope local --path "C:\work\my-project"
 ```
 
 | Scope | Records the install in | Shared with others? |
@@ -184,7 +186,7 @@ Run `claude plugin list` from inside the project folder to see a project or loca
 Install other products the same way, one at a time or as a comma list:
 
 ```
-node gsm.mjs install --agent claude --plugin gcalendar,gchat
+npx google-services-mcps install --agent claude --plugin gcalendar,gchat
 ```
 
 The product ids are in [SURFACES.md](SURFACES.md).
@@ -236,15 +238,15 @@ After a change, the CLI says to restart Claude Code to apply it. **Checked** (th
 
 ```
 claude plugin list
-node gsm.mjs list
-node gsm.mjs doctor --plugin gmail
+npx google-services-mcps list
+npx google-services-mcps doctor --plugin gmail
 ```
 
 - `claude plugin list` shows each plugin with its scope and status, such as `Status: ✔ enabled`. Look for the id ending in `@google-services-mcps`. **Checked.**
 - `claude plugin details gmail@google-services-mcps` shows the plugin's parts and its token cost. **Checked.**
 - `claude plugin validate` checks a manifest. Run `claude plugin validate D:\Projects2\Google-services-mcps\plugins\gmail` for the plugin, or give the repository folder for the marketplace. **Checked:** both print `Validation passed`.
-- `node gsm.mjs list` shows the install and where it is. **Checked.**
-- `node gsm.mjs doctor --plugin gmail` checks the plugin folder and the credentials. **Checked** (sample below).
+- `npx google-services-mcps list` shows the install and where it is. **Checked.**
+- `npx google-services-mcps doctor --plugin gmail` checks the plugin folder and the credentials. **Checked** (sample below).
 
 Then, inside Claude Code, run `/mcp`. The `gmail` server should show as connected. **UNVERIFIED** in a live session.
 
@@ -275,15 +277,15 @@ claude plugin enable gmail@google-services-mcps --scope user
 
 ## Other agents: Codex, OpenCode, Antigravity
 
-`node gsm.mjs install` writes the server entries into the agent's own config file. It changes nothing else.
+`npx google-services-mcps install` writes the server entries into the agent's own config file. It changes nothing else.
 
 ### Install
 
 Always run a dry run first. It prints every change and writes nothing.
 
 ```
-node gsm.mjs install --agent codex --plugin gmail --dry-run
-node gsm.mjs install --agent codex --plugin gmail
+npx google-services-mcps install --agent codex --plugin gmail --dry-run
+npx google-services-mcps install --agent codex --plugin gmail
 ```
 
 **Checked.** The dry run printed:
@@ -300,7 +302,7 @@ summary: would install 1 products, 1 servers, 97 tools; confirmation: not set (p
 For a project or a folder, add the scope and the folder:
 
 ```
-node gsm.mjs install --agent opencode --plugin gmail,gcalendar,gcontacts --scope project --path "C:\work\my-project"
+npx google-services-mcps install --agent opencode --plugin gmail,gcalendar,gcontacts --scope project --path "C:\work\my-project"
 ```
 
 `--plugin all` installs all 23 products. Use it only if you need them all. **Checked:** 23 products, 3,334 tools.
@@ -329,15 +331,15 @@ Notes for each agent:
 ### Uninstall
 
 ```
-node gsm.mjs uninstall --agent codex --plugin gmail --scope global --dry-run
-node gsm.mjs uninstall --agent codex --plugin gmail --scope global
+npx google-services-mcps uninstall --agent codex --plugin gmail --scope global --dry-run
+npx google-services-mcps uninstall --agent codex --plugin gmail --scope global
 ```
 
 **Checked.** Uninstall removes only the gsm entries, and the runtime copy when no other install uses it. Your other config is kept. A `*.gsm-backup-<date-time>` copy of the changed file is left behind. **Checked.**
 
 ---
 
-## Flags of `node gsm.mjs install` and `node gsm.mjs uninstall`
+## Flags of `npx google-services-mcps install` and `npx google-services-mcps uninstall`
 
 **Checked:** every flag below is accepted by the parser. The behaviour notes come from the help text and from runs.
 
@@ -363,21 +365,21 @@ Other commands:
 
 | Command | Purpose |
 |---|---|
-| `node gsm.mjs list [--json] [--home <dir>]` | Show every install gsm made: agent, scope, folder, products and state. **Checked.** |
-| `node gsm.mjs login <group> [--profile readonly\|readwrite\|full] [--scopes <urls>] [--servers <a,b>] [--client-secret <file>] [--no-browser] [--replace]` | Log in one group. Merges with the scopes already stored, unless `--replace` drops them. **UNVERIFIED:** not run, because it starts Google's sign-in. Help text checked. |
-| `node gsm.mjs scopes <group> [--profile ...] [--servers ...] [--json]` | Show what each profile would enable. **Checked.** |
-| `node gsm.mjs setup-client <client_secret.json> [--force]` | Save the OAuth desktop client file. **Checked** with a test file. |
-| `node gsm.mjs setup-apikey [--force]` | Save the API key. The key comes from `GSM_API_KEY_INPUT` or standard input. **Checked** with a test key. |
-| `node gsm.mjs setup-admin --subject <email> --key-file <json> [--profile ...] [--servers ...] [--replace]` | Set up the workspace-admin group. **Checked** with a test service account file. |
-| `node gsm.mjs status` | Show logins, the API key and the setup of each group. **Checked.** |
-| `node gsm.mjs logout <group>` | Remove one group's token file. **Checked** (no token case). |
-| `node gsm.mjs products [--json]` | List the products. **Checked.** |
-| `node gsm.mjs apis [<product>] [--search <text>] [--json] [--limit <n>]` | List the APIs of a product. **Checked.** |
-| `node gsm.mjs methods <api> [<version>] [--search <text>] [--json] [--limit <n>]` | List the methods of one API. **Checked.** |
-| `node gsm.mjs doctor [--plugin <id>] [--token-dir <dir>]` | Check the plugin folders, hooks, tool names and credentials. **Checked.** |
-| `node gsm.mjs version` | Show the suite version and the Node version. **Checked.** |
+| `npx google-services-mcps list [--json] [--home <dir>]` | Show every install gsm made: agent, scope, folder, products and state. **Checked.** |
+| `npx google-services-mcps login <group> [--profile readonly\|readwrite\|full] [--scopes <urls>] [--servers <a,b>] [--client-secret <file>] [--no-browser] [--replace]` | Log in one group. Merges with the scopes already stored, unless `--replace` drops them. **UNVERIFIED:** not run, because it starts Google's sign-in. Help text checked. |
+| `npx google-services-mcps scopes <group> [--profile ...] [--servers ...] [--json]` | Show what each profile would enable. **Checked.** |
+| `npx google-services-mcps setup-client <client_secret.json> [--force]` | Save the OAuth desktop client file. **Checked** with a test file. |
+| `npx google-services-mcps setup-apikey [--force]` | Save the API key. The key comes from `GSM_API_KEY_INPUT` or standard input. **Checked** with a test key. |
+| `npx google-services-mcps setup-admin --subject <email> --key-file <json> [--profile ...] [--servers ...] [--replace]` | Set up the workspace-admin group. **Checked** with a test service account file. |
+| `npx google-services-mcps status` | Show logins, the API key and the setup of each group. **Checked.** |
+| `npx google-services-mcps logout <group>` | Remove one group's token file. **Checked** (no token case). |
+| `npx google-services-mcps products [--json]` | List the products. **Checked.** |
+| `npx google-services-mcps apis [<product>] [--search <text>] [--json] [--limit <n>]` | List the APIs of a product. **Checked.** |
+| `npx google-services-mcps methods <api> [<version>] [--search <text>] [--json] [--limit <n>]` | List the methods of one API. **Checked.** |
+| `npx google-services-mcps doctor [--plugin <id>] [--token-dir <dir>]` | Check the plugin folders, hooks, tool names and credentials. **Checked.** |
+| `npx google-services-mcps version` | Show the suite version and the Node version. **Checked.** |
 
-`node gsm.mjs login` and `node gsm.mjs setup-*` run in a terminal. They open a browser or read a key. Read [SETUP.md](SETUP.md) before you run them.
+`npx google-services-mcps login` and `npx google-services-mcps setup-*` run in a terminal. They open a browser or read a key. Read [SETUP.md](SETUP.md) before you run them.
 
 ---
 
@@ -388,8 +390,8 @@ For Claude Code, see [4. Check the install](#4-check-the-install).
 For the suite itself:
 
 ```
-node gsm.mjs doctor --plugin gmail
-node gsm.mjs status
+npx google-services-mcps doctor --plugin gmail
+npx google-services-mcps status
 ```
 
 `doctor` checks each plugin folder: the required files, the hook, the server files and the tool names. It prints `PASS` or `FAIL` for each check. It exits with code 1 if any check fails. It creates nothing. **Checked output**, with a test client file in a temporary token directory:
@@ -415,24 +417,24 @@ Without a client file, the last check shows `FAIL OAuth client file missing ... 
 
 | What | Where | Written by |
 |---|---|---|
-| Claude Code plugin registry | Managed by Claude Code. | `claude plugin` commands. `node gsm.mjs` does not edit Claude's settings files. |
-| Claude Code project and local settings | `.claude/settings.json` and `.claude/settings.local.json` in `--path`. | Claude Code, through `node gsm.mjs install --agent claude --scope project` or `local`. **Checked.** |
-| Codex config | `~/.codex/config.toml`, or `.codex/config.toml` in `--path`. | `node gsm.mjs install --agent codex` |
-| OpenCode config | `~/.config/opencode/opencode.json`, or `opencode.json` in `--path`. | `node gsm.mjs install --agent opencode` |
-| Antigravity config | `~/.gemini/config/mcp_config.json` (global only). | `node gsm.mjs install --agent agy` |
-| Runtime copy | `~/.google-services-mcps/runtime/<product>/`. Codex, OpenCode and Antigravity point here. | `node gsm.mjs install` (not for Claude Code, which reads the repository). **Checked.** |
-| Install record | `~/.google-services-mcps/runtime/installs.json`. Read by `node gsm.mjs list`. | `node gsm.mjs install` and `node gsm.mjs uninstall`, also for Claude Code. **Checked.** |
+| Claude Code plugin registry | Managed by Claude Code. | `claude plugin` commands. `npx google-services-mcps` does not edit Claude's settings files. |
+| Claude Code project and local settings | `.claude/settings.json` and `.claude/settings.local.json` in `--path`. | Claude Code, through `npx google-services-mcps install --agent claude --scope project` or `local`. **Checked.** |
+| Codex config | `~/.codex/config.toml`, or `.codex/config.toml` in `--path`. | `npx google-services-mcps install --agent codex` |
+| OpenCode config | `~/.config/opencode/opencode.json`, or `opencode.json` in `--path`. | `npx google-services-mcps install --agent opencode` |
+| Antigravity config | `~/.gemini/config/mcp_config.json` (global only). | `npx google-services-mcps install --agent agy` |
+| Runtime copy | `~/.google-services-mcps/runtime/<product>/`. Codex, OpenCode and Antigravity point here. | `npx google-services-mcps install` (not for Claude Code, which reads the repository). **Checked.** |
+| Install record | `~/.google-services-mcps/runtime/installs.json`. Read by `npx google-services-mcps list`. | `npx google-services-mcps install` and `npx google-services-mcps uninstall`, also for Claude Code. **Checked.** |
 | Token directory | `~/.google-services-mcps` (Windows: `C:\Users\<you>\.google-services-mcps`). | `setup-client`, `login`, `setup-apikey`, `setup-admin`. Also `audit.log` when the suite runs. |
 
 **Install and uninstall never write to the token directory.** Each agent install writes only its own config file, plus the runtime copy and the install record. The installer reads the token directory only to print the login steps that are still missing (`src/cli/install.ts`). **Checked** (the token folder was unchanged by install and uninstall in the runs).
 
-The server files that Codex, OpenCode and Antigravity use are in `~/.google-services-mcps/runtime/<product>/`, a copy made at install time. Run `node gsm.mjs install` again after you update the repository, so the copy is refreshed. **Checked** (the copy is made by the install).
+The server files that Codex, OpenCode and Antigravity use are in `~/.google-services-mcps/runtime/<product>/`, a copy made at install time. Run `npx google-services-mcps install` again after you update the repository, so the copy is refreshed. **Checked** (the copy is made by the install).
 
 ## Backups
 
-- Before `node gsm.mjs` changes an existing agent config file, it copies the file to `<file>.gsm-backup-<YYYYMMDD-HHMMSS>`. **Checked** (on uninstall). A dry run shows which files would be created or changed.
-- `node gsm.mjs` does not back up Claude Code's files, because it does not edit them.
-- `node gsm.mjs setup-client --force` backs up the old client file first. **Checked.** `node gsm.mjs setup-apikey --force` replaces the saved key and keeps no backup.
+- Before `npx google-services-mcps` changes an existing agent config file, it copies the file to `<file>.gsm-backup-<YYYYMMDD-HHMMSS>`. **Checked** (on uninstall). A dry run shows which files would be created or changed.
+- `npx google-services-mcps` does not back up Claude Code's files, because it does not edit them.
+- `npx google-services-mcps setup-client --force` backs up the old client file first. **Checked.** `npx google-services-mcps setup-apikey --force` replaces the saved key and keeps no backup.
 - Uninstall leaves the `*.gsm-backup-*` files in place. **Checked.**
 
 ---
@@ -444,35 +446,35 @@ Work through these steps in order.
 ### 1. Log out of each login group
 
 ```
-node gsm.mjs status
-node gsm.mjs logout workspace-user
-node gsm.mjs logout cloud
+npx google-services-mcps status
+npx google-services-mcps logout workspace-user
+npx google-services-mcps logout cloud
 ```
 
 Use the groups you actually logged in to: `cloud`, `searchconsole`, `workspace-user`, `business`, `developer` or `workspace-admin`. `logout` removes that group's token file only. It does not revoke the access at Google. `logout` prints the page where you can revoke it: `https://myaccount.google.com/permissions`. **Checked** (the message, with no token). **UNVERIFIED:** removing a real token, because no login was run.
 
-`logout` does not remove the API key. `node gsm.mjs logout apikey` shows where the key file is. Delete that file yourself. **Checked.**
+`logout` does not remove the API key. `npx google-services-mcps logout apikey` shows where the key file is. Delete that file yourself. **Checked.**
 
 ### 2. Remove the agent entries
 
 For Claude Code, uninstall each plugin. Preview first, then remove:
 
 ```
-node gsm.mjs uninstall --agent claude --plugin gmail --scope global --dry-run
-node gsm.mjs uninstall --agent claude --plugin gmail --scope global
+npx google-services-mcps uninstall --agent claude --plugin gmail --scope global --dry-run
+npx google-services-mcps uninstall --agent claude --plugin gmail --scope global
 ```
 
 **Checked.** For a project or local install, use the same `--scope` and `--path` as the install. Add `--keep-data` to keep the plugin's data folder. For Codex, OpenCode or Antigravity:
 
 ```
-node gsm.mjs uninstall --agent codex --plugin gmail --scope global
+npx google-services-mcps uninstall --agent codex --plugin gmail --scope global
 ```
 
 To remove every install at once, preview and then remove:
 
 ```
-node gsm.mjs uninstall --all --dry-run
-node gsm.mjs uninstall --all --yes
+npx google-services-mcps uninstall --all --dry-run
+npx google-services-mcps uninstall --all --yes
 ```
 
 **Checked** (the dry run lists the installs and removes nothing; `--yes` removes them). Without `--yes`, gsm asks first, according to the help text. **UNVERIFIED:** the question was not run.
@@ -489,7 +491,7 @@ claude plugin marketplace remove google-services-mcps
 
 ### 4. Delete the token directory
 
-Delete `~/.google-services-mcps` by hand. It holds `client_secret.json`, the login tokens, `apikey.json`, `workspace-admin.scopes.json`, `policy.json` and `audit.log`. Keep `audit.log` if you need the record. No `node gsm.mjs` command deletes this folder. **Checked:** uninstall leaves it in place.
+Delete `~/.google-services-mcps` by hand. It holds `client_secret.json`, the login tokens, `apikey.json`, `workspace-admin.scopes.json`, `policy.json` and `audit.log`. Keep `audit.log` if you need the record. No `npx google-services-mcps` command deletes this folder. **Checked:** uninstall leaves it in place.
 
 ### 5. Delete the OAuth client (optional)
 
@@ -513,7 +515,7 @@ The exact error text is **UNVERIFIED**.
 1. Run `claude plugin list`. If the status is `disabled`, enable it: `claude plugin enable gmail@google-services-mcps --scope user`. **Checked.**
 2. Run `claude plugin validate D:\Projects2\Google-services-mcps\plugins\gmail`. **Checked.**
 3. Run `/mcp` in Claude Code. If the server shows as failed, read the message there. **UNVERIFIED** in a live session.
-4. Run `node gsm.mjs doctor --plugin gmail` and fix each `FAIL` line. **Checked.**
+4. Run `npx google-services-mcps doctor --plugin gmail` and fix each `FAIL` line. **Checked.**
 
 **The server shows no tools.** Check these causes in order:
 
@@ -526,11 +528,11 @@ The exact error text is **UNVERIFIED**.
   Not logged in for "workspace-user". Run: node <plugin>/bin/gsm.mjs login workspace-user (after setting up the OAuth desktop client with setup-client).
   ```
 
-  The server prints the plugin-folder form of the command. The same login is `node gsm.mjs login workspace-user` from the repository folder. Set up the client, then log in. See [SETUP.md](SETUP.md). **Checked** (the text is from the source; the message was not triggered in a live session).
+  The server prints the plugin-folder form of the command. The same login is `npx google-services-mcps login workspace-user`. Set up the client, then log in. See [SETUP.md](SETUP.md). **Checked** (the text is from the source; the message was not triggered in a live session).
 
 **`setup-client` says the file already exists.** Use `--force`. The old client file is backed up first. **Checked.**
 
-**`node gsm.mjs doctor` says the OAuth client file is missing.** Run `node gsm.mjs setup-client <client_secret.json>` with the file you downloaded from the Google Cloud console. **Checked** (the message).
+**`npx google-services-mcps doctor` says the OAuth client file is missing.** Run `npx google-services-mcps setup-client <client_secret.json>` with the file you downloaded from the Google Cloud console. **Checked** (the message).
 
 **The browser does not open for `login`.** Run the same login with `--no-browser`. The command prints the URL. Open that URL in a browser on the same machine. The redirect goes to `127.0.0.1`, so the browser must run on the machine where the login command runs. **Help text.** **UNVERIFIED:** not run.
 
@@ -539,7 +541,7 @@ The exact error text is **UNVERIFIED**.
 **Earlier scopes are still in the token.** A login merges with the scopes already stored for its group, so logging in for one product keeps the others. Use `--replace` to drop the stored scopes and keep only what this login requests. A merge can leave write scopes from an earlier readwrite login in place: when you want a readonly token again, log in with `--replace`. For example:
 
 ```
-node gsm.mjs login workspace-user --profile readonly --replace --servers gmail,gcalendar,gdrive
+npx google-services-mcps login workspace-user --profile readonly --replace --servers gmail,gcalendar,gdrive
 ```
 
 **UNVERIFIED:** not run, because it starts a sign-in.
@@ -547,10 +549,10 @@ node gsm.mjs login workspace-user --profile readonly --replace --servers gmail,g
 **`The token lacks a scope for this tool.`** The login does not cover this tool. Log in again with a wider profile, then restart the server:
 
 ```
-node gsm.mjs login <group> --profile readwrite --servers <list>
+npx google-services-mcps login <group> --profile readwrite --servers <list>
 ```
 
-For the workspace admin group, run `node gsm.mjs setup-admin --subject <email> --key-file <file> --profile readwrite`. The error text is **checked** against the source. The rest of the errors are in [USING.md](USING.md#10-common-errors).
+For the workspace admin group, run `npx google-services-mcps setup-admin --subject <email> --key-file <file> --profile readwrite`. The error text is **checked** against the source. The rest of the errors are in [USING.md](USING.md#10-common-errors).
 
 **Rate limits and quota errors.** The suite retries throttled requests on its own. It makes at most three attempts in all. The waits start at 0.5 seconds and double, with jitter. A `Retry-After` header is used instead, up to 60 seconds. After the last attempt, the error text is returned. A quota that is used up resets on Google's schedule. See [LIMITS-AND-COSTS.md](LIMITS-AND-COSTS.md). Do not run a loop that retries on its own. **Checked** (the constants are in `src/core/http.ts`).
 

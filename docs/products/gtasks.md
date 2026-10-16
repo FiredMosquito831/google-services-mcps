@@ -1,6 +1,6 @@
 # Tasks and Keep (`gtasks`)
 
-Install with the simplest command: `node gsm.mjs install --agent claude --plugin <id>` (see docs/TUTORIAL.md).
+Install with the simplest command: `npx google-services-mcps install --agent claude --plugin <id>` (see docs/TUTORIAL.md).
 
 Google Tasks task lists and tasks, plus Google Keep notes. It lists, creates, moves, completes and deletes tasks, and it creates, reads, shares and deletes Keep notes. It has no gateway.
 

@@ -58,16 +58,16 @@ Interactive: in a terminal, run gsm with no arguments for a menu. Install and un
              so the same steps can be typed later with flags. Scripts (no terminal) always need the flags.
 
 Examples:
-  node gsm.mjs install --agent codex --plugin gmail                        Gmail for Codex, for this user (global is the default)
-  node gsm.mjs install --agent claude --plugin gcalendar --scope project   Google Calendar for Claude Code, in this project only
-  node gsm.mjs list                                                        Show every install gsm made, and where
-  node gsm.mjs uninstall --agent codex --plugin gmail --dry-run            Preview the removal of the Gmail entry
+  npx google-services-mcps install --agent codex --plugin gmail                        Gmail for Codex, for this user (global is the default)
+  npx google-services-mcps install --agent claude --plugin gcalendar --scope project   Google Calendar for Claude Code, in this project only
+  npx google-services-mcps list                                                        Show every install gsm made, and where
+  npx google-services-mcps uninstall --agent codex --plugin gmail --dry-run            Preview the removal of the Gmail entry
 
 Commands:
   install       Install product plugins for an agent: claude, codex, opencode, agy, or all
   uninstall     Remove product plugins again, or every install with --all. Only gsm's own entries are removed
   list          Show every install gsm made: agent, scope, folder, products, and whether it is still in place
-  login         Log in one OAuth group. "node gsm.mjs login apikey" only explains the API key step
+  login         Log in one OAuth group. "npx google-services-mcps login apikey" only explains the API key step
   scopes        Show each profile's scopes, the products of a group and their tool counts
   setup-client  Save the OAuth Desktop client file (client_secret.json)
   setup-apikey  Save the API key for the apikey group (reads GSM_API_KEY_INPUT or stdin)
@@ -82,25 +82,25 @@ Commands:
   --help        Show this help
 
 Usage:
-  node gsm.mjs install   --agent <claude|codex|opencode|agy|all> --plugin <id[,id...]|all> [--scope global|project|local]
+  npx google-services-mcps install   --agent <claude|codex|opencode|agy|all> --plugin <id[,id...]|all> [--scope global|project|local]
                          [--path <dir>] [--allow-writes] [--confirmation <every-change|destructive-only|off>] [--dry-run]
-  node gsm.mjs uninstall --agent <claude|codex|opencode|agy|all> --plugin <id[,id...]|all> [--scope global|project|local]
+  npx google-services-mcps uninstall --agent <claude|codex|opencode|agy|all> --plugin <id[,id...]|all> [--scope global|project|local]
                          [--path <dir>] [--dry-run]
-  node gsm.mjs uninstall --all [--dry-run] [--yes]
-  node gsm.mjs list [--json] [--home <dir>]
-  node gsm.mjs login <group> [--profile readonly|readwrite|full] [--scopes <url,url>] [--servers <a,b>] [--client-secret <file>] [--no-browser] [--replace]
-  node gsm.mjs scopes <group> [--profile readonly|readwrite|full] [--servers <a,b>] [--json]
-  node gsm.mjs setup-client <path-to-client_secret.json> [--force]
-  node gsm.mjs setup-apikey [--force]
-  node gsm.mjs setup-admin --subject <admin email> --key-file <service account JSON> [--profile readonly|readwrite|full] [--servers <a,b>] [--replace]
-  node gsm.mjs status
-  node gsm.mjs logout <group>
-  node gsm.mjs products [--json]
-  node gsm.mjs apis [<product>] [--search <text>] [--json] [--limit <n>]
-  node gsm.mjs methods <api> [<version>] [--search <text>] [--json] [--limit <n>]
-  node gsm.mjs doctor [--plugin <id>] [--token-dir <dir>]
-  node gsm.mjs version
-  node gsm.mjs --help
+  npx google-services-mcps uninstall --all [--dry-run] [--yes]
+  npx google-services-mcps list [--json] [--home <dir>]
+  npx google-services-mcps login <group> [--profile readonly|readwrite|full] [--scopes <url,url>] [--servers <a,b>] [--client-secret <file>] [--no-browser] [--replace]
+  npx google-services-mcps scopes <group> [--profile readonly|readwrite|full] [--servers <a,b>] [--json]
+  npx google-services-mcps setup-client <path-to-client_secret.json> [--force]
+  npx google-services-mcps setup-apikey [--force]
+  npx google-services-mcps setup-admin --subject <admin email> --key-file <service account JSON> [--profile readonly|readwrite|full] [--servers <a,b>] [--replace]
+  npx google-services-mcps status
+  npx google-services-mcps logout <group>
+  npx google-services-mcps products [--json]
+  npx google-services-mcps apis [<product>] [--search <text>] [--json] [--limit <n>]
+  npx google-services-mcps methods <api> [<version>] [--search <text>] [--json] [--limit <n>]
+  npx google-services-mcps doctor [--plugin <id>] [--token-dir <dir>]
+  npx google-services-mcps version
+  npx google-services-mcps --help
 
 Install and uninstall:
   --agent       claude (the claude CLI), codex (config.toml), opencode (opencode.json), agy (global only), or all.

@@ -1,6 +1,6 @@
 # Apps Script (`gapps`)
 
-Install with the simplest command: `node gsm.mjs install --agent claude --plugin <id>` (see docs/TUTORIAL.md).
+Install with the simplest command: `npx google-services-mcps install --agent claude --plugin <id>` (see docs/TUTORIAL.md).
 
 Apps Script projects: their files, versions, deployments and process history, plus running a script function. It also reads Google Workspace Marketplace license data. It has 19 tools and no gateway.
 

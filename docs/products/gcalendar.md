@@ -1,6 +1,6 @@
 # Google Calendar (`gcalendar`)
 
-Install with the simplest command: `node gsm.mjs install --agent claude --plugin <id>` (see docs/TUTORIAL.md).
+Install with the simplest command: `npx google-services-mcps install --agent claude --plugin <id>` (see docs/TUTORIAL.md).
 
 Google Calendar calendars, events, free and busy checks, sharing rules and calendar settings. It lists and reads events, creates and updates them, and deletes them. It has no gateway. Every method is a per-method tool.
 

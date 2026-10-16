@@ -1,6 +1,6 @@
 # Google Meet (`gmeet`)
 
-Install with the simplest command: `node gsm.mjs install --agent claude --plugin <id>` (see docs/TUTORIAL.md).
+Install with the simplest command: `npx google-services-mcps install --agent claude --plugin <id>` (see docs/TUTORIAL.md).
 
 Google Meet spaces, conference records, participants, recordings, transcripts and smart notes. It creates and updates meeting spaces, and reads the records of meetings that already happened. It has no gateway, and it does not join or start a call.
 

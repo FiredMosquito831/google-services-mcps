@@ -1,6 +1,6 @@
 # Tag Manager (`gtm`)
 
-Install with the simplest command: `node gsm.mjs install --agent claude --plugin <id>` (see docs/TUTORIAL.md).
+Install with the simplest command: `npx google-services-mcps install --agent claude --plugin <id>` (see docs/TUTORIAL.md).
 
 Google Tag Manager accounts, containers, workspaces, tags, triggers, variables, folders, templates, versions and environments. It edits a container's draft workspace and publishes versions. A published version goes live on the website. It has 110 tools.
 
