@@ -6,6 +6,7 @@ import { loadConfig, verboseOn, type RuntimeConfig } from './config.js';
 import { AuthRequiredError, GrantExpiredError, grantedScopes, isLoggedIn, type AuthKind } from './auth.js';
 import { createGate, type GateFn } from './approval.js';
 import { toolMapFromDefs } from './dump.js';
+import { serverHealth } from './health.js';
 import { loadRegistry, serverByName, type AuthGroup } from './registry.js';
 import { invocation, invocationFor, setInvocation } from './invocation.js';
 
@@ -139,9 +140,16 @@ async function dumpTools(buildTools: (cfg: RuntimeConfig) => Promise<ToolDef[]> 
   let text: string;
   try {
     const defined = await buildTools({ ...cfg, allowWrites: true });
-    const map = toolMapFromDefs(
-      defined.map((tool) => ({ name: tool.name, kind: tool.kind, scopes: tool.scopes, title: tool.title, methodId: tool.methodId })),
-    );
+    // health and auth_status are added by runServer, not by buildTools. The hook needs them in the map as reads:
+    // a tool missing from the map is treated as destructive, and every call to it would ask.
+    const runtimeReads = [
+      { name: 'health', kind: 'read' as const, title: 'Server health' },
+      { name: 'auth_status', kind: 'read' as const, title: 'Login status' },
+    ];
+    const map = toolMapFromDefs([
+      ...defined.map((tool) => ({ name: tool.name, kind: tool.kind, scopes: tool.scopes, title: tool.title, methodId: tool.methodId })),
+      ...runtimeReads,
+    ]);
     text = `${JSON.stringify({ tools: map }, null, 2)}\n`;
   } catch (err) {
     process.stderr.write(`[dump-tools] ${(err as Error).message}\n`);
@@ -249,6 +257,31 @@ export async function runServer(opts: {
       },
     );
   }
+
+  // Every server has a health tool. It is read-only and needs no login. It asks Google only when live is true.
+  server.registerTool(
+    'health',
+    {
+      title: 'Server health',
+      description:
+        'Reports this server: its version, its login state and the account it belongs to (as recorded at login), how many tools are registered, and whether writes are allowed. With live: true it also asks Google whether the login still works. It changes nothing.',
+      inputSchema: { live: z.boolean().optional().describe('Ask Google whether the login still works. A network call. Default false.') },
+      annotations: { readOnlyHint: true },
+    },
+    async (rawArgs: Record<string, unknown>): Promise<CallToolResult> => {
+      const report = await serverHealth({
+        server: opts.name,
+        version: opts.version,
+        group,
+        cfg,
+        registered: registered.size,
+        hidden: defined.length - registered.size,
+        writesAllowed: cfg.allowWrites,
+        live: rawArgs.live === true,
+      });
+      return asJson(report, cfg.maxResultChars);
+    },
+  );
 
   await server.connect(new StdioServerTransport());
   const hidden = defined.length - registered.size;

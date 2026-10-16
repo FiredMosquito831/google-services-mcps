@@ -2128,6 +2128,12 @@
     "title": "Search API methods"
   },
   {
+    "name": "mcp__plugin_gplay_gplay__auth_status",
+    "kind": "read",
+    "scopes": [],
+    "title": "Login status"
+  },
+  {
     "name": "mcp__plugin_gplay_gplay__chromewebs_publishers_items_cancel_subm",
     "kind": "write",
     "scopes": [
@@ -2777,6 +2783,12 @@
     ],
     "methodId": "gamesManagement.scores.resetMultipleForAllPlayers",
     "title": "gamesManagement.scores.resetMultipleForAllPlayers"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__health",
+    "kind": "read",
+    "scopes": [],
+    "title": "Server health"
   },
   {
     "name": "mcp__plugin_gplay_gplay__playdevelo_anomalies_list",

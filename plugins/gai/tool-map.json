@@ -24,6 +24,12 @@
     "title": "Search API methods"
   },
   {
+    "name": "mcp__plugin_gai_gai__auth_status",
+    "kind": "read",
+    "scopes": [],
+    "title": "Login status"
+  },
+  {
     "name": "mcp__plugin_gai_gai__discoverye_billing_ac_billing_ac_distribute",
     "kind": "write",
     "scopes": [
@@ -3144,6 +3150,12 @@
     ],
     "methodId": "discoveryengine.projects.provision",
     "title": "discoveryengine.projects.provision"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__health",
+    "kind": "read",
+    "scopes": [],
+    "title": "Server health"
   },
   {
     "name": "mcp__plugin_gai_gai__language_documents_analyze_entities",

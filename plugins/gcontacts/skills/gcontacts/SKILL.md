@@ -1,13 +1,13 @@
 ---
 name: gcontacts
-description: Google Contacts and People, personal health metrics, Data Portability, and the OAuth2 userinfo endpoints. Served by the gcontacts MCP server with 63 tools. Use for requests about these Google APIs.
+description: Google Contacts and People, personal health metrics, Data Portability, and the OAuth2 userinfo endpoints. Served by the gcontacts MCP server with 65 tools. Use for requests about these Google APIs.
 ---
 
 # Contacts and Profile
 
 Google Contacts and People, personal health metrics, Data Portability, and the OAuth2 userinfo endpoints.
 
-The `gcontacts` MCP server exposes 63 tools. Per-method tools cover the Discovery APIs listed below. Gateway APIs are reached through three generic tools: api_search finds a method, api_describe shows its parameters, and api_call runs it.
+The `gcontacts` MCP server exposes 65 tools. Per-method tools cover the Discovery APIs listed below. Gateway APIs are reached through three generic tools: api_search finds a method, api_describe shows its parameters, and api_call runs it.
 
 ## Log in
 

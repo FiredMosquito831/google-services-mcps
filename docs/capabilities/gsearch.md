@@ -4,9 +4,16 @@ Public search and web-quality APIs (Custom Search, PageSpeed, CrUX, Safe Browsin
 
 - Plugin: `gsearch`, MCP server: `gsearch`, login: API key, then `setup-apikey` (no login)
 - Install: `claude plugin install gsearch@google-services-mcps`
-- Tools: 51 total. Curated 0, per-method 47, gateway 3. Read 42, write 5, destructive 3, dynamic 1.
+- Tools: 53 total. Curated 2, per-method 47, gateway 3. Read 44, write 5, destructive 3, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
+
+## Curated tools (2)
+
+| Tool | Safety | Method or purpose | Scopes |
+|---|---|---|---|
+| `auth_status` | read | Login status | (none) |
+| `health` | read | Server health | (none) |
 
 ## Per-method tools (47)
 

@@ -24,6 +24,12 @@
     "title": "Search API methods"
   },
   {
+    "name": "mcp__plugin_gcontacts_gcontacts__auth_status",
+    "kind": "read",
+    "scopes": [],
+    "title": "Login status"
+  },
+  {
     "name": "mcp__plugin_gcontacts_gcontacts__dataportab_access_type_check",
     "kind": "read",
     "scopes": [
@@ -508,6 +514,12 @@
     ],
     "methodId": "dataportability.portabilityArchive.initiate",
     "title": "dataportability.portabilityArchive.initiate"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__health",
+    "kind": "read",
+    "scopes": [],
+    "title": "Server health"
   },
   {
     "name": "mcp__plugin_gcontacts_gcontacts__health_proje_subsc_subsc_create",

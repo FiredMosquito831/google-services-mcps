@@ -372,6 +372,7 @@ Other commands:
 | `npx google-services-mcps setup-apikey [--force]` | Save the API key. The key comes from `GSM_API_KEY_INPUT` or standard input. **Checked** with a test key. |
 | `npx google-services-mcps setup-admin --subject <email> --key-file <json> [--profile ...] [--servers ...] [--replace]` | Set up the workspace-admin group. **Checked** with a test service account file. |
 | `npx google-services-mcps status` | Show logins, the API key and the setup of each group. **Checked.** |
+| `npx google-services-mcps health` | One row per server: login, account, tool count. `--check` asks Google about each login. `--json` prints the rows. **Checked** offline. |
 | `npx google-services-mcps logout <group>` | Revoke the login at Google, then remove the token file. `--local-only` removes the file only. **Checked** (no token case). |
 | `npx google-services-mcps products [--json]` | List the products. **Checked.** |
 | `npx google-services-mcps apis [<product>] [--search <text>] [--json] [--limit <n>]` | List the APIs of a product. **Checked.** |

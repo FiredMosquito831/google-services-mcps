@@ -24,6 +24,12 @@
     "title": "Search API methods"
   },
   {
+    "name": "mcp__plugin_ganalytics_ganalytics__auth_status",
+    "kind": "read",
+    "scopes": [],
+    "title": "Login status"
+  },
+  {
     "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_account_summarie_list",
     "kind": "read",
     "scopes": [
@@ -650,5 +656,11 @@
     ],
     "methodId": "analyticsdata.properties.runReport",
     "title": "analyticsdata.properties.runReport"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__health",
+    "kind": "read",
+    "scopes": [],
+    "title": "Server health"
   }
 ]

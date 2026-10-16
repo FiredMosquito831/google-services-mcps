@@ -16,6 +16,8 @@ export interface GrantCheck {
   group: AuthKind;
   state: GrantState;
   detail: string;
+  /** The account the login belongs to, from Google's token info. Undefined when the token has no email scope. */
+  account?: string;
   /** The scopes Google reports for the access token. Empty unless the check reached Google. */
   scopes: string[];
   /** Scopes stored at login that Google no longer reports. */
@@ -27,7 +29,7 @@ export interface GrantCheck {
 export interface OAuthClientLike {
   setCredentials(tokens: Credentials): void;
   getAccessToken(): Promise<{ token?: string | null }>;
-  getTokenInfo(accessToken: string): Promise<{ scope?: string | null; expires_in?: number | null }>;
+  getTokenInfo(accessToken: string): Promise<{ scope?: string | null; expires_in?: number | null; email?: string | null }>;
   revokeToken(token: string): Promise<unknown>;
 }
 
@@ -93,7 +95,7 @@ export async function checkGrant(group: AuthKind, cfg: RuntimeConfig, deps: Gran
   }
   if (!access) return none('expired', expiredDetail(group));
 
-  let info: { scope?: string | null; expires_in?: number | null };
+  let info: { scope?: string | null; expires_in?: number | null; email?: string | null };
   try {
     info = await client.getTokenInfo(access);
   } catch (err) {
@@ -111,7 +113,34 @@ export async function checkGrant(group: AuthKind, cfg: RuntimeConfig, deps: Gran
     scopes: granted,
     missingScopes,
     expiresInSeconds: info.expires_in ?? undefined,
+    account: info.email ?? undefined,
   };
+}
+
+/** The email scope. With it, Google's token info names the account the login belongs to. */
+export const IDENTITY_SCOPE = 'https://www.googleapis.com/auth/userinfo.email';
+
+/** The scopes with the identity scope added, once. Logins request it so `status` and `health` can name the account. */
+export function withIdentityScope(scopes: readonly string[]): string[] {
+  return [...new Set([...scopes, IDENTITY_SCOPE])];
+}
+
+/**
+ * The account an access token belongs to, from Google's token info. Undefined when the token has no email scope, or
+ * when Google cannot be reached. A login records it once, so later offline views can show it.
+ */
+export async function accountOfToken(
+  accessToken: string,
+  clientId: string,
+  clientSecret: string,
+  deps: GrantDeps = {},
+): Promise<string | undefined> {
+  try {
+    const info = await (deps.makeClient ?? defaultClient)(clientId, clientSecret).getTokenInfo(accessToken);
+    return info.email ?? undefined;
+  } catch {
+    return undefined;
+  }
 }
 
 export interface RevokeResult {

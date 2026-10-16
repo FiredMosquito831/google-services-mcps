@@ -6,6 +6,12 @@
     "title": "gcalendar: API methods"
   },
   {
+    "name": "mcp__plugin_gcalendar_gcalendar__auth_status",
+    "kind": "read",
+    "scopes": [],
+    "title": "Login status"
+  },
+  {
     "name": "mcp__plugin_gcalendar_gcalendar__calendar_acl_delete",
     "kind": "destructive",
     "scopes": [
@@ -545,5 +551,11 @@
       "https://www.googleapis.com/auth/calendar.events"
     ],
     "title": "Update calendar event"
+  },
+  {
+    "name": "mcp__plugin_gcalendar_gcalendar__health",
+    "kind": "read",
+    "scopes": [],
+    "title": "Server health"
   }
 ]

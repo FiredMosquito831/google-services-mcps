@@ -47,6 +47,8 @@ export function apiKeyAgeDays(file: string, now: number = Date.now()): number | 
 }
 
 export interface StoredToken {
+  /** The account the login belongs to, recorded at login from Google's token info. */
+  account?: string;
   scope?: string;
   expiry_date?: number;
   refresh_token?: string;
@@ -137,6 +139,7 @@ export function runStatus(out: Output, env: NodeJS.ProcessEnv = process.env): nu
     const scopes = (token.scope ?? '').split(' ').filter(Boolean);
     out.log(`${group}: logged in`);
     out.log(`  token file: ${file}`);
+    out.log(`  account: ${token.account ?? 'not recorded (log in again to record it)'}`);
     out.log(`  expires: ${formatExpiry(token.expiry_date)}`);
     out.log(`  refresh token: ${token.refresh_token ? 'yes' : 'no'}`);
     out.log(`  scopes (${scopes.length}):`);
@@ -168,6 +171,7 @@ export async function runStatusCheck(out: Output, env: NodeJS.ProcessEnv = proce
     out.log(`${group}: ${CHECK_LABEL[result.state]}. ${result.detail}`);
     if (result.state === 'valid') {
       const minutes = result.expiresInSeconds === undefined ? 'unknown' : `${Math.round(result.expiresInSeconds / 60)} min`;
+      out.log(`  account: ${result.account ?? 'unknown (the login has no email scope; log in again to record it)'}`);
       out.log(`  access token expires in: ${minutes}`);
       out.log(`  granted scopes (${result.scopes.length}):`);
       for (const scope of result.scopes) out.log(`    ${scope}`);

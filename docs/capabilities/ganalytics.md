@@ -4,9 +4,16 @@ Google Analytics admin and data APIs for GA4 properties, configuration and repor
 
 - Plugin: `ganalytics`, MCP server: `ganalytics`, login: Desktop OAuth client, then `login business`
 - Install: `claude plugin install ganalytics@google-services-mcps`
-- Tools: 70 total. Curated 0, per-method 66, gateway 3. Read 35, write 24, destructive 10, dynamic 1.
+- Tools: 72 total. Curated 2, per-method 66, gateway 3. Read 37, write 24, destructive 10, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
+
+## Curated tools (2)
+
+| Tool | Safety | Method or purpose | Scopes |
+|---|---|---|---|
+| `auth_status` | read | Login status | (none) |
+| `health` | read | Server health | (none) |
 
 ## Per-method tools (66)
 

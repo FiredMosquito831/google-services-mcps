@@ -4,9 +4,16 @@ Google Play developer publishing and reporting, Play Games Services, Android Ent
 
 - Plugin: `gplay`, MCP server: `gplay`, login: Desktop OAuth client, then `login developer`
 - Install: `claude plugin install gplay@google-services-mcps`
-- Tools: 353 total. Curated 0, per-method 349, gateway 3. Read 150, write 160, destructive 42, dynamic 1.
+- Tools: 355 total. Curated 2, per-method 349, gateway 3. Read 152, write 160, destructive 42, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
+
+## Curated tools (2)
+
+| Tool | Safety | Method or purpose | Scopes |
+|---|---|---|---|
+| `auth_status` | read | Login status | (none) |
+| `health` | read | Server health | (none) |
 
 ## Per-method tools (349)
 

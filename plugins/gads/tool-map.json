@@ -106,6 +106,12 @@
     "title": "Search API methods"
   },
   {
+    "name": "mcp__plugin_gads_gads__auth_status",
+    "kind": "read",
+    "scopes": [],
+    "title": "Login status"
+  },
+  {
     "name": "mcp__plugin_gads_gads__displayvid_adver_ad_gr_targe_assig_create",
     "kind": "write",
     "scopes": [
@@ -1516,6 +1522,12 @@
     ],
     "methodId": "googleads.keywordThemeConstants.suggest",
     "title": "googleads.keywordThemeConstants.suggest"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__health",
+    "kind": "read",
+    "scopes": [],
+    "title": "Server health"
   },
   {
     "name": "mcp__plugin_gads_gads__searchads3_audience_insig_list_insights_e",

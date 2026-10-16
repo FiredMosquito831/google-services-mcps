@@ -1,13 +1,13 @@
 ---
 name: gsc
-description: Search Console sites, sitemaps, search analytics, URL indexing and site verification. Served by the gsc MCP server with 31 tools. Use for requests about these Google APIs.
+description: Search Console sites, sitemaps, search analytics, URL indexing and site verification. Served by the gsc MCP server with 33 tools. Use for requests about these Google APIs.
 ---
 
 # Search Console
 
 Search Console sites, sitemaps, search analytics, URL indexing and site verification.
 
-The `gsc` MCP server exposes 31 tools. Per-method tools cover the Discovery APIs listed below.
+The `gsc` MCP server exposes 33 tools. Per-method tools cover the Discovery APIs listed below.
 
 ## Log in
 

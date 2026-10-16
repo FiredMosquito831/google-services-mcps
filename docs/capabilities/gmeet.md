@@ -4,9 +4,16 @@ Google Meet spaces, conference records, participants and recordings.
 
 - Plugin: `gmeet`, MCP server: `gmeet`, login: Desktop OAuth client, then `login workspace-user`
 - Install: `claude plugin install gmeet@google-services-mcps`
-- Tools: 25 total. Curated 0, per-method 24, gateway 0. Read 18, write 6, destructive 1, dynamic 0.
+- Tools: 27 total. Curated 2, per-method 24, gateway 0. Read 20, write 6, destructive 1, dynamic 0.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
+
+## Curated tools (2)
+
+| Tool | Safety | Method or purpose | Scopes |
+|---|---|---|---|
+| `auth_status` | read | Login status | (none) |
+| `health` | read | Server health | (none) |
 
 ## Per-method tools (24)
 

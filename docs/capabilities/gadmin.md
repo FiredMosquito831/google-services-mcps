@@ -4,11 +4,11 @@ Google Workspace administration: Cloud Identity, Chrome management and policy, G
 
 - Plugin: `gadmin`, MCP server: `gadmin`, login: Service account with domain-wide delegation, then `setup-admin`
 - Install: `claude plugin install gadmin@google-services-mcps`
-- Tools: 366 total. Curated 19, per-method 343, gateway 3. Read 153, write 152, destructive 60, dynamic 1.
+- Tools: 368 total. Curated 21, per-method 343, gateway 3. Read 155, write 152, destructive 60, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-## Curated tools (19)
+## Curated tools (21)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
@@ -31,6 +31,8 @@ Read tools never ask. Write, destructive and dynamic tools ask before they run, 
 | `admin_user_move_org_unit` | write | Move user to org unit | admin.directory.user |
 | `admin_user_set_suspended` | write | Suspend or restore user | admin.directory.user |
 | `admin_users_list` | read | List users | admin.directory.user, admin.directory.user.readonly |
+| `auth_status` | read | Login status | (none) |
+| `health` | read | Server health | (none) |
 
 ## Per-method tools (343)
 

@@ -1,13 +1,13 @@
 ---
 name: gchat
-description: Google Chat spaces, messages and members, plus Workspace Events subscriptions. Served by the gchat MCP server with 61 tools. Use for requests about these Google APIs.
+description: Google Chat spaces, messages and members, plus Workspace Events subscriptions. Served by the gchat MCP server with 63 tools. Use for requests about these Google APIs.
 ---
 
 # Google Chat
 
 Google Chat spaces, messages and members, plus Workspace Events subscriptions.
 
-The `gchat` MCP server exposes 61 tools. Per-method tools cover the Discovery APIs listed below.
+The `gchat` MCP server exposes 63 tools. Per-method tools cover the Discovery APIs listed below.
 
 ## Log in
 

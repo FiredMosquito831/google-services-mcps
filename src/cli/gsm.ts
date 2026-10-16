@@ -25,6 +25,7 @@ import { createPrompter, type Prompter } from './prompt.js';
 import { invocationFor, invocationText, setInvocation } from '../core/invocation.js';
 import { loadConfig } from '../core/config.js';
 import { runDoctor } from './doctor.js';
+import { runHealth } from './health.js';
 import { spawnRunner } from './exec.js';
 import { runInstall, runUninstallAll, type InstallEnv } from './install.js';
 import { runList } from './list.js';
@@ -64,6 +65,7 @@ Commands:
   apis          List the APIs of a product (generated and gateway), or of the whole catalog, with method counts
   methods       List the methods of one catalog API: id, HTTP verb, path and kind (read, write or destructive)
   doctor        Check the plugin folders, hooks, tool names, token directory and credentials: PASS or FAIL per check
+  health        One row per server: login, account, tool count (--check asks Google about each login)
   version       Show the suite version and the Node version
   --help        Show this help
 
@@ -379,6 +381,22 @@ async function dispatch(argv: readonly string[]): Promise<number> {
           registry: loadProductRegistry(roots),
           pluginId: optionalString(parsed.values.plugin, 'plugin'),
           tokenDir: tokenDir === undefined ? undefined : resolvePath(tokenDir),
+          env: process.env,
+        },
+        out,
+      );
+    }
+
+    case 'health': {
+      noPositionals(parsed.positionals, 'usage: node gsm.mjs health [--check] [--plugin <id>] [--json]');
+      const roots = findRoots(moduleUrl);
+      return runHealth(
+        {
+          roots,
+          registry: loadProductRegistry(roots),
+          check: parsed.values.check === true,
+          pluginId: optionalString(parsed.values.plugin, 'plugin'),
+          json: parsed.values.json === true,
           env: process.env,
         },
         out,

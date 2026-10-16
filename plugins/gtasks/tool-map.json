@@ -6,6 +6,18 @@
     "title": "gtasks: API methods"
   },
   {
+    "name": "mcp__plugin_gtasks_gtasks__auth_status",
+    "kind": "read",
+    "scopes": [],
+    "title": "Login status"
+  },
+  {
+    "name": "mcp__plugin_gtasks_gtasks__health",
+    "kind": "read",
+    "scopes": [],
+    "title": "Server health"
+  },
+  {
     "name": "mcp__plugin_gtasks_gtasks__keep_media_download",
     "kind": "read",
     "scopes": [

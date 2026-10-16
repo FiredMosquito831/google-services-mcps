@@ -115,7 +115,7 @@ for (const id of ids) {
     const manifest = load('plugins', id, '.claude-plugin', 'plugin.json');
     assert.equal(manifest.name, id);
     assert.equal(manifest.displayName, product.title);
-    assert.equal(manifest.version, '0.2.0');
+    assert.equal(manifest.version, readFileSync(join(ROOT, 'scripts', 'bundle.mjs'), 'utf8').match(/MANIFEST_VERSION = '([^']+)'/)[1]);
     assert.equal(manifest.author.name, 'FiredMosquito831');
     assert.equal(manifest.userConfig.confirmation.default, 'every-change');
     assert.deepEqual(manifest.userConfig.confirmation.options, ['every-change', 'destructive-only', 'off']);

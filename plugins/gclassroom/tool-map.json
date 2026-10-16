@@ -6,6 +6,12 @@
     "title": "gclassroom: API methods"
   },
   {
+    "name": "mcp__plugin_gclassroom_gclassroom__auth_status",
+    "kind": "read",
+    "scopes": [],
+    "title": "Login status"
+  },
+  {
     "name": "mcp__plugin_gclassroom_gclassroom__classroom_cou_cou_add_cr_a08b",
     "kind": "write",
     "scopes": [
@@ -1029,5 +1035,11 @@
     ],
     "methodId": "classroom.userProfiles.get",
     "title": "classroom.userProfiles.get"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__health",
+    "kind": "read",
+    "scopes": [],
+    "title": "Server health"
   }
 ]

@@ -4,9 +4,16 @@ Google Tag Manager accounts, containers, tags, triggers and variables.
 
 - Plugin: `gtm`, MCP server: `gtm`, login: Desktop OAuth client, then `login business`
 - Install: `claude plugin install gtm@google-services-mcps`
-- Tools: 110 total. Curated 0, per-method 106, gateway 3. Read 41, write 53, destructive 15, dynamic 1.
+- Tools: 112 total. Curated 2, per-method 106, gateway 3. Read 43, write 53, destructive 15, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
+
+## Curated tools (2)
+
+| Tool | Safety | Method or purpose | Scopes |
+|---|---|---|---|
+| `auth_status` | read | Login status | (none) |
+| `health` | read | Server health | (none) |
 
 ## Per-method tools (106)
 

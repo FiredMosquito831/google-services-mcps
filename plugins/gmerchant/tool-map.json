@@ -24,6 +24,12 @@
     "title": "Search API methods"
   },
   {
+    "name": "mcp__plugin_gmerchant_gmerchant__auth_status",
+    "kind": "read",
+    "scopes": [],
+    "title": "Login status"
+  },
+  {
     "name": "mcp__plugin_gmerchant_gmerchant__css_accounts_css_product_delete",
     "kind": "destructive",
     "scopes": [
@@ -139,6 +145,12 @@
     ],
     "methodId": "css.accounts.updateLabels",
     "title": "css.accounts.updateLabels"
+  },
+  {
+    "name": "mcp__plugin_gmerchant_gmerchant__health",
+    "kind": "read",
+    "scopes": [],
+    "title": "Server health"
   },
   {
     "name": "mcp__plugin_gmerchant_gmerchant__manufactur_acco_lang_prod_delet",

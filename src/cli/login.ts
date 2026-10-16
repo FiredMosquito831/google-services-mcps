@@ -16,6 +16,7 @@ import type { AddressInfo } from 'node:net';
 import { resolve } from 'node:path';
 import { OAuth2Client, CodeChallengeMethod, type Credentials } from 'google-auth-library';
 import { ensureTokenDir } from '../core/acl.js';
+import { accountOfToken, withIdentityScope } from '../core/grant-check.js';
 import { ADMIN_SCOPES, readClientSecret } from '../core/auth.js';
 import { loadConfig } from '../core/config.js';
 import { serverByName, type AuthGroup, type Registry } from '../core/registry.js';
@@ -98,9 +99,11 @@ export async function runLogin(req: LoginRequest, loadRegistryFn: () => Registry
   const file = tokenFileFor(group, cfg);
   const replace = req.replace === true;
   const merge = mergeScopes({ requested, stored: storedLoginScopes(file, out), replace });
-  const scopes = merge.scopes;
+  // The email scope is always added: it lets gsm name the account the login belongs to. It grants no tool access.
+  const scopes = withIdentityScope(merge.scopes);
   if (scopes.length === 0) throw new Error(`no OAuth scopes resolved for group "${group}"`);
 
+  out.log('Also requested: the email scope, so gsm can show which account the login belongs to.');
   out.log(`Servers: ${servers.join(', ')}`);
   out.log(`This token runs ${formatCoverage(coverageOf(requirements, scopes))}.`);
   if (hasGatewayApis(registry, servers)) out.log(gatewayReachLine(requirements, scopes, req.profile));
@@ -118,8 +121,10 @@ export async function runLogin(req: LoginRequest, loadRegistryFn: () => Registry
 
   const tokens = await loopbackLogin(clientId, clientSecret, scopes, out, { openBrowser: req.noBrowser !== true });
   ensureTokenDir(cfg.tokenDir);
-  writeAtomic(file, JSON.stringify(tokens, null, 2) + '\n', 0o600);
+  const account = tokens.access_token ? await accountOfToken(tokens.access_token, clientId, clientSecret) : undefined;
+  writeAtomic(file, JSON.stringify(account ? { ...tokens, account } : tokens, null, 2) + '\n', 0o600);
   out.log(`Saved token: ${file} (mode 0600)`);
+  out.log(account ? `Account: ${account}` : 'Account: not recorded (Google did not name the account)');
   out.log(`Granted scopes: ${tokens.scope ?? '(not reported by Google)'}`);
   const granted = (tokens.scope ?? '').split(' ').filter(Boolean);
   out.log(postureLine(granted.length > 0 ? granted : scopes, process.env));

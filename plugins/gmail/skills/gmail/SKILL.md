@@ -1,13 +1,13 @@
 ---
 name: gmail
-description: Gmail mailboxes, messages, labels and settings, plus Gmail Postmaster Tools. Served by the gmail MCP server with 97 tools. Use for requests about these Google APIs.
+description: Gmail mailboxes, messages, labels and settings, plus Gmail Postmaster Tools. Served by the gmail MCP server with 99 tools. Use for requests about these Google APIs.
 ---
 
 # Gmail
 
 Gmail mailboxes, messages, labels and settings, plus Gmail Postmaster Tools.
 
-The `gmail` MCP server exposes 97 tools. Per-method tools cover the Discovery APIs listed below. Gateway APIs are reached through three generic tools: api_search finds a method, api_describe shows its parameters, and api_call runs it.
+The `gmail` MCP server exposes 99 tools. Per-method tools cover the Discovery APIs listed below. Gateway APIs are reached through three generic tools: api_search finds a method, api_describe shows its parameters, and api_call runs it.
 
 ## Log in
 

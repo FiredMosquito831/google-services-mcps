@@ -6,6 +6,18 @@
     "title": "gmeet: API methods"
   },
   {
+    "name": "mcp__plugin_gmeet_gmeet__auth_status",
+    "kind": "read",
+    "scopes": [],
+    "title": "Login status"
+  },
+  {
+    "name": "mcp__plugin_gmeet_gmeet__health",
+    "kind": "read",
+    "scopes": [],
+    "title": "Server health"
+  },
+  {
     "name": "mcp__plugin_gmeet_gmeet__meet_conferenc_participa_participa_list",
     "kind": "read",
     "scopes": [

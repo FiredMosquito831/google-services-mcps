@@ -6,6 +6,12 @@
     "title": "gyoutube: API methods"
   },
   {
+    "name": "mcp__plugin_gyoutube_gyoutube__auth_status",
+    "kind": "read",
+    "scopes": [],
+    "title": "Login status"
+  },
+  {
     "name": "mcp__plugin_gyoutube_gyoutube__blogger_blog_user_infos_get",
     "kind": "read",
     "scopes": [
@@ -317,6 +323,12 @@
     ],
     "methodId": "blogger.users.get",
     "title": "blogger.users.get"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__health",
+    "kind": "read",
+    "scopes": [],
+    "title": "Server health"
   },
   {
     "name": "mcp__plugin_gyoutube_gyoutube__youtube_abuse_reports_insert",

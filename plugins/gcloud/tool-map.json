@@ -344,6 +344,12 @@
     "title": "cloudasset.searchAllResources"
   },
   {
+    "name": "mcp__plugin_gcloud_gcloud__auth_status",
+    "kind": "read",
+    "scopes": [],
+    "title": "Login status"
+  },
+  {
     "name": "mcp__plugin_gcloud_gcloud__bigquery_datasets_delete",
     "kind": "destructive",
     "scopes": [
@@ -2101,6 +2107,12 @@
     ],
     "methodId": "cloudresourcemanager.fetchResourceSemantics",
     "title": "cloudresourcemanager.fetchResourceSemantics"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__health",
+    "kind": "read",
+    "scopes": [],
+    "title": "Server health"
   },
   {
     "name": "mcp__plugin_gcloud_gcloud__iam_policies_create_policy",

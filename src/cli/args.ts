@@ -35,6 +35,7 @@ export type Command =
   | 'apis'
   | 'methods'
   | 'doctor'
+  | 'health'
   | 'version'
   | 'help';
 
@@ -77,6 +78,7 @@ const COMMANDS: Record<Exclude<Command, 'help'>, Record<string, OptionType>> = {
   apis: { search: 'string', limit: 'string', json: 'boolean' },
   methods: { search: 'string', limit: 'string', json: 'boolean' },
   doctor: { plugin: 'string', 'token-dir': 'string' },
+  health: { check: 'boolean', plugin: 'string', json: 'boolean' },
   version: {},
 };
 

@@ -6,6 +6,12 @@
     "title": "gbusiness: API methods"
   },
   {
+    "name": "mcp__plugin_gbusiness_gbusiness__auth_status",
+    "kind": "read",
+    "scopes": [],
+    "title": "Login status"
+  },
+  {
     "name": "mcp__plugin_gbusiness_gbusiness__bpperf_loca_sear_impr_mont_list",
     "kind": "read",
     "scopes": [],
@@ -25,6 +31,12 @@
     "scopes": [],
     "methodId": "businessprofileperformance.locations.getDailyMetricsTimeSeries",
     "title": "businessprofileperformance.locations.getDailyMetricsTimeSeries"
+  },
+  {
+    "name": "mcp__plugin_gbusiness_gbusiness__health",
+    "kind": "read",
+    "scopes": [],
+    "title": "Server health"
   },
   {
     "name": "mcp__plugin_gbusiness_gbusiness__mbaccount_accoun_invita_decline",

@@ -24,6 +24,12 @@
     "title": "Search API methods"
   },
   {
+    "name": "mcp__plugin_gdrive_gdrive__auth_status",
+    "kind": "read",
+    "scopes": [],
+    "title": "Login status"
+  },
+  {
     "name": "mcp__plugin_gdrive_gdrive__books_bookshelves_get",
     "kind": "read",
     "scopes": [
@@ -1709,6 +1715,12 @@
     ],
     "methodId": "forms.forms.watches.renew",
     "title": "forms.forms.watches.renew"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__health",
+    "kind": "read",
+    "scopes": [],
+    "title": "Server health"
   },
   {
     "name": "mcp__plugin_gdrive_gdrive__sheets_spreadsh_values_batch_cle_7bcc",

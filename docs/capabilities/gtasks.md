@@ -4,9 +4,16 @@ Google Tasks task lists and tasks, plus Google Keep notes.
 
 - Plugin: `gtasks`, MCP server: `gtasks`, login: Desktop OAuth client, then `login workspace-user`
 - Install: `claude plugin install gtasks@google-services-mcps`
-- Tools: 22 total. Curated 0, per-method 21, gateway 0. Read 8, write 9, destructive 5, dynamic 0.
+- Tools: 24 total. Curated 2, per-method 21, gateway 0. Read 10, write 9, destructive 5, dynamic 0.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
+
+## Curated tools (2)
+
+| Tool | Safety | Method or purpose | Scopes |
+|---|---|---|---|
+| `auth_status` | read | Login status | (none) |
+| `health` | read | Server health | (none) |
 
 ## Per-method tools (21)
 

@@ -1610,6 +1610,12 @@
     "title": "Search API methods"
   },
   {
+    "name": "mcp__plugin_gadmin_gadmin__auth_status",
+    "kind": "read",
+    "scopes": [],
+    "title": "Login status"
+  },
+  {
     "name": "mcp__plugin_gadmin_gadmin__chromepoli_cust_poli_group_batch_862a",
     "kind": "destructive",
     "scopes": [
@@ -2962,6 +2968,12 @@
     ],
     "methodId": "groupsSettings.groups.update",
     "title": "groupsSettings.groups.update"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__health",
+    "kind": "read",
+    "scopes": [],
+    "title": "Server health"
   },
   {
     "name": "mcp__plugin_gadmin_gadmin__license_license_ass_list_for_pro_17d9",

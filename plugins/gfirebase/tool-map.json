@@ -24,6 +24,12 @@
     "title": "Search API methods"
   },
   {
+    "name": "mcp__plugin_gfirebase_gfirebase__auth_status",
+    "kind": "read",
+    "scopes": [],
+    "title": "Login status"
+  },
+  {
     "name": "mcp__plugin_gfirebase_gfirebase__devicerun_proj_loca_opera_cance",
     "kind": "destructive",
     "scopes": [
@@ -2331,6 +2337,12 @@
     ],
     "methodId": "firebasestorage.projects.getDefaultBucket",
     "title": "firebasestorage.projects.getDefaultBucket"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__health",
+    "kind": "read",
+    "scopes": [],
+    "title": "Server health"
   },
   {
     "name": "mcp__plugin_gfirebase_gfirebase__identityto_relyingpa_create_aut",

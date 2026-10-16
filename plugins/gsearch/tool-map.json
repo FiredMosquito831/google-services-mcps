@@ -59,6 +59,12 @@
     "title": "Search API methods"
   },
   {
+    "name": "mcp__plugin_gsearch_gsearch__auth_status",
+    "kind": "read",
+    "scopes": [],
+    "title": "Login status"
+  },
+  {
     "name": "mcp__plugin_gsearch_gsearch__chromeuxre_records_query_history_re",
     "kind": "read",
     "scopes": [],
@@ -229,6 +235,12 @@
     ],
     "methodId": "factchecktools.pages.update",
     "title": "factchecktools.pages.update"
+  },
+  {
+    "name": "mcp__plugin_gsearch_gsearch__health",
+    "kind": "read",
+    "scopes": [],
+    "title": "Server health"
   },
   {
     "name": "mcp__plugin_gsearch_gsearch__kgsearch_entities_search",

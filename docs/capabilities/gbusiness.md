@@ -4,9 +4,16 @@ Business Profile accounts, locations, verifications, lodging, place actions, not
 
 - Plugin: `gbusiness`, MCP server: `gbusiness`, login: Desktop OAuth client, then `login business`
 - Install: `claude plugin install gbusiness@google-services-mcps`
-- Tools: 52 total. Curated 0, per-method 51, gateway 0. Read 29, write 19, destructive 4, dynamic 0.
+- Tools: 54 total. Curated 2, per-method 51, gateway 0. Read 31, write 19, destructive 4, dynamic 0.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
+
+## Curated tools (2)
+
+| Tool | Safety | Method or purpose | Scopes |
+|---|---|---|---|
+| `auth_status` | read | Login status | (none) |
+| `health` | read | Server health | (none) |
 
 ## Per-method tools (51)
 

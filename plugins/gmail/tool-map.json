@@ -24,6 +24,12 @@
     "title": "Search API methods"
   },
   {
+    "name": "mcp__plugin_gmail_gmail__auth_status",
+    "kind": "read",
+    "scopes": [],
+    "title": "Login status"
+  },
+  {
     "name": "mcp__plugin_gmail_gmail__gmail_create_draft",
     "kind": "write",
     "scopes": [
@@ -1026,5 +1032,11 @@
     ],
     "methodId": "gmailpostmastertools.domains.verify",
     "title": "gmailpostmastertools.domains.verify"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__health",
+    "kind": "read",
+    "scopes": [],
+    "title": "Server health"
   }
 ]

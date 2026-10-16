@@ -24,6 +24,18 @@
     "title": "Search API methods"
   },
   {
+    "name": "mcp__plugin_gtm_gtm__auth_status",
+    "kind": "read",
+    "scopes": [],
+    "title": "Login status"
+  },
+  {
+    "name": "mcp__plugin_gtm_gtm__health",
+    "kind": "read",
+    "scopes": [],
+    "title": "Server health"
+  },
+  {
     "name": "mcp__plugin_gtm_gtm__tagmgr_accoun_contai_worksp_folders_entitie",
     "kind": "write",
     "scopes": [

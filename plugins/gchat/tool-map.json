@@ -6,6 +6,12 @@
     "title": "gchat: API methods"
   },
   {
+    "name": "mcp__plugin_gchat_gchat__auth_status",
+    "kind": "read",
+    "scopes": [],
+    "title": "Login status"
+  },
+  {
     "name": "mcp__plugin_gchat_gchat__chat_custom_emojis_create",
     "kind": "write",
     "scopes": [
@@ -595,6 +601,12 @@
     ],
     "methodId": "chat.users.spaces.updateSpaceReadState",
     "title": "chat.users.spaces.updateSpaceReadState"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__health",
+    "kind": "read",
+    "scopes": [],
+    "title": "Server health"
   },
   {
     "name": "mcp__plugin_gchat_gchat__workspacee_operations_get",
