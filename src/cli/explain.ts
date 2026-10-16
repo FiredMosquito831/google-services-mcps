@@ -18,7 +18,7 @@ export const WHAT_GSM_DOES: readonly string[] = [
 
 const AGENT_TEXT: Record<AgentId, string> = {
   claude:
-    'Claude Code: gsm runs "claude plugin marketplace add" once (only if the marketplace is not there yet), then "claude plugin install <product>@google-services-mcps". Claude Code keeps the plugin in its own settings. gsm writes no Claude file itself.',
+    'Claude Code: gsm declares the marketplace in the same scope as the plugin (for a project, in the project\'s .claude/settings.json, so a teammate who clones the project gets it too), then runs "claude plugin install <product>@google-services-mcps" at that scope. The write and confirmation choices are passed to the plugin as its options. Claude Code keeps the plugin in its own settings. gsm writes no Claude file itself.',
   codex:
     'Codex: gsm adds one block that it owns to ~/.codex/config.toml (or .codex/config.toml in the folder, which Codex reads only for trusted projects). Text outside that block is never changed. Restart Codex afterwards.',
   opencode:

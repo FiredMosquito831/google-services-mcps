@@ -56,7 +56,7 @@ The full list is in `docs/capabilities/gtm.md`.
 - Publishing goes live on the website. The publish tool is classed write, not destructive, so Claude asks once. Read the approval text, and check the container and the version number before you approve.
 - Setting the latest version also changes what is live.
 - Deletes ask twice.
-- The `confirmation` option defaults to `every-change`. Change it with `claude plugin configure gtm`.
+- The `confirmation` option defaults to `every-change`. Change it with `printf '%s' '{"confirmation":"destructive-only"}' | claude plugin configure gtm@google-services-mcps --values-stdin` (JSON on stdin), or `/plugin configure gtm@google-services-mcps` in Claude Code.
 
 ## Costs and limits
 

@@ -60,7 +60,7 @@ The full list is in `docs/capabilities/gmaps.md`.
 - Autocomplete and the emissions and insight calculations are classed write, so Claude asks before each call.
 - Street View deletes are destructive. They ask twice.
 - Field masks decide which billing SKU a request uses. Ask only for the fields you need.
-- The `confirmation` option defaults to `every-change`. Change it with `claude plugin configure gmaps`.
+- The `confirmation` option defaults to `every-change`. Change it with `printf '%s' '{"confirmation":"destructive-only"}' | claude plugin configure gmaps@google-services-mcps --values-stdin` (JSON on stdin), or `/plugin configure gmaps@google-services-mcps` in Claude Code.
 
 ## Costs and limits
 

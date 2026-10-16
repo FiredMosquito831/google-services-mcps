@@ -57,7 +57,7 @@ The full list is in `docs/capabilities/gcloud.md`.
 ## Safety
 
 - Reads never ask. Writes ask first. Deletes and disables ask twice: a hook prompt and an exact preview.
-- The `confirmation` option defaults to `every-change`. Change it with `claude plugin configure gcloud`.
+- The `confirmation` option defaults to `every-change`. Change it with `printf '%s' '{"confirmation":"destructive-only"}' | claude plugin configure gcloud@google-services-mcps --values-stdin` (JSON on stdin), or `/plugin configure gcloud@google-services-mcps` in Claude Code.
 - Destructive tools include `cloud_project_delete`, `cloud_service_disable` (stops an API that running services may use) and `cloud_apikey_delete`. There are 51 destructive tools in total, including BigQuery dataset and job deletes.
 - `cloud_apikey_reveal` is classed read, so it shows a key string without asking.
 - Gateway calls follow each method's class. Delete methods are destructive.

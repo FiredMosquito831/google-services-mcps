@@ -101,7 +101,8 @@ Install and uninstall:
                 Requirements: Claude Code (claude) for --agent claude; git when the marketplace comes from GitHub; codex or
                 opencode for those agents. Antigravity is installed by its own installer.
   --allow-writes, --confirmation   Set GSM_ALLOW_WRITES and GSM_CONFIRMATION for codex, opencode and agy.
-                For claude they are plugin options: the install prints the command that sets them.
+                For claude they are the plugin options allow_writes and confirmation, passed to claude plugin install
+                as --config. Options that are not given keep their values (claude plugin configure shows them).
   --marketplace claude only: owner/repo, a URL or a path. Default: this checkout, else FiredMosquito831/google-services-mcps.
   --all         uninstall only: removes every install in the list. It prints the list, then asks; --yes skips the question.
   --keep-data   uninstall with claude: keeps the plugin data directory.

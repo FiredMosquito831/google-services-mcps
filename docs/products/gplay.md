@@ -57,7 +57,7 @@ The full list is in `docs/capabilities/gplay.md`.
 - Committing an edit publishes store changes. It is classed write, so Claude asks once. Check the track and the edit before you approve.
 - Review replies are public.
 - Android Enterprise deletes and device access revocation are destructive.
-- The `confirmation` option defaults to `every-change`. Change it with `claude plugin configure gplay`.
+- The `confirmation` option defaults to `every-change`. Change it with `printf '%s' '{"confirmation":"destructive-only"}' | claude plugin configure gplay@google-services-mcps --values-stdin` (JSON on stdin), or `/plugin configure gplay@google-services-mcps` in Claude Code.
 
 ## Costs and limits
 

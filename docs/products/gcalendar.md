@@ -55,7 +55,7 @@ The full list is in `docs/capabilities/gcalendar.md`.
 - Reads never ask. Creates and updates ask first. Deletes ask twice.
 - Event writes can notify attendees. The preview shows who is invited, so check it.
 - Sharing changes (ACL tools) decide who can see or edit a calendar. Some of them are destructive.
-- The `confirmation` option defaults to `every-change`. Change it with `claude plugin configure gcalendar`.
+- The `confirmation` option defaults to `every-change`. Change it with `printf '%s' '{"confirmation":"destructive-only"}' | claude plugin configure gcalendar@google-services-mcps --values-stdin` (JSON on stdin), or `/plugin configure gcalendar@google-services-mcps` in Claude Code.
 
 ## Costs and limits
 

@@ -193,15 +193,20 @@ test('opencode and agy write GSM_CONFIRMATION into their server environment keys
     assert.deepEqual(JSON.parse(read(agyFile)).mcpServers['gsm-gcloud'].env, { GSM_ALLOW_WRITES: 'true', GSM_CONFIRMATION: 'off' });
   }));
 
-test('the claude adapter prints the plugin option instruction for --confirmation and runs no command for it', () =>
+test('the claude adapter passes --confirmation to each plugin install as --config, and runs no configure command', () =>
   withTemp(async (p) => {
     const listed = JSON.stringify([{ name: 'google-services-mcps' }]);
     const { run, calls } = fakeRunner((cmd, args) => (args[2] === 'list' ? { code: 0, stdout: listed, stderr: '' } : OK));
     const res = await claude.install(makeCtx(p, { run, plugins: ['gcloud', 'gsc'], confirmation: 'destructive-only' }));
-    assert.ok(
-      res.notes.some((n) => n.includes('"confirmation"') && n.includes('destructive-only') && n.includes('claude plugin configure')),
-      'the note must name the option, the value and the command',
+    assert.deepEqual(res.errors, []);
+    assert.deepEqual(
+      calls.slice(1).map((c) => c.args),
+      [
+        ['plugin', 'install', 'gcloud@google-services-mcps', '--scope', 'user', '--config', 'confirmation=destructive-only'],
+        ['plugin', 'install', 'gsc@google-services-mcps', '--scope', 'user', '--config', 'confirmation=destructive-only'],
+      ],
     );
+    assert.ok(res.notes.some((n) => n === 'plugin options set: confirmation=destructive-only'), res.notes.join('\n'));
     assert.equal(calls.some((c) => c.args.includes('configure')), false);
   }));
 

@@ -61,7 +61,7 @@ The full list is in `docs/capabilities/gadmin.md`.
 - This product can change every user in the domain. Use `readonly` until you need changes.
 - Reads never ask. Writes ask first. Deletes ask twice. There are 60 destructive tools.
 - A token without a write scope gets HTTP 403 on writes. Check the scopes before you test a write.
-- The `confirmation` option defaults to `every-change`. Change it with `claude plugin configure gadmin`.
+- The `confirmation` option defaults to `every-change`. Change it with `printf '%s' '{"confirmation":"destructive-only"}' | claude plugin configure gadmin@google-services-mcps --values-stdin` (JSON on stdin), or `/plugin configure gadmin@google-services-mcps` in Claude Code.
 
 ## Costs and limits
 

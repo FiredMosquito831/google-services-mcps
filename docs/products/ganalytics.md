@@ -54,7 +54,7 @@ The full list is in `docs/capabilities/ganalytics.md`.
 - Reads never ask. Creates and changes ask first. Deletes and archives ask twice.
 - Deleting a property or account removes its setup. Check the property ID in the preview.
 - Alpha methods in the gateway can change. Check them with `api_describe` first.
-- The `confirmation` option defaults to `every-change`. Change it with `claude plugin configure ganalytics`.
+- The `confirmation` option defaults to `every-change`. Change it with `printf '%s' '{"confirmation":"destructive-only"}' | claude plugin configure ganalytics@google-services-mcps --values-stdin` (JSON on stdin), or `/plugin configure ganalytics@google-services-mcps` in Claude Code.
 
 ## Costs and limits
 

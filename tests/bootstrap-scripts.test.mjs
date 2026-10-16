@@ -67,6 +67,8 @@ function fresh(label) {
 const posix = (p) => p.replace(/\\/g, '/');
 const report = (r) => `status=${r.status} error=${r.error ?? '-'}\n--- stdout ---\n${r.stdout ?? ''}\n--- stderr ---\n${r.stderr ?? ''}`;
 const isEmptyDir = (dir) => readdirSync(dir).length === 0;
+// Running npm (the requirement check runs `npm --version`) leaves Node's own compile cache in TEMP. That is npm's folder, not ours.
+const leftovers = (dir) => readdirSync(dir).filter((name) => name !== 'node-compile-cache');
 const missingUrl = (dir) => pathToFileURL(join(dir, 'missing', 'none.zip')).href;
 const DRY = (home) => ['install', '--agent', 'codex', '--plugin', 'gmail', '--scope', 'global', '--home', home, '--dry-run'];
 const PATH_KEY = Object.keys(process.env).find((k) => k.toUpperCase() === 'PATH') ?? 'PATH';
@@ -173,7 +175,7 @@ function assertDryRunInstalled(r, { installDir, home, tempDir }) {
   assert.match(r.stdout, /codex/);
   assert.ok(r.stdout.includes(home), 'the --home argument (with a space) reached gsm.mjs intact');
   assert.ok(isEmptyDir(home), 'nothing written in the home folder');
-  assert.deepEqual(readdirSync(tempDir), [], 'the temp folder is cleaned up');
+  assert.deepEqual(leftovers(tempDir), [], 'the temp folder is cleaned up');
   assert.deepEqual(readdirSync(dirname(installDir)), [installDir.split(/[\\/]/).pop()], 'no .partial folder is left');
 }
 
@@ -241,7 +243,7 @@ test('2. sh: offline archive, dry run for codex; the folder is created with gsm.
   assert.match(r.stdout, /codex/);
   assert.match(r.stdout, /dry-run/);
   assert.ok(isEmptyDir(home), 'nothing written in the home folder');
-  assert.deepEqual(readdirSync(tempDir), [], 'the temp folder is cleaned up');
+  assert.deepEqual(leftovers(tempDir), [], 'the temp folder is cleaned up');
 });
 
 test('3. sh: a missing archive names the download, exits 1, creates no install folder and cleans up', { skip: NEEDS_SH }, () => {
@@ -254,7 +256,7 @@ test('3. sh: a missing archive names the download, exits 1, creates no install f
   assert.match(r.stderr, /Download failed/);
   assert.equal(existsSync(installDir), false, 'no install folder');
   assert.equal(existsSync(join(dir, 'parent')), false, 'no parent folder either');
-  assert.deepEqual(readdirSync(tempDir), [], 'the temp folder is cleaned up after the error');
+  assert.deepEqual(leftovers(tempDir), [], 'the temp folder is cleaned up after the error');
 });
 
 test('4. sh: no arguments prints the usage, exits 0, downloads nothing and creates no install folder', { skip: NEEDS_SH }, () => {
@@ -277,7 +279,7 @@ test('4a. sh: an archive without gsm.mjs exits 1, says so, and creates no instal
   assert.equal(r.status, 1, report(r));
   assert.match(r.stderr, /does not contain gsm\.mjs/);
   assert.equal(existsSync(installDir), false);
-  assert.deepEqual(readdirSync(tempDir), []);
+  assert.deepEqual(leftovers(tempDir), []);
 });
 
 test('4a. sh: a second run replaces the install folder, so a stale file is gone and no .partial is left', { skip: NEEDS_SH }, () => {
@@ -337,7 +339,7 @@ test('4c. sh: the download works when the Windows curl comes first on PATH (Git 
   assert.equal(r.status, 0, report(r));
   assert.match(r.stdout, /dry-run/);
   assert.ok(existsSync(join(installDir, 'gsm.mjs')), 'gsm.mjs is in the install folder');
-  assert.deepEqual(readdirSync(tempDir), [], 'the temp folder is cleaned up');
+  assert.deepEqual(leftovers(tempDir), [], 'the temp folder is cleaned up');
 });
 
 test('5. cmd: the install folder on another drive from %TEMP% (copied across drives, not moved)', {
@@ -397,7 +399,7 @@ test('5. cmd: a missing archive exits 1 with a download message and creates no i
   assertNoLabelError(r);
   assert.match(r.stderr, /Download failed/);
   assert.equal(existsSync(installDir), false);
-  assert.deepEqual(readdirSync(tempDir), [], 'the temp folder is cleaned up after the error');
+  assert.deepEqual(leftovers(tempDir), [], 'the temp folder is cleaned up after the error');
 });
 
 test('5. cmd: an archive without gsm.mjs exits 1 and says so; a second run replaces the install folder', { skip: NEEDS_WINDOWS }, () => {
@@ -411,7 +413,7 @@ test('5. cmd: an archive without gsm.mjs exits 1 and says so; a second run repla
   assertNoLabelError(none);
   assert.match(none.stderr, /does not contain gsm\.mjs/);
   assert.equal(existsSync(installDir), false);
-  assert.deepEqual(readdirSync(tempDir), []);
+  assert.deepEqual(leftovers(tempDir), []);
 
   const home = join(dir, 'home');
   mkdirSync(home);
@@ -479,7 +481,7 @@ test('5. PowerShell scriptblock form (the one-liner shape): comma list, node exi
   assert.match(r.stdout, /gmail/);
   assert.match(r.stdout, /gcalendar/);
   assert.ok(existsSync(join(installDir, 'gsm.mjs')));
-  assert.deepEqual(readdirSync(tempDir), []);
+  assert.deepEqual(leftovers(tempDir), []);
 
   const bad = runPsOneLiner('powershell.exe', PS1, ['install', '--agent', 'codex', '--plugin', 'nosuchproduct', '--home', home, '--dry-run'], envWith({ GSM_ARCHIVE_URL: archive(), GSM_DIR: join(dir, 'second') }));
   assert.notEqual(bad.status, 0, report(bad));

@@ -61,7 +61,7 @@ The full list is in `docs/capabilities/gcontacts.md`.
 - Reads never ask. Writes ask first. Deletes and cancellations ask twice.
 - Contact and health data are sensitive. Keep the readonly profile unless you need changes.
 - Health writes and deletes change personal health records.
-- The `confirmation` option defaults to `every-change`. Change it with `claude plugin configure gcontacts`.
+- The `confirmation` option defaults to `every-change`. Change it with `printf '%s' '{"confirmation":"destructive-only"}' | claude plugin configure gcontacts@google-services-mcps --values-stdin` (JSON on stdin), or `/plugin configure gcontacts@google-services-mcps` in Claude Code.
 
 ## Costs and limits
 

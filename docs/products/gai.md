@@ -51,7 +51,7 @@ The full list is in `docs/capabilities/gai.md`.
 - Model and recognition calls cost money per use. The verb rule in `docs/SECURITY.md` classes calls that run work as writes, so Claude asks before them.
 - Read tools never ask. Writes ask first. Destructive calls, such as deleting Discovery Engine documents, ask twice.
 - Gateway calls follow each method's class. Check a method with `api_describe` before you call it.
-- The `confirmation` option defaults to `every-change`. Change it with `claude plugin configure gai`.
+- The `confirmation` option defaults to `every-change`. Change it with `printf '%s' '{"confirmation":"destructive-only"}' | claude plugin configure gai@google-services-mcps --values-stdin` (JSON on stdin), or `/plugin configure gai@google-services-mcps` in Claude Code.
 
 ## Costs and limits
 

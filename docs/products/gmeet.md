@@ -59,7 +59,7 @@ The full list is in `docs/capabilities/gmeet.md`.
 - Reads never ask. Creates, changes and ending a conference ask first. Removing a member asks twice.
 - Ending a conference removes everyone from it.
 - Recordings and transcripts hold private meeting content. Fetch them only when you need them.
-- The `confirmation` option defaults to `every-change`. Change it with `claude plugin configure gmeet`.
+- The `confirmation` option defaults to `every-change`. Change it with `printf '%s' '{"confirmation":"destructive-only"}' | claude plugin configure gmeet@google-services-mcps --values-stdin` (JSON on stdin), or `/plugin configure gmeet@google-services-mcps` in Claude Code.
 
 ## Costs and limits
 

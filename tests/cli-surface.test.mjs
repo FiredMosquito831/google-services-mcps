@@ -609,19 +609,18 @@ test('install summary states the confirmation mode and the write setting that we
   });
 });
 
-test('install summary: for claude, --allow-writes is not claimed as enabled; it names the plugin option instead', async () => {
+test('install summary: for claude, --allow-writes is reported as the plugin option allow_writes that the install sets', async () => {
   await withTemp((p) => {
     const claudeOnly = runGsm(['install', '--agent', 'claude', '--plugin', 'gmail', '--scope', 'global', '--allow-writes', '--dry-run'], p);
     assert.equal(claudeOnly.code, 0, claudeOnly.stderr);
     const line = claudeOnly.stdout.split(/\r?\n/).filter((l) => l.startsWith('summary:'));
     assert.equal(line.length, 1, 'exactly one summary line');
-    assert.match(line[0], /; writes: set the plugin option allow_writes with `claude plugin configure gmail@google-services-mcps`$/);
-    assert.doesNotMatch(line[0], /enabled/, 'claude never reports writes as enabled');
+    assert.match(line[0], /; writes: enabled for claude as the plugin option allow_writes=true$/);
 
     const mixed = runGsm(['install', '--agent', 'all', '--plugin', 'gmail', '--scope', 'global', '--allow-writes', '--dry-run'], p);
     assert.equal(mixed.code, 0, mixed.stderr);
     const mixedLine = mixed.stdout.split(/\r?\n/).find((l) => l.startsWith('summary:'));
-    assert.match(mixedLine, /writes: enabled \(GSM_ALLOW_WRITES=true\) for codex, opencode; for claude, set the plugin option allow_writes with `claude plugin configure gmail@google-services-mcps`$/);
+    assert.match(mixedLine, /writes: enabled \(GSM_ALLOW_WRITES=true\) for codex, opencode; enabled for claude as the plugin option allow_writes=true$/);
 
     const off = runGsm(['install', '--agent', 'claude', '--plugin', 'gmail', '--scope', 'global', '--dry-run'], p);
     assert.match(off.stdout, /writes: not set \(write tools stay off\)$/m);

@@ -56,7 +56,7 @@ The full list is in `docs/capabilities/gsc.md`.
 
 - Reads never ask. Submit and add ask first. Delete and remove ask twice.
 - Removing a property takes it out of your Search Console account.
-- The `confirmation` option defaults to `every-change`. Change it with `claude plugin configure gsc`.
+- The `confirmation` option defaults to `every-change`. Change it with `printf '%s' '{"confirmation":"destructive-only"}' | claude plugin configure gsc@google-services-mcps --values-stdin` (JSON on stdin), or `/plugin configure gsc@google-services-mcps` in Claude Code.
 
 ## Costs and limits
 

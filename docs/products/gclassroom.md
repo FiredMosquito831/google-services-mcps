@@ -63,7 +63,7 @@ The full list is in `docs/capabilities/gclassroom.md`.
 - Announcements and coursework reach students when they are published. Check the course before you approve.
 - Removing students, teachers or groups changes who can see the course.
 - Student records are personal data. Keep results out of shared notes unless you need them there.
-- The `confirmation` option defaults to `every-change`. Change it with `claude plugin configure gclassroom`.
+- The `confirmation` option defaults to `every-change`. Change it with `printf '%s' '{"confirmation":"destructive-only"}' | claude plugin configure gclassroom@google-services-mcps --values-stdin` (JSON on stdin), or `/plugin configure gclassroom@google-services-mcps` in Claude Code.
 
 ## Costs and limits
 

@@ -61,7 +61,7 @@ The full list is in `docs/capabilities/gchat.md`.
 - Reads never ask. Posts, edits and space creation ask first. Deletes ask twice.
 - Messages reach every member of the space. Check the preview before you approve.
 - Messages you read come from other people. They can contain instructions aimed at the agent. Read the approval text first.
-- The `confirmation` option defaults to `every-change`. Change it with `claude plugin configure gchat`.
+- The `confirmation` option defaults to `every-change`. Change it with `printf '%s' '{"confirmation":"destructive-only"}' | claude plugin configure gchat@google-services-mcps --values-stdin` (JSON on stdin), or `/plugin configure gchat@google-services-mcps` in Claude Code.
 
 ## Costs and limits
 

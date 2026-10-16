@@ -326,19 +326,21 @@ test('claude: installs into a new marketplace and maps global to --scope user', 
     assert.deepEqual(res.errors, []);
     assert.deepEqual(calls.map((c) => c.args), [
       ['plugin', 'marketplace', 'list', '--json'],
-      ['plugin', 'marketplace', 'add', '/repo/root'],
+      ['plugin', 'marketplace', 'add', '/repo/root', '--scope', 'user'],
       ['plugin', 'install', 'google-cloud@google-services-mcps', '--scope', 'user'],
     ]);
     assert.ok(calls.every((c) => c.command === 'claude'));
     assert.equal(calls[0].cwd, p.cwd);
   }));
 
-test('claude: skips marketplace add when already registered; folder scope uses local and cwd = path', () =>
+test('claude: a folder install declares the marketplace in local settings every time (no list check), then installs at local scope', () =>
   withTemp(async (p) => {
     const listed = JSON.stringify([{ name: 'google-services-mcps' }]);
     const { run, calls } = fakeRunner((cmd, args) => (args[2] === 'list' ? { code: 0, stdout: listed, stderr: '' } : OK));
     await claude.install(makeCtx(p, { run, scope: 'folder', pathArg: p.folder, plugins: ['google-search'] }));
     assert.equal(calls.length, 2);
+    assert.equal(calls[0].args[2], 'add', 'the marketplace is declared in the folder scope');
+    assert.deepEqual(calls[0].args.slice(-2), ['--scope', 'local']);
     assert.deepEqual(calls[1].args, ['plugin', 'install', 'google-search@google-services-mcps', '--scope', 'local']);
     assert.equal(calls[1].cwd, p.folder);
   }));
@@ -386,11 +388,11 @@ test('claude: with no checkout the marketplace comes from GitHub, and --marketpl
     const { run, calls } = fakeRunner((cmd, args) => (args[2] === 'list' ? { code: 0, stdout: '[]', stderr: '' } : OK));
     const res = await claude.install(makeCtx(p, { run, plugins: ['google-cloud'], repoRoot: undefined }));
     assert.deepEqual(res.errors, []);
-    assert.deepEqual(calls[1].args, ['plugin', 'marketplace', 'add', 'FiredMosquito831/google-services-mcps']);
+    assert.deepEqual(calls[1].args, ['plugin', 'marketplace', 'add', 'FiredMosquito831/google-services-mcps', '--scope', 'user']);
 
     const fork = fakeRunner((cmd, args) => (args[2] === 'list' ? { code: 0, stdout: '[]', stderr: '' } : OK));
     await claude.install(makeCtx(p, { run: fork.run, plugins: ['google-cloud'], repoRoot: '/repo', marketplace: 'someone/fork' }));
-    assert.deepEqual(fork.calls[1].args, ['plugin', 'marketplace', 'add', 'someone/fork'], '--marketplace beats the checkout');
+    assert.deepEqual(fork.calls[1].args, ['plugin', 'marketplace', 'add', 'someone/fork', '--scope', 'user'], '--marketplace beats the checkout');
   }));
 
 // ---------- argument parsing ----------

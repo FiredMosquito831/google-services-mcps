@@ -54,7 +54,7 @@ The full list is in `docs/capabilities/gads.md`.
 - `ads_search` cannot change data. It rejects anything but SELECT.
 - Reads never ask. Writes ask first. Removals ask twice.
 - The gateway reaches APIs that have no per-method tool. Check each call with `api_describe`.
-- The `confirmation` option defaults to `every-change`. Change it with `claude plugin configure gads`.
+- The `confirmation` option defaults to `every-change`. Change it with `printf '%s' '{"confirmation":"destructive-only"}' | claude plugin configure gads@google-services-mcps --values-stdin` (JSON on stdin), or `/plugin configure gads@google-services-mcps` in Claude Code.
 
 ## Costs and limits
 

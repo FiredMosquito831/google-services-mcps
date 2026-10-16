@@ -274,7 +274,7 @@ test('claude builds the marketplace add and the plugin install and uninstall com
       assert.equal(await runInstall(install, envFor(p, lines, { run: fake.run })), 0, lines.join('\n'));
 
       const add = fake.calls.find((c) => c.args[2] === 'add');
-      assert.deepEqual(add.args, ['plugin', 'marketplace', 'add', REPO_ROOTS.root], 'the checkout is the marketplace');
+      assert.deepEqual(add.args, ['plugin', 'marketplace', 'add', REPO_ROOTS.root, '--scope', flag], 'the checkout is the marketplace, declared in the same scope');
       const plugin = fake.calls.find((c) => c.args[1] === 'install');
       assert.deepEqual(plugin.args, ['plugin', 'install', 'gmail@google-services-mcps', '--scope', flag]);
       assert.equal(plugin.cwd, folder, `${scope}: the claude CLI runs in the folder`);
@@ -297,7 +297,25 @@ test('claude from a plugin folder (not a checkout) adds the GitHub marketplace',
     const lines = [];
     await runInstall(act('install', ['--agent', 'claude', '--plugin', 'gmail']), envFor(p, lines, { run: fake.run, roots, registry }));
     const add = fake.calls.find((c) => c.args[2] === 'add');
-    assert.deepEqual(add.args, ['plugin', 'marketplace', 'add', 'FiredMosquito831/google-services-mcps']);
+    assert.deepEqual(add.args, ['plugin', 'marketplace', 'add', 'FiredMosquito831/google-services-mcps', '--scope', 'user']);
+  }));
+
+test('claude project install declares the marketplace in the project settings, and passes the write options as --config', () =>
+  withTemp(async (p) => {
+    const fake = fakeClaude();
+    const lines = [];
+    const install = act('install', [
+      '--agent', 'claude', '--plugin', 'gmail', '--scope', 'project', '--path', p.folder, '--allow-writes', '--confirmation', 'destructive-only',
+    ]);
+    assert.equal(await runInstall(install, envFor(p, lines, { run: fake.run })), 0, lines.join('\n'));
+    assert.deepEqual(
+      fake.calls.map((c) => c.args),
+      [
+        ['plugin', 'marketplace', 'add', REPO_ROOTS.root, '--scope', 'project'],
+        ['plugin', 'install', 'gmail@google-services-mcps', '--scope', 'project', '--config', 'allow_writes=true', '--config', 'confirmation=destructive-only'],
+      ],
+    );
+    assert.equal(fake.calls[0].cwd, p.folder, 'the claude CLI runs in the project folder');
   }));
 
 // ---------- gsm list ----------

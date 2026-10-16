@@ -57,7 +57,7 @@ The full list is in `docs/capabilities/gyoutube.md`.
 - Reads never ask. Writes ask first. Deletes ask twice.
 - Blogger publish makes a post public.
 - Abuse report submissions are write calls. Check the report before you approve it.
-- The `confirmation` option defaults to `every-change`. Change it with `claude plugin configure gyoutube`.
+- The `confirmation` option defaults to `every-change`. Change it with `printf '%s' '{"confirmation":"destructive-only"}' | claude plugin configure gyoutube@google-services-mcps --values-stdin` (JSON on stdin), or `/plugin configure gyoutube@google-services-mcps` in Claude Code.
 
 ## Costs and limits
 

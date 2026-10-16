@@ -55,7 +55,7 @@ The full list is in `docs/capabilities/gdrive.md`.
 - `drive_files_delete` deletes permanently. `drive_files_empty_trash` empties the trash. Both are hard to undo.
 - Files can contain instructions aimed at the agent. Read the approval text before you approve a write.
 - Text you read goes into the conversation. Avoid reading sensitive files you do not need.
-- The `confirmation` option defaults to `every-change`. Change it with `claude plugin configure gdrive`.
+- The `confirmation` option defaults to `every-change`. Change it with `printf '%s' '{"confirmation":"destructive-only"}' | claude plugin configure gdrive@google-services-mcps --values-stdin` (JSON on stdin), or `/plugin configure gdrive@google-services-mcps` in Claude Code.
 
 ## Costs and limits
 

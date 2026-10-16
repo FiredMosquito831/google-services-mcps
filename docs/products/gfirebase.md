@@ -60,7 +60,7 @@ The full list is in `docs/capabilities/gfirebase.md`.
 - Removing an app, a SHA certificate, or cancelling a test or release is destructive.
 - Hosting and App Hosting deploys change a live site or backend. They ask first.
 - Rules changes can open or block access to data. Read the preview first.
-- The `confirmation` option defaults to `every-change`. Change it with `claude plugin configure gfirebase`.
+- The `confirmation` option defaults to `every-change`. Change it with `printf '%s' '{"confirmation":"destructive-only"}' | claude plugin configure gfirebase@google-services-mcps --values-stdin` (JSON on stdin), or `/plugin configure gfirebase@google-services-mcps` in Claude Code.
 
 ## Costs and limits
 

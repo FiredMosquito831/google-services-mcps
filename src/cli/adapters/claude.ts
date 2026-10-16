@@ -1,21 +1,25 @@
 /**
- * Claude Code adapter. It drives the official `claude plugin` CLI and never edits
- * Claude's settings files.
+ * Claude Code adapter. It drives the official `claude plugin` CLI and never edits Claude's settings files.
  *
+ * Global (--scope global, which is user scope):
  *   install:   claude plugin marketplace list --json
- *              claude plugin marketplace add <source>        (only if google-services-mcps is not registered)
- *              claude plugin install <plugin>@google-services-mcps --scope user|project|local
- *   uninstall: claude plugin uninstall <plugin>@google-services-mcps --scope ... [--keep-data]
+ *              claude plugin marketplace add <source> --scope user   (only if google-services-mcps is not registered)
+ *              claude plugin install <plugin>@google-services-mcps --scope user [--config allow_writes=true] [--config confirmation=<mode>]
+ *   uninstall: claude plugin uninstall <plugin>@google-services-mcps --scope user [--keep-data]
  *
- * <source> is --marketplace when given, else the repo checkout the installer runs from, else
- * FiredMosquito831/google-services-mcps on GitHub.
+ * Project and local (--scope project or local, with --path or the current folder):
+ *   install:   claude plugin marketplace add <source> --scope project|local   (every time: repeating it is safe)
+ *              claude plugin install <plugin>@google-services-mcps --scope project|local [--config ...]
+ *   The marketplace is declared in the same scope as the plugin. In a project, that puts it in .claude/settings.json next to
+ *   the plugin's enabledPlugins entry, so a teammate who clones the project gets both (see the Claude Code docs, "Install and
+ *   manage plugins", and "Settings files and precedence").
  *
- * Scope mapping: global -> user, project -> project, local -> local. Project and local run the command inside
- * the folder (--path, or the current folder). Every call goes through ctx.run with shell: false and an argument
- * array. On Windows the program is tried as "claude", then "claude.cmd". Dry-run only plans.
+ * <source> is --marketplace when given, else the repo checkout (only when it is a git checkout), else
+ * FiredMosquito831/google-services-mcps on GitHub. Every call goes through ctx.run with shell: false and an argument array.
+ * On Windows the program is tried as "claude", then "claude.cmd". Dry-run only plans.
  *
- * --confirmation is not written here. It is the plugin user option "confirmation", which the user
- * sets with `claude plugin configure`; install prints that instruction as a note.
+ * --allow-writes and --confirmation are Claude Code plugin options (allow_writes, confirmation). They are passed to the
+ * install as --config key=value. Options that are not given keep their values; `claude plugin configure <plugin>` shows them.
  */
 import { displayCommand } from '../exec.js';
 import { scopeFolder } from '../paths.js';
@@ -72,17 +76,53 @@ export function marketplaceSourceFor(ctx: Pick<AdapterContext, 'marketplace' | '
   return ctx.marketplace ?? ctx.repoRoot ?? MARKETPLACE_SOURCE;
 }
 
-function marketplaceAddArgs(source: string): string[] {
-  return ['plugin', 'marketplace', 'add', source];
+/** The plugin options that gsm sets on install, as --config pairs. Only the ones the user gave are sent. */
+export function configArgs(ctx: Pick<AdapterContext, 'allowWrites' | 'confirmation'>): string[] {
+  const pairs: string[] = [];
+  if (ctx.allowWrites) pairs.push('allow_writes=true');
+  if (ctx.confirmation !== undefined) pairs.push(`confirmation=${ctx.confirmation}`);
+  return pairs.flatMap((pair) => ['--config', pair]);
 }
 
-/** Ensures the marketplace is registered. Returns false when the install must stop. */
+function marketplaceAddArgs(source: string, scopeFlag: string): string[] {
+  return ['plugin', 'marketplace', 'add', source, '--scope', scopeFlag];
+}
+
+/**
+ * Declares the marketplace for the install. Global: once, in user settings (checked first, so it is not cloned again).
+ * Project and local: in that scope's settings, every time, because a repeated add reports that it is already declared.
+ * Returns false when the install must stop.
+ */
 async function ensureMarketplace(ctx: AdapterContext, cwd: string, result: AdapterResult): Promise<boolean> {
   const source = marketplaceSourceFor(ctx);
+  const scopeFlag = claudeScopeFlag(ctx.scope);
+  const addArgs = marketplaceAddArgs(source, scopeFlag);
   const listArgs = ['plugin', 'marketplace', 'list', '--json'];
+
+  if (ctx.scope !== 'global' && ctx.marketplace === undefined && ctx.repoRoot !== undefined && source === ctx.repoRoot) {
+    result.notes.push(
+      `the marketplace is this folder (${source}), so the ${scopeFlag} settings record that path. Commit them only if teammates have the same path, or install with --marketplace FiredMosquito831/google-services-mcps to record the GitHub source.`,
+    );
+  }
+
+  if (ctx.scope !== 'global') {
+    result.commands.push(displayCommand('claude', addArgs));
+    if (ctx.dryRun) {
+      result.notes.push(`the marketplace is declared in ${scopeFlag} settings; repeating the add is safe`);
+      return true;
+    }
+    const add = await runClaude(ctx, addArgs, cwd);
+    if (add.code !== 0) {
+      result.errors.push(`claude plugin marketplace add failed: ${(add.stderr || add.stdout).trim()}`);
+      return false;
+    }
+    result.notes.push(`marketplace ${MARKETPLACE_NAME} is declared in ${scopeFlag} settings`);
+    return true;
+  }
+
   if (ctx.dryRun) {
     result.commands.push(displayCommand('claude', listArgs));
-    result.commands.push(displayCommand('claude', marketplaceAddArgs(source)));
+    result.commands.push(displayCommand('claude', addArgs));
     result.notes.push(`marketplace add runs only if ${MARKETPLACE_NAME} is not registered yet (source: ${source})`);
     return true;
   }
@@ -96,7 +136,6 @@ async function ensureMarketplace(ctx: AdapterContext, cwd: string, result: Adapt
     result.notes.push(`marketplace ${MARKETPLACE_NAME} is already registered`);
     return true;
   }
-  const addArgs = marketplaceAddArgs(source);
   result.commands.push(displayCommand('claude', addArgs));
   const add = await runClaude(ctx, addArgs, cwd);
   if (add.code !== 0) {
@@ -112,18 +151,19 @@ async function run(ctx: AdapterContext, action: 'install' | 'uninstall'): Promis
   const cwd = ctx.scope === 'global' ? ctx.cwd : scopeFolder(ctx.pathArg, ctx.cwd);
   const scopeFlag = claudeScopeFlag(ctx.scope);
   if (ctx.scope === 'project') result.notes.push(`project scope: written to ${cwd}/.claude/settings.json by Claude Code`);
-  if (ctx.scope !== 'global' && ctx.scope !== 'project') result.notes.push(`local scope: written to ${cwd}/.claude/settings.local.json by Claude Code`);
+  if (ctx.scope === 'local') result.notes.push(`local scope: written to ${cwd}/.claude/settings.local.json by Claude Code`);
 
   if (action === 'install') {
     const ready = await ensureMarketplace(ctx, cwd, result);
     if (!ready) return result;
   }
 
+  const options = configArgs(ctx);
   for (const plugin of ctx.plugins) {
     const extra = action === 'uninstall' && ctx.keepData ? ['--keep-data'] : [];
     const args =
       action === 'install'
-        ? ['plugin', 'install', claudePluginId(plugin), '--scope', scopeFlag]
+        ? ['plugin', 'install', claudePluginId(plugin), '--scope', scopeFlag, ...options]
         : ['plugin', 'uninstall', claudePluginId(plugin), '--scope', scopeFlag, ...extra];
     const shown = displayCommand('claude', args);
     result.commands.push(shown);
@@ -136,10 +176,14 @@ async function run(ctx: AdapterContext, action: 'install' | 'uninstall'): Promis
     }
   }
 
-  if (action === 'install' && ctx.confirmation !== undefined) {
-    const ids = ctx.plugins.map(claudePluginId).join(', ');
+  if (action === 'install') {
+    const set = configArgs(ctx);
+    if (set.length > 0) {
+      const pairs = set.filter((_, index) => index % 2 === 1).join(', ');
+      result.notes.push(`plugin options set: ${pairs}`);
+    }
     result.notes.push(
-      `confirmation is a plugin user option, so gsm does not write it. Set the option "confirmation" to ${ctx.confirmation} with claude plugin configure (plugins: ${ids}).`,
+      `other plugin options keep their values. See them with: claude plugin configure ${ctx.plugins.map(claudePluginId).join(' ')}`,
     );
   }
   return result;

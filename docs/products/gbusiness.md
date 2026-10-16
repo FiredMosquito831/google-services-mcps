@@ -60,7 +60,7 @@ The full list is in `docs/capabilities/gbusiness.md`.
 - Listing edits are public. They change what customers see on Google.
 - Business Information edits are limited to 10 per minute per profile, and that limit cannot be raised.
 - Deletes of locations and admins ask twice.
-- The `confirmation` option defaults to `every-change`. Change it with `claude plugin configure gbusiness`.
+- The `confirmation` option defaults to `every-change`. Change it with `printf '%s' '{"confirmation":"destructive-only"}' | claude plugin configure gbusiness@google-services-mcps --values-stdin` (JSON on stdin), or `/plugin configure gbusiness@google-services-mcps` in Claude Code.
 
 ## Costs and limits
 

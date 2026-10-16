@@ -57,7 +57,7 @@ The full list is in `docs/capabilities/gmerchant.md`.
 
 - Product, inventory, promotion and business information writes change live data in the account.
 - Deletes ask twice. There are 20 destructive tools.
-- The `confirmation` option defaults to `every-change`. Change it with `claude plugin configure gmerchant`.
+- The `confirmation` option defaults to `every-change`. Change it with `printf '%s' '{"confirmation":"destructive-only"}' | claude plugin configure gmerchant@google-services-mcps --values-stdin` (JSON on stdin), or `/plugin configure gmerchant@google-services-mcps` in Claude Code.
 
 ## Costs and limits
 

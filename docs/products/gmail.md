@@ -56,7 +56,7 @@ The full list is in `docs/capabilities/gmail.md`.
 - Message deletes remove mail. Trash moves a message to Trash.
 - Filters, forwarding, auto-forwarding, delegates and send-as changes can route mail away from you. Treat them as high risk.
 - Mail can carry instructions aimed at the agent. Read the approval text before you approve anything.
-- The `confirmation` option defaults to `every-change`. Change it with `claude plugin configure gmail`.
+- The `confirmation` option defaults to `every-change`. Change it with `printf '%s' '{"confirmation":"destructive-only"}' | claude plugin configure gmail@google-services-mcps --values-stdin` (JSON on stdin), or `/plugin configure gmail@google-services-mcps` in Claude Code.
 
 ## Costs and limits
 

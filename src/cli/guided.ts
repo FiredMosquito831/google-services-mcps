@@ -255,7 +255,7 @@ export async function guidedInstall(env: GuidedEnv, prefill: InstallPrefill = {}
   }
   sayAll(env, describeWrites(allowWrites, confirmation), '  ');
   if (agent === 'claude' && allowWrites) {
-    prompt.say('  For Claude Code, the write and confirmation settings are plugin options. gsm prints the command that sets them after the install.');
+    prompt.say('  For Claude Code, the write and confirmation settings are passed to the plugin as its options (claude plugin install --config).');
   }
 
   const agents = agentsOf(agent);

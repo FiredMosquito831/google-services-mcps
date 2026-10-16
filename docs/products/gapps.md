@@ -56,7 +56,7 @@ The full list is in `docs/capabilities/gapps.md`.
 - Reads never ask. Writes ask first. Running a script and deleting a deployment ask twice.
 - Running a script executes code that can change Drive, Gmail, Sheets or other data. Read the code before you run it.
 - Replacing a project's files overwrites them. Keep a copy first.
-- The `confirmation` option defaults to `every-change`. Change it with `claude plugin configure gapps`.
+- The `confirmation` option defaults to `every-change`. Change it with `printf '%s' '{"confirmation":"destructive-only"}' | claude plugin configure gapps@google-services-mcps --values-stdin` (JSON on stdin), or `/plugin configure gapps@google-services-mcps` in Claude Code.
 
 ## Costs and limits
 

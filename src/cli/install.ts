@@ -120,15 +120,15 @@ export function loginSteps(servers: readonly ServerSpec[]): string[] {
 
 /**
  * The write setting in the summary, for the agents that ran. --allow-writes reaches codex, opencode and agy as
- * GSM_ALLOW_WRITES=true. Claude does not get it: its write setting is the plugin option allow_writes, which the
- * user sets with `claude plugin configure`, so the summary names that command and never says writes are enabled for it.
+ * GSM_ALLOW_WRITES=true. For Claude Code it is the plugin option allow_writes, which the install sets with
+ * `claude plugin install --config allow_writes=true`.
  */
-function writesText(allowWrites: boolean, agents: readonly AgentId[], products: readonly string[]): string {
+function writesText(allowWrites: boolean, agents: readonly AgentId[]): string {
   if (!allowWrites) return 'not set (write tools stay off)';
   if (!agents.includes('claude')) return 'enabled (GSM_ALLOW_WRITES=true)';
-  const claudeNote = `set the plugin option allow_writes with ${products.map((p) => `\`claude plugin configure ${claude.claudePluginId(p)}\``).join(', ')}`;
+  const claudeText = 'enabled for claude as the plugin option allow_writes=true';
   const others = agents.filter((a) => a !== 'claude');
-  return others.length === 0 ? claudeNote : `enabled (GSM_ALLOW_WRITES=true) for ${others.join(', ')}; for claude, ${claudeNote}`;
+  return others.length === 0 ? claudeText : `enabled (GSM_ALLOW_WRITES=true) for ${others.join(', ')}; ${claudeText}`;
 }
 
 /**
@@ -159,7 +159,7 @@ export function installSummary(
   }
   const toolText = `${tools} tools${unknown > 0 ? ` (${unknown} product(s) without a tool count)` : ''}`;
   const confirmation = run.confirmation ?? 'not set (plugin default every-change)';
-  const writes = writesText(run.allowWrites, agents, products);
+  const writes = writesText(run.allowWrites, agents);
   // A run with an error must not say "installed": the error was printed above and the exit code is 1.
   const verb = run.dryRun ? 'would install' : failed ? 'could not install' : 'installed';
   const note = failed && !run.dryRun ? ' (an agent reported an error above)' : '';
