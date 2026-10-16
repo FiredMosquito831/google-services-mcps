@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 google-services-mcps is a set of MCP servers for Google products, packaged as Claude Code plugins in one marketplace, with an installer (`gsm`) for Codex, OpenCode and Antigravity (`agy`). One plugin per product (23 in total), and each plugin runs one MCP server with the same name as the plugin. Public repository: https://github.com/FiredMosquito831/google-services-mcps (owner FiredMosquito831). Licence Apache-2.0 with NOTICE. The website is GitHub Pages from `site/`.
 
-Status: built and tested offline (513 tests on Windows: 512 pass, 1 opt-in test skipped; the Linux count is checked before each release), smoke test over all servers, plugin validation. The npm package is `google-services-mcps`, one package. 0.1.4 is live under that name (GitHub release v0.1.4, published with provenance). The scoped name `@firedmosquito831/google-services-mcps` (0.1.3 is its latest) is still to be deprecated: the owner runs `npm deprecate` in a terminal, because it needs a one-time password. The `npm` workflow publishes the package when a GitHub release is published (trusted publishing, with provenance). Not yet run against live Google accounts. Treat any claim about live behaviour as unverified until a live test has run.
+Status: built and tested offline (513 tests on Windows: 512 pass, 1 opt-in test skipped; the Linux count is checked before each release), smoke test over all servers, plugin validation. The npm package is `google-services-mcps`, one package. 0.1.4 is live under that name (GitHub release v0.1.4, published with provenance). The scoped name `@firedmosquito831/google-services-mcps` is deprecated (all five versions, 2026-10-16). The owner ran `npm deprecate` in a terminal, because it needs a one-time password. The `npm` workflow publishes the package when a GitHub release is published (trusted publishing, with provenance). Not yet run against live Google accounts. Treat any claim about live behaviour as unverified until a live test has run.
 
 ## Stack and versions
 
@@ -104,6 +104,7 @@ Append a dated bullet whenever you learn something non-obvious about this reposi
 - 2026-10-16: PowerShell's `ConvertFrom-Json` fails on `package-lock.json`, which has an empty-string key (`""`). Edit JSON with `node` instead.
 - 2026-10-16: `npm deprecate` needs a one-time password like `npm publish`. From this shell it prints a "deprecating" notice for each version, then stops at `EOTP`, and the registry shows no flag. Check the registry (`versions.<v>.deprecated`) before saying a deprecation happened. The owner runs the command in a terminal.
 - 2026-10-16: `gsm install --home <dir>` is refused for `--agent claude`, which always uses the real Claude Code configuration. A dry run into a temp home must use codex, opencode or agy.
+- 2026-10-16: `git add -A` picked up `bash.exe.stackdump`, an msys crash dump, in a docs commit. `*.stackdump` is in `.gitignore` now. Stage files by name when a crash has happened.
 
 ## Preferences (the owner)
 
