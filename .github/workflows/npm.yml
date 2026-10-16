@@ -1,14 +1,22 @@
 name: npm publish
 
-# Publishes @firedmosquito831/google-services-mcps when a GitHub release is published, or by hand with a tag.
-# The tag must match the version in package.json (a hard failure otherwise). A version that is already on npm is skipped.
-# A push to main does not publish.
+# Publishes both npm packages when a GitHub release is published, or by hand with an existing tag:
+#   1. @firedmosquito831/google-services-mcps, the installer (the root package.json).
+#   2. google-services-mcps, the short name (packages/google-services-mcps). It pins (1) by exact version.
+# (1) goes first, so the short name never points at a version that is not on npm.
 #
-# Release steps: bump "version" in package.json, push to main, then create the GitHub release vX.Y.Z and publish it
-# (not a draft; a draft does not fire this workflow).
+# THE RELEASE, IN ORDER
+#   1. node scripts/bump.mjs patch|minor|major (or X.Y.Z). It moves both packages and the pin, and nothing else.
+#   2. Commit the bump with the change it ships, and push to main. A push does not publish.
+#   3. Create the GitHub release vX.Y.Z and publish it (not a draft: a draft does not fire this workflow).
 #
-# Uses trusted publishing (OIDC): no token is stored. npmjs.com setting for this package: Settings -> Trusted Publisher
-# -> GitHub Actions: owner FiredMosquito831, repository google-services-mcps, workflow filename npm.yml, environment empty.
+# THE GUARDS
+#   The tag, both package versions and the pin must all be the same version, or nothing is published.
+#   A version already on npm is skipped, so a re-run is safe.
+#
+# AUTHENTICATION: trusted publishing (OIDC), no token stored. Each package needs a Trusted Publisher on npmjs.com:
+#   GitHub Actions, owner FiredMosquito831, repository google-services-mcps, workflow filename npm.yml, environment empty.
+#   A refusal fails this job (red) on purpose: a publish that did not happen must be seen.
 
 on:
   release:
@@ -16,7 +24,7 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: "The existing release tag to publish from, e.g. v0.1.1"
+        description: "The existing release tag to publish from, e.g. v0.1.3"
         required: true
         type: string
 
@@ -55,34 +63,53 @@ jobs:
           npm install -g npm@latest
           npm --version
 
-      - name: Check the tag against package.json, and skip if already published
-        id: check
+      - name: Check the tag against both packages and the pin
+        id: version
         env:
           TAG: ${{ github.event.release.tag_name || inputs.tag }}
         run: |
           set -euo pipefail
           version="${TAG#v}"
-          declared="$(node -p 'require("./package.json").version')"
-          if [ "$version" != "$declared" ]; then
-            echo "::error::tag '$TAG' is version '$version' but package.json says '$declared'. Refusing to publish."
-            exit 1
-          fi
+          installer="$(node -p 'require("./package.json").version')"
+          short="$(node -p 'require("./packages/google-services-mcps/package.json").version')"
+          pin="$(node -p 'require("./packages/google-services-mcps/package.json").dependencies["@firedmosquito831/google-services-mcps"]')"
+          for pair in "installer package.json:$installer" "short name package.json:$short" "short name pin:$pin"; do
+            label="${pair%%:*}"
+            value="${pair#*:}"
+            if [ "$value" != "$version" ]; then
+              echo "::error::tag '$TAG' is version '$version' but the $label says '$value'. Refusing to publish."
+              exit 1
+            fi
+          done
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "publishing $version"
+
+      - name: Publish @firedmosquito831/google-services-mcps (the installer)
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          set -euo pipefail
           name="$(node -p 'require("./package.json").name')"
-          published="$(npm view "$name@$version" version 2>/dev/null || true)"
-          if [ "$published" = "$version" ]; then
-            echo "publish=false" >> "$GITHUB_OUTPUT"
-            echo "::notice::$name@$version is already published; nothing to do."
-          else
-            echo "publish=true" >> "$GITHUB_OUTPUT"
-            echo "publishing $name@$version"
+          published="$(npm view "$name@$VERSION" version 2>/dev/null || true)"
+          if [ "$published" = "$VERSION" ]; then
+            echo "::notice::$name@$VERSION is already on npm; nothing to do."
+            exit 0
           fi
+          # npm ci installs the dev dependencies that prepublishOnly needs: the build and the test suite.
+          npm ci
+          npm publish --access public --provenance
 
-      - name: Install dependencies
-        if: steps.check.outputs.publish == 'true'
-        # npm ci also installs the dev dependencies that prepublishOnly needs (the build and the tests).
-        run: npm ci
-
-      - name: npm publish (trusted publishing)
-        if: steps.check.outputs.publish == 'true'
-        # prepublishOnly runs the build and the test suite first; a failing test stops the publish.
-        run: npm publish --access public --provenance
+      - name: Publish google-services-mcps (the short name)
+        # Runs after the installer, so the pin it names is already on npm.
+        working-directory: packages/google-services-mcps
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          set -euo pipefail
+          name="$(node -p 'require("./package.json").name')"
+          published="$(npm view "$name@$VERSION" version 2>/dev/null || true)"
+          if [ "$published" = "$VERSION" ]; then
+            echo "::notice::$name@$VERSION is already on npm; nothing to do."
+            exit 0
+          fi
+          npm publish --access public --provenance
