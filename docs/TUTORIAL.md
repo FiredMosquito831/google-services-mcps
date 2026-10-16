@@ -61,11 +61,13 @@ Examples in this tutorial use Windows paths such as `D:\Projects2\Google-service
 
 ## 5. The install command
 
-Every agent uses the same command. Only the agent name changes:
+Every agent uses the same command. Only the agent name changes. The npm package runs it as `npx @firedmosquito831/google-services-mcps install --agent <agent> --plugin <product>`, and this tutorial uses the older form from the clone, `node gsm.mjs`. The two are identical in what they do.
 
 ```
 node gsm.mjs install --agent <agent> --plugin <product>
 ```
+
+Run `node gsm.mjs` with no arguments in a terminal (or `npx @firedmosquito831/google-services-mcps` with no arguments) for the guided menu. It asks for the agent, the scope, the products and the write settings, shows the command it will run, previews it, and installs after you confirm. Give `install` some flags and the menu asks only for the rest. Scripts always use flags. The full option table is in [INSTALL.md](INSTALL.md#npm-and-npx-commands).
 
 | Part | What to write | Default |
 |---|---|---|
@@ -202,14 +204,14 @@ To set an option, use either route:
   '{"confirmation":"destructive-only"}' | claude plugin configure gmail@google-services-mcps --values-stdin
   ```
 
-The values are JSON strings. A JSON boolean is refused, so turn on writes with `"allow_writes":"true"` (checked). The `--allow-writes` and `--confirmation` flags of gsm do not set these options for Claude Code. The dry run prints the `claude plugin configure` command instead (checked).
+The values are JSON strings. A JSON boolean is refused, so turn on writes with `"allow_writes":"true"` (checked). The `--allow-writes` and `--confirmation` flags of gsm set these options during the install, through `claude plugin install --config` (checked). Options you do not give keep their values.
 
 You can also pass an option when the plugin is installed with the `claude` command: `claude plugin install gmail@google-services-mcps --scope user --config confirmation=destructive-only` (checked).
 
-**The manual route.** This is the same install with the `claude` command only, without gsm:
+**The manual route.** This is the same install with the `claude` command only, without gsm. Pick the scope with `--scope` on both commands, so the marketplace and the plugin are declared together:
 
 ```
-claude plugin marketplace add D:/Projects2/Google-services-mcps
+claude plugin marketplace add FiredMosquito831/google-services-mcps --scope user
 claude plugin marketplace list
 claude plugin install gmail@google-services-mcps --scope user
 ```

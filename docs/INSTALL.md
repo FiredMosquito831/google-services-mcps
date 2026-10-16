@@ -86,8 +86,9 @@ Options:
 | `--scope` | install, uninstall | `global` (the default: your user account), `project` (the folder given by `--path`, or the current folder), or `local` (that folder only, not shared). `folder` means `local`. |
 | `--path` | install, uninstall | The folder for `project` and `local`. It must exist. Not allowed with `global`. |
 | `--dry-run` | all | Prints every change and command. Writes nothing and runs nothing. Use it first. |
-| `--allow-writes` | install | For `codex`, `opencode` and `agy`: sets `GSM_ALLOW_WRITES=true`. For `claude` the setting is a plugin option, so gsm prints the `claude plugin configure` command instead. |
-| `--confirmation` | install | `every-change` (the default), `destructive-only` or `off`. Set the same way as `--allow-writes`. |
+| `--allow-writes` | install | For `codex`, `opencode` and `agy`: sets `GSM_ALLOW_WRITES=true`. For `claude`: passed to the plugin as the option `allow_writes=true` (`claude plugin install --config`). |
+| `--confirmation` | install | `every-change` (the default), `destructive-only` or `off`. For `codex`, `opencode` and `agy`: sets `GSM_CONFIRMATION`. For `claude`: passed to the plugin as the option `confirmation` (`--config`). |
+| `--install-missing` | install | Installs the requirements gsm can install (npm for Claude Code, Codex and OpenCode; winget or brew for git), then checks again. Without it, a missing requirement stops the install. |
 | `--marketplace` | install (claude) | Where Claude Code gets the marketplace: `owner/repo`, a URL, or a path. The default is the repository folder when it is a git clone. Otherwise (npm package, zip download) it is `FiredMosquito831/google-services-mcps` on GitHub. |
 | `--servers` | install | Keeps only these servers of the chosen products (`a,b`). For `claude`, which installs whole plugins, gsm installs the plugins that contain them. |
 | `--keep-data` | uninstall (claude) | Keeps the plugin's data folder. |
@@ -100,7 +101,7 @@ What each agent does:
 
 | Agent | Scope and where it writes | Install | Uninstall |
 |---|---|---|---|
-| `claude` | `global` = user, `project` = project, `local` = local. Claude Code writes its own settings files. | Adds the marketplace if `google-services-mcps` is not registered yet, then runs `claude plugin install <id>@google-services-mcps --scope ...`. | Runs `claude plugin uninstall ...`. The marketplace stays registered. Logins are never touched. |
+| `claude` | `global` = user, `project` = project, `local` = local. Claude Code writes its own settings files. | Declares the marketplace in the same scope (for `global`, once, if it is not registered yet), then runs `claude plugin install <id>@google-services-mcps --scope ...`, with `--config` for the options you set. | Runs `claude plugin uninstall ...`. The marketplace stays registered. Logins are never touched. |
 | `codex` | `global` = `~/.codex/config.toml`. `project` and `local` = `.codex/config.toml` in the folder (Codex reads it only for trusted projects). `local` writes the same file as `project`. | Writes one block that gsm owns, between marker lines. Text outside the block is never changed. | Removes gsm's entries and its block. Keeps a backup of the file. If gsm created the file, it stays behind empty. |
 | `opencode` | `global` = `~/.config/opencode/opencode.json`. `project` and `local` = `opencode.json` in the folder. `local` writes the same file as `project`. | Adds gsm's keys under `mcp`. | Removes those keys. Keeps a backup. |
 | `agy` | `global` only: `~/.gemini/config/mcp_config.json`. A project or local scope is refused (exit code 2). | Adds gsm's keys under `mcpServers`. If the agy config folder is missing, the install stops. With `--agent all` it is skipped with a note. | Removes those keys. Keeps a backup. |
@@ -145,24 +146,27 @@ Known issues:
 
 ### 1. Add the marketplace (once)
 
-The first `node gsm.mjs install --agent claude` adds the marketplace for you, if `google-services-mcps` is not registered yet. **Checked** (the dry run prints `marketplace add runs only if google-services-mcps is not registered yet`, and a real run printed `ran: claude plugin marketplace add`).
+gsm declares the marketplace `google-services-mcps` in the same scope as the plugin. For the user scope (`global`), it is added once, if it is not registered yet. For `project` and `local`, it is declared in that scope's settings on every install, because repeating the add is safe. **Checked:** a project install in an isolated Claude Code config wrote both `extraKnownMarketplaces` and `enabledPlugins` into the project's `.claude/settings.json`.
 
-To do it yourself:
+To add it yourself, choose the scope with `--scope`:
 
 ```
-claude plugin marketplace add D:\Projects2\Google-services-mcps
+claude plugin marketplace add FiredMosquito831/google-services-mcps --scope user
+claude plugin marketplace add FiredMosquito831/google-services-mcps --scope project
 claude plugin marketplace list
 ```
 
-A GitHub copy works too: `claude plugin marketplace add FiredMosquito831/google-services-mcps`. **UNVERIFIED:** the GitHub form was not run, because the repository was not cloned for this check. The `add` and `list` commands with a folder path **checked**.
+A folder works too: `claude plugin marketplace add D:\path\to\google-services-mcps --scope project`. A folder records that path in the project settings, so commit that file only when teammates have the same path. **Checked** for the folder form, and the GitHub form **checked** with a project scope.
 
 ### 2. Install a product
+
+The examples below use `node gsm.mjs`, the older form from a clone. The npm package's form is `npx @firedmosquito831/google-services-mcps`, with the same options.
 
 ```
 node gsm.mjs install --agent claude --plugin gmail
 ```
 
-This runs `claude plugin install gmail@google-services-mcps --scope user`. **Checked.** For a project or a folder:
+This declares the marketplace if it is needed, then runs `claude plugin install gmail@google-services-mcps --scope user`. **Checked.** For a project or a folder:
 
 ```
 node gsm.mjs install --agent claude --plugin gmail --scope project --path "C:\work\my-project"
@@ -226,7 +230,7 @@ Change them in either of these ways:
 
 After a change, the CLI says to restart Claude Code to apply it. **Checked** (the text is printed). A restart itself is **UNVERIFIED** in a live session.
 
-**Not applied by gsm.** `--allow-writes` and `--confirmation` do not set these options for Claude Code. The install prints the `claude plugin configure` command to run instead, and the summary says `writes: set the plugin option allow_writes with ...`. **Checked.**
+**Applied by gsm.** `--allow-writes` and `--confirmation` are sent to `claude plugin install` as `--config allow_writes=true` and `--config confirmation=<mode>`, so the install sets them. Options you do not give keep their values. **Checked:** after an install with both flags, `claude plugin configure` lists `allow_writes` and `confirmation` as set. The summary says `writes: enabled for claude as the plugin option allow_writes=true`.
 
 ### 4. Check the install
 
