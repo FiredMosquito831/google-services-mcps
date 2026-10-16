@@ -124,7 +124,7 @@ npx @firedmosquito831/google-services-mcps list
 
 Known issues:
 
-- **Claude Code with the npm package version 0.1.1 needs `--marketplace FiredMosquito831/google-services-mcps`.** Without it the install tries to use the package folder as the marketplace, and that fails. Checked: the install fails without the option and succeeds with it. The fix is in the repository, and it reaches npm with the next release.
+- **Version 0.1.1 only:** Claude Code through the npm package needed `--marketplace FiredMosquito831/google-services-mcps`, because the install tried to use the package folder as the marketplace. Version 0.1.2 and later use the GitHub marketplace by default, so the option is not needed.
 - Every message now shows the command for your route: `node gsm.mjs ...` from the repository, `npx @firedmosquito831/google-services-mcps ...` for the npm package, and `node "<full path>\gsm.mjs" ...` from any other folder.
 - The Claude Code marketplace comes from the `main` branch on GitHub, not from the npm version. The two can differ.
 

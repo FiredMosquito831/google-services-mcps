@@ -155,8 +155,7 @@ The login groups are `cloud`, `searchconsole`, `workspace-user`, `workspace-admi
 Install with one command. Three ways, all with the same install command:
 
 1. **One line, no clone.** The Quick start above. The line downloads the suite to `google-services-mcps` in your home folder and runs the installer there.
-2. **npm.** `npx @firedmosquito831/google-services-mcps install --agent <agent> --plugin <product>`. Or install once with `npm install -g @firedmosquito831/google-services-mcps`, then run `gsm install --agent <agent> --plugin <product>`. In a terminal, `npx @firedmosquito831/google-services-mcps` with no arguments opens a menu, and `install` asks for anything you leave out. Every command and option is listed in [docs/INSTALL.md](docs/INSTALL.md#npm-and-npx-commands). For Claude Code with the 0.1.1 package, add `--marketplace FiredMosquito831/google-services-mcps` until the next release.
-3. **From a clone**, from the repository folder. No build is needed:
+2. **npm.** `npx @firedmosquito831/google-services-mcps install --agent <agent> --plugin <product>`. Or install once with `npm install -g @firedmosquito831/google-services-mcps`, then run `gsm install --agent <agent> --plugin <product>`. In a terminal, `npx @firedmosquito831/google-services-mcps` with no arguments opens a menu, and `install` asks for anything you leave out. Every command and option is listed in [docs/INSTALL.md](docs/INSTALL.md#npm-and-npx-commands).3. **From a clone**, from the repository folder. No build is needed:
 
 ```
 node gsm.mjs install --agent <agent> --plugin <product>
