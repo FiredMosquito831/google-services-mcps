@@ -76,6 +76,8 @@ function envFor(p, lines, { run = noRun, roots = REPO_ROOTS, registry = REGISTRY
     platform: 'linux',
     run,
     out: { log: (l) => lines.push(l), warn: (l) => lines.push(`WARN ${l}`) },
+    // The tests do not depend on which programs this machine has.
+    requirements: async () => [],
   };
 }
 

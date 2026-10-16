@@ -2,14 +2,14 @@
 
 ![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue)
 ![Status: beta](https://img.shields.io/badge/status-beta-orange)
-![Tests: 489 passing](https://img.shields.io/badge/tests-489%20passing-brightgreen)
+![Tests: 508 passing](https://img.shields.io/badge/tests-508%20passing-brightgreen)
 ![Plugins: 23](https://img.shields.io/badge/plugins-23-blue)
 ![Model Context Protocol](https://img.shields.io/badge/Model%20Context%20Protocol-server-6f42c1)
 ![Claude Code plugin](https://img.shields.io/badge/Claude%20Code-plugin-d97757)
 
 **google-services-mcps** is a Google Workspace MCP, Google Cloud MCP and Search Console MCP suite. It includes a Gmail MCP, a Google Drive MCP, a Google Calendar MCP and a Google Ads MCP, plus 19 more Google products. Each product is one **Model Context Protocol** server, packaged as a **Claude Code plugin** in one marketplace. An installer adds the same servers to a Codex MCP, an OpenCode MCP and an Antigravity MCP setup. Use it to let an AI agent read your Google data and, when you allow it, change that data.
 
-> **Status: beta.** Built and tested offline: 489 passing tests (one more downloads from GitHub and runs only with `GSM_NETWORK_TESTS=1`), a smoke test over all 23 servers, and Claude plugin validation. Not yet tested against live Google accounts. The repository is public. Licensed under Apache-2.0.
+> **Status: beta.** Built and tested offline: 508 passing tests (one more downloads from GitHub and runs only with `GSM_NETWORK_TESTS=1`), a smoke test over all 23 servers, and Claude plugin validation. Not yet tested against live Google accounts. The repository is public. Licensed under Apache-2.0.
 
 ## At a glance
 
@@ -155,7 +155,7 @@ The login groups are `cloud`, `searchconsole`, `workspace-user`, `workspace-admi
 Install with one command. Three ways, all with the same install command:
 
 1. **One line, no clone.** The Quick start above. The line downloads the suite to `google-services-mcps` in your home folder and runs the installer there.
-2. **npm.** `npx @firedmosquito831/google-services-mcps install --agent <agent> --plugin <product>`. Or install once with `npm install -g @firedmosquito831/google-services-mcps`, then run `gsm install --agent <agent> --plugin <product>`. In a terminal, `npx @firedmosquito831/google-services-mcps` with no arguments opens a menu, and `install` asks for anything you leave out. Every command and option is listed in [docs/INSTALL.md](docs/INSTALL.md#npm-and-npx-commands).3. **From a clone**, from the repository folder. No build is needed:
+2. **npm.** `npx @firedmosquito831/google-services-mcps install --agent <agent> --plugin <product>`. Or install once with `npm install -g @firedmosquito831/google-services-mcps`, then run `gsm install --agent <agent> --plugin <product>`. In a terminal, `npx @firedmosquito831/google-services-mcps` with no arguments opens a menu, and `install` asks for anything you leave out. An install checks what it needs (Claude Code, Codex, OpenCode, git), and `--install-missing` or a yes in the menu installs what gsm can install ([requirements](docs/INSTALL.md#npm-and-npx-commands)). Every command and option is listed in [docs/INSTALL.md](docs/INSTALL.md#npm-and-npx-commands).3. **From a clone**, from the repository folder. No build is needed:
 
 ```
 node gsm.mjs install --agent <agent> --plugin <product>

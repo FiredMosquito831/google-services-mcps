@@ -1,19 +1,32 @@
 import { existsSync, statSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { ALL_GROUPS, type CliGroup } from './args.js';
+import { checkoutRootFor } from './paths.js';
+import { productRows, type ProductRow } from './products.js';
 import { readInstalls, type InstallRecord } from './records.js';
-import { productRows } from './products.js';
+import {
+  ACTION_TEXT,
+  WHAT_GSM_DOES,
+  describeAgent,
+  describeInstallSteps,
+  describeLogin,
+  describeNeededLogins,
+  describeProduct,
+  describeScope,
+  describeWrites,
+} from './explain.js';
 import type { Choice, Prompter } from './prompt.js';
 import type { InstallRoots } from './paths.js';
+import { describeMissing, marketplaceNeedsGit, missingOf, type Requirement } from './requirements.js';
 import type { Registry } from '../core/registry.js';
 import { invocation } from '../core/invocation.js';
 import type { Output } from './report.js';
-import { UsageError } from './types.js';
+import { AGENTS, UsageError, type AgentId } from './types.js';
 
 /**
- * The guided flows. Each one asks its questions, shows the exact command it is about to run, and then runs that command
- * through `run`, the same dispatcher the typed commands use. So a guided answer and the typed flags do the same thing,
- * and the command shown is the one to type next time.
+ * The guided flows. Each one explains what it does, asks its questions, shows the exact command it is about to run, and
+ * then runs that command through `run`, the same dispatcher the typed commands use. So a guided answer and the typed flags
+ * do the same thing, and the command shown is the one to type next time.
  */
 export interface GuidedEnv {
   prompt: Prompter;
@@ -30,6 +43,8 @@ export interface GuidedEnv {
   /** Saves an API key typed in the terminal. force replaces a key that is already saved. */
   saveApiKey: (key: string, force: boolean) => Promise<number>;
   apiKeySaved: boolean;
+  /** The requirements of an install on this machine. The CLI runs the real check; tests give a stub. */
+  requirements: (agents: readonly AgentId[], needGit: boolean) => Promise<Requirement[]>;
 }
 
 /** Values already given as flags. A guided flow asks only for what is missing. */
@@ -43,11 +58,11 @@ export interface InstallPrefill {
 }
 
 const AGENT_CHOICES: Choice<string>[] = [
-  { value: 'claude', label: 'Claude Code', hint: 'through the claude CLI' },
+  { value: 'claude', label: 'Claude Code', hint: 'through the claude command' },
   { value: 'codex', label: 'Codex', hint: '~/.codex/config.toml' },
   { value: 'opencode', label: 'OpenCode', hint: 'opencode.json' },
   { value: 'agy', label: 'Antigravity (agy)', hint: 'global only' },
-  { value: 'all', label: 'All four agents', hint: 'every agent that is set up on this machine' },
+  { value: 'all', label: 'All four agents', hint: 'each one that is set up on this machine' },
 ];
 
 const SCOPE_CHOICES: Choice<string>[] = [
@@ -89,7 +104,7 @@ const MENU: Choice<MenuAction>[] = [
   { value: 'list', label: 'Show what gsm installed, and where' },
   { value: 'status', label: 'Show the sign-in status of each group' },
   { value: 'products', label: 'Show the products and their tool counts' },
-  { value: 'browse', label: 'Browse the APIs and methods behind the gateway' },
+  { value: 'browse', label: 'Browse the APIs and methods behind the gateway tools' },
   { value: 'scopes', label: 'Show the scopes of a group for each profile' },
   { value: 'doctor', label: 'Check the installation' },
   { value: 'version', label: 'Show the version' },
@@ -107,6 +122,10 @@ export function commandLine(args: readonly string[]): string {
 
 function showCommand(env: GuidedEnv, args: readonly string[]): void {
   env.prompt.say(`The command for this is:\n  ${commandLine(args)}`);
+}
+
+function sayAll(env: GuidedEnv, lines: readonly string[], indent = ''): void {
+  for (const line of lines) env.prompt.say(indent + line);
 }
 
 function isExistingDirectory(path: string): boolean {
@@ -137,31 +156,94 @@ async function askFile(env: GuidedEnv, question: string): Promise<string> {
   }
 }
 
-async function askProducts(env: GuidedEnv): Promise<string> {
-  const rows = productRows(env.roots, env.registry);
-  const choices: Choice<string>[] = rows.map((row) => ({
+/** A short description for a picker line: the first part of the product's description. */
+function shortDescription(text: string | undefined): string {
+  if (!text) return '';
+  const cut = text.length > 90 ? `${text.slice(0, 87).trimEnd()}...` : text;
+  return cut;
+}
+
+function productChoices(env: GuidedEnv): Choice<string>[] {
+  return productRows(env.roots, env.registry).map((row) => ({
     value: row.id,
     label: `${row.id}: ${row.title}`,
-    hint: `${row.group}, ${row.tools ?? '?'} tools`,
+    hint: `${row.group} login, ${row.tools ?? '?'} tools. ${shortDescription(row.description)}`.trim(),
   }));
+}
+
+async function askProducts(env: GuidedEnv): Promise<string> {
+  const rows = productRows(env.roots, env.registry);
+  const choices = productChoices(env);
   const picked = await env.prompt.pick('Which products? Pick several, or "all" for every product.', choices);
   return picked.length === rows.length ? 'all' : picked.join(',');
 }
 
-/** Install: agent, scope and folder, products, and write settings. Then a preview, then the install after a yes. */
+/** The product rows a plugin value (a list of ids, or "all") stands for. */
+function rowsFor(env: GuidedEnv, plugin: string): ProductRow[] {
+  const rows = productRows(env.roots, env.registry);
+  if (plugin === 'all') return rows;
+  const wanted = plugin.split(',').map((p) => p.trim());
+  return rows.filter((row) => wanted.includes(row.id));
+}
+
+function agentsOf(agent: string): AgentId[] {
+  return agent === 'all' ? [...AGENTS] : [agent as AgentId];
+}
+
+/** Asks for the missing requirements. Returns the install mode, or null when the flow must stop (nothing installed). */
+async function requirementsStep(env: GuidedEnv, agents: readonly AgentId[], needGit: boolean): Promise<{ installMissing: boolean } | null> {
+  const { prompt } = env;
+  const missing = missingOf(await env.requirements(agents, needGit));
+  if (missing.length === 0) {
+    prompt.say('Requirements: everything this install needs is already on this machine.');
+    return { installMissing: false };
+  }
+  prompt.say('Requirements that are missing on this machine:');
+  sayAll(env, describeMissing(missing), '  ');
+  if (missing.some((r) => r.install === null)) {
+    prompt.say('Some of them are installed by hand (the commands above). Install them, then run this again. Nothing was installed.');
+    return null;
+  }
+  if (!(await prompt.confirm('Install the missing requirements now, with the commands shown above?', true))) {
+    prompt.say('Install them by hand, then run this again. Nothing was installed.');
+    return null;
+  }
+  return { installMissing: true };
+}
+
+/**
+ * Install: explains what gsm does, asks the agent, scope, products and write settings, checks the requirements, shows the
+ * command and a preview, and installs after a yes.
+ */
 export async function guidedInstall(env: GuidedEnv, prefill: InstallPrefill = {}): Promise<number> {
   const { prompt } = env;
+  prompt.say('What gsm installs, and how:');
+  sayAll(env, WHAT_GSM_DOES, '  ');
+  prompt.say('');
   prompt.say('Install: choose the agent, where it goes, and the products. Nothing is changed until you confirm.');
 
   const agent = prefill.agent ?? (await prompt.choose('Which agent?', AGENT_CHOICES, 'claude'));
   if (!AGENT_CHOICES.some((c) => c.value === agent)) {
     throw new UsageError(`--agent must be one of: ${AGENT_CHOICES.map((c) => c.value).join(', ')}`);
   }
+  sayAll(env, describeAgent(agent as AgentId | 'all'), '  ');
 
   // agy has only a global config, so its scope is fixed.
-  const scope = agent === 'agy' ? 'global' : (prefill.scope ?? (await prompt.choose('Where should it be installed?', SCOPE_CHOICES, 'global')));
+  let scope = prefill.scope;
+  if (agent === 'agy') {
+    scope = 'global';
+    prompt.say('  Antigravity has only a global install, so the scope is global.');
+  } else if (scope === undefined) {
+    scope = await prompt.choose('Where should it be installed?', SCOPE_CHOICES, 'global');
+  }
+  if (scope !== undefined) sayAll(env, describeScope(scope as 'global' | 'project' | 'local'), '  ');
   const path = scope === 'project' || scope === 'local' ? (prefill.path ?? (await askFolder(env, 'Folder for this install'))) : undefined;
+
   const plugin = prefill.plugin ?? (await askProducts(env));
+  const rows = rowsFor(env, plugin);
+  prompt.say('What you chose:');
+  sayAll(env, rows.map((row) => describeProduct(row)), '  ');
+  const products = rows.map((row) => row.id);
 
   let allowWrites = prefill.allowWrites === true;
   let confirmation = prefill.confirmation;
@@ -171,14 +253,24 @@ export async function guidedInstall(env: GuidedEnv, prefill: InstallPrefill = {}
       confirmation = await prompt.choose('When should gsm ask before a change?', CONFIRM_CHOICES, 'every-change');
     }
   }
+  sayAll(env, describeWrites(allowWrites, confirmation), '  ');
+  if (agent === 'claude' && allowWrites) {
+    prompt.say('  For Claude Code, the write and confirmation settings are plugin options. gsm prints the command that sets them after the install.');
+  }
 
-  const args = ['install', '--agent', agent, '--plugin', plugin, '--scope', scope];
+  const agents = agentsOf(agent);
+  const needGit = agents.includes('claude') && marketplaceNeedsGit(undefined, checkoutRootFor(env.roots));
+  const requirements = await requirementsStep(env, agents, needGit);
+  if (requirements === null) return 0;
+
+  prompt.say('What this will do:');
+  sayAll(env, describeInstallSteps(agents, products, scope as 'global' | 'project' | 'local'), '  ');
+
+  const args = ['install', '--agent', agent, '--plugin', plugin, '--scope', scope ?? 'global'];
   if (path !== undefined) args.push('--path', path);
   if (allowWrites) args.push('--allow-writes');
   if (confirmation !== undefined) args.push('--confirmation', confirmation);
-  if (agent === 'claude' && allowWrites) {
-    prompt.say('For Claude Code, the write and confirmation settings are plugin options. gsm prints the command that sets them after the install.');
-  }
+  if (requirements.installMissing) args.push('--install-missing');
 
   showCommand(env, args);
   prompt.say('Preview (nothing is written):');
@@ -187,7 +279,14 @@ export async function guidedInstall(env: GuidedEnv, prefill: InstallPrefill = {}
     prompt.say('Nothing was installed.');
     return 0;
   }
-  return env.run(args);
+  const code = await env.run(args);
+  if (code === 0) {
+    prompt.say('');
+    prompt.say('Next: the servers need a sign-in for their Google groups:');
+    sayAll(env, describeNeededLogins([...new Set(rows.map((row) => row.group as CliGroup))]), '  ');
+    prompt.say('Restart the agent so it loads the new servers.');
+  }
+  return code;
 }
 
 /** Uninstall: one recorded install, or everything gsm installed. The products to remove are picked, then a preview. */
@@ -210,6 +309,7 @@ export async function guidedUninstall(env: GuidedEnv): Promise<number> {
   const picked = await prompt.choose('What do you want to uninstall?', choices);
 
   if (picked === 'all') {
+    prompt.say('This removes gsm\'s own entries from every recorded install. The logins, the OAuth client and the other agents stay.');
     await env.run(['uninstall', '--all', '--dry-run']);
     if (!(await prompt.confirm('Remove every install listed above? Logins are kept.', false))) {
       prompt.say('Nothing was removed.');
@@ -220,6 +320,8 @@ export async function guidedUninstall(env: GuidedEnv): Promise<number> {
 
   const record = records[Number(picked)];
   if (record === undefined) throw new UsageError('that install is not in the record any more');
+  prompt.say('Removing gsm\'s entries from this install:');
+  sayAll(env, describeAgent(record.agent), '  ');
   const products = await prompt.pick(
     'Which products to remove from this install?',
     record.products.map((id) => ({ value: id, label: id })),
@@ -242,9 +344,9 @@ export async function guidedUninstall(env: GuidedEnv): Promise<number> {
 export async function guidedSignIn(env: GuidedEnv): Promise<number> {
   const { prompt } = env;
   const group = await prompt.choose('Which group do you want to set up?', GROUP_CHOICES);
+  sayAll(env, describeLogin(group), '  ');
 
   if (group === 'apikey') {
-    prompt.say('The API key is saved in your token folder. It is typed without echo, and it is never printed or kept in a command.');
     let force = false;
     if (env.apiKeySaved) force = await prompt.confirm('An API key is already saved. Replace it?', false);
     if (env.apiKeySaved && !force) return 0;
@@ -267,9 +369,7 @@ export async function guidedSignIn(env: GuidedEnv): Promise<number> {
   }
 
   if (!existsSync(env.clientSecretFile)) {
-    prompt.say(
-      'This group needs the OAuth desktop client once. In the Google Cloud console, create an OAuth client of type "Desktop app", download its JSON file, and give the path here.',
-    );
+    prompt.say('This group needs the OAuth desktop client once. Give the path of the downloaded JSON file here, and gsm saves it in your token folder.');
     const file = await askFile(env, 'Path to the client_secret.json file');
     const setup = ['setup-client', file];
     showCommand(env, setup);
@@ -339,6 +439,7 @@ export async function runMenu(env: GuidedEnv): Promise<number> {
     prompt.say('');
     const action = await prompt.choose('What do you want to do?', MENU, 'install');
     if (action === 'quit') return 0;
+    prompt.say(ACTION_TEXT[action] ?? '');
     try {
       await runAction(env, action);
     } catch (err) {

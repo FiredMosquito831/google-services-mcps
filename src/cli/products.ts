@@ -110,6 +110,8 @@ export type ToolSource = 'tool-map' | 'products' | 'none';
 export interface ProductRow {
   id: string;
   title: string;
+  /** One sentence on what the product covers. Empty when the product map does not carry it (a plugin folder). */
+  description?: string;
   group: string;
   generated: ApiEntry[];
   gateway: ApiEntry[];
@@ -163,6 +165,7 @@ function repoRows(roots: InstallRoots): ProductRow[] {
     return {
       id,
       title: typeof value.title === 'string' ? value.title : id,
+      description: typeof value.description === 'string' ? value.description : '',
       group: typeof value.group === 'string' ? value.group : '',
       generated: apiEntries(value.generated),
       gateway: apiEntries(value.gateway),

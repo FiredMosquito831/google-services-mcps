@@ -109,6 +109,19 @@ For `codex`, `opencode` and `agy`, install also copies each product's server fil
 
 Install and uninstall never touch the login tokens. To remove a login, use `logout`.
 
+**Requirements.** An install checks what it needs on this machine before it writes anything. A missing requirement stops the install, and the message says what to install:
+
+| Requirement | Needed for | Installed by gsm (with `--install-missing`, or yes in the menu) | By hand |
+|---|---|---|---|
+| Claude Code (`claude`) | `--agent claude` | `npm install -g @anthropic-ai/claude-code` | the native installer: see https://code.claude.com/docs/en/setup |
+| Codex (`codex`) | `--agent codex` | `npm install -g @openai/codex` | the same command |
+| OpenCode (`opencode`) | `--agent opencode` | `npm install -g opencode-ai` | the same command |
+| git | `--agent claude` when the marketplace comes from GitHub (the default for the npm package and the one-line installers) | Windows: `winget install --id Git.Git -e --source winget`. macOS: `brew install git`. Linux: not installed by gsm (it needs sudo). | Windows: the installer at https://git-scm.com/downloads/win. Linux: for example `sudo apt-get install -y git`. |
+
+Antigravity (`agy`) has its own installer, and gsm writes its config only when the agy config folder exists (start Antigravity once).
+
+`--install-missing` installs what gsm can install and checks again. Without it, a missing requirement stops the install, and nothing is changed. A `--dry-run` only lists what is missing. In the menu, the same question is asked before the install, with the commands shown.
+
 Examples:
 
 ```

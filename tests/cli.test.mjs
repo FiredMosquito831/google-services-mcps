@@ -479,6 +479,8 @@ function orchestratorEnv(p, lines) {
       throw new Error('nothing may run in dry-run');
     },
     out: { log: (l) => lines.push(l), warn: (l) => lines.push(`WARN ${l}`) },
+    // The tests do not depend on which programs this machine has.
+    requirements: async () => [],
   };
 }
 

@@ -20,6 +20,7 @@ import { runSetupAdmin } from './admin.js';
 import { API_KEY_ENV, runSetupApiKey } from './apikey.js';
 import { apiKeyFileFor, apiKeyState, runStatus, runLogout, runSetupClient } from './credentials.js';
 import { guidedInstall, guidedSignIn, guidedUninstall, runMenu, type GuidedEnv, type InstallPrefill } from './guided.js';
+import { checkRequirements } from './requirements.js';
 import { createPrompter, type Prompter } from './prompt.js';
 import { invocationFor, invocationText, setInvocation } from '../core/invocation.js';
 import { loadConfig } from '../core/config.js';
@@ -95,6 +96,10 @@ Install and uninstall:
   --path        The folder for project and local scope. It must exist.
   --plugin      Product ids such as gcloud, gsc, gmail or gai, or all. An unknown id is refused, and the error lists them.
   --dry-run     Prints every planned change and command, and writes nothing.
+  --install-missing   install only: installs what the install needs and is missing (npm for Claude Code, Codex and OpenCode;
+                winget or brew for git). Without it, a missing requirement stops the install, and nothing is changed.
+                Requirements: Claude Code (claude) for --agent claude; git when the marketplace comes from GitHub; codex or
+                opencode for those agents. Antigravity is installed by its own installer.
   --allow-writes, --confirmation   Set GSM_ALLOW_WRITES and GSM_CONFIRMATION for codex, opencode and agy.
                 For claude they are plugin options: the install prints the command that sets them.
   --marketplace claude only: owner/repo, a URL or a path. Default: this checkout, else FiredMosquito831/google-services-mcps.
@@ -179,6 +184,7 @@ function guidedEnvFor(prompt: Prompter, moduleUrl: string): GuidedEnv {
     clientSecretFile: cfg.clientSecretFile,
     apiKeySaved: apiKeyState(apiKeyFileFor(cfg)) === 'saved',
     saveApiKey: (key, force) => runSetupApiKey({ force, env: environment, readStdin: async () => key }, out),
+    requirements: (agents, needGit) => checkRequirements({ run: spawnRunner, platform: process.platform, cwd: process.cwd() }, agents, needGit),
   };
 }
 

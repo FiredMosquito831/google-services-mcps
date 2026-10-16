@@ -24,6 +24,7 @@ import {
   type ServerEntry,
 } from './records.js';
 import { copyRuntime, planRuntimeCopies, removeRuntime, runtimeFolderFor, runtimeServerFile } from './runtime.js';
+import { checkRequirements, describeMissing, marketplaceNeedsGit, missingOf, runPlannedInstall, type Requirement } from './requirements.js';
 import {
   AGENTS,
   AGY_GLOBAL_ONLY,
@@ -48,6 +49,11 @@ export interface InstallEnv {
   platform: NodeJS.Platform;
   run: Runner;
   out: Output;
+  /**
+   * The requirement check. The CLI leaves it out, so the real check runs. Tests give a stub, so they do not depend on
+   * which programs this machine has.
+   */
+  requirements?: (agents: readonly AgentId[], needGit: boolean) => Promise<Requirement[]>;
 }
 
 interface AdapterModule {
@@ -196,6 +202,44 @@ export async function runInstall(run: InstallRun, env: InstallEnv): Promise<numb
   const folder = run.scope === 'global' ? null : (run.pathArg ?? env.cwd);
   const agents = pickAgents(run, home, out);
   const products = productsOf(servers);
+
+  // Requirements first: a missing program stops a real install before any agent configuration is written. With
+  // --install-missing, gsm installs what it can (npm, winget or brew) and checks again; a dry run only reports.
+  if (run.action === 'install' && agents.length > 0) {
+    const requirementsEnv = { run: env.run, platform: env.platform, cwd: env.cwd };
+    const check = env.requirements ?? ((list: readonly AgentId[], git: boolean) => checkRequirements(requirementsEnv, list, git));
+    const needGit = agents.includes('claude') && marketplaceNeedsGit(run.marketplace, checkoutRootFor(env.roots));
+    const missing = missingOf(await check(agents, needGit));
+    if (missing.length > 0 && run.dryRun) {
+      out.log('requirements (a dry run installs nothing):');
+      for (const line of describeMissing(missing)) out.log(`  ${line}`);
+    } else if (missing.length > 0 && !run.installMissing) {
+      throw new UsageError(
+        [
+          'these requirements are missing. The agent configurations were not changed.',
+          ...describeMissing(missing).map((line) => `  ${line}`),
+          'Run the same command with --install-missing to install what gsm can install, or install the rest by hand and run again.',
+        ].join('\n'),
+      );
+    } else if (missing.length > 0) {
+      for (const req of missing) {
+        if (req.install === null) {
+          throw new UsageError(`${req.title} cannot be installed by gsm on this machine. Install it by hand: ${req.manual}. The agent configurations were not changed.`);
+        }
+        out.log(`installing ${req.title}: ${req.install.display}`);
+        out.log('  (this can take a minute; the output is shown when it finishes)');
+        const code = await runPlannedInstall(requirementsEnv, req.install);
+        if (code !== 0) {
+          throw new UsageError(`installing ${req.title} failed (exit ${code}): ${req.install.display}. The agent configurations were not changed.`);
+        }
+      }
+      const still = missingOf(await check(agents, needGit));
+      if (still.length > 0) {
+        throw new UsageError(`still missing after the installs: ${still.map((r) => r.title).join(', ')}. The agent configurations were not changed.`);
+      }
+      out.log('requirements are in place.');
+    }
+  }
 
   // Claude installs whole plugins, so --servers selects the plugins that contain them.
   const claudePlugins = run.servers ? products : plugins;

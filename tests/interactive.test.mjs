@@ -188,6 +188,8 @@ function guidedEnv(answers, { home = fresh('home'), cwd = fresh('cwd'), clientSe
       saved.push({ key, force });
       return 0;
     },
+    // The tests do not depend on which programs this machine has.
+    requirements: async () => [],
   };
   return { env, runs, saved, text, close: () => prompt.close() };
 }
@@ -342,6 +344,49 @@ describe('guided sign-in and the other flows', () => {
     try {
       await guidedBrowse(g.env);
       assert.deepEqual(g.runs, [['apis', 'gmail', '--search', 'gmail']]);
+    } finally {
+      g.close();
+    }
+  });
+
+  test('guided install: a missing requirement is shown, and a yes adds --install-missing to the command', async () => {
+    const claudeMissing = {
+      id: 'claude',
+      title: 'Claude Code (the claude command)',
+      why: 'the plugins run inside Claude Code',
+      present: false,
+      install: { display: 'npm install -g @anthropic-ai/claude-code', command: 'npm', args: ['install', '-g', '@anthropic-ai/claude-code'] },
+      manual: 'npm install -g @anthropic-ai/claude-code',
+    };
+    // agent 1 (claude), scope (empty: global), products (gmail), writes (empty: no), install the requirement (y), install now (y)
+    const g = guidedEnv(['1', '', 'gmail', '', 'y', 'y']);
+    g.env.requirements = async () => [claudeMissing];
+    try {
+      assert.equal(await guidedInstall(g.env), 0);
+      assert.match(g.text(), /Claude Code \(the claude command\) is not installed/);
+      assert.deepEqual(g.runs[g.runs.length - 1], ['install', '--agent', 'claude', '--plugin', 'gmail', '--scope', 'global', '--install-missing']);
+    } finally {
+      g.close();
+    }
+  });
+
+  test('guided install: a requirement that can only be installed by hand stops the flow before anything runs', async () => {
+    const gitManual = {
+      id: 'git',
+      title: 'git',
+      why: 'the marketplace is fetched from GitHub',
+      present: false,
+      install: null,
+      manual: 'sudo apt-get install -y git',
+    };
+    // agent 1 (claude), scope (empty), products (gmail), writes (empty: no)
+    const g = guidedEnv(['1', '', 'gmail', '']);
+    g.env.requirements = async () => [gitManual];
+    try {
+      assert.equal(await guidedInstall(g.env), 0);
+      assert.deepEqual(g.runs, [], 'no install command is run');
+      assert.match(g.text(), /installed by hand/);
+      assert.match(g.text(), /sudo apt-get install -y git/);
     } finally {
       g.close();
     }

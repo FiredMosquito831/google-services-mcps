@@ -47,6 +47,7 @@ const COMMANDS: Record<Exclude<Command, 'help'>, Record<string, OptionType>> = {
     path: 'string',
     servers: 'string',
     'allow-writes': 'boolean',
+    'install-missing': 'boolean',
     confirmation: 'string',
     marketplace: 'string',
     'dry-run': 'boolean',
@@ -118,6 +119,8 @@ export interface InstallRequestArgs {
   pathArg?: string;
   servers?: string[];
   allowWrites: boolean;
+  /** --install-missing, install only: installs what the install needs and is missing (npm or winget or brew). */
+  installMissing: boolean;
   /** --confirmation, install only. Undefined: nothing is written for it. */
   confirmation?: ConfirmationMode;
   /** --marketplace, install with claude only: owner/repo, a URL or a path. */
@@ -228,6 +231,7 @@ export function parseInstallArgs(
     pathArg,
     servers: splitList(values.servers, 'servers'),
     allowWrites: command === 'install' && values['allow-writes'] === true,
+    installMissing: command === 'install' && values['install-missing'] === true,
     confirmation: command === 'install' ? confirmation : undefined,
     marketplace,
     dryRun: values['dry-run'] === true,
