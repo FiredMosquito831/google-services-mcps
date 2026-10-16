@@ -1,0 +1,46 @@
+{
+  "name": "google-services-mcps",
+  "version": "0.1.2",
+  "description": "Google services MCP suite: the same installer as @firedmosquito831/google-services-mcps, under the short name. Install and run with npx google-services-mcps.",
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "claude-code",
+    "codex",
+    "opencode",
+    "antigravity",
+    "google-workspace",
+    "google-cloud",
+    "google-apis"
+  ],
+  "author": "FiredMosquito831 (https://github.com/FiredMosquito831)",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FiredMosquito831/google-services-mcps.git",
+    "directory": "packages/google-services-mcps"
+  },
+  "homepage": "https://firedmosquito831.github.io/google-services-mcps/",
+  "bugs": {
+    "url": "https://github.com/FiredMosquito831/google-services-mcps/issues"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "bin": {
+    "google-services-mcps": "bin/google-services-mcps.mjs"
+  },
+  "files": [
+    "bin/",
+    "LICENSE",
+    "NOTICE",
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@firedmosquito831/google-services-mcps": "0.1.2"
+  }
+}
