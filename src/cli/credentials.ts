@@ -9,11 +9,22 @@ import {
   removeAccount,
   setDefaultAccount,
 } from '../core/accounts.js';
-import { ADMIN_SCOPES, adminScopeFileFor, adcSourceFor, readAdminScopeFile, type AuthKind } from '../core/auth.js';
-import { checkGrant, checkKeyRestrictions, revokeGrant, type GrantState } from '../core/grant-check.js';
+import {
+  ADMIN_SCOPES,
+  SERVICE_ACCOUNT_SCOPES,
+  adminScopeFileFor,
+  adcSourceFor,
+  readAdminScopeFile,
+  readServiceAccountFile,
+  serviceAccountFileFor,
+  serviceAccountSource,
+  type AuthKind,
+} from '../core/auth.js';
+import { checkGrant, checkKeyRestrictions, checkServiceAccountGrant, revokeGrant, type GrantState } from '../core/grant-check.js';
 import { loadConfig, type RuntimeConfig } from '../core/config.js';
 import { ALL_GROUPS, OAUTH_GROUPS, type CliGroup } from './args.js';
-import { backupFile, writeAtomic } from './fsutil.js';
+import { backupFile } from './fsutil.js';
+import { readSecretText, secretFileExists, secretNameOf, storeFor, writeSecretText } from '../core/secret-files.js';
 import { postureLine } from './posture.js';
 import type { Output } from './report.js';
 import { UsageError } from './types.js';
@@ -30,11 +41,12 @@ export function apiKeyFileFor(cfg: Pick<RuntimeConfig, 'tokenDir'>): string {
 
 export type ApiKeyState = 'missing' | 'saved' | 'unreadable';
 
-/** Whether a key is saved. The key value is read only to check it is a non-empty string, and is never returned. */
-export function apiKeyState(file: string): ApiKeyState {
-  if (!existsSync(file)) return 'missing';
+/** Whether a key is saved, in the store or in the plain file. The key value is read only to check it is a non-empty string, and is never returned. */
+export function apiKeyState(cfg: Pick<RuntimeConfig, 'tokenDir'>): ApiKeyState {
+  const file = apiKeyFileFor(cfg);
+  if (!secretFileExists(cfg, file)) return 'missing';
   try {
-    const parsed: unknown = JSON.parse(readFileSync(file, 'utf8'));
+    const parsed: unknown = JSON.parse(readSecretText(cfg, file) ?? '');
     const saved = typeof parsed === 'object' && parsed !== null ? (parsed as { apiKey?: unknown }).apiKey : undefined;
     return typeof saved === 'string' && saved.trim() !== '' ? 'saved' : 'unreadable';
   } catch {
@@ -43,9 +55,9 @@ export function apiKeyState(file: string): ApiKeyState {
 }
 
 /** Days since the API key was saved (the savedAt field), or undefined for a file saved before the field existed. */
-export function apiKeyAgeDays(file: string, now: number = Date.now()): number | undefined {
+export function apiKeyAgeDays(cfg: Pick<RuntimeConfig, 'tokenDir'>, now: number = Date.now()): number | undefined {
   try {
-    const parsed = JSON.parse(readFileSync(file, 'utf8')) as { savedAt?: unknown };
+    const parsed = JSON.parse(readSecretText(cfg, apiKeyFileFor(cfg)) ?? '') as { savedAt?: unknown };
     if (typeof parsed.savedAt !== 'string') return undefined;
     const saved = Date.parse(parsed.savedAt);
     return Number.isFinite(saved) ? Math.floor((now - saved) / 86_400_000) : undefined;
@@ -67,11 +79,12 @@ export interface StoredToken {
  * Reads a token file. Errors are reported generically: a JSON.parse message can
  * quote part of the file, and that must never reach the terminal.
  */
-export function readStoredToken(file: string): { token?: StoredToken; error?: string } {
-  if (!existsSync(file)) return {};
+export function readStoredToken(file: string, cfg: Pick<RuntimeConfig, 'tokenDir'>): { token?: StoredToken; error?: string } {
+  const text = readSecretText(cfg, file);
+  if (text === undefined) return {};
   let parsed: unknown;
   try {
-    parsed = JSON.parse(readFileSync(file, 'utf8'));
+    parsed = JSON.parse(text);
   } catch {
     return { error: 'token file is not valid JSON' };
   }
@@ -94,21 +107,44 @@ function formatExpiry(expiryMs: number | undefined): string {
 export function runStatus(out: Output, env: NodeJS.ProcessEnv = process.env): number {
   const cfg = loadConfig(env);
   out.log(`token directory: ${cfg.tokenDir}`);
+  const store = storeFor(cfg.tokenDir);
   out.log(
-    `OAuth client file: ${existsSync(cfg.clientSecretFile) ? cfg.clientSecretFile : 'missing (run: node gsm.mjs setup-client <client_secret.json>)'}`,
+    `secret store: ${store === 'file' ? 'plain files (mode 0600) in the token directory' : `${store} (the OS store; node gsm.mjs protect --off returns to plain files)`}`,
+  );
+  out.log(
+    `OAuth client file: ${secretFileExists(cfg, cfg.clientSecretFile) ? cfg.clientSecretFile : 'missing (run: node gsm.mjs setup-client <client_secret.json>)'}`,
   );
 
   for (const group of ALL_GROUPS) {
     if (group === 'apikey') {
       const file = apiKeyFileFor(cfg);
-      const state = apiKeyState(file);
+      const state = apiKeyState(cfg);
       if (state === 'saved') {
-        const age = apiKeyAgeDays(file);
+        const age = apiKeyAgeDays(cfg);
         out.log(`apikey: API key saved in ${file} (the value is not shown)${age === undefined ? '' : `, saved ${age} day(s) ago`}`);
         if (age !== undefined && age > 90) out.log('  The key is over 90 days old. Replace it (node gsm.mjs setup-apikey --force) and keep it restricted.');
       }
       else if (state === 'missing') out.log('apikey: not set (run: node gsm.mjs setup-apikey)');
       else out.log(`apikey: ${file} is unreadable or holds no key (run: node gsm.mjs setup-apikey --force)`);
+      continue;
+    }
+
+    if (group === 'service-account') {
+      const stored = readServiceAccountFile(cfg);
+      const source = serviceAccountSource(cfg);
+      if (!source) {
+        out.log(`${group}: not set up (run: node gsm.mjs setup-service-account --key-file <service account JSON>). Used by gplay and gmerchant.`);
+        continue;
+      }
+      out.log(`${group}: set up (${source.via === 'setup' ? 'setup-service-account' : 'GOOGLE_APPLICATION_CREDENTIALS'}). Used by gplay and gmerchant.`);
+      if (stored) {
+        out.log(`  setup file: ${serviceAccountFileFor(cfg)}`);
+        out.log(`  account: ${stored.clientEmail ?? '(not recorded)'}`);
+        out.log(`  key file: ${stored.keyFile}${existsSync(stored.keyFile) ? '' : ' (NOT found)'}`);
+      } else {
+        out.log(`  key file: ${source.keyFile}`);
+      }
+      out.log(`  scopes: ${SERVICE_ACCOUNT_SCOPES.join(', ')}`);
       continue;
     }
 
@@ -147,7 +183,7 @@ export function runStatus(out: Output, env: NodeJS.ProcessEnv = process.env): nu
     out.log(`${group}: ${accounts.length} account(s) signed in`);
     for (const account of accounts) {
       const file = join(cfg.tokenDir, account.file);
-      const { token, error } = readStoredToken(file);
+      const { token, error } = readStoredToken(file, cfg);
       if (error || !token) {
         out.log(`  ${account.email}: token file unreadable${error ? ` (${error})` : ''}. Log it out and sign in again.`);
         continue;
@@ -205,7 +241,7 @@ export async function runStatusCheck(out: Output, env: NodeJS.ProcessEnv = proce
   }
 
   if (cfg.apiKey) {
-    const age = apiKeyAgeDays(apiKeyFileFor(cfg));
+    const age = apiKeyAgeDays(cfg);
     try {
       const key = await checkKeyRestrictions(cfg.apiKey, cfg);
       if (!key.restricted) problems += 1;
@@ -219,6 +255,15 @@ export async function runStatusCheck(out: Output, env: NodeJS.ProcessEnv = proce
     }
   } else {
     out.log('apikey: not set, nothing to check');
+  }
+
+  // The service-account group: the key is checked with Google's token endpoint. Play and Merchant access is not checked here.
+  if (serviceAccountSource(cfg)) {
+    const result = await checkServiceAccountGrant(cfg);
+    if (result.state !== 'valid') problems += 1;
+    out.log(`service-account: ${CHECK_LABEL[result.state]}. ${result.detail}`);
+  } else {
+    out.log('service-account: not set up, nothing to check');
   }
 
   out.log(problems === 0 ? 'All stored logins and keys check out.' : `${problems} check(s) need attention. See the lines above.`);
@@ -236,6 +281,12 @@ export async function runLogout(
 ): Promise<number> {
   if (group === 'workspace-admin') {
     out.log('workspace-admin has no stored login (it uses GSM_SERVICE_ACCOUNT_KEY_FILE and GSM_ADMIN_SUBJECT). Nothing to remove.');
+    return 0;
+  }
+  if (group === 'service-account') {
+    out.log(
+      'service-account has no login to revoke. To forget the key setup, run: node gsm.mjs setup-service-account --remove. The key file is not deleted: to stop it working, delete the key in Google Cloud console.',
+    );
     return 0;
   }
   const cfg = loadConfig();
@@ -297,6 +348,19 @@ export function runSetDefaultAccount(group: string, email: string, out: Output, 
 }
 
 /** Copies a Desktop OAuth client JSON into the token directory as client_secret.json (mode 0600). */
+/**
+ * Keeps the client file that is being replaced. In file mode it is copied next to the old one, as before. With an OS
+ * store the old text is stored under a backup name, so the secret never becomes a plain file. Returns where the backup is.
+ */
+function backupCurrentClient(cfg: RuntimeConfig, dest: string): string {
+  if (storeFor(cfg.tokenDir) === 'file') return backupFile(dest);
+  const old = readSecretText(cfg, dest);
+  const stamp = new Date().toISOString().replace(/[-:.]/g, '').replace('T', '-').slice(0, 15);
+  const backupFileName = join(cfg.tokenDir, `client_secret.bak-${stamp}.json`);
+  if (old !== undefined) writeSecretText(cfg, backupFileName, old);
+  return `the ${storeFor(cfg.tokenDir)} store as ${secretNameOf(backupFileName)}`;
+}
+
 export function runSetupClient(sourceArg: string, force: boolean, out: Output): number {
   const source = resolve(sourceArg);
   if (!existsSync(source)) throw new Error(`file not found: ${source}`);
@@ -323,14 +387,16 @@ export function runSetupClient(sourceArg: string, force: boolean, out: Output): 
     out.log(`OAuth client already in place: ${dest}`);
     return 0;
   }
-  if (existsSync(dest) && !force) {
+  const exists = secretFileExists(cfg, dest);
+  if (exists && !force) {
     throw new UsageError(`${dest} already exists. Re-run with --force to replace it (the current file is backed up first).`);
   }
 
   ensureTokenDir(cfg.tokenDir);
-  const backup = existsSync(dest) ? backupFile(dest) : undefined;
-  writeAtomic(dest, text, 0o600);
-  out.log(`OAuth client saved: ${dest} (mode 0600). The client secret was not printed.`);
+  const backup = exists ? backupCurrentClient(cfg, dest) : undefined;
+  writeSecretText(cfg, dest, text);
+  const where = storeFor(cfg.tokenDir) === 'file' ? dest : `the ${storeFor(cfg.tokenDir)} store`;
+  out.log(`OAuth client saved: ${where} (mode 0600 for files). The client secret was not printed.`);
   if (backup) out.log(`backup: ${backup}`);
   out.log(`Next: node gsm.mjs login ${OAUTH_GROUPS.join(' | ')}`);
   return 0;

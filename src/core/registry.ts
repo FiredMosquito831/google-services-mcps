@@ -16,7 +16,7 @@ import type { ToolKind } from './tools.js';
  * One auth group per token file, or 'apikey' for products that take an API key
  * instead of an OAuth login (no token file).
  */
-export type AuthGroup = 'cloud' | 'workspace-user' | 'workspace-admin' | 'searchconsole' | 'business' | 'developer' | 'apikey';
+export type AuthGroup = 'cloud' | 'workspace-user' | 'workspace-admin' | 'searchconsole' | 'business' | 'developer' | 'apikey' | 'service-account';
 
 export interface ApiRef {
   api: string;

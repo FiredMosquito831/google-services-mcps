@@ -4,11 +4,11 @@ Google Contacts and People, personal health metrics, Data Portability, and the O
 
 - Plugin: `gcontacts`, MCP server: `gcontacts`, login: Desktop OAuth client, then `login workspace-user`
 - Install: `claude plugin install gcontacts@google-services-mcps`
-- Tools: 71 total. Curated 8, per-method 59, gateway 3. Read 35, write 26, destructive 9, dynamic 1.
+- Tools: 72 total. Curated 9, per-method 59, gateway 3. Read 35, write 27, destructive 9, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-## Curated tools (8)
+## Curated tools (9)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
@@ -18,6 +18,7 @@ Read tools never ask. Write, destructive and dynamic tools ask before they run, 
 | `auth_login` | write | Sign in to Google | (none) |
 | `auth_setup_admin` | write | Set up the workspace admin account | (none) |
 | `auth_setup_client` | write | Save the Google OAuth client | (none) |
+| `auth_setup_service_account` | write | Set up the service account key | (none) |
 | `auth_status` | read | Sign-in status | (none) |
 | `health` | read | Server health | (none) |
 

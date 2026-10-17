@@ -47,9 +47,9 @@ export interface LoginRequest {
 }
 
 /** The scopes stored in the group's token file. An unreadable file is noted on stderr and counts as nothing stored. */
-function storedLoginScopes(file: string | undefined, out: Output): string[] {
+function storedLoginScopes(file: string | undefined, out: Output, cfg: { tokenDir: string }): string[] {
   if (file === undefined) return [];
-  const { token, error } = readStoredToken(file);
+  const { token, error } = readStoredToken(file, cfg);
   if (error) {
     out.warn(`note: ${file} is unreadable (${error}); its stored scopes are not merged.`);
     return [];
@@ -65,6 +65,10 @@ export async function runLogin(req: LoginRequest, loadRegistryFn: () => Registry
   }
   if (req.group === 'apikey') {
     printApiKeyAlias(out);
+    return 0;
+  }
+  if (req.group === 'service-account') {
+    printServiceAccountGuidance(out);
     return 0;
   }
   if (!(OAUTH_GROUPS as readonly string[]).includes(req.group)) {
@@ -99,7 +103,7 @@ export async function runLogin(req: LoginRequest, loadRegistryFn: () => Registry
 
   // The rule for stored scopes (merge by default, --replace drops them) is in merge.ts; login and setup-admin share it.
   const replace = req.replace === true;
-  const merge = mergeScopes({ requested, stored: storedLoginScopes(defaultAccountTokenFile(group, cfg), out), replace });
+  const merge = mergeScopes({ requested, stored: storedLoginScopes(defaultAccountTokenFile(group, cfg), out, cfg), replace });
   // The email scope is always added: it lets gsm name the account the login belongs to. It grants no tool access.
   const scopes = withIdentityScope(merge.scopes);
   if (scopes.length === 0) throw new Error(`no OAuth scopes resolved for group "${group}"`);
@@ -138,6 +142,13 @@ export async function runLogin(req: LoginRequest, loadRegistryFn: () => Registry
 function printApiKeyAlias(out: Output): void {
   out.log('apikey: no login is needed. The products in this group read a saved API key instead.');
   out.log('Save the key with: node gsm.mjs setup-apikey  (it reads GSM_API_KEY_INPUT or stdin, never an argument)');
+}
+
+function printServiceAccountGuidance(out: Output): void {
+  out.log('service-account (gplay, gmerchant) uses a service account key. It has no interactive login.');
+  out.log('Set it up with: node gsm.mjs setup-service-account --key-file <service account JSON>');
+  out.log('First add the service account email in Play Console (Users and permissions), and as an Admin user of Merchant Center.');
+  out.log('The key file stays where it is. Forget the setup with: node gsm.mjs setup-service-account --remove');
 }
 
 function printAdminGuidance(out: Output): void {

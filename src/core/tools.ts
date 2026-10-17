@@ -9,6 +9,7 @@ import {
   GrantExpiredError,
   UnknownAccountError,
   forgetAdcClients,
+  forgetServiceAccountClients,
   grantedScopes,
   isLoggedIn,
   loginSourceOf,
@@ -97,6 +98,9 @@ export function scopeHint(group?: string): string {
   if (group === 'workspace-admin') {
     return `The token lacks a scope for this tool. Re-run ${invocation()} setup-admin with a broader profile: ${invocation()} setup-admin --subject <email> --key-file <file> --profile readwrite.`;
   }
+  if (group === 'service-account') {
+    return `The service account lacks a scope for this tool, or it is not added to the service in use. Check it in Play Console (Users and permissions) or Merchant Center (Users), then set the key up again: ${invocation()} setup-service-account --key-file <file>.`;
+  }
   return `The token lacks a scope for this tool. Log in again with a broader profile: ${invocation()} login ${group ?? '<group>'} --profile readwrite.`;
 }
 
@@ -174,6 +178,7 @@ async function dumpTools(buildTools: (cfg: RuntimeConfig) => Promise<ToolDef[]> 
       { name: 'auth_setup_client', kind: 'write' as const, title: 'Save the Google OAuth client' },
       { name: 'auth_login', kind: 'write' as const, title: 'Sign in to Google' },
       { name: 'auth_setup_admin', kind: 'write' as const, title: 'Set up the workspace admin account' },
+      { name: 'auth_setup_service_account', kind: 'write' as const, title: 'Set up the service account key' },
       { name: 'accounts_list', kind: 'read' as const, title: 'Signed-in accounts' },
       { name: 'account_set_default', kind: 'write' as const, title: 'Set the default account' },
       { name: 'account_remove', kind: 'write' as const, title: 'Remove a signed-in account' },
@@ -218,7 +223,8 @@ export async function runServer(opts: {
   const currentGrant = (): string[] | null => (group ? grantedScopes(group, cfg) : null);
 
   // Before a login, the OAuth groups register only the tools that need no scope. auth_status loads the rest after a login.
-  const LOGIN_REQUIRED: ReadonlySet<string> = new Set(['workspace-user', 'searchconsole', 'business', 'developer']);
+  // The service-account group counts as logged in once its key is set up (see loginSourceOf in auth.ts).
+  const LOGIN_REQUIRED: ReadonlySet<string> = new Set(['workspace-user', 'searchconsole', 'business', 'developer', 'service-account']);
   const needsLogin = group !== undefined && LOGIN_REQUIRED.has(group);
   const loggedIn = (): boolean => !needsLogin || isLoggedIn(group as AuthKind, cfg);
   const granted = needsLogin && !loggedIn() ? [] : currentGrant();
@@ -396,6 +402,58 @@ export async function runServer(opts: {
         const via = source === 'adc' ? ' with Application Default Credentials' : source === 'oauth' ? ' with an OAuth account' : '';
         const state = signedIn ? `Signed in for "${group}"${via}. ${loaded} tool(s) loaded now.` : `Not signed in for "${group}".`;
         return text(`${state} Accounts: ${accountNames(group as string, cfg)}. ${signIn.describe()}`);
+      },
+    );
+  }
+
+  // The service-account group (Google Play, Merchant Center): one key, set up here or with setup-service-account.
+  if (group === 'service-account') {
+    server.registerTool(
+      'auth_setup_service_account',
+      {
+        title: 'Set up the service account key',
+        description:
+          'Records the service account JSON key for this server. Give the full path of the key file (from Google Cloud console, IAM & Admin > Service accounts > Keys). Its content is never shown. First add the service account email in Play Console (Users and permissions) or Merchant Center (Users). Call auth_status afterwards. Pass remove: true to forget the stored setup; the key file itself is not deleted.',
+        inputSchema: {
+          path: z.string().optional().describe('Full path of the service account JSON key file.'),
+          remove: z.boolean().optional().describe('Forget the stored setup. The key file is not deleted.'),
+        },
+        annotations: { readOnlyHint: false },
+      },
+      async (rawArgs: Record<string, unknown>): Promise<CallToolResult> => {
+        if (rawArgs.remove === true) {
+          const res = await runGsmCommand(cliFile, ['setup-service-account', '--remove']);
+          forgetServiceAccountClients();
+          return text(`${res.output}\nRestart this server so its tools are unloaded.`);
+        }
+        if (typeof rawArgs.path !== 'string' || rawArgs.path.trim() === '') {
+          return text('Give the full path of the service account JSON key file (path), or pass remove: true to forget the setup.');
+        }
+        const res = await runGsmCommand(cliFile, ['setup-service-account', '--key-file', rawArgs.path]);
+        if (res.code !== 0) return text(`Could not set up the service account: ${res.output}`);
+        forgetServiceAccountClients();
+        register(registerable(currentGrant(), defined));
+        return text(`${res.output}\nNext: call auth_status to load the tools.`);
+      },
+    );
+    server.registerTool(
+      'auth_status',
+      {
+        title: 'Service account status',
+        description:
+          'Says whether this server has a service account key set up, and which account it is. After auth_setup_service_account the tools of this server load without a restart.',
+        annotations: { readOnlyHint: true },
+      },
+      async (): Promise<CallToolResult> => {
+        const before = registered.size;
+        const set = isLoggedIn(group, cfg);
+        if (set) register(registerable(currentGrant(), defined));
+        const loaded = registered.size - before;
+        return text(
+          set
+            ? `Set up for "${group}" with a service account key (${loginSourceOf(group, cfg)}). ${loaded} tool(s) loaded now.`
+            : `Not set up for "${group}". Call auth_setup_service_account with the full path of the key file.`,
+        );
       },
     );
   }

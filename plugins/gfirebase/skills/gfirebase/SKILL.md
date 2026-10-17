@@ -1,13 +1,13 @@
 ---
 name: gfirebase
-description: Firebase management, App Check, App Distribution, Crashlytics, Hosting, Data Connect, Rules, Test Lab, FCM and Identity Toolkit. Served by the gfirebase MCP server with 309 tools. Use for requests about these Google APIs.
+description: Firebase management, App Check, App Distribution, Crashlytics, Hosting, Data Connect, Rules, Test Lab, FCM and Identity Toolkit. Served by the gfirebase MCP server with 310 tools. Use for requests about these Google APIs.
 ---
 
 # Firebase
 
 Firebase management, App Check, App Distribution, Crashlytics, Hosting, Data Connect, Rules, Test Lab, FCM and Identity Toolkit.
 
-The `gfirebase` MCP server exposes 309 tools. Per-method tools cover the Discovery APIs listed below. Gateway APIs are reached through three generic tools: api_search finds a method, api_describe shows its parameters, and api_call runs it.
+The `gfirebase` MCP server exposes 310 tools. Per-method tools cover the Discovery APIs listed below. Gateway APIs are reached through three generic tools: api_search finds a method, api_describe shows its parameters, and api_call runs it.
 
 ## Log in
 

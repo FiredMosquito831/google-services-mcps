@@ -23,6 +23,7 @@ const GROUPS = new Set([
   'workspace-admin',
   'business',
   'developer',
+  'service-account',
 ]);
 
 // A catalog entry is an API name plus a version, so one name can have several entries.

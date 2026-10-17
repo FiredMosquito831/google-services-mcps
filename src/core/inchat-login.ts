@@ -1,7 +1,7 @@
 import { spawn, type ChildProcess, type StdioOptions } from 'node:child_process';
-import { existsSync } from 'node:fs';
 import { findGcloud, GCLOUD_DEFAULT_SCOPES, readAdcState, saveAdcRecord } from './adc.js';
 import type { RuntimeConfig } from './config.js';
+import { secretFileExists } from './secret-files.js';
 
 /**
  * Sign-in from inside the chat. A local (stdio) MCP server cannot run OAuth in the client, so its tools do the steps:
@@ -18,7 +18,7 @@ export type SignInMethod = 'oauth' | 'adc';
 
 /** Whether the Desktop OAuth client is saved in the token folder. */
 export function clientFileReady(cfg: RuntimeConfig): boolean {
-  return existsSync(cfg.clientSecretFile);
+  return secretFileExists(cfg, cfg.clientSecretFile);
 }
 
 /** Runs one gsm command and returns its exit code and output. Used for setup-client and setup-admin. */

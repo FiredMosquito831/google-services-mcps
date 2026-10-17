@@ -2,13 +2,13 @@
 
 Maps Platform and location APIs: Places, Address Validation, Solar, Air Quality, Pollen, Street View Publish and related datasets.
 
-- Plugin: `gmaps`, MCP server: `gmaps`, login: Desktop OAuth client, then `login developer`
+- Plugin: `gmaps`, MCP server: `gmaps`, login: API key, then `setup-apikey` (no login)
 - Install: `claude plugin install gmaps@google-services-mcps`
-- Tools: 44 total. Curated 8, per-method 35, gateway 0. Read 23, write 18, destructive 3, dynamic 0.
+- Tools: 45 total. Curated 9, per-method 35, gateway 0. Read 23, write 19, destructive 3, dynamic 0.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-## Curated tools (8)
+## Curated tools (9)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
@@ -18,6 +18,7 @@ Read tools never ask. Write, destructive and dynamic tools ask before they run, 
 | `auth_login` | write | Sign in to Google | (none) |
 | `auth_setup_admin` | write | Set up the workspace admin account | (none) |
 | `auth_setup_client` | write | Save the Google OAuth client | (none) |
+| `auth_setup_service_account` | write | Set up the service account key | (none) |
 | `auth_status` | read | Sign-in status | (none) |
 | `health` | read | Server health | (none) |
 

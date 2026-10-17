@@ -35,6 +35,7 @@ const GROUP_LABELS = {
   apikey: 'Public APIs (API key)',
   'workspace-user': 'Workspace users',
   'workspace-admin': 'Workspace admin',
+  'service-account': 'Play and Merchant Center',
   business: 'Business and advertising',
   developer: 'Developer platforms',
 };

@@ -2,6 +2,32 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.0.0 - 2026-10-17
+
+This is a major version: two products change how they sign in, so people must act once.
+
+### Action needed
+- **gplay and gmerchant use a service account key now.** Their OAuth logins are not used any more. To set up: add the service account's email in Play Console (Users and permissions) and as an Admin user of Merchant Center, then run `node gsm.mjs setup-service-account --key-file <service account JSON>`, or call `auth_setup_service_account` in the chat. `gsm login gplay` or `gsm login gmerchant` explains the steps.
+- **gmaps uses an API key now.** Save a key restricted to the Maps APIs with `node gsm.mjs setup-apikey` (or GSM_API_KEY). The OAuth login for gmaps is not used any more. The key is shared with gsearch.
+
+### Secret storage (opt-in)
+- `node gsm.mjs protect` moves the saved secrets (OAuth tokens, the client secret and its backups, the API key, the Ads developer token) into the operating system's store. Windows uses DPAPI, which encrypts for your user on this machine. `node gsm.mjs protect --off` moves them back to plain files.
+- Every value is read back from the store before its plain copy is removed. If one value fails, nothing is changed.
+- The store choice is kept in `store.json`. The names of the stored secrets are kept in `secrets.json`, with no content. `GSM_TOKEN_STORE` overrides the choice.
+- macOS (Keychain) and Linux (libsecret) are implemented. They are not run in this release: only Windows (DPAPI) was tested.
+- The default is still plain files with mode 0600, so nothing changes until you run `protect`.
+
+### Service accounts
+- New login group `service-account` for gplay and gmerchant (scope https://www.googleapis.com/auth/androidpublisher and https://www.googleapis.com/auth/content). The key is referenced by path, never copied, and never printed.
+- `status --check` and `health --check` ask Google whether the key is accepted. They do not check Play or Merchant access, which Play Console and Merchant Center decide.
+- `setup-service-account --remove` forgets the setup. The key file is not deleted.
+- If GOOGLE_APPLICATION_CREDENTIALS points to a service account key, the group uses it, without a setup step.
+
+### Changes
+- `doctor` checks the service account, the secret store and that every stored name is present in the store.
+- `status` reports the secret store and the service account.
+- Setup prompts and install steps only ask for the admin setup when it is missing.
+
 ## 0.6.0 - 2026-10-17
 
 ### Application Default Credentials as a sign-in option

@@ -60,6 +60,12 @@
     "title": "Save the Google OAuth client"
   },
   {
+    "name": "mcp__plugin_gmerchant_gmerchant__auth_setup_service_account",
+    "kind": "write",
+    "scopes": [],
+    "title": "Set up the service account key"
+  },
+  {
     "name": "mcp__plugin_gmerchant_gmerchant__auth_status",
     "kind": "read",
     "scopes": [],

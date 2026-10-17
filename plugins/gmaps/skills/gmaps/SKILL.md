@@ -1,17 +1,17 @@
 ---
 name: gmaps
-description: Maps Platform and location APIs: Places, Address Validation, Solar, Air Quality, Pollen, Street View Publish and related datasets. Served by the gmaps MCP server with 44 tools. Use for requests about these Google APIs.
+description: Maps Platform and location APIs: Places, Address Validation, Solar, Air Quality, Pollen, Street View Publish and related datasets. Served by the gmaps MCP server with 45 tools. Use for requests about these Google APIs.
 ---
 
 # Maps and Location
 
 Maps Platform and location APIs: Places, Address Validation, Solar, Air Quality, Pollen, Street View Publish and related datasets.
 
-The `gmaps` MCP server exposes 44 tools. Per-method tools cover the Discovery APIs listed below.
+The `gmaps` MCP server exposes 45 tools. Per-method tools cover the Discovery APIs listed below.
 
 ## Log in
 
-Replace `<plugin>` with this plugin's folder, the one that holds `bin/gsm.mjs`. Sign in with the OAuth desktop client, once: `node <plugin>/bin/gsm.mjs setup-client <client_secret.json>`, then `node <plugin>/bin/gsm.mjs login developer`.
+Replace `<plugin>` with this plugin's folder, the one that holds `bin/gsm.mjs`. No sign-in. Store the API key once: `node <plugin>/bin/gsm.mjs setup-apikey`, which reads the key from GSM_API_KEY_INPUT or stdin.
 
 ## Safety
 

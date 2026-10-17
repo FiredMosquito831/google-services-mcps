@@ -6,11 +6,10 @@
  * {"apiKey": "<key>"}, mode 0600. An existing file is replaced only with --force, and no backup is kept,
  * so no second copy of the key is left behind. The key is never printed, and no error message repeats it.
  */
-import { existsSync } from 'node:fs';
 import { ensureTokenDir } from '../core/acl.js';
 import { loadConfig } from '../core/config.js';
+import { secretFileExists, storeFor, writeSecretText } from '../core/secret-files.js';
 import { apiKeyFileFor } from './credentials.js';
-import { writeAtomic } from './fsutil.js';
 import type { Output } from './report.js';
 import { UsageError } from './types.js';
 
@@ -37,7 +36,7 @@ export interface SetupApiKeyRequest {
 export async function runSetupApiKey(req: SetupApiKeyRequest, out: Output): Promise<number> {
   const cfg = loadConfig(req.env);
   const file = apiKeyFileFor(cfg);
-  if (existsSync(file) && !req.force) {
+  if (secretFileExists(cfg, file) && !req.force) {
     throw new UsageError(`${file} already exists. Re-run with --force to replace the saved key.`);
   }
 
@@ -52,7 +51,8 @@ export async function runSetupApiKey(req: SetupApiKeyRequest, out: Output): Prom
   const key = checkApiKey(raw);
 
   ensureTokenDir(cfg.tokenDir);
-  writeAtomic(file, JSON.stringify({ apiKey: key, savedAt: new Date().toISOString() }, null, 2) + '\n', 0o600);
-  out.log(`API key saved to ${file}`);
+  writeSecretText(cfg, file, JSON.stringify({ apiKey: key, savedAt: new Date().toISOString() }, null, 2) + '\n');
+  const where = storeFor(cfg.tokenDir) === 'file' ? file : `the ${storeFor(cfg.tokenDir)} store (folder ${cfg.tokenDir})`;
+  out.log(`API key saved to ${where}`);
   return 0;
 }

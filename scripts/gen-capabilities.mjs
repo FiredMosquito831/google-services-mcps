@@ -30,6 +30,7 @@ const LOGIN = {
   searchconsole: 'Desktop OAuth client, then `login searchconsole`',
   'workspace-user': 'Desktop OAuth client, then `login workspace-user`',
   'workspace-admin': 'Service account with domain-wide delegation, then `setup-admin`',
+  'service-account': 'Service account key, then `setup-service-account` (no login)',
   business: 'Desktop OAuth client, then `login business`',
   developer: 'Desktop OAuth client, then `login developer`',
   apikey: 'API key, then `setup-apikey` (no login)',

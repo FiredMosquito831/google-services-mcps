@@ -18,6 +18,7 @@ export const GROUP_TEXT: Record<string, string> = {
   cloud: 'Application Default Credentials or OAuth user token with cloud-platform scope',
   'workspace-user': 'OAuth user token (Gmail, Drive, Calendar and the user-data APIs)',
   'workspace-admin': 'Service account with domain-wide delegation, impersonating a super admin',
+  'service-account': 'Service account key for Google Play and Merchant Center (no user login)',
   searchconsole: 'OAuth user token with webmasters scope',
   business: 'OAuth user token with the scopes of the business APIs',
   developer: 'OAuth user token with the scopes of the developer APIs',

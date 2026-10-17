@@ -71,7 +71,16 @@ const HTTP_VERBS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'] 
 type HttpVerb = (typeof HTTP_VERBS)[number];
 
 /** Auth groups the gateway serves. apikey has no OAuth login: its client adds the API key to each request. */
-const GROUPS: readonly string[] = ['cloud', 'workspace-user', 'workspace-admin', 'searchconsole', 'business', 'developer', 'apikey'];
+const GROUPS: readonly string[] = [
+  'cloud',
+  'workspace-user',
+  'workspace-admin',
+  'searchconsole',
+  'business',
+  'developer',
+  'apikey',
+  'service-account',
+];
 const API_KEY_GROUP = 'apikey';
 
 const DISCOVERY_TTL_MS = 7 * 24 * 60 * 60 * 1000;
@@ -540,6 +549,7 @@ function redactValue(value: unknown): unknown {
 
 function loginHint(group: string): string {
   if (group === API_KEY_GROUP) return 'set GSM_API_KEY, or put {"apiKey": "..."} in apikey.json in the token folder';
+  if (group === 'service-account') return `${invocation()} setup-service-account --key-file <file>`;
   return group === 'workspace-admin'
     ? `${invocation()} setup-admin --subject <email> --key-file <file>`
     : `${invocation()} login ${group}`;

@@ -4,13 +4,13 @@
     "gmerchant": "Merchant Center: Merchant API, Comparison Shopping Service and Manufacturer Center."
   },
   "groups": {
-    "business": "OAuth user token with the scopes of the business APIs"
+    "service-account": "Service account key for Google Play and Merchant Center (no user login)"
   },
   "servers": [
     {
       "name": "gmerchant",
       "plugin": "gmerchant",
-      "group": "business",
+      "group": "service-account",
       "kind": "discovery",
       "curated": null,
       "apis": [

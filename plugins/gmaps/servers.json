@@ -4,13 +4,13 @@
     "gmaps": "Maps Platform and location APIs: Places, Address Validation, Solar, Air Quality, Pollen, Street View Publish and related datasets."
   },
   "groups": {
-    "developer": "OAuth user token with the scopes of the developer platform APIs"
+    "apikey": "API key for public APIs that take no sign-in (set with setup-apikey)"
   },
   "servers": [
     {
       "name": "gmaps",
       "plugin": "gmaps",
-      "group": "developer",
+      "group": "apikey",
       "kind": "discovery",
       "curated": null,
       "apis": [

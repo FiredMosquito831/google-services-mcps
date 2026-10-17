@@ -4,11 +4,11 @@ Google Workspace administration: Cloud Identity, Chrome management and policy, G
 
 - Plugin: `gadmin`, MCP server: `gadmin`, login: Service account with domain-wide delegation, then `setup-admin`
 - Install: `claude plugin install gadmin@google-services-mcps`
-- Tools: 374 total. Curated 27, per-method 343, gateway 3. Read 156, write 157, destructive 60, dynamic 1.
+- Tools: 375 total. Curated 28, per-method 343, gateway 3. Read 156, write 158, destructive 60, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-## Curated tools (27)
+## Curated tools (28)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
@@ -37,6 +37,7 @@ Read tools never ask. Write, destructive and dynamic tools ask before they run, 
 | `auth_login` | write | Sign in to Google | (none) |
 | `auth_setup_admin` | write | Set up the workspace admin account | (none) |
 | `auth_setup_client` | write | Save the Google OAuth client | (none) |
+| `auth_setup_service_account` | write | Set up the service account key | (none) |
 | `auth_status` | read | Sign-in status | (none) |
 | `health` | read | Server health | (none) |
 

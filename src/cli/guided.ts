@@ -1,5 +1,6 @@
 import { existsSync, statSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { dirname, resolve } from 'node:path';
+import { secretFileExists } from '../core/secret-files.js';
 import { ALL_GROUPS, type CliGroup } from './args.js';
 import { checkoutRootFor } from './paths.js';
 import { productRows, type ProductRow } from './products.js';
@@ -87,10 +88,11 @@ const GROUP_HINTS: Record<CliGroup, string> = {
   cloud: 'gcloud, gai: OAuth desktop client',
   'workspace-user': 'Gmail, Drive, Calendar, Chat, Meet, Contacts, Tasks, Classroom, Apps Script: OAuth desktop client',
   searchconsole: 'gsc: OAuth desktop client',
-  business: 'Analytics, Tag Manager, YouTube, Business Profile, Ads, Merchant Center: OAuth desktop client',
-  developer: 'Play, Firebase, Maps: OAuth desktop client',
-  apikey: 'gsearch: an API key, no login',
+  business: 'Analytics, Tag Manager, YouTube, Business Profile, Ads: OAuth desktop client',
+  developer: 'Firebase: OAuth desktop client',
+  apikey: 'gsearch, Maps: an API key, no login',
   'workspace-admin': 'gadmin: a service account with domain-wide delegation',
+  'service-account': 'Play, Merchant Center: a service account key (setup-service-account)',
 };
 
 const GROUP_CHOICES: Choice<CliGroup>[] = ALL_GROUPS.map((group) => ({ value: group, label: group, hint: GROUP_HINTS[group] }));
@@ -368,7 +370,15 @@ export async function guidedSignIn(env: GuidedEnv): Promise<number> {
     return env.run(args);
   }
 
-  if (!existsSync(env.clientSecretFile)) {
+  if (group === 'service-account') {
+    prompt.say('Play and Merchant Center use one service account. Add its email in Play Console (Users and permissions) and as an Admin user of Merchant Center.');
+    const keyFile = await askFile(env, 'Path to the service account JSON key file');
+    const args = ['setup-service-account', '--key-file', keyFile];
+    showCommand(env, args);
+    return env.run(args);
+  }
+
+  if (!secretFileExists({ tokenDir: dirname(env.clientSecretFile) }, env.clientSecretFile)) {
     prompt.say('This group needs the OAuth desktop client once. Give the path of the downloaded JSON file here, and gsm saves it in your token folder.');
     const file = await askFile(env, 'Path to the client_secret.json file');
     const setup = ['setup-client', file];

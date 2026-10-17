@@ -25,6 +25,7 @@ const GROUPS = {
   cloud: 'Application Default Credentials or an OAuth user token with the cloud-platform scope',
   'workspace-user': 'OAuth user token for Gmail, Drive, Calendar and the other personal Workspace APIs',
   'workspace-admin': 'Service account with domain-wide delegation, impersonating a super admin',
+  'service-account': 'Service account key for Google Play and Merchant Center (no user login)',
   searchconsole: 'OAuth user token with the webmasters scope',
   business: 'OAuth user token with the scopes of the business APIs',
   developer: 'OAuth user token with the scopes of the developer platform APIs',

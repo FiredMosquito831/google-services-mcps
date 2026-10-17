@@ -24,6 +24,7 @@ const LOGIN = {
   searchconsole: { group: 'searchconsole', setup: 'Desktop OAuth client, then `login searchconsole`' },
   'workspace-user': { group: 'workspace-user', setup: 'Desktop OAuth client, then `login workspace-user`' },
   'workspace-admin': { group: 'workspace-admin', setup: 'Service account with domain-wide delegation, then `setup-admin`' },
+  'service-account': { group: 'service-account', setup: 'Service account key, then `setup-service-account` (no login)' },
   business: { group: 'business', setup: 'Desktop OAuth client, then `login business`' },
   developer: { group: 'developer', setup: 'Desktop OAuth client, then `login developer`' },
   apikey: { group: 'apikey', setup: 'API key, then `setup-apikey` (no login)' },

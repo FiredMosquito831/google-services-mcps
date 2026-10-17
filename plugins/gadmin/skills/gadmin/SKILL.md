@@ -1,13 +1,13 @@
 ---
 name: gadmin
-description: Google Workspace administration: Cloud Identity, Chrome management and policy, Groups Settings, licensing, reports, alerts, Vault, reseller and Cloud Search admin. Served by the gadmin MCP server with 374 tools. Use for requests about these Google APIs.
+description: Google Workspace administration: Cloud Identity, Chrome management and policy, Groups Settings, licensing, reports, alerts, Vault, reseller and Cloud Search admin. Served by the gadmin MCP server with 375 tools. Use for requests about these Google APIs.
 ---
 
 # Workspace Admin
 
 Google Workspace administration: Cloud Identity, Chrome management and policy, Groups Settings, licensing, reports, alerts, Vault, reseller and Cloud Search admin.
 
-The `gadmin` MCP server exposes 374 tools. Per-method tools cover the Discovery APIs listed below. Gateway APIs are reached through three generic tools: api_search finds a method, api_describe shows its parameters, and api_call runs it.
+The `gadmin` MCP server exposes 375 tools. Per-method tools cover the Discovery APIs listed below. Gateway APIs are reached through three generic tools: api_search finds a method, api_describe shows its parameters, and api_call runs it.
 
 ## Log in
 

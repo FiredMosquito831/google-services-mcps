@@ -15,8 +15,11 @@ import {
 
 /** Groups with an OAuth token file (<group>.token.json). */
 export const OAUTH_GROUPS = ['cloud', 'workspace-user', 'searchconsole', 'business', 'developer'] as const;
-/** Groups that `gsm login` accepts. apikey has no login: `gsm login apikey` explains setup-apikey. */
-export const LOGIN_GROUPS = [...OAUTH_GROUPS, 'apikey'] as const;
+/**
+ * Groups that `gsm login` accepts. apikey and service-account have no login: `gsm login apikey` explains setup-apikey,
+ * and `gsm login service-account` explains setup-service-account.
+ */
+export const LOGIN_GROUPS = [...OAUTH_GROUPS, 'apikey', 'service-account'] as const;
 export const ALL_GROUPS = [...LOGIN_GROUPS, 'workspace-admin'] as const;
 export type CliGroup = (typeof ALL_GROUPS)[number];
 
@@ -32,6 +35,8 @@ export type Command =
   | 'accounts'
   | 'scopes'
   | 'setup-admin'
+  | 'setup-service-account'
+  | 'protect'
   | 'products'
   | 'apis'
   | 'methods'
@@ -76,6 +81,8 @@ const COMMANDS: Record<Exclude<Command, 'help'>, Record<string, OptionType>> = {
   accounts: { group: 'string' },
   scopes: { servers: 'string', profile: 'string', json: 'boolean' },
   'setup-admin': { subject: 'string', 'key-file': 'string', profile: 'string', servers: 'string', replace: 'boolean' },
+  'setup-service-account': { 'key-file': 'string', remove: 'boolean' },
+  protect: { off: 'boolean', backend: 'string' },
   products: { json: 'boolean' },
   apis: { search: 'string', limit: 'string', json: 'boolean' },
   methods: { search: 'string', limit: 'string', json: 'boolean' },

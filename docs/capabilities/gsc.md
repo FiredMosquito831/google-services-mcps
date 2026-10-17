@@ -4,11 +4,11 @@ Search Console sites, sitemaps, search analytics, URL indexing and site verifica
 
 - Plugin: `gsc`, MCP server: `gsc`, login: Desktop OAuth client, then `login searchconsole`
 - Install: `claude plugin install gsc@google-services-mcps`
-- Tools: 39 total. Curated 18, per-method 20, gateway 0. Read 18, write 16, destructive 5, dynamic 0.
+- Tools: 40 total. Curated 19, per-method 20, gateway 0. Read 18, write 17, destructive 5, dynamic 0.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-## Curated tools (18)
+## Curated tools (19)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
@@ -18,6 +18,7 @@ Read tools never ask. Write, destructive and dynamic tools ask before they run, 
 | `auth_login` | write | Sign in to Google | (none) |
 | `auth_setup_admin` | write | Set up the workspace admin account | (none) |
 | `auth_setup_client` | write | Save the Google OAuth client | (none) |
+| `auth_setup_service_account` | write | Set up the service account key | (none) |
 | `auth_status` | read | Sign-in status | (none) |
 | `health` | read | Server health | (none) |
 | `sc_search_analytics_query` | read | Query search analytics | webmasters, webmasters.readonly |

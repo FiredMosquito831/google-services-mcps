@@ -62,6 +62,10 @@ export function describeLogin(group: CliGroup): string[] {
       return [
         'gadmin acts as a Google Workspace super admin, through a service account with domain-wide delegation. You need the service account JSON key file and the admin\'s email address.',
       ];
+    case 'service-account':
+      return [
+        'gplay and gmerchant use a service account key: a JSON file from the Google Cloud console (IAM & Admin, Service accounts, Keys). There is no login. First add the service account\'s email in Play Console (Users and permissions) and as an Admin user of Merchant Center. Then give gsm the key file (setup-service-account). The key is referenced by path and never printed.',
+      ];
     default:
       return [
         'This group needs a Google login. Once, create an OAuth client of type "Desktop app" in the Google Cloud console (APIs & Services, Credentials), download its JSON file, and give that file to gsm (setup-client).',

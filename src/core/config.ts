@@ -1,4 +1,5 @@
-import { existsSync, readFileSync, statSync } from 'node:fs';
+import { existsSync, statSync } from 'node:fs';
+import { readSecretText } from './secret-files.js';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
 import { DEFAULT_CONFIRMATION, isConfirmationMode, type ConfirmationMode } from './policy.js';
@@ -46,15 +47,17 @@ function readConfirmation(value: string | undefined): { mode: ConfirmationMode; 
 /** Reads <tokenDir>/apikey.json. Warns when the file is not mode 0600 on POSIX. An unreadable file gives no key. */
 function readApiKeyFile(tokenDir: string): string | undefined {
   const file = join(tokenDir, 'apikey.json');
-  if (!existsSync(file)) return undefined;
-  if (process.platform !== 'win32') {
+  // The key may be in the OS store (see secret-files.ts). The mode check applies only to a plain file.
+  const text = readSecretText({ tokenDir }, file);
+  if (text === undefined) return undefined;
+  if (process.platform !== 'win32' && existsSync(file)) {
     const mode = statSync(file).mode & 0o777;
     if (mode !== 0o600) {
       process.stderr.write(`[config] ${file} is mode ${mode.toString(8)}; it holds an API key and should be 0600. Run: chmod 600 "${file}".\n`);
     }
   }
   try {
-    const raw = JSON.parse(readFileSync(file, 'utf8').replace(/^\uFEFF/, '')) as { apiKey?: unknown };
+    const raw = JSON.parse(text.replace(/^\uFEFF/, '')) as { apiKey?: unknown };
     return typeof raw.apiKey === 'string' && raw.apiKey.trim() !== '' ? raw.apiKey.trim() : undefined;
   } catch {
     // The message names the file, never its contents.

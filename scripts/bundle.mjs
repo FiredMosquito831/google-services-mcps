@@ -34,7 +34,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const AUTHOR = { name: 'FiredMosquito831' };
-const MANIFEST_VERSION = '0.6.0';
+const MANIFEST_VERSION = '1.0.0';
 const TOOL_NAME_MAX = 64;
 /** When two API versions give one method two kinds, the riskier one is kept. A dynamic method is kept as dynamic (decided per call). */
 const RANK = { read: 0, write: 1, dynamic: 2, destructive: 3 };
@@ -335,6 +335,8 @@ const LOGIN_TEXT = {
   apikey: (p) => `No sign-in. Store the API key once: \`node ${p}/bin/gsm.mjs setup-apikey\`, which reads the key from GSM_API_KEY_INPUT or stdin.`,
   'workspace-admin': (p) =>
     `Use a service account with domain-wide delegation: \`node ${p}/bin/gsm.mjs setup-admin --subject <super admin email> --key-file <service account JSON>\`.`,
+  'service-account': (p) =>
+    `No sign-in. Add the service account's email in Play Console (Users and permissions) or Merchant Center (Admin), then set up its key once: \`node ${p}/bin/gsm.mjs setup-service-account --key-file <service account JSON>\`. Or set GOOGLE_APPLICATION_CREDENTIALS to the key.`,
 };
 
 function skillFile(product, id, server, toolCount, titles) {

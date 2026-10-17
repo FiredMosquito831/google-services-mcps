@@ -45,7 +45,16 @@ async function connect(pluginDir, serverName, env) {
   const transport = new StdioClientTransport({
     command: 'node',
     args: [script],
-    env: { ...process.env, GSM_TOKEN_DIR: tokenDir, GSM_ALLOW_WRITES: 'false', ...env },
+    // The servers start with no login: an empty token folder, and no ADC file, so a real gcloud login on this machine
+    // cannot change what the smoke test checks.
+    env: {
+      ...process.env,
+      GSM_TOKEN_DIR: tokenDir,
+      GSM_ALLOW_WRITES: 'false',
+      APPDATA: join(tokenDir, 'appdata'),
+      GOOGLE_APPLICATION_CREDENTIALS: join(tokenDir, 'no-adc.json'),
+      ...env,
+    },
     stderr: 'pipe',
   });
   const client = new Client({ name: 'gsm-smoke', version: '0.1.0' });
@@ -118,6 +127,20 @@ const plugins = readdirSync(pluginsDir, { withFileTypes: true })
 for (const id of Object.keys(products)) if (!plugins.includes(id)) fail(`plugins/${id} is missing`);
 for (const name of plugins) if (!(name in products)) fail(`plugins/${name} is not a product in config/products.json`);
 
+// The sign-in and account tools (write-hinted in the tool map). Listed with writes off by design; see the checks below.
+const SIGN_IN_TOOLS = new Set([
+  'auth_status',
+  'accounts_list',
+  'account_set_default',
+  'account_remove',
+  'auth_login',
+  'auth_setup_client',
+  'auth_setup_admin',
+  'auth_setup_service_account',
+]);
+// Groups that need a login (or a key set up) register only the tools that need no scope until then.
+const NEEDS_LOGIN_FIRST = new Set(['workspace-admin', 'workspace-user', 'searchconsole', 'business', 'developer', 'service-account']);
+
 const toolMaps = new Map();
 for (const id of plugins) {
   if (!(id in products)) continue;
@@ -145,16 +168,30 @@ for (const plugin of plugins) {
 
       // A dynamic tool (the gateway's api_call) is listed with writes off, and it refuses writes itself.
       const toolMap = toolMaps.get(plugin) ?? [];
-      const expectedOff = toolMap.filter((t) => READ_KINDS.has(t.kind)).map((t) => t.name.slice(prefix.length)).sort();
-      const listedOff = [...names].sort();
-      // The admin group registers only the tools its default grant covers, so for it only the subset rule holds.
+      // The sign-in and account tools are registered with writes off on purpose: the hook asks before each call to them.
+      // Which of them a server registers depends on its group, so they are kept out of the exact comparison. Each one
+      // must still be in the tool map, or the hook would treat it as destructive.
+      for (const n of names) {
+        if (SIGN_IN_TOOLS.has(n) && !toolMap.some((t) => t.name === prefix + n)) fail(`${server}: ${n} is not in tool-map.json, so the hook would ask for every call`);
+      }
+      const expectedOff = toolMap
+        .filter((t) => READ_KINDS.has(t.kind))
+        .map((t) => t.name.slice(prefix.length))
+        .filter((n) => !SIGN_IN_TOOLS.has(n))
+        .sort();
+      const listedOff = names.filter((n) => !SIGN_IN_TOOLS.has(n)).sort();
+      // The tools a server lists with writes off must be read entries of its tool map.
       const unexpected = listedOff.filter((n) => !expectedOff.includes(n));
       if (unexpected.length) fail(`${server}: with writes off, tools not in tool-map.json: ${unexpected.slice(0, 5).join(', ')}`);
-      if (groupOf.get(plugin) !== 'workspace-admin' && JSON.stringify(expectedOff) !== JSON.stringify(listedOff)) {
+      // Groups that need a login (or a key set up) register only the tools that need no scope until then, so for them only
+      // the subset rule above holds. The admin group does the same.
+      if (!NEEDS_LOGIN_FIRST.has(groupOf.get(plugin)) && JSON.stringify(expectedOff) !== JSON.stringify(listedOff)) {
         const missing = expectedOff.filter((n) => !listedOff.includes(n));
         fail(`${server}: with writes off, ${missing.length} tool-map tools are not registered: ${missing.slice(0, 5).join(', ')}`);
       }
-      const writeTools = tools.filter((t) => t.annotations?.readOnlyHint !== true && !READ_KINDS.has(toolKindOf(toolMap, prefix, t.name)));
+      const writeTools = tools.filter(
+        (t) => t.annotations?.readOnlyHint !== true && !READ_KINDS.has(toolKindOf(toolMap, prefix, t.name)) && !SIGN_IN_TOOLS.has(t.name),
+      );
       if (writeTools.length) fail(`${server}: write tools visible with writes off: ${writeTools.map((t) => t.name).slice(0, 5).join(', ')}`);
 
       // Read tool with no login must fail cleanly. The list tool and the gateway search tool take no login.
@@ -190,11 +227,15 @@ for (const plugin of plugins) {
       if (longestFull > TOOL_NAME_MAX) fail(`${server} (writes on): full tool name is ${longestFull} characters (limit ${TOOL_NAME_MAX})`);
       if (new Set(names).size !== names.length) fail(`${server} (writes on): duplicate tool names`);
       if (!tools.some((t) => t.annotations?.readOnlyHint !== true)) fail(`${server} (writes on): no write tools registered`);
-      const expected = (toolMaps.get(plugin) ?? []).map((t) => t.name.slice(prefix.length)).sort();
-      const unexpected = names.filter((n) => !expected.includes(n));
+      const expected = (toolMaps.get(plugin) ?? [])
+        .map((t) => t.name.slice(prefix.length))
+        .filter((n) => !SIGN_IN_TOOLS.has(n))
+        .sort();
+      const registered = names.filter((n) => !SIGN_IN_TOOLS.has(n));
+      const unexpected = registered.filter((n) => !expected.includes(n));
       if (unexpected.length) fail(`${server} (writes on): tools not in tool-map.json: ${unexpected.slice(0, 5).join(', ')}`);
-      if (groupOf.get(plugin) !== 'workspace-admin' && names.length !== expected.length) {
-        fail(`${server} (writes on): ${names.length} tools registered, ${expected.length} in tool-map.json`);
+      if (!NEEDS_LOGIN_FIRST.has(groupOf.get(plugin)) && registered.length !== expected.length) {
+        fail(`${server} (writes on): ${registered.length} tools registered, ${expected.length} in tool-map.json`);
       }
     } finally {
       await client.close();

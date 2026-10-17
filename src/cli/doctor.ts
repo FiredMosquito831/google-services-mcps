@@ -12,7 +12,9 @@ import { dirname, join } from 'node:path';
 import type { Registry } from '../core/registry.js';
 import { loadConfig } from '../core/config.js';
 import { aclExtras } from '../core/acl.js';
-import { adminScopeFileFor } from '../core/auth.js';
+import { adminScopeFileFor, serviceAccountSource } from '../core/auth.js';
+import { getSecretSync } from '../core/secret-store.js';
+import { secretFileExists, storedSecretNames, storeFor } from '../core/secret-files.js';
 import { OAUTH_GROUPS } from './args.js';
 import { apiKeyFileFor, apiKeyState } from './credentials.js';
 import type { InstallRoots } from './paths.js';
@@ -260,16 +262,33 @@ export function runDoctor(req: DoctorRequest, out: Output): number {
   const oauthIds = active.filter((id) => (OAUTH_GROUPS as readonly string[]).includes(groupOf(id) ?? ''));
   if (oauthIds.length > 0) {
     const file = join(tokenDir, 'client_secret.json');
-    const exists = existsSync(file);
+    const exists = secretFileExists({ tokenDir }, file);
     tally.check(exists, exists
       ? `OAuth client file exists: ${file} (needed by ${list(oauthIds)})`
       : `OAuth client file missing: ${file} (needed by ${list(oauthIds)}). Run: node gsm.mjs setup-client <client_secret.json>`);
   }
 
+  // Where the secrets are kept, and whether the store agrees with its index. Only names are checked, never values.
+  const backend = storeFor(tokenDir, req.env);
+  out.log(`INFO secret store: ${backend}${backend === 'file' ? ' (plain files in the token folder)' : ' (the token folder holds no plain copies)'}`);
+  if (backend !== 'file') {
+    for (const name of storedSecretNames(tokenDir)) {
+      let present = false;
+      try {
+        present = getSecretSync(backend, tokenDir, name) !== undefined;
+      } catch {
+        present = false;
+      }
+      tally.check(present, present
+        ? `secret ${name} is in the ${backend} store`
+        : `secret ${name} is listed but missing from the ${backend} store. Run: node gsm.mjs protect --off, then node gsm.mjs protect, or log that account out and sign in again`);
+    }
+  }
+
   const keyIds = active.filter((id) => groupOf(id) === 'apikey');
   if (keyIds.length > 0) {
+    const state = apiKeyState({ tokenDir });
     const file = apiKeyFileFor({ tokenDir });
-    const state = apiKeyState(file);
     // The key itself is never read into a message: only its state is reported.
     if (state === 'saved') tally.check(true, `API key file holds a key: ${file} (needed by ${list(keyIds)})`);
     else if (state === 'missing') tally.check(false, `API key file missing: ${file} (needed by ${list(keyIds)}). Run: node gsm.mjs setup-apikey`);
@@ -292,6 +311,15 @@ export function runDoctor(req: DoctorRequest, out: Output): number {
     tally.check(stored || fromEnv, stored || fromEnv
       ? `workspace-admin is set up (needed by ${list(adminIds)}): ${stored ? file : 'GSM_ADMIN_SUBJECT and GSM_SERVICE_ACCOUNT_KEY_FILE are set'}`
       : `workspace-admin is not set up (needed by ${list(adminIds)}): no ${file}, and GSM_ADMIN_SUBJECT and GSM_SERVICE_ACCOUNT_KEY_FILE are not both set. Run: node gsm.mjs setup-admin --subject <email> --key-file <file>`);
+  }
+
+  // gplay and gmerchant need a service account key: the one setup-service-account records, or GOOGLE_APPLICATION_CREDENTIALS.
+  const serviceIds = active.filter((id) => groupOf(id) === 'service-account');
+  if (serviceIds.length > 0) {
+    const source = serviceAccountSource({ tokenDir });
+    tally.check(source !== null, source
+      ? `service account key is set up (needed by ${list(serviceIds)})`
+      : `service account key is not set up (needed by ${list(serviceIds)}). Run: node gsm.mjs setup-service-account --key-file <service account JSON>`);
   }
 
   out.log(`doctor: ${tally.passed} passed, ${tally.failed} failed`);

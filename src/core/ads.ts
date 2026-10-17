@@ -8,9 +8,10 @@
  * error and blocks nothing. The login-customer-id header is sent when GSM_ADS_LOGIN_CUSTOMER_ID is set (manager accounts).
  * A token is never printed, logged or returned: errors are redacted.
  */
-import { existsSync, readFileSync, statSync } from 'node:fs';
+import { existsSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import type { RuntimeConfig } from './config.js';
+import { readSecretText } from './secret-files.js';
 
 /** The host of the Google Ads REST API. A request to this host is an Ads request. */
 export const ADS_HOST = 'googleads.googleapis.com';
@@ -35,8 +36,9 @@ export function developerTokenOf(cfg: Pick<RuntimeConfig, 'tokenDir'>): string |
   const fromEnv = process.env[DEVELOPER_TOKEN_ENV]?.trim();
   if (fromEnv) return fromEnv;
   const file = join(cfg.tokenDir, 'ads.json');
-  if (!existsSync(file)) return undefined;
-  if (process.platform !== 'win32') {
+  const text = readSecretText(cfg, file);
+  if (text === undefined) return undefined;
+  if (process.platform !== 'win32' && existsSync(file)) {
     const mode = statSync(file).mode & 0o777;
     if (mode !== 0o600) {
       process.stderr.write(`[gads] ${file} is mode ${mode.toString(8)}; it may hold a developer token and should be 0600.\n`);
@@ -44,7 +46,7 @@ export function developerTokenOf(cfg: Pick<RuntimeConfig, 'tokenDir'>): string |
   }
   let raw: { developerToken?: unknown } | null;
   try {
-    raw = JSON.parse(readFileSync(file, 'utf8').replace(/^﻿/, '')) as { developerToken?: unknown } | null;
+    raw = JSON.parse(text.replace(/^﻿/, '')) as { developerToken?: unknown } | null;
   } catch {
     process.stderr.write(`[gads] ${file} is not valid JSON, so no developer token was read. Requests are sent without one.\n`);
     return undefined;

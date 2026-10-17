@@ -1908,7 +1908,7 @@
     "gmerchant": {
       "title": "Merchant Center",
       "description": "Merchant Center: Merchant API, Comparison Shopping Service and Manufacturer Center.",
-      "group": "business",
+      "group": "service-account",
       "server": {
         "name": "gmerchant",
         "curated": null
@@ -2034,7 +2034,7 @@
     "gplay": {
       "title": "Google Play",
       "description": "Google Play developer publishing and reporting, Play Games Services, Android Enterprise and Management, Play Integrity and device APIs.",
-      "group": "developer",
+      "group": "service-account",
       "server": {
         "name": "gplay",
         "curated": null
@@ -2242,7 +2242,7 @@
     "gmaps": {
       "title": "Maps and Location",
       "description": "Maps Platform and location APIs: Places, Address Validation, Solar, Air Quality, Pollen, Street View Publish and related datasets.",
-      "group": "developer",
+      "group": "apikey",
       "server": {
         "name": "gmaps",
         "curated": null

@@ -7,7 +7,8 @@ import { requestedAccount } from './account-context.js';
 import type { RuntimeConfig } from './config.js';
 import { invocation } from './invocation.js';
 import { isIdempotentMethod, requestWithRetry, type HttpResult } from './http.js';
-import { adcGrantFor, GCLOUD_DEFAULT_SCOPES, type AdcGrant } from './adc.js';
+import { adcFilePath, adcGrantFor, GCLOUD_DEFAULT_SCOPES, readAdcState, type AdcGrant } from './adc.js';
+import { readSecretText, secretFileExists, writeSecretText } from './secret-files.js';
 
 /**
  * One auth group per token file. Each group maps to one or more MCP servers
@@ -19,7 +20,16 @@ import { adcGrantFor, GCLOUD_DEFAULT_SCOPES, type AdcGrant } from './adc.js';
  * The apikey group is not an AuthKind: it has no token file. Its client is built
  * by the discovery code (see core/discovery/apikey-client.ts).
  */
-export type AuthKind = 'cloud' | 'workspace-user' | 'workspace-admin' | 'searchconsole' | 'business' | 'developer';
+export type AuthKind = 'cloud' | 'workspace-user' | 'workspace-admin' | 'searchconsole' | 'business' | 'developer' | 'service-account';
+
+/**
+ * Scopes of the service-account group (Google Play and Merchant Center). A service account needs no user consent; the
+ * person adds the account's email to Play Console or Merchant Center. These are the scopes of those two APIs.
+ */
+export const SERVICE_ACCOUNT_SCOPES = [
+  'https://www.googleapis.com/auth/androidpublisher',
+  'https://www.googleapis.com/auth/content',
+];
 
 /** Domain-wide delegation scopes for the Admin SDK Directory API. The admin login uses a service account and needs no login. */
 export const ADMIN_SCOPES = [
@@ -55,7 +65,9 @@ export class AuthRequiredError extends Error {
 export class GrantExpiredError extends Error {
   constructor(kind: AuthKind, options?: { cause?: unknown }) {
     super(
-      `The login for "${kind}" has expired or was revoked. Log in again: ${invocation()} login ${kind}. An app left in Testing loses its refresh tokens after 7 days.`,
+      kind === 'service-account'
+        ? `Google refused the service account key. The key may be deleted, disabled, or not added to Play Console or Merchant Center. Check it in Google Cloud console, then set it up again: ${invocation()} setup-service-account --key-file <file>.`
+        : `The login for "${kind}" has expired or was revoked. Log in again: ${invocation()} login ${kind}. An app left in Testing loses its refresh tokens after 7 days.`,
       options,
     );
     this.name = 'GrantExpiredError';
@@ -135,8 +147,10 @@ function tokenFileOf(kind: AuthKind, cfg: RuntimeConfig, account?: string): stri
   return file;
 }
 
-function readTokenFile(path: string): Credentials {
-  return existsSync(path) ? (JSON.parse(readFileSync(path, 'utf8')) as Credentials) : {};
+/** The tokens in one token file, read through the store in use (see secret-files.ts). Empty when there is no file. */
+function readTokenFile(cfg: RuntimeConfig, path: string): Credentials {
+  const text = readSecretText(cfg, path);
+  return text === undefined ? {} : (JSON.parse(text) as Credentials);
 }
 
 function writeSecureJson(path: string, data: unknown): void {
@@ -155,12 +169,13 @@ interface ClientSecretFile {
 }
 
 export function readClientSecret(cfg: RuntimeConfig): { clientId: string; clientSecret: string } {
-  if (!existsSync(cfg.clientSecretFile)) {
+  const text = readSecretText(cfg, cfg.clientSecretFile);
+  if (text === undefined) {
     throw new Error(
       `OAuth client file not found: ${cfg.clientSecretFile}. Create a "Desktop app" OAuth client in Google Cloud console and run: gsm setup-client <file>.`,
     );
   }
-  const raw = JSON.parse(readFileSync(cfg.clientSecretFile, 'utf8')) as ClientSecretFile;
+  const raw = JSON.parse(text) as ClientSecretFile;
   const block = raw.installed ?? raw.web;
   if (!block) throw new Error(`Unrecognized client secret file: ${cfg.clientSecretFile}`);
   return { clientId: block.client_id, clientSecret: block.client_secret };
@@ -172,8 +187,10 @@ export function readClientSecret(cfg: RuntimeConfig): { clientId: string; client
  */
 export function loadUserTokens(kind: AuthKind, cfg: RuntimeConfig, account?: string): Credentials | null {
   const path = tokenFileOf(kind, cfg, account);
-  if (!path || !existsSync(path)) return null;
-  return JSON.parse(readFileSync(path, 'utf8')) as Credentials;
+  if (!path) return null;
+  const text = readSecretText(cfg, path);
+  if (text === undefined) return null;
+  return JSON.parse(text) as Credentials;
 }
 
 /**
@@ -186,7 +203,8 @@ export function adcSourceFor(kind: AuthKind, cfg: RuntimeConfig): AdcGrant | nul
 }
 
 /** Where a group's login comes from: the suite's own accounts, the ADC login, or nothing. Never calls Google. */
-export function loginSourceOf(kind: AuthKind, cfg: RuntimeConfig, account?: string): 'oauth' | 'adc' | undefined {
+export function loginSourceOf(kind: AuthKind, cfg: RuntimeConfig, account?: string): 'oauth' | 'adc' | 'service-account' | undefined {
+  if (kind === 'service-account') return serviceAccountSource(cfg) ? 'service-account' : undefined;
   try {
     const tokens = loadUserTokens(kind, cfg, account);
     if (tokens && (tokens.refresh_token || tokens.access_token)) return 'oauth';
@@ -245,6 +263,67 @@ export function saveAdminScopeFile(cfg: RuntimeConfig, record: AdminScopeRecord)
 }
 
 /**
+ * What `gsm setup-service-account` stores for the service-account group, in <tokenDir>/service-account.json. The key file
+ * is referenced by path and never copied. clientEmail is the account's address, which is not a secret.
+ */
+export interface ServiceAccountRecord {
+  keyFile: string;
+  clientEmail?: string;
+  savedAt: string;
+}
+
+export function serviceAccountFileFor(cfg: Pick<RuntimeConfig, 'tokenDir'>): string {
+  return join(cfg.tokenDir, 'service-account.json');
+}
+
+/** The stored service-account setup, or null when none is set or the file is not valid. */
+export function readServiceAccountFile(cfg: Pick<RuntimeConfig, 'tokenDir'>): ServiceAccountRecord | null {
+  const file = serviceAccountFileFor(cfg);
+  if (!existsSync(file)) return null;
+  try {
+    const raw = JSON.parse(readFileSync(file, 'utf8')) as Partial<ServiceAccountRecord>;
+    if (typeof raw.keyFile !== 'string' || raw.keyFile === '') return null;
+    return {
+      keyFile: raw.keyFile,
+      clientEmail: typeof raw.clientEmail === 'string' ? raw.clientEmail : undefined,
+      savedAt: typeof raw.savedAt === 'string' ? raw.savedAt : '',
+    };
+  } catch {
+    return null;
+  }
+}
+
+/** Writes the service-account setup with mode 0600. Returns the file path. */
+export function saveServiceAccountFile(cfg: Pick<RuntimeConfig, 'tokenDir'>, record: Omit<ServiceAccountRecord, 'savedAt'>): string {
+  const file = serviceAccountFileFor(cfg);
+  writeSecureJson(file, { ...record, savedAt: new Date().toISOString() });
+  return file;
+}
+
+/** Removes the stored service-account setup. Returns false when there was none. The key file itself is never touched. */
+export function removeServiceAccountFile(cfg: Pick<RuntimeConfig, 'tokenDir'>): boolean {
+  const file = serviceAccountFileFor(cfg);
+  if (!existsSync(file)) return false;
+  rmSync(file);
+  return true;
+}
+
+/**
+ * Where the service-account key comes from, in order: the setup from `gsm setup-service-account`, then the
+ * GOOGLE_APPLICATION_CREDENTIALS file when it is a service-account key (Application Default Credentials). Null when neither.
+ */
+export function serviceAccountSource(cfg: Pick<RuntimeConfig, 'tokenDir'>): { keyFile: string; via: 'setup' | 'adc' } | null {
+  const stored = readServiceAccountFile(cfg);
+  if (stored) return { keyFile: stored.keyFile, via: 'setup' };
+  const adcFile = adcFilePath();
+  if (existsSync(adcFile)) {
+    const state = readAdcState(cfg);
+    if (state.type === 'service_account') return { keyFile: adcFile, via: 'adc' };
+  }
+  return null;
+}
+
+/**
  * Builds an authenticated client for a server group. OAuth user tokens refresh
  * automatically; the admin group uses domain-wide delegation with a service
  * account. Throws AuthRequiredError rather than prompting, because MCP servers
@@ -271,8 +350,10 @@ export async function getAuthClient(kind: AuthKind, cfg: RuntimeConfig): Promise
     );
   }
 
+  if (kind === 'service-account') return serviceAccountClient(cfg);
+
   const path = tokenFileOf(kind, cfg);
-  if (!path || !existsSync(path)) {
+  if (!path || !secretFileExists(cfg, path)) {
     const signedIn = accountNames(kind, cfg);
     if (signedIn !== 'none' && !path) throw new AccountChoiceError(kind, signedIn);
     const adc = await adcClientFor(kind, cfg);
@@ -285,10 +366,10 @@ export async function getAuthClient(kind: AuthKind, cfg: RuntimeConfig): Promise
 
   const { clientId, clientSecret } = readClientSecret(cfg);
   const client = new OAuth2Client(clientId, clientSecret);
-  client.setCredentials(readTokenFile(path));
-  // Persist refreshed access tokens so a restart does not force a new login.
+  client.setCredentials(readTokenFile(cfg, path));
+  // Persist refreshed access tokens so a restart does not force a new login. The write goes to the store in use.
   client.on('tokens', (fresh) => {
-    writeSecureJson(path, { ...readTokenFile(path), ...fresh });
+    writeSecretText(cfg, path, JSON.stringify({ ...readTokenFile(cfg, path), ...fresh }, null, 2));
   });
   const wrapped = withRetry(client, kind);
   userClients.set(path, wrapped);
@@ -297,6 +378,36 @@ export async function getAuthClient(kind: AuthKind, cfg: RuntimeConfig): Promise
 
 /** The OAuth clients of the user accounts, by token file. */
 const userClients = new Map<string, OAuth2Client | JWT>();
+
+/** The service-account clients, by key file. */
+const serviceClients = new Map<string, JWT>();
+
+/**
+ * The client of the service-account group: the key file from `gsm setup-service-account`, else the service-account key
+ * in GOOGLE_APPLICATION_CREDENTIALS. A key is used as it is, with the scopes of the two APIs (no user consent).
+ */
+async function serviceAccountClient(cfg: RuntimeConfig): Promise<JWT> {
+  const source = serviceAccountSource(cfg);
+  if (!source) {
+    throw new Error(
+      `The service account is not set up. Run: ${invocation()} setup-service-account --key-file <service account JSON>, or set GOOGLE_APPLICATION_CREDENTIALS to a service account key.`,
+    );
+  }
+  if (!existsSync(source.keyFile)) {
+    throw new Error(`Service account key file not found: ${source.keyFile}. Run: ${invocation()} setup-service-account --key-file <file>.`);
+  }
+  const cached = serviceClients.get(source.keyFile);
+  if (cached) return cached;
+  const client = new JWT({ keyFile: source.keyFile, scopes: SERVICE_ACCOUNT_SCOPES });
+  const wrapped = withRetry(client, 'service-account');
+  serviceClients.set(source.keyFile, wrapped);
+  return wrapped;
+}
+
+/** Forgets the service-account clients, so the next call reads the key file again. */
+export function forgetServiceAccountClients(): void {
+  serviceClients.clear();
+}
 
 /** The ADC clients, by group. Forgotten after a new ADC login, so the next call reads the file again. */
 const adcClients = new Map<string, OAuth2Client | JWT>();
@@ -337,6 +448,7 @@ export function forgetAdcClients(): void {
  */
 export function grantedScopes(kind: AuthKind | 'apikey', cfg: RuntimeConfig): string[] | null {
   if (kind === 'apikey') return null;
+  if (kind === 'service-account') return serviceAccountSource(cfg) ? [...SERVICE_ACCOUNT_SCOPES] : null;
   if (kind === 'workspace-admin') return readAdminScopeFile(cfg)?.scopes ?? [...ADMIN_SCOPES];
   let tokens: Credentials | null;
   try {
@@ -353,13 +465,23 @@ export interface TokenStatus {
   kind: AuthKind;
   loggedIn: boolean;
   /** Where the login comes from. Undefined when there is no login. */
-  source?: 'oauth' | 'adc';
+  source?: 'oauth' | 'adc' | 'service-account';
   tokenFile: string;
   scopes?: string[];
   expiresAt?: string;
 }
 
 export function tokenStatus(kind: AuthKind, cfg: RuntimeConfig): TokenStatus {
+  if (kind === 'service-account') {
+    const source = serviceAccountSource(cfg);
+    return {
+      kind,
+      loggedIn: source !== null,
+      source: source ? 'service-account' : undefined,
+      tokenFile: serviceAccountFileFor(cfg),
+      scopes: source ? [...SERVICE_ACCOUNT_SCOPES] : undefined,
+    };
+  }
   if (kind === 'workspace-admin') {
     const stored = readAdminScopeFile(cfg);
     return {
@@ -387,7 +509,7 @@ export function tokenStatus(kind: AuthKind, cfg: RuntimeConfig): TokenStatus {
 
 /** Removes one account of a group (the default when none is named). Returns false when no such account is signed in. */
 export function removeUserTokens(kind: AuthKind, cfg: RuntimeConfig, account?: string): boolean {
-  if (kind === 'workspace-admin') return false;
+  if (kind === 'workspace-admin' || kind === 'service-account') return false;
   const email = account ?? defaultAccount(kind, cfg);
   if (email === undefined) return false;
   userClients.delete(accountTokenFile(kind, email, cfg) ?? '');

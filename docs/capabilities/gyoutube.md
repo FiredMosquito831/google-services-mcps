@@ -4,11 +4,11 @@ YouTube Data, YouTube Analytics and YouTube Reporting APIs, plus Blogger.
 
 - Plugin: `gyoutube`, MCP server: `gyoutube`, login: Desktop OAuth client, then `login business`
 - Install: `claude plugin install gyoutube@google-services-mcps`
-- Tools: 133 total. Curated 8, per-method 124, gateway 0. Read 59, write 54, destructive 20, dynamic 0.
+- Tools: 134 total. Curated 9, per-method 124, gateway 0. Read 59, write 55, destructive 20, dynamic 0.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-## Curated tools (8)
+## Curated tools (9)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
@@ -18,6 +18,7 @@ Read tools never ask. Write, destructive and dynamic tools ask before they run, 
 | `auth_login` | write | Sign in to Google | (none) |
 | `auth_setup_admin` | write | Set up the workspace admin account | (none) |
 | `auth_setup_client` | write | Save the Google OAuth client | (none) |
+| `auth_setup_service_account` | write | Set up the service account key | (none) |
 | `auth_status` | read | Sign-in status | (none) |
 | `health` | read | Server health | (none) |
 

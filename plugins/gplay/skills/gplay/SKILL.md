@@ -1,17 +1,17 @@
 ---
 name: gplay
-description: Google Play developer publishing and reporting, Play Games Services, Android Enterprise and Management, Play Integrity and device APIs. Served by the gplay MCP server with 361 tools. Use for requests about these Google APIs.
+description: Google Play developer publishing and reporting, Play Games Services, Android Enterprise and Management, Play Integrity and device APIs. Served by the gplay MCP server with 362 tools. Use for requests about these Google APIs.
 ---
 
 # Google Play
 
 Google Play developer publishing and reporting, Play Games Services, Android Enterprise and Management, Play Integrity and device APIs.
 
-The `gplay` MCP server exposes 361 tools. Per-method tools cover the Discovery APIs listed below. Gateway APIs are reached through three generic tools: api_search finds a method, api_describe shows its parameters, and api_call runs it.
+The `gplay` MCP server exposes 362 tools. Per-method tools cover the Discovery APIs listed below. Gateway APIs are reached through three generic tools: api_search finds a method, api_describe shows its parameters, and api_call runs it.
 
 ## Log in
 
-Replace `<plugin>` with this plugin's folder, the one that holds `bin/gsm.mjs`. Sign in with the OAuth desktop client, once: `node <plugin>/bin/gsm.mjs setup-client <client_secret.json>`, then `node <plugin>/bin/gsm.mjs login developer`.
+Replace `<plugin>` with this plugin's folder, the one that holds `bin/gsm.mjs`. No sign-in. Add the service account's email in Play Console (Users and permissions) or Merchant Center (Admin), then set up its key once: `node <plugin>/bin/gsm.mjs setup-service-account --key-file <service account JSON>`. Or set GOOGLE_APPLICATION_CREDENTIALS to the key.
 
 ## Safety
 

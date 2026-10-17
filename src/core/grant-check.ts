@@ -1,7 +1,18 @@
 import { apikeys } from '@googleapis/apikeys';
 import { OAuth2Client, type Credentials } from 'google-auth-library';
 import { GoogleAuth } from 'google-auth-library';
-import { adcSourceFor, isInvalidGrant, loadUserTokens, readClientSecret, type AuthKind } from './auth.js';
+import { existsSync } from 'node:fs';
+import { JWT } from 'google-auth-library';
+import {
+  adcSourceFor,
+  isInvalidGrant,
+  loadUserTokens,
+  readClientSecret,
+  readServiceAccountFile,
+  SERVICE_ACCOUNT_SCOPES,
+  serviceAccountSource,
+  type AuthKind,
+} from './auth.js';
 import type { RuntimeConfig } from './config.js';
 import { invocation } from './invocation.js';
 
@@ -39,7 +50,12 @@ export interface GrantDeps {
   makeClient?: (clientId: string, clientSecret: string) => OAuthClientLike;
   /** Builds the client of the ADC login with the scopes it holds. The default reads the ADC file. */
   makeAdcClient?: (scopes: string[]) => Promise<OAuthClientLike>;
+  /** Builds the service-account client for a key file. The default is a JWT with the key. */
+  makeServiceClient?: (keyFile: string, scopes: string[]) => Promise<OAuthClientLike>;
 }
+
+const defaultServiceClient = async (keyFile: string, scopes: string[]): Promise<OAuthClientLike> =>
+  new JWT({ keyFile, scopes }) as unknown as OAuthClientLike;
 
 const defaultClient = (clientId: string, clientSecret: string): OAuthClientLike =>
   new OAuth2Client(clientId, clientSecret) as unknown as OAuthClientLike;
@@ -172,6 +188,37 @@ async function checkAdcGrant(group: AuthKind, stored: string[], deps: GrantDeps)
     missingScopes,
     expiresInSeconds: info.expires_in ?? undefined,
     account: info.email ?? undefined,
+  };
+}
+
+/** The service-account group's live check: the key has to be accepted by Google's token endpoint. */
+export async function checkServiceAccountGrant(cfg: RuntimeConfig, deps: GrantDeps = {}): Promise<GrantCheck> {
+  const group = 'service-account' as const;
+  const none = (state: GrantState, detail: string): GrantCheck => ({ group, state, detail, scopes: [], missingScopes: [] });
+  const source = serviceAccountSource(cfg);
+  if (!source) return none('not-logged-in', `not set up: run ${invocation()} setup-service-account --key-file <file>`);
+  if (!existsSync(source.keyFile)) return none('not-logged-in', `the key file is missing: ${source.keyFile}. Set it up again with ${invocation()} setup-service-account --key-file <file>.`);
+
+  let token: string | null | undefined;
+  try {
+    const client = await (deps.makeServiceClient ?? defaultServiceClient)(source.keyFile, [...SERVICE_ACCOUNT_SCOPES]);
+    token = (await client.getAccessToken()).token;
+  } catch (err) {
+    const text = redact(messageOf(err), [source.keyFile]);
+    if (isInvalidGrant(err) || /invalid_grant|unauthorized_client|invalid_client|\b401\b/.test(text)) {
+      return none('expired', `Google refused the service account key. Check it in Google Cloud console, or set it up again: ${invocation()} setup-service-account --key-file <file>.`);
+    }
+    return none('unreachable', `could not get a token from Google: ${text}`);
+  }
+  if (!token) return none('expired', `Google gave no token for the service account key. Set it up again: ${invocation()} setup-service-account --key-file <file>.`);
+  const stored = readServiceAccountFile(cfg);
+  return {
+    group,
+    state: 'valid',
+    detail: `the key works (${source.via === 'setup' ? 'set up with setup-service-account' : 'from GOOGLE_APPLICATION_CREDENTIALS'}). Play Console or Merchant Center must also list the account for calls to succeed.`,
+    scopes: [...SERVICE_ACCOUNT_SCOPES],
+    missingScopes: [],
+    account: stored?.clientEmail,
   };
 }
 

@@ -4,13 +4,13 @@
     "gplay": "Google Play developer publishing and reporting, Play Games Services, Android Enterprise and Management, Play Integrity and device APIs."
   },
   "groups": {
-    "developer": "OAuth user token with the scopes of the developer platform APIs"
+    "service-account": "Service account key for Google Play and Merchant Center (no user login)"
   },
   "servers": [
     {
       "name": "gplay",
       "plugin": "gplay",
-      "group": "developer",
+      "group": "service-account",
       "kind": "discovery",
       "curated": null,
       "apis": [

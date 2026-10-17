@@ -21,7 +21,7 @@ const toolKinds = load('config', 'tool-kinds.json');
 const catalog = load('data', 'catalog.json');
 const marketplace = load('.claude-plugin', 'marketplace.json');
 
-const GROUPS = ['cloud', 'workspace-user', 'workspace-admin', 'searchconsole', 'business', 'developer', 'apikey'];
+const GROUPS = ['cloud', 'workspace-user', 'workspace-admin', 'searchconsole', 'business', 'developer', 'apikey', 'service-account'];
 const TOOL_KINDS = new Set(['read', 'write', 'destructive', 'dynamic']);
 // A method-kinds entry is read, write, destructive, or dynamic (decided per call from the body, for the Google Ads mutate methods).
 const METHOD_KINDS = new Set(['read', 'write', 'destructive', 'dynamic']);

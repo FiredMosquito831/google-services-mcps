@@ -4,11 +4,11 @@ Google Ads API (accounts, campaigns, ad groups, ads, keywords, budgets, conversi
 
 - Plugin: `gads`, MCP server: `gads`, login: Desktop OAuth client, then `login business`
 - Install: `claude plugin install gads@google-services-mcps`
-- Tools: 338 total. Curated 11, per-method 323, gateway 3. Read 99, write 195, destructive 20, dynamic 24.
+- Tools: 339 total. Curated 12, per-method 323, gateway 3. Read 99, write 196, destructive 20, dynamic 24.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-## Curated tools (11)
+## Curated tools (12)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
@@ -21,6 +21,7 @@ Read tools never ask. Write, destructive and dynamic tools ask before they run, 
 | `auth_login` | write | Sign in to Google | (none) |
 | `auth_setup_admin` | write | Set up the workspace admin account | (none) |
 | `auth_setup_client` | write | Save the Google OAuth client | (none) |
+| `auth_setup_service_account` | write | Set up the service account key | (none) |
 | `auth_status` | read | Sign-in status | (none) |
 | `health` | read | Server health | (none) |
 

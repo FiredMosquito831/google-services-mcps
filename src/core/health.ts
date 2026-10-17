@@ -1,8 +1,8 @@
-import { existsSync } from 'node:fs';
-import { loadUserTokens, loginSourceOf, readAdminScopeFile, type AuthKind } from './auth.js';
+import { loadUserTokens, loginSourceOf, readAdminScopeFile, readServiceAccountFile, type AuthKind } from './auth.js';
 import { readAdcState } from './adc.js';
 import type { RuntimeConfig } from './config.js';
-import { checkGrant, type GrantState } from './grant-check.js';
+import { secretFileExists } from './secret-files.js';
+import { checkGrant, checkServiceAccountGrant, type GrantState } from './grant-check.js';
 import { invocation } from './invocation.js';
 
 /**
@@ -33,7 +33,7 @@ export interface LiveHealth {
 
 /** The next tool for a server without a Google sign-in: save the client first if it is missing, then sign in. */
 function nextSignIn(cfg: RuntimeConfig): string {
-  return existsSync(cfg.clientSecretFile) ? 'auth_login' : 'auth_setup_client';
+  return secretFileExists(cfg, cfg.clientSecretFile) ? 'auth_login' : 'auth_setup_client';
 }
 
 /** The account recorded in a group's token file at login. */
@@ -68,6 +68,19 @@ export function loginHealth(group: string, cfg: RuntimeConfig): LoginHealth {
       next: configured ? undefined : 'auth_setup_admin',
     };
   }
+  if (group === 'service-account') {
+    const source = loginSourceOf('service-account', cfg);
+    const stored = readServiceAccountFile(cfg);
+    return {
+      kind: 'service-account',
+      loggedIn: source !== undefined,
+      account: source ? stored?.clientEmail : undefined,
+      next: source ? undefined : 'auth_setup_service_account',
+      detail: source
+        ? 'service account key set up (Play Console or Merchant Center must list the account)'
+        : `not set up: run ${invocation()} setup-service-account --key-file <file>`,
+    };
+  }
   if (group === 'cloud') {
     const source = loginSourceOf('cloud', cfg);
     return {
@@ -92,8 +105,9 @@ export function loginHealth(group: string, cfg: RuntimeConfig): LoginHealth {
  * What a login's source means for the health line. An ADC login made by hand, with gcloud's built-in client, has no
  * quota project unless gcloud was given one. The line says so, because cloud APIs may then fail with a quota error.
  */
-function sourceDetail(source: 'oauth' | 'adc' | undefined, cfg: RuntimeConfig, missing: string): string {
+function sourceDetail(source: 'oauth' | 'adc' | 'service-account' | undefined, cfg: RuntimeConfig, missing: string): string {
   if (source === 'oauth') return 'logged in';
+  if (source === 'service-account') return 'service account key set up';
   if (source === undefined) return missing;
   const state = readAdcState(cfg);
   const quotaNote =
@@ -108,7 +122,7 @@ export async function liveHealth(group: string, cfg: RuntimeConfig): Promise<Liv
   if (group === 'apikey' || group === 'workspace-admin') {
     return { state: 'not-applicable', detail: 'nothing to ask Google about for this group', missingScopes: [] };
   }
-  const check = await checkGrant(group as AuthKind, cfg);
+  const check = group === 'service-account' ? await checkServiceAccountGrant(cfg) : await checkGrant(group as AuthKind, cfg);
   return {
     state: check.state,
     detail: check.detail,

@@ -128,11 +128,13 @@ test('a plugin folder validates ids against its own servers.json, so another pro
   }
 });
 
-test('the repo product list comes from config/products.json, and developer products are in its registry', () => {
+test('the repo product list comes from config/products.json, and each product is in its group', () => {
   const reg = loadProductRegistry({ layout: 'repo', root: REPO, mapFile: join(REPO, 'config', 'products.json') }, import.meta.url);
   assert.deepEqual([...productIds(reg)].sort(), [...REPO_IDS].sort());
-  for (const id of ['gplay', 'gfirebase', 'gmaps']) {
-    assert.equal(reg.servers.find((s) => s.plugin === id)?.group, 'developer', `${id} should be in the developer group`);
+  // Google Play and Merchant Center use a service account key; Maps uses an API key; Firebase keeps its OAuth login.
+  const expected = { gplay: 'service-account', gmerchant: 'service-account', gmaps: 'apikey', gfirebase: 'developer' };
+  for (const [id, group] of Object.entries(expected)) {
+    assert.equal(reg.servers.find((s) => s.plugin === id)?.group, group, `${id} should be in the ${group} group`);
   }
 });
 

@@ -8,6 +8,8 @@ import * as codex from './adapters/codex.js';
 import * as opencode from './adapters/opencode.js';
 import { OAUTH_GROUPS, type InstallRequestArgs } from './args.js';
 import { listAccounts } from '../core/accounts.js';
+import { readAdminScopeFile, serviceAccountSource } from '../core/auth.js';
+import { secretFileExists } from '../core/secret-files.js';
 import { apiKeyFileFor, apiKeyState } from './credentials.js';
 import { checkInstall, renderInstallList } from './list.js';
 import { checkoutRootFor, serverFileFor, type InstallRoots } from './paths.js';
@@ -103,18 +105,21 @@ export function loginSteps(servers: readonly ServerSpec[]): string[] {
   const groups = [...new Set(servers.map((s) => s.group as string))];
   const pending = groups.filter((g) => (OAUTH_GROUPS as readonly string[]).includes(g) && listAccounts(g, cfg).length === 0);
   const steps: string[] = [];
-  if (pending.length > 0 && !existsSync(cfg.clientSecretFile)) {
+  if (pending.length > 0 && !secretFileExists(cfg, cfg.clientSecretFile)) {
     steps.push('node gsm.mjs setup-client <client_secret.json>   (once: the OAuth desktop client)');
   }
   for (const group of pending) {
     const names = servers.filter((s) => s.group === group).map((s) => s.name);
     steps.push(`node gsm.mjs login ${group} --profile readonly --servers ${names.join(',')}`);
   }
-  if (groups.includes('apikey') && apiKeyState(apiKeyFileFor(cfg)) !== 'saved') {
+  if (groups.includes('apikey') && apiKeyState(cfg) !== 'saved') {
     steps.push('node gsm.mjs setup-apikey   (reads GSM_API_KEY_INPUT or stdin)');
   }
-  if (groups.includes('workspace-admin')) {
+  if (groups.includes('workspace-admin') && !readAdminScopeFile(cfg) && !(cfg.serviceAccountKeyFile && cfg.adminSubject)) {
     steps.push('node gsm.mjs setup-admin --subject <super admin email> --key-file <service account JSON>');
+  }
+  if (groups.includes('service-account') && serviceAccountSource(cfg) === null) {
+    steps.push('node gsm.mjs setup-service-account --key-file <service account JSON>   (gplay and gmerchant: add its email in Play Console and Merchant Center first)');
   }
   return steps;
 }

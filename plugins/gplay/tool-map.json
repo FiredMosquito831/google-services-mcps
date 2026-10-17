@@ -2164,6 +2164,12 @@
     "title": "Save the Google OAuth client"
   },
   {
+    "name": "mcp__plugin_gplay_gplay__auth_setup_service_account",
+    "kind": "write",
+    "scopes": [],
+    "title": "Set up the service account key"
+  },
+  {
     "name": "mcp__plugin_gplay_gplay__auth_status",
     "kind": "read",
     "scopes": [],

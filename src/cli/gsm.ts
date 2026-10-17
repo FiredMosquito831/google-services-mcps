@@ -17,6 +17,8 @@ import {
   parseUninstallAllArgs,
 } from './args.js';
 import { runSetupAdmin } from './admin.js';
+import { runSetupServiceAccount } from './service-account.js';
+import { runProtect } from './protect.js';
 import { API_KEY_ENV, runSetupApiKey } from './apikey.js';
 import {
   apiKeyFileFor,
@@ -68,6 +70,8 @@ Commands:
   setup-client  Save the OAuth Desktop client file (client_secret.json)
   setup-apikey  Save the API key for the apikey group (reads GSM_API_KEY_INPUT or stdin)
   setup-admin   Set up workspace-admin: service account and super admin subject
+  setup-service-account  Set up the service account for Google Play and Merchant Center (--remove forgets it)
+  protect       Move the saved secrets into the OS store (DPAPI, Keychain or libsecret). --off moves them back to plain files
   status        Show logins, the API key and the security posture of each token (--check asks Google: validity, scopes, key restrictions)
   logout        Revoke one group's login at Google and remove its token (--account <email> names one account; --local-only: only remove the file; apikey: shows where the key file is)
   accounts      List the signed-in accounts of each group. "accounts default <group> <email>" sets the default one
@@ -91,6 +95,7 @@ Usage:
   node gsm.mjs setup-client <path-to-client_secret.json> [--force]
   node gsm.mjs setup-apikey [--force]
   node gsm.mjs setup-admin --subject <admin email> --key-file <service account JSON> [--profile readonly|readwrite|full] [--servers <a,b>] [--replace]
+  node gsm.mjs setup-service-account --key-file <service account JSON>   (gplay and gmerchant; --remove forgets the setup)
   node gsm.mjs status [--check]
   node gsm.mjs logout <group> [--local-only]
   node gsm.mjs products [--json]
@@ -195,7 +200,7 @@ function guidedEnvFor(prompt: Prompter, moduleUrl: string): GuidedEnv {
     cwd: process.cwd(),
     out,
     clientSecretFile: cfg.clientSecretFile,
-    apiKeySaved: apiKeyState(apiKeyFileFor(cfg)) === 'saved',
+    apiKeySaved: apiKeyState(cfg) === 'saved',
     saveApiKey: (key, force) => runSetupApiKey({ force, env: environment, readStdin: async () => key }, out),
     requirements: (agents, needGit) => checkRequirements({ run: spawnRunner, platform: process.platform, cwd: process.cwd() }, agents, needGit),
   };
@@ -329,6 +334,32 @@ async function dispatch(argv: readonly string[]): Promise<number> {
         throw new UsageError('usage: node gsm.mjs setup-admin --subject <admin email> --key-file <service account JSON> [--profile readonly|readwrite|full] [--servers a,b] [--replace]');
       }
       return runSetupAdmin(parseSetupAdminArgs(parsed.values), registryFor(), out);
+    }
+
+    case 'protect': {
+      if (parsed.positionals.length !== 0) {
+        throw new UsageError('usage: node gsm.mjs protect [--backend dpapi|keychain|secret-service] | protect --off');
+      }
+      const protectCfg = loadConfig();
+      return runProtect(
+        {
+          tokenDir: protectCfg.tokenDir,
+          off: parsed.values.off === true,
+          backend: optionalString(parsed.values.backend, 'backend'),
+        },
+        out,
+      );
+    }
+
+    case 'setup-service-account': {
+      // Play and Merchant Center: one key for the service-account group. Never read the key from an argument.
+      if (parsed.positionals.length !== 0) {
+        throw new UsageError('usage: node gsm.mjs setup-service-account --key-file <service account JSON>  (or --remove)');
+      }
+      return runSetupServiceAccount(
+        { keyFile: optionalString(parsed.values['key-file'], 'key-file'), remove: parsed.values.remove === true },
+        out,
+      );
     }
 
     case 'setup-client': {

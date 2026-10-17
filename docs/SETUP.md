@@ -10,9 +10,10 @@ The commands in this guide use the installer, `npx google-services-mcps`. They r
 | gsc | `searchconsole` | Desktop OAuth client, then `login searchconsole` |
 | gdrive, gmail, gcalendar, gchat, gmeet, gcontacts, gtasks, gclassroom, gapps | `workspace-user` | Desktop OAuth client, then `login workspace-user` |
 | gadmin | `workspace-admin` | Service account with domain-wide delegation, then `setup-admin` |
-| ganalytics, gtm, gyoutube, gbusiness, gads, gmerchant | `business` | Desktop OAuth client, then `login business`. Google Ads also needs the notes in [Google Ads (gads)](#google-ads-gads). |
-| gplay, gfirebase, gmaps | `developer` | Desktop OAuth client, then `login developer` |
-| gsearch | `apikey` | API key, then `setup-apikey` (no login) |
+| ganalytics, gtm, gyoutube, gbusiness, gads | `business` | Desktop OAuth client, then `login business`. Google Ads also needs the notes in [Google Ads (gads)](#google-ads-gads). |
+| gfirebase | `developer` | Desktop OAuth client, then `login developer` |
+| gplay, gmerchant | `service-account` | Service account key, then `setup-service-account` (no login). See [Google Play and Merchant Center](#google-play-and-merchant-center-gplay-gmerchant). |
+| gsearch, gmaps | `apikey` | API key, then `setup-apikey` (no login) |
 
 ## Desktop OAuth client (most products)
 
@@ -68,6 +69,45 @@ Domain-wide delegation needs a super admin and a Google Cloud service account.
    ```
 
 The command checks that the file is a service account key (JSON with a `client_email`). It never prints the file. The key file is not copied. The suite reads it from where you put it, so do not move it. The admin's email and the key file can also be set as plugin options (`admin_subject` and `service_account_key_file`).
+
+## Google Play and Merchant Center (gplay, gmerchant)
+
+These two use a service account key, not a login. Google recommends a service account for this kind of server-side use.
+
+1. In the Google Cloud console, open IAM & Admin > Service accounts, and create a service account. Under Keys, add a JSON key. Keep the file.
+2. Give the service account's email address (it ends in `.iam.gserviceaccount.com`) access:
+   - Google Play: Play Console > Users and permissions, and add the email with the rights you need.
+   - Merchant Center: add the email as a user with Admin access, as the [Merchant API quickstart](https://developers.google.com/merchant/api/guides/quickstart/authentication) describes.
+3. Record the key:
+
+   ```
+   node gsm.mjs setup-service-account --key-file C:\path\to\key.json
+   ```
+
+   Or call `auth_setup_service_account` in the chat. gsm stores only the path to the key, the account's email and the time. It never copies or prints the key. `node gsm.mjs setup-service-account --remove` forgets the setup, and the key file stays where it is.
+4. Restart the gplay and gmerchant servers.
+
+Google accepts calls only for accounts that Play Console or Merchant Center lists. `status --check` checks the key with Google, and it does not check that access.
+
+If `GOOGLE_APPLICATION_CREDENTIALS` points to a service account key, these servers use that key, with no setup step.
+
+## Google Maps (gmaps)
+
+gmaps uses an API key, like gsearch. Create the key in Google Cloud console, restrict it to the Maps APIs you use, and save it with `node gsm.mjs setup-apikey`. gsearch and gmaps share the one saved key.
+
+## Keeping the secrets in the OS store (optional)
+
+By default the saved secrets are plain files in the token folder, with mode 0600 on Linux and macOS. To keep them in the operating system's store:
+
+```
+node gsm.mjs protect
+```
+
+- Windows uses DPAPI. The data is encrypted for your Windows user on this machine. A copy of the token folder on another machine, or for another user, cannot be read.
+- macOS (Keychain) and Linux (libsecret) are implemented, but they were not run in this release.
+- Each value is read back from the store before its plain file is removed. If one value fails, nothing is changed.
+- To return to plain files: `node gsm.mjs protect --off`.
+- `node gsm.mjs status` shows which store is in use. The names of the stored secrets are listed in `secrets.json`, and the choice is in `store.json`. Neither holds a secret.
 
 ## Google Ads (gads)
 

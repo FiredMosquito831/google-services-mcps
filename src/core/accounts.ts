@@ -1,4 +1,5 @@
-import { existsSync, readFileSync, rmSync, writeFileSync, chmodSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync, chmodSync } from 'node:fs';
+import { readSecretText, removeSecretFile, writeSecretText } from './secret-files.js';
 import { join } from 'node:path';
 import type { Credentials } from 'google-auth-library';
 import { ensureTokenDir } from './acl.js';
@@ -67,10 +68,11 @@ function writeRegistry(cfg: RuntimeConfig, registry: Registry): void {
   }
 }
 
-function readTokenFile(path: string): Credentials | null {
-  if (!existsSync(path)) return null;
+function readTokenFile(cfg: RuntimeConfig, path: string): Credentials | null {
+  const text = readSecretText(cfg, path);
+  if (text === undefined) return null;
   try {
-    return JSON.parse(readFileSync(path, 'utf8')) as Credentials;
+    return JSON.parse(text) as Credentials;
   } catch {
     return null;
   }
@@ -81,7 +83,7 @@ function recordOf(registry: Registry, group: string, cfg: RuntimeConfig): GroupR
   const known = registry.groups[group];
   if (known) return known;
   const legacyFile = `${group}.token.json`;
-  const legacy = readTokenFile(join(cfg.tokenDir, legacyFile));
+  const legacy = readTokenFile(cfg, join(cfg.tokenDir, legacyFile));
   if (!legacy?.refresh_token && !legacy?.access_token) return { accounts: {} };
   const email = (legacy as { account?: string }).account ?? UNKNOWN_ACCOUNT;
   return {
@@ -135,12 +137,7 @@ export function saveAccount(group: string, email: string, tokens: Credentials & 
   const previous = Object.keys(record.accounts);
   const file = existing?.file ?? `${group}.${slugOf(email)}.token.json`;
   ensureTokenDir(cfg.tokenDir);
-  writeFileSync(join(cfg.tokenDir, file), JSON.stringify(tokens, null, 2) + '\n', { encoding: 'utf8', mode: 0o600 });
-  try {
-    chmodSync(join(cfg.tokenDir, file), 0o600);
-  } catch {
-    // Windows ignores POSIX modes.
-  }
+  writeSecretText(cfg, join(cfg.tokenDir, file), JSON.stringify(tokens, null, 2) + '\n');
   record.accounts[email] = {
     file,
     scopes: (tokens.scope ?? '').split(' ').filter(Boolean),
@@ -172,8 +169,7 @@ export function removeAccount(group: string, email: string, cfg: RuntimeConfig):
   const record = recordOf(registry, group, cfg);
   const entry = record.accounts[email];
   if (!entry) return false;
-  const file = join(cfg.tokenDir, entry.file);
-  if (existsSync(file)) rmSync(file);
+  removeSecretFile(cfg, join(cfg.tokenDir, entry.file));
   delete record.accounts[email];
   if (record.default === email) {
     const remaining = Object.keys(record.accounts);

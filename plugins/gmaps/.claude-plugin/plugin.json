@@ -1,7 +1,7 @@
 {
   "name": "gmaps",
   "displayName": "Maps and Location",
-  "version": "0.6.0",
+  "version": "1.0.0",
   "description": "Maps Platform and location APIs: Places, Address Validation, Solar, Air Quality, Pollen, Street View Publish and related datasets.",
   "author": {
     "name": "FiredMosquito831"
@@ -10,7 +10,7 @@
     "google",
     "mcp",
     "gmaps",
-    "developer"
+    "apikey"
   ],
   "userConfig": {
     "allow_writes": {

@@ -626,7 +626,9 @@ test('--dump-tools prints the tool map with dynamic tools listed as write, and s
   // The runtime tools (health, the sign-in tools) are added by runServer to every map. The demo tools are checked on their own.
   assert.ok(tools.some((t) => t.name === 'health' && t.kind === 'read'));
   assert.deepEqual(
-    tools.filter((t) => !['health', 'auth_status', 'auth_setup_client', 'auth_login', 'auth_setup_admin', 'accounts_list', 'account_set_default', 'account_remove'].includes(t.name)).map((t) => [t.name, t.kind]),
+    tools
+      .filter((t) => !['health', 'auth_status', 'auth_setup_client', 'auth_login', 'auth_setup_admin', 'auth_setup_service_account', 'accounts_list', 'account_set_default', 'account_remove'].includes(t.name))
+      .map((t) => [t.name, t.kind]),
     [
       ['demo_delete', 'destructive'],
       ['demo_dynamic', 'dynamic'],
