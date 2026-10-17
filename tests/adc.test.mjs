@@ -284,6 +284,38 @@ test('the live check of an ADC login asks Google the same way, and names the acc
   }
 });
 
+test('token info is read in both shapes: the library returns scopes and expiry_date, the raw endpoint returns scope and expires_in', async () => {
+  const now = 1_000_000;
+  assert.deepEqual(grant.readTokenInfo({ scopes: ['a', 'b'], expiry_date: now + 90_000 }, now), { scopes: ['a', 'b'], expiresInSeconds: 90 });
+  assert.deepEqual(grant.readTokenInfo({ scope: 'a b', expires_in: 60 }, now), { scopes: ['a', 'b'], expiresInSeconds: 60 });
+  assert.deepEqual(grant.readTokenInfo({ scopes: ['a'], expiry_date: now - 5_000 }, now), { scopes: ['a'], expiresInSeconds: 0 });
+  assert.deepEqual(grant.readTokenInfo({}, now), { scopes: [], expiresInSeconds: undefined });
+});
+
+test('the live check of an ADC login reads the scopes the library reports, so a granted scope is not called missing', async () => {
+  const dir = folder();
+  try {
+    const cfg = loadConfig({ GSM_TOKEN_DIR: dir });
+    const file = writeAdcFile(dir, { refresh: 'rt-shape' });
+    adc.saveAdcRecord(cfg, { group: 'workspace-user', scopes: [GMAIL_SCOPE], fingerprint: adc.fingerprintOf('rt-shape') });
+    const libraryShape = {
+      makeAdcClient: async () => ({
+        getAccessToken: async () => ({ token: 'ya29.fake-shape' }),
+        // google-auth-library's shape: scopes as an array, expiry_date in milliseconds.
+        getTokenInfo: async () => ({ scopes: [GMAIL_SCOPE, 'https://www.googleapis.com/auth/userinfo.email'], expiry_date: Date.now() + 600_000, email: 'me@example.com' }),
+        setCredentials() {},
+        revokeToken: async () => {},
+      }),
+    };
+    const check = await withAdcEnv(file, () => grant.checkGrant('workspace-user', cfg, libraryShape));
+    assert.equal(check.state, 'valid');
+    assert.deepEqual(check.missingScopes, [], 'the granted scope is found');
+    assert.ok(check.expiresInSeconds > 0 && check.expiresInSeconds <= 600, 'the time left is read from expiry_date');
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
 test('auth_login asks which way to sign in, then signs in with ADC through gcloud and records the group', async () => {
   const dir = folder();
   try {

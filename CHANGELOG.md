@@ -2,6 +2,11 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.0.1 - 2026-10-17
+
+### Fixes
+- The live checks read the granted scopes and the time left from Google's token info in the shape google-auth-library returns (`scopes` as a list, `expiry_date` in milliseconds). Before, the granted scopes were read as empty, so a valid login could show its stored scopes as no longer granted. This affected every OAuth login and the ADC login, in `status --check`, `doctor`, and the health tool with `live: true`.
+
 ## 1.0.0 - 2026-10-17
 
 This is a major version: two products change how they sign in, so people must act once.

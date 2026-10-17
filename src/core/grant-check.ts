@@ -37,11 +37,33 @@ export interface GrantCheck {
   expiresInSeconds?: number;
 }
 
+/**
+ * Google's token info, in either shape. google-auth-library returns the scopes as `scopes` (an array) and the expiry as
+ * `expiry_date` (milliseconds). The raw tokeninfo endpoint returns `scope` (a space-separated string) and `expires_in`
+ * (seconds). A check that reads only one of them sees no granted scopes, so both are read.
+ */
+export interface TokenInfoLike {
+  scope?: string | null;
+  scopes?: string[] | null;
+  expires_in?: number | null;
+  expiry_date?: number | null;
+  email?: string | null;
+}
+
+/** The scopes and the time left, from either shape of token info. */
+export function readTokenInfo(info: TokenInfoLike, now: number = Date.now()): { scopes: string[]; expiresInSeconds?: number } {
+  const scopes = Array.isArray(info.scopes) ? info.scopes.filter(Boolean) : (info.scope ?? '').split(' ').filter(Boolean);
+  let expiresInSeconds: number | undefined;
+  if (typeof info.expires_in === 'number') expiresInSeconds = info.expires_in;
+  else if (typeof info.expiry_date === 'number') expiresInSeconds = Math.max(0, Math.round((info.expiry_date - now) / 1000));
+  return { scopes, expiresInSeconds };
+}
+
 /** The part of OAuth2Client these checks use. Tests pass a fake. */
 export interface OAuthClientLike {
   setCredentials(tokens: Credentials): void;
   getAccessToken(): Promise<{ token?: string | null }>;
-  getTokenInfo(accessToken: string): Promise<{ scope?: string | null; expires_in?: number | null; email?: string | null }>;
+  getTokenInfo(accessToken: string): Promise<TokenInfoLike>;
   revokeToken(token: string): Promise<unknown>;
 }
 
@@ -123,7 +145,7 @@ export async function checkGrant(group: AuthKind, cfg: RuntimeConfig, deps: Gran
   }
   if (!access) return none('expired', expiredDetail(group));
 
-  let info: { scope?: string | null; expires_in?: number | null; email?: string | null };
+  let info: TokenInfoLike;
   try {
     info = await client.getTokenInfo(access);
   } catch (err) {
@@ -132,7 +154,7 @@ export async function checkGrant(group: AuthKind, cfg: RuntimeConfig, deps: Gran
     return none('unreachable', `could not check the token with Google: ${text}`);
   }
 
-  const granted = (info.scope ?? '').split(' ').filter(Boolean);
+  const { scopes: granted, expiresInSeconds } = readTokenInfo(info);
   const missingScopes = stored.filter((scope) => !granted.includes(scope));
   return {
     group,
@@ -140,7 +162,7 @@ export async function checkGrant(group: AuthKind, cfg: RuntimeConfig, deps: Gran
     detail: missingScopes.length > 0 ? `valid, but ${missingScopes.length} stored scope(s) are no longer granted` : 'valid',
     scopes: granted,
     missingScopes,
-    expiresInSeconds: info.expires_in ?? undefined,
+    expiresInSeconds,
     account: info.email ?? undefined,
   };
 }
@@ -169,7 +191,7 @@ async function checkAdcGrant(group: AuthKind, stored: string[], deps: GrantDeps)
   }
   if (!access) return none('expired', adcExpiredDetail(group));
 
-  let info: { scope?: string | null; expires_in?: number | null; email?: string | null };
+  let info: TokenInfoLike;
   try {
     info = await client.getTokenInfo(access);
   } catch (err) {
@@ -178,7 +200,7 @@ async function checkAdcGrant(group: AuthKind, stored: string[], deps: GrantDeps)
     return none('unreachable', `could not check the ADC token with Google: ${text}`);
   }
 
-  const granted = (info.scope ?? '').split(' ').filter(Boolean);
+  const { scopes: granted, expiresInSeconds } = readTokenInfo(info);
   const missingScopes = stored.filter((scope) => !granted.includes(scope));
   return {
     group,
@@ -186,7 +208,7 @@ async function checkAdcGrant(group: AuthKind, stored: string[], deps: GrantDeps)
     detail: missingScopes.length > 0 ? `valid (ADC), but ${missingScopes.length} stored scope(s) are no longer granted` : 'valid (ADC)',
     scopes: granted,
     missingScopes,
-    expiresInSeconds: info.expires_in ?? undefined,
+    expiresInSeconds,
     account: info.email ?? undefined,
   };
 }
