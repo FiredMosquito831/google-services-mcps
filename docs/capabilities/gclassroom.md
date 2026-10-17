@@ -4,14 +4,17 @@ Google Classroom courses, coursework, submissions, students and teachers.
 
 - Plugin: `gclassroom`, MCP server: `gclassroom`, login: Desktop OAuth client, then `login workspace-user`
 - Install: `claude plugin install gclassroom@google-services-mcps`
-- Tools: 110 total. Curated 5, per-method 104, gateway 0. Read 46, write 46, destructive 18, dynamic 0.
+- Tools: 113 total. Curated 8, per-method 104, gateway 0. Read 47, write 48, destructive 18, dynamic 0.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-## Curated tools (5)
+## Curated tools (8)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
+| `account_remove` | write | Remove a signed-in account | (none) |
+| `account_set_default` | write | Set the default account | (none) |
+| `accounts_list` | read | Signed-in accounts | (none) |
 | `auth_login` | write | Sign in to Google | (none) |
 | `auth_setup_admin` | write | Set up the workspace admin account | (none) |
 | `auth_setup_client` | write | Save the Google OAuth client | (none) |

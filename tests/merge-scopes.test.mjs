@@ -264,6 +264,6 @@ test('status: a stored login shows its scope count', async () => {
     writeFileSync(join(p.tokens, 'business.token.json'), JSON.stringify({ access_token: 'not-a-real-token', scope: [G('a'), G('b'), G('c')].join(' ') }));
     const res = spawnSync(process.execPath, [GSM, 'status'], { env: envFor(p), encoding: 'utf8', timeout: 60_000 });
     assert.equal(res.status, 0, res.stderr);
-    assert.match(res.stdout, /business: logged in[\s\S]*?  scopes \(3\):/);
+    assert.match(res.stdout, /business: 1 account\(s\) signed in[\s\S]*?scopes \(3\):/);
   });
 });

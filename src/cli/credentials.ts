@@ -1,6 +1,14 @@
-import { existsSync, readFileSync, unlinkSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { ensureTokenDir } from '../core/acl.js';
+import {
+  accountNames,
+  accountTokenFile,
+  defaultAccount,
+  listAccounts,
+  removeAccount,
+  setDefaultAccount,
+} from '../core/accounts.js';
 import { ADMIN_SCOPES, adminScopeFileFor, readAdminScopeFile, type AuthKind } from '../core/auth.js';
 import { checkGrant, checkKeyRestrictions, revokeGrant, type GrantState } from '../core/grant-check.js';
 import { loadConfig, type RuntimeConfig } from '../core/config.js';
@@ -126,25 +134,28 @@ export function runStatus(out: Output, env: NodeJS.ProcessEnv = process.env): nu
       continue;
     }
 
-    const file = tokenFileFor(group, cfg);
-    const { token, error } = readStoredToken(file);
-    if (error) {
-      out.log(`${group}: token file unreadable (${error}). Run: node gsm.mjs logout ${group}, then node gsm.mjs login ${group}`);
-      continue;
-    }
-    if (!token || !(token.refresh_token || token.access_token)) {
+    const accounts = listAccounts(group, cfg);
+    if (accounts.length === 0) {
       out.log(`${group}: not logged in (run: node gsm.mjs login ${group})`);
       continue;
     }
-    const scopes = (token.scope ?? '').split(' ').filter(Boolean);
-    out.log(`${group}: logged in`);
-    out.log(`  token file: ${file}`);
-    out.log(`  account: ${token.account ?? 'not recorded (log in again to record it)'}`);
-    out.log(`  expires: ${formatExpiry(token.expiry_date)}`);
-    out.log(`  refresh token: ${token.refresh_token ? 'yes' : 'no'}`);
-    out.log(`  scopes (${scopes.length}):`);
-    for (const scope of scopes) out.log(`    ${scope}`);
-    out.log(`  ${postureLine(scopes, env)}`);
+    out.log(`${group}: ${accounts.length} account(s) signed in`);
+    for (const account of accounts) {
+      const file = join(cfg.tokenDir, account.file);
+      const { token, error } = readStoredToken(file);
+      if (error || !token) {
+        out.log(`  ${account.email}: token file unreadable${error ? ` (${error})` : ''}. Log it out and sign in again.`);
+        continue;
+      }
+      const scopes = (token.scope ?? '').split(' ').filter(Boolean);
+      out.log(`  ${account.email}${account.default ? ' (default)' : ''}: logged in`);
+      out.log(`    token file: ${file}`);
+      out.log(`    expires: ${formatExpiry(token.expiry_date)}`);
+      out.log(`    refresh token: ${token.refresh_token ? 'yes' : 'no'}`);
+      out.log(`    scopes (${scopes.length}):`);
+      for (const scope of scopes) out.log(`      ${scope}`);
+      out.log(`    ${postureLine(scopes, env)}`);
+    }
   }
   return 0;
 }
@@ -166,15 +177,24 @@ export async function runStatusCheck(out: Output, env: NodeJS.ProcessEnv = proce
   const cfg = loadConfig(env);
   let problems = 0;
   for (const group of OAUTH_GROUPS) {
-    const result = await checkGrant(group as AuthKind, cfg);
-    if (result.state !== 'valid') problems += 1;
-    out.log(`${group}: ${CHECK_LABEL[result.state]}. ${result.detail}`);
-    if (result.state === 'valid') {
-      const minutes = result.expiresInSeconds === undefined ? 'unknown' : `${Math.round(result.expiresInSeconds / 60)} min`;
-      out.log(`  account: ${result.account ?? 'unknown (the login has no email scope; log in again to record it)'}`);
-      out.log(`  access token expires in: ${minutes}`);
-      out.log(`  granted scopes (${result.scopes.length}):`);
-      for (const scope of result.scopes) out.log(`    ${scope}`);
+    const accounts = listAccounts(group, cfg);
+    if (accounts.length === 0) {
+      const result = await checkGrant(group as AuthKind, cfg);
+      problems += 1;
+      out.log(`${group}: ${CHECK_LABEL[result.state]}. ${result.detail}`);
+      continue;
+    }
+    // Every signed-in account is checked, so each one's grant and scopes are seen.
+    for (const account of accounts) {
+      const result = await checkGrant(group as AuthKind, cfg, {}, account.email);
+      if (result.state !== 'valid') problems += 1;
+      out.log(`${group} ${account.email}${account.default ? ' (default)' : ''}: ${CHECK_LABEL[result.state]}. ${result.detail}`);
+      if (result.state === 'valid') {
+        const minutes = result.expiresInSeconds === undefined ? 'unknown' : `${Math.round(result.expiresInSeconds / 60)} min`;
+        out.log(`  access token expires in: ${minutes}`);
+        out.log(`  granted scopes (${result.scopes.length}):`);
+        for (const scope of result.scopes) out.log(`    ${scope}`);
+      }
     }
   }
 
@@ -200,10 +220,14 @@ export async function runStatusCheck(out: Output, env: NodeJS.ProcessEnv = proce
 }
 
 /**
- * Removes one group's token file. Unless localOnly is set, the grant is revoked at Google first, so the refresh token
- * stops working everywhere, not just on this machine.
+ * Removes one account of a group: the named one, else the default. Unless localOnly is set, that account's grant is
+ * revoked at Google first, so its refresh token stops working everywhere, not just on this machine.
  */
-export async function runLogout(group: CliGroup, out: Output, options: { localOnly?: boolean } = {}): Promise<number> {
+export async function runLogout(
+  group: CliGroup,
+  out: Output,
+  options: { localOnly?: boolean; account?: string } = {},
+): Promise<number> {
   if (group === 'workspace-admin') {
     out.log('workspace-admin has no stored login (it uses GSM_SERVICE_ACCOUNT_KEY_FILE and GSM_ADMIN_SUBJECT). Nothing to remove.');
     return 0;
@@ -213,20 +237,51 @@ export async function runLogout(group: CliGroup, out: Output, options: { localOn
     out.log(`apikey has no login. The saved key is ${apiKeyFileFor(cfg)}: delete that file to remove it.`);
     return 0;
   }
-  const file = tokenFileFor(group, cfg);
-  if (!existsSync(file)) {
-    out.log(`${group}: not logged in (no token file)`);
+  const email = options.account ?? defaultAccount(group, cfg);
+  if (email === undefined) {
+    out.log(`${group}: not logged in${accountNames(group, cfg) === 'none' ? '' : `; ${accountNames(group, cfg)} are signed in, so name one with --account`}`);
+    return 0;
+  }
+  const file = accountTokenFile(group, email, cfg);
+  if (!file) {
+    out.log(`${group}: no signed-in account "${email}". Signed in: ${accountNames(group, cfg)}`);
     return 0;
   }
   if (!options.localOnly) {
-    const revoke = await revokeGrant(group as AuthKind, cfg);
-    if (revoke) out.log(`${group}: ${revoke.detail}`);
+    const revoke = await revokeGrant(group as AuthKind, cfg, {}, email);
+    if (revoke) out.log(`${group} ${email}: ${revoke.detail}`);
   }
-  unlinkSync(file);
-  out.log(`${group}: removed ${file}`);
+  removeAccount(group, email, cfg);
+  out.log(`${group} ${email}: removed from this machine (${file})`);
+  out.log(`Signed in for ${group}: ${accountNames(group, cfg)}`);
   if (options.localOnly) {
     out.log('--local-only: the grant was not revoked at Google. To revoke it, use https://myaccount.google.com/permissions');
   }
+  return 0;
+}
+
+/** Lists the signed-in accounts of every Google group, the default one marked. */
+export function runAccounts(out: Output, group: string | undefined, env: NodeJS.ProcessEnv = process.env): number {
+  const cfg = loadConfig(env);
+  const groups = group === undefined ? (OAUTH_GROUPS as readonly string[]) : [group];
+  for (const name of groups) {
+    const accounts = listAccounts(name, cfg);
+    if (accounts.length === 0) {
+      out.log(`${name}: no account signed in (run: node gsm.mjs login ${name})`);
+      continue;
+    }
+    out.log(`${name}:`);
+    for (const account of accounts) {
+      out.log(`  ${account.email}${account.default ? '  (default)' : ''}  ${account.scopes.length} scope(s)${account.addedAt ? `  signed in ${account.addedAt.slice(0, 10)}` : ''}`);
+    }
+  }
+  return 0;
+}
+
+/** Makes one signed-in account the default of its group. Tools use the default when a call names no account. */
+export function runSetDefaultAccount(group: string, email: string, out: Output, env: NodeJS.ProcessEnv = process.env): number {
+  setDefaultAccount(group, email, loadConfig(env));
+  out.log(`The default account for ${group} is now ${email}.`);
   return 0;
 }
 

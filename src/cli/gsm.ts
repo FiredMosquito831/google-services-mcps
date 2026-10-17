@@ -18,7 +18,16 @@ import {
 } from './args.js';
 import { runSetupAdmin } from './admin.js';
 import { API_KEY_ENV, runSetupApiKey } from './apikey.js';
-import { apiKeyFileFor, apiKeyState, runStatus, runStatusCheck, runLogout, runSetupClient } from './credentials.js';
+import {
+  apiKeyFileFor,
+  apiKeyState,
+  runAccounts,
+  runLogout,
+  runSetDefaultAccount,
+  runSetupClient,
+  runStatus,
+  runStatusCheck,
+} from './credentials.js';
 import { guidedInstall, guidedSignIn, guidedUninstall, runMenu, type GuidedEnv, type InstallPrefill } from './guided.js';
 import { checkRequirements } from './requirements.js';
 import { createPrompter, type Prompter } from './prompt.js';
@@ -60,7 +69,8 @@ Commands:
   setup-apikey  Save the API key for the apikey group (reads GSM_API_KEY_INPUT or stdin)
   setup-admin   Set up workspace-admin: service account and super admin subject
   status        Show logins, the API key and the security posture of each token (--check asks Google: validity, scopes, key restrictions)
-  logout        Revoke one group's login at Google and remove its token (--local-only: only remove the file; apikey: shows where the key file is)
+  logout        Revoke one group's login at Google and remove its token (--account <email> names one account; --local-only: only remove the file; apikey: shows where the key file is)
+  accounts      List the signed-in accounts of each group. "accounts default <group> <email>" sets the default one
   products      List the products: id, title, group, tool count, gateway APIs and whether the plugin folder exists
   apis          List the APIs of a product (generated and gateway), or of the whole catalog, with method counts
   methods       List the methods of one catalog API: id, HTTP verb, path and kind (read, write or destructive)
@@ -339,7 +349,21 @@ async function dispatch(argv: readonly string[]): Promise<number> {
 
     case 'logout': {
       const group = parseGroup(parsed.positionals, 'usage: node gsm.mjs logout <group>');
-      return runLogout(group, out, { localOnly: parsed.values['local-only'] === true });
+      return runLogout(group, out, {
+        localOnly: parsed.values['local-only'] === true,
+        account: optionalString(parsed.values.account, 'account'),
+      });
+    }
+
+    case 'accounts': {
+      // accounts [--group <g>]: the signed-in accounts. accounts default <group> <email>: the default one.
+      if (parsed.positionals[0] === 'default') {
+        const [, group, email] = parsed.positionals;
+        if (!group || !email) throw new UsageError('usage: node gsm.mjs accounts default <group> <email>');
+        return runSetDefaultAccount(group, email, out);
+      }
+      noPositionals(parsed.positionals, 'usage: node gsm.mjs accounts [--group <group>] | accounts default <group> <email>');
+      return runAccounts(out, optionalString(parsed.values.group, 'group'));
     }
 
     case 'products':

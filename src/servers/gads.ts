@@ -57,15 +57,9 @@ interface AdsMutateResponse {
   requestId?: string;
 }
 
-const authClients = new Map<string, Auth>();
-
-/** The OAuth client of the business group, built once per token directory. A failed login is not kept, so a new login is seen. */
+/** The OAuth client of the business group, for the account the call names (see account-context.ts). */
 async function authFor(cfg: RuntimeConfig): Promise<Auth> {
-  const cached = authClients.get(cfg.tokenDir);
-  if (cached) return cached;
-  const auth = await getAuthClient('business', cfg);
-  authClients.set(cfg.tokenDir, auth);
-  return auth;
+  return getAuthClient('business', cfg);
 }
 
 interface AdsErrorBody {

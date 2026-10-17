@@ -1,13 +1,13 @@
 ---
 name: gdrive
-description: Google Drive files, labels and activity, plus Docs, Sheets, Slides, Forms and Books. Served by the gdrive MCP server with 190 tools. Use for requests about these Google APIs.
+description: Google Drive files, labels and activity, plus Docs, Sheets, Slides, Forms and Books. Served by the gdrive MCP server with 193 tools. Use for requests about these Google APIs.
 ---
 
 # Google Drive and Docs
 
 Google Drive files, labels and activity, plus Docs, Sheets, Slides, Forms and Books.
 
-The `gdrive` MCP server exposes 190 tools. Per-method tools cover the Discovery APIs listed below. Gateway APIs are reached through three generic tools: api_search finds a method, api_describe shows its parameters, and api_call runs it.
+The `gdrive` MCP server exposes 193 tools. Per-method tools cover the Discovery APIs listed below. Gateway APIs are reached through three generic tools: api_search finds a method, api_describe shows its parameters, and api_call runs it.
 
 ## Log in
 

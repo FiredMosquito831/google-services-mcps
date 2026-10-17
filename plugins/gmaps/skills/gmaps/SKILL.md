@@ -1,13 +1,13 @@
 ---
 name: gmaps
-description: Maps Platform and location APIs: Places, Address Validation, Solar, Air Quality, Pollen, Street View Publish and related datasets. Served by the gmaps MCP server with 41 tools. Use for requests about these Google APIs.
+description: Maps Platform and location APIs: Places, Address Validation, Solar, Air Quality, Pollen, Street View Publish and related datasets. Served by the gmaps MCP server with 44 tools. Use for requests about these Google APIs.
 ---
 
 # Maps and Location
 
 Maps Platform and location APIs: Places, Address Validation, Solar, Air Quality, Pollen, Street View Publish and related datasets.
 
-The `gmaps` MCP server exposes 41 tools. Per-method tools cover the Discovery APIs listed below.
+The `gmaps` MCP server exposes 44 tools. Per-method tools cover the Discovery APIs listed below.
 
 ## Log in
 

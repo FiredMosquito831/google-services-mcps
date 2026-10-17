@@ -1,7 +1,7 @@
 {
   "name": "gmeet",
   "displayName": "Google Meet",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Google Meet spaces, conference records, participants and recordings.",
   "author": {
     "name": "FiredMosquito831"

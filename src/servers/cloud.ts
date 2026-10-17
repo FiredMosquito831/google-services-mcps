@@ -21,12 +21,12 @@ import { defineTool, type ToolDef } from '../core/tools.js';
 
 type Auth = OAuth2Client | JWT;
 
-let cachedAuth: Auth | undefined;
+// The Application Default Credentials client is kept once; the OAuth client is per account (see account-context.ts).
+let adcClient: Auth | undefined;
 async function authFor(cfg: RuntimeConfig): Promise<Auth> {
-  if (!cachedAuth) {
-    cachedAuth = loadUserTokens('cloud', cfg) ? await getAuthClient('cloud', cfg) : await getCloudAdcClient();
-  }
-  return cachedAuth;
+  if (loadUserTokens('cloud', cfg)) return getAuthClient('cloud', cfg);
+  adcClient ??= await getCloudAdcClient();
+  return adcClient;
 }
 
 /** API keys are scoped by project NUMBER, so IDs are resolved once and cached. */

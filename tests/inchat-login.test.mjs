@@ -102,6 +102,7 @@ test('the steps in one session: no client yet, save the client, sign-in URL with
       assert.equal(url.searchParams.get('code_challenge_method'), 'S256');
       assert.ok(url.searchParams.get('code_challenge'), 'a PKCE challenge is sent');
       assert.equal(url.searchParams.get('access_type'), 'offline');
+      assert.match(url.searchParams.get('prompt'), /select_account/, 'Google shows the account chooser, so another account can be signed in');
       assert.match(url.searchParams.get('scope'), /userinfo\.email/);
       assert.match(url.searchParams.get('redirect_uri'), /^http:\/\/127\.0\.0\.1:\d+\/oauth2callback$/);
 

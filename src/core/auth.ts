@@ -2,6 +2,8 @@ import { existsSync, readFileSync, rmSync, writeFileSync, chmodSync } from 'node
 import { dirname, join } from 'node:path';
 import { OAuth2Client, GoogleAuth, JWT, type Credentials } from 'google-auth-library';
 import { ensureTokenDir } from './acl.js';
+import { accountNames, accountTokenFile, defaultAccount, removeAccount } from './accounts.js';
+import { requestedAccount } from './account-context.js';
 import type { RuntimeConfig } from './config.js';
 import { invocation } from './invocation.js';
 import { isIdempotentMethod, requestWithRetry, type HttpResult } from './http.js';
@@ -102,8 +104,41 @@ function withRetry<C extends OAuth2Client | JWT>(client: C, group?: AuthKind): C
   return client;
 }
 
-function tokenPath(kind: AuthKind, cfg: RuntimeConfig): string {
-  return join(cfg.tokenDir, `${kind}.token.json`);
+/** The account named in a call is not signed in for this group. The message lists the accounts that are. */
+export class UnknownAccountError extends Error {
+  constructor(kind: AuthKind, email: string, signedIn: string) {
+    super(`No signed-in account "${email}" for ${kind}. Signed in: ${signedIn}. Use accounts_list to see them, or sign in with auth_login.`);
+    this.name = 'UnknownAccountError';
+  }
+}
+
+/** Several accounts are signed in and none is the default, so a call must name one. */
+export class AccountChoiceError extends Error {
+  constructor(kind: AuthKind, signedIn: string) {
+    super(
+      `Several accounts are signed in for ${kind} (${signedIn}), and none is the default. Pass the account argument, or set the default with account_set_default.`,
+    );
+    this.name = 'AccountChoiceError';
+  }
+}
+
+/**
+ * The token file a call is about: the account the call named, else the default account. Undefined when no account
+ * is the default (none is signed in, or several are and none was chosen). Naming an account that is not signed in throws.
+ */
+function tokenFileOf(kind: AuthKind, cfg: RuntimeConfig, account?: string): string | undefined {
+  const wanted = account ?? requestedAccount();
+  if (wanted === undefined) {
+    const current = defaultAccount(kind, cfg);
+    return current === undefined ? undefined : accountTokenFile(kind, current, cfg);
+  }
+  const file = accountTokenFile(kind, wanted, cfg);
+  if (!file) throw new UnknownAccountError(kind, wanted, accountNames(kind, cfg));
+  return file;
+}
+
+function readTokenFile(path: string): Credentials {
+  return existsSync(path) ? (JSON.parse(readFileSync(path, 'utf8')) as Credentials) : {};
 }
 
 function writeSecureJson(path: string, data: unknown): void {
@@ -133,10 +168,13 @@ export function readClientSecret(cfg: RuntimeConfig): { clientId: string; client
   return { clientId: block.client_id, clientSecret: block.client_secret };
 }
 
-/** Returns the stored OAuth user credentials for a group, or null when not logged in. */
-export function loadUserTokens(kind: AuthKind, cfg: RuntimeConfig): Credentials | null {
-  const path = tokenPath(kind, cfg);
-  if (!existsSync(path)) return null;
+/**
+ * Returns the stored OAuth credentials of one account of a group: the named account, else the requested one (set by
+ * the tool call's account argument), else the default. Null when that account is not signed in.
+ */
+export function loadUserTokens(kind: AuthKind, cfg: RuntimeConfig, account?: string): Credentials | null {
+  const path = tokenFileOf(kind, cfg, account);
+  if (!path || !existsSync(path)) return null;
   return JSON.parse(readFileSync(path, 'utf8')) as Credentials;
 }
 
@@ -144,9 +182,9 @@ export function loadUserTokens(kind: AuthKind, cfg: RuntimeConfig): Credentials 
  * True when a token file holds a refresh or an access token. It does not ask Google whether the login still works:
  * that is checkGrant in grant-check.ts, which only `gsm status --check` and `gsm doctor` run.
  */
-export function isLoggedIn(kind: AuthKind, cfg: RuntimeConfig): boolean {
+export function isLoggedIn(kind: AuthKind, cfg: RuntimeConfig, account?: string): boolean {
   try {
-    const tokens = loadUserTokens(kind, cfg);
+    const tokens = loadUserTokens(kind, cfg, account);
     return Boolean(tokens && (tokens.refresh_token || tokens.access_token));
   } catch {
     return false;
@@ -220,19 +258,30 @@ export async function getAuthClient(kind: AuthKind, cfg: RuntimeConfig): Promise
     );
   }
 
-  const tokens = loadUserTokens(kind, cfg);
-  if (!tokens) throw new AuthRequiredError(kind);
+  const path = tokenFileOf(kind, cfg);
+  if (!path || !existsSync(path)) {
+    const signedIn = accountNames(kind, cfg);
+    if (signedIn !== 'none' && !path) throw new AccountChoiceError(kind, signedIn);
+    throw new AuthRequiredError(kind);
+  }
+  // One client per account file, so each account keeps its own refreshed tokens for the life of the process.
+  const cached = userClients.get(path);
+  if (cached) return cached;
 
   const { clientId, clientSecret } = readClientSecret(cfg);
   const client = new OAuth2Client(clientId, clientSecret);
-  client.setCredentials(tokens);
+  client.setCredentials(readTokenFile(path));
   // Persist refreshed access tokens so a restart does not force a new login.
   client.on('tokens', (fresh) => {
-    const merged = { ...loadUserTokens(kind, cfg), ...fresh };
-    writeSecureJson(tokenPath(kind, cfg), merged);
+    writeSecureJson(path, { ...readTokenFile(path), ...fresh });
   });
-  return withRetry(client, kind);
+  const wrapped = withRetry(client, kind);
+  userClients.set(path, wrapped);
+  return wrapped;
 }
+
+/** The OAuth clients of the user accounts, by token file. */
+const userClients = new Map<string, OAuth2Client | JWT>();
 
 /**
  * Cloud servers fall back to Application Default Credentials when no OAuth token is stored. When there are none
@@ -291,16 +340,17 @@ export function tokenStatus(kind: AuthKind, cfg: RuntimeConfig): TokenStatus {
   return {
     kind,
     loggedIn: Boolean(tokens),
-    tokenFile: tokenPath(kind, cfg),
+    tokenFile: tokenFileOf(kind, cfg) ?? '',
     scopes: tokens?.scope?.split(' '),
     expiresAt: tokens?.expiry_date ? new Date(tokens.expiry_date).toISOString() : undefined,
   };
 }
 
-export function removeUserTokens(kind: AuthKind, cfg: RuntimeConfig): boolean {
+/** Removes one account of a group (the default when none is named). Returns false when no such account is signed in. */
+export function removeUserTokens(kind: AuthKind, cfg: RuntimeConfig, account?: string): boolean {
   if (kind === 'workspace-admin') return false;
-  const path = tokenPath(kind, cfg);
-  if (!existsSync(path)) return false;
-  rmSync(path);
-  return true;
+  const email = account ?? defaultAccount(kind, cfg);
+  if (email === undefined) return false;
+  userClients.delete(accountTokenFile(kind, email, cfg) ?? '');
+  return removeAccount(kind, email, cfg);
 }

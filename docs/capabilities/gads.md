@@ -4,14 +4,17 @@ Google Ads API (accounts, campaigns, ad groups, ads, keywords, budgets, conversi
 
 - Plugin: `gads`, MCP server: `gads`, login: Desktop OAuth client, then `login business`
 - Install: `claude plugin install gads@google-services-mcps`
-- Tools: 335 total. Curated 8, per-method 323, gateway 3. Read 98, write 193, destructive 20, dynamic 24.
+- Tools: 338 total. Curated 11, per-method 323, gateway 3. Read 99, write 195, destructive 20, dynamic 24.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-## Curated tools (8)
+## Curated tools (11)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
+| `account_remove` | write | Remove a signed-in account | (none) |
+| `account_set_default` | write | Set the default account | (none) |
+| `accounts_list` | read | Signed-in accounts | (none) |
 | `ads_list_customers` | read | List Google Ads accounts | adwords |
 | `ads_mutate` | dynamic | Change Google Ads resources | adwords |
 | `ads_search` | read | Search Google Ads (GAQL) | adwords |

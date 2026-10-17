@@ -1,5 +1,23 @@
 [
   {
+    "name": "mcp__plugin_gadmin_gadmin__account_remove",
+    "kind": "write",
+    "scopes": [],
+    "title": "Remove a signed-in account"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__account_set_default",
+    "kind": "write",
+    "scopes": [],
+    "title": "Set the default account"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__accounts_list",
+    "kind": "read",
+    "scopes": [],
+    "title": "Signed-in accounts"
+  },
+  {
     "name": "mcp__plugin_gadmin_gadmin__admin_activities_list",
     "kind": "read",
     "scopes": [

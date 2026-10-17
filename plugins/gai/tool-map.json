@@ -1,5 +1,23 @@
 [
   {
+    "name": "mcp__plugin_gai_gai__account_remove",
+    "kind": "write",
+    "scopes": [],
+    "title": "Remove a signed-in account"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__account_set_default",
+    "kind": "write",
+    "scopes": [],
+    "title": "Set the default account"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__accounts_list",
+    "kind": "read",
+    "scopes": [],
+    "title": "Signed-in accounts"
+  },
+  {
     "name": "mcp__plugin_gai_gai__api_call",
     "kind": "dynamic",
     "scopes": [],

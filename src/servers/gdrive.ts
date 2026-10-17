@@ -13,10 +13,9 @@ import { defineTool, type ToolDef } from '../core/tools.js';
 
 type Auth = OAuth2Client | JWT;
 
-let cachedAuth: Auth | undefined;
+// The account is chosen per call (see account-context.ts), so the client is not cached here.
 async function authFor(cfg: RuntimeConfig): Promise<Auth> {
-  if (!cachedAuth) cachedAuth = await getAuthClient('workspace-user', cfg);
-  return cachedAuth;
+  return getAuthClient('workspace-user', cfg);
 }
 
 const FOLDER_MIME = 'application/vnd.google-apps.folder';

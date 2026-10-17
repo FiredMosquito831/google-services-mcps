@@ -7,7 +7,8 @@ import * as claude from './adapters/claude.js';
 import * as codex from './adapters/codex.js';
 import * as opencode from './adapters/opencode.js';
 import { OAUTH_GROUPS, type InstallRequestArgs } from './args.js';
-import { apiKeyFileFor, apiKeyState, tokenFileFor } from './credentials.js';
+import { listAccounts } from '../core/accounts.js';
+import { apiKeyFileFor, apiKeyState } from './credentials.js';
 import { checkInstall, renderInstallList } from './list.js';
 import { checkoutRootFor, serverFileFor, type InstallRoots } from './paths.js';
 import { productIds, productRows } from './products.js';
@@ -100,7 +101,7 @@ const toRef = (s: ServerEntry): ServerRef => ({ name: s.name, plugin: s.plugin, 
 export function loginSteps(servers: readonly ServerSpec[]): string[] {
   const cfg = loadConfig();
   const groups = [...new Set(servers.map((s) => s.group as string))];
-  const pending = groups.filter((g) => (OAUTH_GROUPS as readonly string[]).includes(g) && !existsSync(tokenFileFor(g, cfg)));
+  const pending = groups.filter((g) => (OAUTH_GROUPS as readonly string[]).includes(g) && listAccounts(g, cfg).length === 0);
   const steps: string[] = [];
   if (pending.length > 0 && !existsSync(cfg.clientSecretFile)) {
     steps.push('node gsm.mjs setup-client <client_secret.json>   (once: the OAuth desktop client)');

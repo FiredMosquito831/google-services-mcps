@@ -3,7 +3,19 @@ import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import type { CallToolResult } from '@modelcontextprotocol/sdk/types.js';
 import { z, type ZodRawShape } from 'zod';
 import { loadConfig, verboseOn, type RuntimeConfig } from './config.js';
-import { AuthRequiredError, GrantExpiredError, grantedScopes, isLoggedIn, type AuthKind } from './auth.js';
+import {
+  AccountChoiceError,
+  AuthRequiredError,
+  GrantExpiredError,
+  UnknownAccountError,
+  grantedScopes,
+  isLoggedIn,
+  removeUserTokens,
+  type AuthKind,
+} from './auth.js';
+import { accountNames, listAccounts, setDefaultAccount } from './accounts.js';
+import { withAccount } from './account-context.js';
+import { revokeGrant } from './grant-check.js';
 import { createGate, type GateFn } from './approval.js';
 import { toolMapFromDefs } from './dump.js';
 import { serverHealth } from './health.js';
@@ -104,7 +116,14 @@ function causeSuffix(err: unknown): string {
 }
 
 export function describeError(err: unknown, group?: string): string {
-  if (err instanceof AuthRequiredError || err instanceof GrantExpiredError) return err.message + causeSuffix(err);
+  if (
+    err instanceof AuthRequiredError ||
+    err instanceof GrantExpiredError ||
+    err instanceof UnknownAccountError ||
+    err instanceof AccountChoiceError
+  ) {
+    return err.message + causeSuffix(err);
+  }
   // googleapis errors carry status code and a Google-formatted message.
   const e = err as { code?: number; status?: number; message?: string; errors?: Array<{ reason?: string }>; response?: { data?: unknown } };
   const status = e?.code ?? e?.status;
@@ -151,6 +170,9 @@ async function dumpTools(buildTools: (cfg: RuntimeConfig) => Promise<ToolDef[]> 
       { name: 'auth_setup_client', kind: 'write' as const, title: 'Save the Google OAuth client' },
       { name: 'auth_login', kind: 'write' as const, title: 'Sign in to Google' },
       { name: 'auth_setup_admin', kind: 'write' as const, title: 'Set up the workspace admin account' },
+      { name: 'accounts_list', kind: 'read' as const, title: 'Signed-in accounts' },
+      { name: 'account_set_default', kind: 'write' as const, title: 'Set the default account' },
+      { name: 'account_remove', kind: 'write' as const, title: 'Remove a signed-in account' },
     ];
     const map = toolMapFromDefs([
       ...defined.map((tool) => ({ name: tool.name, kind: tool.kind, scopes: tool.scopes, title: tool.title, methodId: tool.methodId })),
@@ -211,6 +233,15 @@ export async function runServer(opts: {
     hasScope: (anyOf) => isGranted({ scopes: anyOf }, currentGrant()),
   };
 
+  // Groups with Google accounts take an optional account argument on every tool. It picks the account the handler uses,
+  // and never reaches the handler's own arguments (see the wrapper below and account-context.ts).
+  const ACCOUNT_GROUPS: ReadonlySet<string> = new Set(['workspace-user', 'searchconsole', 'business', 'developer', 'cloud']);
+  const accountArgument = {
+    account: z.string().optional().describe('The Google account to use, by its email address. Omit it for the default account (see accounts_list).'),
+  };
+  const withAccountArgument = (shape: ZodRawShape): ZodRawShape =>
+    group !== undefined && ACCOUNT_GROUPS.has(group) ? { ...shape, ...accountArgument } : shape;
+
   // Registers tools once each. After the server is connected, the SDK tells the client that the list changed.
   const register = (list: ToolDef[]): void => {
     for (const tool of list) {
@@ -221,7 +252,7 @@ export async function runServer(opts: {
         {
           title: tool.title,
           description: tool.description,
-          inputSchema: tool.inputSchema,
+          inputSchema: withAccountArgument(tool.inputSchema),
           annotations: {
             readOnlyHint: tool.kind === 'read',
             destructiveHint: tool.kind === 'destructive' || tool.kind === 'dynamic',
@@ -233,7 +264,11 @@ export async function runServer(opts: {
               // The gate runs before the handler. If it throws, the handler never runs.
               await gate({ kind: tool.kind, target: tool.name, methodId: tool.methodId, args: rawArgs });
             }
-            const data = await tool.handler(rawArgs as never, ctx);
+            // The account argument picks the account for this call. It is not passed to the handler, so it never reaches Google.
+            const { account, ...args } = rawArgs;
+            const data = await withAccount(typeof account === 'string' ? account : undefined, () =>
+              tool.handler(args as never, ctx),
+            );
             return asJson(data, cfg.maxResultChars);
           } catch (err) {
             return { isError: true, content: [{ type: 'text', text: describeError(err, group) }] };
@@ -246,8 +281,7 @@ export async function runServer(opts: {
 
   // Sign-in from the chat, for the groups that use a Google login. The client file, the sign-in and the admin setup run
   // as gsm commands of this plugin, so they do the same work as the terminal commands (see inchat-login.ts).
-  const SIGN_IN_GROUPS: ReadonlySet<string> = new Set(['workspace-user', 'searchconsole', 'business', 'developer', 'cloud']);
-  const canSignIn = group !== undefined && SIGN_IN_GROUPS.has(group);
+  const canSignIn = group !== undefined && ACCOUNT_GROUPS.has(group);
   const cliFile = fileURLToPath(new URL('../bin/gsm.mjs', import.meta.url));
   const text = (value: string): CallToolResult => ({ content: [{ type: 'text', text: value }] });
   const signIn = canSignIn
@@ -312,7 +346,68 @@ export async function runServer(opts: {
         if (signedIn) register(registerable(currentGrant(), defined));
         const loaded = registered.size - before;
         const state = signedIn ? `Signed in for "${group}". ${loaded} tool(s) loaded now.` : `Not signed in for "${group}".`;
-        return text(`${state} ${signIn.describe()}`);
+        return text(`${state} Accounts: ${accountNames(group as string, cfg)}. ${signIn.describe()}`);
+      },
+    );
+  }
+
+  if (signIn) {
+    // Accounts: the signed-in accounts of this server's group, and which one is the default.
+    server.registerTool(
+      'accounts_list',
+      {
+        title: 'Signed-in accounts',
+        description:
+          'Lists the Google accounts signed in for this server, which one is the default, and how many scopes each has. Names only: no token is shown.',
+        annotations: { readOnlyHint: true },
+      },
+      async (): Promise<CallToolResult> => {
+        const accounts = listAccounts(group as string, cfg);
+        const summary = {
+          group,
+          default: accounts.find((account) => account.default)?.email ?? null,
+          accounts: accounts.map((account) => ({
+            email: account.email,
+            default: account.default,
+            scopes: account.scopes.length,
+            addedAt: account.addedAt || null,
+          })),
+        };
+        return text(JSON.stringify(summary, null, 2));
+      },
+    );
+    server.registerTool(
+      'account_set_default',
+      {
+        title: 'Set the default account',
+        description:
+          'Makes one signed-in account the default for this server. A call without an account argument uses the default.',
+        inputSchema: { email: z.string().describe('The signed-in account to make the default.') },
+        annotations: { readOnlyHint: false },
+      },
+      async (rawArgs: Record<string, unknown>): Promise<CallToolResult> => {
+        try {
+          setDefaultAccount(group as string, String(rawArgs.email), cfg);
+          return text(`The default account for ${group} is now ${String(rawArgs.email)}.`);
+        } catch (err) {
+          return text((err as Error).message);
+        }
+      },
+    );
+    server.registerTool(
+      'account_remove',
+      {
+        title: 'Remove a signed-in account',
+        description:
+          'Revokes one account of this server at Google, and removes its token from this machine. The other accounts stay signed in.',
+        inputSchema: { email: z.string().describe('The account to remove.') },
+        annotations: { readOnlyHint: false },
+      },
+      async (rawArgs: Record<string, unknown>): Promise<CallToolResult> => {
+        const email = String(rawArgs.email);
+        const revoke = await revokeGrant(group as AuthKind, cfg, {}, email);
+        if (!removeUserTokens(group as AuthKind, cfg, email)) return text(`No signed-in account "${email}" for ${group}.`);
+        return text(`Removed ${email} from ${group}. ${revoke?.detail ?? ''}`.trim());
       },
     );
   }

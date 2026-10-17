@@ -61,12 +61,12 @@ function revokedDetail(group: AuthKind): string {
 }
 
 /** Asks Google whether the stored login still works, and what it grants. Refreshes the access token when it has expired. */
-export async function checkGrant(group: AuthKind, cfg: RuntimeConfig, deps: GrantDeps = {}): Promise<GrantCheck> {
+export async function checkGrant(group: AuthKind, cfg: RuntimeConfig, deps: GrantDeps = {}, account?: string): Promise<GrantCheck> {
   const none = (state: GrantState, detail: string): GrantCheck => ({ group, state, detail, scopes: [], missingScopes: [] });
 
   let tokens: Credentials | null;
   try {
-    tokens = loadUserTokens(group, cfg);
+    tokens = loadUserTokens(group, cfg, account);
   } catch {
     return none('not-logged-in', `the token file is unreadable. Log in again: ${invocation()} login ${group}`);
   }
@@ -152,10 +152,10 @@ export interface RevokeResult {
  * Revokes the stored login at Google, so its refresh token stops working everywhere. Returns undefined when there is
  * no stored login. A failure is returned, not thrown: the caller still removes the local file, and says what is left.
  */
-export async function revokeGrant(group: AuthKind, cfg: RuntimeConfig, deps: GrantDeps = {}): Promise<RevokeResult | undefined> {
+export async function revokeGrant(group: AuthKind, cfg: RuntimeConfig, deps: GrantDeps = {}, account?: string): Promise<RevokeResult | undefined> {
   let tokens: Credentials | null;
   try {
-    tokens = loadUserTokens(group, cfg);
+    tokens = loadUserTokens(group, cfg, account);
   } catch {
     return { revoked: false, detail: 'the token file is unreadable, so nothing could be revoked' };
   }

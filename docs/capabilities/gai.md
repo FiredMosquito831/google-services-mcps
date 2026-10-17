@@ -4,14 +4,17 @@ Generative and classic AI APIs: Discovery Engine, Vertex AI, Dialogflow, Vision,
 
 - Plugin: `gai`, MCP server: `gai`, login: Desktop OAuth client, then `login cloud`
 - Install: `claude plugin install gai@google-services-mcps`
-- Tools: 359 total. Curated 5, per-method 350, gateway 3. Read 155, write 146, destructive 57, dynamic 1.
+- Tools: 362 total. Curated 8, per-method 350, gateway 3. Read 156, write 148, destructive 57, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-## Curated tools (5)
+## Curated tools (8)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
+| `account_remove` | write | Remove a signed-in account | (none) |
+| `account_set_default` | write | Set the default account | (none) |
+| `accounts_list` | read | Signed-in accounts | (none) |
 | `auth_login` | write | Sign in to Google | (none) |
 | `auth_setup_admin` | write | Set up the workspace admin account | (none) |
 | `auth_setup_client` | write | Save the Google OAuth client | (none) |

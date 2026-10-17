@@ -24,13 +24,8 @@ type Auth = OAuth2Client | JWT;
  * Cached once a login works. A failed attempt is not cached, so running
  * `gsm login searchconsole` takes effect without restarting the server.
  */
-let authPromise: Promise<Auth> | undefined;
 function authClient(cfg: RuntimeConfig): Promise<Auth> {
-  authPromise ??= getAuthClient('searchconsole', cfg).catch((err: unknown) => {
-    authPromise = undefined;
-    throw err;
-  });
-  return authPromise;
+  return getAuthClient('searchconsole', cfg);
 }
 
 // ---- input checks: values are validated, never rewritten ----

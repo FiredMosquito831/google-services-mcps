@@ -4,14 +4,17 @@ Business Profile accounts, locations, verifications, lodging, place actions, not
 
 - Plugin: `gbusiness`, MCP server: `gbusiness`, login: Desktop OAuth client, then `login business`
 - Install: `claude plugin install gbusiness@google-services-mcps`
-- Tools: 57 total. Curated 5, per-method 51, gateway 0. Read 31, write 22, destructive 4, dynamic 0.
+- Tools: 60 total. Curated 8, per-method 51, gateway 0. Read 32, write 24, destructive 4, dynamic 0.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-## Curated tools (5)
+## Curated tools (8)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
+| `account_remove` | write | Remove a signed-in account | (none) |
+| `account_set_default` | write | Set the default account | (none) |
+| `accounts_list` | read | Signed-in accounts | (none) |
 | `auth_login` | write | Sign in to Google | (none) |
 | `auth_setup_admin` | write | Set up the workspace admin account | (none) |
 | `auth_setup_client` | write | Save the Google OAuth client | (none) |

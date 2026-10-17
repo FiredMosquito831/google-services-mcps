@@ -1,13 +1,13 @@
 ---
 name: gyoutube
-description: YouTube Data, YouTube Analytics and YouTube Reporting APIs, plus Blogger. Served by the gyoutube MCP server with 130 tools. Use for requests about these Google APIs.
+description: YouTube Data, YouTube Analytics and YouTube Reporting APIs, plus Blogger. Served by the gyoutube MCP server with 133 tools. Use for requests about these Google APIs.
 ---
 
 # YouTube and Blogger
 
 YouTube Data, YouTube Analytics and YouTube Reporting APIs, plus Blogger.
 
-The `gyoutube` MCP server exposes 130 tools. Per-method tools cover the Discovery APIs listed below.
+The `gyoutube` MCP server exposes 133 tools. Per-method tools cover the Discovery APIs listed below.
 
 ## Log in
 

@@ -29,6 +29,7 @@ export type Command =
   | 'setup-apikey'
   | 'status'
   | 'logout'
+  | 'accounts'
   | 'scopes'
   | 'setup-admin'
   | 'products'
@@ -71,7 +72,8 @@ const COMMANDS: Record<Exclude<Command, 'help'>, Record<string, OptionType>> = {
   'setup-client': { force: 'boolean' },
   'setup-apikey': { force: 'boolean' },
   status: { check: 'boolean' },
-  logout: { 'local-only': 'boolean' },
+  logout: { 'local-only': 'boolean', account: 'string' },
+  accounts: { group: 'string' },
   scopes: { servers: 'string', profile: 'string', json: 'boolean' },
   'setup-admin': { subject: 'string', 'key-file': 'string', profile: 'string', servers: 'string', replace: 'boolean' },
   products: { json: 'boolean' },

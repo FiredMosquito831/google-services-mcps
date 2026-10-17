@@ -1,5 +1,23 @@
 [
   {
+    "name": "mcp__plugin_gmaps_gmaps__account_remove",
+    "kind": "write",
+    "scopes": [],
+    "title": "Remove a signed-in account"
+  },
+  {
+    "name": "mcp__plugin_gmaps_gmaps__account_set_default",
+    "kind": "write",
+    "scopes": [],
+    "title": "Set the default account"
+  },
+  {
+    "name": "mcp__plugin_gmaps_gmaps__accounts_list",
+    "kind": "read",
+    "scopes": [],
+    "title": "Signed-in accounts"
+  },
+  {
     "name": "mcp__plugin_gmaps_gmaps__addressval_v1_provide_validation_feedba",
     "kind": "write",
     "scopes": [

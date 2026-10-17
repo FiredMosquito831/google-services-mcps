@@ -126,6 +126,18 @@ Every approval prompt ends with this footer. It always names the setting:
 
 The suite retries throttled requests (HTTP 429 and 503, and some rate-limit 403s on reads). It makes three attempts in all. After that, the error is returned. The details and the waits are in [LIMITS-AND-COSTS.md](LIMITS-AND-COSTS.md#4-quota-errors-and-what-the-suite-does).
 
+## Several accounts
+
+A Google group can have several accounts, for example a work Gmail and a personal Gmail.
+
+- To add an account, sign in again (`auth_login` in the chat, or `login <group>` in a terminal). Google shows the account chooser, so pick the account to add. The new account is kept next to the others.
+- The first account signed in for a group is its default. Tools use the default when a call names no account.
+- In the chat, ask for `accounts_list` to see the accounts and the default. Ask for `account_set_default` to change the default, or `account_remove` to remove one account.
+- Any Google tool takes an `account` argument with the account's email address. For example, a Gmail search for the second account names that account, and the others are unchanged.
+- In a terminal: `gsm accounts` lists them, `gsm accounts default <group> <email>` sets the default, and `gsm logout <group> --account <email>` removes one account.
+
+Each account has its own token file in the token folder, and `accounts.json` lists them.
+
 ## Checking a setup
 
 ```

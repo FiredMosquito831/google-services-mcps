@@ -1,13 +1,13 @@
 ---
 name: gmerchant
-description: Merchant Center: Merchant API, Comparison Shopping Service and Manufacturer Center. Served by the gmerchant MCP server with 163 tools. Use for requests about these Google APIs.
+description: Merchant Center: Merchant API, Comparison Shopping Service and Manufacturer Center. Served by the gmerchant MCP server with 166 tools. Use for requests about these Google APIs.
 ---
 
 # Merchant Center
 
 Merchant Center: Merchant API, Comparison Shopping Service and Manufacturer Center.
 
-The `gmerchant` MCP server exposes 163 tools. Per-method tools cover the Discovery APIs listed below. Gateway APIs are reached through three generic tools: api_search finds a method, api_describe shows its parameters, and api_call runs it.
+The `gmerchant` MCP server exposes 166 tools. Per-method tools cover the Discovery APIs listed below. Gateway APIs are reached through three generic tools: api_search finds a method, api_describe shows its parameters, and api_call runs it.
 
 ## Log in
 
