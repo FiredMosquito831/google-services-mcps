@@ -2816,6 +2816,24 @@
     "title": "policytroubleshooter.iam.troubleshoot"
   },
   {
+    "name": "mcp__plugin_gcloud_gcloud__project_enable_missing",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/service.management"
+    ],
+    "title": "Enable the APIs the MCPs need"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__project_readiness",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-platform.read-only"
+    ],
+    "title": "Check a project for the MCPs"
+  },
+  {
     "name": "mcp__plugin_gcloud_gcloud__serviceusa_operations_cancel",
     "kind": "destructive",
     "scopes": [

@@ -1,13 +1,13 @@
 ---
 name: gcloud
-description: Google Cloud console APIs: projects, service enablement, API keys, billing, monitoring, storage, BigQuery and IAM, plus the rest of the infrastructure, data, devops, networking, security and governance APIs. Served by the gcloud MCP server with 383 tools. Use for requests about these Google APIs.
+description: Google Cloud console APIs: projects, service enablement, API keys, billing, monitoring, storage, BigQuery and IAM, plus the rest of the infrastructure, data, devops, networking, security and governance APIs. Served by the gcloud MCP server with 385 tools. Use for requests about these Google APIs.
 ---
 
 # Google Cloud
 
 Google Cloud console APIs: projects, service enablement, API keys, billing, monitoring, storage, BigQuery and IAM, plus the rest of the infrastructure, data, devops, networking, security and governance APIs.
 
-The `gcloud` MCP server exposes 383 tools. Per-method tools cover the Discovery APIs listed below. Gateway APIs are reached through three generic tools: api_search finds a method, api_describe shows its parameters, and api_call runs it.
+The `gcloud` MCP server exposes 385 tools. Per-method tools cover the Discovery APIs listed below. Gateway APIs are reached through three generic tools: api_search finds a method, api_describe shows its parameters, and api_call runs it.
 
 ## Log in
 

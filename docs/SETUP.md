@@ -70,6 +70,15 @@ Domain-wide delegation needs a super admin and a Google Cloud service account.
 
 The command checks that the file is a service account key (JSON with a `client_email`). It never prints the file. The key file is not copied. The suite reads it from where you put it, so do not move it. The admin's email and the key file can also be set as plugin options (`admin_subject` and `service_account_key_file`).
 
+## Checking the Google Cloud project
+
+The gcloud server can check a project for the MCPs:
+
+- `project_readiness` lists, for each login group, which APIs are enabled, which are missing, whether the group is signed in here, and the console steps that have no API. It only reads.
+- `project_enable_missing` enables the missing APIs for the groups you choose, after you approve it. It needs writes allowed for the gcloud plugin, and it runs in the background, so check again with `project_readiness` afterwards.
+
+Google has no API for the consent screen, publishing, test users or the Desktop OAuth client. Those are the console steps in the readiness output.
+
 ## Google Play and Merchant Center (gplay, gmerchant)
 
 These two use a service account key, not a login. Google recommends a service account for this kind of server-side use.

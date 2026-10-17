@@ -16,7 +16,17 @@ import { apikeys } from '@googleapis/apikeys';
 import type { JWT, OAuth2Client } from 'google-auth-library';
 import { z } from 'zod';
 import type { RuntimeConfig } from '../core/config.js';
-import { getAuthClient, googleScopes } from '../core/auth.js';
+import { getAuthClient, googleScopes, loginSourceOf, tokenStatus, type AuthKind } from '../core/auth.js';
+import {
+  BATCH_ENABLE_LIMIT,
+  READINESS_GROUP_KEYS,
+  chunkServices,
+  consoleSteps,
+  missingForGroups,
+  missingServices,
+  selectReadinessGroups,
+  serviceIdFromName,
+} from '../core/readiness.js';
 import { defineTool, type ToolDef } from '../core/tools.js';
 
 type Auth = OAuth2Client | JWT;
@@ -166,10 +176,45 @@ const bqLocation = z
   .describe('Location, for example US or europe-west1. Leave unset to let BigQuery infer it from the datasets; polling a job outside US needs it.');
 const bqMaxResults = (max: number, dflt: number) => z.number().int().min(1).max(max).optional().describe(`1 to ${max}. Default ${dflt}.`);
 
+/** How a login group is signed in here, for people. Never shows a secret. */
+function loginLabel(group: string, cfg: RuntimeConfig): string {
+  if (group === 'apikey') return cfg.apiKey ? 'API key set' : 'no API key';
+  if (group === 'workspace-admin') return tokenStatus('workspace-admin', cfg).loggedIn ? 'service account set up' : 'not set up';
+  const source = loginSourceOf(group as AuthKind, cfg);
+  if (source === 'oauth') return 'signed in (OAuth account)';
+  if (source === 'adc') return 'signed in (application default credentials)';
+  if (source === 'service-account') return 'service account key set up';
+  if (group === 'service-account') return 'not set up';
+  return 'not signed in';
+}
+
 export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
   const rm = async () => cloudresourcemanager({ version: 'v3', auth: await authFor(cfg) });
   const su = async () => serviceusage({ version: 'v1', auth: await authFor(cfg) });
   const ak = async () => apikeys({ version: 'v2', auth: await authFor(cfg) });
+
+  /** The IDs of the services that are enabled on a project, read page by page. */
+  const listEnabled = async (projectId: string): Promise<Set<string>> => {
+    const ids = new Set<string>();
+    let pageToken: string | undefined;
+    for (let page = 0; page < 50; page++) {
+      const res = await (await su()).services.list({
+        parent: `projects/${projectId}`,
+        filter: 'state:ENABLED',
+        pageSize: 200,
+        pageToken,
+      });
+      for (const service of res.data.services ?? []) {
+        const id = serviceIdFromName(service.name);
+        if (id) ids.add(id);
+      }
+      pageToken = res.data.nextPageToken ?? undefined;
+      if (!pageToken) break;
+    }
+    return ids;
+  };
+
+  const groupKeysText = READINESS_GROUP_KEYS.join(', ');
 
   return [
     // ---- read ----
@@ -476,6 +521,80 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
           requestBody: { projectId: project_id, displayName: display_name, parent },
         });
         return res.data;
+      },
+    }),
+    defineTool({
+      name: 'project_readiness',
+      title: 'Check a project for the MCPs',
+      description:
+        'Checks a Google Cloud project against what each login group needs: which APIs are enabled, which are missing, and whether each group is signed in here. Also lists the console steps that have no API (the consent screen, publishing, the Desktop client, test users, Basic API Access). Reads only. Pass groups to check some groups only.',
+      kind: 'read',
+      scopes: googleScopes('cloud-platform', 'cloud-platform.read-only'),
+      inputSchema: {
+        project_id: projectId,
+        groups: z.array(z.string()).optional().describe(`Groups to check: ${groupKeysText}. Leave unset for all of them.`),
+      },
+      async handler({ project_id, groups }) {
+        const { groups: chosen, unknown } = selectReadinessGroups(groups);
+        if (unknown.length) throw new Error(`Unknown group: ${unknown.join(', ')}. The groups are: ${groupKeysText}.`);
+        const enabled = await listEnabled(project_id);
+        return {
+          project: project_id,
+          enabledServices: enabled.size,
+          groups: chosen.map((g) => {
+            const missing = missingServices(g, enabled);
+            return {
+              group: g.group,
+              label: g.label,
+              products: g.products,
+              login: loginLabel(g.group, cfg),
+              required: g.services.length,
+              enabled: g.services.length - missing.length,
+              missing,
+            };
+          }),
+          notChecked:
+            'Gateway APIs (the rest of each product, about 277 for the cloud group) are not checked. Enable one when a tool says it is not enabled. Some APIs are shut down or limited and cannot be checked here: the consent screen, publishing and test users have no API at all.',
+          consoleSteps: consoleSteps(project_id),
+        };
+      },
+    }),
+    defineTool({
+      name: 'project_enable_missing',
+      title: 'Enable the APIs the MCPs need',
+      description: `Enables, on a project, the Google APIs that the chosen login groups need and that are not enabled yet. Asks for approval first. Sends at most ${BATCH_ENABLE_LIMIT} services per request. A failed request is reported, and the others still run. Enabling runs in the background: run project_readiness again afterwards to confirm. Leave groups unset to enable for every group.`,
+      kind: 'write',
+      scopes: googleScopes('cloud-platform', 'service.management'),
+      inputSchema: {
+        project_id: projectId,
+        groups: z.array(z.string()).optional().describe(`Groups to enable for: ${groupKeysText}. Leave unset for all of them.`),
+      },
+      async handler({ project_id, groups }) {
+        const { groups: chosen, unknown } = selectReadinessGroups(groups);
+        if (unknown.length) throw new Error(`Unknown group: ${unknown.join(', ')}. The groups are: ${groupKeysText}.`);
+        const enabled = await listEnabled(project_id);
+        const missing = missingForGroups(chosen, enabled);
+        if (missing.length === 0) {
+          return { project: project_id, requested: [], batches: [], message: 'Nothing to enable: every API the chosen groups need is already enabled.' };
+        }
+        const batches: Array<{ services: string[]; operation: string | null; error: string | null }> = [];
+        for (const chunk of chunkServices(missing)) {
+          try {
+            const res = await (await su()).services.batchEnable({
+              parent: `projects/${project_id}`,
+              requestBody: { serviceIds: chunk },
+            });
+            batches.push({ services: chunk, operation: res.data.name ?? null, error: null });
+          } catch (err) {
+            batches.push({ services: chunk, operation: null, error: err instanceof Error ? err.message : String(err) });
+          }
+        }
+        return {
+          project: project_id,
+          requested: missing,
+          batches,
+          note: 'Enabling runs in the background. Run project_readiness in a minute to confirm.',
+        };
       },
     }),
     defineTool({

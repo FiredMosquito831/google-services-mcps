@@ -1,7 +1,7 @@
 {
   "name": "gsc",
   "displayName": "Search Console",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Search Console sites, sitemaps, search analytics, URL indexing and site verification.",
   "author": {
     "name": "FiredMosquito831"

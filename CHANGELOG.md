@@ -2,6 +2,17 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.1.0 - 2026-10-18
+
+### Project readiness (gcloud server)
+- `project_readiness` (read): checks a Google Cloud project against what each login group needs. It lists the APIs that are enabled and the ones that are missing, shows whether each group is signed in here, and lists the console steps that have no API: the consent screen, publishing, the Desktop client, test users, and Basic API Access. Pass `groups` to check some groups only.
+- `project_enable_missing` (write, asks for approval): enables the missing APIs for the chosen groups, in batches of at most 20 services. It runs in the background, so run `project_readiness` again to confirm.
+- The service lists are checked by tests against `config/products.json`, so they follow the product map.
+
+### Notes
+- Google offers no API we can use for the consent screen, publishing, test users or the Desktop OAuth client. The checklist links to the console pages for them.
+- The old IAP OAuth brand and client API is shut down, so it is not used.
+
 ## 1.0.1 - 2026-10-17
 
 ### Fixes
