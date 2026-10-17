@@ -2,6 +2,23 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 0.6.0 - 2026-10-17
+
+### Application Default Credentials as a sign-in option
+- Every Google server offers ADC next to the saved OAuth client. `auth_login` lists both ways first, with their pros and cons, and runs the one you choose (`method: "oauth"` or `"adc"`).
+- ADC uses the gcloud CLI. For the cloud servers it uses gcloud's built-in client, so no client file is needed. For other APIs it uses your saved OAuth client through gcloud, with the group's scopes.
+- A group with no account of its own uses the ADC login. A group with accounts uses those accounts. ADC holds one login per machine. The suite records which group and scopes that login holds, as a hash of its token, never the token.
+- `health`, `auth_status`, `status` and the live check count an ADC login as a login. When the login has no quota project, `health` says so and gives the command that sets one.
+- `logout` says when a group is on ADC. It does not remove that login. The message names `gcloud auth application-default revoke`.
+- Cloud tools and generated tools share one login path. A new login is used without a restart.
+
+### Fixes
+- `health` reported "not logged in" for cloud while its calls worked through ADC.
+
+### Notes
+- ADC for the Workspace groups needs your own OAuth client. gcloud's built-in client cannot grant those scopes.
+- The gcloud CLI must be installed for the ADC route. The suite does not install it.
+
 ## 0.5.0 - 2026-10-17
 
 ### Several accounts per Google group

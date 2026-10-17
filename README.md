@@ -2,14 +2,14 @@
 
 ![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue)
 ![Status: beta](https://img.shields.io/badge/status-beta-orange)
-![Tests: 508 passing](https://img.shields.io/badge/tests-550%20passing-brightgreen)
+![Tests: 508 passing](https://img.shields.io/badge/tests-558%20passing-brightgreen)
 ![Plugins: 23](https://img.shields.io/badge/plugins-23-blue)
 ![Model Context Protocol](https://img.shields.io/badge/Model%20Context%20Protocol-server-6f42c1)
 ![Claude Code plugin](https://img.shields.io/badge/Claude%20Code-plugin-d97757)
 
 **google-services-mcps** is a Google Workspace MCP, Google Cloud MCP and Search Console MCP suite. It includes a Gmail MCP, a Google Drive MCP, a Google Calendar MCP and a Google Ads MCP, plus 19 more Google products. Each product is one **Model Context Protocol** server, packaged as a **Claude Code plugin** in one marketplace. An installer adds the same servers to a Codex MCP, an OpenCode MCP and an Antigravity MCP setup. Use it to let an AI agent read your Google data and, when you allow it, change that data.
 
-> **Status: beta.** Built and tested offline: 550 passing tests (two are skipped: one downloads from GitHub and runs only with `GSM_NETWORK_TESTS=1`, and one checks the Windows folder access list only off Windows), a smoke test over all 23 servers, and Claude plugin validation. Not yet tested against live Google accounts. The repository is public. Licensed under Apache-2.0.
+> **Status: beta.** Built and tested offline: 558 passing tests (two are skipped: one downloads from GitHub and runs only with `GSM_NETWORK_TESTS=1`, and one checks the Windows folder access list only off Windows), a smoke test over all 23 servers, and Claude plugin validation. Not yet tested against live Google accounts. The repository is public. Licensed under Apache-2.0.
 
 ## At a glance
 
@@ -250,7 +250,7 @@ Each product belongs to one login group. You log in once per group, with the pro
 4. Sign in from Claude Code. Start with a read-only profile. Ask Claude to use the server's sign-in tools:
 
 - `auth_setup_client`: give it the full path of the downloaded file. The secret is copied into the token folder and is not shown.
-- `auth_login`: it returns a Google address. Open it, approve, and Google redirects back to this machine.
+- `auth_login`: without a method, it first lists the two ways to sign in: `oauth` (the saved client, several accounts) and `adc` (Application Default Credentials through the gcloud CLI, one login per machine). The person chooses, then `auth_login` returns a Google address. Open it, approve, and Google redirects back to this machine. See [SETUP.md](docs/SETUP.md#two-ways-to-sign-in-oauth-or-adc).
 - `auth_status`: once you have approved, the tools of the server load without a restart.
 
 The same steps run in a terminal too:

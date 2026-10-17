@@ -1,6 +1,7 @@
 import { apikeys } from '@googleapis/apikeys';
 import { OAuth2Client, type Credentials } from 'google-auth-library';
-import { isInvalidGrant, loadUserTokens, readClientSecret, type AuthKind } from './auth.js';
+import { GoogleAuth } from 'google-auth-library';
+import { adcSourceFor, isInvalidGrant, loadUserTokens, readClientSecret, type AuthKind } from './auth.js';
 import type { RuntimeConfig } from './config.js';
 import { invocation } from './invocation.js';
 
@@ -36,10 +37,19 @@ export interface OAuthClientLike {
 export interface GrantDeps {
   /** Builds the OAuth client. The default is google-auth-library's OAuth2Client. */
   makeClient?: (clientId: string, clientSecret: string) => OAuthClientLike;
+  /** Builds the client of the ADC login with the scopes it holds. The default reads the ADC file. */
+  makeAdcClient?: (scopes: string[]) => Promise<OAuthClientLike>;
 }
 
 const defaultClient = (clientId: string, clientSecret: string): OAuthClientLike =>
   new OAuth2Client(clientId, clientSecret) as unknown as OAuthClientLike;
+
+const defaultAdcClient = async (scopes: string[]): Promise<OAuthClientLike> =>
+  (await new GoogleAuth({ scopes }).getClient()) as unknown as OAuthClientLike;
+
+function adcExpiredDetail(group: AuthKind): string {
+  return `The Application Default Credentials login has expired or was revoked. Log in again with: gcloud auth application-default login, or call auth_login with method "adc" (${group}).`;
+}
 
 function messageOf(err: unknown): string {
   return err instanceof Error ? err.message : String(err);
@@ -71,6 +81,8 @@ export async function checkGrant(group: AuthKind, cfg: RuntimeConfig, deps: Gran
     return none('not-logged-in', `the token file is unreadable. Log in again: ${invocation()} login ${group}`);
   }
   if (!tokens || !(tokens.refresh_token || tokens.access_token)) {
+    const adc = adcSourceFor(group, cfg);
+    if (adc) return checkAdcGrant(group, adc.scopes, deps);
     return none('not-logged-in', `Run: ${invocation()} login ${group}`);
   }
 
@@ -110,6 +122,52 @@ export async function checkGrant(group: AuthKind, cfg: RuntimeConfig, deps: Gran
     group,
     state: 'valid',
     detail: missingScopes.length > 0 ? `valid, but ${missingScopes.length} stored scope(s) are no longer granted` : 'valid',
+    scopes: granted,
+    missingScopes,
+    expiresInSeconds: info.expires_in ?? undefined,
+    account: info.email ?? undefined,
+  };
+}
+
+/**
+ * The live check of the ADC login for a group, with the same steps as the OAuth check: refresh, then ask Google what the
+ * token grants. The scopes compared are the ones the login was made with.
+ */
+async function checkAdcGrant(group: AuthKind, stored: string[], deps: GrantDeps): Promise<GrantCheck> {
+  const none = (state: GrantState, detail: string): GrantCheck => ({ group, state, detail, scopes: [], missingScopes: [] });
+
+  let client: OAuthClientLike;
+  try {
+    client = await (deps.makeAdcClient ?? defaultAdcClient)(stored);
+  } catch (err) {
+    if (isInvalidGrant(err)) return none('expired', adcExpiredDetail(group));
+    return none('unreachable', `could not read the ADC file: ${messageOf(err)}`);
+  }
+
+  let access: string | null | undefined;
+  try {
+    access = (await client.getAccessToken()).token;
+  } catch (err) {
+    if (isInvalidGrant(err)) return none('expired', adcExpiredDetail(group));
+    return none('unreachable', `could not refresh the ADC access token: ${messageOf(err)}`);
+  }
+  if (!access) return none('expired', adcExpiredDetail(group));
+
+  let info: { scope?: string | null; expires_in?: number | null; email?: string | null };
+  try {
+    info = await client.getTokenInfo(access);
+  } catch (err) {
+    const text = redact(messageOf(err), [access]);
+    if (/invalid_token|\b400\b|\b401\b/.test(text)) return none('revoked', adcExpiredDetail(group));
+    return none('unreachable', `could not check the ADC token with Google: ${text}`);
+  }
+
+  const granted = (info.scope ?? '').split(' ').filter(Boolean);
+  const missingScopes = stored.filter((scope) => !granted.includes(scope));
+  return {
+    group,
+    state: 'valid',
+    detail: missingScopes.length > 0 ? `valid (ADC), but ${missingScopes.length} stored scope(s) are no longer granted` : 'valid (ADC)',
     scopes: granted,
     missingScopes,
     expiresInSeconds: info.expires_in ?? undefined,
@@ -216,13 +274,19 @@ export function describeKeyRestrictions(restrictions: Record<string, unknown> | 
  */
 export async function checkKeyRestrictions(keyString: string, cfg: RuntimeConfig): Promise<KeyRestrictions & { name?: string }> {
   const tokens = loadUserTokens('cloud', cfg);
-  if (!tokens || !(tokens.refresh_token || tokens.access_token)) {
-    throw new Error(`needs a cloud login to read the key's restrictions. Run: ${invocation()} login cloud`);
+  const adc = tokens ? null : adcSourceFor('cloud', cfg);
+  if ((!tokens || !(tokens.refresh_token || tokens.access_token)) && !adc) {
+    throw new Error(`needs a cloud login to read the key's restrictions. Run: ${invocation()} login cloud, or sign in with ADC`);
   }
-  const { clientId, clientSecret } = readClientSecret(cfg);
-  const client = new OAuth2Client(clientId, clientSecret);
-  client.setCredentials(tokens);
-  const api = apikeys({ version: 'v2', auth: client });
+  let auth: OAuth2Client;
+  if (adc) {
+    auth = (await new GoogleAuth({ scopes: adc.scopes }).getClient()) as OAuth2Client;
+  } else {
+    const { clientId, clientSecret } = readClientSecret(cfg);
+    auth = new OAuth2Client(clientId, clientSecret);
+    auth.setCredentials(tokens as Credentials);
+  }
+  const api = apikeys({ version: 'v2', auth });
   const lookup = await api.keys.lookupKey({ keyString });
   const name = lookup.data.name ?? undefined;
   if (!name) throw new Error('Google did not name the key');

@@ -7,6 +7,7 @@ import { requestedAccount } from './account-context.js';
 import type { RuntimeConfig } from './config.js';
 import { invocation } from './invocation.js';
 import { isIdempotentMethod, requestWithRetry, type HttpResult } from './http.js';
+import { adcGrantFor, GCLOUD_DEFAULT_SCOPES, type AdcGrant } from './adc.js';
 
 /**
  * One auth group per token file. Each group maps to one or more MCP servers
@@ -19,9 +20,6 @@ import { isIdempotentMethod, requestWithRetry, type HttpResult } from './http.js
  * by the discovery code (see core/discovery/apikey-client.ts).
  */
 export type AuthKind = 'cloud' | 'workspace-user' | 'workspace-admin' | 'searchconsole' | 'business' | 'developer';
-
-/** Scope for Application Default Credentials, used by cloud servers when no OAuth token is stored. */
-export const CLOUD_SCOPES = ['https://www.googleapis.com/auth/cloud-platform'];
 
 /** Domain-wide delegation scopes for the Admin SDK Directory API. The admin login uses a service account and needs no login. */
 export const ADMIN_SCOPES = [
@@ -179,16 +177,31 @@ export function loadUserTokens(kind: AuthKind, cfg: RuntimeConfig, account?: str
 }
 
 /**
- * True when a token file holds a refresh or an access token. It does not ask Google whether the login still works:
- * that is checkGrant in grant-check.ts, which only `gsm status --check` and `gsm doctor` run.
+ * The ADC login a group can use. ADC is a fallback: it applies only when no account of the group is signed in here, so
+ * a group with its own accounts never silently switches to the ADC login.
  */
-export function isLoggedIn(kind: AuthKind, cfg: RuntimeConfig, account?: string): boolean {
+export function adcSourceFor(kind: AuthKind, cfg: RuntimeConfig): AdcGrant | null {
+  if (accountNames(kind, cfg) !== 'none') return null;
+  return adcGrantFor(kind, cfg);
+}
+
+/** Where a group's login comes from: the suite's own accounts, the ADC login, or nothing. Never calls Google. */
+export function loginSourceOf(kind: AuthKind, cfg: RuntimeConfig, account?: string): 'oauth' | 'adc' | undefined {
   try {
     const tokens = loadUserTokens(kind, cfg, account);
-    return Boolean(tokens && (tokens.refresh_token || tokens.access_token));
+    if (tokens && (tokens.refresh_token || tokens.access_token)) return 'oauth';
   } catch {
-    return false;
+    return undefined;
   }
+  return account === undefined && adcSourceFor(kind, cfg) !== null ? 'adc' : undefined;
+}
+
+/**
+ * True when a login exists, from the suite's own accounts or from ADC. It does not ask Google whether the login still
+ * works: that is checkGrant in grant-check.ts, which only `gsm status --check` and `gsm doctor` run.
+ */
+export function isLoggedIn(kind: AuthKind, cfg: RuntimeConfig, account?: string): boolean {
+  return loginSourceOf(kind, cfg, account) !== undefined;
 }
 
 /**
@@ -262,6 +275,8 @@ export async function getAuthClient(kind: AuthKind, cfg: RuntimeConfig): Promise
   if (!path || !existsSync(path)) {
     const signedIn = accountNames(kind, cfg);
     if (signedIn !== 'none' && !path) throw new AccountChoiceError(kind, signedIn);
+    const adc = await adcClientFor(kind, cfg);
+    if (adc) return adc;
     throw new AuthRequiredError(kind);
   }
   // One client per account file, so each account keeps its own refreshed tokens for the life of the process.
@@ -283,19 +298,34 @@ export async function getAuthClient(kind: AuthKind, cfg: RuntimeConfig): Promise
 /** The OAuth clients of the user accounts, by token file. */
 const userClients = new Map<string, OAuth2Client | JWT>();
 
+/** The ADC clients, by group. Forgotten after a new ADC login, so the next call reads the file again. */
+const adcClients = new Map<string, OAuth2Client | JWT>();
+
 /**
- * Cloud servers fall back to Application Default Credentials when no OAuth token is stored. When there are none
- * either, the failure is reported as gsm's "not logged in" message, with Google's own text kept as the cause.
+ * The client of the ADC login for a group, or undefined when no ADC login covers it. Google's own text for a failure
+ * is kept as the cause, and the error is gsm's "not logged in" message.
  */
-export async function getCloudAdcClient(): Promise<OAuth2Client | JWT> {
-  const auth = new GoogleAuth({ scopes: CLOUD_SCOPES });
+async function adcClientFor(kind: AuthKind, cfg: RuntimeConfig): Promise<OAuth2Client | JWT | undefined> {
+  const grant = adcSourceFor(kind, cfg);
+  // The cloud group always asks google-auth-library, as it always has: that also finds a key file or the machine's own
+  // identity. Without a login, the failure is gsm's "not logged in" message, with Google's own text kept as the cause.
+  if (!grant && kind !== 'cloud') return undefined;
+  const cached = adcClients.get(kind);
+  if (cached) return cached;
   let client: OAuth2Client | JWT;
   try {
-    client = (await auth.getClient()) as OAuth2Client | JWT;
+    client = (await new GoogleAuth({ scopes: grant?.scopes ?? GCLOUD_DEFAULT_SCOPES }).getClient()) as OAuth2Client | JWT;
   } catch (err) {
-    throw new AuthRequiredError('cloud', { cause: err });
+    throw new AuthRequiredError(kind, { cause: err });
   }
-  return withRetry(client);
+  const wrapped = withRetry(client, kind);
+  adcClients.set(kind, wrapped);
+  return wrapped;
+}
+
+/** Forgets the ADC clients, so the next call reads the ADC file again. Call it after a new ADC login. */
+export function forgetAdcClients(): void {
+  adcClients.clear();
 }
 
 /**
@@ -314,13 +344,16 @@ export function grantedScopes(kind: AuthKind | 'apikey', cfg: RuntimeConfig): st
   } catch {
     return null;
   }
-  if (!tokens?.scope) return null;
+  if (!tokens) return adcSourceFor(kind, cfg)?.scopes ?? null;
+  if (!tokens.scope) return null;
   return tokens.scope.split(' ').filter(Boolean);
 }
 
 export interface TokenStatus {
   kind: AuthKind;
   loggedIn: boolean;
+  /** Where the login comes from. Undefined when there is no login. */
+  source?: 'oauth' | 'adc';
   tokenFile: string;
   scopes?: string[];
   expiresAt?: string;
@@ -337,9 +370,15 @@ export function tokenStatus(kind: AuthKind, cfg: RuntimeConfig): TokenStatus {
     };
   }
   const tokens = loadUserTokens(kind, cfg);
+  const source = loginSourceOf(kind, cfg);
+  if (!tokens && source === 'adc') {
+    const adc = adcSourceFor(kind, cfg);
+    return { kind, loggedIn: true, source, tokenFile: '', scopes: adc?.scopes };
+  }
   return {
     kind,
     loggedIn: Boolean(tokens),
+    source,
     tokenFile: tokenFileOf(kind, cfg) ?? '',
     scopes: tokens?.scope?.split(' '),
     expiresAt: tokens?.expiry_date ? new Date(tokens.expiry_date).toISOString() : undefined,

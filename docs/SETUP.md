@@ -126,6 +126,27 @@ Every approval prompt ends with this footer. It always names the setting:
 
 The suite retries throttled requests (HTTP 429 and 503, and some rate-limit 403s on reads). It makes three attempts in all. After that, the error is returned. The details and the waits are in [LIMITS-AND-COSTS.md](LIMITS-AND-COSTS.md#4-quota-errors-and-what-the-suite-does).
 
+## Two ways to sign in: OAuth or ADC
+
+Every Google server asks which way to sign in: the saved OAuth client (`oauth`) or Application Default Credentials (`adc`). The chat shows both with their pros and cons, and the person chooses.
+
+| | `oauth`: the saved client | `adc`: Application Default Credentials |
+|---|---|---|
+| Accounts | Several at once, each with its own token | One login per machine |
+| Where the token is kept | The token folder. Logout revokes it | gcloud's folder. Logout here does not remove it |
+| What you need | A Desktop OAuth client from your own Google Cloud project | The gcloud CLI installed. For the Workspace groups, the same client file as `oauth` |
+| Cloud APIs | Yes | Yes, with gcloud's built-in client: no client file |
+| Other APIs | Yes | Yes, through gcloud with your client. gcloud's built-in client is for cloud scopes; gcloud's docs say other scopes need your own client |
+| Quota project | Not needed | Some cloud calls need one: `gcloud auth application-default set-quota-project <project-id>` |
+
+To sign in with ADC from the chat, call `auth_login` with `method: "adc"`. The suite runs `gcloud auth application-default login` for you, and the browser opens on this machine. You can also run it yourself in a terminal, for cloud APIs:
+
+```
+gcloud auth application-default login
+```
+
+To remove an ADC login: `gcloud auth application-default revoke`. `logout` in the suite does not remove it.
+
 ## Several accounts
 
 A Google group can have several accounts, for example a work Gmail and a personal Gmail.

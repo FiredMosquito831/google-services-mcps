@@ -264,7 +264,7 @@ test('before a login, gmail registers only auth_status and tools that need no sc
     // A stored login (no network: the check only looks for the token file), then auth_status loads the tools.
     writeFileSync(join(dir, 'workspace-user.token.json'), JSON.stringify({ refresh_token: 'rt-test', scope: GMAIL_RO }));
     const loaded = await request('tools/call', { name: 'auth_status', arguments: {} });
-    assert.match(loaded.result.content[0].text, /Signed in for "workspace-user"\. \d+ tool\(s\) loaded now/);
+    assert.match(loaded.result.content[0].text, /Signed in for "workspace-user" with an OAuth account\. \d+ tool\(s\) loaded now/);
     const after = (await request('tools/list', {})).result.tools.map((tool) => tool.name);
     assert.ok(after.includes('gmail_search'), 'the scoped tools load once the login exists');
   });

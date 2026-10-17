@@ -88,7 +88,11 @@ test('the steps in one session: no client yet, save the client, sign-in URL with
   writeFileSync(desktop, JSON.stringify({ installed: { client_id: 'test-client-id.apps.googleusercontent.com', client_secret: 'test-secret-value' } }));
   try {
     await withServer(plugin('gmail'), dir, async ({ call }) => {
-      const early = await call('auth_login', {});
+      // Without a method, auth_login lists the two ways to sign in. The OAuth sign-in is asked for by method "oauth".
+      const choice = await call('auth_login', {});
+      assert.match(choice, /with method "oauth" or "adc"/, 'the choice is offered before any sign-in starts');
+
+      const early = await call('auth_login', { method: 'oauth' });
       assert.match(early, /auth_setup_client/, 'without a client, the sign-in asks for the client first');
 
       const saved = await call('auth_setup_client', { path: desktop });
@@ -96,7 +100,7 @@ test('the steps in one session: no client yet, save the client, sign-in URL with
       assert.match(saved, /Next: call auth_login/);
       assert.ok(!saved.includes('test-secret-value'), 'the secret is never shown');
 
-      const started = await call('auth_login', { profile: 'readonly' });
+      const started = await call('auth_login', { profile: 'readonly', method: 'oauth' });
       const url = new URL(started.match(/https:\/\/accounts\.google\.com\S+/)[0]);
       assert.equal(url.searchParams.get('client_id'), 'test-client-id.apps.googleusercontent.com');
       assert.equal(url.searchParams.get('code_challenge_method'), 'S256');
@@ -110,7 +114,7 @@ test('the steps in one session: no client yet, save the client, sign-in URL with
       assert.match(status, /Not signed in/);
       assert.match(status, /waiting for approval in the browser/);
 
-      const again = await call('auth_login', {});
+      const again = await call('auth_login', { method: 'oauth' });
       assert.match(again, /already waiting for approval/);
 
       const health = JSON.parse(await call('health', {}));

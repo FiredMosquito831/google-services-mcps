@@ -50,11 +50,11 @@ function childJson(body, env) {
   return JSON.parse(lines[lines.length - 1]);
 }
 
-test('getCloudAdcClient with no ADC throws gsm\'s "Not logged in" message, with Google\'s text kept as the cause', () => {
+test('the cloud login with no ADC throws gsm\'s "Not logged in" message, with Google\'s text kept as the cause', () => {
   const env = isolatedEnv();
   const out = childJson(
     `const auth = await import(${JSON.stringify(AUTH)});
-     try { await auth.getCloudAdcClient(); print({ ok: true }); } catch (err) { print(describe(err)); }`,
+     try { await auth.getAuthClient('cloud', { tokenDir: ${JSON.stringify(env.tokenDir)} }); print({ ok: true }); } catch (err) { print(describe(err)); }`,
     env,
   );
   assert.equal(out.name, 'AuthRequiredError');

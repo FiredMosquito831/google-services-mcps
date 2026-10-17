@@ -1,5 +1,6 @@
 import { existsSync } from 'node:fs';
-import { isLoggedIn, loadUserTokens, readAdminScopeFile, type AuthKind } from './auth.js';
+import { loadUserTokens, loginSourceOf, readAdminScopeFile, type AuthKind } from './auth.js';
+import { readAdcState } from './adc.js';
 import type { RuntimeConfig } from './config.js';
 import { checkGrant, type GrantState } from './grant-check.js';
 import { invocation } from './invocation.js';
@@ -68,25 +69,38 @@ export function loginHealth(group: string, cfg: RuntimeConfig): LoginHealth {
     };
   }
   if (group === 'cloud') {
-    const oauth = isLoggedIn('cloud', cfg);
+    const source = loginSourceOf('cloud', cfg);
     return {
       kind: 'oauth-or-adc',
-      loggedIn: oauth,
-      account: oauth ? storedAccount('cloud', cfg) : undefined,
-      next: oauth ? undefined : nextSignIn(cfg),
-      detail: oauth
-        ? 'OAuth login'
-        : `no OAuth login: run ${invocation()} login cloud, or use Application Default Credentials`,
+      loggedIn: source !== undefined,
+      account: source === 'oauth' ? storedAccount('cloud', cfg) : undefined,
+      next: source ? undefined : nextSignIn(cfg),
+      detail: sourceDetail(source, cfg, `no login: run ${invocation()} login cloud, or sign in with ADC (auth_login, method "adc")`),
     };
   }
-  const loggedIn = isLoggedIn(group as AuthKind, cfg);
+  const source = loginSourceOf(group as AuthKind, cfg);
   return {
     kind: 'oauth',
-    loggedIn,
-    account: loggedIn ? storedAccount(group as AuthKind, cfg) : undefined,
-    next: loggedIn ? undefined : nextSignIn(cfg),
-    detail: loggedIn ? 'logged in' : `not logged in: run ${invocation()} login ${group}`,
+    loggedIn: source !== undefined,
+    account: source === 'oauth' ? storedAccount(group as AuthKind, cfg) : undefined,
+    next: source ? undefined : nextSignIn(cfg),
+    detail: sourceDetail(source, cfg, `not logged in: run ${invocation()} login ${group}`),
   };
+}
+
+/**
+ * What a login's source means for the health line. An ADC login made by hand, with gcloud's built-in client, has no
+ * quota project unless gcloud was given one. The line says so, because cloud APIs may then fail with a quota error.
+ */
+function sourceDetail(source: 'oauth' | 'adc' | undefined, cfg: RuntimeConfig, missing: string): string {
+  if (source === 'oauth') return 'logged in';
+  if (source === undefined) return missing;
+  const state = readAdcState(cfg);
+  const quotaNote =
+    !state.recorded && !state.quotaProject
+      ? ' No quota project is set for this ADC login. If a call fails with a quota error, run: gcloud auth application-default set-quota-project <project-id>.'
+      : '';
+  return `signed in with Application Default Credentials.${quotaNote}`;
 }
 
 /** Asks Google about a group's login. Makes network calls, so it runs only when asked. */

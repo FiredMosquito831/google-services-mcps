@@ -14,7 +14,7 @@ import { fileURLToPath } from 'node:url';
 import type { JWT, OAuth2Client } from 'google-auth-library';
 import { z, type ZodRawShape } from 'zod';
 import { verboseOn, type RuntimeConfig } from '../config.js';
-import { getAuthClient, getCloudAdcClient, loadUserTokens, type AuthKind } from '../auth.js';
+import { getAuthClient, type AuthKind } from '../auth.js';
 import { isIdempotentMethod, requestWithRetry } from '../http.js';
 import type { ToolContext, ToolDef, ToolKind } from '../tools.js';
 import { loadRegistry, serverByName, type ApiRef, type AuthGroup, type ServerSpec } from '../registry.js';
@@ -155,27 +155,15 @@ export function loadToolKinds(dataRoot: string): ToolKindsFile {
 // Auth
 
 type Auth = OAuth2Client | JWT | ApiKeyClient;
-const authCache = new Map<AuthGroup, Promise<Auth>>();
 
 /**
- * One client per auth group, cached for the life of the process. The cloud group
- * falls back to Application Default Credentials when no OAuth token is stored, as
- * the curated cloud server does. The apikey group gets an ApiKeyClient, which adds
- * the key to each request. Every other group gets its OAuth client.
+ * The client of an auth group. The apikey group gets an ApiKeyClient, which adds the key to each request. Every other
+ * group goes through getAuthClient, which picks the account's OAuth client, else the ADC login, and caches per account.
+ * Nothing is cached here, so a new login (or a new ADC login) is used at once.
  */
 export function authFor(group: AuthGroup, cfg: RuntimeConfig): Promise<Auth> {
-  const cached = authCache.get(group);
-  if (cached) return cached;
-
-  const pending = (async (): Promise<Auth> => {
-    if (group === 'apikey') return new ApiKeyClient(cfg);
-    if (group === 'cloud' && !loadUserTokens('cloud', cfg)) return getCloudAdcClient();
-    return getAuthClient(group as AuthKind, cfg);
-  })();
-  authCache.set(group, pending);
-  // A failed attempt (for example, not logged in yet) is not cached.
-  pending.catch(() => authCache.delete(group));
-  return pending;
+  if (group === 'apikey') return Promise.resolve(new ApiKeyClient(cfg));
+  return getAuthClient(group as AuthKind, cfg);
 }
 
 /** One request for an auth group. The apikey group's client adds the key itself, so callers never put it in the URL. */

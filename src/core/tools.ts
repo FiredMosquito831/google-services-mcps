@@ -8,18 +8,22 @@ import {
   AuthRequiredError,
   GrantExpiredError,
   UnknownAccountError,
+  forgetAdcClients,
   grantedScopes,
   isLoggedIn,
+  loginSourceOf,
   removeUserTokens,
   type AuthKind,
 } from './auth.js';
 import { accountNames, listAccounts, setDefaultAccount } from './accounts.js';
 import { withAccount } from './account-context.js';
-import { revokeGrant } from './grant-check.js';
+import { revokeGrant, withIdentityScope } from './grant-check.js';
 import { createGate, type GateFn } from './approval.js';
 import { toolMapFromDefs } from './dump.js';
 import { serverHealth } from './health.js';
-import { createSignIn, runGsmCommand } from './inchat-login.js';
+import { createSignIn, runGsmCommand, type SignInMethod } from './inchat-login.js';
+import { findGcloud } from './adc.js';
+import { resolveScopes, type Requirement } from './scopes.js';
 import { fileURLToPath } from 'node:url';
 import { loadRegistry, serverByName, type AuthGroup } from './registry.js';
 import { invocation, invocationFor, setInvocation } from './invocation.js';
@@ -284,13 +288,47 @@ export async function runServer(opts: {
   const canSignIn = group !== undefined && ACCOUNT_GROUPS.has(group);
   const cliFile = fileURLToPath(new URL('../bin/gsm.mjs', import.meta.url));
   const text = (value: string): CallToolResult => ({ content: [{ type: 'text', text: value }] });
+  // The scopes an ADC login for this server asks for: the scopes its tools need, resolved as the OAuth login resolves them.
+  const adcScopesFor = (profile: 'readonly' | 'readwrite'): string[] => {
+    const requirements: Requirement[] = defined.map((tool) => ({ tool: tool.name, kind: tool.kind, scopes: [...(tool.scopes ?? [])] }));
+    return withIdentityScope(resolveScopes(requirements, profile).scopes);
+  };
+
+  // The two ways to sign in, with their costs. auth_login shows them first, so the person chooses before anything starts.
+  const signInChoice = (): string => {
+    const signedIn = accountNames(group as string, cfg);
+    const source = loginSourceOf(group as AuthKind, cfg);
+    const lines = [
+      `Two ways to sign in to "${group}" (server ${opts.name}). Ask the person which one to use, then call auth_login again with method "oauth" or "adc".`,
+      '',
+      'oauth: sign in here, with the Desktop OAuth client saved by auth_setup_client.',
+      '  + Several accounts can be signed in at once. Each has its own token, and logout revokes it.',
+      '  + No terminal and no gcloud CLI.',
+      '  - Needs the OAuth client from your own Google Cloud project. An app left in Testing loses its tokens after 7 days.',
+      '',
+      `adc: Application Default Credentials, signed in through the gcloud CLI${findGcloud() ? '' : ' (gcloud is not installed on this machine)'}.`,
+      "  + Google's standard way for local tools. For cloud APIs it needs no client file: gcloud's built-in client is used.",
+      '  + For other APIs it uses the same client file as oauth, through gcloud.',
+      '  - One login per machine. It cannot hold several accounts, and a new ADC login replaces the old one.',
+      '  - gcloud keeps the tokens, so logout here does not remove them. Revoke them with: gcloud auth application-default revoke.',
+      '  - Cloud APIs may need a quota project: gcloud auth application-default set-quota-project <project-id>.',
+    ];
+    if (signedIn !== 'none') lines.push('', `Already signed in here: ${signedIn}. oauth adds an account; adc is used only when no account is signed in here.`);
+    if (source) lines.push('', `Currently signed in for "${group}" with ${source === 'adc' ? 'ADC' : 'an OAuth account'}.`);
+    return lines.join('\n');
+  };
+
   const signIn = canSignIn
     ? createSignIn({
         cliFile,
         group: group as string,
         server: opts.name,
         cfg,
-        onSignedIn: () => register(registerable(currentGrant(), defined)),
+        adcScopes: adcScopesFor,
+        onSignedIn: () => {
+          forgetAdcClients();
+          register(registerable(currentGrant(), defined));
+        },
       })
     : undefined;
 
@@ -320,17 +358,26 @@ export async function runServer(opts: {
       {
         title: 'Sign in to Google',
         description:
-          'Starts the Google sign-in for this server, in the browser on this machine. Returns the URL to approve. When you approve, the tools of this server load without a restart. The OAuth client must be saved first (auth_setup_client).',
+          'Starts the Google sign-in for this server, in the browser on this machine. Call it without method first: the answer lists the two ways to sign in (oauth or adc) with their pros and cons. Ask the person which one to use, then call again with method. When the person approves in the browser, the tools of this server load without a restart.',
         inputSchema: {
           profile: z
             .enum(['readonly', 'readwrite'])
             .optional()
             .describe('readonly (the default) or readwrite. Write tools also need writes to be allowed in the plugin settings.'),
+          method: z
+            .enum(['oauth', 'adc'])
+            .optional()
+            .describe(
+              'oauth: sign in with the saved OAuth client. adc: Application Default Credentials through the gcloud CLI. Leave it out to see the options first.',
+            ),
         },
         annotations: { readOnlyHint: false },
       },
-      async (rawArgs: Record<string, unknown>): Promise<CallToolResult> =>
-        text(await signIn.start(rawArgs.profile === 'readwrite' ? 'readwrite' : 'readonly')),
+      async (rawArgs: Record<string, unknown>): Promise<CallToolResult> => {
+        if (rawArgs.method !== 'oauth' && rawArgs.method !== 'adc') return text(signInChoice());
+        const method: SignInMethod = rawArgs.method;
+        return text(await signIn.start(rawArgs.profile === 'readwrite' ? 'readwrite' : 'readonly', method));
+      },
     );
     server.registerTool(
       'auth_status',
@@ -345,7 +392,9 @@ export async function runServer(opts: {
         const signedIn = isLoggedIn(group as AuthKind, cfg);
         if (signedIn) register(registerable(currentGrant(), defined));
         const loaded = registered.size - before;
-        const state = signedIn ? `Signed in for "${group}". ${loaded} tool(s) loaded now.` : `Not signed in for "${group}".`;
+        const source = loginSourceOf(group as AuthKind, cfg);
+        const via = source === 'adc' ? ' with Application Default Credentials' : source === 'oauth' ? ' with an OAuth account' : '';
+        const state = signedIn ? `Signed in for "${group}"${via}. ${loaded} tool(s) loaded now.` : `Not signed in for "${group}".`;
         return text(`${state} Accounts: ${accountNames(group as string, cfg)}. ${signIn.describe()}`);
       },
     );

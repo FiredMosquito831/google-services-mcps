@@ -9,7 +9,7 @@ import {
   removeAccount,
   setDefaultAccount,
 } from '../core/accounts.js';
-import { ADMIN_SCOPES, adminScopeFileFor, readAdminScopeFile, type AuthKind } from '../core/auth.js';
+import { ADMIN_SCOPES, adminScopeFileFor, adcSourceFor, readAdminScopeFile, type AuthKind } from '../core/auth.js';
 import { checkGrant, checkKeyRestrictions, revokeGrant, type GrantState } from '../core/grant-check.js';
 import { loadConfig, type RuntimeConfig } from '../core/config.js';
 import { ALL_GROUPS, OAUTH_GROUPS, type CliGroup } from './args.js';
@@ -136,7 +136,12 @@ export function runStatus(out: Output, env: NodeJS.ProcessEnv = process.env): nu
 
     const accounts = listAccounts(group, cfg);
     if (accounts.length === 0) {
-      out.log(`${group}: not logged in (run: node gsm.mjs login ${group})`);
+      const adc = adcSourceFor(group, cfg);
+      if (adc) {
+        out.log(`${group}: signed in with Application Default Credentials (scopes: ${adc.scopes.length}). Check it with: node gsm.mjs status --check`);
+        continue;
+      }
+      out.log(`${group}: not logged in (run: node gsm.mjs login ${group}, or sign in with ADC: gcloud auth application-default login)`);
       continue;
     }
     out.log(`${group}: ${accounts.length} account(s) signed in`);
@@ -179,8 +184,9 @@ export async function runStatusCheck(out: Output, env: NodeJS.ProcessEnv = proce
   for (const group of OAUTH_GROUPS) {
     const accounts = listAccounts(group, cfg);
     if (accounts.length === 0) {
+      // No account of its own: the group may be on the ADC login, which the check reads too.
       const result = await checkGrant(group as AuthKind, cfg);
-      problems += 1;
+      if (result.state !== 'valid') problems += 1;
       out.log(`${group}: ${CHECK_LABEL[result.state]}. ${result.detail}`);
       continue;
     }
@@ -239,6 +245,11 @@ export async function runLogout(
   }
   const email = options.account ?? defaultAccount(group, cfg);
   if (email === undefined) {
+    // The ADC login is kept by gcloud, not by the suite, so it is not removed here. The message says how to remove it.
+    if (options.account === undefined && adcSourceFor(group as AuthKind, cfg)) {
+      out.log(`${group}: signed in with Application Default Credentials. gsm does not remove that login. Remove it with: gcloud auth application-default revoke`);
+      return 0;
+    }
     out.log(`${group}: not logged in${accountNames(group, cfg) === 'none' ? '' : `; ${accountNames(group, cfg)} are signed in, so name one with --account`}`);
     return 0;
   }

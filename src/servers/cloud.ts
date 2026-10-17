@@ -16,17 +16,14 @@ import { apikeys } from '@googleapis/apikeys';
 import type { JWT, OAuth2Client } from 'google-auth-library';
 import { z } from 'zod';
 import type { RuntimeConfig } from '../core/config.js';
-import { getAuthClient, getCloudAdcClient, googleScopes, loadUserTokens } from '../core/auth.js';
+import { getAuthClient, googleScopes } from '../core/auth.js';
 import { defineTool, type ToolDef } from '../core/tools.js';
 
 type Auth = OAuth2Client | JWT;
 
-// The Application Default Credentials client is kept once; the OAuth client is per account (see account-context.ts).
-let adcClient: Auth | undefined;
+// The cloud login is the account's OAuth client, else the Application Default Credentials login (see core/auth.ts).
 async function authFor(cfg: RuntimeConfig): Promise<Auth> {
-  if (loadUserTokens('cloud', cfg)) return getAuthClient('cloud', cfg);
-  adcClient ??= await getCloudAdcClient();
-  return adcClient;
+  return getAuthClient('cloud', cfg);
 }
 
 /** API keys are scoped by project NUMBER, so IDs are resolved once and cached. */
