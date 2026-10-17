@@ -4,15 +4,18 @@ Google Drive files, labels and activity, plus Docs, Sheets, Slides, Forms and Bo
 
 - Plugin: `gdrive`, MCP server: `gdrive`, login: Desktop OAuth client, then `login workspace-user`
 - Install: `claude plugin install gdrive@google-services-mcps`
-- Tools: 187 total. Curated 8, per-method 175, gateway 3. Read 89, write 75, destructive 22, dynamic 1.
+- Tools: 190 total. Curated 11, per-method 175, gateway 3. Read 89, write 78, destructive 22, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-## Curated tools (8)
+## Curated tools (11)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
-| `auth_status` | read | Login status | (none) |
+| `auth_login` | write | Sign in to Google | (none) |
+| `auth_setup_admin` | write | Set up the workspace admin account | (none) |
+| `auth_setup_client` | write | Save the Google OAuth client | (none) |
+| `auth_status` | read | Sign-in status | (none) |
 | `drive_create_folder` | write | Create Drive folder | drive, drive.file |
 | `drive_create_text_file` | write | Create Drive text file | drive, drive.file |
 | `drive_get_file` | read | Get Drive file | drive, drive.metadata |

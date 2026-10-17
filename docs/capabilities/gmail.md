@@ -4,15 +4,18 @@ Gmail mailboxes, messages, labels and settings, plus Gmail Postmaster Tools.
 
 - Plugin: `gmail`, MCP server: `gmail`, login: Desktop OAuth client, then `login workspace-user`
 - Install: `claude plugin install gmail@google-services-mcps`
-- Tools: 99 total. Curated 8, per-method 87, gateway 3. Read 45, write 35, destructive 18, dynamic 1.
+- Tools: 102 total. Curated 11, per-method 87, gateway 3. Read 45, write 38, destructive 18, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-## Curated tools (8)
+## Curated tools (11)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
-| `auth_status` | read | Login status | (none) |
+| `auth_login` | write | Sign in to Google | (none) |
+| `auth_setup_admin` | write | Set up the workspace admin account | (none) |
+| `auth_setup_client` | write | Save the Google OAuth client | (none) |
+| `auth_status` | read | Sign-in status | (none) |
 | `gmail_create_draft` | write | Create Gmail draft | https://mail.google.com/, gmail.compose |
 | `gmail_get_message` | read | Get Gmail message | https://mail.google.com/, gmail.metadata |
 | `gmail_list_drafts` | read | List Gmail drafts | https://mail.google.com/, gmail.compose |

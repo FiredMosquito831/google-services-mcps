@@ -4,15 +4,18 @@ Google Cloud console APIs: projects, service enablement, API keys, billing, moni
 
 - Plugin: `gcloud`, MCP server: `gcloud`, login: Desktop OAuth client, then `login cloud`
 - Install: `claude plugin install gcloud@google-services-mcps`
-- Tools: 376 total. Curated 22, per-method 350, gateway 3. Read 185, write 139, destructive 51, dynamic 1.
+- Tools: 379 total. Curated 25, per-method 350, gateway 3. Read 185, write 142, destructive 51, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-## Curated tools (22)
+## Curated tools (25)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
-| `auth_status` | read | Login status | (none) |
+| `auth_login` | write | Sign in to Google | (none) |
+| `auth_setup_admin` | write | Set up the workspace admin account | (none) |
+| `auth_setup_client` | write | Save the Google OAuth client | (none) |
+| `auth_status` | read | Sign-in status | (none) |
 | `bq_dataset_list` | read | List BigQuery datasets | bigquery.readonly, cloud-platform.read-only |
 | `bq_job_get` | read | Get BigQuery job rows | bigquery.readonly, cloud-platform.read-only |
 | `bq_query_read` | read | Run read-only BigQuery query | bigquery.readonly, cloud-platform.read-only |

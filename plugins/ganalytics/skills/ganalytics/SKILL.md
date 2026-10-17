@@ -1,13 +1,13 @@
 ---
 name: ganalytics
-description: Google Analytics admin and data APIs for GA4 properties, configuration and reports. Served by the ganalytics MCP server with 72 tools. Use for requests about these Google APIs.
+description: Google Analytics admin and data APIs for GA4 properties, configuration and reports. Served by the ganalytics MCP server with 75 tools. Use for requests about these Google APIs.
 ---
 
 # Google Analytics
 
 Google Analytics admin and data APIs for GA4 properties, configuration and reports.
 
-The `ganalytics` MCP server exposes 72 tools. Per-method tools cover the Discovery APIs listed below. Gateway APIs are reached through three generic tools: api_search finds a method, api_describe shows its parameters, and api_call runs it.
+The `ganalytics` MCP server exposes 75 tools. Per-method tools cover the Discovery APIs listed below. Gateway APIs are reached through three generic tools: api_search finds a method, api_describe shows its parameters, and api_call runs it.
 
 ## Log in
 

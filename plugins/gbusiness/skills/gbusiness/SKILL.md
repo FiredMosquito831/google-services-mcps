@@ -1,13 +1,13 @@
 ---
 name: gbusiness
-description: Business Profile accounts, locations, verifications, lodging, place actions, notifications and performance. Served by the gbusiness MCP server with 54 tools. Use for requests about these Google APIs.
+description: Business Profile accounts, locations, verifications, lodging, place actions, notifications and performance. Served by the gbusiness MCP server with 57 tools. Use for requests about these Google APIs.
 ---
 
 # Business Profile
 
 Business Profile accounts, locations, verifications, lodging, place actions, notifications and performance.
 
-The `gbusiness` MCP server exposes 54 tools. Per-method tools cover the Discovery APIs listed below.
+The `gbusiness` MCP server exposes 57 tools. Per-method tools cover the Discovery APIs listed below.
 
 ## Log in
 

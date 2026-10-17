@@ -4,15 +4,18 @@ Google Calendar calendars, events and calendar settings.
 
 - Plugin: `gcalendar`, MCP server: `gcalendar`, login: Desktop OAuth client, then `login workspace-user`
 - Install: `claude plugin install gcalendar@google-services-mcps`
-- Tools: 48 total. Curated 9, per-method 38, gateway 0. Read 18, write 23, destructive 7, dynamic 0.
+- Tools: 51 total. Curated 12, per-method 38, gateway 0. Read 18, write 26, destructive 7, dynamic 0.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-## Curated tools (9)
+## Curated tools (12)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
-| `auth_status` | read | Login status | (none) |
+| `auth_login` | write | Sign in to Google | (none) |
+| `auth_setup_admin` | write | Set up the workspace admin account | (none) |
+| `auth_setup_client` | write | Save the Google OAuth client | (none) |
+| `auth_status` | read | Sign-in status | (none) |
 | `calendar_create_event` | write | Create calendar event | calendar, calendar.events |
 | `calendar_delete_event` | destructive | Delete calendar event | calendar, calendar.events |
 | `calendar_freebusy` | read | Check free/busy | calendar, calendar.events.freebusy |

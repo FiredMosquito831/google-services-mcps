@@ -1,13 +1,13 @@
 ---
 name: gtm
-description: Google Tag Manager accounts, containers, tags, triggers and variables. Served by the gtm MCP server with 112 tools. Use for requests about these Google APIs.
+description: Google Tag Manager accounts, containers, tags, triggers and variables. Served by the gtm MCP server with 115 tools. Use for requests about these Google APIs.
 ---
 
 # Tag Manager
 
 Google Tag Manager accounts, containers, tags, triggers and variables.
 
-The `gtm` MCP server exposes 112 tools. Per-method tools cover the Discovery APIs listed below. Gateway APIs are reached through three generic tools: api_search finds a method, api_describe shows its parameters, and api_call runs it.
+The `gtm` MCP server exposes 115 tools. Per-method tools cover the Discovery APIs listed below. Gateway APIs are reached through three generic tools: api_search finds a method, api_describe shows its parameters, and api_call runs it.
 
 ## Log in
 

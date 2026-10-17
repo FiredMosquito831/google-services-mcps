@@ -1,13 +1,13 @@
 ---
 name: gmeet
-description: Google Meet spaces, conference records, participants and recordings. Served by the gmeet MCP server with 27 tools. Use for requests about these Google APIs.
+description: Google Meet spaces, conference records, participants and recordings. Served by the gmeet MCP server with 30 tools. Use for requests about these Google APIs.
 ---
 
 # Google Meet
 
 Google Meet spaces, conference records, participants and recordings.
 
-The `gmeet` MCP server exposes 27 tools. Per-method tools cover the Discovery APIs listed below.
+The `gmeet` MCP server exposes 30 tools. Per-method tools cover the Discovery APIs listed below.
 
 ## Log in
 

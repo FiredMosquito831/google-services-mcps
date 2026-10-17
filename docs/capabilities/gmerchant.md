@@ -4,15 +4,18 @@ Merchant Center: Merchant API, Comparison Shopping Service and Manufacturer Cent
 
 - Plugin: `gmerchant`, MCP server: `gmerchant`, login: Desktop OAuth client, then `login business`
 - Install: `claude plugin install gmerchant@google-services-mcps`
-- Tools: 160 total. Curated 2, per-method 154, gateway 3. Read 75, write 64, destructive 20, dynamic 1.
+- Tools: 163 total. Curated 5, per-method 154, gateway 3. Read 75, write 67, destructive 20, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-## Curated tools (2)
+## Curated tools (5)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
-| `auth_status` | read | Login status | (none) |
+| `auth_login` | write | Sign in to Google | (none) |
+| `auth_setup_admin` | write | Set up the workspace admin account | (none) |
+| `auth_setup_client` | write | Save the Google OAuth client | (none) |
+| `auth_status` | read | Sign-in status | (none) |
 | `health` | read | Server health | (none) |
 
 ## Per-method tools (154)

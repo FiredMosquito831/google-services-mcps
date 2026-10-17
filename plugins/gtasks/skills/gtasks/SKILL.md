@@ -1,13 +1,13 @@
 ---
 name: gtasks
-description: Google Tasks task lists and tasks, plus Google Keep notes. Served by the gtasks MCP server with 24 tools. Use for requests about these Google APIs.
+description: Google Tasks task lists and tasks, plus Google Keep notes. Served by the gtasks MCP server with 27 tools. Use for requests about these Google APIs.
 ---
 
 # Tasks and Keep
 
 Google Tasks task lists and tasks, plus Google Keep notes.
 
-The `gtasks` MCP server exposes 24 tools. Per-method tools cover the Discovery APIs listed below.
+The `gtasks` MCP server exposes 27 tools. Per-method tools cover the Discovery APIs listed below.
 
 ## Log in
 

@@ -1610,10 +1610,28 @@
     "title": "Search API methods"
   },
   {
+    "name": "mcp__plugin_gadmin_gadmin__auth_login",
+    "kind": "write",
+    "scopes": [],
+    "title": "Sign in to Google"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__auth_setup_admin",
+    "kind": "write",
+    "scopes": [],
+    "title": "Set up the workspace admin account"
+  },
+  {
+    "name": "mcp__plugin_gadmin_gadmin__auth_setup_client",
+    "kind": "write",
+    "scopes": [],
+    "title": "Save the Google OAuth client"
+  },
+  {
     "name": "mcp__plugin_gadmin_gadmin__auth_status",
     "kind": "read",
     "scopes": [],
-    "title": "Login status"
+    "title": "Sign-in status"
   },
   {
     "name": "mcp__plugin_gadmin_gadmin__chromepoli_cust_poli_group_batch_862a",

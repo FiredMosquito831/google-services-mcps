@@ -2,6 +2,15 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 0.4.0 - 2026-10-16
+
+### Sign-in from the chat
+- Google servers sign in from Claude Code. `auth_setup_client` saves the Desktop OAuth client from a file path, `auth_login` returns the Google address to approve, and `auth_status` loads the tools once the sign-in finishes. No terminal is needed.
+- The sign-in runs the same `gsm login` as the terminal, so the scopes, PKCE, the recorded account and the token file are the same.
+- `auth_setup_admin` sets up the admin server's service account from a key file path.
+- The health report names the next tool to call for a server that is not signed in (`auth_setup_client`, then `auth_login`).
+- The sign-in and setup tools are writes in the plugin map, so the hook asks before each call. API keys are never sent through the chat.
+
 ## 0.3.0 - 2026-10-16
 
 ### Health and identity

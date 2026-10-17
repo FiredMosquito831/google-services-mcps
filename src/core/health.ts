@@ -1,3 +1,4 @@
+import { existsSync } from 'node:fs';
 import { isLoggedIn, loadUserTokens, readAdminScopeFile, type AuthKind } from './auth.js';
 import type { RuntimeConfig } from './config.js';
 import { checkGrant, type GrantState } from './grant-check.js';
@@ -17,6 +18,8 @@ export interface LoginHealth {
   /** The account the login belongs to, as recorded at login. Undefined when none was recorded. */
   account?: string;
   detail: string;
+  /** The tool that moves a server that is not signed in forward. Undefined when signed in. */
+  next?: string;
 }
 
 export interface LiveHealth {
@@ -25,6 +28,11 @@ export interface LiveHealth {
   account?: string;
   expiresInSeconds?: number;
   missingScopes: string[];
+}
+
+/** The next tool for a server without a Google sign-in: save the client first if it is missing, then sign in. */
+function nextSignIn(cfg: RuntimeConfig): string {
+  return existsSync(cfg.clientSecretFile) ? 'auth_login' : 'auth_setup_client';
 }
 
 /** The account recorded in a group's token file at login. */
@@ -41,7 +49,13 @@ export function storedAccount(group: AuthKind, cfg: RuntimeConfig): string | und
 export function loginHealth(group: string, cfg: RuntimeConfig): LoginHealth {
   if (group === 'apikey') {
     const set = Boolean(cfg.apiKey);
-    return { kind: 'api-key', loggedIn: set, detail: set ? 'API key set' : `no API key: run ${invocation()} setup-apikey` };
+    return {
+      kind: 'api-key',
+      loggedIn: set,
+      detail: set ? 'API key set' : `no API key: run ${invocation()} setup-apikey`,
+      // A key is never sent through the chat, so there is no tool to set it.
+      next: set ? undefined : 'set GSM_API_KEY, or run setup-apikey in a terminal',
+    };
   }
   if (group === 'workspace-admin') {
     const stored = readAdminScopeFile(cfg);
@@ -50,6 +64,7 @@ export function loginHealth(group: string, cfg: RuntimeConfig): LoginHealth {
       kind: 'service-account',
       loggedIn: configured,
       detail: configured ? 'service account set up' : `not set up: run ${invocation()} setup-admin`,
+      next: configured ? undefined : 'auth_setup_admin',
     };
   }
   if (group === 'cloud') {
@@ -58,6 +73,7 @@ export function loginHealth(group: string, cfg: RuntimeConfig): LoginHealth {
       kind: 'oauth-or-adc',
       loggedIn: oauth,
       account: oauth ? storedAccount('cloud', cfg) : undefined,
+      next: oauth ? undefined : nextSignIn(cfg),
       detail: oauth
         ? 'OAuth login'
         : `no OAuth login: run ${invocation()} login cloud, or use Application Default Credentials`,
@@ -68,6 +84,7 @@ export function loginHealth(group: string, cfg: RuntimeConfig): LoginHealth {
     kind: 'oauth',
     loggedIn,
     account: loggedIn ? storedAccount(group as AuthKind, cfg) : undefined,
+    next: loggedIn ? undefined : nextSignIn(cfg),
     detail: loggedIn ? 'logged in' : `not logged in: run ${invocation()} login ${group}`,
   };
 }

@@ -623,10 +623,10 @@ test('--dump-tools prints the tool map with dynamic tools listed as write, and s
   const result = spawnSync(process.execPath, [entry, '--dump-tools'], { env: childEnv(dir, {}), encoding: 'utf8', timeout: 60_000 });
   assert.equal(result.status, 0, result.stderr);
   const { tools } = JSON.parse(result.stdout);
-  // health and auth_status are added by runServer to every map, as reads. The demo tools are checked on their own.
+  // The runtime tools (health, the sign-in tools) are added by runServer to every map. The demo tools are checked on their own.
   assert.ok(tools.some((t) => t.name === 'health' && t.kind === 'read'));
   assert.deepEqual(
-    tools.filter((t) => !['health', 'auth_status'].includes(t.name)).map((t) => [t.name, t.kind]),
+    tools.filter((t) => !['health', 'auth_status', 'auth_setup_client', 'auth_login', 'auth_setup_admin'].includes(t.name)).map((t) => [t.name, t.kind]),
     [
       ['demo_delete', 'destructive'],
       ['demo_dynamic', 'dynamic'],

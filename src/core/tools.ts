@@ -7,6 +7,8 @@ import { AuthRequiredError, GrantExpiredError, grantedScopes, isLoggedIn, type A
 import { createGate, type GateFn } from './approval.js';
 import { toolMapFromDefs } from './dump.js';
 import { serverHealth } from './health.js';
+import { createSignIn, runGsmCommand } from './inchat-login.js';
+import { fileURLToPath } from 'node:url';
 import { loadRegistry, serverByName, type AuthGroup } from './registry.js';
 import { invocation, invocationFor, setInvocation } from './invocation.js';
 
@@ -144,7 +146,11 @@ async function dumpTools(buildTools: (cfg: RuntimeConfig) => Promise<ToolDef[]> 
     // a tool missing from the map is treated as destructive, and every call to it would ask.
     const runtimeReads = [
       { name: 'health', kind: 'read' as const, title: 'Server health' },
-      { name: 'auth_status', kind: 'read' as const, title: 'Login status' },
+      { name: 'auth_status', kind: 'read' as const, title: 'Sign-in status' },
+      // Sign-in tools change local state (a client file, a token, an admin setup), so the hook asks before each call.
+      { name: 'auth_setup_client', kind: 'write' as const, title: 'Save the Google OAuth client' },
+      { name: 'auth_login', kind: 'write' as const, title: 'Sign in to Google' },
+      { name: 'auth_setup_admin', kind: 'write' as const, title: 'Set up the workspace admin account' },
     ];
     const map = toolMapFromDefs([
       ...defined.map((tool) => ({ name: tool.name, kind: tool.kind, scopes: tool.scopes, title: tool.title, methodId: tool.methodId })),
@@ -238,22 +244,98 @@ export async function runServer(opts: {
   };
   register(registerable(granted, defined));
 
-  if (needsLogin) {
+  // Sign-in from the chat, for the groups that use a Google login. The client file, the sign-in and the admin setup run
+  // as gsm commands of this plugin, so they do the same work as the terminal commands (see inchat-login.ts).
+  const SIGN_IN_GROUPS: ReadonlySet<string> = new Set(['workspace-user', 'searchconsole', 'business', 'developer', 'cloud']);
+  const canSignIn = group !== undefined && SIGN_IN_GROUPS.has(group);
+  const cliFile = fileURLToPath(new URL('../bin/gsm.mjs', import.meta.url));
+  const text = (value: string): CallToolResult => ({ content: [{ type: 'text', text: value }] });
+  const signIn = canSignIn
+    ? createSignIn({
+        cliFile,
+        group: group as string,
+        server: opts.name,
+        cfg,
+        onSignedIn: () => register(registerable(currentGrant(), defined)),
+      })
+    : undefined;
+
+  if (signIn) {
+    server.registerTool(
+      'auth_setup_client',
+      {
+        title: 'Save the Google OAuth client',
+        description:
+          'Saves the Desktop OAuth client JSON that you downloaded from Google Cloud console (APIs & Services > Credentials). Give the full path of that file. Its secret is copied into the token folder and is never shown.',
+        inputSchema: {
+          path: z.string().describe('Full path of the Desktop OAuth client JSON file.'),
+          force: z.boolean().optional().describe('Replace a client file that is already saved.'),
+        },
+        annotations: { readOnlyHint: false },
+      },
+      async (rawArgs: Record<string, unknown>): Promise<CallToolResult> => {
+        const args = ['setup-client', String(rawArgs.path)];
+        if (rawArgs.force === true) args.push('--force');
+        const res = await runGsmCommand(cliFile, args);
+        if (res.code !== 0) return text(`Could not save the OAuth client: ${res.output}`);
+        return text(`${res.output.split('\n')[0] ?? 'OAuth client saved.'}\nNext: call auth_login to sign in.`);
+      },
+    );
+    server.registerTool(
+      'auth_login',
+      {
+        title: 'Sign in to Google',
+        description:
+          'Starts the Google sign-in for this server, in the browser on this machine. Returns the URL to approve. When you approve, the tools of this server load without a restart. The OAuth client must be saved first (auth_setup_client).',
+        inputSchema: {
+          profile: z
+            .enum(['readonly', 'readwrite'])
+            .optional()
+            .describe('readonly (the default) or readwrite. Write tools also need writes to be allowed in the plugin settings.'),
+        },
+        annotations: { readOnlyHint: false },
+      },
+      async (rawArgs: Record<string, unknown>): Promise<CallToolResult> =>
+        text(await signIn.start(rawArgs.profile === 'readwrite' ? 'readwrite' : 'readonly')),
+    );
     server.registerTool(
       'auth_status',
       {
-        title: 'Login status',
+        title: 'Sign-in status',
         description:
-          'Says whether this server has a Google login, and the command that logs in. Call it after a login: the tools of this server load then, without a restart.',
+          'Says whether this server is signed in to Google, and what a sign-in in progress is doing. Call it after approving a sign-in: the tools load then, without a restart.',
         annotations: { readOnlyHint: true },
       },
       async (): Promise<CallToolResult> => {
-        if (!loggedIn()) {
-          return { content: [{ type: 'text', text: `Not logged in for "${group}". Run: ${invocation()} login ${group}` }] };
-        }
         const before = registered.size;
-        register(registerable(currentGrant(), defined));
-        return { content: [{ type: 'text', text: `Logged in for "${group}". ${registered.size - before} tool(s) loaded now.` }] };
+        const signedIn = isLoggedIn(group as AuthKind, cfg);
+        if (signedIn) register(registerable(currentGrant(), defined));
+        const loaded = registered.size - before;
+        const state = signedIn ? `Signed in for "${group}". ${loaded} tool(s) loaded now.` : `Not signed in for "${group}".`;
+        return text(`${state} ${signIn.describe()}`);
+      },
+    );
+  }
+
+  if (group === 'workspace-admin') {
+    server.registerTool(
+      'auth_setup_admin',
+      {
+        title: 'Set up the workspace admin account',
+        description:
+          'Sets up domain-wide delegation for the admin tools: the super admin email to act as, and the full path of the service account key file. The key file stays where it is; only its path is saved.',
+        inputSchema: {
+          subject: z.string().describe('The super admin email to act as.'),
+          key_file: z.string().describe('Full path of the service account key JSON file.'),
+          replace: z.boolean().optional().describe('Keep only the scopes this setup asks for, instead of merging with the stored ones.'),
+        },
+        annotations: { readOnlyHint: false },
+      },
+      async (rawArgs: Record<string, unknown>): Promise<CallToolResult> => {
+        const args = ['setup-admin', '--subject', String(rawArgs.subject), '--key-file', String(rawArgs.key_file), '--profile', 'readonly', '--servers', opts.name];
+        if (rawArgs.replace === true) args.push('--replace');
+        const res = await runGsmCommand(cliFile, args);
+        return text(res.code === 0 ? res.output : `Could not set up the admin account: ${res.output}`);
       },
     );
   }
@@ -284,10 +366,12 @@ export async function runServer(opts: {
   );
 
   await server.connect(new StdioServerTransport());
+  // When the client closes the connection, a sign-in still waiting for the browser is stopped with it.
+  process.stdin.once('end', () => signIn?.dispose());
   const hidden = defined.length - registered.size;
   process.stderr.write(
     `[${opts.name}] ready, ${registered.size} tool(s) registered, writes ${cfg.allowWrites ? 'enabled' : 'disabled'}` +
-      (needsLogin && !loggedIn() ? `, not logged in: run ${invocation()} login ${group}` : '') +
+      (needsLogin && !loggedIn() ? `, not signed in: call auth_login (or run ${invocation()} login ${group})` : '') +
       (hidden > 0 ? `, ${hidden} hidden (they need a login, or the stored grant lacks their scopes)` : '') +
       '\n',
   );

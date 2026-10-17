@@ -4,15 +4,18 @@ Google Chat spaces, messages and members, plus Workspace Events subscriptions.
 
 - Plugin: `gchat`, MCP server: `gchat`, login: Desktop OAuth client, then `login workspace-user`
 - Install: `claude plugin install gchat@google-services-mcps`
-- Tools: 63 total. Curated 2, per-method 60, gateway 0. Read 30, write 25, destructive 8, dynamic 0.
+- Tools: 66 total. Curated 5, per-method 60, gateway 0. Read 30, write 28, destructive 8, dynamic 0.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-## Curated tools (2)
+## Curated tools (5)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
-| `auth_status` | read | Login status | (none) |
+| `auth_login` | write | Sign in to Google | (none) |
+| `auth_setup_admin` | write | Set up the workspace admin account | (none) |
+| `auth_setup_client` | write | Save the Google OAuth client | (none) |
+| `auth_status` | read | Sign-in status | (none) |
 | `health` | read | Server health | (none) |
 
 ## Per-method tools (60)

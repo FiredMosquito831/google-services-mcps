@@ -1,13 +1,13 @@
 ---
 name: gapps
-description: Apps Script projects and execution, plus the Workspace Marketplace SDK. Served by the gapps MCP server with 21 tools. Use for requests about these Google APIs.
+description: Apps Script projects and execution, plus the Workspace Marketplace SDK. Served by the gapps MCP server with 24 tools. Use for requests about these Google APIs.
 ---
 
 # Apps Script
 
 Apps Script projects and execution, plus the Workspace Marketplace SDK.
 
-The `gapps` MCP server exposes 21 tools. Per-method tools cover the Discovery APIs listed below.
+The `gapps` MCP server exposes 24 tools. Per-method tools cover the Discovery APIs listed below.
 
 ## Log in
 
