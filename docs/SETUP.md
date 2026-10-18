@@ -19,7 +19,7 @@ The commands in this guide use the installer, `npx google-services-mcps`. They r
 
 1. In the Google Cloud console, create a project for this suite if you do not have one. Use the same project for the products of one group. Google Ads access is tied to this project (see [Google Ads (gads)](#google-ads-gads)).
 2. Enable the APIs of the products you use. For example, the Gmail API, the Google Drive API and the Google Calendar API.
-3. Configure the OAuth consent screen. Use **Internal** for a Workspace domain. If you choose **External**, publish the app. An app left in **Testing** loses its refresh token after 7 days.
+3. Configure the OAuth consent screen. Use **Internal** for a Workspace domain. If you choose **External**, publish the app. An app left in **Testing** loses its refresh token after 7 days. Before you can publish, Google asks for an app name, a support email, a homepage URL and a privacy policy URL. The suite's privacy policy, which says what the software does with your data, is at https://firedmosquito831.github.io/google-services-mcps/privacy.html.
 4. Create credentials: an OAuth client ID of type **Desktop app**. Download the JSON file.
 5. Save the file into the token directory, then log in:
 
