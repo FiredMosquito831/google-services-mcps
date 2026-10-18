@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://firedmosquito831.github.io/google-services-mcps/sitemap.xml
+Sitemap: https://google-services-mcps.danubelabs.net/sitemap.xml

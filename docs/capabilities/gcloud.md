@@ -4,11 +4,11 @@ Google Cloud console APIs: projects, service enablement, API keys, billing, moni
 
 - Plugin: `gcloud`, MCP server: `gcloud`, login: Desktop OAuth client, then `login cloud`
 - Install: `claude plugin install gcloud@google-services-mcps`
-- Tools: 383 total. Curated 29, per-method 350, gateway 3. Read 186, write 145, destructive 51, dynamic 1.
+- Tools: 385 total. Curated 31, per-method 350, gateway 3. Read 187, write 146, destructive 51, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-## Curated tools (29)
+## Curated tools (31)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
@@ -41,6 +41,8 @@ Read tools never ask. Write, destructive and dynamic tools ask before they run, 
 | `cloud_service_enable` | write | Enable API | cloud-platform, service.management |
 | `cloud_services_list` | read | List APIs on a project | cloud-platform, cloud-platform.read-only |
 | `health` | read | Server health | (none) |
+| `project_enable_missing` | write | Enable the APIs the MCPs need | cloud-platform, service.management |
+| `project_readiness` | read | Check a project for the MCPs | cloud-platform, cloud-platform.read-only |
 
 ## Per-method tools (350)
 

@@ -22,7 +22,7 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SITE = path.join(ROOT, 'site');
-const SITE_URL = 'https://firedmosquito831.github.io/google-services-mcps/';
+const SITE_URL = 'https://google-services-mcps.danubelabs.net/';
 const REPO_URL = 'https://github.com/FiredMosquito831/google-services-mcps';
 const BLOB = `${REPO_URL}/blob/main/`;
 const KINDS = ['read', 'write', 'destructive', 'dynamic'];
@@ -309,7 +309,8 @@ function jsonLdHtml(description, faq) {
 
 function sitemapXml() {
   // Only URLs on the site host are listed: search engines ignore sitemap entries on other hosts.
-const urls = [SITE_URL];
+  const urls = [SITE_URL, `${SITE_URL}privacy.html`];
+  if (!exists('site/privacy.html')) fail('site/privacy.html is listed in the sitemap but does not exist');
   for (const g of GUIDES) {
     if (!exists(`docs/${g}.md`)) fail(`docs/${g}.md is listed in the sitemap but does not exist`);
   }
