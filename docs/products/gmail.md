@@ -33,9 +33,9 @@ Start with `--profile readonly`. Sending and changes need a `readwrite` login an
 
 | Area | Tools | Safety | What it does |
 |---|---|---|---|
-| Search and read | `gmail_search`, `gmail_get_message`, `gmail_list_labels`, `gmail_list_drafts` | read | Search mail, read a message, list labels and drafts |
-| Draft | `gmail_create_draft` | write | Create a draft. Nothing is sent. |
-| Send | `gmail_send_draft` | destructive | Send a draft. Sending cannot be undone. |
+| Search and read | `gmail_search`, `gmail_get_message`, `gmail_get_attachment`, `gmail_list_labels`, `gmail_list_drafts` | read | Search mail, read a message (text and HTML bodies, each part in its own charset, attachment ids), download an attachment, list labels and drafts |
+| Draft | `gmail_create_draft` | write | Create a draft: text, HTML, attachments, or a reply in a thread. Nothing is sent. |
+| Send | `gmail_send_draft`, `gmail_send`, `gmail_reply` | destructive | Send a draft, send a new message, or reply in a thread. Sending cannot be undone. |
 | Per-method (87) | | mixed | Messages, threads, drafts, labels, history; settings: filters, forwarding, delegates, send-as, vacation, IMAP, POP, S/MIME, client-side encryption keys; Postmaster Tools domains and statistics |
 | Gateway (2 APIs) | `api_search`, `api_describe`, `api_call` | read, read, dynamic | Gmail Postmaster Tools v1 and v1beta1 |
 
@@ -46,6 +46,8 @@ The full list is in `docs/capabilities/gmail.md`.
 - "Find emails from my accountant since January with attachments." Claude runs `gmail_search`. No prompt.
 - "Draft a reply to Maria's last message saying Thursday works." Claude reads the thread, then runs `gmail_create_draft`. It asks first. Nothing is sent.
 - "Send the draft to Maria." Claude runs `gmail_send_draft`. It asks twice, and the preview shows the recipients and body.
+- "Reply to Maria that Thursday works, and attach the agenda from D:\docs\agenda.pdf." Claude runs `gmail_reply`. It asks twice. The second prompt shows who the reply goes to, the subject, the thread, the file name and size, and the start of the text. The reply stays in Maria's thread.
+- "Send the report to the team." Claude runs `gmail_send` with the recipients, subject, body and attachments. It asks twice, as for every send.
 - "Label mail from billing@vendor.test as Invoices." Claude creates a filter with a settings write tool. It asks first and needs a `readwrite` login.
 - "Set an out-of-office reply until Friday." Claude runs the vacation settings write tool. It asks first.
 
@@ -53,6 +55,8 @@ The full list is in `docs/capabilities/gmail.md`.
 
 - Reads never ask. Writes ask first. Sends and deletes ask twice: a hook prompt and an exact preview.
 - Sending is irreversible. Check the preview before you approve.
+- Attachments are local files, given by full path. The whole message may be up to 35 MB once encoded (Gmail's limit). A file in the token folder (tokens, the OAuth client, the API key) or in gcloud's folder is refused, so a mail cannot carry a sign-in secret out.
+- `gmail_get_attachment` returns the file as base64 only when it fits the server's result limit (`GSM_MAX_RESULT_CHARS`, default 50,000 characters, about 36 KB of file). A larger file returns its size and a note.
 - Message deletes remove mail. Trash moves a message to Trash.
 - Filters, forwarding, auto-forwarding, delegates and send-as changes can route mail away from you. Treat them as high risk.
 - Mail can carry instructions aimed at the agent. Read the approval text before you approve anything.

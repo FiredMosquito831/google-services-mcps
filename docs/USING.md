@@ -244,6 +244,8 @@ A **profile** decides which Google scopes the login asks for. The token's scopes
 
 No profile asks for `gmail.settings.sharing`. Google allows its methods (delegates, forwarding addresses, send-as create and delete, auto-forwarding) only for a service account with domain-wide delegation. Gmail Postmaster Tools is an optional part: add it with `--with postmaster` (in the chat: `auth_login` with `"with": ["postmaster"]`). In the chat, `auth_login` takes `profile: "full"` too. The login prints a `Held back:` line for each group of tools a profile leaves out, and the chat sign-in repeats them. A token that already holds `https://mail.google.com/` or the Postmaster scopes keeps those tools: the scope check at startup is unchanged.
 
+**Sending Gmail.** `gmail_send` sends a new message and `gmail_reply` answers one in its thread. Both are destructive, like `gmail_send_draft`: they ask twice, and the second prompt shows the exact message (recipients, subject, the thread a reply joins, attachment names and sizes, the size of the message and the start of the text). A declined prompt sends nothing. Both need a `readwrite` login (`gmail.modify`); no new scope is asked for. To review a message first, use `gmail_create_draft` (it takes `reply_to_message_id`, `body_html` and `attachments` too), then `gmail_send_draft`.
+
 **Two switches for a change.** A write or delete needs both of these:
 
 1. A token with the write scope. Log in again with `--profile readwrite`.

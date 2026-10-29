@@ -4,11 +4,11 @@ Gmail mailboxes, messages, labels and settings, plus Gmail Postmaster Tools.
 
 - Plugin: `gmail`, MCP server: `gmail`, login: Desktop OAuth client, then `login workspace-user`
 - Install: `claude plugin install gmail@google-services-mcps`
-- Tools: 106 total. Curated 15, per-method 87, gateway 3. Read 46, write 41, destructive 18, dynamic 1.
+- Tools: 109 total. Curated 18, per-method 87, gateway 3. Read 47, write 41, destructive 20, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 106, google 20, curated 18 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 109, google 20, curated 21 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
 
 ## Toolset google (11)
 
@@ -28,7 +28,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `gmail_users_threads_modify` | `label_thread`, `unlabel_thread` | One tool adds and removes labels (label_thread and unlabel_thread in Google's server). |
 | `gmail_users_messages_modify` | `label_message`, `unlabel_message` | One tool adds and removes labels (label_message and unlabel_message in Google's server). |
 
-## Curated tools (15)
+## Curated tools (18)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
@@ -41,10 +41,13 @@ The tools that match Google's official MCP server for this product (https://deve
 | `auth_setup_service_account` | write | Set up the service account key | (none) |
 | `auth_status` | read | Sign-in status | (none) |
 | `gmail_create_draft` | write | Create Gmail draft | https://mail.google.com/, gmail.compose |
+| `gmail_get_attachment` | read | Get Gmail attachment | https://mail.google.com/, gmail.modify |
 | `gmail_get_message` | read | Get Gmail message | https://mail.google.com/, gmail.metadata |
 | `gmail_list_drafts` | read | List Gmail drafts | https://mail.google.com/, gmail.compose |
 | `gmail_list_labels` | read | List Gmail labels | https://mail.google.com/, gmail.labels |
+| `gmail_reply` | destructive | Reply to a Gmail message | https://mail.google.com/, gmail.modify |
 | `gmail_search` | read | Search Gmail | https://mail.google.com/, gmail.metadata |
+| `gmail_send` | destructive | Send Gmail message | https://mail.google.com/, gmail.compose |
 | `gmail_send_draft` | destructive | Send Gmail draft | https://mail.google.com/, gmail.compose |
 | `health` | read | Server health | (none) |
 

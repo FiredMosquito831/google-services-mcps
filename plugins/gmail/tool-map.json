@@ -82,6 +82,16 @@
     "title": "Create Gmail draft"
   },
   {
+    "name": "mcp__plugin_gmail_gmail__gmail_get_attachment",
+    "kind": "read",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.modify",
+      "https://www.googleapis.com/auth/gmail.readonly"
+    ],
+    "title": "Get Gmail attachment"
+  },
+  {
     "name": "mcp__plugin_gmail_gmail__gmail_get_message",
     "kind": "read",
     "scopes": [
@@ -116,6 +126,15 @@
     "title": "List Gmail labels"
   },
   {
+    "name": "mcp__plugin_gmail_gmail__gmail_reply",
+    "kind": "destructive",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.modify"
+    ],
+    "title": "Reply to a Gmail message"
+  },
+  {
     "name": "mcp__plugin_gmail_gmail__gmail_search",
     "kind": "read",
     "scopes": [
@@ -125,6 +144,16 @@
       "https://www.googleapis.com/auth/gmail.readonly"
     ],
     "title": "Search Gmail"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_send",
+    "kind": "destructive",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.compose",
+      "https://www.googleapis.com/auth/gmail.modify"
+    ],
+    "title": "Send Gmail message"
   },
   {
     "name": "mcp__plugin_gmail_gmail__gmail_send_draft",

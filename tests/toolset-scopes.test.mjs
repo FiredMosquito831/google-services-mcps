@@ -86,7 +86,17 @@ test('requirements: curated keeps the curated tools and, with api_call, the gate
   const { cfg } = tempTokens();
   const all = await requirementsFor(['gmail'], cfg, quiet);
   const curated = await requirementsFor(['gmail'], cfg, { ...quiet, toolset: 'curated' });
-  assert.deepEqual(toolsOf(curated), ['gmail_create_draft', 'gmail_get_message', 'gmail_list_drafts', 'gmail_list_labels', 'gmail_search', 'gmail_send_draft']);
+  assert.deepEqual(toolsOf(curated), [
+    'gmail_create_draft',
+    'gmail_get_attachment',
+    'gmail_get_message',
+    'gmail_list_drafts',
+    'gmail_list_labels',
+    'gmail_reply',
+    'gmail_search',
+    'gmail_send',
+    'gmail_send_draft',
+  ]);
   assert.deepEqual(
     curated.filter((r) => r.gateway),
     all.filter((r) => r.gateway),

@@ -133,8 +133,8 @@ test('tool counts per toolset from the tool map: gmail all, google and curated',
   assert.equal(runtime, RUNTIME_TOOL_NAMES.length, 'every runtime tool is in the map');
   assert.deepEqual(toolsetCount(map, 'gmail', 'gmail', 'all', gmail.toolsets), { count: entries.length, effective: 'all' });
   assert.deepEqual(toolsetCount(map, 'gmail', 'gmail', 'google', gmail.toolsets), { count: 11 + runtime, effective: 'google' });
-  // curated: the 6 hand-written Gmail tools and the 3 gateway tools.
-  assert.deepEqual(toolsetCount(map, 'gmail', 'gmail', 'curated', gmail.toolsets), { count: 9 + runtime, effective: 'curated' });
+  // curated: the 9 hand-written Gmail tools and the 3 gateway tools.
+  assert.deepEqual(toolsetCount(map, 'gmail', 'gmail', 'curated', gmail.toolsets), { count: 12 + runtime, effective: 'curated' });
   const gsc = env.registry.servers.find((s) => s.plugin === 'gsc');
   assert.equal(toolsetCount(join(REPO, 'plugins', 'gsc', 'tool-map.json'), 'gsc', 'gsc', 'google', gsc.toolsets).effective, 'all');
 });
@@ -145,7 +145,7 @@ test('agy warnings: a product over the limit is named with the counts of the oth
   const lines = agyToolWarnings({}, env, ['gcloud', 'gmail', 'gsc']);
   assert.equal(lines.length, 2, lines.join('\n'));
   assert.match(lines[0], /^\[agy\] warning: gcloud can list up to \d+ tools with toolset all\. Antigravity is reported to refuse a server with more than 100 tools \(not verified by gsm\)\. Fewer tools: --toolset curated: up to \d+\.$/);
-  assert.match(lines[1], /^\[agy\] warning: gmail can list up to 106 tools with toolset all\. .* Fewer tools: --toolset google: up to 20, --toolset curated: up to 18\.$/);
+  assert.match(lines[1], /^\[agy\] warning: gmail can list up to 109 tools with toolset all\. .* Fewer tools: --toolset google: up to 20, --toolset curated: up to 21\.$/);
   const google = agyToolWarnings({ toolset: 'google' }, env, ['gcloud', 'gmail']);
   assert.equal(google.length, 1);
   assert.match(google[0], /^\[agy\] warning: gcloud can list up to \d+ tools with toolset google \(it has no google list, so all tools\)\./);

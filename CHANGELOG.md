@@ -2,6 +2,27 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.6.0 - 2026-10-29
+
+### New: send and reply in Gmail
+- `gmail_send` sends a new message: `to`, `cc`, `bcc`, `subject`, `body_text` and/or `body_html`, and `attachments` (full paths of local files).
+- `gmail_reply` answers one message in its thread: to its sender (its Reply-To when set), or with `reply_all` also to its To and Cc, never to the signed-in account. The subject gets one "Re: ". `threadId`, `In-Reply-To` and `References` are set, so Gmail and other mail programs keep the thread. `quote_original` quotes the original under the reply.
+- Both are destructive, like `gmail_send_draft`: they ask twice. The second prompt shows the exact message, worked out before it asks: recipients, subject, the thread a reply joins, attachment names and sizes, the size of the message and the start of the text. The message sent is the one the prompt described. A declined prompt sends nothing. `confirmation: destructive-only` still asks before them.
+- Messages are built as RFC 5322 MIME: UTF-8, RFC 2047 headers (long ones folded), multipart/alternative for text with HTML, multipart/mixed with base64 attachments in 76-character lines. Date, From and Message-ID are left to Gmail. Up to 5 MB a message goes in the `raw` field; above that, through Gmail's upload endpoint (`uploadType=multipart`). Over Gmail's 35 MB limit it is refused before any file is read.
+- An attachment must be a full path to a file. A file in the token folder, in gcloud's folder, or a key file named by `GOOGLE_APPLICATION_CREDENTIALS` or `GSM_SERVICE_ACCOUNT_KEY_FILE` is refused, so a mail cannot carry a sign-in secret out.
+- `gmail_get_attachment` (read) downloads one attachment as base64, when it fits the server's result limit (`GSM_MAX_RESULT_CHARS`); a larger file returns its size and a note that says how far to raise the limit.
+
+### Changed: drafts and reading
+- `gmail_create_draft` takes `body_html`, `attachments`, `reply_to_message_id` (a reply draft in the thread; `to` then defaults to who a reply goes to and `subject` to "Re: " plus the original) and `quote_original`. `to`, `subject` and `body` are optional in the schema now; a draft without `reply_to_message_id` still needs `to` and `subject`. A 1.5.0 call sends the same bytes as before, except that header lines over 78 characters are now folded (the same value once unfolded).
+- `gmail_get_message` returns the `snippet`, decodes each text part with its own charset (UTF-8, ISO-8859-1 and -2, windows-1250 and -1252, US-ASCII and the other WHATWG encodings; an unknown charset is read as UTF-8 and `charset_note` says so), fetches a large body Gmail keeps apart (only an attachment id), and removes blank lines at the start and end of the body (at most one blank line in a row). `include_html` adds the HTML body. Each attachment has its `attachment_id` and `part_id`.
+- A long subject that is not ASCII is split into encoded words of at most 39 bytes, and folded, so every header line stays within 78 characters.
+
+### Not changed
+- Scopes: no new scope. Send and reply ride on `gmail.modify` (`readwrite`), `gmail.compose` or `https://mail.google.com/`; `gmail_get_attachment` on `gmail.readonly`.
+- Tool kinds, the write gate and the hook. Every other plugin lists the same tools with the same schemas.
+- The `google` toolset: Google's Gmail MCP server has no send tool, so `gmail_send` and `gmail_reply` are in `all` and `curated` only.
+- Not tested against a live Gmail account. Sending mail is an outward action; it was tested with Google's HTTP layer stubbed.
+
 ## 1.5.0 - 2026-10-29
 
 ### New: the toolset in every agent

@@ -12,7 +12,7 @@ const dist = (p) => new URL(`../dist/${p}`, import.meta.url).href;
 const MODULES = ['cloud', 'gmail', 'gdrive', 'gcalendar', 'workspace-admin', 'searchconsole'];
 // The product modules that must hold only their own area's tools.
 const AREA_PREFIX = { gmail: ['gmail'], gdrive: ['drive'], gcalendar: ['calendar'] };
-const EXPECTED_COUNT = { gmail: 6, gdrive: 6, gcalendar: 7 };
+const EXPECTED_COUNT = { gmail: 9, gdrive: 6, gcalendar: 7 };
 const KINDS = new Set(['read', 'write', 'destructive']);
 
 const dir = mkdtempSync(join(tmpdir(), 'gsm-curated-'));
