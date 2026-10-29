@@ -10,12 +10,27 @@
  * api_call; api_methods lists a server's generated methods.
  *
  * Usage: node scripts/gen-capabilities.mjs
+ *        node scripts/gen-capabilities.mjs --check   exit 1 when a written file would change (writes nothing)
  */
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { dirname, join, resolve } from 'node:path';
+import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const checkOnly = process.argv.includes('--check');
+/** Files whose content differs from what this run builds (--check). */
+const stale = [];
+
+/** Writes a file, or with --check only compares it (line endings aside) and records it when it differs. */
+function emit(file, text) {
+  if (!checkOnly) {
+    mkdirSync(dirname(file), { recursive: true });
+    writeFileSync(file, text);
+    return;
+  }
+  const current = existsSync(file) ? readFileSync(file, 'utf8').replace(/\r\n/g, '\n') : undefined;
+  if (current !== text) stale.push(relative(root, file).replace(/\\/g, '/'));
+}
 const readJson = (rel) => JSON.parse(readFileSync(join(root, rel), 'utf8'));
 
 const products = readJson('config/products.json');
@@ -101,7 +116,6 @@ const totals = perProduct.reduce(
 
 // ---- Per-product detail files ----
 const detailDir = join(root, 'docs', 'capabilities');
-mkdirSync(detailDir, { recursive: true });
 for (const p of perProduct) {
   const lines = [];
   lines.push(`# ${p.title} (\`${p.id}\`)`);
@@ -140,7 +154,7 @@ for (const p of perProduct) {
   if (!p.gatewayApis.length) lines.push('None.');
   for (const a of p.gatewayApis) lines.push(`- ${a.title} (\`${a.key}\`), ${a.methods} methods`);
   lines.push('');
-  writeFileSync(join(detailDir, `${p.id}.md`), lines.join('\n') + '\n');
+  emit(join(detailDir, `${p.id}.md`), lines.join('\n') + '\n');
 }
 
 // ---- Overview ----
@@ -179,6 +193,13 @@ out.push('- `api_search`: find methods by text in an API the product covers. Rea
 out.push('- `api_describe`: parameters, request body and scopes of one method. Read.');
 out.push('- `api_call`: call any method of the product, subject to the same safety classes.');
 out.push('');
-mkdirSync(join(root, 'docs'), { recursive: true });
-writeFileSync(join(root, 'docs', 'CAPABILITIES.md'), out.join('\n') + '\n');
-console.log(`wrote docs/CAPABILITIES.md and ${perProduct.length} files under docs/capabilities/: ${totals.tools} tools`);
+emit(join(root, 'docs', 'CAPABILITIES.md'), out.join('\n') + '\n');
+if (checkOnly) {
+  if (stale.length > 0) {
+    console.error(`Out of date: ${stale.join(', ')}. Run: node scripts/gen-capabilities.mjs`);
+    process.exit(1);
+  }
+  console.log(`docs/CAPABILITIES.md and ${perProduct.length} files under docs/capabilities/ are up to date: ${totals.tools} tools`);
+} else {
+  console.log(`wrote docs/CAPABILITIES.md and ${perProduct.length} files under docs/capabilities/: ${totals.tools} tools`);
+}

@@ -23,11 +23,11 @@ import { revokeGrant, withIdentityScope } from './grant-check.js';
 import { createGate, type GateFn } from './approval.js';
 import { toolMapFromDefs } from './dump.js';
 import { serverHealth } from './health.js';
-import { createSignIn, runGsmCommand, type SignInMethod } from './inchat-login.js';
+import { createSignIn, runGsmCommand, type SignInMethod, type SignInProfile } from './inchat-login.js';
 import { findGcloud } from './adc.js';
-import { resolveScopes, type Requirement } from './scopes.js';
+import { apiOfMethod, policyFields, resolveScopes, type Requirement } from './scopes.js';
 import { fileURLToPath } from 'node:url';
-import { loadRegistry, serverByName, type AuthGroup } from './registry.js';
+import { loadRegistry, serverByName, type AuthGroup, type ScopePolicy } from './registry.js';
 import { invocation, invocationFor, setInvocation } from './invocation.js';
 
 /**
@@ -150,6 +150,16 @@ export function describeError(err: unknown, group?: string): string {
 export function isGranted(tool: { scopes?: readonly string[] }, granted: readonly string[] | null): boolean {
   if (granted === null || !tool.scopes || tool.scopes.length === 0) return true;
   return tool.scopes.some((scope) => granted.includes(scope));
+}
+
+/** The scope policy of a server, from the server map. Undefined when it has none or the map cannot be read. */
+function scopePolicyOf(serverName: string): ScopePolicy | undefined {
+  try {
+    return serverByName(loadRegistry(), serverName).scopePolicy;
+  } catch {
+    // groupOf reports an unreadable map already.
+    return undefined;
+  }
 }
 
 /** The auth group of a server, from the server map. Undefined (no scope filtering) when the map cannot be read. */
@@ -295,10 +305,18 @@ export async function runServer(opts: {
   const canSignIn = group !== undefined && ACCOUNT_GROUPS.has(group);
   const cliFile = fileURLToPath(new URL('../bin/gsm.mjs', import.meta.url));
   const text = (value: string): CallToolResult => ({ content: [{ type: 'text', text: value }] });
+  // The product's scope rules (config/products.json scopePolicy), when it has them. Undefined for most servers.
+  const policy = scopePolicyOf(opts.name);
+  const optionalParts = Object.keys(policy?.optional ?? {}).sort();
   // The scopes an ADC login for this server asks for: the scopes its tools need, resolved as the OAuth login resolves them.
-  const adcScopesFor = (profile: 'readonly' | 'readwrite'): string[] => {
-    const requirements: Requirement[] = defined.map((tool) => ({ tool: tool.name, kind: tool.kind, scopes: [...(tool.scopes ?? [])] }));
-    return withIdentityScope(resolveScopes(requirements, profile).scopes);
+  const adcScopesFor = (profile: SignInProfile, include: readonly string[]): string[] => {
+    const requirements: Requirement[] = defined.map((tool) => ({
+      tool: tool.name,
+      kind: tool.kind,
+      scopes: [...(tool.scopes ?? [])],
+      ...policyFields(policy, apiOfMethod(tool.methodId)),
+    }));
+    return withIdentityScope(resolveScopes(requirements, profile, include).scopes);
   };
 
   // The two ways to sign in, with their costs. auth_login shows them first, so the person chooses before anything starts.
@@ -371,9 +389,22 @@ export async function runServer(opts: {
           'Starts the Google sign-in for this server, in the browser on this machine. Call it without method first: the answer lists the two ways to sign in (oauth or adc) with their pros and cons. Ask the person which one to use, then call again with method. For an account that is already signed in here, pass its email as account, so the scopes it holds for the other servers of this group are kept. When the person approves in the browser, the tools of this server load without a restart.',
         inputSchema: {
           profile: z
-            .enum(['readonly', 'readwrite'])
+            .enum(['readonly', 'readwrite', 'full'])
             .optional()
-            .describe('readonly (the default) or readwrite. Write tools also need writes to be allowed in the plugin settings.'),
+            .describe(
+              'readonly (the default) or readwrite. full asks for the broadest scope of each tool; use it only when the person needs a tool that readwrite holds back (the sign-in answer lists them). Write tools also need writes to be allowed in the plugin settings.',
+            ),
+          // Only a server whose product has optional parts (config/products.json scopePolicy.optional) takes this argument.
+          ...(optionalParts.length > 0
+            ? {
+                with: z
+                  .array(z.enum(optionalParts as [string, ...string[]]))
+                  .optional()
+                  .describe(
+                    `Optional parts of this server to add to the sign-in. They are left out unless named here: ${optionalParts.join(', ')}. Their tools load only when the login holds their scopes.`,
+                  ),
+              }
+            : {}),
           method: z
             .enum(['oauth', 'adc'])
             .optional()
@@ -397,7 +428,9 @@ export async function runServer(opts: {
           account = accountEmailOf(rawArgs.account);
           if (account === undefined) return text('account must be the email address of a Google account, for example name@example.com.');
         }
-        return text(await signIn.start(rawArgs.profile === 'readwrite' ? 'readwrite' : 'readonly', method, account));
+        const profile: SignInProfile = rawArgs.profile === 'readwrite' || rawArgs.profile === 'full' ? rawArgs.profile : 'readonly';
+        const include = Array.isArray(rawArgs.with) ? rawArgs.with.filter((p): p is string => typeof p === 'string' && optionalParts.includes(p)) : [];
+        return text(await signIn.start(profile, method, account, include));
       },
     );
     server.registerTool(

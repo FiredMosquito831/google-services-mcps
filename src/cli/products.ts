@@ -10,7 +10,7 @@
  */
 import { existsSync, readFileSync, statSync } from 'node:fs';
 import { dirname, join } from 'node:path';
-import type { AuthGroup, Registry, ServerSpec } from '../core/registry.js';
+import type { AuthGroup, Registry, ScopePolicy, ServerSpec } from '../core/registry.js';
 import type { InstallRoots } from './paths.js';
 
 /** One line per auth group, shown in help-like output and kept in the converted registry. */
@@ -53,12 +53,15 @@ export function registryFromProducts(raw: unknown, dataRoot: string): Registry {
     const curated = typeof server.curated === 'string' && server.curated !== '';
     const label = typeof value.title === 'string' ? value.title : id;
     plugins[id] = label;
+    const policy = value.scopePolicy;
     servers.push({
       name: server.name,
       plugin: id,
       group: value.group as AuthGroup,
       kind: curated ? (generated.length > 0 ? 'curated+discovery' : 'curated') : 'discovery',
       apis: generated,
+      // The product's scope rules (checked by scripts/gen-servers.mjs). Only a product that has them gets the key.
+      ...(typeof policy === 'object' && policy !== null && !Array.isArray(policy) ? { scopePolicy: policy as ScopePolicy } : {}),
       label,
     });
   }

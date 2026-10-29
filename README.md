@@ -275,6 +275,16 @@ A Google group can have several accounts. To add one, sign in again: Google asks
 
 A login merges with the scopes the same account already holds for its group, so one product's login keeps the others. Name the account with `--account <email>` (in the chat: `auth_login` with `account`): only that account's stored scopes are merged, and only the ones a server of the group uses. Without `--account`, nothing is merged, and a login that would take scopes away from an account already signed in saves nothing and says how to retry. Use `--replace` to drop the stored scopes. A merge can leave write scopes from an earlier `readwrite` login in place. To get a read-only token back, log in again with `--replace`.
 
+**Gmail scopes.** A Gmail login asks only for what its profile needs:
+
+| Profile | Gmail scopes asked for |
+|---|---|
+| `readonly` | `gmail.readonly` |
+| `readwrite` | `gmail.modify` and `gmail.settings.basic` (search, read, send, drafts, labels, trash, filters, vacation, IMAP and POP settings) |
+| `full` | `https://mail.google.com/` and `gmail.settings.basic`. Only `full` covers permanent delete (`messages.delete`, `messages.batchDelete`, `threads.delete`). |
+
+No profile asks for `gmail.settings.sharing`: Google allows its methods (delegates, forwarding addresses, send-as create and delete, auto-forwarding) only for a service account with domain-wide delegation. Gmail Postmaster Tools (bulk-sender statistics) is an optional part: add it with `--with postmaster` (in the chat: `auth_login` with `"with": ["postmaster"]`). The login, and `npx google-services-mcps scopes workspace-user --servers gmail`, list the tools a profile holds back (`Held back:`). An account that already holds `https://mail.google.com/` or the Postmaster scopes keeps them when you name it with `--account`. Use `--replace` to drop them.
+
 ### Workspace admin (gadmin)
 
 `gadmin` uses a service account with domain-wide delegation, not a user login. You need a super admin and a Google Cloud service account JSON key.
@@ -469,8 +479,8 @@ Usage:
                          [--path <dir>] [--dry-run]
   npx google-services-mcps uninstall --all [--dry-run] [--yes]
   npx google-services-mcps list [--json] [--home <dir>]
-  npx google-services-mcps login <group> [--profile readonly|readwrite|full] [--scopes <url,url>] [--servers <a,b>] [--client-secret <file>] [--no-browser] [--replace] [--account <email>]
-  npx google-services-mcps scopes <group> [--profile readonly|readwrite|full] [--servers <a,b>] [--json]
+  npx google-services-mcps login <group> [--profile readonly|readwrite|full] [--scopes <url,url>] [--servers <a,b>] [--client-secret <file>] [--no-browser] [--replace] [--account <email>] [--with <part,...>]
+  npx google-services-mcps scopes <group> [--profile readonly|readwrite|full] [--servers <a,b>] [--with <part,...>] [--json]
   npx google-services-mcps setup-client <path-to-client_secret.json> [--force]
   npx google-services-mcps setup-apikey [--force]
   npx google-services-mcps setup-admin --subject <admin email> --key-file <service account JSON> [--profile readonly|readwrite|full] [--servers <a,b>] [--replace]
@@ -504,12 +514,17 @@ Runtime:  install copies each product's servers and hook to ~/.google-services-m
 Profiles: readonly (default) covers the read tools with read-only scopes. readwrite adds write and destructive tools
           with the narrowest scopes that cover them. full covers every tool. --scopes gives an exact list instead.
           The scopes a token holds decide which tools run: a tool whose scopes it lacks is not registered.
+          A product can hold scopes back: Gmail's readwrite asks for gmail.modify and gmail.settings.basic, and only full
+          asks for https://mail.google.com/ (permanent delete). No profile asks for gmail.settings.sharing (it is for
+          domain-wide delegation). The login and gsm scopes list the tools held back ("Held back:").
 Groups:   OAuth login: cloud, workspace-user, searchconsole, business, developer. apikey: setup-apikey, no login.
           workspace-admin: setup-admin (service account with domain-wide delegation).
 Flags:    --no-browser (login) prints the login URL only, and does not open the browser.
           --replace (login, setup-admin): by default a login merges the requested scopes with the stored ones; --replace drops the stored ones.
           --account (login): the Google account to sign in. Google is asked to preselect it, and the merge reads that
           account's stored scopes only (scopes no server of the group uses are left out). Without it, nothing is merged.
+          --with (login, scopes): add an optional part of a product, left out of every profile otherwise. Gmail has
+          postmaster (Gmail Postmaster Tools): --with postmaster. gsm scopes lists the optional parts of a group.
           --json (scopes, products, apis, methods, list) prints JSON.
 API key:  setup-apikey reads GSM_API_KEY_INPUT or stdin. The key is never a command-line argument and is never printed.
 Backups:  an existing config file is copied to <file>.gsm-backup-<YYYYMMDD-HHMMSS> before it changes.

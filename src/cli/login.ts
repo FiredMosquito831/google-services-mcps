@@ -27,7 +27,16 @@ import { readStoredToken, tokenFileFor } from './credentials.js';
 import { writeAtomic } from './fsutil.js';
 import { mergeScopes, describeMerge, scopesDroppedBySave, splitUsable } from './merge.js';
 import { postureLine } from './posture.js';
-import { coverageOf, formatCoverage, gatewayReachLine, groupScopeUniverse, hasGatewayApis, selectGroupServers } from './scopes.js';
+import {
+  checkOptionalParts,
+  coverageOf,
+  formatCoverage,
+  gatewayReachLine,
+  groupScopeUniverse,
+  hasGatewayApis,
+  heldBackLines,
+  selectGroupServers,
+} from './scopes.js';
 import type { Output } from './report.js';
 import { UsageError } from './types.js';
 
@@ -49,6 +58,11 @@ export interface LoginRequest {
    * scopes of this account only. Without it nothing is merged, because the account is not known until Google answers.
    */
   account?: string;
+  /**
+   * --with: optional parts of the products to add to the login (a product's scopePolicy.optional, such as Gmail's
+   * postmaster). Without it, the requirements of optional parts are left out of the profile.
+   */
+  with?: string[];
 }
 
 /** What runLogin reaches outside the process. Tests pass fakes; the defaults are the real ones. */
@@ -97,6 +111,9 @@ export async function runLogin(req: LoginRequest, loadRegistryFn: () => Registry
     throw new UsageError(`group "${req.group}" has no interactive login`);
   }
   const group = req.group as AuthGroup;
+  if (req.profile === 'custom' && req.with && req.with.length > 0) {
+    throw new UsageError('use --with with a profile, not with --scopes. --scopes gives the exact scope list and adds nothing.');
+  }
   const registry = loadRegistryFn();
 
   const cfg = deps.cfg ?? loadConfig();
@@ -108,6 +125,7 @@ export async function runLogin(req: LoginRequest, loadRegistryFn: () => Registry
 
   // --servers narrows the group; every name must belong to it (checked with the same message as before).
   const servers = selectGroupServers(registry, group, req.servers && req.servers.length > 0 ? req.servers : undefined);
+  const include = checkOptionalParts(registry, servers, req.with);
   const requirements = await requirementsForSpecs(
     servers.map((name) => serverByName(registry, name)),
     cfg,
@@ -119,8 +137,9 @@ export async function runLogin(req: LoginRequest, loadRegistryFn: () => Registry
     requested = [...new Set(req.customScopes ?? [])].sort();
     out.log(`Requesting the ${requested.length} scope(s) given with --scopes. Nothing else is requested by this login.`);
   } else {
-    requested = resolveScopes(requirements, req.profile).scopes;
+    requested = resolveScopes(requirements, req.profile, include).scopes;
     out.log(`Profile ${req.profile}: ${PROFILE_TEXT[req.profile]}.`);
+    if (include.length > 0) out.log(`Optional parts included: ${include.join(', ')}.`);
   }
 
   // The rule for stored scopes (merge by default, --replace drops them) is in merge.ts; login and setup-admin share it.
@@ -141,6 +160,9 @@ export async function runLogin(req: LoginRequest, loadRegistryFn: () => Registry
   out.log(`Servers: ${servers.join(', ')}`);
   out.log(`If Google grants every scope asked for, this token runs ${formatCoverage(coverageOf(requirements, scopes))}.`);
   if (hasGatewayApis(registry, servers)) out.log(gatewayReachLine(requirements, scopes, req.profile));
+  // What a product's scope rules left out of this profile (empty for products without rules). Counted against the scopes
+  // this login asks for, merged ones included, so a held-back tool that a kept scope covers is not listed.
+  if (req.profile !== 'custom') for (const line of heldBackLines(requirements, req.profile, include, scopes)) out.log(line);
   if (hint === undefined) {
     out.log(
       `No account named: no stored scope is merged, and this login asks only for the scopes below. If the account you pick is already signed in for ${group} and holds scopes this login does not ask for, nothing is saved${replace ? ' unless --replace is given' : ''}. To keep its scopes for the other servers of ${group}, name it: --account <email> (in the chat: auth_login with account).`,

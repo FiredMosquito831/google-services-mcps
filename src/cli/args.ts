@@ -74,13 +74,13 @@ const COMMANDS: Record<Exclude<Command, 'help'>, Record<string, OptionType>> = {
     'keep-data': 'boolean',
   },
   list: { json: 'boolean', home: 'string' },
-  login: { servers: 'string', 'client-secret': 'string', profile: 'string', scopes: 'string', 'no-browser': 'boolean', replace: 'boolean', account: 'string' },
+  login: { servers: 'string', 'client-secret': 'string', profile: 'string', scopes: 'string', 'no-browser': 'boolean', replace: 'boolean', account: 'string', with: 'string' },
   'setup-client': { force: 'boolean' },
   'setup-apikey': { force: 'boolean' },
   status: { check: 'boolean' },
   logout: { 'local-only': 'boolean', account: 'string', 'revoke-all': 'boolean' },
   accounts: { group: 'string' },
-  scopes: { servers: 'string', profile: 'string', json: 'boolean' },
+  scopes: { servers: 'string', profile: 'string', json: 'boolean', with: 'string' },
   'setup-admin': { subject: 'string', 'key-file': 'string', profile: 'string', servers: 'string', replace: 'boolean' },
   'setup-service-account': { 'key-file': 'string', remove: 'boolean' },
   protect: { off: 'boolean', backend: 'string' },
@@ -325,6 +325,16 @@ export function parseLoginAccount(value: string | boolean | undefined): string |
     throw new UsageError('--account takes the email address of a Google account, for example --account name@example.com');
   }
   return email;
+}
+
+/**
+ * --with for gsm login and gsm scopes: the optional parts of the products to add (a product's scopePolicy.optional, such
+ * as Gmail's postmaster), as a list, or undefined when not given. Which names exist is checked against the servers later.
+ */
+export function parseWith(value: string | boolean | undefined): string[] | undefined {
+  if (value === undefined) return undefined;
+  if (typeof value !== 'string') throw new UsageError('--with needs the name of an optional part, for example --with postmaster');
+  return splitList(value, 'with');
 }
 
 /** The scope choice for gsm login: a profile (default readonly), or an exact list with --scopes. */

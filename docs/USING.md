@@ -234,6 +234,16 @@ A **profile** decides which Google scopes the login asks for. The token's scopes
 | `full` | Every tool, with the broadest scope listed for each method. | You need every method, for example in an admin setup. Use rarely. |
 | `--scopes <urls>` | Exactly the scopes you list. Nothing else is added. | You know the scopes you need. |
 
+**Gmail.** A product can hold scopes back from a profile. For Gmail:
+
+| Profile | Gmail scopes |
+|---|---|
+| `readonly` | `gmail.readonly` |
+| `readwrite` | `gmail.modify` and `gmail.settings.basic`: search, read, send, drafts, labels, trash, and the filter, vacation, IMAP and POP settings. |
+| `full` | `https://mail.google.com/` and `gmail.settings.basic`. Only `full` covers permanent delete (`messages.delete`, `messages.batchDelete`, `threads.delete`). |
+
+No profile asks for `gmail.settings.sharing`. Google allows its methods (delegates, forwarding addresses, send-as create and delete, auto-forwarding) only for a service account with domain-wide delegation. Gmail Postmaster Tools is an optional part: add it with `--with postmaster` (in the chat: `auth_login` with `"with": ["postmaster"]`). In the chat, `auth_login` takes `profile: "full"` too. The login prints a `Held back:` line for each group of tools a profile leaves out, and the chat sign-in repeats them. A token that already holds `https://mail.google.com/` or the Postmaster scopes keeps those tools: the scope check at startup is unchanged.
+
 **Two switches for a change.** A write or delete needs both of these:
 
 1. A token with the write scope. Log in again with `--profile readwrite`.

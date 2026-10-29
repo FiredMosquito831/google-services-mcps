@@ -79,6 +79,33 @@ function apiRefs(list, where, allowInclude = false) {
   });
 }
 
+const PROFILE_NAMES = ['readonly', 'readwrite', 'full'];
+const PART_PATTERN = /^[a-z][a-z0-9-]*$/;
+
+/**
+ * A product's scopePolicy (ScopePolicy in src/core/registry.ts), checked and copied as is. onlyIn maps a scope URL to the
+ * profiles that may request it (an empty list: none). optional maps a part name to APIs of the product.
+ */
+function scopePolicyOf(policy, id, apiNames) {
+  if (policy === undefined) return undefined;
+  const where = `product ${id} scopePolicy`;
+  if (typeof policy !== 'object' || policy === null || Array.isArray(policy)) fail(`${where} must be an object`);
+  for (const key of Object.keys(policy)) if (key !== 'onlyIn' && key !== 'optional') fail(`${where} has an unknown key "${key}"`);
+  for (const [scope, profiles] of Object.entries(policy.onlyIn ?? {})) {
+    if (!scope.startsWith('https://')) fail(`${where}.onlyIn: "${scope}" is not a scope URL`);
+    if (!Array.isArray(profiles) || !profiles.every((p) => PROFILE_NAMES.includes(p))) {
+      fail(`${where}.onlyIn["${scope}"] must be a list of profiles (${PROFILE_NAMES.join(', ')})`);
+    }
+  }
+  for (const [name, apis] of Object.entries(policy.optional ?? {})) {
+    if (!PART_PATTERN.test(name)) fail(`${where}.optional: "${name}" must be lowercase letters, digits or dashes`);
+    if (!Array.isArray(apis) || apis.length === 0 || !apis.every((a) => apiNames.has(a))) {
+      fail(`${where}.optional["${name}"] must list APIs of the product (${[...apiNames].join(', ')})`);
+    }
+  }
+  return policy;
+}
+
 function kindOf(curated, apis) {
   if (curated && apis.length) return 'curated+discovery';
   if (curated) return 'curated';
@@ -126,6 +153,9 @@ function main() {
       apis,
     };
     if (gatewayApis.length) server.gatewayApis = gatewayApis;
+    // Only a product with a scope policy gets the key, so the entries of the others stay as they were.
+    const policy = scopePolicyOf(p.scopePolicy, id, new Set([...apis, ...gatewayApis].map((a) => a.api)));
+    if (policy) server.scopePolicy = policy;
     server.label = `${p.title}: ${p.description}`;
     servers.push(server);
   }

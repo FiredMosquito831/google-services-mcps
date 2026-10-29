@@ -16,6 +16,7 @@ import {
   parseServers,
   parseSetupAdminArgs,
   parseUninstallAllArgs,
+  parseWith,
 } from './args.js';
 import { runSetupAdmin } from './admin.js';
 import { runSetupServiceAccount } from './service-account.js';
@@ -93,8 +94,8 @@ Usage:
                          [--path <dir>] [--dry-run]
   node gsm.mjs uninstall --all [--dry-run] [--yes]
   node gsm.mjs list [--json] [--home <dir>]
-  node gsm.mjs login <group> [--profile readonly|readwrite|full] [--scopes <url,url>] [--servers <a,b>] [--client-secret <file>] [--no-browser] [--replace] [--account <email>]
-  node gsm.mjs scopes <group> [--profile readonly|readwrite|full] [--servers <a,b>] [--json]
+  node gsm.mjs login <group> [--profile readonly|readwrite|full] [--scopes <url,url>] [--servers <a,b>] [--client-secret <file>] [--no-browser] [--replace] [--account <email>] [--with <part,...>]
+  node gsm.mjs scopes <group> [--profile readonly|readwrite|full] [--servers <a,b>] [--with <part,...>] [--json]
   node gsm.mjs setup-client <path-to-client_secret.json> [--force]
   node gsm.mjs setup-apikey [--force]
   node gsm.mjs setup-admin --subject <admin email> --key-file <service account JSON> [--profile readonly|readwrite|full] [--servers <a,b>] [--replace]
@@ -134,12 +135,17 @@ Runtime:  install copies each product's servers and hook to ~/.google-services-m
 Profiles: readonly (default) covers the read tools with read-only scopes. readwrite adds write and destructive tools
           with the narrowest scopes that cover them. full covers every tool. --scopes gives an exact list instead.
           The scopes a token holds decide which tools run: a tool whose scopes it lacks is not registered.
+          A product can hold scopes back: Gmail's readwrite asks for gmail.modify and gmail.settings.basic, and only full
+          asks for https://mail.google.com/ (permanent delete). No profile asks for gmail.settings.sharing (it is for
+          domain-wide delegation). The login and gsm scopes list the tools held back ("Held back:").
 Groups:   OAuth login: cloud, workspace-user, searchconsole, business, developer. apikey: setup-apikey, no login.
           workspace-admin: setup-admin (service account with domain-wide delegation).
 Flags:    --no-browser (login) prints the login URL only, and does not open the browser.
           --replace (login, setup-admin): by default a login merges the requested scopes with the stored ones; --replace drops the stored ones.
           --account (login): the Google account to sign in. Google is asked to preselect it, and the merge reads that
           account's stored scopes only (scopes no server of the group uses are left out). Without it, nothing is merged.
+          --with (login, scopes): add an optional part of a product, left out of every profile otherwise. Gmail has
+          postmaster (Gmail Postmaster Tools): --with postmaster. gsm scopes lists the optional parts of a group.
           --json (scopes, products, apis, methods, list) prints JSON.
 API key:  setup-apikey reads GSM_API_KEY_INPUT or stdin. The key is never a command-line argument and is never printed.
 Backups:  an existing config file is copied to <file>.gsm-backup-<YYYYMMDD-HHMMSS> before it changes.
@@ -311,28 +317,41 @@ async function dispatch(argv: readonly string[]): Promise<number> {
     case 'login': {
       // In a terminal, `login` with no group starts the guided sign-in (group, client file, profile, API key, admin).
       if (parsed.positionals.length === 0 && isInteractive()) return withPrompter((prompt) => guidedSignIn(guidedEnvFor(prompt, moduleUrl)));
-      const group = parseGroup(parsed.positionals, 'usage: node gsm.mjs login <group> [--profile readonly|readwrite|full] [--scopes <urls>] [--servers a,b] [--client-secret <file>] [--no-browser] [--replace] [--account <email>]');
+      const group = parseGroup(parsed.positionals, 'usage: node gsm.mjs login <group> [--profile readonly|readwrite|full] [--scopes <urls>] [--servers a,b] [--client-secret <file>] [--no-browser] [--replace] [--account <email>] [--with <part,...>]');
       const choice = parseLoginScopes(parsed.values);
       const servers = parseServers(parsed.values);
       const clientSecretFile = typeof parsed.values['client-secret'] === 'string' ? parsed.values['client-secret'] : undefined;
       const noBrowser = parsed.values['no-browser'] === true;
       const replace = parsed.values.replace === true;
       const account = parseLoginAccount(parsed.values.account);
+      const withParts = parseWith(parsed.values.with);
       return runLogin(
-        { group, servers, clientSecretFile, profile: choice.profile, customScopes: choice.customScopes, noBrowser, replace, account },
+        {
+          group,
+          servers,
+          clientSecretFile,
+          profile: choice.profile,
+          customScopes: choice.customScopes,
+          noBrowser,
+          replace,
+          account,
+          ...(withParts ? { with: withParts } : {}),
+        },
         registryFor,
         out,
       );
     }
 
     case 'scopes': {
-      const group = parseGroup(parsed.positionals, 'usage: node gsm.mjs scopes <group> [--profile readonly|readwrite|full] [--servers a,b] [--json]');
+      const group = parseGroup(parsed.positionals, 'usage: node gsm.mjs scopes <group> [--profile readonly|readwrite|full] [--servers a,b] [--with <part,...>] [--json]');
+      const withParts = parseWith(parsed.values.with);
       return runScopes(
         {
           group,
           servers: parseServers(parsed.values),
           profile: parseProfile(parsed.values.profile),
           json: parsed.values.json === true,
+          ...(withParts ? { with: withParts } : {}),
         },
         registryFor(),
         out,

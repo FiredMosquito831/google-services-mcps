@@ -387,6 +387,8 @@ Installing a product is not enough. Each product needs its login group set up, o
 | `readwrite` | Read, write and delete tools, with the narrowest scopes that cover them. |
 | `full` | Every tool. |
 
+Gmail holds some scopes back. `readonly` asks for `gmail.readonly`; `readwrite` asks for `gmail.modify` and `gmail.settings.basic`; only `full` asks for `https://mail.google.com/`, which permanent delete needs. No profile asks for `gmail.settings.sharing` (Google allows its methods only with domain-wide delegation). Gmail Postmaster Tools is left out unless you add it with `--with postmaster`. The login lists what it held back in `Held back:` lines.
+
 Compare the profiles before you log in (checked):
 
 ```
@@ -747,6 +749,7 @@ Run `npx google-services-mcps --help` for the full text. Each flag in each comma
 | `--no-browser` | off | Prints the sign-in address instead of opening a browser. |
 | `--replace` | off | Drops the stored scopes instead of merging with them. |
 | `--account <email>` | none | The account to sign in. Google preselects it, and the login merges the scopes this account already holds for the group (only the ones a server of the group uses). Without it, nothing is merged. |
+| `--with <part,...>` | none | Adds an optional part of a product, which every profile leaves out otherwise. Gmail has `postmaster` (Gmail Postmaster Tools). `scopes` takes it too. |
 
 ### setup-client
 

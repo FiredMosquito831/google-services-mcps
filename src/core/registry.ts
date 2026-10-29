@@ -40,7 +40,28 @@ export interface ServerSpec {
   gatewayApis?: ApiRef[];
   /** Scopes the curated tools need, in addition to the discovery method scopes. */
   scopes?: string[];
+  /** How a login of this product picks its scopes, when the product needs a rule beyond the profiles (see ScopePolicy). */
+  scopePolicy?: ScopePolicy;
   label: string;
+}
+
+/**
+ * A product's rules for the scopes a login requests, declared in config/products.json. Absent for most products: their
+ * logins pick scopes by the profile alone. The rules only change what a login asks Google for. Tool kinds, the gate and
+ * the runtime check (a tool registers when the token holds one of its scopes) are the same with or without them.
+ */
+export interface ScopePolicy {
+  /**
+   * Scopes that only the listed profiles may request for this product's tools (readonly, readwrite, full). An empty list
+   * means no profile requests the scope; an exact --scopes list still can. Example: Gmail's https://mail.google.com/
+   * is listed with ["full"], so readwrite uses the narrower gmail.modify and permanent delete needs full.
+   */
+  onlyIn?: Record<string, string[]>;
+  /**
+   * Named optional parts: the APIs (Discovery names) whose methods a login leaves out unless it names the part (gsm login
+   * --with <name>, or auth_login with "with"). Example: { "postmaster": ["gmailpostmastertools"] }.
+   */
+  optional?: Record<string, string[]>;
 }
 
 export interface Registry {

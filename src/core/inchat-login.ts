@@ -15,6 +15,8 @@ import { secretFileExists } from './secret-files.js';
  */
 
 export type SignInMethod = 'oauth' | 'adc';
+/** The scope profiles a sign-in from the chat can ask for (the profiles of gsm login). */
+export type SignInProfile = 'readonly' | 'readwrite' | 'full';
 
 /** Whether the Desktop OAuth client is saved in the token folder. */
 export function clientFileReady(cfg: RuntimeConfig): boolean {
@@ -42,7 +44,7 @@ export interface SignIn {
    * Starts the browser sign-in. Resolves with the URL to approve, or with the reason it could not start. `account` (oauth
    * only) is the email to sign in: Google preselects it, and the login merges the scopes that account already holds.
    */
-  start(profile: 'readonly' | 'readwrite', method?: SignInMethod, account?: string): Promise<string>;
+  start(profile: SignInProfile, method?: SignInMethod, account?: string, include?: readonly string[]): Promise<string>;
   /** What the sign-in is doing now, for auth_status. */
   describe(): string;
   /** Stops a sign-in that is still waiting for the browser. */
@@ -55,8 +57,11 @@ export interface SignInOptions {
   /** The server name. The login covers this server's group, and its servers only. */
   server: string;
   cfg: RuntimeConfig;
-  /** The scopes an ADC login for this server asks for, per profile (the tools' scopes, resolved as the login does). */
-  adcScopes: (profile: 'readonly' | 'readwrite') => string[];
+  /**
+   * The scopes an ADC login for this server asks for, per profile and optional parts (the tools' scopes, resolved as the
+   * login does).
+   */
+  adcScopes: (profile: SignInProfile, include: readonly string[]) => string[];
   /** Called when the sign-in has saved a token, so the server can load its tools. */
   onSignedIn: () => void;
 }
@@ -94,6 +99,17 @@ export function outcomeLines(output: string): string[] {
     .filter((line) => /^(No account named:|Not requested again:|Not kept:|Not saved:|Its token is unchanged\.|To add them back,)/.test(line));
 }
 
+/**
+ * The "Held back:" lines of a login's output: the tools a product's scope rules left out of the profile (see
+ * heldBackLines in cli/scopes.ts). Empty for products without rules. Exported for the tests.
+ */
+export function heldBackOutput(output: string): string[] {
+  return output
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter((line) => line.startsWith('Held back:'));
+}
+
 export function createSignIn(opts: SignInOptions): SignIn {
   let child: ChildProcess | undefined;
   let phase: 'idle' | 'waiting' | 'signed-in' | 'failed' = 'idle';
@@ -125,8 +141,11 @@ export function createSignIn(opts: SignInOptions): SignIn {
         if (url) {
           note = url[0];
           // The URL sits on its own line, so no punctuation can end up inside it when it is copied.
+          // The login prints what a product's scope rules leave out before the URL. Empty for products without rules.
+          const held = heldBackOutput(out + err);
           answer(
-            `Approve the sign-in in your browser. The sign-in address is:\n${url[0]}\nOnce Google redirects back, the tools of this server load. Then call auth_status.`,
+            `Approve the sign-in in your browser. The sign-in address is:\n${url[0]}\nOnce Google redirects back, the tools of this server load. Then call auth_status.` +
+              (held.length > 0 ? `\n${held.join('\n')}` : ''),
           );
         }
       };
@@ -144,10 +163,12 @@ export function createSignIn(opts: SignInOptions): SignIn {
       });
     });
 
-  const startOAuth = (profile: 'readonly' | 'readwrite', account?: string): Promise<string> => {
+  const startOAuth = (profile: SignInProfile, account?: string, include: readonly string[] = []): Promise<string> => {
     const args = [opts.cliFile, 'login', opts.group, '--profile', profile, '--servers', opts.server];
     // One argument, so the email can never be read as another option.
     if (account) args.push(`--account=${account}`);
+    // The optional parts to add (--with). Absent when none are named, so the argv is the same as before.
+    if (include.length > 0) args.push(`--with=${include.join(',')}`);
     // Tests set GSM_NO_BROWSER=1, so no browser opens. Normal use opens the browser on this machine.
     if (process.env.GSM_NO_BROWSER === '1') args.push('--no-browser');
     const proc = spawn(process.execPath, args, { env: process.env, stdio: ['ignore', 'pipe', 'pipe'] });
@@ -159,7 +180,8 @@ export function createSignIn(opts: SignInOptions): SignIn {
       const said = outcomeLines(output);
       if (code === 0) {
         phase = 'signed-in';
-        note = ['Signed in.', ...said].join(' ');
+        // What the product's scope rules left out of this sign-in, so the person can ask for a broader one.
+        note = ['Signed in.', ...said, ...heldBackOutput(output)].join(' ');
         opts.onSignedIn();
       } else {
         phase = 'failed';
@@ -169,7 +191,7 @@ export function createSignIn(opts: SignInOptions): SignIn {
     });
   };
 
-  const startAdc = (profile: 'readonly' | 'readwrite'): Promise<string> => {
+  const startAdc = (profile: SignInProfile, include: readonly string[] = []): Promise<string> => {
     const gcloud = findGcloud();
     if (!gcloud) {
       return Promise.resolve(
@@ -179,7 +201,7 @@ export function createSignIn(opts: SignInOptions): SignIn {
     const ownClient = opts.group !== 'cloud';
     if (ownClient && !clientFileReady(opts.cfg)) return Promise.resolve(NO_CLIENT_MESSAGE);
 
-    const scopes = ownClient ? opts.adcScopes(profile) : [...GCLOUD_DEFAULT_SCOPES];
+    const scopes = ownClient ? opts.adcScopes(profile, include) : [...GCLOUD_DEFAULT_SCOPES];
     const args = ['auth', 'application-default', 'login'];
     if (ownClient) args.push(`--client-id-file=${opts.cfg.clientSecretFile}`, `--scopes=${scopes.join(',')}`);
 
@@ -209,14 +231,14 @@ export function createSignIn(opts: SignInOptions): SignIn {
   };
 
   return {
-    start(profile, method = 'oauth', account) {
+    start(profile, method = 'oauth', account, include = []) {
       if (!clientFileReady(opts.cfg) && (method === 'oauth' || opts.group !== 'cloud')) {
         return Promise.resolve(NO_CLIENT_MESSAGE);
       }
       if (child && child.exitCode === null) {
         return Promise.resolve(`A sign-in is already waiting for approval in the browser. ${note}`);
       }
-      return method === 'adc' ? startAdc(profile) : startOAuth(profile, account);
+      return method === 'adc' ? startAdc(profile, include) : startOAuth(profile, account, include);
     },
 
     describe() {
