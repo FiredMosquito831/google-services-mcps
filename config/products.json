@@ -1330,6 +1330,100 @@
           "version": "v2beta"
         }
       ],
+      "toolsets": {
+        "google": {
+          "source": "https://developers.google.com/workspace/drive/api/reference/mcp/tools_list",
+          "tools": [
+            "drive_search",
+            "drive_list_recent",
+            "drive_get_file",
+            "drive_permissions_list",
+            "drive_read_text",
+            "drive_download",
+            "drive_create_file",
+            "drive_files_copy",
+            "docs_documents_get",
+            "docs_documents_batch_update",
+            "sheets_get_values",
+            "sheets_spreadsheets_get",
+            "sheets_spreadsheets_batch_update",
+            "sheets_write_values",
+            "sheets_insert_rows",
+            "slides_presentations_get",
+            "slides_presentations_pages_get",
+            "slides_presentatio_pages_get_thumbnai",
+            "slides_presentations_batch_update"
+          ],
+          "matches": {
+            "drive_search": [
+              "search_files"
+            ],
+            "drive_list_recent": [
+              "list_recent_files"
+            ],
+            "drive_get_file": [
+              "get_file_metadata"
+            ],
+            "drive_permissions_list": [
+              "get_file_permissions"
+            ],
+            "drive_read_text": [
+              "read_file_content"
+            ],
+            "drive_download": [
+              "download_file_content"
+            ],
+            "drive_create_file": [
+              "create_file"
+            ],
+            "drive_files_copy": [
+              "copy_file"
+            ],
+            "docs_documents_get": [
+              "read_doc"
+            ],
+            "docs_documents_batch_update": [
+              "update_doc"
+            ],
+            "sheets_get_values": [
+              "get_values"
+            ],
+            "sheets_spreadsheets_get": [
+              "get_spreadsheet"
+            ],
+            "sheets_spreadsheets_batch_update": [
+              "update_spreadsheet"
+            ],
+            "sheets_write_values": [
+              "update_values",
+              "update_formulas"
+            ],
+            "sheets_insert_rows": [
+              "insert_dimension"
+            ],
+            "slides_presentations_get": [
+              "read_presentation"
+            ],
+            "slides_presentations_pages_get": [
+              "read_slide_page"
+            ],
+            "slides_presentatio_pages_get_thumbnai": [
+              "read_slide_page_thumbnail"
+            ],
+            "slides_presentations_batch_update": [
+              "update_presentation"
+            ]
+          },
+          "notes": {
+            "drive_search": "Takes Drive's own query syntax (q), not the dialect of Google's search_files (title, parentId, owner); the same searches can be written in either.",
+            "drive_read_text": "PDF and image text is not read: Drive has no public text-extraction call. Office and OpenDocument text is taken from the downloaded file, since Drive exports only Google files.",
+            "drive_create_file": "Converts to a Google type only when google_type is given; Google's create_file converts by default.",
+            "sheets_write_values": "One tool for Google's update_values and update_formulas: value_input data (RAW) or formulas (USER_ENTERED), always given.",
+            "docs_documents_get": "Generated from Docs' documents.get: the full document JSON. Comments (Google's commentsIncluded) are in drive_read_text with include_comments.",
+            "slides_presentatio_pages_get_thumbnai": "The generated name is cut to fit the 64-character tool name budget."
+          }
+        }
+      },
       "generatedToolCount": 175
     },
     "gmail": {
@@ -1458,6 +1552,53 @@
         }
       ],
       "gateway": [],
+      "toolsets": {
+        "google": {
+          "source": "https://developers.google.com/workspace/calendar/api/v3/reference/mcp/tools_list",
+          "tools": [
+            "calendar_list_calendars",
+            "calendar_list_events",
+            "calendar_get_event",
+            "calendar_suggest_time",
+            "calendar_create_event",
+            "calendar_update_event",
+            "calendar_delete_event",
+            "calendar_respond"
+          ],
+          "matches": {
+            "calendar_list_calendars": [
+              "list_calendars"
+            ],
+            "calendar_list_events": [
+              "list_events",
+              "search_events"
+            ],
+            "calendar_get_event": [
+              "get_event"
+            ],
+            "calendar_suggest_time": [
+              "suggest_time"
+            ],
+            "calendar_create_event": [
+              "create_event"
+            ],
+            "calendar_update_event": [
+              "update_event"
+            ],
+            "calendar_delete_event": [
+              "delete_event"
+            ],
+            "calendar_respond": [
+              "respond_to_event"
+            ]
+          },
+          "notes": {
+            "calendar_list_events": "Google's search_events is a semantic search of the primary calendar with no public API; the keyword search of calendar_list_events (q) stands in for it. Without time_min the list starts now, as before 1.8.0; include_past gives Google's no-lower-bound list.",
+            "calendar_suggest_time": "Computed here from free/busy (freebusy.query) and the window, duration and working hours given; Google's preferences object is not public, so its exact ranking is not copied.",
+            "calendar_delete_event": "Destructive, so it asks first, as in Google's server (destructiveHint)."
+          }
+        }
+      },
       "generatedToolCount": 38
     },
     "gchat": {

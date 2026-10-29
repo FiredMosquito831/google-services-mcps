@@ -11,8 +11,8 @@ const dist = (p) => new URL(`../dist/${p}`, import.meta.url).href;
 // Every hand-written (curated) module. Each one exports buildTools and nothing that starts a server.
 const MODULES = ['cloud', 'gmail', 'gdrive', 'gcalendar', 'workspace-admin', 'searchconsole'];
 // The product modules that must hold only their own area's tools.
-const AREA_PREFIX = { gmail: ['gmail'], gdrive: ['drive'], gcalendar: ['calendar'] };
-const EXPECTED_COUNT = { gmail: 15, gdrive: 6, gcalendar: 7 };
+const AREA_PREFIX = { gmail: ['gmail'], gdrive: ['drive', 'sheets'], gcalendar: ['calendar'] };
+const EXPECTED_COUNT = { gmail: 15, gdrive: 12, gcalendar: 9 };
 const KINDS = new Set(['read', 'write', 'destructive']);
 
 const dir = mkdtempSync(join(tmpdir(), 'gsm-curated-'));

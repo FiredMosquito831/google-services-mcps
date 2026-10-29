@@ -6,16 +6,16 @@
  *
  * Auth: OAuth user token from `gsm login workspace-user`. The MIME and decoding rules are in gmail-mime.ts.
  */
-import { readFileSync, realpathSync, statSync } from 'node:fs';
-import { basename, dirname, extname, isAbsolute, relative } from 'node:path';
+import { readFileSync } from 'node:fs';
+import { basename } from 'node:path';
 import { gmail, type gmail_v1 } from '@googleapis/gmail';
 import type { JWT, OAuth2Client } from 'google-auth-library';
 import { z } from 'zod';
 import type { RuntimeConfig } from '../core/config.js';
 import { getAuthClient, googleScopes } from '../core/auth.js';
 import { requestedAccount } from '../core/account-context.js';
-import { adcFilePath } from '../core/adc.js';
 import { defineTool, type PreparedAction, type ToolDef } from '../core/tools.js';
+import { checkLocalFile, mimeTypeOf, protectedPaths } from './local-files.js';
 import {
   GMAIL_JSON_RAW_MAX_BYTES,
   GMAIL_MAX_MESSAGE_BYTES,
@@ -166,86 +166,19 @@ async function inChunks<T, R>(items: T[], size: number, fn: (item: T) => Promise
 
 // ---------- attachments from local files ----------
 
-/** Common types by file extension. Anything else is sent as application/octet-stream. */
-const MIME_TYPES: Record<string, string> = {
-  '.pdf': 'application/pdf',
-  '.txt': 'text/plain',
-  '.csv': 'text/csv',
-  '.htm': 'text/html',
-  '.html': 'text/html',
-  '.md': 'text/markdown',
-  '.json': 'application/json',
-  '.xml': 'application/xml',
-  '.ics': 'text/calendar',
-  '.eml': 'message/rfc822',
-  '.png': 'image/png',
-  '.jpg': 'image/jpeg',
-  '.jpeg': 'image/jpeg',
-  '.gif': 'image/gif',
-  '.webp': 'image/webp',
-  '.svg': 'image/svg+xml',
-  '.zip': 'application/zip',
-  '.doc': 'application/msword',
-  '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-  '.xls': 'application/vnd.ms-excel',
-  '.xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-  '.ppt': 'application/vnd.ms-powerpoint',
-  '.pptx': 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-};
-
 interface LocalFile extends MimeAttachment {
   path: string;
 }
 
-const sameOrInside = (file: string, folder: string): boolean => {
-  const rel = relative(folder, file);
-  return rel === '' || (!rel.startsWith('..') && !isAbsolute(rel));
-};
-
-const realOrSame = (path: string): string => {
-  try {
-    return realpathSync(path);
-  } catch {
-    return path;
-  }
-};
-
 /**
- * Folders and files an attachment may never come from: the token folder (tokens, the OAuth client, the API key), the
- * gcloud folder with the ADC file, and the service account key files this server knows of. A mail must not carry a
- * credential out, even when the person approves without reading the path.
- */
-function protectedPaths(cfg: RuntimeConfig): string[] {
-  const adc = process.env.GOOGLE_APPLICATION_CREDENTIALS?.trim();
-  const list = [cfg.tokenDir, dirname(adcFilePath({ ...process.env, GOOGLE_APPLICATION_CREDENTIALS: '' })), cfg.clientSecretFile];
-  if (adc) list.push(adc);
-  if (cfg.serviceAccountKeyFile) list.push(cfg.serviceAccountKeyFile);
-  return list.map(realOrSame);
-}
-
-/**
- * Reads local files to attach. Each path must be a full path to a regular file outside the protected folders. The
- * sizes are checked before any file is read: with the message around them, the encoded total must stay within
- * Gmail's 35 MB limit.
+ * Reads local files to attach. Each path must be a full path to a regular file outside the protected folders
+ * (checkLocalFile in local-files.ts, shared with the Drive upload). The sizes are checked before any file is read: with
+ * the message around them, the encoded total must stay within Gmail's 35 MB limit.
  */
 function readLocalFiles(paths: string[] | undefined, cfg: RuntimeConfig, otherBytes: number): LocalFile[] {
   if (!paths?.length) return [];
   const blocked = protectedPaths(cfg);
-  const found = paths.map((given) => {
-    if (!isAbsolute(given)) throw new Error(`Attachment "${given}" must be a full path.`);
-    let real: string;
-    try {
-      real = realpathSync(given);
-    } catch {
-      throw new Error(`Attachment "${given}" was not found.`);
-    }
-    if (!statSync(real).isFile()) throw new Error(`Attachment "${given}" is not a file.`);
-    const lower = process.platform === 'win32' ? (p: string) => p.toLowerCase() : (p: string) => p;
-    if (blocked.some((p) => sameOrInside(lower(real), lower(p)))) {
-      throw new Error(`Attachment "${given}" is refused: it is in the folder that holds Google sign-in data (tokens, client secrets or keys).`);
-    }
-    return { path: real, size: statSync(real).size };
-  });
+  const found = paths.map((given) => checkLocalFile(given, blocked, 'Attachment'));
   const estimate = otherBytes + found.reduce((sum, f) => sum + base64LinesLength(f.size) + 300, 0);
   if (estimate > GMAIL_MAX_MESSAGE_BYTES) {
     throw new Error(
@@ -255,7 +188,7 @@ function readLocalFiles(paths: string[] | undefined, cfg: RuntimeConfig, otherBy
   return found.map((f) => ({
     path: f.path,
     filename: basename(f.path),
-    mimeType: MIME_TYPES[extname(f.path).toLowerCase()] ?? 'application/octet-stream',
+    mimeType: mimeTypeOf(f.path),
     data: readFileSync(f.path),
   }));
 }

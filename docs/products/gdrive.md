@@ -2,7 +2,7 @@
 
 Install with the simplest command: `npx google-services-mcps install --agent claude --plugin <id>` (see docs/TUTORIAL.md).
 
-Google Drive files, labels and activity, plus Docs, Sheets, Slides, Forms and Books. It searches and reads files, creates folders and text files, and trashes files. Through the per-method tools and the gateway it also reads and writes Docs, Sheets, Slides and Forms content, and manages sharing and labels.
+Google Drive files, labels and activity, plus Docs, Sheets, Slides, Forms and Books. It searches, reads and downloads files, creates folders, blank Google files and uploads, reads and writes Sheets ranges, and trashes files. Through the per-method tools and the gateway it also reads and writes Docs, Sheets, Slides and Forms content, and manages sharing and labels.
 
 ## When to install it
 
@@ -33,18 +33,24 @@ Start with `--profile readonly`. Writes need a `readwrite` login and the plugin 
 
 | Area | Tools | Safety | What it does |
 |---|---|---|---|
-| Search and read | `drive_search`, `drive_get_file`, `drive_read_text` | read | Search Drive, read file metadata, read a file as text |
-| Create | `drive_create_folder`, `drive_create_text_file` | write | Create a folder or a text file |
+| Search and read | `drive_search`, `drive_list_recent`, `drive_get_file`, `drive_read_text`, `drive_download` | read | Search Drive, list recent files, read file metadata, read a file as text (Google files, text, Office and OpenDocument files, with comments if asked), download a file as base64 |
+| Create | `drive_create_folder`, `drive_create_text_file`, `drive_create_file` | write | Create a folder, a text file, a blank Google Doc, Sheet or Slides, or upload content or a local file (converted to a Google type if asked) |
+| Sheets | `sheets_get_values` (read), `sheets_write_values`, `sheets_insert_rows` (write) | read, write | Read a range, write values or formulas (`value_input` must say which), insert rows or columns |
 | Trash | `drive_trash_file` | destructive | Move a file to trash |
 | Per-method (175) | | mixed | Drive v3 files, permissions, comments, shared drives; Drive Labels (26); Sheets (17); Forms (10); Docs (3); Slides (5); Drive Activity; Books (51) |
 | Gateway (2 APIs) | `api_search`, `api_describe`, `api_call` | read, read, dynamic | Drive v2 (75 methods) and Drive Labels v2beta (26 methods) |
 
 The full list is in `docs/capabilities/gdrive.md`.
 
+With the plugin option `toolset: google`, the server lists the 19 tools that match Google's Drive, Docs, Sheets and Slides MCP servers (their 20 tools; `sheets_write_values` covers both `update_values` and `update_formulas`), plus `health` and the sign-in tools.
+
 ## Example requests
 
 - "Find the Q3 budget spreadsheet and tell me who owns it." Claude runs `drive_search`, then `drive_get_file`. No prompt.
 - "Read the meeting notes doc and list the action items." Claude runs `drive_read_text`. No prompt.
+- "What are the open comments on the proposal.docx?" Claude runs `drive_read_text` with `include_comments`. No prompt.
+- "Upload C:\Reports\q3.xlsx to Drive as a Google Sheet." Claude runs `drive_create_file` with `local_path` and `google_type: spreadsheet`. It asks first.
+- "Put =SUM(B2:B10) in B11 of the budget sheet." Claude runs `sheets_write_values` with `value_input: formulas`. It asks first.
 - "Create a folder called Invoices 2026." Claude runs `drive_create_folder`. It asks first.
 - "Trash the file old-plan.docx." Claude runs `drive_trash_file`. It asks twice.
 - "Remove Sam's access to the Launch folder." Claude uses the permissions delete tool. It asks twice.

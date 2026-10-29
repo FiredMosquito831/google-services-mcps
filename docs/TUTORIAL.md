@@ -559,7 +559,11 @@ Each example names the tool an agent would call. The tool names are checked. The
 - **Gmail, a reply:** "Reply to Ana's last message: Thursday works." The agent finds the message with `gmail_search`, then calls `gmail_reply`. Sending is destructive, so it asks twice; the second prompt shows the recipients, the subject and the thread. This needs a `readwrite` login and **Allow write tools**.
 - **Gmail, a conversation:** "Summarise my thread with Ana about the venue." The agent calls `gmail_search_threads`, then `gmail_get_thread`. Reads never ask. With `toolset: google`, these are the thread tools the server lists.
 - **Calendar (workspace-user):** "What is on my calendar tomorrow?" The agent calls `calendar_events_list`.
+- **Calendar, a meeting time:** "Find an hour next week when Ana, Bo and I are free, between 9 and 5." The agent calls `calendar_suggest_time`, then `calendar_create_event` with `add_meet` for the time you pick. The search never asks; the create asks first and needs a `readwrite` login and **Allow write tools**.
+- **Calendar, an answer:** "Accept the design review on Thursday." The agent finds the event with `calendar_list_events`, then calls `calendar_respond`. It asks first; only your own answer changes.
 - **Drive (workspace-user):** "List the files in my Drive." The agent calls `drive_files_list`.
+- **Drive, recent work:** "What did I work on this week? Summarise the budget workbook." The agent calls `drive_list_recent`, then `drive_read_text` (it reads Google Sheets and Excel files alike). Reads never ask.
+- **Sheets, a change:** "Add a total row under the expenses." The agent calls `sheets_get_values`, then `sheets_insert_rows` and `sheets_write_values` with `value_input: formulas`. Each write asks first, and needs a `readwrite` login and **Allow write tools**.
 - **Search Console (searchconsole):** "Which sites are in my Search Console?" The agent calls `sc_sites_list`.
 - **Google Cloud (cloud):** "List the BigQuery projects I can see." The agent calls `bigquery_projects_list`.
 - **Workspace admin (workspace-admin):** "List the users in my domain." The agent calls `admin_users_list`. This needs the `setup-admin` step.

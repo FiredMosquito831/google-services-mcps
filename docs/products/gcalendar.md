@@ -34,19 +34,23 @@ Start with `--profile readonly`. Event changes need a `readwrite` login and the 
 
 | Area | Tools | Safety | What it does |
 |---|---|---|---|
-| Read | `calendar_list_calendars`, `calendar_list_events`, `calendar_get_event`, `calendar_freebusy` | read | List calendars and events, read one event, check free and busy times |
-| Write | `calendar_create_event`, `calendar_update_event` | write | Create or change an event |
+| Read | `calendar_list_calendars`, `calendar_list_events`, `calendar_get_event`, `calendar_freebusy`, `calendar_suggest_time` | read | List calendars and events (by type, without a lower time bound with `include_past`), read one event (Meet link, attachments, reminders), check free and busy times, suggest meeting times when everyone is free |
+| Write | `calendar_create_event`, `calendar_update_event`, `calendar_respond` | write | Create or change an event (Meet link, recurrence, reminders, add or remove guests), answer an invitation |
 | Delete | `calendar_delete_event` | destructive | Delete an event |
 | Per-method (38) | | mixed | Event moves, imports, quick add and instances; calendar create, patch and clear; sharing (ACL); calendar list; settings; colors; watch channels |
 | Gateway | none | | No gateway tools. All methods are per-method tools. |
 
 The full list is in `docs/capabilities/gcalendar.md`.
 
+With the plugin option `toolset: google`, the server lists the 8 tools that match Google's Calendar MCP server (`list_calendars`, `list_events`, `get_event`, `suggest_time`, `create_event`, `update_event`, `delete_event`, `respond_to_event`; its `search_events` is a semantic search with no public API, so `calendar_list_events` with `q` stands in for it), plus `health` and the sign-in tools.
+
 ## Example requests
 
 - "What is on my calendar tomorrow?" Claude runs `calendar_list_events`. No prompt.
-- "Find a 30-minute slot next week when Ana and I are both free." Claude runs `calendar_freebusy` for both calendars. No prompt.
-- "Add a 3pm call with the design team on Thursday." Claude runs `calendar_create_event`. It asks first.
+- "Find a 30-minute slot next week when Ana and I are both free." Claude runs `calendar_suggest_time` for both calendars. No prompt.
+- "Add a 3pm call with the design team on Thursday, with a Meet link." Claude runs `calendar_create_event` with `add_meet`. It asks first.
+- "Add Carl to Friday's review." Claude runs `calendar_update_event` with `add_attendees`; the other guests keep their answers. It asks first.
+- "Decline the 4pm sync and say I am travelling." Claude runs `calendar_respond`. It asks first.
 - "Move the 10am standup to 10:30." Claude runs `calendar_update_event`. It asks first.
 - "Delete the cancelled Friday workshop." Claude runs `calendar_delete_event`. It asks twice.
 

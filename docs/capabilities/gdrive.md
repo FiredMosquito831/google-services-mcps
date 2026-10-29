@@ -4,13 +4,39 @@ Google Drive files, labels and activity, plus Docs, Sheets, Slides, Forms and Bo
 
 - Plugin: `gdrive`, MCP server: `gdrive`, login: Desktop OAuth client, then `login workspace-user`
 - Install: `claude plugin install gdrive@google-services-mcps`
-- Tools: 194 total. Curated 15, per-method 175, gateway 3. Read 90, write 81, destructive 22, dynamic 1.
+- Tools: 200 total. Curated 21, per-method 175, gateway 3. Read 93, write 84, destructive 22, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 194, google 194 (all), curated 18 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 200, google 28, curated 24 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
 
-## Curated tools (15)
+## Toolset google (19)
+
+The tools that match Google's official MCP server for this product (https://developers.google.com/workspace/drive/api/reference/mcp/tools_list).
+
+| Tool | Google's tool | Note |
+|---|---|---|
+| `drive_search` | `search_files` | Takes Drive's own query syntax (q), not the dialect of Google's search_files (title, parentId, owner); the same searches can be written in either. |
+| `drive_list_recent` | `list_recent_files` |  |
+| `drive_get_file` | `get_file_metadata` |  |
+| `drive_permissions_list` | `get_file_permissions` |  |
+| `drive_read_text` | `read_file_content` | PDF and image text is not read: Drive has no public text-extraction call. Office and OpenDocument text is taken from the downloaded file, since Drive exports only Google files. |
+| `drive_download` | `download_file_content` |  |
+| `drive_create_file` | `create_file` | Converts to a Google type only when google_type is given; Google's create_file converts by default. |
+| `drive_files_copy` | `copy_file` |  |
+| `docs_documents_get` | `read_doc` | Generated from Docs' documents.get: the full document JSON. Comments (Google's commentsIncluded) are in drive_read_text with include_comments. |
+| `docs_documents_batch_update` | `update_doc` |  |
+| `sheets_get_values` | `get_values` |  |
+| `sheets_spreadsheets_get` | `get_spreadsheet` |  |
+| `sheets_spreadsheets_batch_update` | `update_spreadsheet` |  |
+| `sheets_write_values` | `update_values`, `update_formulas` | One tool for Google's update_values and update_formulas: value_input data (RAW) or formulas (USER_ENTERED), always given. |
+| `sheets_insert_rows` | `insert_dimension` |  |
+| `slides_presentations_get` | `read_presentation` |  |
+| `slides_presentations_pages_get` | `read_slide_page` |  |
+| `slides_presentatio_pages_get_thumbnai` | `read_slide_page_thumbnail` | The generated name is cut to fit the 64-character tool name budget. |
+| `slides_presentations_batch_update` | `update_presentation` |  |
+
+## Curated tools (21)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
@@ -22,13 +48,19 @@ Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 194, google 194 (all)
 | `auth_setup_client` | write | Save the Google OAuth client | (none) |
 | `auth_setup_service_account` | write | Set up the service account key | (none) |
 | `auth_status` | read | Sign-in status | (none) |
+| `drive_create_file` | write | Create or upload Drive file | drive, drive.file |
 | `drive_create_folder` | write | Create Drive folder | drive, drive.file |
 | `drive_create_text_file` | write | Create Drive text file | drive, drive.file |
+| `drive_download` | read | Download Drive file | drive, drive.file |
 | `drive_get_file` | read | Get Drive file | drive, drive.metadata |
+| `drive_list_recent` | read | List recent Drive files | drive, drive.metadata |
 | `drive_read_text` | read | Read Drive file as text | drive, drive.readonly |
 | `drive_search` | read | Search Drive | drive, drive.metadata |
 | `drive_trash_file` | destructive | Trash Drive file | drive, drive.file |
 | `health` | read | Server health | (none) |
+| `sheets_get_values` | read | Read spreadsheet values | drive, drive.file |
+| `sheets_insert_rows` | write | Insert spreadsheet rows or columns | drive, drive.file |
+| `sheets_write_values` | write | Write spreadsheet values | drive, drive.file |
 
 ## Per-method tools (175)
 

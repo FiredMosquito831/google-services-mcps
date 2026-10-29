@@ -853,6 +853,15 @@
     "title": "drive.comments.update"
   },
   {
+    "name": "mcp__plugin_gdrive_gdrive__drive_create_file",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file"
+    ],
+    "title": "Create or upload Drive file"
+  },
+  {
     "name": "mcp__plugin_gdrive_gdrive__drive_create_folder",
     "kind": "write",
     "scopes": [
@@ -869,6 +878,16 @@
       "https://www.googleapis.com/auth/drive.file"
     ],
     "title": "Create Drive text file"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_download",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.readonly"
+    ],
+    "title": "Download Drive file"
   },
   {
     "name": "mcp__plugin_gdrive_gdrive__drive_drives_create",
@@ -1093,6 +1112,17 @@
       "https://www.googleapis.com/auth/drive.readonly"
     ],
     "title": "Get Drive file"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_list_recent",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.metadata",
+      "https://www.googleapis.com/auth/drive.metadata.readonly",
+      "https://www.googleapis.com/auth/drive.readonly"
+    ],
+    "title": "List recent Drive files"
   },
   {
     "name": "mcp__plugin_gdrive_gdrive__drive_operations_get",
@@ -1765,6 +1795,28 @@
     "title": "Server health"
   },
   {
+    "name": "mcp__plugin_gdrive_gdrive__sheets_get_values",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.readonly",
+      "https://www.googleapis.com/auth/spreadsheets",
+      "https://www.googleapis.com/auth/spreadsheets.readonly"
+    ],
+    "title": "Read spreadsheet values"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__sheets_insert_rows",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/spreadsheets"
+    ],
+    "title": "Insert spreadsheet rows or columns"
+  },
+  {
     "name": "mcp__plugin_gdrive_gdrive__sheets_spreadsh_values_batch_cle_7bcc",
     "kind": "destructive",
     "scopes": [
@@ -1956,6 +2008,16 @@
     ],
     "methodId": "sheets.spreadsheets.values.update",
     "title": "sheets.spreadsheets.values.update"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__sheets_write_values",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/spreadsheets"
+    ],
+    "title": "Write spreadsheet values"
   },
   {
     "name": "mcp__plugin_gdrive_gdrive__slides_presentatio_pages_get_thumbnai",

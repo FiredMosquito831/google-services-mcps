@@ -13,6 +13,7 @@ import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { JWT, OAuth2Client } from 'google-auth-library';
+import { DOCX, docx } from './fixtures/office-zip.mjs';
 
 // No Application Default Credentials from this machine: every group below has its own login in a temp folder.
 delete process.env.GOOGLE_APPLICATION_CREDENTIALS;
@@ -117,6 +118,7 @@ const DOCS = [
   'gmail.v1',
   'calendar.v3',
   'drive.v3',
+  'sheets.v4',
   'searchconsole.v1',
   'cloudresourcemanager.v3',
   'serviceusage.v1',
@@ -183,6 +185,13 @@ function methodFor(call) {
 /** Marked deprecated in Discovery: the deprecated flag, or the word in its description. */
 const isDeprecated = (schema) => schema?.deprecated === true || /\bdeprecated\b/i.test(schema?.description ?? '');
 
+/**
+ * Body fields whose description uses the word for some of their values, not for the field. Each with the reason.
+ * ConferenceSolutionKey.type: "eventHangout" and "eventNamedHangout" are deprecated; "hangoutsMeet" is how a Meet link
+ * is created (Calendar API release notes, 2020-09-07: set conferenceData.createRequest.conferenceSolutionKey.type).
+ */
+const DEPRECATED_VALUES_ONLY = new Set(['ConferenceSolutionKey.type']);
+
 /** A schema by reference (a $ref, or the bare name the snapshots keep for a method's request), or the inline schema. */
 const resolve = (doc, schema) => (typeof schema === 'string' ? doc.schemas?.[schema] : schema?.$ref ? doc.schemas?.[schema.$ref] : schema);
 
@@ -214,7 +223,7 @@ function bodyProblems(doc, schema, value, where) {
       out.push(`body field ${where}.${key} is not in ${typeof schema === 'string' ? schema : (schema?.$ref ?? s.id ?? 'the schema')}`);
       continue;
     }
-    if (isDeprecated(prop)) out.push(`body field ${where}.${key} is deprecated`);
+    if (isDeprecated(prop) && !DEPRECATED_VALUES_ONLY.has(`${s.id}.${key}`)) out.push(`body field ${where}.${key} is deprecated`);
     out.push(...bodyProblems(doc, prop, child, `${where}.${key}`));
   }
   return out;
@@ -376,9 +385,36 @@ const CASES = {
       args: { calendar_id: 'primary', time_min: '2026-11-01T00:00:00Z', time_max: '2026-11-08T00:00:00Z', q: 'standup', max_results: 10, single_events: true, page_token: 'p1' },
       expect: ['calendar.events.list'],
     },
+    // 1.8.0: no lower bound, event types, time zone, order by last change.
+    {
+      args: { include_past: true, event_types: ['default', 'outOfOffice'], time_zone: 'Europe/Zurich', order_by: 'updated', q: 'review' },
+      expect: ['calendar.events.list'],
+    },
   ],
   calendar_get_event: [{ args: { calendar_id: 'primary', event_id: 'ev-1' }, expect: ['calendar.events.get'] }],
   calendar_freebusy: [{ args: { time_min: '2026-11-01T00:00:00Z', time_max: '2026-11-02T00:00:00Z', calendar_ids: ['primary'] }, expect: ['calendar.freebusy.query'] }],
+  calendar_suggest_time: [
+    {
+      args: {
+        attendees: ['a@example.com'],
+        start_time: '2026-11-02T08:00:00+01:00',
+        end_time: '2026-11-06T18:00:00+01:00',
+        duration_minutes: 45,
+        time_zone: 'Europe/Berlin',
+        working_hours: { start: '09:00', end: '17:00' },
+        weekdays_only: true,
+        max_suggestions: 3,
+      },
+      expect: ['calendar.freebusy.query'],
+    },
+  ],
+  calendar_respond: [
+    {
+      args: { calendar_id: 'primary', event_id: 'ev-1', response: 'accepted', comment: 'See you', send_updates: 'all' },
+      expect: ['calendar.events.get', 'calendar.events.patch'],
+      respond: () => ({ ...generic(), attendees: [{ email: 'me@example.com', self: true, responseStatus: 'needsAction' }, { email: 'b@example.com' }] }),
+    },
+  ],
   calendar_create_event: [
     {
       args: {
@@ -395,6 +431,19 @@ const CASES = {
       expect: ['calendar.events.insert'],
     },
     { args: { summary: 'Holiday', start: '2026-12-24', end: '2026-12-25' }, expect: ['calendar.events.insert'] },
+    // 1.8.0: Meet link, recurrence, reminders.
+    {
+      args: {
+        summary: 'Weekly',
+        start: '2026-11-02T10:00:00+01:00',
+        end: '2026-11-02T10:30:00+01:00',
+        time_zone: 'Europe/Berlin',
+        add_meet: true,
+        recurrence: ['RRULE:FREQ=WEEKLY;BYDAY=MO;COUNT=10'],
+        reminders: [{ method: 'popup', minutes: 10 }, { method: 'email', minutes: 60 }],
+      },
+      expect: ['calendar.events.insert'],
+    },
   ],
   calendar_update_event: [
     {
@@ -412,6 +461,12 @@ const CASES = {
       },
       expect: ['calendar.events.patch'],
     },
+    // 1.8.0: add and remove guests (read the event first), a Meet link, recurrence and reminders.
+    {
+      args: { event_id: 'ev-1', add_attendees: ['c@example.com'], remove_attendees: ['b@example.com'], add_meet: true, recurrence: ['RRULE:FREQ=DAILY;COUNT=3'], reminders: [] },
+      expect: ['calendar.events.get', 'calendar.events.patch'],
+      respond: () => ({ ...generic(), attendees: [{ email: 'a@example.com', responseStatus: 'accepted' }, { email: 'b@example.com' }] }),
+    },
   ],
   calendar_delete_event: [{ args: { calendar_id: 'primary', event_id: 'ev-1', send_updates: 'none' }, preview: true, expect: ['calendar.events.get', 'calendar.events.delete'] }],
 
@@ -425,7 +480,31 @@ const CASES = {
       expect: ['drive.files.get', 'drive.files.export'],
       respond: (call) => (call.url.endsWith('/export') ? 'exported text' : { ...generic(), mimeType: 'application/vnd.google-apps.document' }),
     },
+    // 1.9.0: an Office file (size, then the bytes) and the comment threads.
+    {
+      args: { file_id: 'docx-1', include_comments: true },
+      expect: ['drive.files.get', 'drive.comments.list'],
+      respond: (call) =>
+        call.url.endsWith('/comments') ? { comments: [{ id: 'c1', content: 'Check this', replies: [] }] } : call.query.alt === 'media' ? docx() : { ...generic(), mimeType: DOCX, size: '900' },
+    },
   ],
+  drive_list_recent: [{ args: { order_by: 'lastModifiedByMe', page_size: 5, page_token: 'p1' }, expect: ['drive.files.list'] }],
+  drive_download: [
+    { args: { file_id: 'doc-1', export_mime_type: 'application/pdf' }, expect: ['drive.files.get', 'drive.files.export'], respond: (call) => (call.url.endsWith('/export') ? '%PDF' : { ...generic(), mimeType: 'application/vnd.google-apps.document' }) },
+    { args: { file_id: 'file-1' }, expect: ['drive.files.get'], respond: (call) => (call.query.alt === 'media' ? 'bytes' : { ...generic(), mimeType: 'application/pdf', size: '5' }) },
+  ],
+  drive_create_file: [
+    { args: { name: 'Plan', google_type: 'document', parent_id: 'folder-1' }, expect: ['drive.files.create'] },
+    { args: { name: 'Budget', google_type: 'spreadsheet', text_content: 'a,b\n1,2', content_mime_type: 'text/csv' }, expect: ['drive.files.create'] },
+    { args: { name: 'logo.png', base64_content: 'iVBORw0KGgo=', content_mime_type: 'image/png' }, expect: ['drive.files.create'] },
+    { args: { name: 'notes.txt', local_path: SMALL_FILE }, expect: ['drive.files.create'] },
+  ],
+  sheets_get_values: [{ args: { spreadsheet_id: 'sheet-1', range: 'Sheet1!A1:C3', value_render: 'formula' }, expect: ['sheets.spreadsheets.values.get'] }],
+  sheets_write_values: [
+    { args: { spreadsheet_id: 'sheet-1', range: 'Sheet1!A1', values: [['a', 1, true, null]], value_input: 'data' }, expect: ['sheets.spreadsheets.values.update'] },
+    { args: { spreadsheet_id: 'sheet-1', range: "'My sheet'!C1:C2", values: [['=A1+B1'], ['=A2+B2']], value_input: 'formulas' }, expect: ['sheets.spreadsheets.values.update'] },
+  ],
+  sheets_insert_rows: [{ args: { spreadsheet_id: 'sheet-1', sheet_id: 0, start_index: 2, end_index: 5, dimension: 'ROWS', inherit_from_before: true }, expect: ['sheets.spreadsheets.batchUpdate'] }],
   drive_create_folder: [{ args: { name: 'Reports', parent_id: 'folder-1' }, expect: ['drive.files.create'] }],
   drive_create_text_file: [{ args: { name: 'notes.txt', content: 'Hello', mime_type: 'text/plain', parent_id: 'folder-1' }, expect: ['drive.files.create'] }],
   drive_trash_file: [{ args: { file_id: 'file-1' }, preview: true, expect: ['drive.files.get', 'drive.files.update'] }],
@@ -536,7 +615,7 @@ test('every curated tool has a contract row, a skip reason or a known defect, an
   const listed = new Set([...Object.keys(CASES), ...Object.keys(SKIPPED), ...Object.keys(KNOWN_DEFECTS)]);
   assert.deepEqual([...tools.keys()].filter((name) => !listed.has(name)), [], 'curated tools without a row');
   assert.deepEqual([...listed].filter((name) => !tools.has(name)), [], 'rows for tools that do not exist');
-  assert.equal(tools.size, 82, 'the curated tool count; update the table when it changes');
+  assert.equal(tools.size, 90, 'the curated tool count; update the table when it changes');
 });
 
 for (const [name, cases] of Object.entries(CASES)) {

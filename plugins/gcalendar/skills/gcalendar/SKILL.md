@@ -1,13 +1,13 @@
 ---
 name: gcalendar
-description: Google Calendar calendars, events and calendar settings. Served by the gcalendar MCP server with 55 tools. Use for requests about these Google APIs.
+description: Google Calendar calendars, events and calendar settings. Served by the gcalendar MCP server with 57 tools. Use for requests about these Google APIs.
 ---
 
 # Google Calendar
 
 Google Calendar calendars, events and calendar settings.
 
-The `gcalendar` MCP server exposes 55 tools. Per-method tools cover the Discovery APIs listed below.
+The `gcalendar` MCP server exposes 57 tools. Per-method tools cover the Discovery APIs listed below.
 
 ## Log in
 
