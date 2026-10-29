@@ -12,6 +12,7 @@ import { existsSync, readFileSync, statSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import type { AuthGroup, Registry, ScopePolicy, ServerSpec } from '../core/registry.js';
 import type { InstallRoots } from './paths.js';
+import { LISTED_TOOLSETS, type ServerToolsets } from '../core/toolset.js';
 
 /** One line per auth group, shown in help-like output and kept in the converted registry. */
 export const GROUP_TEXT: Record<string, string> = {
@@ -62,10 +63,27 @@ export function registryFromProducts(raw: unknown, dataRoot: string): Registry {
       apis: generated,
       // The product's scope rules (checked by scripts/gen-servers.mjs). Only a product that has them gets the key.
       ...(typeof policy === 'object' && policy !== null && !Array.isArray(policy) ? { scopePolicy: policy as ScopePolicy } : {}),
+      // The product's listed toolsets, as tool names (scripts/gen-servers.mjs writes the same into config/servers.json).
+      ...toolsetsField(value.toolsets),
       label,
     });
   }
   return { dataRoot, plugins, groups: GROUP_TEXT as Registry['groups'], servers };
+}
+
+/**
+ * The toolsets field of a server entry from a product's "toolsets": per listed toolset, its tool names (the "tools" list
+ * of { tools, matches, notes }). Empty when the product lists none. Checked by scripts/gen-servers.mjs.
+ */
+function toolsetsField(value: unknown): { toolsets?: ServerToolsets } {
+  if (typeof value !== 'object' || value === null || Array.isArray(value)) return {};
+  const out: ServerToolsets = {};
+  for (const name of LISTED_TOOLSETS) {
+    const entry = (value as Record<string, unknown>)[name];
+    const tools = Array.isArray(entry) ? entry : (entry as { tools?: unknown } | undefined)?.tools;
+    if (Array.isArray(tools)) out[name] = tools.filter((t): t is string => typeof t === 'string');
+  }
+  return Object.keys(out).length > 0 ? { toolsets: out } : {};
 }
 
 /** The API entries in a JSON list. Entries without a string api and version are dropped. */

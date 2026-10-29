@@ -2,6 +2,22 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.3.0 - 2026-10-29
+
+### New: the `toolset` option
+- Every plugin has a new option, **Toolset** (`toolset`, environment variable `GSM_TOOLSET`): `all` (the default), `google` or `curated`. It decides which tools a server lists.
+- `all` lists every tool, as before. With the option unset or `all`, every server lists the same tools with the same schemas as 1.2.0.
+- `google` lists the tools that match Google's official MCP server for the product. Gmail is the only product with this list so far: `gmail_search`, `gmail_users_threads_list`, `gmail_users_threads_get`, `gmail_get_message`, `gmail_list_drafts`, `gmail_create_draft`, `gmail_send_draft`, `gmail_list_labels`, `gmail_users_labels_create`, `gmail_users_threads_modify` and `gmail_users_messages_modify`. `config/products.json` names the official tool each one matches. Other products list all their tools, and `health` and `auth_status` say "toolset google is not defined for this product yet; showing all tools".
+- `curated` lists the hand-written tools and the gateway tools (`api_search`, `api_describe`, `api_call`). A product with neither lists all its tools, and says so.
+- The sign-in tools, the account tools and `health` are listed in every toolset.
+- `health` reports the toolset and how many tools are outside it, when a toolset other than `all` is set.
+- An unknown value means `all`, with one line on stderr.
+
+### Not changed
+- The hook's tool map (`tool-map.json`) still lists every tool, so a tool outside the toolset is still classified. Tool kinds, the write gate and the scope check are the same.
+- What a login asks Google for. Login scopes do not follow the toolset yet.
+- Codex, OpenCode and Antigravity: set `GSM_TOOLSET` in the server environment by hand for now. `gsm install` does not write it yet.
+
 ## 1.2.0 - 2026-10-29
 
 ### Changed: what a Gmail login asks Google for

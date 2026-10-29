@@ -3,6 +3,7 @@ import { readSecretText } from './secret-files.js';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
 import { DEFAULT_CONFIRMATION, isConfirmationMode, type ConfirmationMode } from './policy.js';
+import { readToolset, type Toolset } from './toolset.js';
 
 /**
  * Runtime settings, read from environment variables. The plugin manifest and
@@ -32,6 +33,11 @@ export interface RuntimeConfig {
   hookActive: boolean;
   /** API key for the apikey group: GSM_API_KEY, else the apiKey field of <tokenDir>/apikey.json. Never logged. */
   apiKey?: string;
+  /**
+   * Which tools the server registers, from GSM_TOOLSET: all (default), google or curated (see toolset.ts). An unknown
+   * value gives all, with one line on stderr.
+   */
+  toolset: Toolset;
 }
 
 function readConfirmation(value: string | undefined): { mode: ConfirmationMode; fromEnv: boolean } {
@@ -94,5 +100,6 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): RuntimeConfig 
     confirmationFromEnv: confirmation.fromEnv,
     hookActive: env.GSM_HOOK_ACTIVE === '1',
     apiKey: env.GSM_API_KEY?.trim() || readApiKeyFile(tokenDir),
+    toolset: readToolset(env.GSM_TOOLSET),
   };
 }

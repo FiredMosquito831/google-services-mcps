@@ -204,7 +204,7 @@ For Claude Code, the marketplace is declared in the same scope as the plugin. A 
 
 ### Plugin options (Claude Code)
 
-The Claude Code plugin has three options: `allow_writes`, `confirmation` and `token_dir`. `--allow-writes` and `--confirmation` set the first two. Options that are not given keep their values. To see them, run `claude plugin configure gmail@google-services-mcps`. To change one later, pipe JSON to `claude plugin configure gmail@google-services-mcps --values-stdin` (the values are strings, for example `{"confirmation":"destructive-only"}`), or use `/plugin configure` in Claude Code.
+The Claude Code plugin has four options: `allow_writes`, `confirmation`, `toolset` and `token_dir`. `--allow-writes` and `--confirmation` set the first two. `toolset` picks which tools a server lists: `all` (the default, every tool), `google` (the tools that match Google's official MCP server; defined for Gmail so far, all tools elsewhere) or `curated` (the hand-written tools and the gateway tools). Options that are not given keep their values. To see them, run `claude plugin configure gmail@google-services-mcps`. To change one later, pipe JSON to `claude plugin configure gmail@google-services-mcps --values-stdin` (the values are strings, for example `{"confirmation":"destructive-only"}`), or use `/plugin configure` in Claude Code.
 
 ### The one-line installers
 

@@ -177,12 +177,13 @@ npx google-services-mcps doctor --plugin gmail
 - In Claude Code, run `/mcp`. The `gmail` server should show as connected. **UNVERIFIED** in a live session.
 - `npx google-services-mcps list` shows the install and where it is. `npx google-services-mcps doctor` checks the plugin files. Its output is in section 11.
 
-**Plugin options.** Each plugin has options. Install prints `3 userConfig options not yet set` (checked). The options and their defaults:
+**Plugin options.** Each plugin has options. Install prints `4 userConfig options not yet set` (checked). The options and their defaults:
 
 | Option | Default | What it does |
 |---|---|---|
 | **Allow write tools** (`allow_writes`) | Off | Lists the tools that change or delete data. Off means only reads are listed. |
 | **Confirm before changes** (`confirmation`) | `every-change` | When to ask: `every-change`, `destructive-only` or `off`. Section 9. |
+| **Toolset** (`toolset`) | `all` | Which tools the server lists: `all` (every tool), `google` (the tools that match Google's official MCP server; defined for Gmail so far, all tools elsewhere) or `curated` (the hand-written tools and the gateway tools). |
 | **Token directory** (`token_dir`) | Empty | Where logins are kept. Empty means `~/.google-services-mcps`. |
 
 `gadmin` also has **Workspace super admin email** (`admin_subject`) and **Service account key file** (`service_account_key_file`). `gads` has an optional **Google Ads developer token** (`ads_developer_token`) and **Manager (login) customer ID** (`ads_login_customer_id`). See [SETUP.md](SETUP.md).

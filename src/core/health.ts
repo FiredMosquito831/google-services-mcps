@@ -155,6 +155,11 @@ export interface ServerHealthInput {
   hidden: number;
   writesAllowed: boolean;
   live: boolean;
+  /**
+   * The toolset in use (GSM_TOOLSET), with the number of tools outside it. Only given when a toolset other than all was
+   * asked for, so the report of a server on the default toolset has no such field.
+   */
+  toolset?: Record<string, unknown>;
 }
 
 /** The report of one server. The JSON it returns is what the health tool and `gsm health --json` show. */
@@ -165,6 +170,7 @@ export async function serverHealth(input: ServerHealthInput): Promise<Record<str
     version: input.version,
     group: input.group ?? null,
     tools: { registered: input.registered, hidden: input.hidden, writesAllowed: input.writesAllowed },
+    ...(input.toolset !== undefined ? { toolset: input.toolset } : {}),
     login,
   };
   if (input.live && input.group) {

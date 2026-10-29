@@ -11,6 +11,7 @@ import { classifyMethod } from './discovery/methods.js';
 import { loadToolKinds } from './discovery/tools.js';
 import { catalogPath } from './gateway.js';
 import type { ToolKind } from './tools.js';
+import type { ServerToolsets } from './toolset.js';
 
 /**
  * One auth group per token file, or 'apikey' for products that take an API key
@@ -42,6 +43,11 @@ export interface ServerSpec {
   scopes?: string[];
   /** How a login of this product picks its scopes, when the product needs a rule beyond the profiles (see ScopePolicy). */
   scopePolicy?: ScopePolicy;
+  /**
+   * The toolsets this product lists by name (config/products.json toolsets): tool names per toolset, such as
+   * { google: [...] }. Absent for a product that lists none. all and curated are never listed (see core/toolset.ts).
+   */
+  toolsets?: ServerToolsets;
   label: string;
 }
 

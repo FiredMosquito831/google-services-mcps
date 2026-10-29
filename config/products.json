@@ -1373,6 +1373,65 @@
           ]
         }
       },
+      "toolsets": {
+        "google": {
+          "source": "https://developers.google.com/workspace/gmail/api/reference/mcp/tools_list",
+          "tools": [
+            "gmail_search",
+            "gmail_users_threads_list",
+            "gmail_users_threads_get",
+            "gmail_get_message",
+            "gmail_list_drafts",
+            "gmail_create_draft",
+            "gmail_send_draft",
+            "gmail_list_labels",
+            "gmail_users_labels_create",
+            "gmail_users_threads_modify",
+            "gmail_users_messages_modify"
+          ],
+          "matches": {
+            "gmail_search": [
+              "search_threads"
+            ],
+            "gmail_users_threads_list": [
+              "search_threads"
+            ],
+            "gmail_users_threads_get": [
+              "get_thread"
+            ],
+            "gmail_get_message": [
+              "get_message"
+            ],
+            "gmail_list_drafts": [
+              "list_drafts"
+            ],
+            "gmail_create_draft": [
+              "create_draft"
+            ],
+            "gmail_send_draft": [],
+            "gmail_list_labels": [
+              "list_labels"
+            ],
+            "gmail_users_labels_create": [
+              "create_label"
+            ],
+            "gmail_users_threads_modify": [
+              "label_thread",
+              "unlabel_thread"
+            ],
+            "gmail_users_messages_modify": [
+              "label_message",
+              "unlabel_message"
+            ]
+          },
+          "notes": {
+            "gmail_search": "Searches messages; Google's search_threads returns threads. gmail_users_threads_list gives the thread-level list.",
+            "gmail_send_draft": "Google's Gmail server has no send tool. Kept so a draft made with gmail_create_draft can be sent; it is destructive, so it asks first.",
+            "gmail_users_threads_modify": "One tool adds and removes labels (label_thread and unlabel_thread in Google's server).",
+            "gmail_users_messages_modify": "One tool adds and removes labels (label_message and unlabel_message in Google's server)."
+          }
+        }
+      },
       "generatedToolCount": 87
     },
     "gcalendar": {

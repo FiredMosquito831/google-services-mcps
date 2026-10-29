@@ -106,6 +106,51 @@ function scopePolicyOf(policy, id, apiNames) {
   return policy;
 }
 
+/** Toolsets a product may list by name (LISTED_TOOLSETS in src/core/toolset.ts). all and curated are implicit. */
+const LISTED_TOOLSETS = ['google'];
+const IMPLICIT_TOOLSETS = ['all', 'curated'];
+const TOOL_NAME_PATTERN = /^[a-z0-9_]+$/;
+
+/**
+ * A product's toolsets: per listed toolset, { tools, matches, notes?, source? }. tools are the tool names the toolset keeps
+ * (a test checks each exists in the plugin's tool map). matches names, per tool, the official Google tools it stands for;
+ * an empty list needs a note that says why the tool is kept. Returns { google: [names] } for config/servers.json, or
+ * undefined when the product lists none.
+ */
+function toolsetsOf(value, id) {
+  if (value === undefined) return undefined;
+  const where = `product ${id} toolsets`;
+  if (typeof value !== 'object' || value === null || Array.isArray(value)) fail(`${where} must be an object`);
+  const out = {};
+  for (const [name, entry] of Object.entries(value)) {
+    if (IMPLICIT_TOOLSETS.includes(name)) fail(`${where}: "${name}" is implicit and cannot be listed (${name === 'all' ? 'every tool' : 'derived from the tool origins'})`);
+    if (!LISTED_TOOLSETS.includes(name)) fail(`${where}: unknown toolset "${name}" (listed toolsets: ${LISTED_TOOLSETS.join(', ')})`);
+    const at = `${where}.${name}`;
+    if (typeof entry !== 'object' || entry === null || Array.isArray(entry)) fail(`${at} must be an object with tools and matches`);
+    for (const key of Object.keys(entry)) if (!['tools', 'matches', 'notes', 'source'].includes(key)) fail(`${at} has an unknown key "${key}"`);
+    const tools = entry.tools;
+    if (!Array.isArray(tools) || tools.length === 0 || !tools.every((t) => typeof t === 'string' && TOOL_NAME_PATTERN.test(t))) {
+      fail(`${at}.tools must be a non-empty list of tool names`);
+    }
+    if (new Set(tools).size !== tools.length) fail(`${at}.tools lists a tool twice`);
+    const matches = entry.matches ?? {};
+    const notes = entry.notes ?? {};
+    if (typeof matches !== 'object' || Array.isArray(matches)) fail(`${at}.matches must be an object`);
+    if (typeof notes !== 'object' || Array.isArray(notes)) fail(`${at}.notes must be an object`);
+    for (const key of [...Object.keys(matches), ...Object.keys(notes)]) {
+      if (!tools.includes(key)) fail(`${at}: "${key}" has a match or a note but is not in tools`);
+    }
+    for (const tool of tools) {
+      const m = matches[tool];
+      if (!Array.isArray(m) || !m.every((x) => typeof x === 'string' && x !== '')) fail(`${at}.matches["${tool}"] must list the official tools it matches`);
+      if (m.length === 0 && (typeof notes[tool] !== 'string' || notes[tool] === '')) fail(`${at}: "${tool}" matches no official tool, so it needs a note`);
+    }
+    if (entry.source !== undefined && (typeof entry.source !== 'string' || !entry.source.startsWith('https://'))) fail(`${at}.source must be a URL`);
+    out[name] = [...tools];
+  }
+  return Object.keys(out).length > 0 ? out : undefined;
+}
+
 function kindOf(curated, apis) {
   if (curated && apis.length) return 'curated+discovery';
   if (curated) return 'curated';
@@ -156,6 +201,9 @@ function main() {
     // Only a product with a scope policy gets the key, so the entries of the others stay as they were.
     const policy = scopePolicyOf(p.scopePolicy, id, new Set([...apis, ...gatewayApis].map((a) => a.api)));
     if (policy) server.scopePolicy = policy;
+    // Only a product that lists a toolset gets the key, so the entries of the others stay as they were.
+    const toolsets = toolsetsOf(p.toolsets, id);
+    if (toolsets) server.toolsets = toolsets;
     server.label = `${p.title}: ${p.description}`;
     servers.push(server);
   }

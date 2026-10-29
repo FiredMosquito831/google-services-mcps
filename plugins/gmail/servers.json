@@ -46,6 +46,21 @@
           ]
         }
       },
+      "toolsets": {
+        "google": [
+          "gmail_search",
+          "gmail_users_threads_list",
+          "gmail_users_threads_get",
+          "gmail_get_message",
+          "gmail_list_drafts",
+          "gmail_create_draft",
+          "gmail_send_draft",
+          "gmail_list_labels",
+          "gmail_users_labels_create",
+          "gmail_users_threads_modify",
+          "gmail_users_messages_modify"
+        ]
+      },
       "scopes": [
         "https://mail.google.com/",
         "https://www.googleapis.com/auth/gmail.compose",
