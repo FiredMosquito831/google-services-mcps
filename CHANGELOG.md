@@ -2,6 +2,11 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.1.1 - 2026-10-29
+
+### Fixes
+- `ads_search` (gads) no longer sends `pageSize`. Google's v26 reference says the API answers `PAGE_SIZE_NOT_SUPPORTED` when the field is set, and the tool always set it, so its calls would fail (found in the reference, not reproduced against a live account). Google sets the page size itself. The `page_size` input is removed; a caller that still passes it gets the same request, because unknown inputs are dropped. The tool still returns one page, at most 500 rows.
+
 ## 1.1.0 - 2026-10-18
 
 ### Project readiness (gcloud server)

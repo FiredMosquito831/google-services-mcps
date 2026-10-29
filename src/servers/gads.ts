@@ -37,8 +37,6 @@ const ADS_SCOPES = googleScopes('adwords');
 /** The Discovery method id of googleAds:mutate (defined in core/dynamic.ts, where the hook can read it too). */
 export { GOOGLE_ADS_MUTATE_METHOD };
 
-const SEARCH_DEFAULT_PAGE = 1000;
-const SEARCH_MAX_PAGE = 10_000;
 const SEARCH_MAX_QUERY = 10_000;
 const SEARCH_ROW_CAP = 500;
 
@@ -168,13 +166,6 @@ const searchShape = {
     .string()
     .max(SEARCH_MAX_QUERY)
     .describe('A GAQL query that starts with SELECT, for example "SELECT campaign.id, campaign.name FROM campaign". At most 10000 characters.'),
-  page_size: z
-    .number()
-    .int()
-    .min(1)
-    .max(SEARCH_MAX_PAGE)
-    .optional()
-    .describe(`Rows to ask Google for, 1 to ${SEARCH_MAX_PAGE}. Default ${SEARCH_DEFAULT_PAGE}. At most ${SEARCH_ROW_CAP} rows are returned.`),
 };
 
 const mutateShape = {
@@ -223,7 +214,8 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
         const res = await session.request<AdsSearchResponse>({
           method: 'POST',
           path: `customers/${input.customer_id}/googleAds:search`,
-          body: { query: input.query, pageSize: input.page_size ?? SEARCH_DEFAULT_PAGE },
+          // No pageSize: Google Ads (v26 Discovery) answers PAGE_SIZE_NOT_SUPPORTED when it is set. Google sets the page size.
+          body: { query: input.query },
         });
         const rows = res.results ?? [];
         const truncated = rows.length > SEARCH_ROW_CAP;
