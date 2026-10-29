@@ -8,6 +8,26 @@ Gmail mailboxes, messages, labels and settings, plus Gmail Postmaster Tools.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 106, google 20, curated 18 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+
+## Toolset google (11)
+
+The tools that match Google's official MCP server for this product (https://developers.google.com/workspace/gmail/api/reference/mcp/tools_list).
+
+| Tool | Google's tool | Note |
+|---|---|---|
+| `gmail_search` | `search_threads` | Searches messages; Google's search_threads returns threads. gmail_users_threads_list gives the thread-level list. |
+| `gmail_users_threads_list` | `search_threads` |  |
+| `gmail_users_threads_get` | `get_thread` |  |
+| `gmail_get_message` | `get_message` |  |
+| `gmail_list_drafts` | `list_drafts` |  |
+| `gmail_create_draft` | `create_draft` |  |
+| `gmail_send_draft` | (none) | Google's Gmail server has no send tool. Kept so a draft made with gmail_create_draft can be sent; it is destructive, so it asks first. |
+| `gmail_list_labels` | `list_labels` |  |
+| `gmail_users_labels_create` | `create_label` |  |
+| `gmail_users_threads_modify` | `label_thread`, `unlabel_thread` | One tool adds and removes labels (label_thread and unlabel_thread in Google's server). |
+| `gmail_users_messages_modify` | `label_message`, `unlabel_message` | One tool adds and removes labels (label_message and unlabel_message in Google's server). |
+
 ## Curated tools (15)
 
 | Tool | Safety | Method or purpose | Scopes |

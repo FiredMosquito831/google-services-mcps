@@ -1,7 +1,7 @@
 {
   "name": "gyoutube",
   "displayName": "YouTube and Blogger",
-  "version": "1.2.0",
+  "version": "1.5.0",
   "description": "YouTube Data, YouTube Analytics and YouTube Reporting APIs, plus Blogger.",
   "author": {
     "name": "FiredMosquito831"
@@ -29,6 +29,17 @@
         "off"
       ],
       "default": "every-change"
+    },
+    "toolset": {
+      "type": "string",
+      "title": "Toolset",
+      "description": "Which tools this server lists. all: every tool (the default). google: the tools that match Google's official MCP server for this product; where that list is not defined yet, all tools, and health says so. curated: the hand-written tools and the gateway tools (api_search, api_describe, api_call); where a product has neither, all tools. It takes effect when the server starts again.",
+      "options": [
+        "all",
+        "google",
+        "curated"
+      ],
+      "default": "all"
     },
     "token_dir": {
       "type": "string",

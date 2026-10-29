@@ -1,4 +1,5 @@
 /** Shared types and constants for the gsm installer and login CLI. */
+import type { Toolset } from '../core/toolset.js';
 
 export const AGENTS = ['claude', 'codex', 'opencode', 'agy'] as const;
 export type AgentId = (typeof AGENTS)[number];
@@ -79,6 +80,8 @@ export interface AdapterContext {
   plugins: string[];
   /** --confirmation, when given on install. Undefined means nothing is written, so the plugin default applies. */
   confirmation?: ConfirmationMode;
+  /** --toolset, when given on install. Undefined means nothing is written, so the server default (all) applies. */
+  toolset?: Toolset;
   /** Servers to write (used by the config-file adapters). */
   servers: readonly ServerRef[];
   /** Absolute path of the bundled .mjs file for a server. */

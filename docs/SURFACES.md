@@ -90,16 +90,17 @@ Commands:
 
 Usage:
   npx google-services-mcps install   --agent <claude|codex|opencode|agy|all> --plugin <id[,id...]|all> [--scope global|project|local]
-                         [--path <dir>] [--allow-writes] [--confirmation <every-change|destructive-only|off>] [--dry-run]
+                         [--path <dir>] [--allow-writes] [--confirmation <every-change|destructive-only|off>]
+                         [--toolset <all|google|curated>] [--dry-run]
   npx google-services-mcps uninstall --agent <claude|codex|opencode|agy|all> --plugin <id[,id...]|all> [--scope global|project|local]
                          [--path <dir>] [--dry-run]
   npx google-services-mcps uninstall --all [--dry-run] [--yes]
   npx google-services-mcps list [--json] [--home <dir>]
-  npx google-services-mcps login <group> [--profile readonly|readwrite|full] [--scopes <url,url>] [--servers <a,b>] [--client-secret <file>] [--no-browser] [--replace] [--account <email>] [--with <part,...>]
-  npx google-services-mcps scopes <group> [--profile readonly|readwrite|full] [--servers <a,b>] [--with <part,...>] [--json]
+  npx google-services-mcps login <group> [--profile readonly|readwrite|full] [--scopes <url,url>] [--servers <a,b>] [--client-secret <file>] [--no-browser] [--replace] [--account <email>] [--with <part,...>] [--toolset all|google|curated]
+  npx google-services-mcps scopes <group> [--profile readonly|readwrite|full] [--servers <a,b>] [--with <part,...>] [--toolset all|google|curated] [--json]
   npx google-services-mcps setup-client <path-to-client_secret.json> [--force]
   npx google-services-mcps setup-apikey [--force]
-  npx google-services-mcps setup-admin --subject <admin email> --key-file <service account JSON> [--profile readonly|readwrite|full] [--servers <a,b>] [--replace]
+  npx google-services-mcps setup-admin --subject <admin email> --key-file <service account JSON> [--profile readonly|readwrite|full] [--servers <a,b>] [--replace] [--toolset all|google|curated]
   npx google-services-mcps setup-service-account --key-file <service account JSON>   (gplay and gmerchant; --remove forgets the setup)
   npx google-services-mcps status [--check]
   npx google-services-mcps logout <group> [--account <email>] [--local-only | --revoke-all]
@@ -125,6 +126,9 @@ Install and uninstall:
   --allow-writes, --confirmation   Set GSM_ALLOW_WRITES and GSM_CONFIRMATION for codex, opencode and agy.
                 For claude they are the plugin options allow_writes and confirmation, passed to claude plugin install
                 as --config. Options that are not given keep their values (claude plugin configure shows them).
+  --toolset     all, google or curated: which tools each server lists. Only when given: GSM_TOOLSET for codex, opencode
+                and agy, and the plugin option toolset (--config toolset=<value>) for claude. Without it the servers list
+                every tool. agy: the install warns when a product can list more than 100 tools (a reported agy limit).
   --marketplace claude only: owner/repo, a URL or a path. Default: this checkout, else FiredMosquito831/google-services-mcps.
   --all         uninstall only: removes every install in the list. It prints the list, then asks; --yes skips the question.
   --keep-data   uninstall with claude: keeps the plugin data directory.
@@ -147,6 +151,9 @@ Flags:    --no-browser (login) prints the login URL only, and does not open the 
           account's stored scopes only (scopes no server of the group uses are left out). Without it, nothing is merged.
           --with (login, scopes): add an optional part of a product, left out of every profile otherwise. Gmail has
           postmaster (Gmail Postmaster Tools): --with postmaster. gsm scopes lists the optional parts of a group.
+          --toolset (login, scopes, setup-admin): all (default), google or curated. Only the tools of that toolset count
+          toward the scopes, and gateway methods count only when the toolset holds api_call. Default: GSM_TOOLSET, else
+          all. A product without the toolset counts every tool. With --account, the account's other scopes are kept.
           --json (scopes, products, apis, methods, list) prints JSON.
 API key:  setup-apikey reads GSM_API_KEY_INPUT or stdin. The key is never a command-line argument and is never printed.
 Backups:  an existing config file is copied to <file>.gsm-backup-<YYYYMMDD-HHMMSS> before it changes.

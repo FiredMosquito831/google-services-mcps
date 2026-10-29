@@ -8,6 +8,8 @@ Google Contacts and People, personal health metrics, Data Portability, and the O
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 72, google 72 (all), curated 12 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+
 ## Curated tools (9)
 
 | Tool | Safety | Method or purpose | Scopes |

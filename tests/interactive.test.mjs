@@ -196,8 +196,8 @@ function guidedEnv(answers, { home = fresh('home'), cwd = fresh('cwd'), clientSe
 
 describe('guided install: the answers become the command, previewed first', () => {
   test('asks each question, previews with --dry-run, and then runs the same command', async () => {
-    // agent 1 (claude), scope (empty: global), products (gmail), writes (empty: no), install now (y)
-    const g = guidedEnv(['1', '', 'gmail', '', 'y']);
+    // agent 1 (claude), scope (empty: global), products (gmail), writes (empty: no), toolset (empty: all), install now (y)
+    const g = guidedEnv(['1', '', 'gmail', '', '', 'y']);
     try {
       assert.equal(await guidedInstall(g.env), 0);
       assert.deepEqual(g.runs, [
@@ -212,8 +212,8 @@ describe('guided install: the answers become the command, previewed first', () =
 
   test('a flag that was given is not asked again, and writes and the path are passed on', async () => {
     const folder = fresh('project');
-    // Only the final confirmation is asked: the answer n means nothing is installed after the preview.
-    const g = guidedEnv(['n'], { cwd: folder });
+    // Only the toolset (empty: all) and the final confirmation are asked: n means nothing is installed after the preview.
+    const g = guidedEnv(['', 'n'], { cwd: folder });
     try {
       const code = await guidedInstall(g.env, {
         agent: 'codex',
@@ -233,8 +233,20 @@ describe('guided install: the answers become the command, previewed first', () =
     }
   });
 
+  test('the toolset question: all (the default) adds no flag, google adds --toolset google', async () => {
+    // agent 2 (codex), scope (empty), products (gmail), writes (empty: no), toolset 2 (google), install now (n)
+    const g = guidedEnv(['2', '', 'gmail', '', '2', 'n']);
+    try {
+      await guidedInstall(g.env);
+      assert.deepEqual(g.runs, [['install', '--agent', 'codex', '--plugin', 'gmail', '--scope', 'global', '--toolset', 'google', '--dry-run']]);
+      assert.match(g.text(), /Which tools should each server list\?/);
+    } finally {
+      g.close();
+    }
+  });
+
   test('agy is global only, so the scope is not asked', async () => {
-    const g = guidedEnv(['4', 'all', '', 'n']);
+    const g = guidedEnv(['4', 'all', '', '', 'n']);
     try {
       await guidedInstall(g.env);
       assert.equal(g.runs[0][g.runs[0].indexOf('--scope') + 1], 'global');
@@ -358,8 +370,9 @@ describe('guided sign-in and the other flows', () => {
       install: { display: 'npm install -g @anthropic-ai/claude-code', command: 'npm', args: ['install', '-g', '@anthropic-ai/claude-code'] },
       manual: 'npm install -g @anthropic-ai/claude-code',
     };
-    // agent 1 (claude), scope (empty: global), products (gmail), writes (empty: no), install the requirement (y), install now (y)
-    const g = guidedEnv(['1', '', 'gmail', '', 'y', 'y']);
+    // agent 1 (claude), scope (empty: global), products (gmail), writes (empty: no), toolset (empty: all),
+    // install the requirement (y), install now (y)
+    const g = guidedEnv(['1', '', 'gmail', '', '', 'y', 'y']);
     g.env.requirements = async () => [claudeMissing];
     try {
       assert.equal(await guidedInstall(g.env), 0);
@@ -379,8 +392,8 @@ describe('guided sign-in and the other flows', () => {
       install: null,
       manual: 'sudo apt-get install -y git',
     };
-    // agent 1 (claude), scope (empty), products (gmail), writes (empty: no)
-    const g = guidedEnv(['1', '', 'gmail', '']);
+    // agent 1 (claude), scope (empty), products (gmail), writes (empty: no), toolset (empty: all)
+    const g = guidedEnv(['1', '', 'gmail', '', '']);
     g.env.requirements = async () => [gitManual];
     try {
       assert.equal(await guidedInstall(g.env), 0);

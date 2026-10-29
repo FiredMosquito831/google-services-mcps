@@ -8,6 +8,8 @@ Google Workspace administration: Cloud Identity, Chrome management and policy, G
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 375, google 375 (all), curated 31 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+
 ## Curated tools (28)
 
 | Tool | Safety | Method or purpose | Scopes |

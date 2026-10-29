@@ -16,8 +16,8 @@
  *    from `agy mcp add --env`.
  *
  * Entries: mcpServers["gsm-<name>"] = { command: "node", args: ["<absolute .mjs>"], disabled: false }
- * (plus env with GSM_ALLOW_WRITES: "true" for --allow-writes and GSM_CONFIRMATION for --confirmation,
- * each only when its flag is given). Other keys are preserved.
+ * (plus env with GSM_ALLOW_WRITES: "true" for --allow-writes, GSM_CONFIRMATION for --confirmation and GSM_TOOLSET for
+ * --toolset, each only when its flag is given). Other keys are preserved.
  * Uninstall removes only the exact gsm- keys it installs. When that leaves "mcpServers" empty, the empty
  * object goes too (same rule as OpenCode).
  */
@@ -59,7 +59,7 @@ export async function install(ctx: AdapterContext): Promise<AdapterResult> {
   }
   const file = agyConfigPath(ctx.home);
   const set = new Map<string, unknown>();
-  const env = serverEnvironment(ctx.allowWrites, ctx.confirmation);
+  const env = serverEnvironment(ctx.allowWrites, ctx.confirmation, ctx.toolset);
   for (const server of ctx.servers) {
     set.set(`${SERVER_PREFIX}${server.name}`, agyEntry(ctx.serverFile(server), env));
   }
@@ -68,6 +68,7 @@ export async function install(ctx: AdapterContext): Promise<AdapterResult> {
   if (!folderExists) notes.push(`agy config folder not found (${dir}). A real install stops until agy has run once and created it.`);
   if (ctx.allowWrites) notes.push('GSM_ALLOW_WRITES=true is set: write tools are enabled for these servers.');
   if (ctx.confirmation !== undefined) notes.push(`GSM_CONFIRMATION=${ctx.confirmation} is set for these servers.`);
+  if (ctx.toolset !== undefined) notes.push(`GSM_TOOLSET=${ctx.toolset} is set for these servers.`);
   return {
     agent: 'agy',
     action: 'install',

@@ -14,9 +14,16 @@
  */
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+// The toolset counts use the installer's own rule (src/cli/toolset-count.ts), compiled by npm run build.
+const countModule = join(root, 'dist', 'cli', 'toolset-count.js');
+if (!existsSync(countModule)) {
+  console.error('dist/cli/toolset-count.js is missing. Run npm run build (or npx tsc -p tsconfig.json) first.');
+  process.exit(1);
+}
+const { toolsetCount, RUNTIME_TOOL_NAMES } = await import(pathToFileURL(countModule).href);
 const checkOnly = process.argv.includes('--check');
 /** Files whose content differs from what this run builds (--check). */
 const stale = [];
@@ -100,7 +107,24 @@ for (const [id, p] of Object.entries(products.products)) {
     generatedApis: (p.generated ?? []).map(apiLine),
     gatewayApis: (p.gateway ?? []).map(apiLine),
     unassigned: [],
+    // Tools per toolset, from the tool map and the toolset rule. effective is all when the product lacks the toolset.
+    toolsets: Object.fromEntries(
+      ['all', 'google', 'curated'].map((t) => [t, existsSync(mapFile) ? toolsetCount(mapFile, id, serverName, t, toolsetLists(p)) : undefined]),
+    ),
+    google: p.toolsets?.google,
   });
+}
+
+/** A product's listed toolsets as tool names (what scripts/gen-servers.mjs writes into config/servers.json). */
+function toolsetLists(product) {
+  const google = product.toolsets?.google?.tools;
+  return Array.isArray(google) ? { google } : undefined;
+}
+
+/** "106", or "106 (all)" when the product has no such toolset and falls back to all tools. */
+function toolsetCell(count, toolset) {
+  if (!count) return '?';
+  return count.effective === toolset ? String(count.count) : `${count.count} (all)`;
 }
 
 const totals = perProduct.reduce(
@@ -130,6 +154,24 @@ for (const p of perProduct) {
   lines.push('');
   lines.push('Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).');
   lines.push('');
+  const ts = p.toolsets;
+  lines.push(
+    `Toolsets (the plugin option \`toolset\`, \`GSM_TOOLSET\`): all ${toolsetCell(ts.all, 'all')}, google ${toolsetCell(ts.google, 'google')}, curated ${toolsetCell(ts.curated, 'curated')} tools, each with the ${RUNTIME_TOOL_NAMES.length} runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.`,
+  );
+  lines.push('');
+  if (p.google) {
+    lines.push(`## Toolset google (${p.google.tools.length})`);
+    lines.push('');
+    lines.push(`The tools that match Google's official MCP server for this product${p.google.source ? ` (${p.google.source})` : ''}.`);
+    lines.push('');
+    lines.push("| Tool | Google's tool | Note |");
+    lines.push('|---|---|---|');
+    for (const tool of p.google.tools) {
+      const matches = p.google.matches?.[tool] ?? [];
+      lines.push(`| \`${tool}\` | ${matches.length ? matches.map((m) => `\`${m}\``).join(', ') : '(none)'} | ${p.google.notes?.[tool] ?? ''} |`);
+    }
+    lines.push('');
+  }
   for (const group of ['curated', 'generated', 'gateway', 'list']) {
     const set = p.rows.filter((r) => r.group === group);
     if (!set.length) continue;
@@ -169,14 +211,20 @@ out.push(
 out.push('');
 out.push('Each product has a file under `docs/capabilities/` that lists every tool.');
 out.push('');
-out.push('| Product | What it covers | Server | Login | Tools (read / write / destructive / dynamic) | APIs (per-method / gateway) | Detail |');
-out.push('|---|---|---|---|---|---|---|');
+// The Toolsets column comes after APIs: scripts/gen-site.mjs reads the Tools and APIs columns next to each other.
+out.push('| Product | What it covers | Server | Login | Tools (read / write / destructive / dynamic) | APIs (per-method / gateway) | Toolsets (all / google / curated) | Detail |');
+out.push('|---|---|---|---|---|---|---|---|');
 for (const p of perProduct) {
   const c = p.counts;
+  const ts = p.toolsets;
   out.push(
-    `| \`${p.id}\` | ${p.title}: ${p.description} | \`${p.server}\` | ${LOGIN[p.group] ?? p.group} | ${c.total} (${c.read} / ${c.write} / ${c.destructive} / ${c.dynamic}) | ${p.generatedApis.length} / ${p.gatewayApis.length} | [${p.id}](capabilities/${p.id}.md) |`,
+    `| \`${p.id}\` | ${p.title}: ${p.description} | \`${p.server}\` | ${LOGIN[p.group] ?? p.group} | ${c.total} (${c.read} / ${c.write} / ${c.destructive} / ${c.dynamic}) | ${p.generatedApis.length} / ${p.gatewayApis.length} | ${toolsetCell(ts.all, 'all')} / ${toolsetCell(ts.google, 'google')} / ${toolsetCell(ts.curated, 'curated')} | [${p.id}](capabilities/${p.id}.md) |`,
   );
 }
+out.push('');
+out.push(
+  `Toolsets: the plugin option \`toolset\` (\`GSM_TOOLSET\`, \`gsm install --toolset\`) picks which tools a server lists. all is every tool (the default). google is the tools that match Google's official MCP server for the product. curated is the hand-written tools and the gateway tools. "(all)" means the product has no such toolset yet, so it lists every tool. Each count includes the ${RUNTIME_TOOL_NAMES.length} runtime tools of the tool map (health, sign-in and account tools); a server lists only those of its sign-in kind, and write tools only when writes are allowed. Antigravity is reported to refuse a server with more than 100 tools (not verified); \`gsm install --agent agy\` warns.`,
+);
 out.push('');
 out.push('## What the safety classes mean');
 out.push('');

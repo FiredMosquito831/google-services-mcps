@@ -15,6 +15,7 @@ import {
   parseSearch,
   parseServers,
   parseSetupAdminArgs,
+  parseToolset,
   parseUninstallAllArgs,
   parseWith,
 } from './args.js';
@@ -89,16 +90,17 @@ Commands:
 
 Usage:
   node gsm.mjs install   --agent <claude|codex|opencode|agy|all> --plugin <id[,id...]|all> [--scope global|project|local]
-                         [--path <dir>] [--allow-writes] [--confirmation <every-change|destructive-only|off>] [--dry-run]
+                         [--path <dir>] [--allow-writes] [--confirmation <every-change|destructive-only|off>]
+                         [--toolset <all|google|curated>] [--dry-run]
   node gsm.mjs uninstall --agent <claude|codex|opencode|agy|all> --plugin <id[,id...]|all> [--scope global|project|local]
                          [--path <dir>] [--dry-run]
   node gsm.mjs uninstall --all [--dry-run] [--yes]
   node gsm.mjs list [--json] [--home <dir>]
-  node gsm.mjs login <group> [--profile readonly|readwrite|full] [--scopes <url,url>] [--servers <a,b>] [--client-secret <file>] [--no-browser] [--replace] [--account <email>] [--with <part,...>]
-  node gsm.mjs scopes <group> [--profile readonly|readwrite|full] [--servers <a,b>] [--with <part,...>] [--json]
+  node gsm.mjs login <group> [--profile readonly|readwrite|full] [--scopes <url,url>] [--servers <a,b>] [--client-secret <file>] [--no-browser] [--replace] [--account <email>] [--with <part,...>] [--toolset all|google|curated]
+  node gsm.mjs scopes <group> [--profile readonly|readwrite|full] [--servers <a,b>] [--with <part,...>] [--toolset all|google|curated] [--json]
   node gsm.mjs setup-client <path-to-client_secret.json> [--force]
   node gsm.mjs setup-apikey [--force]
-  node gsm.mjs setup-admin --subject <admin email> --key-file <service account JSON> [--profile readonly|readwrite|full] [--servers <a,b>] [--replace]
+  node gsm.mjs setup-admin --subject <admin email> --key-file <service account JSON> [--profile readonly|readwrite|full] [--servers <a,b>] [--replace] [--toolset all|google|curated]
   node gsm.mjs setup-service-account --key-file <service account JSON>   (gplay and gmerchant; --remove forgets the setup)
   node gsm.mjs status [--check]
   node gsm.mjs logout <group> [--account <email>] [--local-only | --revoke-all]
@@ -124,6 +126,9 @@ Install and uninstall:
   --allow-writes, --confirmation   Set GSM_ALLOW_WRITES and GSM_CONFIRMATION for codex, opencode and agy.
                 For claude they are the plugin options allow_writes and confirmation, passed to claude plugin install
                 as --config. Options that are not given keep their values (claude plugin configure shows them).
+  --toolset     all, google or curated: which tools each server lists. Only when given: GSM_TOOLSET for codex, opencode
+                and agy, and the plugin option toolset (--config toolset=<value>) for claude. Without it the servers list
+                every tool. agy: the install warns when a product can list more than 100 tools (a reported agy limit).
   --marketplace claude only: owner/repo, a URL or a path. Default: this checkout, else FiredMosquito831/google-services-mcps.
   --all         uninstall only: removes every install in the list. It prints the list, then asks; --yes skips the question.
   --keep-data   uninstall with claude: keeps the plugin data directory.
@@ -146,6 +151,9 @@ Flags:    --no-browser (login) prints the login URL only, and does not open the 
           account's stored scopes only (scopes no server of the group uses are left out). Without it, nothing is merged.
           --with (login, scopes): add an optional part of a product, left out of every profile otherwise. Gmail has
           postmaster (Gmail Postmaster Tools): --with postmaster. gsm scopes lists the optional parts of a group.
+          --toolset (login, scopes, setup-admin): all (default), google or curated. Only the tools of that toolset count
+          toward the scopes, and gateway methods count only when the toolset holds api_call. Default: GSM_TOOLSET, else
+          all. A product without the toolset counts every tool. With --account, the account's other scopes are kept.
           --json (scopes, products, apis, methods, list) prints JSON.
 API key:  setup-apikey reads GSM_API_KEY_INPUT or stdin. The key is never a command-line argument and is never printed.
 Backups:  an existing config file is copied to <file>.gsm-backup-<YYYYMMDD-HHMMSS> before it changes.
@@ -228,6 +236,7 @@ function prefillFrom(values: ParsedArgs['values']): InstallPrefill {
     path: path === undefined ? undefined : resolvePath(path),
     allowWrites: values['allow-writes'] === true ? true : undefined,
     confirmation: text(values.confirmation),
+    toolset: text(values.toolset),
   };
 }
 
@@ -317,8 +326,9 @@ async function dispatch(argv: readonly string[]): Promise<number> {
     case 'login': {
       // In a terminal, `login` with no group starts the guided sign-in (group, client file, profile, API key, admin).
       if (parsed.positionals.length === 0 && isInteractive()) return withPrompter((prompt) => guidedSignIn(guidedEnvFor(prompt, moduleUrl)));
-      const group = parseGroup(parsed.positionals, 'usage: node gsm.mjs login <group> [--profile readonly|readwrite|full] [--scopes <urls>] [--servers a,b] [--client-secret <file>] [--no-browser] [--replace] [--account <email>] [--with <part,...>]');
+      const group = parseGroup(parsed.positionals, 'usage: node gsm.mjs login <group> [--profile readonly|readwrite|full] [--scopes <urls>] [--servers a,b] [--client-secret <file>] [--no-browser] [--replace] [--account <email>] [--with <part,...>] [--toolset all|google|curated]');
       const choice = parseLoginScopes(parsed.values);
+      const toolset = parseToolset(parsed.values.toolset);
       const servers = parseServers(parsed.values);
       const clientSecretFile = typeof parsed.values['client-secret'] === 'string' ? parsed.values['client-secret'] : undefined;
       const noBrowser = parsed.values['no-browser'] === true;
@@ -336,6 +346,7 @@ async function dispatch(argv: readonly string[]): Promise<number> {
           replace,
           account,
           ...(withParts ? { with: withParts } : {}),
+          ...(toolset ? { toolset } : {}),
         },
         registryFor,
         out,
@@ -343,8 +354,9 @@ async function dispatch(argv: readonly string[]): Promise<number> {
     }
 
     case 'scopes': {
-      const group = parseGroup(parsed.positionals, 'usage: node gsm.mjs scopes <group> [--profile readonly|readwrite|full] [--servers a,b] [--with <part,...>] [--json]');
+      const group = parseGroup(parsed.positionals, 'usage: node gsm.mjs scopes <group> [--profile readonly|readwrite|full] [--servers a,b] [--with <part,...>] [--toolset all|google|curated] [--json]');
       const withParts = parseWith(parsed.values.with);
+      const toolset = parseToolset(parsed.values.toolset);
       return runScopes(
         {
           group,
@@ -352,6 +364,7 @@ async function dispatch(argv: readonly string[]): Promise<number> {
           profile: parseProfile(parsed.values.profile),
           json: parsed.values.json === true,
           ...(withParts ? { with: withParts } : {}),
+          ...(toolset ? { toolset } : {}),
         },
         registryFor(),
         out,
@@ -360,7 +373,7 @@ async function dispatch(argv: readonly string[]): Promise<number> {
 
     case 'setup-admin': {
       if (parsed.positionals.length !== 0) {
-        throw new UsageError('usage: node gsm.mjs setup-admin --subject <admin email> --key-file <service account JSON> [--profile readonly|readwrite|full] [--servers a,b] [--replace]');
+        throw new UsageError('usage: node gsm.mjs setup-admin --subject <admin email> --key-file <service account JSON> [--profile readonly|readwrite|full] [--servers a,b] [--replace] [--toolset all|google|curated]');
       }
       return runSetupAdmin(parseSetupAdminArgs(parsed.values), registryFor(), out);
     }

@@ -183,6 +183,7 @@ Each product is one MCP server. The agent starts it, and it gives the agent Goog
 | `--path <dir>` | the folder for `project` and `local`. It must exist | the current folder |
 | `--allow-writes` | allows the write tools (create, change, delete, send). Each change still asks, unless `--confirmation off` | off |
 | `--confirmation <mode>` | `every-change`, `destructive-only` or `off`: when gsm asks before a change | `every-change` |
+| `--toolset <set>` | `all`, `google` or `curated`: which tools each server lists (written only when given). For Antigravity the install warns when a product can list more than 100 tools | `all` |
 | `--install-missing` | installs the requirements gsm can install, then checks again | off |
 | `--dry-run` | prints every change and command, and writes nothing | off |
 | `--marketplace <src>` | Claude Code only: `owner/repo`, a URL or a folder for the marketplace | the clone folder if it is a git clone, else `FiredMosquito831/google-services-mcps` |
@@ -204,7 +205,7 @@ For Claude Code, the marketplace is declared in the same scope as the plugin. A 
 
 ### Plugin options (Claude Code)
 
-The Claude Code plugin has three options: `allow_writes`, `confirmation` and `token_dir`. `--allow-writes` and `--confirmation` set the first two. Options that are not given keep their values. To see them, run `claude plugin configure gmail@google-services-mcps`. To change one later, pipe JSON to `claude plugin configure gmail@google-services-mcps --values-stdin` (the values are strings, for example `{"confirmation":"destructive-only"}`), or use `/plugin configure` in Claude Code.
+The Claude Code plugin has four options: `allow_writes`, `confirmation`, `toolset` and `token_dir`. `--allow-writes` and `--confirmation` set the first two. `toolset` picks which tools a server lists: `all` (the default, every tool), `google` (the tools that match Google's official MCP server; defined for Gmail so far, all tools elsewhere) or `curated` (the hand-written tools and the gateway tools). Options that are not given keep their values. To see them, run `claude plugin configure gmail@google-services-mcps`. To change one later, pipe JSON to `claude plugin configure gmail@google-services-mcps --values-stdin` (the values are strings, for example `{"confirmation":"destructive-only"}`), or use `/plugin configure` in Claude Code.
 
 ### The one-line installers
 
@@ -284,6 +285,8 @@ A login merges with the scopes the same account already holds for its group, so 
 | `full` | `https://mail.google.com/` and `gmail.settings.basic`. Only `full` covers permanent delete (`messages.delete`, `messages.batchDelete`, `threads.delete`). |
 
 No profile asks for `gmail.settings.sharing`: Google allows its methods (delegates, forwarding addresses, send-as create and delete, auto-forwarding) only for a service account with domain-wide delegation. Gmail Postmaster Tools (bulk-sender statistics) is an optional part: add it with `--with postmaster` (in the chat: `auth_login` with `"with": ["postmaster"]`). The login, and `npx google-services-mcps scopes workspace-user --servers gmail`, list the tools a profile holds back (`Held back:`). An account that already holds `https://mail.google.com/` or the Postmaster scopes keeps them when you name it with `--account`. Use `--replace` to drop them.
+
+**Scopes follow the toolset.** A login counts only the tools of the server's toolset (the `toolset` option, `GSM_TOOLSET`, or `--toolset` for `login`, `scopes` and `setup-admin`). Gmail with `google`: `readonly` asks for `gmail.readonly`, `readwrite` for `gmail.modify`. Gateway methods count only when the toolset holds `api_call` (`curated` does, Gmail's `google` list does not). The sign-in from the chat uses the server's toolset. Naming the account with `--account` (in the chat: `auth_login` with `account`) keeps the scopes it holds for the other products of the group.
 
 ### Workspace admin (gadmin)
 
@@ -474,16 +477,17 @@ Commands:
 
 Usage:
   npx google-services-mcps install   --agent <claude|codex|opencode|agy|all> --plugin <id[,id...]|all> [--scope global|project|local]
-                         [--path <dir>] [--allow-writes] [--confirmation <every-change|destructive-only|off>] [--dry-run]
+                         [--path <dir>] [--allow-writes] [--confirmation <every-change|destructive-only|off>]
+                         [--toolset <all|google|curated>] [--dry-run]
   npx google-services-mcps uninstall --agent <claude|codex|opencode|agy|all> --plugin <id[,id...]|all> [--scope global|project|local]
                          [--path <dir>] [--dry-run]
   npx google-services-mcps uninstall --all [--dry-run] [--yes]
   npx google-services-mcps list [--json] [--home <dir>]
-  npx google-services-mcps login <group> [--profile readonly|readwrite|full] [--scopes <url,url>] [--servers <a,b>] [--client-secret <file>] [--no-browser] [--replace] [--account <email>] [--with <part,...>]
-  npx google-services-mcps scopes <group> [--profile readonly|readwrite|full] [--servers <a,b>] [--with <part,...>] [--json]
+  npx google-services-mcps login <group> [--profile readonly|readwrite|full] [--scopes <url,url>] [--servers <a,b>] [--client-secret <file>] [--no-browser] [--replace] [--account <email>] [--with <part,...>] [--toolset all|google|curated]
+  npx google-services-mcps scopes <group> [--profile readonly|readwrite|full] [--servers <a,b>] [--with <part,...>] [--toolset all|google|curated] [--json]
   npx google-services-mcps setup-client <path-to-client_secret.json> [--force]
   npx google-services-mcps setup-apikey [--force]
-  npx google-services-mcps setup-admin --subject <admin email> --key-file <service account JSON> [--profile readonly|readwrite|full] [--servers <a,b>] [--replace]
+  npx google-services-mcps setup-admin --subject <admin email> --key-file <service account JSON> [--profile readonly|readwrite|full] [--servers <a,b>] [--replace] [--toolset all|google|curated]
   npx google-services-mcps status
   npx google-services-mcps logout <group> [--account <email>] [--local-only | --revoke-all]
   npx google-services-mcps products [--json]
@@ -503,6 +507,9 @@ Install and uninstall:
   --dry-run     Prints every planned change and command, and writes nothing.
   --allow-writes, --confirmation   Set GSM_ALLOW_WRITES and GSM_CONFIRMATION for codex, opencode and agy.
                 For claude they are plugin options: the install prints the command that sets them.
+  --toolset     all, google or curated: which tools each server lists. Only when given: GSM_TOOLSET for codex, opencode
+                and agy, and the plugin option toolset (--config toolset=<value>) for claude. Without it the servers list
+                every tool. agy: the install warns when a product can list more than 100 tools (a reported agy limit).
   --marketplace claude only: owner/repo, a URL or a path. Default: this checkout, else FiredMosquito831/google-services-mcps.
   --all         uninstall only: removes every install in the list. It prints the list, then asks; --yes skips the question.
   --keep-data   uninstall with claude: keeps the plugin data directory.
@@ -525,6 +532,9 @@ Flags:    --no-browser (login) prints the login URL only, and does not open the 
           account's stored scopes only (scopes no server of the group uses are left out). Without it, nothing is merged.
           --with (login, scopes): add an optional part of a product, left out of every profile otherwise. Gmail has
           postmaster (Gmail Postmaster Tools): --with postmaster. gsm scopes lists the optional parts of a group.
+          --toolset (login, scopes, setup-admin): all (default), google or curated. Only the tools of that toolset count
+          toward the scopes, and gateway methods count only when the toolset holds api_call. Default: GSM_TOOLSET, else
+          all. A product without the toolset counts every tool. With --account, the account's other scopes are kept.
           --json (scopes, products, apis, methods, list) prints JSON.
 API key:  setup-apikey reads GSM_API_KEY_INPUT or stdin. The key is never a command-line argument and is never printed.
 Backups:  an existing config file is copied to <file>.gsm-backup-<YYYYMMDD-HHMMSS> before it changes.

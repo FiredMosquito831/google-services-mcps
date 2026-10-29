@@ -97,6 +97,7 @@ Run `npx google-services-mcps` with no arguments in a terminal (or `npx google-s
 | `--marketplace <path or owner/repo>` | Claude Code only. Where the marketplace comes from. Default: this checkout. |
 | `--allow-writes` | Codex, OpenCode and Antigravity: turns on write tools (`GSM_ALLOW_WRITES=true`). For Claude Code this flag is not applied. Use the plugin option instead (section 6.1). |
 | `--confirmation <every-change\|destructive-only\|off>` | Codex, OpenCode and Antigravity: sets `GSM_CONFIRMATION`. For Claude Code this flag is not applied. Use the plugin option instead. |
+| `--toolset <all\|google\|curated>` | Which tools each server lists. Codex, OpenCode and Antigravity: sets `GSM_TOOLSET`. Claude Code: sets the plugin option `toolset`. Only when given; without it every tool is listed. For Antigravity the install warns when a product can list more than 100 tools (a reported Antigravity limit, not verified). |
 | `--servers <a,b>` | Keeps only these servers from the chosen products. Each product has one server with the same name. |
 
 **Always run `--dry-run` first.** It shows what would change. Example output, trimmed, for Codex (checked):
@@ -177,12 +178,13 @@ npx google-services-mcps doctor --plugin gmail
 - In Claude Code, run `/mcp`. The `gmail` server should show as connected. **UNVERIFIED** in a live session.
 - `npx google-services-mcps list` shows the install and where it is. `npx google-services-mcps doctor` checks the plugin files. Its output is in section 11.
 
-**Plugin options.** Each plugin has options. Install prints `3 userConfig options not yet set` (checked). The options and their defaults:
+**Plugin options.** Each plugin has options. Install prints `4 userConfig options not yet set` (checked). The options and their defaults:
 
 | Option | Default | What it does |
 |---|---|---|
 | **Allow write tools** (`allow_writes`) | Off | Lists the tools that change or delete data. Off means only reads are listed. |
 | **Confirm before changes** (`confirmation`) | `every-change` | When to ask: `every-change`, `destructive-only` or `off`. Section 9. |
+| **Toolset** (`toolset`) | `all` | Which tools the server lists: `all` (every tool), `google` (the tools that match Google's official MCP server; defined for Gmail so far, all tools elsewhere) or `curated` (the hand-written tools and the gateway tools). |
 | **Token directory** (`token_dir`) | Empty | Where logins are kept. Empty means `~/.google-services-mcps`. |
 
 `gadmin` also has **Workspace super admin email** (`admin_subject`) and **Service account key file** (`service_account_key_file`). `gads` has an optional **Google Ads developer token** (`ads_developer_token`) and **Manager (login) customer ID** (`ads_login_customer_id`). See [SETUP.md](SETUP.md).
@@ -717,6 +719,7 @@ Run `npx google-services-mcps --help` for the full text. Each flag in each comma
 | `--servers <a,b>` | all servers of the products | Keeps only these servers. |
 | `--allow-writes` | off | Codex, OpenCode and Antigravity only. Sets `GSM_ALLOW_WRITES=true`. Not applied to Claude Code. |
 | `--confirmation every-change\|destructive-only\|off` | `every-change` | Codex, OpenCode and Antigravity only. Sets `GSM_CONFIRMATION`. Not applied to Claude Code. |
+| `--toolset all\|google\|curated` | `all` | Sets `GSM_TOOLSET` for Codex, OpenCode and Antigravity, and the plugin option `toolset` for Claude Code. Written only when given. |
 | `--marketplace <path or owner/repo>` | this checkout | Claude Code only. |
 | `--dry-run` | off | Prints the plan and writes nothing. |
 | `--home <dir>` | your user folder | Another home folder. Not for `claude`. |

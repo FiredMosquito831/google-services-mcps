@@ -9,6 +9,7 @@ import { adminScopeFileFor, readAdminScopeFile, saveAdminScopeFile } from '../co
 import { loadConfig, type RuntimeConfig } from '../core/config.js';
 import type { Registry } from '../core/registry.js';
 import { PROFILE_TEXT, requirementsFor, resolveScopes, type Profile } from '../core/scopes.js';
+import { TOOLSET_TEXT, type Toolset } from '../core/toolset.js';
 import { describeMerge, mergeScopes } from './merge.js';
 import { coverageOf, formatCoverage, selectGroupServers } from './scopes.js';
 import type { Output } from './report.js';
@@ -21,6 +22,8 @@ export interface SetupAdminRequest {
   servers?: string[];
   /** --replace: keep only the requested scopes and drop the stored ones. Default: merge with the stored scopes. */
   replace?: boolean;
+  /** --toolset: only the tools of this toolset count toward the scopes. Absent: GSM_TOOLSET, else all. */
+  toolset?: Toolset;
 }
 
 /** The scopes of the stored admin setup. An unreadable setup file is noted on stderr and counts as nothing stored. */
@@ -55,7 +58,9 @@ export async function runSetupAdmin(req: SetupAdminRequest, reg: Registry, out: 
 
   const cfg = loadConfig();
   const servers = selectGroupServers(reg, 'workspace-admin', req.servers);
-  const requirements = await requirementsFor(servers, cfg);
+  const toolset = req.toolset ?? cfg.toolset;
+  const requirements = await requirementsFor(servers, cfg, toolset !== 'all' ? { toolset } : {});
+  if (toolset !== 'all') out.log(`Toolset ${toolset}: only the tools of this toolset count toward the scopes (${TOOLSET_TEXT[toolset]}).`);
   const resolution = resolveScopes(requirements, req.profile);
   const replace = req.replace === true;
   const merge = mergeScopes({ requested: resolution.scopes, stored: storedAdminScopes(cfg, out), replace });

@@ -8,6 +8,8 @@ Google Calendar calendars, events and calendar settings.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 55, google 55 (all), curated 16 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+
 ## Curated tools (16)
 
 | Tool | Safety | Method or purpose | Scopes |

@@ -29,6 +29,7 @@ import { apiOfMethod, policyFields, resolveScopes, type Requirement } from './sc
 import { fileURLToPath } from 'node:url';
 import { loadRegistry, serverByName, type AuthGroup, type ScopePolicy } from './registry.js';
 import { invocation, invocationFor, setInvocation } from './invocation.js';
+import { selectToolset, type ServerToolsets, type ToolOrigin, type ToolsetSelection } from './toolset.js';
 
 /**
  * read        : safe, always registered and never gated.
@@ -79,6 +80,11 @@ export interface ToolDef<A extends ZodRawShape = ZodRawShape> {
   handler(args: z.infer<z.ZodObject<A>>, ctx: ToolContext): Promise<unknown>;
   /** Optional metadata: what a destructive action would do, for describe output. The gate does not use it. */
   preview?(args: z.infer<z.ZodObject<A>>): Promise<unknown> | unknown;
+  /**
+   * Where the tool comes from (curated module, Discovery document or gateway), set where a server's tools are assembled
+   * (withOrigin in toolset.ts). The curated toolset reads it. Never shown to the client.
+   */
+  origin?: ToolOrigin;
 }
 
 /** Wraps a tool definition as the model should see it: a typed schema and the same descriptions. */
@@ -162,6 +168,27 @@ function scopePolicyOf(serverName: string): ScopePolicy | undefined {
   }
 }
 
+/** The listed toolsets of a server, from the server map. Undefined when it lists none or the map cannot be read. */
+function toolsetsOf(serverName: string): ServerToolsets | undefined {
+  try {
+    return serverByName(loadRegistry(), serverName).toolsets;
+  } catch {
+    // groupOf reports an unreadable map already.
+    return undefined;
+  }
+}
+
+/** The toolset part of the health report: only when a toolset other than all was asked for, so the default report is unchanged. */
+function toolsetReport(selection: ToolsetSelection<unknown>): Record<string, unknown> | undefined {
+  if (selection.requested === 'all') return undefined;
+  return {
+    requested: selection.requested,
+    effective: selection.effective,
+    outsideToolset: selection.outside,
+    ...(selection.note !== undefined ? { note: selection.note } : {}),
+  };
+}
+
 /** The auth group of a server, from the server map. Undefined (no scope filtering) when the map cannot be read. */
 function groupOf(serverName: string): AuthGroup | undefined {
   try {
@@ -227,7 +254,12 @@ export async function runServer(opts: {
   }
 
   const server = new McpServer({ name: opts.name, version: opts.version });
-  const defined = await opts.buildTools(cfg);
+  // Every tool of the server, then the ones of the chosen toolset (GSM_TOOLSET). With all, `defined` is `built` itself.
+  // Everything below registers from `defined`; the tool map (dumpTools above) is built from every tool.
+  const built = await opts.buildTools(cfg);
+  const selection = selectToolset(built, cfg.toolset, cfg.toolset === 'all' ? undefined : toolsetsOf(opts.name));
+  const defined = selection.tools;
+  const toolsetNote = selection.note !== undefined ? ` Toolset: ${selection.note}.` : '';
 
   // The grant is read at registration, and again on each access to ctx, so a new login is seen without a restart.
   const group = groupOf(opts.name);
@@ -309,6 +341,7 @@ export async function runServer(opts: {
   const policy = scopePolicyOf(opts.name);
   const optionalParts = Object.keys(policy?.optional ?? {}).sort();
   // The scopes an ADC login for this server asks for: the scopes its tools need, resolved as the OAuth login resolves them.
+  // Only the tools of the toolset count (`defined`), as for the OAuth sign-in (--toolset in the child's argv).
   const adcScopesFor = (profile: SignInProfile, include: readonly string[]): string[] => {
     const requirements: Requirement[] = defined.map((tool) => ({
       tool: tool.name,
@@ -453,7 +486,7 @@ export async function runServer(opts: {
         const state = signedIn
           ? `Signed in for "${group}"${via}. ${loaded} tool(s) loaded now, ${registered.size} registered in total.`
           : `Not signed in for "${group}". ${registered.size} tool(s) registered in total.`;
-        return text(`${state} Accounts: ${accountNames(group as string, cfg)}. ${signIn.describe()}`);
+        return text(`${state} Accounts: ${accountNames(group as string, cfg)}. ${signIn.describe()}${toolsetNote}`);
       },
     );
   }
@@ -503,8 +536,8 @@ export async function runServer(opts: {
         const loaded = registered.size - before;
         return text(
           set
-            ? `Set up for "${group}" with a service account key (${loginSourceOf(group, cfg)}). ${loaded} tool(s) loaded now, ${registered.size} registered in total.`
-            : `Not set up for "${group}". Call auth_setup_service_account with the full path of the key file.`,
+            ? `Set up for "${group}" with a service account key (${loginSourceOf(group, cfg)}). ${loaded} tool(s) loaded now, ${registered.size} registered in total.${toolsetNote}`
+            : `Not set up for "${group}". Call auth_setup_service_account with the full path of the key file.${toolsetNote}`,
         );
       },
     );
@@ -596,6 +629,8 @@ export async function runServer(opts: {
       async (rawArgs: Record<string, unknown>): Promise<CallToolResult> => {
         const args = ['setup-admin', '--subject', String(rawArgs.subject), '--key-file', String(rawArgs.key_file), '--profile', 'readonly', '--servers', opts.name];
         if (rawArgs.replace === true) args.push('--replace');
+        // The server's toolset, as for auth_login. Absent for all, so the argv is the same as before.
+        if (cfg.toolset !== 'all') args.push(`--toolset=${cfg.toolset}`);
         const res = await runGsmCommand(cliFile, args);
         return text(res.code === 0 ? res.output : `Could not set up the admin account: ${res.output}`);
       },
@@ -622,6 +657,7 @@ export async function runServer(opts: {
         hidden: defined.length - registered.size,
         writesAllowed: cfg.allowWrites,
         live: rawArgs.live === true,
+        toolset: toolsetReport(selection),
       });
       return asJson(report, cfg.maxResultChars);
     },
@@ -635,6 +671,11 @@ export async function runServer(opts: {
     `[${opts.name}] ready, ${registered.size} tool(s) registered, writes ${cfg.allowWrites ? 'enabled' : 'disabled'}` +
       (needsLogin && !loggedIn() ? `, not signed in: call auth_login (or run ${invocation()} login ${group})` : '') +
       (hidden > 0 ? `, ${hidden} hidden (they need a login, or the stored grant lacks their scopes)` : '') +
+      (selection.requested !== 'all'
+        ? selection.note !== undefined
+          ? `, toolset ${selection.requested}: ${selection.note}`
+          : `, toolset ${selection.effective} (${selection.outside} tool(s) outside it)`
+        : '') +
       '\n',
   );
 }

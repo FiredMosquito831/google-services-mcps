@@ -20,6 +20,7 @@ import {
   type ScopeResolution,
 } from '../core/scopes.js';
 import type { ToolKind } from '../core/tools.js';
+import { TOOLSET_TEXT, type Toolset } from '../core/toolset.js';
 import type { CliGroup } from './args.js';
 import type { Output } from './report.js';
 import { UsageError } from './types.js';
@@ -203,6 +204,8 @@ export interface ScopesRequest {
   json: boolean;
   /** --with: optional parts of the products to include (a product's scopePolicy.optional). */
   with?: string[];
+  /** --toolset: only the tools of this toolset count. Absent: GSM_TOOLSET, else all. */
+  toolset?: Toolset;
 }
 
 /** The products (plugin ids) of a group's servers, each with its server names, in server-map order. */
@@ -239,10 +242,11 @@ export async function runScopes(req: ScopesRequest, reg: Registry, out: Output):
   const servers = selectGroupServers(reg, group, req.servers);
   const include = checkOptionalParts(reg, servers, req.with);
   const optionalParts = optionalPartsOf(servers.map((name) => serverByName(reg, name)));
+  const toolset = req.toolset ?? cfg.toolset;
   const requirements = await requirementsForSpecs(
     servers.map((name) => serverByName(reg, name)),
     cfg,
-    { warn: (line) => out.warn(line) },
+    { warn: (line) => out.warn(line), ...(toolset !== 'all' ? { toolset } : {}) },
   );
   const profiles = req.profile ? [req.profile] : [...PROFILES];
   const products = productsOf(reg, servers);
@@ -312,6 +316,8 @@ export async function runScopes(req: ScopesRequest, reg: Registry, out: Output):
           tools: toolTotal,
           gatewayMethods: gatewayTotal,
           ...(optionalParts.length > 0 ? { optionalParts, with: include } : {}),
+          // Only a toolset other than all adds the key, so the default output is unchanged.
+          ...(toolset !== 'all' ? { toolset } : {}),
           profiles: profilesOut,
         },
         null,
@@ -325,6 +331,7 @@ export async function runScopes(req: ScopesRequest, reg: Registry, out: Output):
   out.log(
     `Group ${group}: products ${products.map((p) => p.id).join(', ')} (servers ${servers.join(', ')}), ${toolTotal} tools${gatewayPart} in total`,
   );
+  if (toolset !== 'all') out.log(`Toolset ${toolset}: only the tools of this toolset are counted (${TOOLSET_TEXT[toolset]}).`);
   for (const r of results) {
     out.log('');
     out.log(`${r.profile}: ${PROFILE_TEXT[r.profile]}`);

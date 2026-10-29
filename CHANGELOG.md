@@ -2,6 +2,44 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.5.0 - 2026-10-29
+
+### New: the toolset in every agent
+- `gsm install --toolset all|google|curated`. For Codex, OpenCode and Antigravity it writes `GSM_TOOLSET` into each server's environment. For Claude Code it sets the plugin option `toolset` (`claude plugin install --config toolset=<value>`). Only when given: without the flag the config files are byte-for-byte what 1.4.0 writes.
+- The guided install asks which tools each server lists (default: every tool, which adds no flag).
+- `gsm status` (the security line) names the toolset when `GSM_TOOLSET` is set, and says when the value is unknown.
+- `gsm install --agent agy` warns for each product that can list more than 100 tools under the chosen toolset, with the counts of the other toolsets. Antigravity is reported to refuse a server with more tools ("enabled tools would exceed max limit of 100"). gsm did not confirm the limit: `agy mcp list` reads its config without starting the servers. It is a warning only; nothing is refused, and the default stays `all`.
+- `docs/CAPABILITIES.md` has a Toolsets column (all / google / curated tool counts), and each product's page lists its toolsets; Gmail's page lists the `google` tools with the Google tool each one matches.
+
+## 1.4.0 - 2026-10-29
+
+### New: login scopes follow the toolset
+- A login counts only the tools of the toolset: Gmail with `google` asks for `gmail.readonly` (`readonly`) or `gmail.modify` (`readwrite`), where `all` asks for `gmail.readonly`, or `gmail.modify` and `gmail.settings.basic`.
+- Gateway methods count only when the toolset holds `api_call`. `curated` does; Gmail's `google` list does not, so its login asks for no Postmaster scope even with `--with postmaster`.
+- `--toolset all|google|curated` for `gsm login`, `gsm scopes` and `gsm setup-admin`. Without it, `GSM_TOOLSET` applies, else `all`. An unknown value is a usage error. `gsm scopes --json` adds `"toolset"` when it is not `all`.
+- The sign-in from the chat (`auth_login`, `auth_setup_admin`) passes the server's toolset to the login (`--toolset`), and an ADC sign-in asks for the scopes of the toolset's tools.
+- A product without the toolset counts every tool, and the login says so.
+
+### Not changed
+- With no toolset, or `all`, every server's requirement list and the scopes of every profile are the same as 1.2.0.
+- A login that names its account (`--account`, or `account` in the chat) keeps the scopes that account holds for the other products of the group. A toolset never drops them.
+
+## 1.3.0 - 2026-10-29
+
+### New: the `toolset` option
+- Every plugin has a new option, **Toolset** (`toolset`, environment variable `GSM_TOOLSET`): `all` (the default), `google` or `curated`. It decides which tools a server lists.
+- `all` lists every tool, as before. With the option unset or `all`, every server lists the same tools with the same schemas as 1.2.0.
+- `google` lists the tools that match Google's official MCP server for the product. Gmail is the only product with this list so far: `gmail_search`, `gmail_users_threads_list`, `gmail_users_threads_get`, `gmail_get_message`, `gmail_list_drafts`, `gmail_create_draft`, `gmail_send_draft`, `gmail_list_labels`, `gmail_users_labels_create`, `gmail_users_threads_modify` and `gmail_users_messages_modify`. `config/products.json` names the official tool each one matches. Other products list all their tools, and `health` and `auth_status` say "toolset google is not defined for this product yet; showing all tools".
+- `curated` lists the hand-written tools and the gateway tools (`api_search`, `api_describe`, `api_call`). A product with neither lists all its tools, and says so.
+- The sign-in tools, the account tools and `health` are listed in every toolset.
+- `health` reports the toolset and how many tools are outside it, when a toolset other than `all` is set.
+- An unknown value means `all`, with one line on stderr.
+
+### Not changed
+- The hook's tool map (`tool-map.json`) still lists every tool, so a tool outside the toolset is still classified. Tool kinds, the write gate and the scope check are the same.
+- What a login asks Google for. Login scopes do not follow the toolset yet.
+- Codex, OpenCode and Antigravity: set `GSM_TOOLSET` in the server environment by hand for now. `gsm install` does not write it yet.
+
 ## 1.2.0 - 2026-10-29
 
 ### Changed: what a Gmail login asks Google for

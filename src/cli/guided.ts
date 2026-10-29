@@ -23,6 +23,8 @@ import type { Registry } from '../core/registry.js';
 import { invocation } from '../core/invocation.js';
 import type { Output } from './report.js';
 import { AGENTS, UsageError, type AgentId } from './types.js';
+import { isToolset, TOOLSETS } from '../core/toolset.js';
+import { AGY_TOOL_LIMIT } from './toolset-count.js';
 
 /**
  * The guided flows. Each one explains what it does, asks its questions, shows the exact command it is about to run, and
@@ -56,6 +58,7 @@ export interface InstallPrefill {
   path?: string;
   allowWrites?: boolean;
   confirmation?: string;
+  toolset?: string;
 }
 
 const AGENT_CHOICES: Choice<string>[] = [
@@ -76,6 +79,12 @@ const CONFIRM_CHOICES: Choice<string>[] = [
   { value: 'every-change', label: 'Before every change', hint: 'the default' },
   { value: 'destructive-only', label: 'Only before deleting or other destructive changes' },
   { value: 'off', label: 'Never ask', hint: 'policy rules still apply' },
+];
+
+const TOOLSET_CHOICES: Choice<string>[] = [
+  { value: 'all', label: 'Every tool', hint: 'the default' },
+  { value: 'google', label: "The tools that match Google's official MCP server", hint: 'defined for Gmail so far; other products list every tool' },
+  { value: 'curated', label: 'The hand-written tools and the gateway (api_search, api_describe, api_call)', hint: 'every tool for a product with neither' },
 ];
 
 const PROFILE_CHOICES: Choice<string>[] = [
@@ -260,6 +269,13 @@ export async function guidedInstall(env: GuidedEnv, prefill: InstallPrefill = {}
     prompt.say('  For Claude Code, the write and confirmation settings are passed to the plugin as its options (claude plugin install --config).');
   }
 
+  // The toolset: all (every tool, the default) unless the person picks another. all adds no flag, so nothing is written.
+  if (agent === 'agy' || agent === 'all') {
+    prompt.say(`  Antigravity is reported to refuse a server with more than ${AGY_TOOL_LIMIT} tools. The install warns when a product has more.`);
+  }
+  const toolset = prefill.toolset ?? (await prompt.choose('Which tools should each server list?', TOOLSET_CHOICES, 'all'));
+  if (!isToolset(toolset)) throw new UsageError(`--toolset must be one of: ${TOOLSETS.join(', ')}`);
+
   const agents = agentsOf(agent);
   const needGit = agents.includes('claude') && marketplaceNeedsGit(undefined, checkoutRootFor(env.roots));
   const requirements = await requirementsStep(env, agents, needGit);
@@ -272,6 +288,7 @@ export async function guidedInstall(env: GuidedEnv, prefill: InstallPrefill = {}
   if (path !== undefined) args.push('--path', path);
   if (allowWrites) args.push('--allow-writes');
   if (confirmation !== undefined) args.push('--confirmation', confirmation);
+  if (toolset !== 'all' || prefill.toolset !== undefined) args.push('--toolset', toolset);
   if (requirements.installMissing) args.push('--install-missing');
 
   showCommand(env, args);

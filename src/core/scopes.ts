@@ -12,7 +12,8 @@
 import type { RuntimeConfig } from './config.js';
 import { gatewayMethodsOf, loadRegistry, serverByName, type AuthGroup, type Registry, type ScopePolicy, type ServerSpec } from './registry.js';
 import { buildServerTools } from '../servers/index.js';
-import type { ToolKind } from './tools.js';
+import type { ToolDef, ToolKind } from './tools.js';
+import { GATEWAY_TOOL_NAMES, selectToolset, type Toolset } from './toolset.js';
 
 export const PROFILES = ['readonly', 'readwrite', 'full'] as const;
 export type Profile = (typeof PROFILES)[number];
@@ -253,6 +254,34 @@ export function serversOfGroup(reg: Registry, group: AuthGroup, only?: readonly 
 export interface RequirementOptions {
   /** Receives the notes about the gateway catalog: missing, or lacking an API. Default: stderr. */
   warn?: (line: string) => void;
+  /**
+   * The toolset the login is for (GSM_TOOLSET or --toolset). Only the tools of that toolset are requirements, and the
+   * gateway methods count only when the toolset holds api_call. Absent or all: every tool and gateway method, as before.
+   */
+  toolset?: Toolset;
+}
+
+/**
+ * The tool names of one server that a toolset keeps, from the same rule the server applies (selectToolset), with the
+ * server's gateway tools added when it has gateway APIs. Undefined for all, and for a toolset that falls back to all.
+ */
+function toolsetNames(spec: ServerSpec, tools: readonly ToolDef[], toolset: Toolset | undefined, warn: (line: string) => void): Set<string> | undefined {
+  if (toolset === undefined || toolset === 'all') return undefined;
+  const gateway = (spec.gatewayApis?.length ? GATEWAY_TOOL_NAMES : []).map((name): ToolDef => ({
+    name,
+    title: name,
+    description: '',
+    kind: 'read',
+    inputSchema: {},
+    handler: async () => undefined,
+    origin: 'gateway',
+  }));
+  const selection = selectToolset([...tools, ...gateway], toolset, spec.toolsets);
+  if (selection.note !== undefined) {
+    warn(`[${spec.name}] ${selection.note.replace(/; showing all tools$/, '')}; every tool counts toward the scopes.`);
+    return undefined;
+  }
+  return new Set(selection.tools.map((tool) => tool.name));
 }
 
 /**
@@ -288,7 +317,11 @@ export async function requirementsForSpecs(
   for (const spec of specs) {
     // The product's scope policy, when it has one, marks each requirement (policyFields). Without one nothing is added.
     const policy = spec.scopePolicy;
-    for (const tool of await buildServerTools(spec, cfg)) {
+    const tools = await buildServerTools(spec, cfg);
+    // The tools of the toolset, when one other than all is asked for. Undefined: every tool counts, as before toolsets.
+    const kept = toolsetNames(spec, tools, opts.toolset, warn);
+    for (const tool of tools) {
+      if (kept !== undefined && !kept.has(tool.name)) continue;
       out.push({
         tool: `${spec.name}/${tool.name}`,
         kind: tool.kind,
@@ -297,6 +330,8 @@ export async function requirementsForSpecs(
       });
     }
     if (!spec.gatewayApis?.length) continue;
+    // Gateway methods run through api_call. A toolset without it reaches none of them, so they ask for no scope.
+    if (kept !== undefined && !kept.has('api_call')) continue;
 
     const gateway = gatewayMethodsOf(spec.gatewayApis);
     if (!gateway.file) {

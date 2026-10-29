@@ -169,6 +169,9 @@ export function createSignIn(opts: SignInOptions): SignIn {
     if (account) args.push(`--account=${account}`);
     // The optional parts to add (--with). Absent when none are named, so the argv is the same as before.
     if (include.length > 0) args.push(`--with=${include.join(',')}`);
+    // The server's toolset, so the login asks for the scopes of the tools this server lists. The child also inherits
+    // GSM_TOOLSET; the flag says it explicitly. Absent for all, so the argv is the same as before.
+    if (opts.cfg.toolset !== 'all') args.push(`--toolset=${opts.cfg.toolset}`);
     // Tests set GSM_NO_BROWSER=1, so no browser opens. Normal use opens the browser on this machine.
     if (process.env.GSM_NO_BROWSER === '1') args.push('--no-browser');
     const proc = spawn(process.execPath, args, { env: process.env, stdio: ['ignore', 'pipe', 'pipe'] });
