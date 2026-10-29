@@ -10,7 +10,7 @@
  * profiles and the login summary cover it the same way the gateway checks it per call.
  */
 import type { RuntimeConfig } from './config.js';
-import { gatewayMethodsOf, loadRegistry, serverByName, type AuthGroup, type Registry, type ServerSpec } from './registry.js';
+import { gatewayMethodsOf, loadRegistry, serverByName, type AuthGroup, type Registry, type ScopePolicy, type ServerSpec } from './registry.js';
 import { buildServerTools } from '../servers/index.js';
 import type { ToolKind } from './tools.js';
 
@@ -32,6 +32,36 @@ export interface Requirement {
   kind: ToolKind;
   scopes: string[];
   gateway?: boolean;
+  /** The product's optional part this requirement belongs to (ScopePolicy.optional). It is a target only when named. */
+  optional?: string;
+  /** The product's ScopePolicy.onlyIn: a scope listed there is requested for this requirement only by those profiles. */
+  onlyIn?: Readonly<Record<string, readonly string[]>>;
+}
+
+/**
+ * The policy fields of one requirement: the optional part its API belongs to, and the profile limits of its product.
+ * `api` is the Discovery name of the method's API (the first part of a method id), or undefined for a curated tool.
+ * Empty for a product without a policy, so its requirements are the same as before policies existed.
+ */
+export function policyFields(policy: ScopePolicy | undefined, api: string | undefined): Pick<Requirement, 'optional' | 'onlyIn'> {
+  if (!policy) return {};
+  const optional = api === undefined ? undefined : Object.keys(policy.optional ?? {}).find((name) => policy.optional?.[name]?.includes(api));
+  return {
+    ...(optional !== undefined ? { optional } : {}),
+    ...(policy.onlyIn && Object.keys(policy.onlyIn).length > 0 ? { onlyIn: policy.onlyIn } : {}),
+  };
+}
+
+/** The API of a method id ("gmail.users.messages.list" gives "gmail"), or undefined when there is no method id. */
+export function apiOfMethod(methodId: string | undefined): string | undefined {
+  if (!methodId) return undefined;
+  const dot = methodId.indexOf('.');
+  return dot > 0 ? methodId.slice(0, dot) : undefined;
+}
+
+/** The names of the optional parts of some servers, sorted, each once. */
+export function optionalPartsOf(specs: readonly ServerSpec[]): string[] {
+  return [...new Set(specs.flatMap((s) => Object.keys(s.scopePolicy?.optional ?? {})))].sort();
 }
 
 export interface ScopeResolution {
@@ -95,18 +125,23 @@ function comparePreference(a: Candidate, b: Candidate, profile: Profile): number
  * read-only scopes: a read tool with no read-only scope in its list stays uncovered. The
  * other profiles target every tool. `covered` and `uncovered` are reported for every
  * requirement, so a readonly token shows its write tools as uncovered.
+ *
+ * A product's scope policy (policyFields) narrows the choice: a requirement of an optional part is a target only when
+ * `include` names the part, and a scope limited by onlyIn is not requested for that requirement by other profiles.
+ * Requirements without policy fields resolve exactly as they did before policies existed.
  */
-export function resolveScopes(requirements: readonly Requirement[], profile: Profile): ScopeResolution {
+export function resolveScopes(requirements: readonly Requirement[], profile: Profile, include: readonly string[] = []): ScopeResolution {
   const usable = (scope: string): boolean => profile !== 'readonly' || isReadonlyScope(scope);
-  const targets = requirements.filter((r) => profile !== 'readonly' || r.kind === 'read');
-  let open = targets.filter((r) => r.scopes.some(usable));
+  const usableFor = (r: Requirement, scope: string): boolean => usable(scope) && allowedByPolicy(r, scope, profile);
+  const targets = requirements.filter((r) => (profile !== 'readonly' || r.kind === 'read') && isIncluded(r, include));
+  let open = targets.filter((r) => r.scopes.some((scope) => usableFor(r, scope)));
   const chosen: string[] = [];
 
   while (open.length > 0) {
     const covers = new Map<string, number>();
     for (const r of open) {
       for (const scope of new Set(r.scopes)) {
-        if (usable(scope)) covers.set(scope, (covers.get(scope) ?? 0) + 1);
+        if (usableFor(r, scope)) covers.set(scope, (covers.get(scope) ?? 0) + 1);
       }
     }
     const best = [...covers]
@@ -123,6 +158,79 @@ export function resolveScopes(requirements: readonly Requirement[], profile: Pro
   const coveredSet = new Set(covered);
   const uncovered = requirements.map((r) => r.tool).filter((tool) => !coveredSet.has(tool)).sort();
   return { scopes, covered, uncovered };
+}
+
+/** True when the product's policy lets this profile request the scope for this requirement. */
+function allowedByPolicy(r: Requirement, scope: string, profile: Profile): boolean {
+  const only = r.onlyIn?.[scope];
+  return only === undefined || only.includes(profile);
+}
+
+/** True when the requirement is not part of an optional part, or its part is named. */
+function isIncluded(r: Requirement, include: readonly string[]): boolean {
+  return r.optional === undefined || include.includes(r.optional);
+}
+
+/** A list of held-back tools and the scopes that would cover them. Both sorted. */
+export interface HeldBackList {
+  tools: string[];
+  scopes: string[];
+}
+
+/** Tools a profile leaves out because of a product's scope policy, by reason. */
+export interface HeldBack {
+  /** Per optional part that was not named: its requirements the profile would otherwise target. */
+  optional: Record<string, HeldBackList>;
+  /** Per profile that would request a scope for them: tools held back for that profile ("full", say). */
+  needsProfile: Record<string, HeldBackList>;
+  /** Tools whose remaining scopes no profile requests (onlyIn lists none): reachable only with an exact --scopes list. */
+  noProfile: HeldBackList;
+}
+
+/**
+ * What a resolution leaves out on purpose: the target requirements that stay uncovered by `scopes` because of a scope
+ * policy (an optional part not named, or a scope this profile may not request). Requirements without policy fields
+ * never appear, so for a product without a policy every list is empty.
+ */
+export function heldBackBy(
+  requirements: readonly Requirement[],
+  profile: Profile,
+  include: readonly string[],
+  scopes: readonly string[],
+): HeldBack {
+  const covered = new Set(coveredTools(requirements, scopes));
+  const out: HeldBack = { optional: {}, needsProfile: {}, noProfile: { tools: [], scopes: [] } };
+  const add = (list: HeldBackList, tool: string, scopesOf: readonly string[]): void => {
+    list.tools.push(tool);
+    for (const scope of scopesOf) if (!list.scopes.includes(scope)) list.scopes.push(scope);
+  };
+  for (const r of requirements) {
+    if (covered.has(r.tool)) continue;
+    if (profile === 'readonly' && r.kind !== 'read') continue;
+    const profileMayUse = (scope: string): boolean => profile !== 'readonly' || isReadonlyScope(scope);
+    if (!isIncluded(r, include)) {
+      // Counted only when naming the part would let this profile cover it.
+      const usable = r.scopes.filter((scope) => profileMayUse(scope) && allowedByPolicy(r, scope, profile));
+      if (usable.length > 0) add((out.optional[r.optional as string] ??= { tools: [], scopes: [] }), r.tool, usable);
+      continue;
+    }
+    // Scopes this profile could use if the policy did not limit them.
+    const blocked = r.scopes.filter((scope) => profileMayUse(scope) && !allowedByPolicy(r, scope, profile));
+    if (blocked.length === 0) continue;
+    const next = PROFILES.find((p) => p !== profile && blocked.some((scope) => r.onlyIn?.[scope]?.includes(p)));
+    if (next === undefined) add(out.noProfile, r.tool, blocked);
+    else add((out.needsProfile[next] ??= { tools: [], scopes: [] }), r.tool, blocked.filter((s) => r.onlyIn?.[s]?.includes(next)));
+  }
+  for (const list of [...Object.values(out.optional), ...Object.values(out.needsProfile), out.noProfile]) {
+    list.tools.sort();
+    list.scopes.sort();
+  }
+  return out;
+}
+
+/** True when nothing is held back. */
+export function nothingHeldBack(h: HeldBack): boolean {
+  return Object.keys(h.optional).length === 0 && Object.keys(h.needsProfile).length === 0 && h.noProfile.tools.length === 0;
 }
 
 /**
@@ -178,8 +286,15 @@ export async function requirementsForSpecs(
   const out: Requirement[] = [];
   const withoutCatalog: string[] = [];
   for (const spec of specs) {
+    // The product's scope policy, when it has one, marks each requirement (policyFields). Without one nothing is added.
+    const policy = spec.scopePolicy;
     for (const tool of await buildServerTools(spec, cfg)) {
-      out.push({ tool: `${spec.name}/${tool.name}`, kind: tool.kind, scopes: [...(tool.scopes ?? [])] });
+      out.push({
+        tool: `${spec.name}/${tool.name}`,
+        kind: tool.kind,
+        scopes: [...(tool.scopes ?? [])],
+        ...policyFields(policy, apiOfMethod(tool.methodId)),
+      });
     }
     if (!spec.gatewayApis?.length) continue;
 
@@ -192,7 +307,7 @@ export async function requirementsForSpecs(
       warn(`[${spec.name}] not in the API catalog, so their methods are not counted: ${gateway.missingApis.join(', ')}`);
     }
     for (const m of gateway.methods) {
-      out.push({ tool: `${spec.name}/${m.id}`, kind: m.kind, scopes: [...m.scopes], gateway: true });
+      out.push({ tool: `${spec.name}/${m.id}`, kind: m.kind, scopes: [...m.scopes], gateway: true, ...policyFields(policy, apiOfMethod(m.id)) });
     }
   }
   if (withoutCatalog.length > 0) {

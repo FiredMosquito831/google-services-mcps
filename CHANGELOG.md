@@ -2,6 +2,25 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.2.0 - 2026-10-29
+
+### Changed: what a Gmail login asks Google for
+- `readonly` asks for `gmail.readonly` only (before: also `postmaster.readonly` and `postmaster.traffic.readonly`).
+- `readwrite` asks for `gmail.modify` and `gmail.settings.basic` (before: `https://mail.google.com/`, `gmail.settings.basic`, `gmail.settings.sharing`, `postmaster` and `postmaster.readonly`). `gmail.modify` covers search, read, send, drafts, labels and trash; `gmail.settings.basic` keeps the filter, vacation, IMAP and POP tools.
+- Only `full` asks for `https://mail.google.com/`. Permanent delete (`gmail_users_messages_delete`, `gmail_users_messages_batch_delete`, `gmail_users_threads_delete`) needs it, so these three tools need `--profile full` now.
+- No profile asks for `gmail.settings.sharing`. Google allows its methods (delegates, forwarding addresses, send-as create and delete, send-as verify, auto-forwarding) only for a service account with domain-wide delegation. An exact `--scopes` list can still ask for it.
+- Gmail Postmaster Tools is left out of every Gmail login unless you add it: `--with postmaster` for `gsm login`, `"with": ["postmaster"]` for the chat tool `auth_login`.
+- Every other product asks for the same scopes as before.
+
+### New
+- `scopePolicy` in `config/products.json`: per product, the profiles that may request a scope (`onlyIn`) and the optional parts left out unless named (`optional`). Gmail is the only product with one.
+- `--with <part,...>` for `gsm login` and `gsm scopes`. An unknown part is a usage error that lists the parts.
+- `gsm login` and `gsm scopes` print a `Held back:` line for each group of tools a product's rules leave out of the profile, with what they need. The chat sign-in repeats these lines.
+- The chat tool `auth_login` accepts `profile: "full"`. On the gmail server it takes `with`.
+
+### Not changed
+- Tool kinds, the write gate and the scope check at startup. A token that already holds `https://mail.google.com/` or the Postmaster scopes keeps those tools, and a login that names its account with `--account` keeps those scopes (merge). `--replace` drops them.
+
 ## 1.1.4 - 2026-10-29
 
 ### Fixes: signing out one group no longer signs the account out of the others

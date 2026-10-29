@@ -33,6 +33,19 @@
           "version": "v1beta1"
         }
       ],
+      "scopePolicy": {
+        "onlyIn": {
+          "https://mail.google.com/": [
+            "full"
+          ],
+          "https://www.googleapis.com/auth/gmail.settings.sharing": []
+        },
+        "optional": {
+          "postmaster": [
+            "gmailpostmastertools"
+          ]
+        }
+      },
       "scopes": [
         "https://mail.google.com/",
         "https://www.googleapis.com/auth/gmail.compose",

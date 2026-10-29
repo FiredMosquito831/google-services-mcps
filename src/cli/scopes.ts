@@ -10,6 +10,8 @@ import {
   PROFILES,
   PROFILE_TEXT,
   coveredTools,
+  heldBackBy,
+  optionalPartsOf,
   requirementsForSpecs,
   resolveScopes,
   serversOfGroup,
@@ -76,6 +78,57 @@ export function selectGroupServers(reg: Registry, group: AuthGroup, requested?: 
     );
   }
   return requested ? names.filter((n) => requested.includes(n)) : names;
+}
+
+/**
+ * --with: every name must be an optional part of one of the servers (their scopePolicy.optional). Returns the names, or
+ * an empty list when none were given.
+ */
+export function checkOptionalParts(reg: Registry, servers: readonly string[], requested: readonly string[] | undefined): string[] {
+  if (!requested || requested.length === 0) return [];
+  const known = optionalPartsOf(servers.map((name) => serverByName(reg, name)));
+  for (const name of requested) {
+    if (known.includes(name)) continue;
+    throw new UsageError(
+      known.length > 0
+        ? `--with: "${name}" is not an optional part of ${servers.join(', ')}. Optional parts: ${known.join(', ')}`
+        : `--with: ${servers.join(', ')} ha${servers.length === 1 ? 's' : 've'} no optional parts.`,
+    );
+  }
+  return [...requested];
+}
+
+/** "3 tool(s)" or "3 tool(s) and 4 gateway method(s)", for a list of requirement keys. */
+function countText(keys: readonly string[], requirements: readonly Requirement[]): string {
+  const gateway = new Set(requirements.filter((r) => r.gateway).map((r) => r.tool));
+  const g = keys.filter((k) => gateway.has(k)).length;
+  const t = keys.length - g;
+  return g > 0 ? `${t} tool(s) and ${g} gateway method(s)` : `${t} tool(s)`;
+}
+
+/**
+ * The lines that say what a profile left out because of a product's scope policy (heldBackBy in core/scopes.ts). Each
+ * starts with "Held back:". Empty for servers without a policy, so their output is unchanged.
+ */
+export function heldBackLines(requirements: readonly Requirement[], profile: Profile, include: readonly string[], scopes: readonly string[]): string[] {
+  const held = heldBackBy(requirements, profile, include, scopes);
+  const lines: string[] = [];
+  for (const [p, list] of Object.entries(held.needsProfile)) {
+    lines.push(
+      `Held back: ${countText(list.tools, requirements)} need ${list.scopes.join(' or ')}, which only the ${p} profile requests (--profile ${p}; in the chat: auth_login with profile "${p}"): ${list.tools.join(', ')}`,
+    );
+  }
+  if (held.noProfile.tools.length > 0) {
+    lines.push(
+      `Held back: ${countText(held.noProfile.tools, requirements)} need ${held.noProfile.scopes.join(' or ')}, which no profile requests (only an exact --scopes list asks for it): ${held.noProfile.tools.join(', ')}`,
+    );
+  }
+  for (const [name, list] of Object.entries(held.optional)) {
+    lines.push(
+      `Held back: the optional part "${name}" (${countText(list.tools, requirements)}). Add it with --with ${name} (in the chat: auth_login with "with": ["${name}"]).`,
+    );
+  }
+  return lines;
 }
 
 export type KindCounts = Record<ToolKind, { total: number; enabled: number }>;
@@ -148,6 +201,8 @@ export interface ScopesRequest {
   servers?: string[];
   profile?: Profile;
   json: boolean;
+  /** --with: optional parts of the products to include (a product's scopePolicy.optional). */
+  with?: string[];
 }
 
 /** The products (plugin ids) of a group's servers, each with its server names, in server-map order. */
@@ -182,6 +237,8 @@ export async function runScopes(req: ScopesRequest, reg: Registry, out: Output):
   const group = req.group as AuthGroup;
   const cfg = loadConfig();
   const servers = selectGroupServers(reg, group, req.servers);
+  const include = checkOptionalParts(reg, servers, req.with);
+  const optionalParts = optionalPartsOf(servers.map((name) => serverByName(reg, name)));
   const requirements = await requirementsForSpecs(
     servers.map((name) => serverByName(reg, name)),
     cfg,
@@ -194,7 +251,9 @@ export async function runScopes(req: ScopesRequest, reg: Registry, out: Output):
   const showGateway = hasGatewayApis(reg, servers);
 
   const results = profiles.map((profile) => {
-    const resolution: ScopeResolution = resolveScopes(requirements, profile);
+    const resolution: ScopeResolution = resolveScopes(requirements, profile, include);
+    // What the product's scope policy left out. Empty, and not shown, for products without a policy.
+    const heldBack = heldBackLines(requirements, profile, include, resolution.scopes);
     const byProduct = products.map((p) => {
       // Requirements are keyed "<server>/<tool>", so a product's tools are the ones whose server is one of its servers.
       const subset = requirements.filter((r) => p.servers.some((name) => r.tool.startsWith(`${name}/`)));
@@ -210,6 +269,7 @@ export async function runScopes(req: ScopesRequest, reg: Registry, out: Output):
       coverage: coverageOf(requirements, resolution.scopes),
       gateway: gatewayCoverageOf(requirements, resolution.scopes),
       byProduct,
+      heldBack,
     };
   });
 
@@ -239,6 +299,7 @@ export async function runScopes(req: ScopesRequest, reg: Registry, out: Output):
               },
             ]),
           ),
+          ...(r.heldBack.length > 0 ? { heldBack: r.heldBack } : {}),
         },
       ]),
     );
@@ -250,6 +311,7 @@ export async function runScopes(req: ScopesRequest, reg: Registry, out: Output):
           servers,
           tools: toolTotal,
           gatewayMethods: gatewayTotal,
+          ...(optionalParts.length > 0 ? { optionalParts, with: include } : {}),
           profiles: profilesOut,
         },
         null,
@@ -280,8 +342,14 @@ export async function runScopes(req: ScopesRequest, reg: Registry, out: Output):
     }
     out.log(`  scopes (${r.scopes.length}):`);
     for (const scope of r.scopes) out.log(`    ${scope}`);
+    for (const line of r.heldBack) out.log(`  ${line}`);
   }
   out.log('');
+  if (optionalParts.length > 0) {
+    out.log(
+      `Optional parts (left out of every profile unless named with --with): ${optionalParts.join(', ')}.${include.length > 0 ? ` Included here: ${include.join(', ')}.` : ''}`,
+    );
+  }
   out.log('Write and destructive tools also need GSM_ALLOW_WRITES=true. The token only decides which tools register.');
   if (showGateway) {
     out.log('Gateway methods run through api_call, which checks the same scopes on each call. Its writes and deletes ask for approval first.');

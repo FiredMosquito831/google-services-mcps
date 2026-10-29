@@ -11,7 +11,10 @@ import { createRequire } from 'node:module';
 const dist = (p) => new URL(`../dist/${p}`, import.meta.url).href;
 const repo = new URL('..', import.meta.url);
 
-const { resolveScopes, requirementsFor, isReadonlyScope, isFullAccessScope, coveredTools, serversOfGroup, PROFILES } = await import(dist('core/scopes.js'));
+const { resolveScopes, requirementsFor, isReadonlyScope, isFullAccessScope, coveredTools, serversOfGroup, PROFILES, heldBackBy } = await import(dist('core/scopes.js'));
+
+/** Every tool key a HeldBack result names. */
+const heldKeys = (h) => new Set([...Object.values(h.optional), ...Object.values(h.needsProfile), h.noProfile].flatMap((l) => l.tools));
 const { isGranted, describeError, scopeHint } = await import(dist('core/tools.js'));
 const { loadConfig } = await import(dist('core/config.js'));
 const { loadRegistry } = await import(dist('core/registry.js'));
@@ -118,16 +121,30 @@ test('real servers: readonly covers every read tool and readwrite covers every t
     const reqs = await requirementsFor(serversOfGroup(reg, group), cfg);
     assert.ok(reqs.length > 0, `${group} has tools`);
     const readonly = resolveScopes(reqs, 'readonly');
+    // A product's scope policy (config/products.json scopePolicy) holds some tools back on purpose; heldBackBy names them.
+    // Every other tool must be covered as before.
+    const heldRO = heldKeys(heldBackBy(reqs, 'readonly', [], readonly.scopes));
     // A read tool is covered by readonly exactly when its list holds a read-only scope (or none is needed).
-    for (const r of reqs.filter((x) => x.kind === 'read')) {
+    for (const r of reqs.filter((x) => x.kind === 'read' && !heldRO.has(x.tool) && x.optional === undefined)) {
       const readable = r.scopes.length === 0 || r.scopes.some(isReadonlyScope);
       const where = readable ? readonly.covered : readonly.uncovered;
       assert.ok(where.includes(r.tool), `${group}: readonly ${readable ? 'covers' : 'leaves uncovered'} ${r.tool}`);
     }
     assert.ok(readonly.scopes.every(isReadonlyScope), `${group}: readonly requests only read-only scopes`);
-    const readwrite = resolveScopes(reqs, 'readwrite');
-    assert.deepEqual(readwrite.uncovered, [], `${group}: readwrite covers every tool`);
-    assert.deepEqual(resolveScopes(reqs, 'full').uncovered, [], `${group}: full covers every tool`);
+    for (const profile of ['readwrite', 'full']) {
+      const r = resolveScopes(reqs, profile);
+      assert.deepEqual(r.uncovered, [...heldKeys(heldBackBy(reqs, profile, [], r.scopes))].sort(), `${group}: ${profile} covers every tool not held back`);
+      // With every optional part named, only the scopes no profile (or only full) may request stay out.
+      const parts = [...new Set(reqs.map((x) => x.optional).filter(Boolean))];
+      const all = resolveScopes(reqs, profile, parts);
+      assert.deepEqual(all.uncovered, [...heldKeys(heldBackBy(reqs, profile, parts, all.scopes))].sort(), `${group}: ${profile} with ${parts} covers the rest`);
+    }
+    if (group !== 'workspace-user') {
+      // No product of the other groups has a scope policy: nothing is held back, and every tool is covered as before.
+      assert.equal(reqs.filter((x) => x.optional !== undefined || x.onlyIn !== undefined).length, 0, `${group}: no scope policy`);
+      assert.deepEqual(resolveScopes(reqs, 'readwrite').uncovered, [], `${group}: readwrite covers every tool`);
+      assert.deepEqual(resolveScopes(reqs, 'full').uncovered, [], `${group}: full covers every tool`);
+    }
   }
 });
 

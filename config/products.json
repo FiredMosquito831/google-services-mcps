@@ -1360,6 +1360,19 @@
           "version": "v1beta1"
         }
       ],
+      "scopePolicy": {
+        "onlyIn": {
+          "https://mail.google.com/": [
+            "full"
+          ],
+          "https://www.googleapis.com/auth/gmail.settings.sharing": []
+        },
+        "optional": {
+          "postmaster": [
+            "gmailpostmastertools"
+          ]
+        }
+      },
       "generatedToolCount": 87
     },
     "gcalendar": {
