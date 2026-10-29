@@ -341,9 +341,9 @@ export async function runServer(opts: {
   const policy = scopePolicyOf(opts.name);
   const optionalParts = Object.keys(policy?.optional ?? {}).sort();
   // The scopes an ADC login for this server asks for: the scopes its tools need, resolved as the OAuth login resolves them.
-  // Every tool of the server counts here, whatever the toolset: the sign-in scopes do not follow the toolset yet.
+  // Only the tools of the toolset count (`defined`), as for the OAuth sign-in (--toolset in the child's argv).
   const adcScopesFor = (profile: SignInProfile, include: readonly string[]): string[] => {
-    const requirements: Requirement[] = built.map((tool) => ({
+    const requirements: Requirement[] = defined.map((tool) => ({
       tool: tool.name,
       kind: tool.kind,
       scopes: [...(tool.scopes ?? [])],
@@ -629,6 +629,8 @@ export async function runServer(opts: {
       async (rawArgs: Record<string, unknown>): Promise<CallToolResult> => {
         const args = ['setup-admin', '--subject', String(rawArgs.subject), '--key-file', String(rawArgs.key_file), '--profile', 'readonly', '--servers', opts.name];
         if (rawArgs.replace === true) args.push('--replace');
+        // The server's toolset, as for auth_login. Absent for all, so the argv is the same as before.
+        if (cfg.toolset !== 'all') args.push(`--toolset=${cfg.toolset}`);
         const res = await runGsmCommand(cliFile, args);
         return text(res.code === 0 ? res.output : `Could not set up the admin account: ${res.output}`);
       },

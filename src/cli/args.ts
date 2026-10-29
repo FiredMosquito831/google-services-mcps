@@ -1,6 +1,7 @@
 import { parseArgs } from 'node:util';
 import { accountEmailOf } from '../core/accounts.js';
 import { PROFILES, type Profile } from '../core/scopes.js';
+import { isToolset, TOOLSETS, type Toolset } from '../core/toolset.js';
 import {
   AGENTS,
   AGY_GLOBAL_ONLY,
@@ -74,14 +75,14 @@ const COMMANDS: Record<Exclude<Command, 'help'>, Record<string, OptionType>> = {
     'keep-data': 'boolean',
   },
   list: { json: 'boolean', home: 'string' },
-  login: { servers: 'string', 'client-secret': 'string', profile: 'string', scopes: 'string', 'no-browser': 'boolean', replace: 'boolean', account: 'string', with: 'string' },
+  login: { servers: 'string', 'client-secret': 'string', profile: 'string', scopes: 'string', 'no-browser': 'boolean', replace: 'boolean', account: 'string', with: 'string', toolset: 'string' },
   'setup-client': { force: 'boolean' },
   'setup-apikey': { force: 'boolean' },
   status: { check: 'boolean' },
   logout: { 'local-only': 'boolean', account: 'string', 'revoke-all': 'boolean' },
   accounts: { group: 'string' },
-  scopes: { servers: 'string', profile: 'string', json: 'boolean', with: 'string' },
-  'setup-admin': { subject: 'string', 'key-file': 'string', profile: 'string', servers: 'string', replace: 'boolean' },
+  scopes: { servers: 'string', profile: 'string', json: 'boolean', with: 'string', toolset: 'string' },
+  'setup-admin': { subject: 'string', 'key-file': 'string', profile: 'string', servers: 'string', replace: 'boolean', toolset: 'string' },
   'setup-service-account': { 'key-file': 'string', remove: 'boolean' },
   protect: { off: 'boolean', backend: 'string' },
   products: { json: 'boolean' },
@@ -337,6 +338,17 @@ export function parseWith(value: string | boolean | undefined): string[] | undef
   return splitList(value, 'with');
 }
 
+/**
+ * --toolset for gsm login, gsm scopes and gsm setup-admin: all, google or curated, or undefined when not given (then
+ * GSM_TOOLSET applies, else all). An unknown value is a usage error that lists the toolsets.
+ */
+export function parseToolset(value: string | boolean | undefined): Toolset | undefined {
+  if (value === undefined) return undefined;
+  const normalised = typeof value === 'string' ? value.trim().toLowerCase() : value;
+  if (!isToolset(normalised)) throw new UsageError(`--toolset must be one of: ${TOOLSETS.join(', ')}`);
+  return normalised;
+}
+
 /** The scope choice for gsm login: a profile (default readonly), or an exact list with --scopes. */
 export interface LoginScopeChoice {
   profile: Profile | 'custom';
@@ -366,6 +378,7 @@ export function parseSetupAdminArgs(values: ParsedArgs['values']): {
   profile: Profile;
   servers?: string[];
   replace: boolean;
+  toolset?: Toolset;
 } {
   if (typeof values.subject !== 'string' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.subject.trim())) {
     throw new UsageError('--subject must be the super admin email to impersonate, for example admin@example.com');
@@ -379,5 +392,7 @@ export function parseSetupAdminArgs(values: ParsedArgs['values']): {
     profile: parseProfile(values.profile) ?? 'readonly',
     servers: parseServers(values),
     replace: values.replace === true,
+    // Only a given flag adds the key, so the parsed request is the same as before when it is absent.
+    ...(values.toolset !== undefined ? { toolset: parseToolset(values.toolset) } : {}),
   };
 }

@@ -30,6 +30,9 @@ export const TOOLSET_TEXT: Record<Toolset, string> = {
   curated: 'the hand-written tools and the gateway tools (api_search, api_describe, api_call); all tools where a product has neither',
 };
 
+/** The gateway tools of a server with gateway APIs (gatewayTools in gateway.ts; a test keeps the lists equal). */
+export const GATEWAY_TOOL_NAMES = ['api_search', 'api_describe', 'api_call'] as const;
+
 /** The toolsets a product lists by name in config/products.json. all and curated are never listed. */
 export const LISTED_TOOLSETS = ['google'] as const;
 export type ListedToolset = (typeof LISTED_TOOLSETS)[number];

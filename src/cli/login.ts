@@ -22,6 +22,7 @@ import { ADMIN_SCOPES, readClientSecret } from '../core/auth.js';
 import { loadConfig, type RuntimeConfig } from '../core/config.js';
 import { serverByName, type AuthGroup, type Registry } from '../core/registry.js';
 import { PROFILE_TEXT, requirementsForSpecs, resolveScopes, type Profile } from '../core/scopes.js';
+import { TOOLSET_TEXT, type Toolset } from '../core/toolset.js';
 import { OAUTH_GROUPS, type CliGroup } from './args.js';
 import { readStoredToken, tokenFileFor } from './credentials.js';
 import { writeAtomic } from './fsutil.js';
@@ -63,6 +64,8 @@ export interface LoginRequest {
    * postmaster). Without it, the requirements of optional parts are left out of the profile.
    */
   with?: string[];
+  /** --toolset: only the tools of this toolset count toward the scopes. Absent: GSM_TOOLSET, else all. */
+  toolset?: Toolset;
 }
 
 /** What runLogin reaches outside the process. Tests pass fakes; the defaults are the real ones. */
@@ -126,11 +129,16 @@ export async function runLogin(req: LoginRequest, loadRegistryFn: () => Registry
   // --servers narrows the group; every name must belong to it (checked with the same message as before).
   const servers = selectGroupServers(registry, group, req.servers && req.servers.length > 0 ? req.servers : undefined);
   const include = checkOptionalParts(registry, servers, req.with);
+  // The toolset: --toolset, else GSM_TOOLSET (the server's setting, passed to a sign-in from the chat), else all.
+  const toolset = req.toolset ?? cfg.toolset;
   const requirements = await requirementsForSpecs(
     servers.map((name) => serverByName(registry, name)),
     cfg,
-    { warn: (line) => out.warn(line) },
+    { warn: (line) => out.warn(line), ...(toolset !== 'all' ? { toolset } : {}) },
   );
+  if (toolset !== 'all' && req.profile !== 'custom') {
+    out.log(`Toolset ${toolset}: only the tools of this toolset count toward the scopes (${TOOLSET_TEXT[toolset]}).`);
+  }
 
   let requested: string[];
   if (req.profile === 'custom') {
@@ -148,7 +156,12 @@ export async function runLogin(req: LoginRequest, loadRegistryFn: () => Registry
   // account (the default one, say) must not be requested for whichever account signs in.
   const replace = req.replace === true;
   const hint = req.account;
-  const usable = await groupScopeUniverse(registry, group, cfg, requirements, servers);
+  // A toolset narrows `requirements`, but the stored scopes a server of the group can use are the same whatever the
+  // toolset: the universe is then built from every tool of every server of the group, so no usable scope looks foreign.
+  const usable =
+    toolset === 'all'
+      ? await groupScopeUniverse(registry, group, cfg, requirements, servers)
+      : await groupScopeUniverse(registry, group, cfg, [], []);
   const hinted = hint === undefined ? undefined : accountEntry(group, hint, cfg);
   const split = splitUsable(hinted ? storedLoginScopes(hinted.file, out, cfg) : [], usable);
   const merge = mergeScopes({ requested, stored: split.usable, replace });

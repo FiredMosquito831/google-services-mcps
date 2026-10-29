@@ -2,6 +2,19 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.4.0 - 2026-10-29
+
+### New: login scopes follow the toolset
+- A login counts only the tools of the toolset: Gmail with `google` asks for `gmail.readonly` (`readonly`) or `gmail.modify` (`readwrite`), where `all` asks for `gmail.readonly`, or `gmail.modify` and `gmail.settings.basic`.
+- Gateway methods count only when the toolset holds `api_call`. `curated` does; Gmail's `google` list does not, so its login asks for no Postmaster scope even with `--with postmaster`.
+- `--toolset all|google|curated` for `gsm login`, `gsm scopes` and `gsm setup-admin`. Without it, `GSM_TOOLSET` applies, else `all`. An unknown value is a usage error. `gsm scopes --json` adds `"toolset"` when it is not `all`.
+- The sign-in from the chat (`auth_login`, `auth_setup_admin`) passes the server's toolset to the login (`--toolset`), and an ADC sign-in asks for the scopes of the toolset's tools.
+- A product without the toolset counts every tool, and the login says so.
+
+### Not changed
+- With no toolset, or `all`, every server's requirement list and the scopes of every profile are the same as 1.2.0.
+- A login that names its account (`--account`, or `account` in the chat) keeps the scopes that account holds for the other products of the group. A toolset never drops them.
+
 ## 1.3.0 - 2026-10-29
 
 ### New: the `toolset` option

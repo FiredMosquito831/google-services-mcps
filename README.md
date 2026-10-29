@@ -285,6 +285,8 @@ A login merges with the scopes the same account already holds for its group, so 
 
 No profile asks for `gmail.settings.sharing`: Google allows its methods (delegates, forwarding addresses, send-as create and delete, auto-forwarding) only for a service account with domain-wide delegation. Gmail Postmaster Tools (bulk-sender statistics) is an optional part: add it with `--with postmaster` (in the chat: `auth_login` with `"with": ["postmaster"]`). The login, and `npx google-services-mcps scopes workspace-user --servers gmail`, list the tools a profile holds back (`Held back:`). An account that already holds `https://mail.google.com/` or the Postmaster scopes keeps them when you name it with `--account`. Use `--replace` to drop them.
 
+**Scopes follow the toolset.** A login counts only the tools of the server's toolset (the `toolset` option, `GSM_TOOLSET`, or `--toolset` for `login`, `scopes` and `setup-admin`). Gmail with `google`: `readonly` asks for `gmail.readonly`, `readwrite` for `gmail.modify`. Gateway methods count only when the toolset holds `api_call` (`curated` does, Gmail's `google` list does not). The sign-in from the chat uses the server's toolset. Naming the account with `--account` (in the chat: `auth_login` with `account`) keeps the scopes it holds for the other products of the group.
+
 ### Workspace admin (gadmin)
 
 `gadmin` uses a service account with domain-wide delegation, not a user login. You need a super admin and a Google Cloud service account JSON key.
@@ -525,6 +527,9 @@ Flags:    --no-browser (login) prints the login URL only, and does not open the 
           account's stored scopes only (scopes no server of the group uses are left out). Without it, nothing is merged.
           --with (login, scopes): add an optional part of a product, left out of every profile otherwise. Gmail has
           postmaster (Gmail Postmaster Tools): --with postmaster. gsm scopes lists the optional parts of a group.
+          --toolset (login, scopes, setup-admin): all (default), google or curated. Only the tools of that toolset count
+          toward the scopes, and gateway methods count only when the toolset holds api_call. Default: GSM_TOOLSET, else
+          all. A product without the toolset counts every tool. With --account, the account's other scopes are kept.
           --json (scopes, products, apis, methods, list) prints JSON.
 API key:  setup-apikey reads GSM_API_KEY_INPUT or stdin. The key is never a command-line argument and is never printed.
 Backups:  an existing config file is copied to <file>.gsm-backup-<YYYYMMDD-HHMMSS> before it changes.
