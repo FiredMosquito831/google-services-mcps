@@ -29,3 +29,5 @@ data/cache-discovery/
 
 # crash dumps from msys bash on Windows
 *.stackdump
+# Orchestration notes (working-notes skill): kept out of git
+.orchestration/

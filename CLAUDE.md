@@ -163,3 +163,23 @@ Append a dated bullet whenever you learn something non-obvious about this reposi
 - Releases are approved by version, for example "approve 1.3 for both". An approval covers that release and the publish it starts, not later steps such as a deprecation or a new version.
 - Keep this file current as the project changes, and write down what is learned.
 - The owner makes console-only settings himself (the GitHub Pages domain, the Google consent screen and publishing). Give him the exact values and the exact page.
+
+<!-- working-notes:begin (managed by the working-notes skill; edit inside only through /working-notes) -->
+## How we work in this repo (orchestration)
+
+**Entry points (read in this order at the start of every session):** the newest `.orchestration/HANDOFF-<date>.md` → `.orchestration/QUEUE.md` → `.orchestration/WORKING-NOTES.md` (PART I, II.3, II.5, II.6, IV, X, the dated lesson lines in PART IX). Specs and their binding `USER DECISIONS` blocks live in `.orchestration/specs/`. Verify the live state before relaying anything; report in five lines or fewer; do not dispatch before the owner's go.
+
+**Binding rules (the full text is WORKING-NOTES; these are the ones that are never relaxed):**
+1. Discuss before building: read-only investigation → spec with numbered questions and a recommendation each → the owner's one-line answers → `USER DECISIONS (<time>)` appended to the spec → one implementer. Never dispatch before the owner agrees.
+2. Safest, 100 % working, break nothing: change only what is broken, where it is broken; extend, never narrow; stop and report if the scope seems to require removing behaviour.
+3. One production change at a time; one concern per commit and release; at most two agents; agents inherit the session model; announce every dispatch; agents keep `PROGRESS.md` + `HANDOFF.md` in their worktree from the first edit.
+4. The orchestrator verifies every "shipped" claim itself (WORKING-NOTES II.5): tag = `main` = release SHA, the npm registry's `latest`, the frozen diff empty, workflow states read one by one, the live site or package doing real work. CONFIRMED / UNVERIFIED / NOT DONE, always separated.
+5. Tracking at every change: `QUEUE.md` (RUNNING / QUEUED / FINISHED / HELD), a version row in WORKING-NOTES PART VIII, dated lesson lines in PART IX (backup before every edit; line endings preserved), one line per event in the dated HANDOFF. A new HANDOFF before every pause or compaction.
+6. Never touch the owner's world: the real token folder `%USERPROFILE%\.google-services-mcps`, the ADC file, the owner's Claude Code configuration and installed plugins, and the owner's GitHub, Google Cloud, Search Console, Cloudflare and Netlify settings. Never run the real installer or uninstaller. Never read token, ADC, `client_secret*.json`, `apikey.json` or `*.token.json` files. Scratch runs use a redirected home (`--home`, `CLAUDE_CONFIG_DIR`) and loopback ports. Stop only PIDs you started, by exact PID. Never delete under `D:\tmp\gsm-worktrees` or `D:\tmp\gsm-scratch`; list leftovers.
+7. Frozen boundary (`src/core/auth.ts`, `src/core/secret-files.ts`, `src/core/secret-store.ts`, `src/core/acl.ts`, `src/core/approval.ts`, `src/core/discovery/methods.ts`, `src/cli/method-kinds.ts`, `config/tool-kinds.json`) and goldens (`tests/gate.test.mjs`, `tests/cli-surface.test.mjs`) change only as a change's stated, owner-approved purpose, with outcomes proven byte-identical. Never alter the write gate or the consent behaviour otherwise.
+8. Tooling: `npm test` and `npx tsc --noEmit` are the gates (`npm run build` and `node scripts/smoke.mjs` for plugin changes). Never bare interpreters, never `-c` one-liners or heredocs into an interpreter, never `sed -i` on tracked files. Scripts as files run by path. Never two full test runs at once.
+9. Product principles (WORKING-NOTES IV): no invented limits; clamp to capability; unknown is not unsupported; everything new opt-in and byte-stable when unset; honest wording; data never lost; general over per-name; no speculative features; documentation where the owner is.
+10. Live external calls (Google APIs with a real account, the Search Console or Cloudflare APIs) only with the owner's consent and a stated budget. A rate-limit answer is inconclusive.
+
+**Attribution:** commits end with `by FiredMosquito831`.
+<!-- working-notes:end -->
