@@ -2,7 +2,7 @@ import { loadUserTokens, loginSourceOf, readAdminScopeFile, readServiceAccountFi
 import { readAdcState } from './adc.js';
 import type { RuntimeConfig } from './config.js';
 import { secretFileExists } from './secret-files.js';
-import { checkGrant, checkServiceAccountGrant, type GrantState } from './grant-check.js';
+import { checkGrant, checkServiceAccountGrant, type GrantDeps, type GrantState } from './grant-check.js';
 import { invocation } from './invocation.js';
 
 /**
@@ -27,9 +27,18 @@ export interface LiveHealth {
   state: GrantState | 'not-applicable';
   detail: string;
   account?: string;
+  /** The access token's remaining life, in seconds (at most an hour). Kept under its first name for existing readers. */
   expiresInSeconds?: number;
+  /** The same value, named for what it is. */
+  accessTokenExpiresInSeconds?: number;
+  /** What the two fields above mean. Present when they are. */
+  expiresNote?: string;
   missingScopes: string[];
 }
+
+/** The access token lasts about an hour and is renewed on its own; this is not how long the login lasts. */
+export const ACCESS_TOKEN_NOTE =
+  'expiresInSeconds and accessTokenExpiresInSeconds are the remaining life of the current access token (at most about an hour). It is renewed on its own while the login is valid. They do not say how long the login itself lasts.';
 
 /** The next tool for a server without a Google sign-in: save the client first if it is missing, then sign in. */
 function nextSignIn(cfg: RuntimeConfig): string {
@@ -118,16 +127,19 @@ function sourceDetail(source: 'oauth' | 'adc' | 'service-account' | undefined, c
 }
 
 /** Asks Google about a group's login. Makes network calls, so it runs only when asked. */
-export async function liveHealth(group: string, cfg: RuntimeConfig): Promise<LiveHealth> {
+export async function liveHealth(group: string, cfg: RuntimeConfig, deps: GrantDeps = {}): Promise<LiveHealth> {
   if (group === 'apikey' || group === 'workspace-admin') {
     return { state: 'not-applicable', detail: 'nothing to ask Google about for this group', missingScopes: [] };
   }
-  const check = group === 'service-account' ? await checkServiceAccountGrant(cfg) : await checkGrant(group as AuthKind, cfg);
+  const check = group === 'service-account' ? await checkServiceAccountGrant(cfg, deps) : await checkGrant(group as AuthKind, cfg, deps);
   return {
     state: check.state,
     detail: check.detail,
     account: check.account,
     expiresInSeconds: check.expiresInSeconds,
+    ...(check.expiresInSeconds === undefined
+      ? {}
+      : { accessTokenExpiresInSeconds: check.expiresInSeconds, expiresNote: ACCESS_TOKEN_NOTE }),
     missingScopes: check.missingScopes,
   };
 }

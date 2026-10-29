@@ -2,6 +2,24 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.1.3 - 2026-10-29
+
+### Fixes: when Google refuses a login
+- A login that Google refuses for reauthentication (`invalid_grant` with `invalid_rapt` or `rapt_required`) now says: "Your Google Workspace requires signing in to Google Cloud again (an admin session policy; Google's default is 16 hours). Call auth_login to sign in again." This is Workspace's Google Cloud session control, which ends logins with Cloud scopes after a set time.
+- Any other refusal shows Google's `error` and `error_subtype` (short codes, never a token). The 7-day Testing limit is named as one possibility, not as the cause. The messages name `auth_login` first and the terminal command second. This applies to tool errors, `gsm status --check`, `gsm doctor` and `health` with `live: true`, for OAuth and ADC logins.
+
+### Fixes: a new sign-in is used at once
+- After a sign-in in the chat, the server forgets its OAuth clients and what it read from the OS secret store, so the new login is used without a restart. A client is also rebuilt when its token file holds another refresh token (a sign-in in a terminal). Only a hash of the refresh token is kept.
+- `auth_status` reads the tokens again, and says how many tools are registered in total as well as how many it loaded now.
+- With the OS secret store (`gsm protect`), a token that is not found is no longer remembered as missing, so a token stored by the sign-in process is seen.
+
+### Fixes: token files
+- With plain files (the default), a secret file is written to a temporary file and then renamed over the old one, so a reader never sees half a file. If the rename fails, the file is written directly, as before.
+- A token refresh no longer creates the token file again after a sign-out, and no longer overwrites a newer sign-in's token with an older client's answer.
+
+### Health
+- `health` with `live: true` adds `accessTokenExpiresInSeconds` and a note: the value is the current access token's remaining life (at most about an hour, renewed on its own), not how long the login lasts. `expiresInSeconds` is kept. `gsm status --check` says the same next to "access token expires in".
+
 ## 1.1.2 - 2026-10-29
 
 ### Fixes: what a sign-in asks Google for

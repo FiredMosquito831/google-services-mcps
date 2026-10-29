@@ -537,7 +537,9 @@ The exact error text is **UNVERIFIED**.
 
 **The browser does not open for `login`.** Run the same login with `--no-browser`. The command prints the URL. Open that URL in a browser on the same machine. The redirect goes to `127.0.0.1`, so the browser must run on the machine where the login command runs. **Help text.** **UNVERIFIED:** not run.
 
-**Login works, but the tools still fail.** Restart the server in `/mcp`, or restart Claude Code. A new login needs a restart to apply the new scopes.
+**Login works, but the tools still fail.** After a sign-in in the chat, the server uses the new login at once. After a login in a terminal, call `auth_status`: it reads the tokens again and loads the tools the new scopes allow. Tools whose scopes the new login lacks stay listed until the server restarts: restart it in `/mcp`, or restart Claude Code.
+
+**"Your Google Workspace requires signing in to Google Cloud again."** Google refused the login with a reauthentication request (`invalid_rapt`). A Workspace admin setting, Google Cloud session control, ends logins that hold Google Cloud scopes after a set time; Google's default is 16 hours. Call `auth_login` to sign in again. To make it last longer, an admin changes the session length or exempts the app (Google Admin console, Security, Access and data control, Google Cloud session control). For any other refusal, the message shows Google's error code and subtype.
 
 **Earlier scopes are still in the token.** A login merges with the scopes the same account already holds for its group, so logging in for one product keeps the others. Name the account with `--account <email>` (in the chat: `auth_login` with `account`): only that account's stored scopes are merged, and only the ones a server of the group uses. Without `--account`, nothing is merged, and a login that would take scopes away from an account already signed in saves nothing and says how to retry. Use `--replace` to drop the stored scopes and keep only what this login requests. A merge can leave write scopes from an earlier readwrite login in place: when you want a readonly token again, log in with `--replace`. For example:
 

@@ -10,6 +10,7 @@ import {
   UnknownAccountError,
   forgetAdcClients,
   forgetServiceAccountClients,
+  forgetUserClients,
   grantedScopes,
   isLoggedIn,
   loginSourceOf,
@@ -332,7 +333,10 @@ export async function runServer(opts: {
         cfg,
         adcScopes: adcScopesFor,
         onSignedIn: () => {
+          // The sign-in ran in another process. Forget the clients built from the old tokens, and what was read from the
+          // OS store, so the next call uses the new login without a restart.
           forgetAdcClients();
+          forgetUserClients();
           register(registerable(currentGrant(), defined));
         },
       })
@@ -405,13 +409,17 @@ export async function runServer(opts: {
         annotations: { readOnlyHint: true },
       },
       async (): Promise<CallToolResult> => {
+        // A sign-in made in a terminal is seen here too: the tokens are read again, not taken from this process's memory.
+        forgetUserClients();
         const before = registered.size;
         const signedIn = isLoggedIn(group as AuthKind, cfg);
         if (signedIn) register(registerable(currentGrant(), defined));
         const loaded = registered.size - before;
         const source = loginSourceOf(group as AuthKind, cfg);
         const via = source === 'adc' ? ' with Application Default Credentials' : source === 'oauth' ? ' with an OAuth account' : '';
-        const state = signedIn ? `Signed in for "${group}"${via}. ${loaded} tool(s) loaded now.` : `Not signed in for "${group}".`;
+        const state = signedIn
+          ? `Signed in for "${group}"${via}. ${loaded} tool(s) loaded now, ${registered.size} registered in total.`
+          : `Not signed in for "${group}". ${registered.size} tool(s) registered in total.`;
         return text(`${state} Accounts: ${accountNames(group as string, cfg)}. ${signIn.describe()}`);
       },
     );
@@ -462,7 +470,7 @@ export async function runServer(opts: {
         const loaded = registered.size - before;
         return text(
           set
-            ? `Set up for "${group}" with a service account key (${loginSourceOf(group, cfg)}). ${loaded} tool(s) loaded now.`
+            ? `Set up for "${group}" with a service account key (${loginSourceOf(group, cfg)}). ${loaded} tool(s) loaded now, ${registered.size} registered in total.`
             : `Not set up for "${group}". Call auth_setup_service_account with the full path of the key file.`,
         );
       },

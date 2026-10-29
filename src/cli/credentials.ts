@@ -233,7 +233,7 @@ export async function runStatusCheck(out: Output, env: NodeJS.ProcessEnv = proce
       out.log(`${group} ${account.email}${account.default ? ' (default)' : ''}: ${CHECK_LABEL[result.state]}. ${result.detail}`);
       if (result.state === 'valid') {
         const minutes = result.expiresInSeconds === undefined ? 'unknown' : `${Math.round(result.expiresInSeconds / 60)} min`;
-        out.log(`  access token expires in: ${minutes}`);
+        out.log(`  access token expires in: ${minutes} (it is renewed on its own; this is not how long the login lasts)`);
         out.log(`  granted scopes (${result.scopes.length}):`);
         for (const scope of result.scopes) out.log(`    ${scope}`);
       }
