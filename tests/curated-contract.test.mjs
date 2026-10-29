@@ -13,6 +13,7 @@ import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { JWT, OAuth2Client } from 'google-auth-library';
+import { DOCX, docx } from './fixtures/office-zip.mjs';
 
 // No Application Default Credentials from this machine: every group below has its own login in a temp folder.
 delete process.env.GOOGLE_APPLICATION_CREDENTIALS;
@@ -117,6 +118,7 @@ const DOCS = [
   'gmail.v1',
   'calendar.v3',
   'drive.v3',
+  'sheets.v4',
   'searchconsole.v1',
   'cloudresourcemanager.v3',
   'serviceusage.v1',
@@ -478,7 +480,31 @@ const CASES = {
       expect: ['drive.files.get', 'drive.files.export'],
       respond: (call) => (call.url.endsWith('/export') ? 'exported text' : { ...generic(), mimeType: 'application/vnd.google-apps.document' }),
     },
+    // 1.9.0: an Office file (size, then the bytes) and the comment threads.
+    {
+      args: { file_id: 'docx-1', include_comments: true },
+      expect: ['drive.files.get', 'drive.comments.list'],
+      respond: (call) =>
+        call.url.endsWith('/comments') ? { comments: [{ id: 'c1', content: 'Check this', replies: [] }] } : call.query.alt === 'media' ? docx() : { ...generic(), mimeType: DOCX, size: '900' },
+    },
   ],
+  drive_list_recent: [{ args: { order_by: 'lastModifiedByMe', page_size: 5, page_token: 'p1' }, expect: ['drive.files.list'] }],
+  drive_download: [
+    { args: { file_id: 'doc-1', export_mime_type: 'application/pdf' }, expect: ['drive.files.get', 'drive.files.export'], respond: (call) => (call.url.endsWith('/export') ? '%PDF' : { ...generic(), mimeType: 'application/vnd.google-apps.document' }) },
+    { args: { file_id: 'file-1' }, expect: ['drive.files.get'], respond: (call) => (call.query.alt === 'media' ? 'bytes' : { ...generic(), mimeType: 'application/pdf', size: '5' }) },
+  ],
+  drive_create_file: [
+    { args: { name: 'Plan', google_type: 'document', parent_id: 'folder-1' }, expect: ['drive.files.create'] },
+    { args: { name: 'Budget', google_type: 'spreadsheet', text_content: 'a,b\n1,2', content_mime_type: 'text/csv' }, expect: ['drive.files.create'] },
+    { args: { name: 'logo.png', base64_content: 'iVBORw0KGgo=', content_mime_type: 'image/png' }, expect: ['drive.files.create'] },
+    { args: { name: 'notes.txt', local_path: SMALL_FILE }, expect: ['drive.files.create'] },
+  ],
+  sheets_get_values: [{ args: { spreadsheet_id: 'sheet-1', range: 'Sheet1!A1:C3', value_render: 'formula' }, expect: ['sheets.spreadsheets.values.get'] }],
+  sheets_write_values: [
+    { args: { spreadsheet_id: 'sheet-1', range: 'Sheet1!A1', values: [['a', 1, true, null]], value_input: 'data' }, expect: ['sheets.spreadsheets.values.update'] },
+    { args: { spreadsheet_id: 'sheet-1', range: "'My sheet'!C1:C2", values: [['=A1+B1'], ['=A2+B2']], value_input: 'formulas' }, expect: ['sheets.spreadsheets.values.update'] },
+  ],
+  sheets_insert_rows: [{ args: { spreadsheet_id: 'sheet-1', sheet_id: 0, start_index: 2, end_index: 5, dimension: 'ROWS', inherit_from_before: true }, expect: ['sheets.spreadsheets.batchUpdate'] }],
   drive_create_folder: [{ args: { name: 'Reports', parent_id: 'folder-1' }, expect: ['drive.files.create'] }],
   drive_create_text_file: [{ args: { name: 'notes.txt', content: 'Hello', mime_type: 'text/plain', parent_id: 'folder-1' }, expect: ['drive.files.create'] }],
   drive_trash_file: [{ args: { file_id: 'file-1' }, preview: true, expect: ['drive.files.get', 'drive.files.update'] }],
@@ -589,7 +615,7 @@ test('every curated tool has a contract row, a skip reason or a known defect, an
   const listed = new Set([...Object.keys(CASES), ...Object.keys(SKIPPED), ...Object.keys(KNOWN_DEFECTS)]);
   assert.deepEqual([...tools.keys()].filter((name) => !listed.has(name)), [], 'curated tools without a row');
   assert.deepEqual([...listed].filter((name) => !tools.has(name)), [], 'rows for tools that do not exist');
-  assert.equal(tools.size, 84, 'the curated tool count; update the table when it changes');
+  assert.equal(tools.size, 90, 'the curated tool count; update the table when it changes');
 });
 
 for (const [name, cases] of Object.entries(CASES)) {

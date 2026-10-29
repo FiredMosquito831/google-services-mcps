@@ -197,6 +197,24 @@ test('the gcalendar google list covers the 9 tools of Google\'s Calendar MCP ser
   assert.match(google.notes.calendar_list_events, /semantic search of the primary calendar with no public API/);
 });
 
+test('the gdrive google list covers the 20 tools of Google\'s Drive, Docs, Sheets and Slides MCP servers', () => {
+  const google = readJson('config', 'products.json').products.gdrive.toolsets.google;
+  assert.equal(google.tools.length, 19);
+  const official = new Set(Object.values(google.matches).flat());
+  const expected = [
+    // Drive (developers.google.com/workspace/drive/api/reference/mcp/tools_list)
+    'search_files', 'list_recent_files', 'get_file_metadata', 'get_file_permissions', 'read_file_content', 'download_file_content', 'create_file', 'copy_file',
+    // Docs, Sheets, Slides
+    'read_doc', 'update_doc',
+    'get_values', 'get_spreadsheet', 'update_spreadsheet', 'update_values', 'update_formulas', 'insert_dimension',
+    'read_presentation', 'read_slide_page', 'read_slide_page_thumbnail', 'update_presentation',
+  ];
+  for (const name of expected) assert.ok(official.has(name), `no tool of ours matches ${name}`);
+  assert.equal(official.size, 20);
+  assert.deepEqual(google.matches.sheets_write_values, ['update_values', 'update_formulas']);
+  assert.match(google.notes.drive_read_text, /PDF and image text is not read/);
+});
+
 test('both registry loaders carry the toolsets: the CLI conversion of config/products.json and a plugin servers.json', () => {
   const reg = registryFromProducts(readJson('config', 'products.json'), ROOT);
   assert.deepEqual(reg.servers.find((s) => s.name === 'gmail').toolsets, { google: GMAIL_GOOGLE });

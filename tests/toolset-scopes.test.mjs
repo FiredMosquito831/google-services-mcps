@@ -96,6 +96,16 @@ test('requirements: the gcalendar google list resolves to calendar.readonly (rea
   assert.deepEqual(resolveScopes(await requirementsFor(['gcalendar'], cfg, quiet), 'readwrite').scopes, [G('calendar')]);
 });
 
+test('requirements: the gdrive google list resolves to drive.readonly (readonly) and drive (readwrite), no gateway method', async () => {
+  const { cfg } = tempTokens();
+  const google = await requirementsFor(['gdrive'], cfg, { ...quiet, toolset: 'google' });
+  assert.equal(google.length, 19);
+  assert.equal(google.filter((r) => r.gateway).length, 0);
+  assert.deepEqual(resolveScopes(google, 'readonly').scopes, [G('drive.readonly')]);
+  // drive covers all 19 tools; drive.file does not cover drive_search, drive_read_text, drive_get_file or drive_list_recent.
+  assert.deepEqual(resolveScopes(google, 'readwrite').scopes, [G('drive')]);
+});
+
 test('requirements: curated keeps the curated tools and, with api_call, the gateway methods', async () => {
   const { cfg } = tempTokens();
   const all = await requirementsFor(['gmail'], cfg, quiet);

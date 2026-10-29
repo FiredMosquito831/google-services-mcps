@@ -2,6 +2,26 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.9.0 - 2026-10-30
+
+### New: Drive and Sheets tools that match Google's Drive, Docs, Sheets and Slides MCP servers
+Each description names the Google tool it matches.
+- `drive_list_recent` (read; `list_recent_files`): newest files first, by `recency` (default), `lastModified`, `lastModifiedByMe` or `viewedByMe`; 10 a page by default; folders and trashed files left out. The scopes of `drive_search`.
+- `drive_download` (read; `download_file_content`): a file's bytes as base64. Google Docs, Sheets, Slides and Drawings are exported to `export_mime_type` (default text/plain, text/csv for Sheets, image/png for Drawings). The base64 text must fit the result limit (`GSM_MAX_RESULT_CHARS`); a larger file returns its size and a note, and is not downloaded at all when Drive reports its size.
+- `drive_create_file` (write; `create_file`): a blank Google Doc, Sheet, Slides or folder (`google_type`), or a file from `text_content`, `base64_content` or `local_path`, uploaded in one multipart request to Drive's upload endpoint. With `google_type` and content, Drive converts the content to that Google type; without it the file keeps its type (Google's server converts by default). `local_path` must be a full path to a file outside the token folder, gcloud's folder and the key files named in the environment, the same rule as Gmail attachments (now shared in `src/servers/local-files.ts`).
+- `sheets_get_values` (read; `get_values`), `sheets_write_values` (write; `update_values` and `update_formulas`) and `sheets_insert_rows` (write; `insert_dimension`). `sheets_write_values` needs `value_input`: `data` sends `valueInputOption=RAW` (values stored as given), `formulas` sends `USER_ENTERED` (parsed as if typed). Kinds as `classifyMethod` classifies `values.update` and `batchUpdate`.
+
+### Changed
+- `drive_read_text` (`read_file_content`) reads Word, Excel and PowerPoint (docx, xlsx, pptx) and OpenDocument (odt, ods, odp) files up to 20 MB. Drive exports only Google files, and a conversion would create a new file, so the file is downloaded and its text taken here (`src/servers/office-text.ts`, node:zlib only; each part inflates to at most 64 MB). Old binary formats (doc, xls, ppt), PDF and images are not read; the error points to `drive_download`. `include_comments` adds the comment threads (at most 1,000). A call without the new options sends the same requests and gets the same fields as before.
+- `drive_get_file` (`get_file_metadata`) also returns `description`, `file_extension`, `viewed_by_me_time`, `shared_with_me_time` and `can_add_children`. Drive's API has no content snippet.
+- The description of `drive_search` names `search_files` and says it takes Drive's own query syntax.
+- The `google` toolset of gdrive: 19 tools covering Google's 20 (Drive 8, Docs 2, Sheets 6, Slides 4), the new curated tools plus the generated `drive_permissions_list`, `drive_files_copy`, `docs_documents_get`, `docs_documents_batch_update`, `sheets_spreadsheets_get`, `sheets_spreadsheets_batch_update` and the four Slides tools. A `readonly` login asks for `drive.readonly`, a `readwrite` login for `drive`.
+
+### Not changed
+- Gmail: the attachment guard moved to `src/servers/local-files.ts` with the same messages; gmail lists the same tools with the same schemas.
+- Scopes of the `all` toolset, the write gate and the hook. Every other plugin lists the same tools with the same schemas.
+- Not tested against a live Google Drive (Google's HTTP layer stubbed).
+
 ## 1.8.0 - 2026-10-30
 
 ### New: Calendar tools that match Google's Calendar MCP server

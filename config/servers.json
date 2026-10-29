@@ -1356,6 +1356,29 @@
           "version": "v2beta"
         }
       ],
+      "toolsets": {
+        "google": [
+          "drive_search",
+          "drive_list_recent",
+          "drive_get_file",
+          "drive_permissions_list",
+          "drive_read_text",
+          "drive_download",
+          "drive_create_file",
+          "drive_files_copy",
+          "docs_documents_get",
+          "docs_documents_batch_update",
+          "sheets_get_values",
+          "sheets_spreadsheets_get",
+          "sheets_spreadsheets_batch_update",
+          "sheets_write_values",
+          "sheets_insert_rows",
+          "slides_presentations_get",
+          "slides_presentations_pages_get",
+          "slides_presentatio_pages_get_thumbnai",
+          "slides_presentations_batch_update"
+        ]
+      },
       "label": "Google Drive and Docs: Google Drive files, labels and activity, plus Docs, Sheets, Slides, Forms and Books."
     },
     {
