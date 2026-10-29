@@ -39,6 +39,15 @@ interface Registry {
 
 const REGISTRY_FILE = 'accounts.json';
 
+/**
+ * An account email as a sign-in takes it (gsm login --account, auth_login account): trimmed and in lower case. Undefined
+ * when the text does not look like one address: a space, no @ or two, or a leading "-" (it would read as an option).
+ */
+export function accountEmailOf(value: string): string | undefined {
+  const email = value.trim().toLowerCase();
+  return /^[^\s@-][^\s@]*@[^\s@]+$/.test(email) && email.length <= 254 ? email : undefined;
+}
+
 /** A file-name part for an email address: lower case, and only characters that are safe in every file system. */
 export function slugOf(email: string): string {
   return email.toLowerCase().replace(/[^a-z0-9._-]+/g, '_').slice(0, 120);

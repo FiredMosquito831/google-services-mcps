@@ -38,8 +38,11 @@ export function runGsmCommand(cliFile: string, args: string[]): Promise<{ code: 
 }
 
 export interface SignIn {
-  /** Starts the browser sign-in. Resolves with the URL to approve, or with the reason it could not start. */
-  start(profile: 'readonly' | 'readwrite', method?: SignInMethod): Promise<string>;
+  /**
+   * Starts the browser sign-in. Resolves with the URL to approve, or with the reason it could not start. `account` (oauth
+   * only) is the email to sign in: Google preselects it, and the login merges the scopes that account already holds.
+   */
+  start(profile: 'readonly' | 'readwrite', method?: SignInMethod, account?: string): Promise<string>;
   /** What the sign-in is doing now, for auth_status. */
   describe(): string;
   /** Stops a sign-in that is still waiting for the browser. */
@@ -80,6 +83,17 @@ function launchGcloud(program: string, args: string[]): ChildProcess {
   return spawn(program, args, { env: process.env, stdio });
 }
 
+/**
+ * The lines of a login's output that say what it kept, dropped or did not save (see cli/login.ts), each with the scope
+ * list that follows it left out. Exported for the tests.
+ */
+export function outcomeLines(output: string): string[] {
+  return output
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter((line) => /^(No account named:|Not requested again:|Not kept:|Not saved:|Its token is unchanged\.|To add them back,)/.test(line));
+}
+
 export function createSignIn(opts: SignInOptions): SignIn {
   let child: ChildProcess | undefined;
   let phase: 'idle' | 'waiting' | 'signed-in' | 'failed' = 'idle';
@@ -89,7 +103,7 @@ export function createSignIn(opts: SignInOptions): SignIn {
    * Waits for a sign-in child to print its URL, or to exit. The first answer goes back to the caller; the exit then
    * settles the phase and runs onExit, which may store the result.
    */
-  const waitFor = (proc: ChildProcess, onExit: (code: number | null) => string): Promise<string> =>
+  const waitFor = (proc: ChildProcess, onExit: (code: number | null, output: string) => string): Promise<string> =>
     new Promise((resolve) => {
       let out = '';
       let err = '';
@@ -125,27 +139,31 @@ export function createSignIn(opts: SignInOptions): SignIn {
         onOutput();
       });
       proc.on('exit', (code) => {
-        const result = onExit(code);
+        const result = onExit(code, `${out}\n${err}`);
         answer(result);
       });
     });
 
-  const startOAuth = (profile: 'readonly' | 'readwrite'): Promise<string> => {
+  const startOAuth = (profile: 'readonly' | 'readwrite', account?: string): Promise<string> => {
     const args = [opts.cliFile, 'login', opts.group, '--profile', profile, '--servers', opts.server];
+    // One argument, so the email can never be read as another option.
+    if (account) args.push(`--account=${account}`);
     // Tests set GSM_NO_BROWSER=1, so no browser opens. Normal use opens the browser on this machine.
     if (process.env.GSM_NO_BROWSER === '1') args.push('--no-browser');
     const proc = spawn(process.execPath, args, { env: process.env, stdio: ['ignore', 'pipe', 'pipe'] });
     child = proc;
     phase = 'waiting';
     note = '';
-    return waitFor(proc, (code) => {
+    return waitFor(proc, (code, output) => {
+      // The lines that say what the login kept, dropped or refused to save, so auth_status can repeat them.
+      const said = outcomeLines(output);
       if (code === 0) {
         phase = 'signed-in';
-        note = 'Signed in.';
+        note = ['Signed in.', ...said].join(' ');
         opts.onSignedIn();
       } else {
         phase = 'failed';
-        note = `the login exited with code ${code}`;
+        note = said.length > 0 ? said.join(' ') : `the login exited with code ${code}`;
       }
       return `The sign-in ${phase === 'signed-in' ? 'finished' : 'failed'}: ${note}`;
     });
@@ -191,14 +209,14 @@ export function createSignIn(opts: SignInOptions): SignIn {
   };
 
   return {
-    start(profile, method = 'oauth') {
+    start(profile, method = 'oauth', account) {
       if (!clientFileReady(opts.cfg) && (method === 'oauth' || opts.group !== 'cloud')) {
         return Promise.resolve(NO_CLIENT_MESSAGE);
       }
       if (child && child.exitCode === null) {
         return Promise.resolve(`A sign-in is already waiting for approval in the browser. ${note}`);
       }
-      return method === 'adc' ? startAdc(profile) : startOAuth(profile);
+      return method === 'adc' ? startAdc(profile) : startOAuth(profile, account);
     },
 
     describe() {

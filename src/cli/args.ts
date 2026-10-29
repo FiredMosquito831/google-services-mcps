@@ -1,4 +1,5 @@
 import { parseArgs } from 'node:util';
+import { accountEmailOf } from '../core/accounts.js';
 import { PROFILES, type Profile } from '../core/scopes.js';
 import {
   AGENTS,
@@ -73,7 +74,7 @@ const COMMANDS: Record<Exclude<Command, 'help'>, Record<string, OptionType>> = {
     'keep-data': 'boolean',
   },
   list: { json: 'boolean', home: 'string' },
-  login: { servers: 'string', 'client-secret': 'string', profile: 'string', scopes: 'string', 'no-browser': 'boolean', replace: 'boolean' },
+  login: { servers: 'string', 'client-secret': 'string', profile: 'string', scopes: 'string', 'no-browser': 'boolean', replace: 'boolean', account: 'string' },
   'setup-client': { force: 'boolean' },
   'setup-apikey': { force: 'boolean' },
   status: { check: 'boolean' },
@@ -311,6 +312,19 @@ export function parseProfile(value: string | boolean | undefined): Profile | und
     throw new UsageError(`--profile must be one of: ${PROFILES.join(', ')}`);
   }
   return value as Profile;
+}
+
+/**
+ * --account for gsm login: one email address, in lower case, or undefined when not given. It is sent to Google as the
+ * login hint, so it must look like an address: no spaces, one @, and not an option.
+ */
+export function parseLoginAccount(value: string | boolean | undefined): string | undefined {
+  if (value === undefined) return undefined;
+  const email = typeof value === 'string' ? accountEmailOf(value) : undefined;
+  if (email === undefined) {
+    throw new UsageError('--account takes the email address of a Google account, for example --account name@example.com');
+  }
+  return email;
 }
 
 /** The scope choice for gsm login: a profile (default readonly), or an exact list with --scopes. */

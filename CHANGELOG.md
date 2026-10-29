@@ -2,6 +2,19 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.1.2 - 2026-10-29
+
+### Fixes: what a sign-in asks Google for
+- The sign-in no longer sends `include_granted_scopes`. With it, Google returned every scope the account had granted the project, and the token was saved with all of them, so a Gmail token could carry Cloud and Search Console scopes. Google says incremental authorization is not supported for installed apps.
+- The merge no longer takes the default account's stored scopes for whichever account signs in. It reads the stored scopes of the account you name, and keeps only the scopes a server of the group uses. A scope that came from another group's sign-in is listed as "Not requested again".
+- New `--account <email>` for `gsm login`, and `account` for the chat tool `auth_login`. Google preselects that account (login hint), and its stored scopes are merged. Without an account, nothing is merged, and the output says so.
+- A save never takes scopes away from an account that is already signed in, unless that account was named (and you unticked scopes on Google's consent screen) or you pass `--replace`. When you name one account and pick another in the browser, or name none and pick one that holds more scopes, the login saves nothing, leaves the token as it was, and prints the command (and the chat call) to try again. `auth_status` repeats that message.
+- The "This token runs ..." line counts the scopes Google granted. Before the browser step, the login says what the token would run if every scope asked for is granted.
+
+### Notes
+- Each plugin's `servers.json` now lists every scope its login group uses (`groupScopes`), because a plugin knows only its own server.
+- Existing tokens keep their scopes until the next sign-in. To clean a token that holds scopes from another group, sign in again naming the account; `cloud-platform` is also a workspace-user scope (the gcontacts plugin's `health_*` tools use it), so drop it with `--replace`.
+
 ## 1.1.1 - 2026-10-29
 
 ### Fixes

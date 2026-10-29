@@ -33,5 +33,14 @@
       ],
       "label": "Search Console: Search Console sites, sitemaps, search analytics, URL indexing and site verification."
     }
-  ]
+  ],
+  "groupScopes": {
+    "searchconsole": [
+      "https://www.googleapis.com/auth/indexing",
+      "https://www.googleapis.com/auth/siteverification",
+      "https://www.googleapis.com/auth/siteverification.verify_only",
+      "https://www.googleapis.com/auth/webmasters",
+      "https://www.googleapis.com/auth/webmasters.readonly"
+    ]
+  }
 }

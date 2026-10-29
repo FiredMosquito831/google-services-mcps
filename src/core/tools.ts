@@ -16,7 +16,7 @@ import {
   removeUserTokens,
   type AuthKind,
 } from './auth.js';
-import { accountNames, listAccounts, setDefaultAccount } from './accounts.js';
+import { accountEmailOf, accountNames, listAccounts, setDefaultAccount } from './accounts.js';
 import { withAccount } from './account-context.js';
 import { revokeGrant, withIdentityScope } from './grant-check.js';
 import { createGate, type GateFn } from './approval.js';
@@ -364,7 +364,7 @@ export async function runServer(opts: {
       {
         title: 'Sign in to Google',
         description:
-          'Starts the Google sign-in for this server, in the browser on this machine. Call it without method first: the answer lists the two ways to sign in (oauth or adc) with their pros and cons. Ask the person which one to use, then call again with method. When the person approves in the browser, the tools of this server load without a restart.',
+          'Starts the Google sign-in for this server, in the browser on this machine. Call it without method first: the answer lists the two ways to sign in (oauth or adc) with their pros and cons. Ask the person which one to use, then call again with method. For an account that is already signed in here, pass its email as account, so the scopes it holds for the other servers of this group are kept. When the person approves in the browser, the tools of this server load without a restart.',
         inputSchema: {
           profile: z
             .enum(['readonly', 'readwrite'])
@@ -376,13 +376,24 @@ export async function runServer(opts: {
             .describe(
               'oauth: sign in with the saved OAuth client. adc: Application Default Credentials through the gcloud CLI. Leave it out to see the options first.',
             ),
+          account: z
+            .string()
+            .optional()
+            .describe(
+              'oauth only: the email of the Google account to sign in. Google preselects it, and the scopes that account already holds for the other servers of this group are kept. Without it, the sign-in asks only for this server\'s scopes, and it saves nothing when that would take scopes away from an account already signed in here (auth_status then says to try again with account).',
+            ),
         },
         annotations: { readOnlyHint: false },
       },
       async (rawArgs: Record<string, unknown>): Promise<CallToolResult> => {
         if (rawArgs.method !== 'oauth' && rawArgs.method !== 'adc') return text(signInChoice());
         const method: SignInMethod = rawArgs.method;
-        return text(await signIn.start(rawArgs.profile === 'readwrite' ? 'readwrite' : 'readonly', method));
+        let account: string | undefined;
+        if (typeof rawArgs.account === 'string' && rawArgs.account.trim() !== '') {
+          account = accountEmailOf(rawArgs.account);
+          if (account === undefined) return text('account must be the email address of a Google account, for example name@example.com.');
+        }
+        return text(await signIn.start(rawArgs.profile === 'readwrite' ? 'readwrite' : 'readonly', method, account));
       },
     );
     server.registerTool(

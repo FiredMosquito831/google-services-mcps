@@ -1,6 +1,6 @@
 # Setup per product
 
-Each product plugin has one login group. Log in once per group, with the list of products you use. A login merges with the scopes already stored for its group, so logging in for one product keeps the others. Use `--replace` to drop the stored scopes and keep only what this login requests. A merge can leave write scopes from an earlier readwrite login in place: when you want a readonly token again, log in with `--replace`. See [INSTALL.md](INSTALL.md#two-command-lines).
+Each product plugin has one login group. Log in once per group, with the list of products you use. A login merges with the scopes the same account already holds for its group, so logging in for one product keeps the others. Name the account with `--account <email>` (in the chat: `auth_login` with `account`): only that account's stored scopes are merged, and only the ones a server of the group uses. Without `--account`, nothing is merged, and a login that would take scopes away from an account already signed in saves nothing and says how to retry. Use `--replace` to drop the stored scopes and keep only what this login requests. A merge can leave write scopes from an earlier readwrite login in place: when you want a readonly token again, log in with `--replace`. See [INSTALL.md](INSTALL.md#two-command-lines).
 
 The commands in this guide use the installer, `npx google-services-mcps`. They run from any folder, and no build is needed. Each plugin folder also has its own copy of the installer, which knows only its own product.
 

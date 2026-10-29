@@ -8,7 +8,7 @@ import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { createInterface } from 'node:readline';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), '..');
 const plugin = (id) => join(REPO, 'plugins', id, 'servers', `${id}.mjs`);
@@ -124,6 +124,67 @@ test('the steps in one session: no client yet, save the client, sign-in URL with
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }
+});
+
+test('auth_login with account sends the hint and keeps only that account\'s scopes that the group uses; without it, no stored scope is asked for', async () => {
+  const dir = mkdtempSync(join(tmpdir(), 'gsm-inchat-account-'));
+  const G = (name) => `https://www.googleapis.com/auth/${name}`;
+  // drive.readonly belongs to another server of the group (gdrive), which the gmail plugin does not hold: the plugin
+  // learns it from the group list the bundle wrote. cloud-platform.read-only belongs to no workspace-user server.
+  const scopes = [G('gmail.readonly'), G('drive.readonly'), G('cloud-platform.read-only'), G('userinfo.email')];
+  writeFileSync(join(dir, 'client_secret.json'), JSON.stringify({ installed: { client_id: 'test-client-id', client_secret: 'test-secret-value' } }));
+  writeFileSync(join(dir, 'workspace-user.person.token.json'), JSON.stringify({ refresh_token: 'fake-refresh', scope: scopes.join(' '), account: 'person@example.com' }));
+  writeFileSync(
+    join(dir, 'accounts.json'),
+    JSON.stringify({
+      groups: {
+        'workspace-user': {
+          default: 'person@example.com',
+          accounts: { 'person@example.com': { file: 'workspace-user.person.token.json', scopes, addedAt: '2026-10-29T00:00:00.000Z' } },
+        },
+      },
+    }),
+  );
+  try {
+    await withServer(plugin('gmail'), dir, async ({ call }) => {
+      const refused = await call('auth_login', { method: 'oauth', account: 'not an email' });
+      assert.match(refused, /account must be the email address/);
+      const started = await call('auth_login', { method: 'oauth', account: 'Person@Example.com' });
+      const url = new URL(started.match(/https:\/\/accounts\.google\.com\S+/)[0]);
+      assert.equal(url.searchParams.get('login_hint'), 'person@example.com');
+      assert.equal(url.searchParams.get('include_granted_scopes'), null);
+      const asked = url.searchParams.get('scope').split(' ');
+      assert.ok(asked.includes(G('drive.readonly')), "the account's scope for another server of the group is kept");
+      assert.ok(!asked.includes(G('cloud-platform.read-only')), 'a scope no server of the group uses is not asked for again');
+    });
+    await withServer(plugin('gmail'), dir, async ({ call }) => {
+      const started = await call('auth_login', { method: 'oauth' });
+      const url = new URL(started.match(/https:\/\/accounts\.google\.com\S+/)[0]);
+      assert.equal(url.searchParams.get('login_hint'), null);
+      const asked = url.searchParams.get('scope').split(' ');
+      assert.ok(!asked.includes(G('drive.readonly')), "without an account, the default account's scopes are not asked for");
+      assert.ok(!asked.includes(G('cloud-platform.read-only')));
+    });
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('outcomeLines picks the lines that say what a login kept, dropped or did not save', async () => {
+  const { outcomeLines } = await import(pathToFileURL(join(REPO, 'dist', 'core', 'inchat-login.js')).href);
+  const output = [
+    'Servers: gmail',
+    'Not requested again: 2 stored scope(s) that no server of workspace-user uses (they came from another sign-in):',
+    '  https://www.googleapis.com/auth/webmasters',
+    'Saved token: x',
+    'Not saved: you named a@example.com, but Google signed in b@example.com. Saving would take 1 scope(s) away from that account\'s token:',
+    'Its token is unchanged. To sign in a@example.com, try again.',
+  ].join('\r\n');
+  assert.deepEqual(outcomeLines(output), [
+    'Not requested again: 2 stored scope(s) that no server of workspace-user uses (they came from another sign-in):',
+    'Not saved: you named a@example.com, but Google signed in b@example.com. Saving would take 1 scope(s) away from that account\'s token:',
+    'Its token is unchanged. To sign in a@example.com, try again.',
+  ]);
 });
 
 test('a missing or wrong client file is refused with the reason', async () => {

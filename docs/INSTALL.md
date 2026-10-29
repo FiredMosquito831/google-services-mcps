@@ -366,7 +366,7 @@ Other commands:
 | Command | Purpose |
 |---|---|
 | `npx google-services-mcps list [--json] [--home <dir>]` | Show every install gsm made: agent, scope, folder, products and state. **Checked.** |
-| `npx google-services-mcps login <group> [--profile readonly\|readwrite\|full] [--scopes <urls>] [--servers <a,b>] [--client-secret <file>] [--no-browser] [--replace]` | Log in one group. Merges with the scopes already stored, unless `--replace` drops them. **UNVERIFIED:** not run, because it starts Google's sign-in. Help text checked. |
+| `npx google-services-mcps login <group> [--profile readonly\|readwrite\|full] [--scopes <urls>] [--servers <a,b>] [--client-secret <file>] [--no-browser] [--replace] [--account <email>]` | Log in one group. With `--account`, merges with the scopes that account already holds for the group (only the ones a server of the group uses), unless `--replace` drops them. Without `--account`, nothing is merged. **UNVERIFIED:** not run, because it starts Google's sign-in. Help text checked. |
 | `npx google-services-mcps scopes <group> [--profile ...] [--servers ...] [--json]` | Show what each profile would enable. **Checked.** |
 | `npx google-services-mcps setup-client <client_secret.json> [--force]` | Save the OAuth desktop client file. **Checked** with a test file. |
 | `npx google-services-mcps setup-apikey [--force]` | Save the API key. The key comes from `GSM_API_KEY_INPUT` or standard input. **Checked** with a test key. |
@@ -539,7 +539,7 @@ The exact error text is **UNVERIFIED**.
 
 **Login works, but the tools still fail.** Restart the server in `/mcp`, or restart Claude Code. A new login needs a restart to apply the new scopes.
 
-**Earlier scopes are still in the token.** A login merges with the scopes already stored for its group, so logging in for one product keeps the others. Use `--replace` to drop the stored scopes and keep only what this login requests. A merge can leave write scopes from an earlier readwrite login in place: when you want a readonly token again, log in with `--replace`. For example:
+**Earlier scopes are still in the token.** A login merges with the scopes the same account already holds for its group, so logging in for one product keeps the others. Name the account with `--account <email>` (in the chat: `auth_login` with `account`): only that account's stored scopes are merged, and only the ones a server of the group uses. Without `--account`, nothing is merged, and a login that would take scopes away from an account already signed in saves nothing and says how to retry. Use `--replace` to drop the stored scopes and keep only what this login requests. A merge can leave write scopes from an earlier readwrite login in place: when you want a readonly token again, log in with `--replace`. For example:
 
 ```
 npx google-services-mcps login workspace-user --profile readonly --replace --servers gmail,gcalendar,gdrive

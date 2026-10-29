@@ -253,7 +253,7 @@ It prints how many tools each profile covers, and the scopes it asks for.
 npx google-services-mcps login workspace-user --profile readwrite --servers gmail
 ```
 
-A login merges with the scopes already stored for its group, so logging in for one product keeps the others. Use `--replace` to drop the stored scopes and keep only what this login requests. A merge can leave write scopes from an earlier readwrite login in place: when you want a readonly token again, log in with `--replace`. Then restart the server: `/mcp` in Claude Code, or restart the agent.
+A login merges with the scopes the same account already holds for its group, so logging in for one product keeps the others. Name the account with `--account <email>` (in the chat: `auth_login` with `account`): only that account's stored scopes are merged, and only the ones a server of the group uses. Without `--account`, nothing is merged, and a login that would take scopes away from an account already signed in saves nothing and says how to retry. Use `--replace` to drop the stored scopes and keep only what this login requests. A merge can leave write scopes from an earlier readwrite login in place: when you want a readonly token again, log in with `--replace`. Then restart the server: `/mcp` in Claude Code, or restart the agent.
 
 ## 7. The gateway workflow
 

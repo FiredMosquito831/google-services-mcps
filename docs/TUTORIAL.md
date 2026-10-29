@@ -395,13 +395,19 @@ npx google-services-mcps scopes workspace-user --servers gmail
 
 `--scopes <url,url>` asks for an exact list of scopes instead of a profile. Then nothing else is added.
 
-**Merge and `--replace`.** A login **merges** the scopes it asks for with the scopes already stored for its group. So logging in for `gmail` keeps the scopes of `gcalendar` that were stored earlier. Use `--replace` to drop the stored scopes, so that only this login's scopes remain. A merge can leave write scopes from an earlier `readwrite` login in place. When you want a read-only token again, log in with `--replace`:
+**Merge, `--account` and `--replace`.** A login **merges** the scopes it asks for with the scopes the same account already holds for its group. Name the account with `--account <email>` (in the chat: `auth_login` with `account`). Google preselects it, and only that account's stored scopes are merged, and only the ones a server of the group uses. So logging in for `gmail` with `--account` keeps the scopes of `gcalendar` that this account stored earlier, and drops a scope that no server of the group uses (such as a Cloud scope that came from another sign-in). Without `--account`, nothing is merged: the login asks only for its own scopes. A save never takes scopes away from an account that is already signed in, unless that account was named (and you unticked them on Google's consent screen) or you pass `--replace`. Otherwise the login saves nothing, leaves the token as it was, and says how to try again. This also covers naming one account and picking another one in the browser.
+
+```
+npx google-services-mcps login workspace-user --account you@example.com --servers gmail
+```
+
+Use `--replace` to drop the stored scopes, so that only this login's scopes remain. A merge can leave write scopes from an earlier `readwrite` login in place. When you want a read-only token again, log in with `--replace`:
 
 ```
 npx google-services-mcps login workspace-user --profile readonly --replace --servers gmail,gcalendar
 ```
 
-**UNVERIFIED:** not run, for the same reason as the login in step 3. The merge rule is from the `login` help text.
+**UNVERIFIED:** not run, for the same reason as the login in step 3. The merge rule is from the `login` help text and the offline tests.
 
 **Restart the server.** A new login needs a restart of the server (in Claude Code, `/mcp`, or restart the agent). **UNVERIFIED** in a live session.
 
@@ -740,6 +746,7 @@ Run `npx google-services-mcps --help` for the full text. Each flag in each comma
 | `--client-secret <file>` | the saved client file | Uses this client file. |
 | `--no-browser` | off | Prints the sign-in address instead of opening a browser. |
 | `--replace` | off | Drops the stored scopes instead of merging with them. |
+| `--account <email>` | none | The account to sign in. Google preselects it, and the login merges the scopes this account already holds for the group (only the ones a server of the group uses). Without it, nothing is merged. |
 
 ### setup-client
 

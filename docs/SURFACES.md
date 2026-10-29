@@ -93,7 +93,7 @@ Usage:
                          [--path <dir>] [--dry-run]
   npx google-services-mcps uninstall --all [--dry-run] [--yes]
   npx google-services-mcps list [--json] [--home <dir>]
-  npx google-services-mcps login <group> [--profile readonly|readwrite|full] [--scopes <url,url>] [--servers <a,b>] [--client-secret <file>] [--no-browser] [--replace]
+  npx google-services-mcps login <group> [--profile readonly|readwrite|full] [--scopes <url,url>] [--servers <a,b>] [--client-secret <file>] [--no-browser] [--replace] [--account <email>]
   npx google-services-mcps scopes <group> [--profile readonly|readwrite|full] [--servers <a,b>] [--json]
   npx google-services-mcps setup-client <path-to-client_secret.json> [--force]
   npx google-services-mcps setup-apikey [--force]
@@ -138,6 +138,8 @@ Groups:   OAuth login: cloud, workspace-user, searchconsole, business, developer
           workspace-admin: setup-admin (service account with domain-wide delegation).
 Flags:    --no-browser (login) prints the login URL only, and does not open the browser.
           --replace (login, setup-admin): by default a login merges the requested scopes with the stored ones; --replace drops the stored ones.
+          --account (login): the Google account to sign in. Google is asked to preselect it, and the merge reads that
+          account's stored scopes only (scopes no server of the group uses are left out). Without it, nothing is merged.
           --json (scopes, products, apis, methods, list) prints JSON.
 API key:  setup-apikey reads GSM_API_KEY_INPUT or stdin. The key is never a command-line argument and is never printed.
 Backups:  an existing config file is copied to <file>.gsm-backup-<YYYYMMDD-HHMMSS> before it changes.

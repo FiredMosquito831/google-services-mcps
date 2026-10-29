@@ -2,14 +2,14 @@
 
 ![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue)
 ![Status: beta](https://img.shields.io/badge/status-beta-orange)
-![Tests: 508 passing](https://img.shields.io/badge/tests-618%20passing-brightgreen)
+![Tests: 508 passing](https://img.shields.io/badge/tests-630%20passing-brightgreen)
 ![Plugins: 23](https://img.shields.io/badge/plugins-23-blue)
 ![Model Context Protocol](https://img.shields.io/badge/Model%20Context%20Protocol-server-6f42c1)
 ![Claude Code plugin](https://img.shields.io/badge/Claude%20Code-plugin-d97757)
 
 **google-services-mcps** is a Google Workspace MCP, Google Cloud MCP and Search Console MCP suite. It includes a Gmail MCP, a Google Drive MCP, a Google Calendar MCP and a Google Ads MCP, plus 19 more Google products. Each product is one **Model Context Protocol** server, packaged as a **Claude Code plugin** in one marketplace. An installer adds the same servers to a Codex MCP, an OpenCode MCP and an Antigravity MCP setup. Use it to let an AI agent read your Google data and, when you allow it, change that data.
 
-> **Status: beta.** Built and tested offline: 618 passing tests (three are skipped: one downloads from GitHub and runs only with `GSM_NETWORK_TESTS=1`, and one checks the Windows folder access list only off Windows), a smoke test over all 23 servers, and Claude plugin validation. Not yet tested against live Google accounts. The repository is public. Licensed under Apache-2.0.
+> **Status: beta.** Built and tested offline: 630 passing tests (three are skipped: one downloads from GitHub and runs only with `GSM_NETWORK_TESTS=1`, and one checks the Windows folder access list only off Windows), a smoke test over all 23 servers, and Claude plugin validation. Not yet tested against live Google accounts. The repository is public. Licensed under Apache-2.0.
 
 ## At a glance
 
@@ -273,7 +273,7 @@ A Google group can have several accounts. To add one, sign in again: Google asks
 | `full` | Every tool, with the broadest listed scope. Use it rarely. |
 | `--scopes <urls>` | Exactly the scopes you list. Nothing else is added. |
 
-A login merges with the scopes already stored for its group, so one product's login keeps the others. Use `--replace` to drop the stored scopes. A merge can leave write scopes from an earlier `readwrite` login in place. To get a read-only token back, log in again with `--replace`.
+A login merges with the scopes the same account already holds for its group, so one product's login keeps the others. Name the account with `--account <email>` (in the chat: `auth_login` with `account`): only that account's stored scopes are merged, and only the ones a server of the group uses. Without `--account`, nothing is merged, and a login that would take scopes away from an account already signed in saves nothing and says how to retry. Use `--replace` to drop the stored scopes. A merge can leave write scopes from an earlier `readwrite` login in place. To get a read-only token back, log in again with `--replace`.
 
 ### Workspace admin (gadmin)
 
@@ -467,7 +467,7 @@ Usage:
                          [--path <dir>] [--dry-run]
   npx google-services-mcps uninstall --all [--dry-run] [--yes]
   npx google-services-mcps list [--json] [--home <dir>]
-  npx google-services-mcps login <group> [--profile readonly|readwrite|full] [--scopes <url,url>] [--servers <a,b>] [--client-secret <file>] [--no-browser] [--replace]
+  npx google-services-mcps login <group> [--profile readonly|readwrite|full] [--scopes <url,url>] [--servers <a,b>] [--client-secret <file>] [--no-browser] [--replace] [--account <email>]
   npx google-services-mcps scopes <group> [--profile readonly|readwrite|full] [--servers <a,b>] [--json]
   npx google-services-mcps setup-client <path-to-client_secret.json> [--force]
   npx google-services-mcps setup-apikey [--force]
@@ -506,6 +506,8 @@ Groups:   OAuth login: cloud, workspace-user, searchconsole, business, developer
           workspace-admin: setup-admin (service account with domain-wide delegation).
 Flags:    --no-browser (login) prints the login URL only, and does not open the browser.
           --replace (login, setup-admin): by default a login merges the requested scopes with the stored ones; --replace drops the stored ones.
+          --account (login): the Google account to sign in. Google is asked to preselect it, and the merge reads that
+          account's stored scopes only (scopes no server of the group uses are left out). Without it, nothing is merged.
           --json (scopes, products, apis, methods, list) prints JSON.
 API key:  setup-apikey reads GSM_API_KEY_INPUT or stdin. The key is never a command-line argument and is never printed.
 Backups:  an existing config file is copied to <file>.gsm-backup-<YYYYMMDD-HHMMSS> before it changes.

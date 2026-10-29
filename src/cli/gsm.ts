@@ -9,6 +9,7 @@ import {
   parseGroup,
   parseInstallArgs,
   parseLimit,
+  parseLoginAccount,
   parseLoginScopes,
   parseProfile,
   parseSearch,
@@ -90,7 +91,7 @@ Usage:
                          [--path <dir>] [--dry-run]
   node gsm.mjs uninstall --all [--dry-run] [--yes]
   node gsm.mjs list [--json] [--home <dir>]
-  node gsm.mjs login <group> [--profile readonly|readwrite|full] [--scopes <url,url>] [--servers <a,b>] [--client-secret <file>] [--no-browser] [--replace]
+  node gsm.mjs login <group> [--profile readonly|readwrite|full] [--scopes <url,url>] [--servers <a,b>] [--client-secret <file>] [--no-browser] [--replace] [--account <email>]
   node gsm.mjs scopes <group> [--profile readonly|readwrite|full] [--servers <a,b>] [--json]
   node gsm.mjs setup-client <path-to-client_secret.json> [--force]
   node gsm.mjs setup-apikey [--force]
@@ -135,6 +136,8 @@ Groups:   OAuth login: cloud, workspace-user, searchconsole, business, developer
           workspace-admin: setup-admin (service account with domain-wide delegation).
 Flags:    --no-browser (login) prints the login URL only, and does not open the browser.
           --replace (login, setup-admin): by default a login merges the requested scopes with the stored ones; --replace drops the stored ones.
+          --account (login): the Google account to sign in. Google is asked to preselect it, and the merge reads that
+          account's stored scopes only (scopes no server of the group uses are left out). Without it, nothing is merged.
           --json (scopes, products, apis, methods, list) prints JSON.
 API key:  setup-apikey reads GSM_API_KEY_INPUT or stdin. The key is never a command-line argument and is never printed.
 Backups:  an existing config file is copied to <file>.gsm-backup-<YYYYMMDD-HHMMSS> before it changes.
@@ -306,13 +309,18 @@ async function dispatch(argv: readonly string[]): Promise<number> {
     case 'login': {
       // In a terminal, `login` with no group starts the guided sign-in (group, client file, profile, API key, admin).
       if (parsed.positionals.length === 0 && isInteractive()) return withPrompter((prompt) => guidedSignIn(guidedEnvFor(prompt, moduleUrl)));
-      const group = parseGroup(parsed.positionals, 'usage: node gsm.mjs login <group> [--profile readonly|readwrite|full] [--scopes <urls>] [--servers a,b] [--client-secret <file>] [--no-browser] [--replace]');
+      const group = parseGroup(parsed.positionals, 'usage: node gsm.mjs login <group> [--profile readonly|readwrite|full] [--scopes <urls>] [--servers a,b] [--client-secret <file>] [--no-browser] [--replace] [--account <email>]');
       const choice = parseLoginScopes(parsed.values);
       const servers = parseServers(parsed.values);
       const clientSecretFile = typeof parsed.values['client-secret'] === 'string' ? parsed.values['client-secret'] : undefined;
       const noBrowser = parsed.values['no-browser'] === true;
       const replace = parsed.values.replace === true;
-      return runLogin({ group, servers, clientSecretFile, profile: choice.profile, customScopes: choice.customScopes, noBrowser, replace }, registryFor, out);
+      const account = parseLoginAccount(parsed.values.account);
+      return runLogin(
+        { group, servers, clientSecretFile, profile: choice.profile, customScopes: choice.customScopes, noBrowser, replace, account },
+        registryFor,
+        out,
+      );
     }
 
     case 'scopes': {

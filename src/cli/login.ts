@@ -17,17 +17,17 @@ import { resolve } from 'node:path';
 import { OAuth2Client, CodeChallengeMethod, type Credentials } from 'google-auth-library';
 import { ensureTokenDir } from '../core/acl.js';
 import { accountOfToken, withIdentityScope } from '../core/grant-check.js';
-import { UNKNOWN_ACCOUNT, accountNames, defaultAccountTokenFile, saveAccount } from '../core/accounts.js';
+import { UNKNOWN_ACCOUNT, accountNames, accountTokenFile, listAccounts, saveAccount } from '../core/accounts.js';
 import { ADMIN_SCOPES, readClientSecret } from '../core/auth.js';
-import { loadConfig } from '../core/config.js';
+import { loadConfig, type RuntimeConfig } from '../core/config.js';
 import { serverByName, type AuthGroup, type Registry } from '../core/registry.js';
 import { PROFILE_TEXT, requirementsForSpecs, resolveScopes, type Profile } from '../core/scopes.js';
 import { OAUTH_GROUPS, type CliGroup } from './args.js';
 import { readStoredToken, tokenFileFor } from './credentials.js';
 import { writeAtomic } from './fsutil.js';
-import { mergeScopes, describeMerge } from './merge.js';
+import { mergeScopes, describeMerge, scopesDroppedBySave, splitUsable } from './merge.js';
 import { postureLine } from './posture.js';
-import { coverageOf, formatCoverage, gatewayReachLine, hasGatewayApis, selectGroupServers } from './scopes.js';
+import { coverageOf, formatCoverage, gatewayReachLine, groupScopeUniverse, hasGatewayApis, selectGroupServers } from './scopes.js';
 import type { Output } from './report.js';
 import { UsageError } from './types.js';
 
@@ -44,7 +44,29 @@ export interface LoginRequest {
   noBrowser?: boolean;
   /** --replace: keep only the requested scopes and drop the stored ones. Default: merge with the stored scopes. */
   replace?: boolean;
+  /**
+   * --account: the Google account to sign in, in lower case. Google gets it as login_hint, and the merge reads the stored
+   * scopes of this account only. Without it nothing is merged, because the account is not known until Google answers.
+   */
+  account?: string;
 }
+
+/** What runLogin reaches outside the process. Tests pass fakes; the defaults are the real ones. */
+export interface LoginDeps {
+  cfg?: RuntimeConfig;
+  loopback?: typeof loopbackLogin;
+  accountOf?: (accessToken: string, clientId: string, clientSecret: string) => Promise<string | undefined>;
+}
+
+/** The signed-in account of a group whose email matches, ignoring case. Undefined when that account is not signed in. */
+function accountEntry(group: AuthGroup, email: string, cfg: RuntimeConfig): { email: string; file: string } | undefined {
+  const entry = listAccounts(group, cfg).find((a) => a.email.toLowerCase() === email.toLowerCase());
+  if (!entry) return undefined;
+  const file = accountTokenFile(group, entry.email, cfg);
+  return file ? { email: entry.email, file } : undefined;
+}
+
+const list = (scopes: readonly string[]): string => scopes.map((s) => `  ${s}`).join('\n');
 
 /** The scopes stored in the group's token file. An unreadable file is noted on stderr and counts as nothing stored. */
 function storedLoginScopes(file: string | undefined, out: Output, cfg: { tokenDir: string }): string[] {
@@ -58,7 +80,7 @@ function storedLoginScopes(file: string | undefined, out: Output, cfg: { tokenDi
 }
 
 /** `loadRegistry` is passed as a function so that workspace-admin guidance needs no registry. */
-export async function runLogin(req: LoginRequest, loadRegistryFn: () => Registry, out: Output): Promise<number> {
+export async function runLogin(req: LoginRequest, loadRegistryFn: () => Registry, out: Output, deps: LoginDeps = {}): Promise<number> {
   if (req.group === 'workspace-admin') {
     printAdminGuidance(out);
     return 0;
@@ -77,7 +99,7 @@ export async function runLogin(req: LoginRequest, loadRegistryFn: () => Registry
   const group = req.group as AuthGroup;
   const registry = loadRegistryFn();
 
-  const cfg = loadConfig();
+  const cfg = deps.cfg ?? loadConfig();
   const secretCfg = {
     ...cfg,
     clientSecretFile: req.clientSecretFile ? resolve(req.clientSecretFile) : cfg.clientSecretFile,
@@ -102,16 +124,36 @@ export async function runLogin(req: LoginRequest, loadRegistryFn: () => Registry
   }
 
   // The rule for stored scopes (merge by default, --replace drops them) is in merge.ts; login and setup-admin share it.
+  // The stored scopes are those of the account named with --account, and only the ones a server of the group can use.
+  // Without an account nothing is merged: the account is not known until Google answers, and the scopes of another
+  // account (the default one, say) must not be requested for whichever account signs in.
   const replace = req.replace === true;
-  const merge = mergeScopes({ requested, stored: storedLoginScopes(defaultAccountTokenFile(group, cfg), out, cfg), replace });
+  const hint = req.account;
+  const usable = await groupScopeUniverse(registry, group, cfg, requirements, servers);
+  const hinted = hint === undefined ? undefined : accountEntry(group, hint, cfg);
+  const split = splitUsable(hinted ? storedLoginScopes(hinted.file, out, cfg) : [], usable);
+  const merge = mergeScopes({ requested, stored: split.usable, replace });
   // The email scope is always added: it lets gsm name the account the login belongs to. It grants no tool access.
   const scopes = withIdentityScope(merge.scopes);
   if (scopes.length === 0) throw new Error(`no OAuth scopes resolved for group "${group}"`);
 
   out.log('Also requested: the email scope, so gsm can show which account the login belongs to.');
   out.log(`Servers: ${servers.join(', ')}`);
-  out.log(`This token runs ${formatCoverage(coverageOf(requirements, scopes))}.`);
+  out.log(`If Google grants every scope asked for, this token runs ${formatCoverage(coverageOf(requirements, scopes))}.`);
   if (hasGatewayApis(registry, servers)) out.log(gatewayReachLine(requirements, scopes, req.profile));
+  if (hint === undefined) {
+    out.log(
+      `No account named: no stored scope is merged, and this login asks only for the scopes below. If the account you pick is already signed in for ${group} and holds scopes this login does not ask for, nothing is saved${replace ? ' unless --replace is given' : ''}. To keep its scopes for the other servers of ${group}, name it: --account <email> (in the chat: auth_login with account).`,
+    );
+  } else if (!hinted) {
+    out.log(`Account ${hint}: not signed in for ${group} yet, so no stored scope is merged. Google is asked to preselect it.`);
+  } else {
+    out.log(`Account ${hint}: its stored scopes are merged. Google is asked to preselect it.`);
+  }
+  if (split.foreign.length > 0) {
+    out.log(`Not requested again: ${split.foreign.length} stored scope(s) that no server of ${group} uses (they came from another sign-in):`);
+    out.log(list(split.foreign));
+  }
   const mergeLine = describeMerge(merge, replace);
   if (mergeLine) out.log(mergeLine);
   out.log(`Logging in for group "${group}" with ${scopes.length} scope(s):`);
@@ -120,21 +162,69 @@ export async function runLogin(req: LoginRequest, loadRegistryFn: () => Registry
     out.log(
       replace
         ? 'Note: --servers with --replace stores a token that covers only those servers.'
-        : 'Note: --servers requests only those servers. The scopes stored for the group for other servers are kept (merge).',
+        : hinted
+          ? `Note: --servers requests only those servers. The scopes ${hinted.email} holds for the other servers of the group are kept (merge).`
+          : 'Note: --servers requests only those servers.',
     );
   }
 
-  const tokens = await loopbackLogin(clientId, clientSecret, scopes, out, { openBrowser: req.noBrowser !== true });
+  const tokens = await (deps.loopback ?? loopbackLogin)(clientId, clientSecret, scopes, out, {
+    openBrowser: req.noBrowser !== true,
+    loginHint: hint,
+  });
   ensureTokenDir(cfg.tokenDir);
-  const account = tokens.access_token ? await accountOfToken(tokens.access_token, clientId, clientSecret) : undefined;
+  const account = tokens.access_token ? await (deps.accountOf ?? accountOfToken)(tokens.access_token, clientId, clientSecret) : undefined;
+  const granted = (tokens.scope ?? '').split(' ').filter(Boolean);
+  // What the new token holds: the scopes Google granted, or the ones asked for when Google does not report them.
+  const holds = granted.length > 0 ? granted : scopes;
+  const email = account ?? UNKNOWN_ACCOUNT;
+  const existing = accountEntry(group, email, cfg);
+  const dropped = existing ? scopesDroppedBySave(storedLoginScopes(existing.file, out, cfg), holds, usable) : [];
+
+  // A save never takes scopes a server of the group uses away from an account, unless that account's scopes were merged
+  // into this request (it was named and Google signed it in) or --replace says to drop them. Otherwise its token is not
+  // overwritten: it keeps working as it was, and the person can try again. The new token Google issued is not revoked,
+  // because a revoke would end every token of that account for this client, the stored one included.
+  const mergedThisAccount = hint !== undefined && email.toLowerCase() === hint;
+  const mayDrop = mergedThisAccount || (replace && hint === undefined);
+  if (!mayDrop && dropped.length > 0) {
+    if (hint !== undefined) {
+      out.warn(
+        `Not saved: you named ${hint}, but Google signed in ${account ?? 'an account it did not name'}. Saving would take ${dropped.length} scope(s) away from that account's token:`,
+      );
+      out.warn(list(dropped));
+      out.warn(`Its token is unchanged. To sign in ${hint}, try again and pick that account in the browser: node gsm.mjs login ${group} --account ${hint} (in the chat: auth_login with account "${hint}").`);
+      if (account) out.warn(`To add scopes to ${account} instead, name it: node gsm.mjs login ${group} --account ${account}.`);
+    } else {
+      out.warn(
+        `Not saved: ${email} is already signed in for ${group}, and this login asked only for its own scopes. Saving would take ${dropped.length} scope(s) away from its token:`,
+      );
+      out.warn(list(dropped));
+      out.warn(
+        `Its token is unchanged. To keep them and add this login's scopes, sign in again naming the account: node gsm.mjs login ${group} --account ${email} (in the chat: auth_login with account "${email}"). To drop them, add --replace.`,
+      );
+    }
+    return 1;
+  }
+
   // Each account keeps its own token file. A sign-in with an account that is already signed in replaces its token.
-  const saved = saveAccount(group, account ?? UNKNOWN_ACCOUNT, account ? { ...tokens, account } : tokens, cfg);
+  const saved = saveAccount(group, existing?.email ?? email, account ? { ...tokens, account } : tokens, cfg);
   out.log(`Saved token: ${saved} (mode 0600)`);
   out.log(account ? `Account: ${account}` : 'Account: not recorded (Google did not name the account)');
   out.log(`Signed-in accounts for ${group}: ${accountNames(group, cfg)}`);
   out.log(`Granted scopes: ${tokens.scope ?? '(not reported by Google)'}`);
-  const granted = (tokens.scope ?? '').split(' ').filter(Boolean);
-  out.log(postureLine(granted.length > 0 ? granted : scopes, process.env));
+  out.log(
+    granted.length > 0
+      ? `This token runs ${formatCoverage(coverageOf(requirements, granted))}.`
+      : `This token runs ${formatCoverage(coverageOf(requirements, scopes))} (Google did not report the granted scopes, so this counts the scopes asked for).`,
+  );
+  if (dropped.length > 0) {
+    // Only a --replace, or scopes left unticked on Google's consent screen, get here.
+    out.log(`Not kept: ${dropped.length} scope(s) that the earlier token of ${email} held for servers of ${group}:`);
+    out.log(list(dropped));
+    out.log(`To add them back, sign in again for the server that uses them, naming the account: --account ${email} (in the chat: auth_login with account).`);
+  }
+  out.log(postureLine(holds, process.env));
   return 0;
 }
 
@@ -190,7 +280,7 @@ export async function loopbackLogin(
   clientSecret: string,
   scopes: string[],
   out: Output,
-  options: { openBrowser?: boolean } = {},
+  options: { openBrowser?: boolean; loginHint?: string } = {},
 ): Promise<Credentials> {
   const shouldOpen = options.openBrowser !== false;
   const state = randomBytes(16).toString('hex');
@@ -249,9 +339,12 @@ export async function loopbackLogin(
         prompt: 'select_account consent',
         scope: scopes,
         state,
-        include_granted_scopes: true,
+        // No include_granted_scopes: Google says incremental authorization is not supported for installed apps, and
+        // with it Google returned every scope the account had granted the project, other groups' scopes included.
         code_challenge_method: CodeChallengeMethod.S256,
         code_challenge: pkce.codeChallenge,
+        // The account named with --account is preselected. The person can still pick another one.
+        ...(options.loginHint ? { login_hint: options.loginHint } : {}),
       });
       if (shouldOpen) {
         out.log(`\nOpen this URL to log in if the browser does not open:\n${authUrl}\n`);
