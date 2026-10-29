@@ -63,6 +63,12 @@ export interface ToolContext {
   hasScope(anyOf: string[]): boolean;
 }
 
+/** What a tool's prepare step worked out: the exact action, and what the approval shows of it. */
+export interface PreparedAction {
+  /** Shown in the approval in place of the raw arguments (and hashed into the audit line). */
+  preview: unknown;
+}
+
 export interface ToolDef<A extends ZodRawShape = ZodRawShape> {
   name: string;
   title: string;
@@ -76,8 +82,18 @@ export interface ToolDef<A extends ZodRawShape = ZodRawShape> {
   scopes?: string[];
   /** The API method id, when the tool runs one method. Used by the policy rules and the tool map. */
   methodId?: string;
-  /** Runs the action. Throw to report an error to the model. */
-  handler(args: z.infer<z.ZodObject<A>>, ctx: ToolContext): Promise<unknown>;
+  /**
+   * Runs the action. Throw to report an error to the model. `prepared` is the result of prepare, when the tool has one
+   * and runServer ran it; a handler called without it works the action out itself.
+   */
+  handler(args: z.infer<z.ZodObject<A>>, ctx: ToolContext, prepared?: PreparedAction): Promise<unknown>;
+  /**
+   * Optional, for a write or destructive tool whose exact effect takes reads to show: the recipients of a reply, the
+   * names and sizes of attached files. runServer calls it with the call's account before the gate, shows its preview in
+   * the approval in place of the raw arguments, and hands the result to the handler, so the action that runs is the one
+   * that was approved. It must change nothing. It never replaces the gate: the gate still runs before the handler.
+   */
+  prepare?(args: z.infer<z.ZodObject<A>>, ctx: ToolContext): Promise<PreparedAction>;
   /** Optional metadata: what a destructive action would do, for describe output. The gate does not use it. */
   preview?(args: z.infer<z.ZodObject<A>>): Promise<unknown> | unknown;
   /**
@@ -313,6 +329,18 @@ export async function runServer(opts: {
         },
         async (rawArgs: Record<string, unknown>): Promise<CallToolResult> => {
           try {
+            const prepare = tool.prepare;
+            if (prepare && (tool.kind === 'write' || tool.kind === 'destructive')) {
+              // Prepare (reads only), then the gate with its exact preview, then the handler with the prepared action. All
+              // three run with the call's account. If the gate throws, the handler never runs.
+              const { account, ...args } = rawArgs;
+              const data = await withAccount(typeof account === 'string' ? account : undefined, async () => {
+                const prepared = await prepare(args as never, ctx);
+                await gate({ kind: tool.kind as ActionKind, target: tool.name, methodId: tool.methodId, args: prepared.preview });
+                return tool.handler(args as never, ctx, prepared);
+              });
+              return asJson(data, cfg.maxResultChars);
+            }
             if (tool.kind === 'write' || tool.kind === 'destructive') {
               // The gate runs before the handler. If it throws, the handler never runs.
               await gate({ kind: tool.kind, target: tool.name, methodId: tool.methodId, args: rawArgs });

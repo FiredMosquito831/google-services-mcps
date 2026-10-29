@@ -254,6 +254,49 @@ for (const mod of SERVERS) {
 
 const ctx = { gate: async () => undefined, grantedScopes: null, hasScope: () => true };
 const SITE = 'sc-domain:example.com';
+
+// Local files for the Gmail attachments (outside the token folder, which the Gmail tools refuse). The large one sends
+// the message through the upload endpoint (over 5 MB).
+const attachDir = mkdtempSync(join(tmpdir(), 'gsm-contract-files-'));
+after(() => rmSync(attachDir, { recursive: true, force: true }));
+const SMALL_FILE = join(attachDir, 'notes.txt');
+writeFileSync(SMALL_FILE, 'notes');
+const LARGE_FILE = join(attachDir, 'large.bin');
+writeFileSync(LARGE_FILE, Buffer.alloc(6 * 1024 * 1024, 1));
+
+/** A message to reply to: the headers a reply reads, and a text part Gmail keeps apart (only an attachment id). */
+const replyable = (call) => {
+  if (call.url.endsWith('/profile')) return { emailAddress: 'me@example.com' };
+  if (/\/messages\/msg-1$/.test(call.url)) {
+    return {
+      id: 'msg-1',
+      threadId: 'thr-1',
+      payload: {
+        mimeType: 'multipart/alternative',
+        headers: [
+          { name: 'From', value: 'Ana <ana@example.com>' },
+          { name: 'Subject', value: 'Hi' },
+          { name: 'Message-ID', value: '<m1@example.com>' },
+        ],
+        parts: [
+          { mimeType: 'text/plain', headers: [{ name: 'Content-Type', value: 'text/plain; charset=iso-8859-2' }], body: { size: 9, data: 'SGVsbG8' } },
+          { mimeType: 'text/html', headers: [], body: { size: 900000, attachmentId: 'part-1' } },
+        ],
+      },
+    };
+  }
+  if (call.url.includes('/attachments/')) return { size: 5, data: 'PGI-eDwvYj4' };
+  return generic();
+};
+
+/** Threads and labels for the thread and label tools: one thread of two messages, and a user label. */
+const threaded = (call) => {
+  const message = (id) => ({ id, threadId: 'thr-1', labelIds: ['INBOX'], snippet: 's', payload: { mimeType: 'text/plain', headers: [{ name: 'Subject', value: 'Hi' }], body: { data: 'SGk' } } });
+  if (call.url.endsWith('/threads')) return { threads: [{ id: 'thr-1' }], nextPageToken: 'n', resultSizeEstimate: 1 };
+  if (call.url.endsWith('/threads/thr-1')) return { id: 'thr-1', messages: [message('m1'), message('m2')] };
+  if (call.url.endsWith('/labels')) return { labels: [{ id: 'INBOX', name: 'INBOX', type: 'system' }, { id: 'Label_1', name: 'Invoices', type: 'user' }] };
+  return generic();
+};
 const SITEMAP = 'https://example.com/sitemap.xml';
 
 /**
@@ -266,11 +309,65 @@ const CASES = {
   gmail_get_message: [
     { args: { id: 'msg-1', format: 'full', max_body_chars: 500 }, expect: ['gmail.users.messages.get'] },
     { args: { id: 'msg-1', format: 'metadata' }, expect: ['gmail.users.messages.get'] },
+    // A text part kept apart by Gmail is fetched by its id.
+    { args: { id: 'msg-1', include_html: true }, expect: ['gmail.users.messages.get', 'gmail.users.messages.attachments.get'], respond: replyable },
   ],
-  gmail_list_labels: [{ args: {}, expect: ['gmail.users.labels.list'] }],
-  gmail_list_drafts: [{ args: { max_results: 5, page_token: 'p1' }, expect: ['gmail.users.drafts.list', 'gmail.users.drafts.get'] }],
-  gmail_create_draft: [{ args: { to: ['a@example.com'], subject: 'Hi', body: 'Text', cc: ['b@example.com'], bcc: ['c@example.com'] }, expect: ['gmail.users.drafts.create'] }],
+  gmail_get_attachment: [{ args: { message_id: 'msg-1', attachment_id: 'att-1' }, expect: ['gmail.users.messages.attachments.get'] }],
+  gmail_list_labels: [
+    { args: {}, expect: ['gmail.users.labels.list'] },
+    { args: { user_only: true, page_size: 1, page_token: '0' }, expect: ['gmail.users.labels.list'], respond: threaded },
+  ],
+  gmail_list_drafts: [
+    { args: { max_results: 5, page_token: 'p1' }, expect: ['gmail.users.drafts.list', 'gmail.users.drafts.get'] },
+    { args: { query: 'subject:plan' }, expect: ['gmail.users.drafts.list', 'gmail.users.drafts.get'] },
+  ],
+  gmail_search_threads: [
+    { args: { query: 'from:a@example.com', page_size: 5, page_token: 'p1', include_trash: true }, expect: ['gmail.users.threads.list', 'gmail.users.threads.get'], respond: threaded },
+    { args: { view: 'concise' }, expect: ['gmail.users.threads.list', 'gmail.users.threads.get'], respond: threaded },
+  ],
+  gmail_get_thread: [
+    { args: { thread_id: 'thr-1', max_body_chars: 500, include_html: true }, expect: ['gmail.users.threads.get'], respond: threaded },
+    { args: { thread_id: 'thr-1', view: 'concise' }, expect: ['gmail.users.threads.get'], respond: threaded },
+  ],
+  gmail_label: [
+    { args: { thread_id: 'thr-1', labels: ['invoices', 'INBOX'] }, expect: ['gmail.users.labels.list', 'gmail.users.threads.modify'], respond: threaded },
+    { args: { message_id: 'm1', labels: ['Label_1'] }, expect: ['gmail.users.labels.list', 'gmail.users.messages.modify'], respond: threaded },
+  ],
+  gmail_unlabel: [
+    { args: { thread_id: 'thr-1', labels: ['INBOX'] }, expect: ['gmail.users.labels.list', 'gmail.users.threads.modify'], respond: threaded },
+    { args: { message_id: 'm1', labels: ['Invoices'] }, expect: ['gmail.users.labels.list', 'gmail.users.messages.modify'], respond: threaded },
+  ],
+  gmail_untrash: [
+    { args: { thread_id: 'thr-1' }, expect: ['gmail.users.threads.untrash'] },
+    { args: { message_id: 'm1' }, expect: ['gmail.users.messages.untrash'] },
+  ],
+  gmail_trash: [
+    { args: { thread_id: 'thr-1' }, expect: ['gmail.users.threads.get', 'gmail.users.threads.trash'], respond: threaded },
+    { args: { message_id: 'm1' }, expect: ['gmail.users.messages.get', 'gmail.users.messages.trash'] },
+  ],
+  gmail_create_draft: [
+    { args: { to: ['a@example.com'], subject: 'Hi', body: 'Text', cc: ['b@example.com'], bcc: ['c@example.com'] }, expect: ['gmail.users.drafts.create'] },
+    {
+      args: { reply_to_message_id: 'msg-1', body: 'Text', body_html: '<p>Text</p>', quote_original: true, attachments: [SMALL_FILE] },
+      expect: ['gmail.users.messages.get', 'gmail.users.messages.attachments.get', 'gmail.users.getProfile', 'gmail.users.drafts.create'],
+      respond: replyable,
+    },
+    { args: { to: ['a@example.com'], subject: 'Large', attachments: [LARGE_FILE] }, expect: ['gmail.users.drafts.create'] },
+  ],
   gmail_send_draft: [{ args: { draft_id: 'draft-1' }, preview: true, expect: ['gmail.users.drafts.get', 'gmail.users.drafts.send'] }],
+  gmail_send: [
+    { args: { to: ['a@example.com'], cc: ['b@example.com'], bcc: ['c@example.com'], subject: 'Hi', body_text: 'Text', body_html: '<p>Text</p>', attachments: [SMALL_FILE] }, expect: ['gmail.users.messages.send'] },
+    // Over 5 MB: the upload endpoint, uploadType=multipart.
+    { args: { to: ['a@example.com'], subject: 'Large', body_text: 'See attached', attachments: [LARGE_FILE] }, expect: ['gmail.users.messages.send'] },
+  ],
+  gmail_reply: [
+    { args: { message_id: 'msg-1', body_text: 'Thanks', reply_all: true }, expect: ['gmail.users.messages.get', 'gmail.users.getProfile', 'gmail.users.messages.send'], respond: replyable },
+    {
+      args: { message_id: 'msg-1', body_html: '<p>Thanks</p>', quote_original: true, attachments: [LARGE_FILE] },
+      expect: ['gmail.users.messages.get', 'gmail.users.messages.attachments.get', 'gmail.users.getProfile', 'gmail.users.messages.send'],
+      respond: replyable,
+    },
+  ],
 
   // gcalendar
   calendar_list_calendars: [{ args: {}, expect: ['calendar.calendarList.list'] }],
@@ -439,7 +536,7 @@ test('every curated tool has a contract row, a skip reason or a known defect, an
   const listed = new Set([...Object.keys(CASES), ...Object.keys(SKIPPED), ...Object.keys(KNOWN_DEFECTS)]);
   assert.deepEqual([...tools.keys()].filter((name) => !listed.has(name)), [], 'curated tools without a row');
   assert.deepEqual([...listed].filter((name) => !tools.has(name)), [], 'rows for tools that do not exist');
-  assert.equal(tools.size, 73, 'the curated tool count; update the table when it changes');
+  assert.equal(tools.size, 82, 'the curated tool count; update the table when it changes');
 });
 
 for (const [name, cases] of Object.entries(CASES)) {

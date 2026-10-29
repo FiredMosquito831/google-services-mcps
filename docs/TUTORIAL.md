@@ -556,6 +556,8 @@ Every product also has `api_methods`, a read tool that lists its generated metho
 Each example names the tool an agent would call. The tool names are checked. The results are not, because no live Google account was used. Reads never ask.
 
 - **Gmail (workspace-user):** "Show the subjects of my five most recent Gmail messages." The agent calls `gmail_users_messages_list`.
+- **Gmail, a reply:** "Reply to Ana's last message: Thursday works." The agent finds the message with `gmail_search`, then calls `gmail_reply`. Sending is destructive, so it asks twice; the second prompt shows the recipients, the subject and the thread. This needs a `readwrite` login and **Allow write tools**.
+- **Gmail, a conversation:** "Summarise my thread with Ana about the venue." The agent calls `gmail_search_threads`, then `gmail_get_thread`. Reads never ask. With `toolset: google`, these are the thread tools the server lists.
 - **Calendar (workspace-user):** "What is on my calendar tomorrow?" The agent calls `calendar_events_list`.
 - **Drive (workspace-user):** "List the files in my Drive." The agent calls `drive_files_list`.
 - **Search Console (searchconsole):** "Which sites are in my Search Console?" The agent calls `sc_sites_list`.

@@ -35,16 +35,19 @@ const tool = (name, origin, extra = {}) => ({ name, title: name, description: `$
 
 const GMAIL_GOOGLE = [
   'gmail_search',
-  'gmail_users_threads_list',
-  'gmail_users_threads_get',
+  'gmail_search_threads',
+  'gmail_get_thread',
   'gmail_get_message',
+  'gmail_get_attachment',
   'gmail_list_drafts',
   'gmail_create_draft',
   'gmail_send_draft',
   'gmail_list_labels',
   'gmail_users_labels_create',
-  'gmail_users_threads_modify',
-  'gmail_users_messages_modify',
+  'gmail_label',
+  'gmail_unlabel',
+  'gmail_trash',
+  'gmail_untrash',
 ];
 /** The tools runServer adds for a server of an OAuth group. No toolset removes them. */
 const RUNTIME_OAUTH = ['account_remove', 'account_set_default', 'accounts_list', 'auth_login', 'auth_setup_client', 'auth_status', 'health'];
