@@ -32,16 +32,19 @@ const registry = () => loadRegistry(DIST('core/registry.js'));
 
 const GMAIL_GOOGLE = [
   'gmail_create_draft',
+  'gmail_get_attachment',
   'gmail_get_message',
+  'gmail_get_thread',
+  'gmail_label',
   'gmail_list_drafts',
   'gmail_list_labels',
   'gmail_search',
+  'gmail_search_threads',
   'gmail_send_draft',
+  'gmail_trash',
+  'gmail_unlabel',
+  'gmail_untrash',
   'gmail_users_labels_create',
-  'gmail_users_messages_modify',
-  'gmail_users_threads_get',
-  'gmail_users_threads_list',
-  'gmail_users_threads_modify',
 ];
 
 const temps = [];
@@ -90,12 +93,18 @@ test('requirements: curated keeps the curated tools and, with api_call, the gate
     'gmail_create_draft',
     'gmail_get_attachment',
     'gmail_get_message',
+    'gmail_get_thread',
+    'gmail_label',
     'gmail_list_drafts',
     'gmail_list_labels',
     'gmail_reply',
     'gmail_search',
+    'gmail_search_threads',
     'gmail_send',
     'gmail_send_draft',
+    'gmail_trash',
+    'gmail_unlabel',
+    'gmail_untrash',
   ]);
   assert.deepEqual(
     curated.filter((r) => r.gateway),

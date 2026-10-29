@@ -2,6 +2,25 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.7.0 - 2026-10-30
+
+### New: Gmail tools that match Google's Gmail MCP server
+Each description names the Google tool it matches.
+- `gmail_search_threads` (read; `search_threads`): Gmail search syntax, thread-level results. View `detailed` (default) summarises each message of each thread (from, to, cc, date, subject, snippet, labels); `concise` gives one line per thread. 20 threads a page by default, at most 50. `include_trash` also searches Trash and Spam (Gmail's `includeSpamTrash`).
+- `gmail_get_thread` (read; `get_thread`): every message of a thread, decoded as `gmail_get_message` does (charsets, blank lines, large parts, attachment ids). `concise` gives headers and snippets only. Each body is capped at 4,000 characters by default (`max_body_chars`).
+- `gmail_label` and `gmail_unlabel` (write; `label_thread`, `label_message`, `unlabel_thread`, `unlabel_message`): a thread or a message, labels by id or by name (names are looked up in the label list, in any case). Adding TRASH or SPAM, and removing TRASH, is refused with the tool to use; nothing is changed then. Both are writes, as `classifyMethod` classifies `modify`.
+- `gmail_trash` (destructive, as `classifyMethod` classifies `trash`) and `gmail_untrash` (write): a thread or a message. Before the approval, `gmail_trash` reads what it moves, and the approval shows the subject, the senders and the number of messages.
+
+### Changed
+- `gmail_list_labels` takes `user_only` (only the labels the user made) and `page_size` / `page_token` (Gmail returns every label at once; this server pages them). Without `page_size` and `page_token` the answer is the plain list, as before. Its description lists the system label ids.
+- `gmail_list_drafts` takes `query` (Gmail search syntax, sent as `q`).
+- The `google` toolset of gmail uses the new tools: `gmail_search_threads`, `gmail_get_thread`, `gmail_label`, `gmail_unlabel`, `gmail_trash`, `gmail_untrash` and `gmail_get_attachment` replace `gmail_users_threads_list`, `gmail_users_threads_get`, `gmail_users_threads_modify` and `gmail_users_messages_modify`. It still asks for `gmail.readonly` (`readonly`) or `gmail.modify` (`readwrite`) only.
+
+### Not changed
+- The generated per-method tools are all still there in the `all` toolset, with the same kinds.
+- Scopes, the write gate and the hook. Every other plugin lists the same tools with the same schemas.
+- Not tested against a live Gmail account (Google's HTTP layer stubbed).
+
 ## 1.6.0 - 2026-10-29
 
 ### New: send and reply in Gmail

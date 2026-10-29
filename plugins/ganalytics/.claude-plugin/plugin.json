@@ -1,7 +1,7 @@
 {
   "name": "ganalytics",
   "displayName": "Google Analytics",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "Google Analytics admin and data APIs for GA4 properties, configuration and reports.",
   "author": {
     "name": "FiredMosquito831"

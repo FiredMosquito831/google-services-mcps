@@ -103,6 +103,25 @@
     "title": "Get Gmail message"
   },
   {
+    "name": "mcp__plugin_gmail_gmail__gmail_get_thread",
+    "kind": "read",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.modify",
+      "https://www.googleapis.com/auth/gmail.readonly"
+    ],
+    "title": "Get Gmail thread"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_label",
+    "kind": "write",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.modify"
+    ],
+    "title": "Add Gmail labels"
+  },
+  {
     "name": "mcp__plugin_gmail_gmail__gmail_list_drafts",
     "kind": "read",
     "scopes": [
@@ -146,6 +165,17 @@
     "title": "Search Gmail"
   },
   {
+    "name": "mcp__plugin_gmail_gmail__gmail_search_threads",
+    "kind": "read",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.metadata",
+      "https://www.googleapis.com/auth/gmail.modify",
+      "https://www.googleapis.com/auth/gmail.readonly"
+    ],
+    "title": "Search Gmail threads"
+  },
+  {
     "name": "mcp__plugin_gmail_gmail__gmail_send",
     "kind": "destructive",
     "scopes": [
@@ -164,6 +194,33 @@
       "https://www.googleapis.com/auth/gmail.modify"
     ],
     "title": "Send Gmail draft"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_trash",
+    "kind": "destructive",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.modify"
+    ],
+    "title": "Move to Gmail Trash"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_unlabel",
+    "kind": "write",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.modify"
+    ],
+    "title": "Remove Gmail labels"
+  },
+  {
+    "name": "mcp__plugin_gmail_gmail__gmail_untrash",
+    "kind": "write",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.modify"
+    ],
+    "title": "Restore from Gmail Trash"
   },
   {
     "name": "mcp__plugin_gmail_gmail__gmail_users_drafts_delete",

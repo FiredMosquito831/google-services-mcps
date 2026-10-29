@@ -4,31 +4,34 @@ Gmail mailboxes, messages, labels and settings, plus Gmail Postmaster Tools.
 
 - Plugin: `gmail`, MCP server: `gmail`, login: Desktop OAuth client, then `login workspace-user`
 - Install: `claude plugin install gmail@google-services-mcps`
-- Tools: 109 total. Curated 18, per-method 87, gateway 3. Read 47, write 41, destructive 20, dynamic 1.
+- Tools: 115 total. Curated 24, per-method 87, gateway 3. Read 49, write 44, destructive 21, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 109, google 20, curated 21 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 115, google 23, curated 27 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
 
-## Toolset google (11)
+## Toolset google (14)
 
 The tools that match Google's official MCP server for this product (https://developers.google.com/workspace/gmail/api/reference/mcp/tools_list).
 
 | Tool | Google's tool | Note |
 |---|---|---|
-| `gmail_search` | `search_threads` | Searches messages; Google's search_threads returns threads. gmail_users_threads_list gives the thread-level list. |
-| `gmail_users_threads_list` | `search_threads` |  |
-| `gmail_users_threads_get` | `get_thread` |  |
+| `gmail_search` | `search_threads` | Searches messages; Google's search_threads returns threads, as gmail_search_threads does. |
+| `gmail_search_threads` | `search_threads` |  |
+| `gmail_get_thread` | `get_thread` |  |
 | `gmail_get_message` | `get_message` |  |
+| `gmail_get_attachment` | (none) | Google's get_message lists attachment ids, but no tool of Google's server downloads them. Kept so the ids lead somewhere; it is a read. |
 | `gmail_list_drafts` | `list_drafts` |  |
 | `gmail_create_draft` | `create_draft` |  |
 | `gmail_send_draft` | (none) | Google's Gmail server has no send tool. Kept so a draft made with gmail_create_draft can be sent; it is destructive, so it asks first. |
 | `gmail_list_labels` | `list_labels` |  |
 | `gmail_users_labels_create` | `create_label` |  |
-| `gmail_users_threads_modify` | `label_thread`, `unlabel_thread` | One tool adds and removes labels (label_thread and unlabel_thread in Google's server). |
-| `gmail_users_messages_modify` | `label_message`, `unlabel_message` | One tool adds and removes labels (label_message and unlabel_message in Google's server). |
+| `gmail_label` | `label_thread`, `label_message` | One tool for threads and messages (label_thread and label_message in Google's server). Trash and Spam are refused here, as Google's label tools refuse them. |
+| `gmail_unlabel` | `unlabel_thread`, `unlabel_message` | One tool for threads and messages (unlabel_thread and unlabel_message in Google's server). Taking mail out of Trash is gmail_untrash. |
+| `gmail_trash` | (none) | Google's label tools send Trash and Spam to tools outside its public list. Kept so mail can still go to Trash; it is destructive, so it asks first and shows what moves. |
+| `gmail_untrash` | (none) | Restores what gmail_trash moved, as removing the Trash label would in Google's server. |
 
-## Curated tools (18)
+## Curated tools (24)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
@@ -43,12 +46,18 @@ The tools that match Google's official MCP server for this product (https://deve
 | `gmail_create_draft` | write | Create Gmail draft | https://mail.google.com/, gmail.compose |
 | `gmail_get_attachment` | read | Get Gmail attachment | https://mail.google.com/, gmail.modify |
 | `gmail_get_message` | read | Get Gmail message | https://mail.google.com/, gmail.metadata |
+| `gmail_get_thread` | read | Get Gmail thread | https://mail.google.com/, gmail.modify |
+| `gmail_label` | write | Add Gmail labels | https://mail.google.com/, gmail.modify |
 | `gmail_list_drafts` | read | List Gmail drafts | https://mail.google.com/, gmail.compose |
 | `gmail_list_labels` | read | List Gmail labels | https://mail.google.com/, gmail.labels |
 | `gmail_reply` | destructive | Reply to a Gmail message | https://mail.google.com/, gmail.modify |
 | `gmail_search` | read | Search Gmail | https://mail.google.com/, gmail.metadata |
+| `gmail_search_threads` | read | Search Gmail threads | https://mail.google.com/, gmail.metadata |
 | `gmail_send` | destructive | Send Gmail message | https://mail.google.com/, gmail.compose |
 | `gmail_send_draft` | destructive | Send Gmail draft | https://mail.google.com/, gmail.compose |
+| `gmail_trash` | destructive | Move to Gmail Trash | https://mail.google.com/, gmail.modify |
+| `gmail_unlabel` | write | Remove Gmail labels | https://mail.google.com/, gmail.modify |
+| `gmail_untrash` | write | Restore from Gmail Trash | https://mail.google.com/, gmail.modify |
 | `health` | read | Server health | (none) |
 
 ## Per-method tools (87)

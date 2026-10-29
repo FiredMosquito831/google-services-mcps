@@ -132,8 +132,8 @@ test('kinds follow classifyMethod for the method each tool changes: send and rep
     gmail_get_message: 'read',
   });
   for (const [name, kind] of Object.entries(expect)) assert.equal(tools.get(name).kind, kind, name);
-  // Only the two sends work out a preview before the gate.
-  assert.deepEqual([...tools.values()].filter((t) => t.prepare).map((t) => t.name).sort(), ['gmail_reply', 'gmail_send']);
+  // Only the two sends and the move to Trash work out a preview before the gate.
+  assert.deepEqual([...tools.values()].filter((t) => t.prepare).map((t) => t.name).sort(), ['gmail_reply', 'gmail_send', 'gmail_trash']);
   // No scope beyond the 1.2.0 policy: send and reply ride on gmail.modify (or compose, or the full scope).
   const G = (s) => `https://www.googleapis.com/auth/${s}`;
   assert.deepEqual(tools.get('gmail_send').scopes, ['https://mail.google.com/', G('gmail.compose'), G('gmail.modify')]);

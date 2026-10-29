@@ -1378,30 +1378,34 @@
           "source": "https://developers.google.com/workspace/gmail/api/reference/mcp/tools_list",
           "tools": [
             "gmail_search",
-            "gmail_users_threads_list",
-            "gmail_users_threads_get",
+            "gmail_search_threads",
+            "gmail_get_thread",
             "gmail_get_message",
+            "gmail_get_attachment",
             "gmail_list_drafts",
             "gmail_create_draft",
             "gmail_send_draft",
             "gmail_list_labels",
             "gmail_users_labels_create",
-            "gmail_users_threads_modify",
-            "gmail_users_messages_modify"
+            "gmail_label",
+            "gmail_unlabel",
+            "gmail_trash",
+            "gmail_untrash"
           ],
           "matches": {
             "gmail_search": [
               "search_threads"
             ],
-            "gmail_users_threads_list": [
+            "gmail_search_threads": [
               "search_threads"
             ],
-            "gmail_users_threads_get": [
+            "gmail_get_thread": [
               "get_thread"
             ],
             "gmail_get_message": [
               "get_message"
             ],
+            "gmail_get_attachment": [],
             "gmail_list_drafts": [
               "list_drafts"
             ],
@@ -1415,20 +1419,25 @@
             "gmail_users_labels_create": [
               "create_label"
             ],
-            "gmail_users_threads_modify": [
+            "gmail_label": [
               "label_thread",
-              "unlabel_thread"
+              "label_message"
             ],
-            "gmail_users_messages_modify": [
-              "label_message",
+            "gmail_unlabel": [
+              "unlabel_thread",
               "unlabel_message"
-            ]
+            ],
+            "gmail_trash": [],
+            "gmail_untrash": []
           },
           "notes": {
-            "gmail_search": "Searches messages; Google's search_threads returns threads. gmail_users_threads_list gives the thread-level list.",
+            "gmail_search": "Searches messages; Google's search_threads returns threads, as gmail_search_threads does.",
+            "gmail_get_attachment": "Google's get_message lists attachment ids, but no tool of Google's server downloads them. Kept so the ids lead somewhere; it is a read.",
             "gmail_send_draft": "Google's Gmail server has no send tool. Kept so a draft made with gmail_create_draft can be sent; it is destructive, so it asks first.",
-            "gmail_users_threads_modify": "One tool adds and removes labels (label_thread and unlabel_thread in Google's server).",
-            "gmail_users_messages_modify": "One tool adds and removes labels (label_message and unlabel_message in Google's server)."
+            "gmail_label": "One tool for threads and messages (label_thread and label_message in Google's server). Trash and Spam are refused here, as Google's label tools refuse them.",
+            "gmail_unlabel": "One tool for threads and messages (unlabel_thread and unlabel_message in Google's server). Taking mail out of Trash is gmail_untrash.",
+            "gmail_trash": "Google's label tools send Trash and Spam to tools outside its public list. Kept so mail can still go to Trash; it is destructive, so it asks first and shows what moves.",
+            "gmail_untrash": "Restores what gmail_trash moved, as removing the Trash label would in Google's server."
           }
         }
       },

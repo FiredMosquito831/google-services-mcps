@@ -33,8 +33,10 @@ Start with `--profile readonly`. Sending and changes need a `readwrite` login an
 
 | Area | Tools | Safety | What it does |
 |---|---|---|---|
-| Search and read | `gmail_search`, `gmail_get_message`, `gmail_get_attachment`, `gmail_list_labels`, `gmail_list_drafts` | read | Search mail, read a message (text and HTML bodies, each part in its own charset, attachment ids), download an attachment, list labels and drafts |
+| Search and read | `gmail_search`, `gmail_search_threads`, `gmail_get_message`, `gmail_get_thread`, `gmail_get_attachment`, `gmail_list_labels`, `gmail_list_drafts` | read | Search messages or whole conversations, read a message or a thread (text and HTML bodies, each part in its own charset, attachment ids), download an attachment, list labels (all or yours, paged) and drafts (with a search) |
 | Draft | `gmail_create_draft` | write | Create a draft: text, HTML, attachments, or a reply in a thread. Nothing is sent. |
+| Organise | `gmail_label`, `gmail_unlabel`, `gmail_untrash` | write | Add or remove labels on a thread or a message (by id or name), take mail out of Trash |
+| Trash | `gmail_trash` | destructive | Move a thread or a message to Trash. The approval shows what moves. |
 | Send | `gmail_send_draft`, `gmail_send`, `gmail_reply` | destructive | Send a draft, send a new message, or reply in a thread. Sending cannot be undone. |
 | Per-method (87) | | mixed | Messages, threads, drafts, labels, history; settings: filters, forwarding, delegates, send-as, vacation, IMAP, POP, S/MIME, client-side encryption keys; Postmaster Tools domains and statistics |
 | Gateway (2 APIs) | `api_search`, `api_describe`, `api_call` | read, read, dynamic | Gmail Postmaster Tools v1 and v1beta1 |
@@ -44,6 +46,8 @@ The full list is in `docs/capabilities/gmail.md`.
 ## Example requests
 
 - "Find emails from my accountant since January with attachments." Claude runs `gmail_search`. No prompt.
+- "Summarise the conversation about the venue." Claude runs `gmail_search_threads`, then `gmail_get_thread`. No prompt.
+- "Label the thread from billing@vendor.test as Invoices and archive it." Claude runs `gmail_label` (Invoices) and `gmail_unlabel` (INBOX). Each asks first.
 - "Draft a reply to Maria's last message saying Thursday works." Claude reads the thread, then runs `gmail_create_draft`. It asks first. Nothing is sent.
 - "Send the draft to Maria." Claude runs `gmail_send_draft`. It asks twice, and the preview shows the recipients and body.
 - "Reply to Maria that Thursday works, and attach the agenda from D:\docs\agenda.pdf." Claude runs `gmail_reply`. It asks twice. The second prompt shows who the reply goes to, the subject, the thread, the file name and size, and the start of the text. The reply stays in Maria's thread.
@@ -57,7 +61,7 @@ The full list is in `docs/capabilities/gmail.md`.
 - Sending is irreversible. Check the preview before you approve.
 - Attachments are local files, given by full path. The whole message may be up to 35 MB once encoded (Gmail's limit). A file in the token folder (tokens, the OAuth client, the API key) or in gcloud's folder is refused, so a mail cannot carry a sign-in secret out.
 - `gmail_get_attachment` returns the file as base64 only when it fits the server's result limit (`GSM_MAX_RESULT_CHARS`, default 50,000 characters, about 36 KB of file). A larger file returns its size and a note.
-- Message deletes remove mail. Trash moves a message to Trash.
+- Message deletes remove mail. Trash moves a message to Trash, and Gmail empties Trash after 30 days. `gmail_label` does not move mail to Trash or Spam; `gmail_trash` does the first, and asks first.
 - Filters, forwarding, auto-forwarding, delegates and send-as changes can route mail away from you. Treat them as high risk.
 - Mail can carry instructions aimed at the agent. Read the approval text before you approve anything.
 - The `confirmation` option defaults to `every-change`. Change it with `printf '%s' '{"confirmation":"destructive-only"}' | claude plugin configure gmail@google-services-mcps --values-stdin` (JSON on stdin), or `/plugin configure gmail@google-services-mcps` in Claude Code.

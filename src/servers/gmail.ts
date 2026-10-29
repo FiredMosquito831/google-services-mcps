@@ -1,7 +1,8 @@
 /**
  * Curated Gmail tools (gmail_*), served by the gmail server.
- * Read: search, get message, get attachment, labels, list drafts. Write: create draft.
- * Destructive (sending cannot be undone, so they ask first): send draft, send, reply.
+ * Read: search, search threads, get message, get thread, get attachment, labels, list drafts.
+ * Write: create draft, label, unlabel, untrash.
+ * Destructive (they ask first): send draft, send, reply (sending cannot be undone), trash.
  *
  * Auth: OAuth user token from `gsm login workspace-user`. The MIME and decoding rules are in gmail-mime.ts.
  */
@@ -259,6 +260,84 @@ function readLocalFiles(paths: string[] | undefined, cfg: RuntimeConfig, otherBy
   }));
 }
 
+// ---------- labels and threads ----------
+
+/** Labels this server never adds (gmail_label) or removes (gmail_unlabel): moving mail to or from Trash, and to Spam. */
+const NOT_ADDED: Record<string, string> = {
+  TRASH: 'TRASH is not added here: use gmail_trash, which asks first and shows what moves to Trash.',
+  SPAM: 'SPAM is not added here: marking mail as spam is left to Gmail (or the generated gmail_users_messages_modify and gmail_users_threads_modify tools, which ask first).',
+};
+const NOT_REMOVED: Record<string, string> = {
+  TRASH: 'TRASH is not removed here: use gmail_untrash.',
+};
+
+/** One of thread_id and message_id, never both. */
+function target(args: { thread_id?: string; message_id?: string }, tool: string): { kind: 'thread' | 'message'; id: string } {
+  const thread = args.thread_id?.trim();
+  const message = args.message_id?.trim();
+  if ((thread ? 1 : 0) + (message ? 1 : 0) !== 1) throw new Error(`${tool} needs thread_id or message_id (one of them).`);
+  return thread ? { kind: 'thread', id: thread } : { kind: 'message', id: message as string };
+}
+
+/**
+ * Label ids for labels given by id or by name: an exact id, then an exact name, then a name (or id) in any case.
+ * A label that matches nothing throws and names gmail_list_labels.
+ */
+async function resolveLabels(api: Gmail, given: string[]): Promise<Array<{ id: string; name: string }>> {
+  const res = await api.users.labels.list({ userId: ME });
+  const labels = (res.data.labels ?? []).filter((l): l is gmail_v1.Schema$Label & { id: string } => Boolean(l.id));
+  return given.map((raw) => {
+    const value = raw.trim();
+    const lower = value.toLowerCase();
+    const found =
+      labels.find((l) => l.id === value) ??
+      labels.find((l) => l.name === value) ??
+      labels.find((l) => (l.name ?? '').toLowerCase() === lower) ??
+      labels.find((l) => l.id.toLowerCase() === lower);
+    if (!found) throw new Error(`No label "${value}". Use gmail_list_labels to see the label ids and names.`);
+    return { id: found.id, name: found.name ?? found.id };
+  });
+}
+
+const THREAD_HEADERS = ['From', 'To', 'Cc', 'Subject', 'Date'];
+
+/** One message of a thread as a search result shows it. */
+function messageLine(m: gmail_v1.Schema$Message) {
+  return {
+    id: m.id,
+    from: headerValue(m, 'From'),
+    to: headerValue(m, 'To'),
+    cc: headerValue(m, 'Cc'),
+    date: headerValue(m, 'Date'),
+    subject: headerValue(m, 'Subject'),
+    snippet: m.snippet ?? undefined,
+    label_ids: m.labelIds ?? [],
+  };
+}
+
+/** A thread in one line: its subject, who started it, the last sender and date, and every label on it. */
+function threadLine(t: gmail_v1.Schema$Thread) {
+  const messages = t.messages ?? [];
+  const first = messages[0];
+  const last = messages[messages.length - 1];
+  return {
+    id: t.id,
+    message_count: messages.length,
+    subject: headerValue(first, 'Subject'),
+    first_from: headerValue(first, 'From'),
+    last_from: headerValue(last, 'From'),
+    last_date: headerValue(last, 'Date'),
+    snippet: last?.snippet ?? t.snippet ?? undefined,
+    label_ids: [...new Set(messages.flatMap((m) => m.labelIds ?? []))],
+  };
+}
+
+/** What gmail_trash moves to Trash, read before the approval. */
+interface TrashPlan extends PreparedAction {
+  target: { kind: 'thread' | 'message'; id: string };
+  count?: number;
+}
+
 // ---------- outgoing messages ----------
 
 /** The message headers a reply needs from the original. */
@@ -310,6 +389,35 @@ async function readOriginal(api: Gmail, id: string, withBody: boolean): Promise<
 async function fetchPartData(api: Gmail, messageId: string, attachmentId: string): Promise<string | undefined> {
   const res = await api.users.messages.attachments.get({ userId: ME, messageId, id: attachmentId });
   return res.data.data ?? undefined;
+}
+
+/**
+ * The readable content of one message fetched with format "full": the body (plain text, else the HTML as text), the
+ * HTML body when asked, a note for an unknown charset, and the attachments with their ids. Shared by gmail_get_message
+ * and gmail_get_thread.
+ */
+async function readMessage(api: Gmail, msg: gmail_v1.Schema$Message, max: number, includeHtml: boolean) {
+  const walked = walkParts(msg.payload);
+  const bodies = await decodeBodies(walked.texts, (attachmentId) => fetchPartData(api, msg.id ?? '', attachmentId));
+  const picked = pickBody(bodies);
+  const clipped = clip(picked.text, max);
+  const html = includeHtml && bodies.html.length ? bodies.html.join('\n') : undefined;
+  const htmlClipped = html !== undefined ? clip(html, max) : undefined;
+  return {
+    body: clipped.text,
+    body_source: picked.source,
+    body_total_chars: picked.text.length,
+    body_truncated: clipped.truncated,
+    ...(includeHtml
+      ? htmlClipped
+        ? { body_html: htmlClipped.text, body_html_total_chars: html?.length, body_html_truncated: htmlClipped.truncated }
+        : { body_html: null }
+      : {}),
+    ...(bodies.unknownCharsets.length
+      ? { charset_note: `Charset ${[...new Set(bodies.unknownCharsets)].join(', ')} is not known here; that text was read as UTF-8.` }
+      : {}),
+    attachments: walked.attachments,
+  };
 }
 
 /** The address of the signed-in account, to keep it out of a reply's recipients. */
@@ -444,6 +552,69 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
     );
   }
 
+  /** gmail_label and gmail_unlabel: resolve the labels, refuse Trash and Spam moves, then one modify request. */
+  async function changeLabels(args: { thread_id?: string; message_id?: string; labels: string[] }, mode: 'add' | 'remove') {
+    const tool = mode === 'add' ? 'gmail_label' : 'gmail_unlabel';
+    const t = target(args, tool);
+    if (!args.labels.length) throw new Error(`${tool} needs at least one label.`);
+    const api = await gmailApi();
+    const labels = await resolveLabels(api, args.labels);
+    const refused = mode === 'add' ? NOT_ADDED : NOT_REMOVED;
+    for (const l of labels) {
+      const reason = refused[l.id];
+      if (reason) throw new Error(`${reason} Nothing was changed.`);
+    }
+    const labelIds = [...new Set(labels.map((l) => l.id))];
+    const requestBody = mode === 'add' ? { addLabelIds: labelIds } : { removeLabelIds: labelIds };
+    const done = mode === 'add' ? { added: labels } : { removed: labels };
+    if (t.kind === 'thread') {
+      await api.users.threads.modify({ userId: ME, id: t.id, requestBody });
+      return { thread_id: t.id, ...done };
+    }
+    const res = await api.users.messages.modify({ userId: ME, id: t.id, requestBody });
+    return { message_id: t.id, ...done, label_ids: res.data.labelIds ?? [] };
+  }
+
+  /** gmail_trash: what moves to Trash, read before the approval. */
+  async function planTrash(args: { thread_id?: string; message_id?: string }): Promise<TrashPlan> {
+    const t = target(args, 'gmail_trash');
+    const api = await gmailApi();
+    const from_account = requestedAccount() ?? 'the default account of this server (accounts_list shows it)';
+    const after = 'Gmail deletes mail in Trash for good after 30 days; gmail_untrash brings it back before then.';
+    if (t.kind === 'thread') {
+      const res = await api.users.threads.get({ userId: ME, id: t.id, format: 'metadata', metadataHeaders: THREAD_HEADERS });
+      const line = threadLine(res.data);
+      return {
+        target: t,
+        count: line.message_count,
+        preview: {
+          action: `Moves this thread (${line.message_count} messages) to Trash. ${after}`,
+          from_account,
+          thread_id: t.id,
+          subject: line.subject ?? null,
+          first_from: line.first_from ?? null,
+          last_from: line.last_from ?? null,
+          last_date: line.last_date ?? null,
+          snippet: line.snippet ?? null,
+        },
+      };
+    }
+    const res = await api.users.messages.get({ userId: ME, id: t.id, format: 'metadata', metadataHeaders: THREAD_HEADERS });
+    return {
+      target: t,
+      preview: {
+        action: `Moves this message to Trash. ${after}`,
+        from_account,
+        message_id: t.id,
+        thread_id: res.data.threadId ?? null,
+        from: headerValue(res.data, 'From') ?? null,
+        subject: headerValue(res.data, 'Subject') ?? null,
+        date: headerValue(res.data, 'Date') ?? null,
+        snippet: res.data.snippet ?? null,
+      },
+    };
+  }
+
   return [
     // ---- read ----
     defineTool({
@@ -507,29 +678,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
         };
         if (fmt === 'metadata') return base;
 
-        const walked = walkParts(msg.payload);
-        const bodies = await decodeBodies(walked.texts, (attachmentId) => fetchPartData(api, id, attachmentId));
-        const picked = pickBody(bodies);
-        const max = max_body_chars ?? 8000;
-        const clipped = clip(picked.text, max);
-        const html = include_html && bodies.html.length ? bodies.html.join('\n') : undefined;
-        const htmlClipped = html !== undefined ? clip(html, max) : undefined;
-        return {
-          ...base,
-          body: clipped.text,
-          body_source: picked.source,
-          body_total_chars: picked.text.length,
-          body_truncated: clipped.truncated,
-          ...(include_html
-            ? htmlClipped
-              ? { body_html: htmlClipped.text, body_html_total_chars: html?.length, body_html_truncated: htmlClipped.truncated }
-              : { body_html: null }
-            : {}),
-          ...(bodies.unknownCharsets.length
-            ? { charset_note: `Charset ${[...new Set(bodies.unknownCharsets)].join(', ')} is not known here; that text was read as UTF-8.` }
-            : {}),
-          attachments: walked.attachments,
-        };
+        return { ...base, ...(await readMessage(api, msg, max_body_chars ?? 8000, include_html === true)) };
       },
     }),
     defineTool({
@@ -562,31 +711,103 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       },
     }),
     defineTool({
+      name: 'gmail_search_threads',
+      title: 'Search Gmail threads',
+      description:
+        "Search conversations with Gmail search syntax (matches search_threads in Google's Gmail MCP server). Returns threads, each with its messages summarised: from, to, cc, date, subject, snippet and labels (view \"detailed\", the default), or one line per thread (view \"concise\"). Bodies are not returned: use gmail_get_thread with a thread id. Spam and Trash are left out unless include_trash is true. A thread matches when one of its messages matches.",
+      kind: 'read',
+      scopes: googleScopes('https://mail.google.com/', 'gmail.metadata', 'gmail.modify', 'gmail.readonly'),
+      inputSchema: {
+        query: z.string().optional().describe('Gmail search, for example "from:anna@example.com newer_than:7d". Omit it for every thread.'),
+        page_size: z.number().int().min(1).max(50).optional().describe('Threads per page, 1 to 50. Default 20.'),
+        page_token: z.string().optional().describe('next_page_token from the previous call'),
+        include_trash: z.boolean().optional().describe("Also search Trash and Spam (Gmail's includeSpamTrash). Default false."),
+        view: z.enum(['detailed', 'concise']).optional().describe('detailed (default): each message of each thread. concise: one line per thread.'),
+      },
+      async handler({ query, page_size, page_token, include_trash, view }) {
+        const api = await gmailApi();
+        const list = await api.users.threads.list({ userId: ME, q: query, maxResults: page_size ?? 20, pageToken: page_token, includeSpamTrash: include_trash === true });
+        const threads = await inChunks(ids(list.data.threads), 10, async (id) => {
+          const res = await api.users.threads.get({ userId: ME, id, format: 'metadata', metadataHeaders: THREAD_HEADERS });
+          if (view === 'concise') return threadLine(res.data);
+          const messages = res.data.messages ?? [];
+          return { id: res.data.id, message_count: messages.length, messages: messages.map(messageLine) };
+        });
+        return {
+          threads,
+          next_page_token: list.data.nextPageToken ?? undefined,
+          result_size_estimate: list.data.resultSizeEstimate ?? undefined,
+        };
+      },
+    }),
+    defineTool({
+      name: 'gmail_get_thread',
+      title: 'Get Gmail thread',
+      description:
+        "Read a whole conversation (matches get_thread in Google's Gmail MCP server): every message, oldest first, decoded as gmail_get_message does (each part in its own charset, blank lines at the start and end removed, attachment ids). view \"concise\" returns the headers and snippet of each message without bodies. Find thread ids with gmail_search_threads.",
+      kind: 'read',
+      scopes: googleScopes('https://mail.google.com/', 'gmail.modify', 'gmail.readonly'),
+      inputSchema: {
+        thread_id: z.string().describe('Thread ID from gmail_search_threads or gmail_search.'),
+        view: z.enum(['detailed', 'concise']).optional().describe('detailed (default): bodies and attachments. concise: headers and snippets only.'),
+        max_body_chars: z.number().int().min(100).max(50000).optional().describe('Cap on each message body in characters. Default 4000.'),
+        include_html: z.boolean().optional().describe('detailed only: also return each HTML body as body_html. Default false.'),
+      },
+      async handler({ thread_id, view, max_body_chars, include_html }) {
+        const api = await gmailApi();
+        const concise = view === 'concise';
+        const res = await api.users.threads.get(
+          concise ? { userId: ME, id: thread_id, format: 'metadata', metadataHeaders: THREAD_HEADERS } : { userId: ME, id: thread_id, format: 'full' },
+        );
+        const messages = res.data.messages ?? [];
+        const max = max_body_chars ?? 4000;
+        const out: Array<Record<string, unknown>> = [];
+        for (const m of messages) {
+          out.push(concise ? messageLine(m) : { ...messageLine(m), ...(await readMessage(api, m, max, include_html === true)) });
+        }
+        return { id: res.data.id, message_count: messages.length, messages: out };
+      },
+    }),
+    defineTool({
       name: 'gmail_list_labels',
       title: 'List Gmail labels',
-      description: 'List Gmail labels (system and user) with their ids and types.',
+      description:
+        "List Gmail labels (system and user) with their ids and types (matches list_labels in Google's Gmail MCP server, which lists user labels only: pass user_only). System label ids: INBOX, SENT, DRAFT, SPAM, TRASH, STARRED, UNREAD, IMPORTANT, CHAT and CATEGORY_*. Use the ids or names with gmail_label and gmail_unlabel. Without page_size the answer is the whole list; with it, a page and next_page_token.",
       kind: 'read',
       scopes: googleScopes('https://mail.google.com/', 'gmail.labels', 'gmail.metadata', 'gmail.modify', 'gmail.readonly'),
-      inputSchema: {},
-      async handler() {
+      inputSchema: {
+        user_only: z.boolean().optional().describe('Only the labels the user made (type "user"). Default false: system and user labels.'),
+        page_size: z.number().int().min(1).max(500).optional().describe('Labels per page. Gmail returns every label at once; this server pages them.'),
+        page_token: z.string().optional().describe('next_page_token from the previous call (with page_size).'),
+      },
+      async handler({ user_only, page_size, page_token }) {
         const api = await gmailApi();
         const res = await api.users.labels.list({ userId: ME });
-        return (res.data.labels ?? []).map((l) => ({ id: l.id, name: l.name, type: l.type }));
+        const all = (res.data.labels ?? []).filter((l) => !user_only || l.type === 'user').map((l) => ({ id: l.id, name: l.name, type: l.type }));
+        // Without paging the answer is the plain list, as before 1.7.0.
+        if (page_size === undefined && page_token === undefined) return all;
+        const start = page_token === undefined ? 0 : Number(page_token);
+        if (!Number.isInteger(start) || start < 0) throw new Error('page_token must be a next_page_token from an earlier gmail_list_labels call.');
+        const size = page_size ?? all.length;
+        const end = start + size;
+        return { labels: all.slice(start, end), next_page_token: end < all.length ? String(end) : undefined };
       },
     }),
     defineTool({
       name: 'gmail_list_drafts',
       title: 'List Gmail drafts',
-      description: 'List drafts with their ids and To, Subject, Date headers. Use gmail_send_draft with a draft_id to send one.',
+      description:
+        "List drafts with their ids and To, Subject, Date headers (matches list_drafts in Google's Gmail MCP server). query filters them with Gmail search syntax. Use gmail_send_draft with a draft_id to send one.",
       kind: 'read',
       scopes: googleScopes('https://mail.google.com/', 'gmail.compose', 'gmail.modify', 'gmail.readonly'),
       inputSchema: {
         max_results: z.number().int().min(1).max(100).optional().describe('1 to 100. Default 20.'),
         page_token: z.string().optional().describe('next_page_token from the previous call'),
+        query: z.string().optional().describe('Gmail search, for example "subject:invoice to:anna@example.com".'),
       },
-      async handler({ max_results, page_token }) {
+      async handler({ max_results, page_token, query }) {
         const api = await gmailApi();
-        const list = await api.users.drafts.list({ userId: ME, maxResults: max_results ?? 20, pageToken: page_token });
+        const list = await api.users.drafts.list({ userId: ME, maxResults: max_results ?? 20, pageToken: page_token, q: query });
         const drafts = await inChunks(ids(list.data.drafts), 10, async (id) => {
           const res = await api.users.drafts.get({ userId: ME, id, format: 'metadata' });
           const msg = res.data.message;
@@ -659,6 +880,60 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
           ...(original ? { in_reply_to: original.id } : {}),
           ...(files.length ? { attachments: files.map((f) => ({ name: f.filename, size_bytes: f.data.length })) } : {}),
         };
+      },
+    }),
+
+    defineTool({
+      name: 'gmail_label',
+      title: 'Add Gmail labels',
+      description:
+        "Add labels to a whole thread (thread_id) or to one message (message_id) (matches label_thread and label_message in Google's Gmail MCP server). Labels by id or by name; names are looked up in the label list, in any case. System labels: INBOX, STARRED, UNREAD, IMPORTANT and the CATEGORY_* ids. Moving to Trash or Spam is not done here: use gmail_trash. Find label ids and names with gmail_list_labels.",
+      kind: 'write',
+      scopes: googleScopes('https://mail.google.com/', 'gmail.modify'),
+      inputSchema: {
+        thread_id: z.string().optional().describe('The thread to label (all its messages). Give this or message_id.'),
+        message_id: z.string().optional().describe('The message to label. Give this or thread_id.'),
+        labels: z.array(z.string()).describe('Label ids or names, for example ["STARRED", "Invoices"].'),
+      },
+      async handler(args) {
+        return changeLabels(args, 'add');
+      },
+    }),
+    defineTool({
+      name: 'gmail_unlabel',
+      title: 'Remove Gmail labels',
+      description:
+        "Remove labels from a whole thread (thread_id) or from one message (message_id) (matches unlabel_thread and unlabel_message in Google's Gmail MCP server). Labels by id or by name. Removing INBOX archives; removing UNREAD marks as read; removing SPAM marks as not spam. Taking mail out of Trash is gmail_untrash.",
+      kind: 'write',
+      scopes: googleScopes('https://mail.google.com/', 'gmail.modify'),
+      inputSchema: {
+        thread_id: z.string().optional().describe('The thread to change (all its messages). Give this or message_id.'),
+        message_id: z.string().optional().describe('The message to change. Give this or thread_id.'),
+        labels: z.array(z.string()).describe('Label ids or names, for example ["INBOX", "UNREAD"].'),
+      },
+      async handler(args) {
+        return changeLabels(args, 'remove');
+      },
+    }),
+    defineTool({
+      name: 'gmail_untrash',
+      title: 'Restore from Gmail Trash',
+      description: 'Take a thread (thread_id) or one message (message_id) out of Trash. It goes back to the labels it had.',
+      kind: 'write',
+      scopes: googleScopes('https://mail.google.com/', 'gmail.modify'),
+      inputSchema: {
+        thread_id: z.string().optional().describe('The thread to restore. Give this or message_id.'),
+        message_id: z.string().optional().describe('The message to restore. Give this or thread_id.'),
+      },
+      async handler(args) {
+        const t = target(args, 'gmail_untrash');
+        const api = await gmailApi();
+        if (t.kind === 'thread') {
+          const res = await api.users.threads.untrash({ userId: ME, id: t.id });
+          return { thread_id: res.data.id ?? t.id, restored: true };
+        }
+        const res = await api.users.messages.untrash({ userId: ME, id: t.id });
+        return { message_id: res.data.id ?? t.id, thread_id: res.data.threadId, label_ids: res.data.labelIds ?? [], restored: true };
       },
     }),
 
@@ -743,6 +1018,31 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
         const req = messageRequest(plan);
         const res = await api.users.messages.send({ userId: ME, requestBody: req.requestBody, ...(req.media ? { media: req.media } : {}) });
         return { ...sentResult(res.data, plan), in_reply_to: plan.composed.reply?.id };
+      },
+    }),
+    defineTool({
+      name: 'gmail_trash',
+      title: 'Move to Gmail Trash',
+      description:
+        'Move a thread (thread_id) or one message (message_id) to Trash. Gmail deletes mail in Trash for good after 30 days; gmail_untrash brings it back before then. It asks first, and the approval shows the subject, the senders and the number of messages.',
+      kind: 'destructive',
+      scopes: googleScopes('https://mail.google.com/', 'gmail.modify'),
+      inputSchema: {
+        thread_id: z.string().optional().describe('The thread to move to Trash (all its messages). Give this or message_id.'),
+        message_id: z.string().optional().describe('The message to move to Trash. Give this or thread_id.'),
+      },
+      async prepare(args) {
+        return planTrash(args);
+      },
+      async handler(args, _ctx, prepared) {
+        const plan = (prepared as TrashPlan | undefined) ?? (await planTrash(args));
+        const api = await gmailApi();
+        if (plan.target.kind === 'thread') {
+          const res = await api.users.threads.trash({ userId: ME, id: plan.target.id });
+          return { thread_id: res.data.id ?? plan.target.id, trashed: true, messages: plan.count };
+        }
+        const res = await api.users.messages.trash({ userId: ME, id: plan.target.id });
+        return { message_id: res.data.id ?? plan.target.id, thread_id: res.data.threadId, trashed: true };
       },
     }),
   ];
