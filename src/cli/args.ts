@@ -58,6 +58,7 @@ const COMMANDS: Record<Exclude<Command, 'help'>, Record<string, OptionType>> = {
     'allow-writes': 'boolean',
     'install-missing': 'boolean',
     confirmation: 'string',
+    toolset: 'string',
     marketplace: 'string',
     'dry-run': 'boolean',
     home: 'string',
@@ -136,6 +137,8 @@ export interface InstallRequestArgs {
   installMissing: boolean;
   /** --confirmation, install only. Undefined: nothing is written for it. */
   confirmation?: ConfirmationMode;
+  /** --toolset, install only. Undefined: nothing is written for it, and the servers list every tool. */
+  toolset?: Toolset;
   /** --marketplace, install with claude only: owner/repo, a URL or a path. */
   marketplace?: string;
   dryRun: boolean;
@@ -246,6 +249,8 @@ export function parseInstallArgs(
     allowWrites: command === 'install' && values['allow-writes'] === true,
     installMissing: command === 'install' && values['install-missing'] === true,
     confirmation: command === 'install' ? confirmation : undefined,
+    // Only a given flag adds the key, so the parsed request is the same as before when it is absent.
+    ...(command === 'install' && values.toolset !== undefined ? { toolset: parseToolset(values.toolset) } : {}),
     marketplace,
     dryRun: values['dry-run'] === true,
     home,

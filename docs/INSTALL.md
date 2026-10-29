@@ -90,6 +90,7 @@ Options:
 | `--dry-run` | all | Prints every change and command. Writes nothing and runs nothing. Use it first. |
 | `--allow-writes` | install | For `codex`, `opencode` and `agy`: sets `GSM_ALLOW_WRITES=true`. For `claude`: passed to the plugin as the option `allow_writes=true` (`claude plugin install --config`). |
 | `--confirmation` | install | `every-change` (the default), `destructive-only` or `off`. For `codex`, `opencode` and `agy`: sets `GSM_CONFIRMATION`. For `claude`: passed to the plugin as the option `confirmation` (`--config`). |
+| `--toolset` | install | `all`, `google` or `curated`: which tools each server lists. Only when given: for `codex`, `opencode` and `agy` it sets `GSM_TOOLSET`; for `claude` it is passed to the plugin as the option `toolset` (`--config toolset=<value>`; checked, and Claude Code refuses another value). Without it nothing is written and the servers list every tool. For `agy`, the install warns when a product can list more than 100 tools: Antigravity is reported to refuse such a server (not verified). |
 | `--install-missing` | install | Installs the requirements gsm can install (npm for Claude Code, Codex and OpenCode; winget or brew for git), then checks again. Without it, a missing requirement stops the install. |
 | `--marketplace` | install (claude) | Where Claude Code gets the marketplace: `owner/repo`, a URL, or a path. The default is the repository folder when it is a git clone. Otherwise (npm package, zip download) it is `FiredMosquito831/google-services-mcps` on GitHub. |
 | `--servers` | install | Keeps only these servers of the chosen products (`a,b`). For `claude`, which installs whole plugins, gsm installs the plugins that contain them. |
@@ -353,6 +354,7 @@ npx google-services-mcps uninstall --agent codex --plugin gmail --scope global
 | `--servers <a,b>` | Keep only these servers from the chosen products. Each product has one server, with the same name as the product. **Checked.** |
 | `--allow-writes` | Set `GSM_ALLOW_WRITES=true` for Codex, OpenCode and Antigravity. **Not applied to Claude Code**, which uses the plugin option. **Checked.** |
 | `--confirmation every-change\|destructive-only\|off` | Set `GSM_CONFIRMATION` for Codex, OpenCode and Antigravity. **Not applied to Claude Code.** **Checked.** |
+| `--toolset all\|google\|curated` | Set `GSM_TOOLSET` for Codex, OpenCode and Antigravity, and the plugin option `toolset` for Claude Code. Only when given. **Checked** (config files in a temp home; `claude plugin install --config toolset=google` with a temp `CLAUDE_CONFIG_DIR`). |
 | `--marketplace <path or owner/repo>` | Claude Code only. Default: this checkout, else `FiredMosquito831/google-services-mcps`. **Checked** (the default was printed from a temporary folder). |
 | `--dry-run` | Print every planned change and command. Write nothing. |
 | `--home <dir>` | Use another home folder, for Codex, OpenCode and Antigravity. **Does not apply to Claude Code**: `--home` with `--agent claude` stops with an error. **Checked.** |

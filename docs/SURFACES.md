@@ -90,7 +90,8 @@ Commands:
 
 Usage:
   npx google-services-mcps install   --agent <claude|codex|opencode|agy|all> --plugin <id[,id...]|all> [--scope global|project|local]
-                         [--path <dir>] [--allow-writes] [--confirmation <every-change|destructive-only|off>] [--dry-run]
+                         [--path <dir>] [--allow-writes] [--confirmation <every-change|destructive-only|off>]
+                         [--toolset <all|google|curated>] [--dry-run]
   npx google-services-mcps uninstall --agent <claude|codex|opencode|agy|all> --plugin <id[,id...]|all> [--scope global|project|local]
                          [--path <dir>] [--dry-run]
   npx google-services-mcps uninstall --all [--dry-run] [--yes]
@@ -125,6 +126,9 @@ Install and uninstall:
   --allow-writes, --confirmation   Set GSM_ALLOW_WRITES and GSM_CONFIRMATION for codex, opencode and agy.
                 For claude they are the plugin options allow_writes and confirmation, passed to claude plugin install
                 as --config. Options that are not given keep their values (claude plugin configure shows them).
+  --toolset     all, google or curated: which tools each server lists. Only when given: GSM_TOOLSET for codex, opencode
+                and agy, and the plugin option toolset (--config toolset=<value>) for claude. Without it the servers list
+                every tool. agy: the install warns when a product can list more than 100 tools (a reported agy limit).
   --marketplace claude only: owner/repo, a URL or a path. Default: this checkout, else FiredMosquito831/google-services-mcps.
   --all         uninstall only: removes every install in the list. It prints the list, then asks; --yes skips the question.
   --keep-data   uninstall with claude: keeps the plugin data directory.

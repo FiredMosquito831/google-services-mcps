@@ -18,8 +18,8 @@
  * FiredMosquito831/google-services-mcps on GitHub. Every call goes through ctx.run with shell: false and an argument array.
  * On Windows the program is tried as "claude", then "claude.cmd". Dry-run only plans.
  *
- * --allow-writes and --confirmation are Claude Code plugin options (allow_writes, confirmation). They are passed to the
- * install as --config key=value. Options that are not given keep their values; `claude plugin configure <plugin>` shows them.
+ * --allow-writes, --confirmation and --toolset are Claude Code plugin options (allow_writes, confirmation, toolset). They
+ * are passed to the install as --config key=value, each only when given. Options that are not given keep their values; `claude plugin configure <plugin>` shows them.
  */
 import { displayCommand } from '../exec.js';
 import { scopeFolder } from '../paths.js';
@@ -77,10 +77,11 @@ export function marketplaceSourceFor(ctx: Pick<AdapterContext, 'marketplace' | '
 }
 
 /** The plugin options that gsm sets on install, as --config pairs. Only the ones the user gave are sent. */
-export function configArgs(ctx: Pick<AdapterContext, 'allowWrites' | 'confirmation'>): string[] {
+export function configArgs(ctx: Pick<AdapterContext, 'allowWrites' | 'confirmation' | 'toolset'>): string[] {
   const pairs: string[] = [];
   if (ctx.allowWrites) pairs.push('allow_writes=true');
   if (ctx.confirmation !== undefined) pairs.push(`confirmation=${ctx.confirmation}`);
+  if (ctx.toolset !== undefined) pairs.push(`toolset=${ctx.toolset}`);
   return pairs.flatMap((pair) => ['--config', pair]);
 }
 

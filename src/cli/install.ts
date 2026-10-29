@@ -14,6 +14,8 @@ import { apiKeyFileFor, apiKeyState } from './credentials.js';
 import { checkInstall, renderInstallList } from './list.js';
 import { checkoutRootFor, serverFileFor, type InstallRoots } from './paths.js';
 import { productIds, productRows } from './products.js';
+import { AGY_TOOL_LIMIT, toolsetCount } from './toolset-count.js';
+import { TOOLSETS, type Toolset } from '../core/toolset.js';
 import { printInstallResult, printResult, type Output } from './report.js';
 import {
   productsOf,
@@ -169,7 +171,43 @@ export function installSummary(
   // A run with an error must not say "installed": the error was printed above and the exit code is 1.
   const verb = run.dryRun ? 'would install' : failed ? 'could not install' : 'installed';
   const note = failed && !run.dryRun ? ' (an agent reported an error above)' : '';
-  return `summary: ${verb} ${products.length} products, ${servers.length} servers, ${toolText}${note}; confirmation: ${confirmation}; writes: ${writes}`;
+  // Only a given --toolset is named, so the line is the same as before without it.
+  const toolset = run.toolset !== undefined ? `; toolset: ${run.toolset}` : '';
+  return `summary: ${verb} ${products.length} products, ${servers.length} servers, ${toolText}${note}; confirmation: ${confirmation}; writes: ${writes}${toolset}`;
+}
+
+/**
+ * The Antigravity warnings of an install: one line per product whose server can list more tools than Antigravity is
+ * reported to accept (AGY_TOOL_LIMIT), under the toolset of the install (--toolset, else all). Each names the counts of
+ * the other toolsets. A warning only: nothing is refused, and the default toolset is not changed.
+ */
+export function agyToolWarnings(run: Pick<InstallRun, 'toolset'>, env: Pick<InstallEnv, 'roots' | 'registry'>, products: readonly string[]): string[] {
+  const toolset: Toolset = run.toolset ?? 'all';
+  const lines: string[] = [];
+  let rows: ReturnType<typeof productRows> = [];
+  try {
+    rows = productRows(env.roots, env.registry, products);
+  } catch {
+    return lines;
+  }
+  for (const row of rows) {
+    const server = env.registry.servers.find((s) => s.plugin === row.id);
+    if (!server) continue;
+    const mapFile = join(row.folder, 'tool-map.json');
+    const countOf = (t: Toolset) => toolsetCount(mapFile, row.id, server.name, t, server.toolsets);
+    const current = countOf(toolset);
+    if (!current || current.count <= AGY_TOOL_LIMIT) continue;
+    const others = TOOLSETS.filter((t) => t !== toolset)
+      .map((t) => ({ t, c: countOf(t) }))
+      .filter((o): o is { t: Toolset; c: NonNullable<ReturnType<typeof countOf>> } => o.c !== undefined && o.c.effective === o.t)
+      .map((o) => `--toolset ${o.t}: up to ${o.c.count}`);
+    lines.push(
+      `[agy] warning: ${row.id} can list up to ${current.count} tools with toolset ${toolset}${current.effective !== toolset ? ` (it has no ${toolset} list, so all tools)` : ''}. ` +
+        `Antigravity is reported to refuse a server with more than ${AGY_TOOL_LIMIT} tools (not verified by gsm).` +
+        (others.length > 0 ? ` Fewer tools: ${others.join(', ')}.` : ''),
+    );
+  }
+  return lines;
 }
 
 /**
@@ -252,6 +290,7 @@ export async function runInstall(run: InstallRun, env: InstallEnv): Promise<numb
   const claudeServers = env.registry.servers.filter((s) => claudePlugins.includes(s.plugin)).map(toEntry);
   if (agents.includes('claude') && run.servers) out.log(`[claude] installs whole plugins: ${claudePlugins.join(', ')}`);
   if (run.dryRun) out.log('dry-run: nothing will be written or run.');
+  if (run.action === 'install' && agents.includes('agy')) for (const line of agyToolWarnings(run, env, products)) out.warn(line);
 
   // The record is read before anything is written, so a damaged record file stops the run with nothing changed.
   let records: InstallRecord[] = readInstalls(home);
@@ -301,6 +340,7 @@ export async function runInstall(run: InstallRun, env: InstallEnv): Promise<numb
       dryRun: run.dryRun,
       allowWrites: run.allowWrites,
       confirmation: run.confirmation,
+      ...(run.toolset !== undefined ? { toolset: run.toolset } : {}),
       keepData: run.keepData,
       run: env.run,
       platform: env.platform,

@@ -2,6 +2,15 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.5.0 - 2026-10-29
+
+### New: the toolset in every agent
+- `gsm install --toolset all|google|curated`. For Codex, OpenCode and Antigravity it writes `GSM_TOOLSET` into each server's environment. For Claude Code it sets the plugin option `toolset` (`claude plugin install --config toolset=<value>`). Only when given: without the flag the config files are byte-for-byte what 1.4.0 writes.
+- The guided install asks which tools each server lists (default: every tool, which adds no flag).
+- `gsm status` (the security line) names the toolset when `GSM_TOOLSET` is set, and says when the value is unknown.
+- `gsm install --agent agy` warns for each product that can list more than 100 tools under the chosen toolset, with the counts of the other toolsets. Antigravity is reported to refuse a server with more tools ("enabled tools would exceed max limit of 100"). gsm did not confirm the limit: `agy mcp list` reads its config without starting the servers. It is a warning only; nothing is refused, and the default stays `all`.
+- `docs/CAPABILITIES.md` has a Toolsets column (all / google / curated tool counts), and each product's page lists its toolsets; Gmail's page lists the `google` tools with the Google tool each one matches.
+
 ## 1.4.0 - 2026-10-29
 
 ### New: login scopes follow the toolset

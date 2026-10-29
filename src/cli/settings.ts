@@ -5,8 +5,10 @@
  * adapters (codex, opencode, agy) write them per server. The claude adapter cannot: its values are
  * plugin user options. A key is written only when its flag is given, so without a flag the server default applies.
  *
- * No core import here: the adapters use this module, and they must stay light to load.
+ * No heavy core import here: the adapters use this module, and they must stay light to load. core/toolset.ts imports
+ * nothing at run time.
  */
+import { DEFAULT_TOOLSET, isToolset, type Toolset } from '../core/toolset.js';
 import { CONFIRMATION_MODES, type ConfirmationMode } from './types.js';
 
 /** The default the servers use when GSM_CONFIRMATION is unset. Shown by status. */
@@ -16,11 +18,28 @@ export const CONFIRMATION_DEFAULT: ConfirmationMode = 'every-change';
 export type EnvPairs = Array<[string, string]>;
 
 /** The env entries for one server. Nothing is written for a flag that was not given. */
-export function serverEnvironment(allowWrites: boolean, confirmation: ConfirmationMode | undefined): EnvPairs {
+export function serverEnvironment(allowWrites: boolean, confirmation: ConfirmationMode | undefined, toolset?: Toolset): EnvPairs {
   const pairs: EnvPairs = [];
   if (allowWrites) pairs.push(['GSM_ALLOW_WRITES', 'true']);
   if (confirmation !== undefined) pairs.push(['GSM_CONFIRMATION', confirmation]);
+  // --toolset, only when given: without it the key is not written and the server default (all) applies.
+  if (toolset !== undefined) pairs.push(['GSM_TOOLSET', toolset]);
   return pairs;
+}
+
+export interface ToolsetStatus {
+  /** The toolset in effect: the value in the environment, or all. */
+  toolset: string;
+  /** True when GSM_TOOLSET is set in the environment. */
+  set: boolean;
+  /** False when the environment holds a value the servers do not know (they use all then). */
+  known: boolean;
+}
+
+export function toolsetStatus(env: NodeJS.ProcessEnv): ToolsetStatus {
+  const raw = (env.GSM_TOOLSET ?? '').trim();
+  if (raw === '') return { toolset: DEFAULT_TOOLSET, set: false, known: true };
+  return { toolset: raw, set: true, known: isToolset(raw.toLowerCase()) };
 }
 
 export function envObject(pairs: EnvPairs): Record<string, string> {

@@ -1,7 +1,7 @@
 {
   "name": "gfirebase",
   "displayName": "Firebase",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "Firebase management, App Check, App Distribution, Crashlytics, Hosting, Data Connect, Rules, Test Lab, FCM and Identity Toolkit.",
   "author": {
     "name": "FiredMosquito831"

@@ -8,6 +8,8 @@ Google Ads API (accounts, campaigns, ad groups, ads, keywords, budgets, conversi
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 339, google 339 (all), curated 15 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+
 ## Curated tools (12)
 
 | Tool | Safety | Method or purpose | Scopes |
