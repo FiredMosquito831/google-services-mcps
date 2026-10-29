@@ -1,6 +1,6 @@
 # Setup per product
 
-Each product plugin has one login group. Log in once per group, with the list of products you use. A login merges with the scopes already stored for its group, so logging in for one product keeps the others. Use `--replace` to drop the stored scopes and keep only what this login requests. A merge can leave write scopes from an earlier readwrite login in place: when you want a readonly token again, log in with `--replace`. See [INSTALL.md](INSTALL.md#two-command-lines).
+Each product plugin has one login group. Log in once per group, with the list of products you use. A login merges with the scopes the same account already holds for its group, so logging in for one product keeps the others. Name the account with `--account <email>` (in the chat: `auth_login` with `account`): only that account's stored scopes are merged, and only the ones a server of the group uses. Without `--account`, nothing is merged, and a login that would take scopes away from an account already signed in saves nothing and says how to retry. Use `--replace` to drop the stored scopes and keep only what this login requests. A merge can leave write scopes from an earlier readwrite login in place: when you want a readonly token again, log in with `--replace`. See [INSTALL.md](INSTALL.md#two-command-lines).
 
 The commands in this guide use the installer, `npx google-services-mcps`. They run from any folder, and no build is needed. Each plugin folder also has its own copy of the installer, which knows only its own product.
 
@@ -222,7 +222,7 @@ npx google-services-mcps doctor --plugin gmail
 - `scopes` shows what each profile would enable. Read it before you widen a login.
 - `doctor` checks the plugin files, the hook and the tool names. On Windows it also checks that the token folder is limited to you, SYSTEM and Administrators. It exits with code 1 if any check fails.
 - Before a login, a server lists only the tools that need no scope, plus `auth_status`. After `login`, ask the server to call `auth_status`: its tools then load, with no restart.
-- `logout` revokes the login at Google before it removes the token file. Use `logout <group> --local-only` to remove the file only.
+- `logout` revokes the login at Google before it removes the token file. Use `logout <group> --local-only` to remove the file only. When the same account is signed in here for another group, `logout` and `account_remove` remove only the local token, because Google's revocation would end that other login too; `logout ... --revoke-all` revokes anyway.
 
 Then restart the server (`/mcp` in Claude Code).
 

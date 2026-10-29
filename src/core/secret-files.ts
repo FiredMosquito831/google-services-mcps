@@ -1,4 +1,5 @@
-import { existsSync, readdirSync, readFileSync, rmSync, writeFileSync, chmodSync } from 'node:fs';
+import { randomBytes } from 'node:crypto';
+import { existsSync, readdirSync, readFileSync, renameSync, rmSync, writeFileSync, chmodSync } from 'node:fs';
 import { basename, dirname, join } from 'node:path';
 import { ensureTokenDir } from './acl.js';
 import type { RuntimeConfig } from './config.js';
@@ -86,11 +87,51 @@ export function readSecretText(cfg: Pick<RuntimeConfig, 'tokenDir'>, file: strin
   if (backend !== 'file') {
     const name = secretNameOf(file);
     const key = cacheKey(cfg.tokenDir, name);
-    if (!cache.has(key)) cache.set(key, getSecretSync(backend, cfg.tokenDir, name));
-    const value = cache.get(key);
-    if (value !== undefined) return value;
+    if (!cache.has(key)) {
+      const found = getSecretSync(backend, cfg.tokenDir, name);
+      // A token that is not there yet is not remembered as missing: a sign-in in another process may store it next.
+      if (found !== undefined || !isTokenName(name)) cache.set(key, found);
+      if (found !== undefined) return found;
+    } else {
+      const value = cache.get(key);
+      if (value !== undefined) return value;
+    }
   }
   return existsSync(file) ? readFileSync(file, 'utf8') : undefined;
+}
+
+/** A token file's secret name (<group>.token or <group>.<account>.token). */
+function isTokenName(name: string): boolean {
+  return name.endsWith('.token');
+}
+
+/**
+ * Forgets what this process read from the OS store, so the next read asks the store again. A sign-in runs in another
+ * process and writes there; call this after it (forgetUserClients in auth.ts does).
+ */
+export function forgetCachedSecrets(): void {
+  cache.clear();
+}
+
+/**
+ * Writes a plain file in one step for its readers: the text goes to a temporary file in the same folder, which then
+ * replaces the file. A reader sees the old text or the new one, never half of it. If the replace fails (on Windows a
+ * scanner can hold the file for a moment), the file is written directly, as before, and the temporary file is removed.
+ */
+function writeFileAtomic(file: string, text: string): void {
+  const temp = `${file}.${process.pid}.${randomBytes(4).toString('hex')}.tmp`;
+  try {
+    writeFileSync(temp, text, { encoding: 'utf8', mode: 0o600 });
+    try {
+      chmodSync(temp, 0o600);
+    } catch {
+      // Windows ignores POSIX modes; the folder's access list is the protection there.
+    }
+    renameSync(temp, file);
+  } catch {
+    if (existsSync(temp)) rmSync(temp, { force: true });
+    writeFileSync(file, text, { encoding: 'utf8', mode: 0o600 });
+  }
 }
 
 /** True when the secret file exists, in the store or as a plain file. */
@@ -106,7 +147,7 @@ export function writeSecretText(cfg: Pick<RuntimeConfig, 'tokenDir'>, file: stri
   const backend = storeFor(cfg.tokenDir, env);
   if (backend === 'file') {
     ensureTokenDir(dirname(file));
-    writeFileSync(file, text, { encoding: 'utf8', mode: 0o600 });
+    writeFileAtomic(file, text);
     try {
       chmodSync(file, 0o600);
     } catch {

@@ -13,8 +13,9 @@ import { fileURLToPath } from 'node:url';
 const dist = (p) => new URL(`../dist/${p}`, import.meta.url).href;
 const GSM = fileURLToPath(new URL('../dist/cli/gsm.js', import.meta.url));
 
-const { mergeScopes, describeMerge } = await import(dist('cli/merge.js'));
-const { parseCliArgs, parseSetupAdminArgs } = await import(dist('cli/args.js'));
+const { mergeScopes, describeMerge, splitUsable, scopesDroppedBySave } = await import(dist('cli/merge.js'));
+const argsModule = await import(dist('cli/args.js'));
+const { parseCliArgs, parseSetupAdminArgs } = argsModule;
 const { UsageError } = await import(dist('cli/types.js'));
 
 const G = (name) => `https://www.googleapis.com/auth/${name}`;
@@ -193,32 +194,85 @@ function loginUntilUrl(args, p) {
   });
 }
 
-test('login: the merge line comes before the browser step, and --replace says what is dropped', async () => {
+/** A business scope the readonly profile never asks for, so in a readonly login it can only come from the stored token. */
+const STORED_USABLE = G('tagmanager.publish');
+const PERSON = 'person@example.com';
+
+/** The authorization URL a login printed. */
+const urlOf = (stdout) => new URL(stdout.match(/https:\/\/accounts\.google\.com\/o\/oauth2\S+/)[0]);
+
+test('login: the merge reads the named account only, drops scopes no server of the group uses, and --replace says what is dropped', async () => {
   await withTemp(async (p) => {
     const client = join(p.root, 'client_secret.json');
     writeFileSync(client, JSON.stringify({ installed: { client_id: 'test-client', client_secret: 'test-secret' } }));
+    // A single token from before accounts existed: it is the default account of the group, named by its account field.
     const tokenFile = join(p.tokens, 'business.token.json');
-    const stored = JSON.stringify({ access_token: 'not-a-real-token', scope: STORED_ONLY });
+    const stored = JSON.stringify({ access_token: 'not-a-real-token', scope: `${STORED_USABLE} ${STORED_ONLY}`, account: PERSON });
     writeFileSync(tokenFile, stored);
 
-    const merged = await loginUntilUrl(['login', 'business', '--no-browser', '--client-secret', client], p);
+    const merged = await loginUntilUrl(['login', 'business', '--account', PERSON, '--no-browser', '--client-secret', client], p);
     const lines = merged.stdout.split(/\r?\n/);
     const mergeAt = lines.findIndex((l) => /^Merging: 1 scope already stored is kept; \d+ new\.$/.test(l));
     const urlAt = lines.findIndex((l) => l.includes('Open this URL in a browser'));
     assert.ok(mergeAt >= 0, merged.stdout);
     assert.ok(mergeAt < urlAt, 'the merge line is printed before the browser step');
-    assert.ok(lines.includes(`  ${STORED_ONLY}`), 'the stored scope is in the list the login requests');
+    assert.ok(lines.includes(`  ${STORED_USABLE}`), 'the stored scope a business server uses is requested again');
+    assert.ok(lines.some((l) => l.startsWith('Not requested again: 1 stored scope(s) that no server of business uses')), merged.stdout);
+    const scopeParam = urlOf(merged.stdout).searchParams.get('scope').split(' ');
+    assert.ok(scopeParam.includes(STORED_USABLE));
+    assert.ok(!scopeParam.includes(STORED_ONLY), 'a scope no business server uses is not requested again');
+    assert.equal(urlOf(merged.stdout).searchParams.get('login_hint'), PERSON, 'the named account is sent as the login hint');
 
-    const replaced = await loginUntilUrl(['login', 'business', '--replace', '--no-browser', '--client-secret', client], p);
+    const replaced = await loginUntilUrl(['login', 'business', '--account', PERSON, '--replace', '--no-browser', '--client-secret', client], p);
     const replacedLines = replaced.stdout.split(/\r?\n/);
     assert.ok(replacedLines.includes('Replacing: the 1 stored scope will be dropped.'), replaced.stdout);
-    assert.ok(!replacedLines.includes(`  ${STORED_ONLY}`), 'a replace does not request the stored scope');
+    assert.ok(!replacedLines.includes(`  ${STORED_USABLE}`), 'a replace does not request the stored scope');
     assert.equal(readFileSync(tokenFile, 'utf8'), stored, 'the token file is not rewritten before the login completes');
 
+    // No account named: the default account's scopes are not requested for whichever account signs in.
+    const unnamed = await loginUntilUrl(['login', 'business', '--no-browser', '--client-secret', client], p);
+    assert.doesNotMatch(unnamed.stdout, /Merging:|Replacing:/, 'nothing is merged without an account');
+    assert.match(unnamed.stdout, /^No account named: no stored scope is merged/m);
+    assert.ok(!unnamed.stdout.split(/\r?\n/).includes(`  ${STORED_USABLE}`), "the default account's stored scope is not requested");
+    assert.equal(urlOf(unnamed.stdout).searchParams.get('login_hint'), null, 'no hint without an account');
+
     rmSync(tokenFile);
-    const fresh = await loginUntilUrl(['login', 'business', '--no-browser', '--client-secret', client], p);
+    const fresh = await loginUntilUrl(['login', 'business', '--account', PERSON, '--no-browser', '--client-secret', client], p);
     assert.doesNotMatch(fresh.stdout, /Merging:|Replacing:/, 'nothing is stored, so nothing is merged or dropped');
+    assert.match(fresh.stdout, /not signed in for business yet/);
   });
+});
+
+test('login: the authorization URL never asks for include_granted_scopes', async () => {
+  await withTemp(async (p) => {
+    const client = join(p.root, 'client_secret.json');
+    writeFileSync(client, JSON.stringify({ installed: { client_id: 'test-client', client_secret: 'test-secret' } }));
+    for (const extra of [[], ['--account', PERSON]]) {
+      const run = await loginUntilUrl(['login', 'business', ...extra, '--no-browser', '--client-secret', client], p);
+      const url = urlOf(run.stdout);
+      assert.equal(url.searchParams.get('include_granted_scopes'), null, `no include_granted_scopes (${extra.join(' ') || 'no account'})`);
+      assert.doesNotMatch(run.stdout, /include_granted_scopes/);
+    }
+  });
+});
+
+test('parse: --account takes one email address, in lower case; anything else is a usage error', () => {
+  const { parseLoginAccount } = argsModule;
+  assert.equal(parseLoginAccount(undefined), undefined);
+  assert.equal(parseLoginAccount(' Person@Example.com '), 'person@example.com');
+  assert.equal(parseCliArgs(['login', 'business', '--account', 'a@b.c']).values.account, 'a@b.c');
+  for (const bad of ['', 'no-at-sign', 'two@at@signs', 'with space@example.com', '-x@example.com', true]) {
+    assert.throws(() => parseLoginAccount(bad), (err) => err instanceof UsageError && /--account/.test(err.message), String(bad));
+  }
+});
+
+test('splitUsable and scopesDroppedBySave: foreign scopes are split off, and only usable scopes count as dropped', () => {
+  const usable = new Set([G('a'), G('b'), G('c')]);
+  assert.deepEqual(splitUsable([G('b'), G('x'), G('a'), G('x')], usable), { usable: [G('a'), G('b')], foreign: [G('x')] });
+  assert.deepEqual(splitUsable([], usable), { usable: [], foreign: [] });
+  // The account held a, b and the foreign x; the new token holds a and c. b is dropped; x does not count.
+  assert.deepEqual(scopesDroppedBySave([G('a'), G('b'), G('x')], [G('a'), G('c')], usable), [G('b')]);
+  assert.deepEqual(scopesDroppedBySave([G('x')], [], usable), []);
 });
 
 test('setup-admin: merges by default, and --replace keeps only what the setup requests', async () => {

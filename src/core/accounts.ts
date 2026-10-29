@@ -1,5 +1,5 @@
 import { existsSync, readFileSync, writeFileSync, chmodSync } from 'node:fs';
-import { readSecretText, removeSecretFile, writeSecretText } from './secret-files.js';
+import { readSecretText, removeSecretFile, storedSecretNames, writeSecretText } from './secret-files.js';
 import { join } from 'node:path';
 import type { Credentials } from 'google-auth-library';
 import { ensureTokenDir } from './acl.js';
@@ -38,6 +38,15 @@ interface Registry {
 }
 
 const REGISTRY_FILE = 'accounts.json';
+
+/**
+ * An account email as a sign-in takes it (gsm login --account, auth_login account): trimmed and in lower case. Undefined
+ * when the text does not look like one address: a space, no @ or two, or a leading "-" (it would read as an option).
+ */
+export function accountEmailOf(value: string): string | undefined {
+  const email = value.trim().toLowerCase();
+  return /^[^\s@-][^\s@]*@[^\s@]+$/.test(email) && email.length <= 254 ? email : undefined;
+}
 
 /** A file-name part for an email address: lower case, and only characters that are safe in every file system. */
 export function slugOf(email: string): string {
@@ -184,6 +193,40 @@ export function removeAccount(group: string, email: string, cfg: RuntimeConfig):
 export function defaultAccountTokenFile(group: string, cfg: RuntimeConfig): string | undefined {
   const email = defaultAccount(group, cfg);
   return email === undefined ? undefined : accountTokenFile(group, email, cfg);
+}
+
+/** The groups whose accounts sign in with the suite's OAuth client. They all share that client's Google Cloud project. */
+export const OAUTH_ACCOUNT_GROUPS: readonly string[] = ['cloud', 'workspace-user', 'searchconsole', 'business', 'developer'];
+
+/**
+ * The other groups where this account may be signed in on this machine. Google's revocation "removes all OAuth 2.0
+ * scopes previously granted to a project, invalidating any issued access or refresh tokens for all clients registered
+ * under that project", so revoking one group's login ends the same account's login in every group. A sign-out revokes
+ * only when this list is empty.
+ *
+ * Read from accounts.json and from file names only, never from a token's content: a group counts when it lists the
+ * account (any case), when it has an account whose email was not recorded, or when it has a token file from before
+ * accounts.json existed (its account cannot be known without reading it). For an account whose email was not recorded,
+ * any other group with an account counts.
+ */
+export function otherGroupsWithAccount(email: string, group: string, cfg: RuntimeConfig): string[] {
+  const registry = readRegistry(cfg);
+  const stored = storedSecretNames(cfg.tokenDir);
+  const wanted = email.toLowerCase();
+  const out: string[] = [];
+  for (const other of OAUTH_ACCOUNT_GROUPS) {
+    if (other === group) continue;
+    const record = registry.groups[other];
+    if (record) {
+      const emails = Object.keys(record.accounts ?? {});
+      const same = emails.some((e) => e.toLowerCase() === wanted || e === UNKNOWN_ACCOUNT);
+      if (same || (email === UNKNOWN_ACCOUNT && emails.length > 0)) out.push(other);
+      continue;
+    }
+    const legacy = `${other}.token.json`;
+    if (existsSync(join(cfg.tokenDir, legacy)) || stored.includes(`${other}.token`)) out.push(other);
+  }
+  return out;
 }
 
 /** The emails of the accounts signed in for a group, for messages. */

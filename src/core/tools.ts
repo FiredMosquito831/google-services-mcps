@@ -10,13 +10,14 @@ import {
   UnknownAccountError,
   forgetAdcClients,
   forgetServiceAccountClients,
+  forgetUserClients,
   grantedScopes,
   isLoggedIn,
   loginSourceOf,
   removeUserTokens,
   type AuthKind,
 } from './auth.js';
-import { accountNames, listAccounts, setDefaultAccount } from './accounts.js';
+import { accountEmailOf, accountNames, listAccounts, otherGroupsWithAccount, setDefaultAccount } from './accounts.js';
 import { withAccount } from './account-context.js';
 import { revokeGrant, withIdentityScope } from './grant-check.js';
 import { createGate, type GateFn } from './approval.js';
@@ -332,7 +333,10 @@ export async function runServer(opts: {
         cfg,
         adcScopes: adcScopesFor,
         onSignedIn: () => {
+          // The sign-in ran in another process. Forget the clients built from the old tokens, and what was read from the
+          // OS store, so the next call uses the new login without a restart.
           forgetAdcClients();
+          forgetUserClients();
           register(registerable(currentGrant(), defined));
         },
       })
@@ -364,7 +368,7 @@ export async function runServer(opts: {
       {
         title: 'Sign in to Google',
         description:
-          'Starts the Google sign-in for this server, in the browser on this machine. Call it without method first: the answer lists the two ways to sign in (oauth or adc) with their pros and cons. Ask the person which one to use, then call again with method. When the person approves in the browser, the tools of this server load without a restart.',
+          'Starts the Google sign-in for this server, in the browser on this machine. Call it without method first: the answer lists the two ways to sign in (oauth or adc) with their pros and cons. Ask the person which one to use, then call again with method. For an account that is already signed in here, pass its email as account, so the scopes it holds for the other servers of this group are kept. When the person approves in the browser, the tools of this server load without a restart.',
         inputSchema: {
           profile: z
             .enum(['readonly', 'readwrite'])
@@ -376,13 +380,24 @@ export async function runServer(opts: {
             .describe(
               'oauth: sign in with the saved OAuth client. adc: Application Default Credentials through the gcloud CLI. Leave it out to see the options first.',
             ),
+          account: z
+            .string()
+            .optional()
+            .describe(
+              'oauth only: the email of the Google account to sign in. Google preselects it, and the scopes that account already holds for the other servers of this group are kept. Without it, the sign-in asks only for this server\'s scopes, and it saves nothing when that would take scopes away from an account already signed in here (auth_status then says to try again with account).',
+            ),
         },
         annotations: { readOnlyHint: false },
       },
       async (rawArgs: Record<string, unknown>): Promise<CallToolResult> => {
         if (rawArgs.method !== 'oauth' && rawArgs.method !== 'adc') return text(signInChoice());
         const method: SignInMethod = rawArgs.method;
-        return text(await signIn.start(rawArgs.profile === 'readwrite' ? 'readwrite' : 'readonly', method));
+        let account: string | undefined;
+        if (typeof rawArgs.account === 'string' && rawArgs.account.trim() !== '') {
+          account = accountEmailOf(rawArgs.account);
+          if (account === undefined) return text('account must be the email address of a Google account, for example name@example.com.');
+        }
+        return text(await signIn.start(rawArgs.profile === 'readwrite' ? 'readwrite' : 'readonly', method, account));
       },
     );
     server.registerTool(
@@ -394,13 +409,17 @@ export async function runServer(opts: {
         annotations: { readOnlyHint: true },
       },
       async (): Promise<CallToolResult> => {
+        // A sign-in made in a terminal is seen here too: the tokens are read again, not taken from this process's memory.
+        forgetUserClients();
         const before = registered.size;
         const signedIn = isLoggedIn(group as AuthKind, cfg);
         if (signedIn) register(registerable(currentGrant(), defined));
         const loaded = registered.size - before;
         const source = loginSourceOf(group as AuthKind, cfg);
         const via = source === 'adc' ? ' with Application Default Credentials' : source === 'oauth' ? ' with an OAuth account' : '';
-        const state = signedIn ? `Signed in for "${group}"${via}. ${loaded} tool(s) loaded now.` : `Not signed in for "${group}".`;
+        const state = signedIn
+          ? `Signed in for "${group}"${via}. ${loaded} tool(s) loaded now, ${registered.size} registered in total.`
+          : `Not signed in for "${group}". ${registered.size} tool(s) registered in total.`;
         return text(`${state} Accounts: ${accountNames(group as string, cfg)}. ${signIn.describe()}`);
       },
     );
@@ -451,7 +470,7 @@ export async function runServer(opts: {
         const loaded = registered.size - before;
         return text(
           set
-            ? `Set up for "${group}" with a service account key (${loginSourceOf(group, cfg)}). ${loaded} tool(s) loaded now.`
+            ? `Set up for "${group}" with a service account key (${loginSourceOf(group, cfg)}). ${loaded} tool(s) loaded now, ${registered.size} registered in total.`
             : `Not set up for "${group}". Call auth_setup_service_account with the full path of the key file.`,
         );
       },
@@ -506,14 +525,22 @@ export async function runServer(opts: {
       {
         title: 'Remove a signed-in account',
         description:
-          'Revokes one account of this server at Google, and removes its token from this machine. The other accounts stay signed in.',
+          "Removes one account of this server's group from this machine. It is also revoked at Google, unless the same account is signed in here for another group: Google's revocation ends every sign-in of that account with this OAuth client, so then only the local token is removed, and the answer says how to revoke it everywhere. Other accounts are not touched.",
         inputSchema: { email: z.string().describe('The account to remove.') },
         annotations: { readOnlyHint: false },
       },
       async (rawArgs: Record<string, unknown>): Promise<CallToolResult> => {
         const email = String(rawArgs.email);
-        const revoke = await revokeGrant(group as AuthKind, cfg, {}, email);
+        // A revoke at Google would also end this account's sign-in for the other groups, so it runs only when no other
+        // group has the account (accounts.json and file names only; no token is read for this).
+        const shared = otherGroupsWithAccount(email, group as string, cfg);
+        const revoke = shared.length === 0 ? await revokeGrant(group as AuthKind, cfg, {}, email) : undefined;
         if (!removeUserTokens(group as AuthKind, cfg, email)) return text(`No signed-in account "${email}" for ${group}.`);
+        if (shared.length > 0) {
+          return text(
+            `Removed ${email} from ${group} on this machine. Not revoked at Google: ${email} is also signed in here for ${shared.join(', ')}, and Google's revocation would end those sign-ins too. To revoke it everywhere on purpose, run: ${invocation()} logout ${shared[0]} --account ${email} --revoke-all, or use https://myaccount.google.com/permissions.`,
+          );
+        }
         return text(`Removed ${email} from ${group}. ${revoke?.detail ?? ''}`.trim());
       },
     );

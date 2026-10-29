@@ -1,9 +1,10 @@
 /**
  * The one scope rule for `gsm login` and `gsm setup-admin`.
  *
- * By default a login merges the scopes it requests with the scopes already stored for its group, so logging in for
- * one product keeps the scopes of the others. --replace keeps only the requested scopes: the stored ones are dropped
- * when the new token is saved. This module is pure: it reads no file and calls no network.
+ * By default a login merges the scopes it requests with the scopes already stored, so logging in for one product keeps
+ * the scopes of the others. For `gsm login` the stored scopes are those of the account named with --account (and only
+ * the ones a server of the group can use); with no account named nothing is merged. --replace keeps only the requested
+ * scopes: the stored ones are dropped when the new token is saved. This module is pure: it reads no file and calls no network.
  */
 
 export interface MergeInput {
@@ -46,6 +47,24 @@ export function mergeScopes({ requested, stored, replace }: MergeInput): MergeRe
     added: scopes.filter((s) => !wasStored.has(s)),
     dropped: storedList.filter((s) => !inResult.has(s)),
   };
+}
+
+/**
+ * Splits stored scopes into the ones a server of the group can use and the ones none can (foreign). A foreign scope came
+ * from another group's sign-in, such as a Cloud scope that Google once added to a Gmail token, so it is not requested again.
+ */
+export function splitUsable(stored: readonly string[], usable: ReadonlySet<string>): { usable: string[]; foreign: string[] } {
+  const list = normal(stored);
+  return { usable: list.filter((s) => usable.has(s)), foreign: list.filter((s) => !usable.has(s)) };
+}
+
+/**
+ * The scopes a save would take away from an account: scopes its current token holds that a server of the group can use,
+ * and that the new token does not hold. Foreign scopes do not count: losing them is the point of not requesting them.
+ */
+export function scopesDroppedBySave(existing: readonly string[], next: readonly string[], usable: ReadonlySet<string>): string[] {
+  const kept = new Set(next);
+  return normal(existing).filter((s) => usable.has(s) && !kept.has(s));
 }
 
 const plural = (n: number, word: string): string => `${n} ${word}${n === 1 ? '' : 's'}`;

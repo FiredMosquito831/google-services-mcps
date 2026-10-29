@@ -4,8 +4,8 @@
  * apart from the per-method tools, because the gateway checks their scopes per call. Makes no network call
  * and does not log in. Also the shared helpers that gsm login and gsm setup-admin use to pick servers and report coverage.
  */
-import { loadConfig } from '../core/config.js';
-import { serverByName, type AuthGroup, type Registry } from '../core/registry.js';
+import { loadConfig, type RuntimeConfig } from '../core/config.js';
+import { loadRegistry, scopesForGroup, serverByName, type AuthGroup, type Registry } from '../core/registry.js';
 import {
   PROFILES,
   PROFILE_TEXT,
@@ -21,6 +21,43 @@ import type { ToolKind } from '../core/tools.js';
 import type { CliGroup } from './args.js';
 import type { Output } from './report.js';
 import { UsageError } from './types.js';
+
+/** The scopes Google adds for the email scope. They name the account and grant no tool access. */
+export const IDENTITY_SCOPES: readonly string[] = ['https://www.googleapis.com/auth/userinfo.email', 'openid', 'email'];
+
+/**
+ * Every scope a server of the group can use: the scopes of its tools and gateway methods, plus the identity scopes. A
+ * login keeps a stored scope only when it is in this set, so a scope that came from another group (a Cloud or Search
+ * Console scope in a Gmail token, for example) is not requested again. A plugin knows only its own server, so the bundle
+ * writes the group's list into the plugin's servers.json (groupScopes). The repository map has every server, so there
+ * the servers the login did not cover are read too. `known` holds the requirements already built for `knownServers`.
+ */
+export async function groupScopeUniverse(
+  reg: Registry,
+  group: AuthGroup,
+  cfg: RuntimeConfig,
+  known: readonly Requirement[],
+  knownServers: readonly string[],
+): Promise<Set<string>> {
+  const set = new Set<string>(IDENTITY_SCOPES);
+  for (const scope of reg.groupScopes?.[group] ?? []) set.add(scope);
+  for (const r of known) for (const scope of r.scopes) set.add(scope);
+  const others = reg.servers.filter((s) => s.group === group && !knownServers.includes(s.name));
+  if (others.length > 0) {
+    // The notes about a missing catalog were printed for the login's own servers already.
+    for (const r of await requirementsForSpecs(others, cfg, { warn: () => undefined })) for (const scope of r.scopes) set.add(scope);
+  }
+  // The server map the servers read (config/servers.json, or the plugin's servers.json) also lists the gateway APIs,
+  // which the repository's product list does not. Its scope lists only add to the set; a missing file adds nothing.
+  try {
+    const served = loadRegistry();
+    for (const scope of served.groupScopes?.[group] ?? []) set.add(scope);
+    for (const scope of scopesForGroup(served, group)) set.add(scope);
+  } catch {
+    // No server map or scope list next to this module: the lists above are what is known.
+  }
+  return set;
+}
 
 /** The servers of one auth group, narrowed by --servers. Every requested name must belong to the group. */
 export function selectGroupServers(reg: Registry, group: AuthGroup, requested?: readonly string[]): string[] {

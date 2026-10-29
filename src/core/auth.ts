@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import { existsSync, readFileSync, rmSync, writeFileSync, chmodSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { OAuth2Client, GoogleAuth, JWT, type Credentials } from 'google-auth-library';
@@ -8,7 +9,7 @@ import type { RuntimeConfig } from './config.js';
 import { invocation } from './invocation.js';
 import { isIdempotentMethod, requestWithRetry, type HttpResult } from './http.js';
 import { adcFilePath, adcGrantFor, GCLOUD_DEFAULT_SCOPES, readAdcState, type AdcGrant } from './adc.js';
-import { readSecretText, secretFileExists, writeSecretText } from './secret-files.js';
+import { forgetCachedSecrets, readSecretText, secretFileExists, writeSecretText } from './secret-files.js';
 
 /**
  * One auth group per token file. Each group maps to one or more MCP servers
@@ -59,15 +60,79 @@ export class AuthRequiredError extends Error {
 }
 
 /**
+ * Why Google refused a login, from its error answer: `error` and `error_subtype` (not secret), and whether it asks for
+ * reauthentication. Workspace's Google Cloud session control ends a login that holds Cloud scopes after a set time and
+ * answers invalid_grant with the subtype invalid_rapt (or rapt_required). google-auth-library then puts the answer, as
+ * JSON, in the error message (oauth2client.js, refreshTokenNoCache), so both places are read. The token is never read.
+ */
+export interface GrantRefusal {
+  error?: string;
+  subtype?: string;
+  /** The HTTP status of a refused call (401), when the answer had no OAuth error code. */
+  status?: number;
+  reauth: boolean;
+}
+
+const REAUTH_SUBTYPES: readonly string[] = ['invalid_rapt', 'rapt_required'];
+
+function answerOf(err: unknown): Record<string, unknown> {
+  const e = err as { message?: unknown; response?: { data?: unknown } } | null;
+  const data = e?.response?.data;
+  if (data && typeof data === 'object') return data as Record<string, unknown>;
+  const message = typeof e?.message === 'string' ? e.message.trim() : '';
+  if (message.startsWith('{')) {
+    try {
+      const parsed = JSON.parse(message) as unknown;
+      if (parsed && typeof parsed === 'object') return parsed as Record<string, unknown>;
+    } catch {
+      // not JSON: nothing more to read
+    }
+  }
+  return {};
+}
+
+export function grantRefusalOf(err: unknown): GrantRefusal {
+  const answer = answerOf(err);
+  const text = (key: string): string | undefined => {
+    const value = answer[key];
+    // Google's codes are short words. Anything else is left out rather than shown.
+    return typeof value === 'string' && /^[\w.-]{1,64}$/.test(value) ? value : undefined;
+  };
+  const error = text('error') ?? (isInvalidGrant(err) ? 'invalid_grant' : undefined);
+  const subtype = text('error_subtype');
+  const description = typeof answer.error_description === 'string' ? answer.error_description : '';
+  const reauth = (subtype !== undefined && REAUTH_SUBTYPES.includes(subtype)) || /ReAuth/i.test(description);
+  const status = httpStatus(err);
+  return { error, subtype, ...(error === undefined && status === 401 ? { status } : {}), reauth };
+}
+
+/** The message for a refused login of an OAuth or ADC group. The sign-in in the chat comes first, the terminal second. */
+export function refusalMessage(kind: AuthKind, refusal: GrantRefusal, adc = false): string {
+  const again = adc
+    ? `Call auth_login with method "adc" to sign in again, or run: gcloud auth application-default login.`
+    : `Call auth_login to sign in again, or run: ${invocation()} login ${kind}.`;
+  if (refusal.reauth) {
+    return `Your Google Workspace requires signing in to Google Cloud again (an admin session policy; Google's default is 16 hours). ${again}`;
+  }
+  const said = [
+    refusal.error ? `error ${refusal.error}` : undefined,
+    refusal.subtype ? `subtype ${refusal.subtype}` : undefined,
+    refusal.status ? `HTTP ${refusal.status}` : undefined,
+  ].filter(Boolean);
+  const reason = said.length > 0 ? ` (Google: ${said.join(', ')})` : '';
+  return `Google refused the ${adc ? 'Application Default Credentials login' : `login for "${kind}"`}${reason}. It may have expired or been revoked, or the OAuth client may have changed; an app left in Testing loses its refresh tokens after 7 days. ${again}`;
+}
+
+/**
  * The stored login was refused: Google rejected the refresh token, or the access token it was asked for. The message
- * says how to log in again, so the model can tell the person what to do.
+ * says why, as far as Google said, and how to sign in again, so the model can tell the person what to do.
  */
 export class GrantExpiredError extends Error {
   constructor(kind: AuthKind, options?: { cause?: unknown }) {
     super(
       kind === 'service-account'
         ? `Google refused the service account key. The key may be deleted, disabled, or not added to Play Console or Merchant Center. Check it in Google Cloud console, then set it up again: ${invocation()} setup-service-account --key-file <file>.`
-        : `The login for "${kind}" has expired or was revoked. Log in again: ${invocation()} login ${kind}. An app left in Testing loses its refresh tokens after 7 days.`,
+        : refusalMessage(kind, options?.cause === undefined ? { reauth: false } : grantRefusalOf(options.cause)),
       options,
     );
     this.name = 'GrantExpiredError';
@@ -360,24 +425,49 @@ export async function getAuthClient(kind: AuthKind, cfg: RuntimeConfig): Promise
     if (adc) return adc;
     throw new AuthRequiredError(kind);
   }
-  // One client per account file, so each account keeps its own refreshed tokens for the life of the process.
+  // One client per account file, so each account keeps its own refreshed tokens. A client is rebuilt when the file holds
+  // another refresh token than the one it was built with: a new sign-in (in the chat or in a terminal) is then used at
+  // once, without a restart. Only a hash of the refresh token is kept, and it is never logged.
+  const stored = readTokenFile(cfg, path);
+  const fingerprint = refreshFingerprint(stored);
   const cached = userClients.get(path);
-  if (cached) return cached;
+  if (cached && cached.fingerprint === fingerprint) return cached.client;
 
   const { clientId, clientSecret } = readClientSecret(cfg);
   const client = new OAuth2Client(clientId, clientSecret);
-  client.setCredentials(readTokenFile(cfg, path));
-  // Persist refreshed access tokens so a restart does not force a new login. The write goes to the store in use.
+  client.setCredentials(stored);
+  const entry: { client: OAuth2Client | JWT; fingerprint: string } = { client, fingerprint };
+  // Persist refreshed access tokens so a restart does not force a new login. The write goes to the store in use. It is
+  // skipped when the file is gone (the account was signed out: it is not created again) or holds another refresh token
+  // (a newer sign-in replaced it: its token is not overwritten with this older client's answer).
   client.on('tokens', (fresh) => {
-    writeSecretText(cfg, path, JSON.stringify({ ...readTokenFile(cfg, path), ...fresh }, null, 2));
+    if (!secretFileExists(cfg, path)) return;
+    const current = readTokenFile(cfg, path);
+    if (refreshFingerprint(current) !== entry.fingerprint) return;
+    writeSecretText(cfg, path, JSON.stringify({ ...current, ...fresh }, null, 2));
+    entry.fingerprint = refreshFingerprint({ ...current, ...fresh });
   });
-  const wrapped = withRetry(client, kind);
-  userClients.set(path, wrapped);
-  return wrapped;
+  entry.client = withRetry(client, kind);
+  userClients.set(path, entry);
+  return entry.client;
 }
 
-/** The OAuth clients of the user accounts, by token file. */
-const userClients = new Map<string, OAuth2Client | JWT>();
+/** A SHA-256 of a token file's refresh token, to notice a new sign-in. Empty when there is none. Never shown. */
+function refreshFingerprint(tokens: Credentials): string {
+  return tokens.refresh_token ? createHash('sha256').update(tokens.refresh_token).digest('hex') : '';
+}
+
+/** The OAuth clients of the user accounts, by token file, with the hash of the refresh token each was built with. */
+const userClients = new Map<string, { client: OAuth2Client | JWT; fingerprint: string }>();
+
+/**
+ * Forgets the OAuth clients of the user accounts and the secrets read from the OS store, so the next call reads the
+ * token files again. Call it after a sign-in: the sign-in runs in another process, which this one cannot see otherwise.
+ */
+export function forgetUserClients(): void {
+  userClients.clear();
+  forgetCachedSecrets();
+}
 
 /** The service-account clients, by key file. */
 const serviceClients = new Map<string, JWT>();

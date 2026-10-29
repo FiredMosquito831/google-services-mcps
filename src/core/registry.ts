@@ -49,6 +49,12 @@ export interface Registry {
   plugins: Record<string, string>;
   groups: Record<AuthGroup, string>;
   servers: ServerSpec[];
+  /**
+   * Every scope the servers of a login group can use (tools and gateway methods), per group. A plugin's servers.json
+   * holds only its own server, so the bundle writes its group's full list here; the login keeps a stored scope only when
+   * the list has it. Absent in the repository map, which has every server, so the list is computed from the servers there.
+   */
+  groupScopes?: Partial<Record<AuthGroup, string[]>>;
 }
 
 const registryCache = new Map<string, Registry>();
@@ -82,6 +88,7 @@ export function loadRegistry(fromUrl: string = import.meta.url): Registry {
         plugins: raw.plugins ?? {},
         groups: (raw.groups ?? {}) as Registry['groups'],
         servers: raw.servers ?? [],
+        ...(raw.groupScopes ? { groupScopes: raw.groupScopes } : {}),
       };
       registryCache.set(file, reg);
       return reg;

@@ -130,7 +130,7 @@ test('ads_search posts the query to customers/{id}/googleAds:search, with the de
   assert.equal(calls.length, 1);
   assert.equal(calls[0].method, 'POST');
   assert.equal(calls[0].url, `${BASE}/customers/${CUSTOMER}/googleAds:search`);
-  assert.deepEqual(calls[0].body, { query: 'select campaign.id from campaign', pageSize: 1000 });
+  assert.deepEqual(calls[0].body, { query: 'select campaign.id from campaign' });
   assert.equal(calls[0].headers['developer-token'], TOKEN);
   assert.equal(calls[0].headers['login-customer-id'], undefined, 'no login header when the manager ID is not set');
   assert.deepEqual(out, { rowCount: 1, results: [{ campaign: { id: '1' } }] });
@@ -138,12 +138,24 @@ test('ads_search posts the query to customers/{id}/googleAds:search, with the de
 
 test('ads_search returns at most 500 rows and notes the truncation', async () => {
   reset(() => ({ results: Array.from({ length: 600 }, (_, i) => ({ id: i })) }));
-  const out = await tool('ads_search').handler({ customer_id: CUSTOMER, query: 'SELECT campaign.id FROM campaign', page_size: 600 });
-  assert.equal(calls[0].body.pageSize, 600);
+  const out = await tool('ads_search').handler({ customer_id: CUSTOMER, query: 'SELECT campaign.id FROM campaign' });
   assert.equal(out.rowCount, 500);
   assert.equal(out.results.length, 500);
   assert.equal(out.truncated, true);
   assert.match(out.note, /first 500/);
+});
+
+test('ads_search never sends pageSize, and takes no page_size input (Google Ads answers PAGE_SIZE_NOT_SUPPORTED)', async () => {
+  reset(() => ({ results: [] }));
+  await tool('ads_search').handler({ customer_id: CUSTOMER, query: 'SELECT campaign.id FROM campaign' });
+  assert.equal(calls.length, 1);
+  assert.equal(Object.hasOwn(calls[0].body, 'pageSize'), false, 'the request body has no pageSize');
+  assert.deepEqual(Object.keys(calls[0].body), ['query']);
+  assert.equal(Object.hasOwn(tool('ads_search').inputSchema, 'page_size'), false, 'the input has no page_size');
+  // An old caller that still passes page_size gets the same request: zod drops unknown keys.
+  reset(() => ({ results: [] }));
+  await tool('ads_search').handler({ customer_id: CUSTOMER, query: 'SELECT campaign.id FROM campaign', page_size: 600 });
+  assert.deepEqual(calls[0].body, { query: 'SELECT campaign.id FROM campaign' });
 });
 
 test('ads_list_customers sends a GET to customers:listAccessibleCustomers and returns the resource names', async () => {

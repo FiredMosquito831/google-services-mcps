@@ -83,6 +83,7 @@ export function loadRegistryFile(file: string): Registry {
     plugins: raw.plugins ?? {},
     groups: (raw.groups ?? {}) as Registry['groups'],
     servers: raw.servers ?? [],
+    ...(raw.groupScopes ? { groupScopes: raw.groupScopes } : {}),
   };
 }
 

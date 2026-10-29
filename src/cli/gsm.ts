@@ -9,6 +9,7 @@ import {
   parseGroup,
   parseInstallArgs,
   parseLimit,
+  parseLoginAccount,
   parseLoginScopes,
   parseProfile,
   parseSearch,
@@ -73,7 +74,9 @@ Commands:
   setup-service-account  Set up the service account for Google Play and Merchant Center (--remove forgets it)
   protect       Move the saved secrets into the OS store (DPAPI, Keychain or libsecret). --off moves them back to plain files
   status        Show logins, the API key and the security posture of each token (--check asks Google: validity, scopes, key restrictions)
-  logout        Revoke one group's login at Google and remove its token (--account <email> names one account; --local-only: only remove the file; apikey: shows where the key file is)
+  logout        Revoke one group's login at Google and remove its token (--account <email> names one account; --local-only: only remove the file;
+                the revoke is skipped when another group here has the same account, because it would end that login too: --revoke-all revokes anyway;
+                apikey: shows where the key file is)
   accounts      List the signed-in accounts of each group. "accounts default <group> <email>" sets the default one
   products      List the products: id, title, group, tool count, gateway APIs and whether the plugin folder exists
   apis          List the APIs of a product (generated and gateway), or of the whole catalog, with method counts
@@ -90,14 +93,14 @@ Usage:
                          [--path <dir>] [--dry-run]
   node gsm.mjs uninstall --all [--dry-run] [--yes]
   node gsm.mjs list [--json] [--home <dir>]
-  node gsm.mjs login <group> [--profile readonly|readwrite|full] [--scopes <url,url>] [--servers <a,b>] [--client-secret <file>] [--no-browser] [--replace]
+  node gsm.mjs login <group> [--profile readonly|readwrite|full] [--scopes <url,url>] [--servers <a,b>] [--client-secret <file>] [--no-browser] [--replace] [--account <email>]
   node gsm.mjs scopes <group> [--profile readonly|readwrite|full] [--servers <a,b>] [--json]
   node gsm.mjs setup-client <path-to-client_secret.json> [--force]
   node gsm.mjs setup-apikey [--force]
   node gsm.mjs setup-admin --subject <admin email> --key-file <service account JSON> [--profile readonly|readwrite|full] [--servers <a,b>] [--replace]
   node gsm.mjs setup-service-account --key-file <service account JSON>   (gplay and gmerchant; --remove forgets the setup)
   node gsm.mjs status [--check]
-  node gsm.mjs logout <group> [--local-only]
+  node gsm.mjs logout <group> [--account <email>] [--local-only | --revoke-all]
   node gsm.mjs products [--json]
   node gsm.mjs apis [<product>] [--search <text>] [--json] [--limit <n>]
   node gsm.mjs methods <api> [<version>] [--search <text>] [--json] [--limit <n>]
@@ -135,6 +138,8 @@ Groups:   OAuth login: cloud, workspace-user, searchconsole, business, developer
           workspace-admin: setup-admin (service account with domain-wide delegation).
 Flags:    --no-browser (login) prints the login URL only, and does not open the browser.
           --replace (login, setup-admin): by default a login merges the requested scopes with the stored ones; --replace drops the stored ones.
+          --account (login): the Google account to sign in. Google is asked to preselect it, and the merge reads that
+          account's stored scopes only (scopes no server of the group uses are left out). Without it, nothing is merged.
           --json (scopes, products, apis, methods, list) prints JSON.
 API key:  setup-apikey reads GSM_API_KEY_INPUT or stdin. The key is never a command-line argument and is never printed.
 Backups:  an existing config file is copied to <file>.gsm-backup-<YYYYMMDD-HHMMSS> before it changes.
@@ -306,13 +311,18 @@ async function dispatch(argv: readonly string[]): Promise<number> {
     case 'login': {
       // In a terminal, `login` with no group starts the guided sign-in (group, client file, profile, API key, admin).
       if (parsed.positionals.length === 0 && isInteractive()) return withPrompter((prompt) => guidedSignIn(guidedEnvFor(prompt, moduleUrl)));
-      const group = parseGroup(parsed.positionals, 'usage: node gsm.mjs login <group> [--profile readonly|readwrite|full] [--scopes <urls>] [--servers a,b] [--client-secret <file>] [--no-browser] [--replace]');
+      const group = parseGroup(parsed.positionals, 'usage: node gsm.mjs login <group> [--profile readonly|readwrite|full] [--scopes <urls>] [--servers a,b] [--client-secret <file>] [--no-browser] [--replace] [--account <email>]');
       const choice = parseLoginScopes(parsed.values);
       const servers = parseServers(parsed.values);
       const clientSecretFile = typeof parsed.values['client-secret'] === 'string' ? parsed.values['client-secret'] : undefined;
       const noBrowser = parsed.values['no-browser'] === true;
       const replace = parsed.values.replace === true;
-      return runLogin({ group, servers, clientSecretFile, profile: choice.profile, customScopes: choice.customScopes, noBrowser, replace }, registryFor, out);
+      const account = parseLoginAccount(parsed.values.account);
+      return runLogin(
+        { group, servers, clientSecretFile, profile: choice.profile, customScopes: choice.customScopes, noBrowser, replace, account },
+        registryFor,
+        out,
+      );
     }
 
     case 'scopes': {
@@ -379,11 +389,11 @@ async function dispatch(argv: readonly string[]): Promise<number> {
       return parsed.values.check === true ? runStatusCheck(out) : runStatus(out);
 
     case 'logout': {
-      const group = parseGroup(parsed.positionals, 'usage: node gsm.mjs logout <group>');
-      return runLogout(group, out, {
-        localOnly: parsed.values['local-only'] === true,
-        account: optionalString(parsed.values.account, 'account'),
-      });
+      const group = parseGroup(parsed.positionals, 'usage: node gsm.mjs logout <group> [--account <email>] [--local-only | --revoke-all]');
+      const localOnly = parsed.values['local-only'] === true;
+      const revokeAll = parsed.values['revoke-all'] === true;
+      if (localOnly && revokeAll) throw new UsageError('use --local-only (do not revoke) or --revoke-all (revoke even when other groups use the account), not both');
+      return runLogout(group, out, { localOnly, revokeAll, account: optionalString(parsed.values.account, 'account') });
     }
 
     case 'accounts': {

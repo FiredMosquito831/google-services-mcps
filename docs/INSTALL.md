@@ -366,14 +366,14 @@ Other commands:
 | Command | Purpose |
 |---|---|
 | `npx google-services-mcps list [--json] [--home <dir>]` | Show every install gsm made: agent, scope, folder, products and state. **Checked.** |
-| `npx google-services-mcps login <group> [--profile readonly\|readwrite\|full] [--scopes <urls>] [--servers <a,b>] [--client-secret <file>] [--no-browser] [--replace]` | Log in one group. Merges with the scopes already stored, unless `--replace` drops them. **UNVERIFIED:** not run, because it starts Google's sign-in. Help text checked. |
+| `npx google-services-mcps login <group> [--profile readonly\|readwrite\|full] [--scopes <urls>] [--servers <a,b>] [--client-secret <file>] [--no-browser] [--replace] [--account <email>]` | Log in one group. With `--account`, merges with the scopes that account already holds for the group (only the ones a server of the group uses), unless `--replace` drops them. Without `--account`, nothing is merged. **UNVERIFIED:** not run, because it starts Google's sign-in. Help text checked. |
 | `npx google-services-mcps scopes <group> [--profile ...] [--servers ...] [--json]` | Show what each profile would enable. **Checked.** |
 | `npx google-services-mcps setup-client <client_secret.json> [--force]` | Save the OAuth desktop client file. **Checked** with a test file. |
 | `npx google-services-mcps setup-apikey [--force]` | Save the API key. The key comes from `GSM_API_KEY_INPUT` or standard input. **Checked** with a test key. |
 | `npx google-services-mcps setup-admin --subject <email> --key-file <json> [--profile ...] [--servers ...] [--replace]` | Set up the workspace-admin group. **Checked** with a test service account file. |
 | `npx google-services-mcps status` | Show logins, the API key and the setup of each group. **Checked.** |
 | `npx google-services-mcps health` | One row per server: login, account, tool count. `--check` asks Google about each login. `--json` prints the rows. **Checked** offline. |
-| `npx google-services-mcps logout <group>` | Revoke the login at Google, then remove the token file. `--local-only` removes the file only. **Checked** (no token case). |
+| `npx google-services-mcps logout <group> [--account <email>] [--local-only \| --revoke-all]` | Revoke the login at Google, then remove the token file. `--local-only` removes the file only. When another group here has the same account, only the file is removed (a revoke would end that login too); `--revoke-all` revokes anyway. **Checked** (no token case; the shared-account case with a fake revoke in the tests). |
 | `npx google-services-mcps products [--json]` | List the products. **Checked.** |
 | `npx google-services-mcps apis [<product>] [--search <text>] [--json] [--limit <n>]` | List the APIs of a product. **Checked.** |
 | `npx google-services-mcps methods <api> [<version>] [--search <text>] [--json] [--limit <n>]` | List the methods of one API. **Checked.** |
@@ -452,7 +452,7 @@ npx google-services-mcps logout workspace-user
 npx google-services-mcps logout cloud
 ```
 
-Use the groups you actually logged in to: `cloud`, `searchconsole`, `workspace-user`, `business`, `developer` or `workspace-admin`. `logout` revokes that group's login at Google, then removes its token file. With `--local-only` it only removes the file, and it prints the page where you can revoke the login: `https://myaccount.google.com/permissions`. **Checked** (the message, with no token). **UNVERIFIED:** revoking a real login, because no login was run.
+Use the groups you actually logged in to: `cloud`, `searchconsole`, `workspace-user`, `business`, `developer` or `workspace-admin`. `logout` revokes that group's login at Google, then removes its token file. When the same account is signed in here for another group, it does not revoke, because Google's revocation removes every grant the account gave the OAuth client's project and the other group's login would stop working too; `--revoke-all` revokes anyway. With `--local-only` it only removes the file, and it prints the page where you can revoke the login: `https://myaccount.google.com/permissions`. **Checked** (the message, with no token). **UNVERIFIED:** revoking a real login, because no login was run.
 
 `logout` does not remove the API key. `npx google-services-mcps logout apikey` shows where the key file is. Delete that file yourself. **Checked.**
 
@@ -537,9 +537,11 @@ The exact error text is **UNVERIFIED**.
 
 **The browser does not open for `login`.** Run the same login with `--no-browser`. The command prints the URL. Open that URL in a browser on the same machine. The redirect goes to `127.0.0.1`, so the browser must run on the machine where the login command runs. **Help text.** **UNVERIFIED:** not run.
 
-**Login works, but the tools still fail.** Restart the server in `/mcp`, or restart Claude Code. A new login needs a restart to apply the new scopes.
+**Login works, but the tools still fail.** After a sign-in in the chat, the server uses the new login at once. After a login in a terminal, call `auth_status`: it reads the tokens again and loads the tools the new scopes allow. Tools whose scopes the new login lacks stay listed until the server restarts: restart it in `/mcp`, or restart Claude Code.
 
-**Earlier scopes are still in the token.** A login merges with the scopes already stored for its group, so logging in for one product keeps the others. Use `--replace` to drop the stored scopes and keep only what this login requests. A merge can leave write scopes from an earlier readwrite login in place: when you want a readonly token again, log in with `--replace`. For example:
+**"Your Google Workspace requires signing in to Google Cloud again."** Google refused the login with a reauthentication request (`invalid_rapt`). A Workspace admin setting, Google Cloud session control, ends logins that hold Google Cloud scopes after a set time; Google's default is 16 hours. Call `auth_login` to sign in again. To make it last longer, an admin changes the session length or exempts the app (Google Admin console, Security, Access and data control, Google Cloud session control). For any other refusal, the message shows Google's error code and subtype.
+
+**Earlier scopes are still in the token.** A login merges with the scopes the same account already holds for its group, so logging in for one product keeps the others. Name the account with `--account <email>` (in the chat: `auth_login` with `account`): only that account's stored scopes are merged, and only the ones a server of the group uses. Without `--account`, nothing is merged, and a login that would take scopes away from an account already signed in saves nothing and says how to retry. Use `--replace` to drop the stored scopes and keep only what this login requests. A merge can leave write scopes from an earlier readwrite login in place: when you want a readonly token again, log in with `--replace`. For example:
 
 ```
 npx google-services-mcps login workspace-user --profile readonly --replace --servers gmail,gcalendar,gdrive

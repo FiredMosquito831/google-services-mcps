@@ -5,7 +5,9 @@ import { existsSync } from 'node:fs';
 import { JWT } from 'google-auth-library';
 import {
   adcSourceFor,
+  grantRefusalOf,
   isInvalidGrant,
+  refusalMessage,
   loadUserTokens,
   readClientSecret,
   readServiceAccountFile,
@@ -85,8 +87,15 @@ const defaultClient = (clientId: string, clientSecret: string): OAuthClientLike 
 const defaultAdcClient = async (scopes: string[]): Promise<OAuthClientLike> =>
   (await new GoogleAuth({ scopes }).getClient()) as unknown as OAuthClientLike;
 
-function adcExpiredDetail(group: AuthKind): string {
-  return `The Application Default Credentials login has expired or was revoked. Log in again with: gcloud auth application-default login, or call auth_login with method "adc" (${group}).`;
+/**
+ * A refused ADC login, with Google's reason when the error carries one (reauthentication, or its error and subtype).
+ * Without an error the text is the one it always was.
+ */
+function adcExpiredDetail(group: AuthKind, err?: unknown): string {
+  if (err === undefined) {
+    return `The Application Default Credentials login has expired or was revoked. Log in again with: gcloud auth application-default login, or call auth_login with method "adc" (${group}).`;
+  }
+  return refusalMessage(group, grantRefusalOf(err), true);
 }
 
 function messageOf(err: unknown): string {
@@ -100,8 +109,15 @@ function redact(text: string, secrets: ReadonlyArray<string | null | undefined>)
   return out;
 }
 
-function expiredDetail(group: AuthKind): string {
-  return `The login for "${group}" has expired or was revoked. An app left in Testing loses its refresh tokens after 7 days. Log in again: ${invocation()} login ${group}`;
+/**
+ * A refused login. With the error Google answered, the text says what Google said (a reauthentication request is told
+ * apart). Without one (Google gave no access token), the text is the one it always was.
+ */
+function expiredDetail(group: AuthKind, err?: unknown): string {
+  if (err === undefined) {
+    return `The login for "${group}" has expired or was revoked. An app left in Testing loses its refresh tokens after 7 days. Log in again: ${invocation()} login ${group}`;
+  }
+  return refusalMessage(group, grantRefusalOf(err));
 }
 
 function revokedDetail(group: AuthKind): string {
@@ -140,7 +156,7 @@ export async function checkGrant(group: AuthKind, cfg: RuntimeConfig, deps: Gran
   try {
     access = (await client.getAccessToken()).token;
   } catch (err) {
-    if (isInvalidGrant(err)) return none('expired', expiredDetail(group));
+    if (isInvalidGrant(err)) return none('expired', expiredDetail(group, err));
     return none('unreachable', `could not refresh the access token: ${redact(messageOf(err), secrets)}`);
   }
   if (!access) return none('expired', expiredDetail(group));
@@ -178,7 +194,7 @@ async function checkAdcGrant(group: AuthKind, stored: string[], deps: GrantDeps)
   try {
     client = await (deps.makeAdcClient ?? defaultAdcClient)(stored);
   } catch (err) {
-    if (isInvalidGrant(err)) return none('expired', adcExpiredDetail(group));
+    if (isInvalidGrant(err)) return none('expired', adcExpiredDetail(group, err));
     return none('unreachable', `could not read the ADC file: ${messageOf(err)}`);
   }
 
@@ -186,7 +202,7 @@ async function checkAdcGrant(group: AuthKind, stored: string[], deps: GrantDeps)
   try {
     access = (await client.getAccessToken()).token;
   } catch (err) {
-    if (isInvalidGrant(err)) return none('expired', adcExpiredDetail(group));
+    if (isInvalidGrant(err)) return none('expired', adcExpiredDetail(group, err));
     return none('unreachable', `could not refresh the ADC access token: ${messageOf(err)}`);
   }
   if (!access) return none('expired', adcExpiredDetail(group));
