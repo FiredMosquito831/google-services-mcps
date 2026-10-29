@@ -373,7 +373,7 @@ Other commands:
 | `npx google-services-mcps setup-admin --subject <email> --key-file <json> [--profile ...] [--servers ...] [--replace]` | Set up the workspace-admin group. **Checked** with a test service account file. |
 | `npx google-services-mcps status` | Show logins, the API key and the setup of each group. **Checked.** |
 | `npx google-services-mcps health` | One row per server: login, account, tool count. `--check` asks Google about each login. `--json` prints the rows. **Checked** offline. |
-| `npx google-services-mcps logout <group>` | Revoke the login at Google, then remove the token file. `--local-only` removes the file only. **Checked** (no token case). |
+| `npx google-services-mcps logout <group> [--account <email>] [--local-only \| --revoke-all]` | Revoke the login at Google, then remove the token file. `--local-only` removes the file only. When another group here has the same account, only the file is removed (a revoke would end that login too); `--revoke-all` revokes anyway. **Checked** (no token case; the shared-account case with a fake revoke in the tests). |
 | `npx google-services-mcps products [--json]` | List the products. **Checked.** |
 | `npx google-services-mcps apis [<product>] [--search <text>] [--json] [--limit <n>]` | List the APIs of a product. **Checked.** |
 | `npx google-services-mcps methods <api> [<version>] [--search <text>] [--json] [--limit <n>]` | List the methods of one API. **Checked.** |
@@ -452,7 +452,7 @@ npx google-services-mcps logout workspace-user
 npx google-services-mcps logout cloud
 ```
 
-Use the groups you actually logged in to: `cloud`, `searchconsole`, `workspace-user`, `business`, `developer` or `workspace-admin`. `logout` revokes that group's login at Google, then removes its token file. With `--local-only` it only removes the file, and it prints the page where you can revoke the login: `https://myaccount.google.com/permissions`. **Checked** (the message, with no token). **UNVERIFIED:** revoking a real login, because no login was run.
+Use the groups you actually logged in to: `cloud`, `searchconsole`, `workspace-user`, `business`, `developer` or `workspace-admin`. `logout` revokes that group's login at Google, then removes its token file. When the same account is signed in here for another group, it does not revoke, because Google's revocation removes every grant the account gave the OAuth client's project and the other group's login would stop working too; `--revoke-all` revokes anyway. With `--local-only` it only removes the file, and it prints the page where you can revoke the login: `https://myaccount.google.com/permissions`. **Checked** (the message, with no token). **UNVERIFIED:** revoking a real login, because no login was run.
 
 `logout` does not remove the API key. `npx google-services-mcps logout apikey` shows where the key file is. Delete that file yourself. **Checked.**
 

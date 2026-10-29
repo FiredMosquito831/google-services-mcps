@@ -2,6 +2,15 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.1.4 - 2026-10-29
+
+### Fixes: signing out one group no longer signs the account out of the others
+- Google's revocation removes every grant an account gave the OAuth client's project, for all its clients. Every login group uses the same client, so `gsm logout` and the chat tool `account_remove` ended the account's login in every group, not just the one being signed out.
+- Now, when the same account is signed in here for another group, they remove only the local token, do not revoke, and say why. The check reads `accounts.json` and file names only, never a token. A group whose account was not recorded, or that still has a token file from before accounts existed, counts as possibly the same account.
+- New `gsm logout --revoke-all`: revoke anyway, and list the other groups whose login stops working (their local tokens are kept). It cannot be combined with `--local-only`.
+- An account that no other group uses is revoked as before. `--local-only` is unchanged.
+- The `account_remove` description no longer says "The other accounts stay signed in"; it says when the revoke runs and when it does not.
+
 ## 1.1.3 - 2026-10-29
 
 ### Fixes: when Google refuses a login

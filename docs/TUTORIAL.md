@@ -680,7 +680,7 @@ The first command prints the list of installs and removes nothing (checked). The
 npx google-services-mcps logout workspace-user
 ```
 
-`logout` removes that group's token file only. It does not revoke the access at Google. Checked: with no token, it prints `workspace-user: not logged in (no token file)`. **UNVERIFIED:** with a real token, because no login was run.
+`logout` revokes that group's login at Google, then removes its token file. `--local-only` removes the file only. When the same account is signed in here for another group, `logout` removes only the file, because Google's revocation would end that other login too; `--revoke-all` revokes anyway. Checked: with no token, it prints `workspace-user: not logged in`. **UNVERIFIED:** with a real token, because no login was run.
 
 `npx google-services-mcps logout apikey` prints where the key file is. Delete that file yourself.
 
@@ -776,7 +776,7 @@ Run `npx google-services-mcps --help` for the full text. Each flag in each comma
 | Command | What it does |
 |---|---|
 | `status` | Shows the logins, the API key, the admin setup and the token directory. |
-| `logout <group>` | Removes one group's token file. For `apikey`, shows the key file. |
+| `logout <group> [--account <email>] [--local-only \| --revoke-all]` | Revokes one account's login at Google and removes its token file. The revoke is skipped when another group here has the same account (`--revoke-all` revokes anyway), and with `--local-only`. For `apikey`, shows the key file. |
 | `scopes <group> [--profile] [--servers] [--json]` | Shows what each profile covers for a group. |
 | `products [--json]` | Lists the products, with their groups and tool counts. |
 | `apis [<product>] [--search <text>] [--json] [--limit <n>]` | Lists the APIs of a product. |

@@ -222,7 +222,7 @@ npx google-services-mcps doctor --plugin gmail
 - `scopes` shows what each profile would enable. Read it before you widen a login.
 - `doctor` checks the plugin files, the hook and the tool names. On Windows it also checks that the token folder is limited to you, SYSTEM and Administrators. It exits with code 1 if any check fails.
 - Before a login, a server lists only the tools that need no scope, plus `auth_status`. After `login`, ask the server to call `auth_status`: its tools then load, with no restart.
-- `logout` revokes the login at Google before it removes the token file. Use `logout <group> --local-only` to remove the file only.
+- `logout` revokes the login at Google before it removes the token file. Use `logout <group> --local-only` to remove the file only. When the same account is signed in here for another group, `logout` and `account_remove` remove only the local token, because Google's revocation would end that other login too; `logout ... --revoke-all` revokes anyway.
 
 Then restart the server (`/mcp` in Claude Code).
 

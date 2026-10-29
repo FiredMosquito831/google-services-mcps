@@ -76,7 +76,9 @@ Commands:
   setup-service-account  Set up the service account for Google Play and Merchant Center (--remove forgets it)
   protect       Move the saved secrets into the OS store (DPAPI, Keychain or libsecret). --off moves them back to plain files
   status        Show logins, the API key and the security posture of each token (--check asks Google: validity, scopes, key restrictions)
-  logout        Revoke one group's login at Google and remove its token (--account <email> names one account; --local-only: only remove the file; apikey: shows where the key file is)
+  logout        Revoke one group's login at Google and remove its token (--account <email> names one account; --local-only: only remove the file;
+                the revoke is skipped when another group here has the same account, because it would end that login too: --revoke-all revokes anyway;
+                apikey: shows where the key file is)
   accounts      List the signed-in accounts of each group. "accounts default <group> <email>" sets the default one
   products      List the products: id, title, group, tool count, gateway APIs and whether the plugin folder exists
   apis          List the APIs of a product (generated and gateway), or of the whole catalog, with method counts
@@ -100,7 +102,7 @@ Usage:
   npx google-services-mcps setup-admin --subject <admin email> --key-file <service account JSON> [--profile readonly|readwrite|full] [--servers <a,b>] [--replace]
   npx google-services-mcps setup-service-account --key-file <service account JSON>   (gplay and gmerchant; --remove forgets the setup)
   npx google-services-mcps status [--check]
-  npx google-services-mcps logout <group> [--local-only]
+  npx google-services-mcps logout <group> [--account <email>] [--local-only | --revoke-all]
   npx google-services-mcps products [--json]
   npx google-services-mcps apis [<product>] [--search <text>] [--json] [--limit <n>]
   npx google-services-mcps methods <api> [<version>] [--search <text>] [--json] [--limit <n>]

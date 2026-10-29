@@ -6,6 +6,7 @@ import {
   accountTokenFile,
   defaultAccount,
   listAccounts,
+  otherGroupsWithAccount,
   removeAccount,
   setDefaultAccount,
 } from '../core/accounts.js';
@@ -20,7 +21,7 @@ import {
   serviceAccountSource,
   type AuthKind,
 } from '../core/auth.js';
-import { checkGrant, checkKeyRestrictions, checkServiceAccountGrant, revokeGrant, type GrantState } from '../core/grant-check.js';
+import { checkGrant, checkKeyRestrictions, checkServiceAccountGrant, revokeGrant, type GrantDeps, type GrantState } from '../core/grant-check.js';
 import { loadConfig, type RuntimeConfig } from '../core/config.js';
 import { ALL_GROUPS, OAUTH_GROUPS, type CliGroup } from './args.js';
 import { backupFile } from './fsutil.js';
@@ -272,12 +273,14 @@ export async function runStatusCheck(out: Output, env: NodeJS.ProcessEnv = proce
 
 /**
  * Removes one account of a group: the named one, else the default. Unless localOnly is set, that account's grant is
- * revoked at Google first, so its refresh token stops working everywhere, not just on this machine.
+ * revoked at Google first, so its refresh token stops working everywhere, not just on this machine. A revoke ends the
+ * account's sign-in for every group of the OAuth client, so when another group here has the same account the revoke is
+ * skipped and only the local token is removed, unless revokeAll says to revoke anyway. `deps` is for the tests.
  */
 export async function runLogout(
   group: CliGroup,
   out: Output,
-  options: { localOnly?: boolean; account?: string } = {},
+  options: { localOnly?: boolean; account?: string; revokeAll?: boolean; deps?: GrantDeps; env?: NodeJS.ProcessEnv } = {},
 ): Promise<number> {
   if (group === 'workspace-admin') {
     out.log('workspace-admin has no stored login (it uses GSM_SERVICE_ACCOUNT_KEY_FILE and GSM_ADMIN_SUBJECT). Nothing to remove.');
@@ -289,7 +292,7 @@ export async function runLogout(
     );
     return 0;
   }
-  const cfg = loadConfig();
+  const cfg = loadConfig(options.env);
   if (group === 'apikey') {
     out.log(`apikey has no login. The saved key is ${apiKeyFileFor(cfg)}: delete that file to remove it.`);
     return 0;
@@ -310,8 +313,20 @@ export async function runLogout(
     return 0;
   }
   if (!options.localOnly) {
-    const revoke = await revokeGrant(group as AuthKind, cfg, {}, email);
-    if (revoke) out.log(`${group} ${email}: ${revoke.detail}`);
+    // accounts.json and file names only: no token is read to find the other groups.
+    const shared = otherGroupsWithAccount(email, group, cfg);
+    if (shared.length > 0 && !options.revokeAll) {
+      out.log(
+        `${group} ${email}: not revoked at Google. ${email} is also signed in here for ${shared.join(', ')}, and Google's revocation ends every grant the account gave this OAuth client's project, so those logins would stop working too.`,
+      );
+      out.log(`To revoke it everywhere on purpose: node gsm.mjs logout ${group} --account ${email} --revoke-all, or use https://myaccount.google.com/permissions`);
+    } else {
+      const revoke = await revokeGrant(group as AuthKind, cfg, options.deps ?? {}, email);
+      if (revoke) out.log(`${group} ${email}: ${revoke.detail}`);
+      if (shared.length > 0 && revoke?.revoked) {
+        out.log(`--revoke-all: the logins of ${email} for ${shared.join(', ')} no longer work. Their local tokens are kept: log out there too, or sign in again.`);
+      }
+    }
   }
   removeAccount(group, email, cfg);
   out.log(`${group} ${email}: removed from this machine (${file})`);

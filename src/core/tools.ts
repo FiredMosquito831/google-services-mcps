@@ -17,7 +17,7 @@ import {
   removeUserTokens,
   type AuthKind,
 } from './auth.js';
-import { accountEmailOf, accountNames, listAccounts, setDefaultAccount } from './accounts.js';
+import { accountEmailOf, accountNames, listAccounts, otherGroupsWithAccount, setDefaultAccount } from './accounts.js';
 import { withAccount } from './account-context.js';
 import { revokeGrant, withIdentityScope } from './grant-check.js';
 import { createGate, type GateFn } from './approval.js';
@@ -525,14 +525,22 @@ export async function runServer(opts: {
       {
         title: 'Remove a signed-in account',
         description:
-          'Revokes one account of this server at Google, and removes its token from this machine. The other accounts stay signed in.',
+          "Removes one account of this server's group from this machine. It is also revoked at Google, unless the same account is signed in here for another group: Google's revocation ends every sign-in of that account with this OAuth client, so then only the local token is removed, and the answer says how to revoke it everywhere. Other accounts are not touched.",
         inputSchema: { email: z.string().describe('The account to remove.') },
         annotations: { readOnlyHint: false },
       },
       async (rawArgs: Record<string, unknown>): Promise<CallToolResult> => {
         const email = String(rawArgs.email);
-        const revoke = await revokeGrant(group as AuthKind, cfg, {}, email);
+        // A revoke at Google would also end this account's sign-in for the other groups, so it runs only when no other
+        // group has the account (accounts.json and file names only; no token is read for this).
+        const shared = otherGroupsWithAccount(email, group as string, cfg);
+        const revoke = shared.length === 0 ? await revokeGrant(group as AuthKind, cfg, {}, email) : undefined;
         if (!removeUserTokens(group as AuthKind, cfg, email)) return text(`No signed-in account "${email}" for ${group}.`);
+        if (shared.length > 0) {
+          return text(
+            `Removed ${email} from ${group} on this machine. Not revoked at Google: ${email} is also signed in here for ${shared.join(', ')}, and Google's revocation would end those sign-ins too. To revoke it everywhere on purpose, run: ${invocation()} logout ${shared[0]} --account ${email} --revoke-all, or use https://myaccount.google.com/permissions.`,
+          );
+        }
         return text(`Removed ${email} from ${group}. ${revoke?.detail ?? ''}`.trim());
       },
     );
