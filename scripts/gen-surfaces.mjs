@@ -5,6 +5,7 @@
  * counts are the built ones.
  *
  * Usage: node scripts/gen-surfaces.mjs
+ *        node scripts/gen-surfaces.mjs --check   exit 1 when docs/SURFACES.md would change (writes nothing)
  */
 import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs';
@@ -129,6 +130,17 @@ lines.push('- Security model: `docs/SECURITY.md`; setup: `docs/SETUP.md`');
 lines.push('');
 
 const out = join(root, 'docs', 'SURFACES.md');
-mkdirSync(dirname(out), { recursive: true });
-writeFileSync(out, lines.join('\n') + '\n');
-console.log(`wrote ${out}: ${productRows.length} products, ${catalog.apis.length} catalog entries`);
+const text = lines.join('\n') + '\n';
+if (process.argv.includes('--check')) {
+  // Compared with line endings aside, so a checkout with CRLF files is not reported.
+  const current = existsSync(out) ? readFileSync(out, 'utf8').replace(/\r\n/g, '\n') : undefined;
+  if (current !== text) {
+    console.error('docs/SURFACES.md is out of date. Run: npm run surfaces');
+    process.exit(1);
+  }
+  console.log(`docs/SURFACES.md is up to date: ${productRows.length} products, ${catalog.apis.length} catalog entries`);
+} else {
+  mkdirSync(dirname(out), { recursive: true });
+  writeFileSync(out, text);
+  console.log(`wrote ${out}: ${productRows.length} products, ${catalog.apis.length} catalog entries`);
+}
