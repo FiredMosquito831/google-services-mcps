@@ -85,6 +85,17 @@ test('requirements: no toolset and all are the same list; google keeps the gmail
   assert.deepEqual(resolveScopes(google, 'readwrite').scopes, [G('gmail.modify')]);
 });
 
+test('requirements: the gcalendar google list resolves to calendar.readonly (readonly) and calendar (readwrite)', async () => {
+  const { cfg } = tempTokens();
+  const google = await requirementsFor(['gcalendar'], cfg, { ...quiet, toolset: 'google' });
+  assert.equal(google.length, 8);
+  assert.deepEqual(resolveScopes(google, 'readonly').scopes, [G('calendar.readonly')]);
+  // The greedy cover takes the one scope that covers all eight tools: calendar.events covers neither list_calendars
+  // nor suggest_time (free/busy), so calendar wins on coverage. Same answer as the all toolset gives today.
+  assert.deepEqual(resolveScopes(google, 'readwrite').scopes, [G('calendar')]);
+  assert.deepEqual(resolveScopes(await requirementsFor(['gcalendar'], cfg, quiet), 'readwrite').scopes, [G('calendar')]);
+});
+
 test('requirements: curated keeps the curated tools and, with api_call, the gateway methods', async () => {
   const { cfg } = tempTokens();
   const all = await requirementsFor(['gmail'], cfg, quiet);

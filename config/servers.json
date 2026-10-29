@@ -1429,6 +1429,18 @@
           "version": "v3"
         }
       ],
+      "toolsets": {
+        "google": [
+          "calendar_list_calendars",
+          "calendar_list_events",
+          "calendar_get_event",
+          "calendar_suggest_time",
+          "calendar_create_event",
+          "calendar_update_event",
+          "calendar_delete_event",
+          "calendar_respond"
+        ]
+      },
       "label": "Google Calendar: Google Calendar calendars, events and calendar settings."
     },
     {

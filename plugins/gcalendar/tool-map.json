@@ -550,6 +550,15 @@
     "title": "List calendar events"
   },
   {
+    "name": "mcp__plugin_gcalendar_gcalendar__calendar_respond",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/calendar",
+      "https://www.googleapis.com/auth/calendar.events"
+    ],
+    "title": "Respond to an invitation"
+  },
+  {
     "name": "mcp__plugin_gcalendar_gcalendar__calendar_settings_get",
     "kind": "read",
     "scopes": [
@@ -584,6 +593,17 @@
     ],
     "methodId": "calendar.settings.watch",
     "title": "calendar.settings.watch"
+  },
+  {
+    "name": "mcp__plugin_gcalendar_gcalendar__calendar_suggest_time",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/calendar",
+      "https://www.googleapis.com/auth/calendar.events.freebusy",
+      "https://www.googleapis.com/auth/calendar.freebusy",
+      "https://www.googleapis.com/auth/calendar.readonly"
+    ],
+    "title": "Suggest meeting times"
   },
   {
     "name": "mcp__plugin_gcalendar_gcalendar__calendar_update_event",

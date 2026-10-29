@@ -183,6 +183,13 @@ function methodFor(call) {
 /** Marked deprecated in Discovery: the deprecated flag, or the word in its description. */
 const isDeprecated = (schema) => schema?.deprecated === true || /\bdeprecated\b/i.test(schema?.description ?? '');
 
+/**
+ * Body fields whose description uses the word for some of their values, not for the field. Each with the reason.
+ * ConferenceSolutionKey.type: "eventHangout" and "eventNamedHangout" are deprecated; "hangoutsMeet" is how a Meet link
+ * is created (Calendar API release notes, 2020-09-07: set conferenceData.createRequest.conferenceSolutionKey.type).
+ */
+const DEPRECATED_VALUES_ONLY = new Set(['ConferenceSolutionKey.type']);
+
 /** A schema by reference (a $ref, or the bare name the snapshots keep for a method's request), or the inline schema. */
 const resolve = (doc, schema) => (typeof schema === 'string' ? doc.schemas?.[schema] : schema?.$ref ? doc.schemas?.[schema.$ref] : schema);
 
@@ -214,7 +221,7 @@ function bodyProblems(doc, schema, value, where) {
       out.push(`body field ${where}.${key} is not in ${typeof schema === 'string' ? schema : (schema?.$ref ?? s.id ?? 'the schema')}`);
       continue;
     }
-    if (isDeprecated(prop)) out.push(`body field ${where}.${key} is deprecated`);
+    if (isDeprecated(prop) && !DEPRECATED_VALUES_ONLY.has(`${s.id}.${key}`)) out.push(`body field ${where}.${key} is deprecated`);
     out.push(...bodyProblems(doc, prop, child, `${where}.${key}`));
   }
   return out;
@@ -376,9 +383,36 @@ const CASES = {
       args: { calendar_id: 'primary', time_min: '2026-11-01T00:00:00Z', time_max: '2026-11-08T00:00:00Z', q: 'standup', max_results: 10, single_events: true, page_token: 'p1' },
       expect: ['calendar.events.list'],
     },
+    // 1.8.0: no lower bound, event types, time zone, order by last change.
+    {
+      args: { include_past: true, event_types: ['default', 'outOfOffice'], time_zone: 'Europe/Zurich', order_by: 'updated', q: 'review' },
+      expect: ['calendar.events.list'],
+    },
   ],
   calendar_get_event: [{ args: { calendar_id: 'primary', event_id: 'ev-1' }, expect: ['calendar.events.get'] }],
   calendar_freebusy: [{ args: { time_min: '2026-11-01T00:00:00Z', time_max: '2026-11-02T00:00:00Z', calendar_ids: ['primary'] }, expect: ['calendar.freebusy.query'] }],
+  calendar_suggest_time: [
+    {
+      args: {
+        attendees: ['a@example.com'],
+        start_time: '2026-11-02T08:00:00+01:00',
+        end_time: '2026-11-06T18:00:00+01:00',
+        duration_minutes: 45,
+        time_zone: 'Europe/Berlin',
+        working_hours: { start: '09:00', end: '17:00' },
+        weekdays_only: true,
+        max_suggestions: 3,
+      },
+      expect: ['calendar.freebusy.query'],
+    },
+  ],
+  calendar_respond: [
+    {
+      args: { calendar_id: 'primary', event_id: 'ev-1', response: 'accepted', comment: 'See you', send_updates: 'all' },
+      expect: ['calendar.events.get', 'calendar.events.patch'],
+      respond: () => ({ ...generic(), attendees: [{ email: 'me@example.com', self: true, responseStatus: 'needsAction' }, { email: 'b@example.com' }] }),
+    },
+  ],
   calendar_create_event: [
     {
       args: {
@@ -395,6 +429,19 @@ const CASES = {
       expect: ['calendar.events.insert'],
     },
     { args: { summary: 'Holiday', start: '2026-12-24', end: '2026-12-25' }, expect: ['calendar.events.insert'] },
+    // 1.8.0: Meet link, recurrence, reminders.
+    {
+      args: {
+        summary: 'Weekly',
+        start: '2026-11-02T10:00:00+01:00',
+        end: '2026-11-02T10:30:00+01:00',
+        time_zone: 'Europe/Berlin',
+        add_meet: true,
+        recurrence: ['RRULE:FREQ=WEEKLY;BYDAY=MO;COUNT=10'],
+        reminders: [{ method: 'popup', minutes: 10 }, { method: 'email', minutes: 60 }],
+      },
+      expect: ['calendar.events.insert'],
+    },
   ],
   calendar_update_event: [
     {
@@ -411,6 +458,12 @@ const CASES = {
         send_updates: 'all',
       },
       expect: ['calendar.events.patch'],
+    },
+    // 1.8.0: add and remove guests (read the event first), a Meet link, recurrence and reminders.
+    {
+      args: { event_id: 'ev-1', add_attendees: ['c@example.com'], remove_attendees: ['b@example.com'], add_meet: true, recurrence: ['RRULE:FREQ=DAILY;COUNT=3'], reminders: [] },
+      expect: ['calendar.events.get', 'calendar.events.patch'],
+      respond: () => ({ ...generic(), attendees: [{ email: 'a@example.com', responseStatus: 'accepted' }, { email: 'b@example.com' }] }),
     },
   ],
   calendar_delete_event: [{ args: { calendar_id: 'primary', event_id: 'ev-1', send_updates: 'none' }, preview: true, expect: ['calendar.events.get', 'calendar.events.delete'] }],
@@ -536,7 +589,7 @@ test('every curated tool has a contract row, a skip reason or a known defect, an
   const listed = new Set([...Object.keys(CASES), ...Object.keys(SKIPPED), ...Object.keys(KNOWN_DEFECTS)]);
   assert.deepEqual([...tools.keys()].filter((name) => !listed.has(name)), [], 'curated tools without a row');
   assert.deepEqual([...listed].filter((name) => !tools.has(name)), [], 'rows for tools that do not exist');
-  assert.equal(tools.size, 82, 'the curated tool count; update the table when it changes');
+  assert.equal(tools.size, 84, 'the curated tool count; update the table when it changes');
 });
 
 for (const [name, cases] of Object.entries(CASES)) {

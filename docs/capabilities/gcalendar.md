@@ -4,13 +4,28 @@ Google Calendar calendars, events and calendar settings.
 
 - Plugin: `gcalendar`, MCP server: `gcalendar`, login: Desktop OAuth client, then `login workspace-user`
 - Install: `claude plugin install gcalendar@google-services-mcps`
-- Tools: 55 total. Curated 16, per-method 38, gateway 0. Read 19, write 29, destructive 7, dynamic 0.
+- Tools: 57 total. Curated 18, per-method 38, gateway 0. Read 20, write 30, destructive 7, dynamic 0.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 55, google 55 (all), curated 16 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 57, google 17, curated 18 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
 
-## Curated tools (16)
+## Toolset google (8)
+
+The tools that match Google's official MCP server for this product (https://developers.google.com/workspace/calendar/api/v3/reference/mcp/tools_list).
+
+| Tool | Google's tool | Note |
+|---|---|---|
+| `calendar_list_calendars` | `list_calendars` |  |
+| `calendar_list_events` | `list_events`, `search_events` | Google's search_events is a semantic search of the primary calendar with no public API; the keyword search of calendar_list_events (q) stands in for it. Without time_min the list starts now, as before 1.8.0; include_past gives Google's no-lower-bound list. |
+| `calendar_get_event` | `get_event` |  |
+| `calendar_suggest_time` | `suggest_time` | Computed here from free/busy (freebusy.query) and the window, duration and working hours given; Google's preferences object is not public, so its exact ranking is not copied. |
+| `calendar_create_event` | `create_event` |  |
+| `calendar_update_event` | `update_event` |  |
+| `calendar_delete_event` | `delete_event` | Destructive, so it asks first, as in Google's server (destructiveHint). |
+| `calendar_respond` | `respond_to_event` |  |
+
+## Curated tools (18)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
@@ -28,6 +43,8 @@ Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 55, google 55 (all), 
 | `calendar_get_event` | read | Get calendar event | calendar, calendar.events |
 | `calendar_list_calendars` | read | List calendars | calendar, calendar.calendarlist |
 | `calendar_list_events` | read | List calendar events | calendar, calendar.events |
+| `calendar_respond` | write | Respond to an invitation | calendar, calendar.events |
+| `calendar_suggest_time` | read | Suggest meeting times | calendar, calendar.events.freebusy |
 | `calendar_update_event` | write | Update calendar event | calendar, calendar.events |
 | `health` | read | Server health | (none) |
 

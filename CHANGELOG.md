@@ -2,6 +2,26 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.8.0 - 2026-10-30
+
+### New: Calendar tools that match Google's Calendar MCP server
+Each description names the Google tool it matches.
+- `calendar_suggest_time` (read; `suggest_time`): free meeting times for the people named (`attendees`, emails or calendar ids, at most 50 calendars; your primary calendar is counted unless `include_primary` is false). One free/busy request (`freebusy.query`), then the free periods long enough for `duration_minutes` (default 30), with one suggested time per free period, starting on a quarter hour (`max_suggestions`, default 5). `working_hours` (`HH:MM` to `HH:MM`) and `weekdays_only` limit the search, in `time_zone` (default: the offset of `start_time`). A calendar Google cannot show is listed under `unavailable`, and its busy time is not counted. A read, with the scopes of `calendar_freebusy`.
+- `calendar_respond` (write; `respond_to_event`): accepted, declined or tentative, with an optional `comment`. It reads the event to find your guest entry, then sends only that entry with `attendeesOmitted`, so the other guests are not sent back. Not a guest of the event: an error, nothing is changed.
+
+### Changed
+- `calendar_create_event` takes `add_meet` (a Google Meet link: `conferenceData.createRequest` with `hangoutsMeet` and a new request id, `conferenceDataVersion=1`), `recurrence` (RRULE, EXRULE, RDATE and EXDATE lines; a timed recurring event needs `time_zone`) and `reminders` (at most 5, in place of the calendar's defaults; an empty list turns them off).
+- `calendar_update_event` takes `add_attendees` and `remove_attendees`: it reads the event and patches the merged list, so the other guests keep their entries and answers. `attendees` still replaces the whole list, with no read, as before; giving both is refused. `add_meet` adds a Meet link when the event has none. `recurrence` and `reminders` as for create.
+- `calendar_list_events` takes `include_past` (no lower time bound when `time_min` is not given, as Google's `list_events` does; without it the list still starts now), `event_types` (each event then carries `event_type`), `time_zone` and `order_by` (`startTime` or `updated`).
+- `calendar_get_event` also returns `event_type`, `meet_link`, `creator`, `visibility`, `availability`, `reminders`, `attachments` and `recurring_event_id`. The fields it returned before are unchanged.
+- The descriptions of `calendar_list_calendars`, `calendar_list_events`, `calendar_get_event`, `calendar_create_event`, `calendar_update_event` and `calendar_delete_event` name the Google tool they match.
+- The `google` toolset of gcalendar: `calendar_list_calendars`, `calendar_list_events`, `calendar_get_event`, `calendar_suggest_time`, `calendar_create_event`, `calendar_update_event`, `calendar_delete_event`, `calendar_respond`. They cover Google's 9 tools; `search_events` (a semantic search with no public API) maps to the keyword search of `calendar_list_events`. A `readonly` login asks for `calendar.readonly`, a `readwrite` login for `calendar`.
+
+### Not changed
+- A call without the new options sends the same request and gets the same answer as in 1.7.0 (`calendar_get_event` and the descriptions aside).
+- Scopes of the `all` toolset, the write gate and the hook. Every other plugin lists the same tools with the same schemas.
+- Not tested against a live Google Calendar (Google's HTTP layer stubbed).
+
 ## 1.7.0 - 2026-10-30
 
 ### New: Gmail tools that match Google's Gmail MCP server

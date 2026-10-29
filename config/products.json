@@ -1458,6 +1458,53 @@
         }
       ],
       "gateway": [],
+      "toolsets": {
+        "google": {
+          "source": "https://developers.google.com/workspace/calendar/api/v3/reference/mcp/tools_list",
+          "tools": [
+            "calendar_list_calendars",
+            "calendar_list_events",
+            "calendar_get_event",
+            "calendar_suggest_time",
+            "calendar_create_event",
+            "calendar_update_event",
+            "calendar_delete_event",
+            "calendar_respond"
+          ],
+          "matches": {
+            "calendar_list_calendars": [
+              "list_calendars"
+            ],
+            "calendar_list_events": [
+              "list_events",
+              "search_events"
+            ],
+            "calendar_get_event": [
+              "get_event"
+            ],
+            "calendar_suggest_time": [
+              "suggest_time"
+            ],
+            "calendar_create_event": [
+              "create_event"
+            ],
+            "calendar_update_event": [
+              "update_event"
+            ],
+            "calendar_delete_event": [
+              "delete_event"
+            ],
+            "calendar_respond": [
+              "respond_to_event"
+            ]
+          },
+          "notes": {
+            "calendar_list_events": "Google's search_events is a semantic search of the primary calendar with no public API; the keyword search of calendar_list_events (q) stands in for it. Without time_min the list starts now, as before 1.8.0; include_past gives Google's no-lower-bound list.",
+            "calendar_suggest_time": "Computed here from free/busy (freebusy.query) and the window, duration and working hours given; Google's preferences object is not public, so its exact ranking is not copied.",
+            "calendar_delete_event": "Destructive, so it asks first, as in Google's server (destructiveHint)."
+          }
+        }
+      },
       "generatedToolCount": 38
     },
     "gchat": {

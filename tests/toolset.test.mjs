@@ -176,6 +176,27 @@ test('the gmail google list names the official Google tool each one matches (or 
   assert.match(google.notes.gmail_send_draft, /no send tool/);
 });
 
+test('the gcalendar google list covers the 9 tools of Google\'s Calendar MCP server, and search_events says why it is a keyword search', () => {
+  const google = readJson('config', 'products.json').products.gcalendar.toolsets.google;
+  assert.deepEqual(google.tools, [
+    'calendar_list_calendars',
+    'calendar_list_events',
+    'calendar_get_event',
+    'calendar_suggest_time',
+    'calendar_create_event',
+    'calendar_update_event',
+    'calendar_delete_event',
+    'calendar_respond',
+  ]);
+  const official = new Set(Object.values(google.matches).flat());
+  // developers.google.com/workspace/calendar/api/v3/reference/mcp/tools_list
+  for (const name of ['list_events', 'get_event', 'list_calendars', 'suggest_time', 'create_event', 'update_event', 'delete_event', 'respond_to_event', 'search_events']) {
+    assert.ok(official.has(name), `no tool of ours matches ${name}`);
+  }
+  assert.equal(official.size, 9);
+  assert.match(google.notes.calendar_list_events, /semantic search of the primary calendar with no public API/);
+});
+
 test('both registry loaders carry the toolsets: the CLI conversion of config/products.json and a plugin servers.json', () => {
   const reg = registryFromProducts(readJson('config', 'products.json'), ROOT);
   assert.deepEqual(reg.servers.find((s) => s.name === 'gmail').toolsets, { google: GMAIL_GOOGLE });
