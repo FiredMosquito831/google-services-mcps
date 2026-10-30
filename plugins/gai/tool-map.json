@@ -3439,6 +3439,34 @@
     "title": "texttospeech.voices.list"
   },
   {
+    "name": "mcp__plugin_gai_gai__vertex_count_tokens",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "title": "Count the tokens of a Vertex AI prompt"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__vertex_embed_content",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/aiplatform",
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-platform.read-only"
+    ],
+    "title": "Embed text with a Vertex AI model"
+  },
+  {
+    "name": "mcp__plugin_gai_gai__vertex_generate_content",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/aiplatform",
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-platform.read-only"
+    ],
+    "title": "Generate content with a Vertex AI model"
+  },
+  {
     "name": "mcp__plugin_gai_gai__videointel_opera_proje_locati_operat_cancel",
     "kind": "destructive",
     "scopes": [

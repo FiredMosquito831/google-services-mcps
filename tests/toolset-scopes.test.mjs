@@ -333,6 +333,27 @@ test('requirements: the ganalytics google list resolves to analytics.readonly, a
   assert.deepEqual(resolveScopes(all, 'readwrite').scopes, [G('analytics'), G('analytics.edit'), G('analytics.manage.users')]);
 });
 
+test('requirements: the gai google list (6 tools, no gateway) resolves to cloud-platform.read-only and to cloud-platform', async () => {
+  const { cfg } = tempTokens();
+  const google = await requirementsFor(['gai'], cfg, { ...quiet, toolset: 'google' });
+  assert.equal(google.length, 6);
+  assert.equal(google.filter((r) => r.gateway).length, 0, 'no api_call in the list, so no gateway method counts');
+  const readonly = resolveScopes(google, 'readonly');
+  assert.deepEqual(readonly.scopes, [G('cloud-platform.read-only')]);
+  // Discovery lists cloud-platform.read-only for generateContent and embedContent, but not for countTokens or Agent Search.
+  assert.deepEqual(readonly.uncovered.sort(), [
+    'gai/discoverye_pro_loc_coll_engi_serv_sear_a054',
+    'gai/discoverye_proj_loca_coll_engin_servi_answe',
+    'gai/discoverye_projec_locati_collec_engine_list',
+    'gai/vertex_count_tokens',
+  ]);
+  assert.deepEqual(resolveScopes(google, 'readwrite').scopes, [G('cloud-platform')]);
+  // The all toolset resolves as before 1.21.0.
+  const all = await requirementsFor(['gai'], cfg, quiet);
+  assert.deepEqual(resolveScopes(all, 'readonly').scopes, [G('cloud-platform.read-only')]);
+  assert.deepEqual(resolveScopes(all, 'readwrite').scopes, [G('cloud-platform'), G('devstorage.read_only')]);
+});
+
 test('requirements: the gmerchant google list (13 generated tools, no gateway) needs content, which has no read-only form', async () => {
   const { cfg } = tempTokens();
   const google = await requirementsFor(['gmerchant'], cfg, { ...quiet, toolset: 'google' });

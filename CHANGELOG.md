@@ -2,6 +2,20 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.21.0 - 2026-10-30
+
+### New: Vertex AI tools that match Google's Agent Platform MCP server
+Each description names the Google tool it matches. All three are reads.
+- `vertex_generate_content` (`generate_content`): a prompt, or a conversation as Vertex `contents`, to a Gemini or other Vertex AI model, with a system instruction, a generation config, safety settings, tools and labels. Returns the text, why it stopped, any function calls, the token usage and the model version; `raw: true` returns Google's whole response.
+- `vertex_count_tokens` (`count_tokens`): the tokens and billable characters of a prompt.
+- `vertex_embed_content` (`embed_content`): an embedding vector for a text (or a multimodal content), with a task type and a dimension count.
+- Each takes the project, the model (an id such as `gemini-2.5-flash`, `publishers/<publisher>/models/<id>`, or `endpoints/<id>`) and the region (`global` by default; another region uses that region's host). They compute and change nothing, so they are declared reads, as Google's server marks them: they do not ask, though Google bills them per token.
+- The `google` toolset of gai: these three and the generated Discovery Engine search, answer and engine list tools, which match Google's Agent Search tools (6 tools). Google's other 53 Agent Platform tools have no tool here; full Agent Platform parity is out of scope. A `readonly` login with it asks for `cloud-platform.read-only`; a `readwrite` login for `cloud-platform`. The Discovery Engine answer tool keeps today's write kind (it asks first), though Google marks it read-only; reviewing that kind is a separate change.
+
+### Not changed
+- Scopes of the `all` toolset (gai's resolve the same; its login requirements grow by the three tools), the gateway, the write gate and the hook. Every other plugin lists the same tools with the same schemas.
+- Not tested against the live Vertex AI API (Google's HTTP layer stubbed; the request shapes are checked against Google's Discovery document, regional hosts included).
+
 ## 1.20.0 - 2026-10-30
 
 ### New: Firebase tools that match Google's Firebase MCP server

@@ -150,6 +150,7 @@ const FIXTURE_DOCS = [
   'firestore.v1',
   'firebaseremoteconfig.v1',
   'identitytoolkit.v1',
+  'aiplatform.v1',
 ];
 
 /**
@@ -178,7 +179,9 @@ for (const file of [...DOCS, ...FIXTURE_DOCS]) {
   const dir = FIXTURE_DOCS.includes(file) ? join(REPO, 'tests', 'fixtures', 'discovery') : join(REPO, 'data', 'discovery');
   const doc = JSON.parse(readFileSync(join(dir, `${file}.json`), 'utf8'));
   docs[file] = doc;
-  const bases = [`${doc.rootUrl}${doc.servicePath ?? ''}`, ...(HOST_ALIASES[file] ?? []).map((root) => `${root}${doc.servicePath ?? ''}`)];
+  // A document's regional hosts (Discovery "endpoints", such as us-central1-aiplatform.googleapis.com) serve its paths too.
+  const regional = (doc.endpoints ?? []).map((e) => e.endpointUrl);
+  const bases = [`${doc.rootUrl}${doc.servicePath ?? ''}`, ...[...(HOST_ALIASES[file] ?? []), ...regional].map((root) => `${root}${doc.servicePath ?? ''}`)];
   const add = (m) => {
     const templates = bases.flatMap((base) => [m.path, m.flatPath].filter(Boolean).map((p) => `${base}${p}`));
     // Media uploads go to the same path under /upload/, such as /upload/drive/v3/files. Discovery lists the protocols;
@@ -279,7 +282,7 @@ function problemsOf(call) {
 // ---------------------------------------------------------------------------
 // The servers and their tools.
 
-const SERVERS = ['gmail', 'gcalendar', 'gdrive', 'searchconsole', 'cloud', 'gads', 'workspace-admin', 'gchat', 'gcontacts', 'gclassroom', 'ganalytics', 'gfirebase'];
+const SERVERS = ['gmail', 'gcalendar', 'gdrive', 'searchconsole', 'cloud', 'gads', 'workspace-admin', 'gchat', 'gcontacts', 'gclassroom', 'ganalytics', 'gfirebase', 'gai'];
 const tools = new Map();
 for (const mod of SERVERS) {
   const { buildTools } = await import(DIST(`servers/${mod}.js`));
@@ -871,6 +874,39 @@ const CASES = {
     { args: { project_id: 'my-app-1234', uids: ['u1'], emails: ['a@example.com'], phone_numbers: ['+15555550100'] }, expect: ['identitytoolkit.projects.accounts.lookup'] },
     { args: { project_id: 'my-app-1234', limit: 20 }, expect: ['identitytoolkit.projects.accounts.query'] },
   ],
+
+  // gai (1.21.0)
+  vertex_generate_content: [
+    {
+      args: {
+        project_id: 'my-project-123',
+        model: 'gemini-2.5-flash',
+        prompt: 'Hello',
+        system_instruction: 'Be brief.',
+        generation_config: { temperature: 0.2, maxOutputTokens: 256 },
+        safety_settings: [{ category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_ONLY_HIGH' }],
+        tools: [{ functionDeclarations: [{ name: 'lookup', description: 'Look up a word.' }] }],
+        tool_config: { functionCallingConfig: { mode: 'AUTO' } },
+        labels: { team: 'search' },
+      },
+      expect: ['aiplatform.projects.locations.publishers.models.generateContent'],
+    },
+    // A region's own host, and a model deployed to an endpoint.
+    {
+      args: { project_id: 'my-project-123', region: 'us-central1', model: 'endpoints/1234567890', contents: [{ role: 'user', parts: [{ text: 'Hi' }] }], cached_content: 'projects/my-project-123/locations/us-central1/cachedContents/c1' },
+      expect: ['aiplatform.projects.locations.endpoints.generateContent'],
+    },
+  ],
+  vertex_count_tokens: [
+    { args: { project_id: 'my-project-123', region: 'europe-west4', model: 'publishers/google/models/gemini-2.5-pro', prompt: 'Hello', system_instruction: 'Be brief.', generation_config: { temperature: 0 } }, expect: ['aiplatform.projects.locations.publishers.models.countTokens'] },
+    { args: { project_id: 'my-project-123', model: 'endpoints/1234567890', contents: [{ role: 'user', parts: [{ text: 'Hi' }] }] }, expect: ['aiplatform.projects.locations.endpoints.countTokens'] },
+  ],
+  vertex_embed_content: [
+    {
+      args: { project_id: 'my-project-123', region: 'us-central1', model: 'gemini-embedding-001', text: 'A sentence.', task_type: 'RETRIEVAL_DOCUMENT', title: 'Doc', output_dimensionality: 256, auto_truncate: false },
+      expect: ['aiplatform.projects.locations.publishers.models.embedContent'],
+    },
+  ],
 };
 
 /** Tools that cannot run here, with the reason. Counted. */
@@ -883,7 +919,7 @@ test('every curated tool has a contract row, a skip reason or a known defect, an
   const listed = new Set([...Object.keys(CASES), ...Object.keys(SKIPPED), ...Object.keys(KNOWN_DEFECTS)]);
   assert.deepEqual([...tools.keys()].filter((name) => !listed.has(name)), [], 'curated tools without a row');
   assert.deepEqual([...listed].filter((name) => !tools.has(name)), [], 'rows for tools that do not exist');
-  assert.equal(tools.size, 135, 'the curated tool count; update the table when it changes');
+  assert.equal(tools.size, 138, 'the curated tool count; update the table when it changes');
 });
 
 for (const [name, cases] of Object.entries(CASES)) {

@@ -11,8 +11,8 @@
       "name": "gai",
       "plugin": "gai",
       "group": "cloud",
-      "kind": "discovery",
-      "curated": null,
+      "kind": "curated+discovery",
+      "curated": "src/servers/gai.ts",
       "apis": [
         {
           "api": "discoveryengine",
@@ -228,6 +228,21 @@
           "api": "generativelanguage",
           "version": "v1"
         }
+      ],
+      "toolsets": {
+        "google": [
+          "vertex_generate_content",
+          "vertex_count_tokens",
+          "vertex_embed_content",
+          "discoverye_pro_loc_coll_engi_serv_sear_a054",
+          "discoverye_proj_loca_coll_engin_servi_answe",
+          "discoverye_projec_locati_collec_engine_list"
+        ]
+      },
+      "scopes": [
+        "https://www.googleapis.com/auth/aiplatform",
+        "https://www.googleapis.com/auth/cloud-platform",
+        "https://www.googleapis.com/auth/cloud-platform.read-only"
       ],
       "label": "AI and ML: Generative and classic AI APIs: Discovery Engine, Vertex AI, Dialogflow, Vision, Speech, Translate, Document AI and agent services."
     }

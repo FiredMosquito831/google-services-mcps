@@ -3574,7 +3574,7 @@
       "group": "cloud",
       "server": {
         "name": "gai",
-        "curated": null
+        "curated": "ai"
       },
       "generated": [
         {
@@ -3792,6 +3792,51 @@
           "version": "v1"
         }
       ],
+      "toolsets": {
+        "google": {
+          "source": [
+            "https://docs.cloud.google.com/gemini-enterprise-agent-platform/reference/use-agent-platform-mcp",
+            "https://docs.cloud.google.com/gemini-enterprise-agent-platform/reference/mcp/tools_list/generate_content",
+            "https://docs.cloud.google.com/generative-ai-app-builder/docs/reference/mcp/tools_list/search"
+          ],
+          "tools": [
+            "vertex_generate_content",
+            "vertex_count_tokens",
+            "vertex_embed_content",
+            "discoverye_pro_loc_coll_engi_serv_sear_a054",
+            "discoverye_proj_loca_coll_engin_servi_answe",
+            "discoverye_projec_locati_collec_engine_list"
+          ],
+          "matches": {
+            "vertex_generate_content": [
+              "generate_content"
+            ],
+            "vertex_count_tokens": [
+              "count_tokens"
+            ],
+            "vertex_embed_content": [
+              "embed_content"
+            ],
+            "discoverye_pro_loc_coll_engi_serv_sear_a054": [
+              "search"
+            ],
+            "discoverye_proj_loca_coll_engin_servi_answe": [
+              "conversational_search"
+            ],
+            "discoverye_projec_locati_collec_engine_list": [
+              "list_engines"
+            ]
+          },
+          "notes": {
+            "vertex_generate_content": "The Vertex basics of Google's Agent Platform MCP server (its generate toolset). Google's other 53 Agent Platform tools (Colab Enterprise, notebook executions, endpoints, models, tuning, RAG, evaluation, prompts, predict and raw_predict) have no tool here and are not in this list; api_call reaches their methods in the all and curated toolsets.",
+            "vertex_count_tokens": "countTokens on the model, or on an endpoint. Discovery lists only cloud-platform for it.",
+            "vertex_embed_content": "embedContent on a publisher embedding model, such as gemini-embedding-001.",
+            "discoverye_pro_loc_coll_engi_serv_sear_a054": "Agent Search (Vertex AI Search) on an engine's serving config: Discovery Engine v1 servingConfigs.search.",
+            "discoverye_proj_loca_coll_engin_servi_answe": "Discovery Engine v1 servingConfigs.answer. Google marks it read-only; the classifier counts this POST as a write, so it asks first. Changing that kind is a separate change (D2).",
+            "discoverye_projec_locati_collec_engine_list": "The engines (search and chat apps) of a collection."
+          }
+        }
+      },
       "generatedToolCount": 350
     }
   },

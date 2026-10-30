@@ -10,6 +10,7 @@ import type { ToolDef } from '../core/tools.js';
 import { withOrigin } from '../core/toolset.js';
 import { buildTools as buildCloud } from './cloud.js';
 import { buildTools as buildGads } from './gads.js';
+import { buildTools as buildGai } from './gai.js';
 import { buildTools as buildGanalytics } from './ganalytics.js';
 import { buildTools as buildGcalendar } from './gcalendar.js';
 import { buildTools as buildGchat } from './gchat.js';
@@ -36,6 +37,7 @@ const CURATED: Record<string, Builder> = {
   'src/servers/gclassroom.ts': buildGclassroom,
   'src/servers/ganalytics.ts': buildGanalytics,
   'src/servers/gfirebase.ts': buildGfirebase,
+  'src/servers/gai.ts': buildGai,
 };
 
 /**

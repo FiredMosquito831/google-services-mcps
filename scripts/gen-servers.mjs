@@ -49,6 +49,7 @@ const CURATED_FILES = {
   classroom: 'src/servers/gclassroom.ts',
   analytics: 'src/servers/ganalytics.ts',
   firebase: 'src/servers/gfirebase.ts',
+  ai: 'src/servers/gai.ts',
 };
 
 const ID_PATTERN = /^[a-z]+$/;
