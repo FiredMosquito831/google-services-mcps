@@ -168,11 +168,13 @@ The tools that match Google's official MCP server for this product (https://deve
 
 ## Generated APIs
 
-- Gmail API (`gmail/v1`), 79 methods in the catalog
-- Gmail Postmaster Tools API (`gmailpostmastertools/v2`), 14 methods in the catalog
+Each API links to Google's documentation for it, as Google's Discovery directory names it (`documentationLink`, kept in `data/catalog.json`). The link is the API's documentation home, not a page per method: the directory gives no link per method, and Google's REST reference pages are laid out differently from product to product.
+
+- Gmail API (`gmail/v1`), 79 methods in the catalog. Documentation: <https://developers.google.com/workspace/gmail/api/>
+- Gmail Postmaster Tools API (`gmailpostmastertools/v2`), 14 methods in the catalog. Documentation: <https://developers.google.com/workspace/gmail/postmaster>
 
 ## Gateway APIs (reached through api_search, api_describe, api_call)
 
-- Gmail Postmaster Tools API (`gmailpostmastertools/v1`), 4 methods
-- Gmail Postmaster Tools API (`gmailpostmastertools/v1beta1`), 4 methods
+- Gmail Postmaster Tools API (`gmailpostmastertools/v1`), 4 methods. Documentation: <https://developers.google.com/workspace/gmail/postmaster>
+- Gmail Postmaster Tools API (`gmailpostmastertools/v1beta1`), 4 methods. Documentation: <https://developers.google.com/workspace/gmail/postmaster>
 

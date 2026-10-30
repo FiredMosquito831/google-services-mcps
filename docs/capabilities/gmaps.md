@@ -85,14 +85,16 @@ The tools that match Google's official MCP server for this product (https://deve
 
 ## Generated APIs
 
-- Places API (New) (`places/v1`), 5 methods in the catalog
-- Address Validation API (`addressvalidation/v1`), 2 methods in the catalog
-- Air Quality API (`airquality/v1`), 4 methods in the catalog
-- Places Aggregate API (`areainsights/v1`), 1 methods in the catalog
-- Pollen API (`pollen/v1`), 2 methods in the catalog
-- Solar API (`solar/v1`), 3 methods in the catalog
-- Street View Publish API (`streetviewpublish/v1`), 14 methods in the catalog
-- Travel Impact Model API (`travelimpactmodel/v1`), 4 methods in the catalog
+Each API links to Google's documentation for it, as Google's Discovery directory names it (`documentationLink`, kept in `data/catalog.json`). The link is the API's documentation home, not a page per method: the directory gives no link per method, and Google's REST reference pages are laid out differently from product to product.
+
+- Places API (New) (`places/v1`), 5 methods in the catalog. Documentation: <https://mapsplatform.google.com/maps-products/#places-section>
+- Address Validation API (`addressvalidation/v1`), 2 methods in the catalog. Documentation: <https://developers.google.com/maps/documentation/addressvalidation>
+- Air Quality API (`airquality/v1`), 4 methods in the catalog. Documentation: <https://developers.google.com/maps/documentation/air-quality>
+- Places Aggregate API (`areainsights/v1`), 1 methods in the catalog. Documentation: <https://developers.google.com/maps/documentation/places-aggregate/overview>
+- Pollen API (`pollen/v1`), 2 methods in the catalog. Documentation: <https://developers.google.com/maps/documentation/pollen>
+- Solar API (`solar/v1`), 3 methods in the catalog. Documentation: <https://developers.google.com/maps/documentation/solar>
+- Street View Publish API (`streetviewpublish/v1`), 14 methods in the catalog. Documentation: <https://developers.google.com/streetview/publish/>
+- Travel Impact Model API (`travelimpactmodel/v1`), 4 methods in the catalog. Documentation: <https://developers.google.com/travel/impact-model>
 
 ## Gateway APIs (reached through api_search, api_describe, api_call)
 

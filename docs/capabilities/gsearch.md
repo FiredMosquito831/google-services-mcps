@@ -107,24 +107,26 @@ The tools that match Google's official MCP server for this product (https://deve
 
 ## Generated APIs
 
-- Custom Search API (`customsearch/v1`), 2 methods in the catalog
-- PageSpeed Insights API (`pagespeedonline/v5`), 1 methods in the catalog
-- Chrome UX Report API (`chromeuxreport/v1`), 2 methods in the catalog
-- Knowledge Graph Search API (`kgsearch/v1`), 1 methods in the catalog
-- Safe Browsing API (`safebrowsing/v5`), 5 methods in the catalog
-- Fact Check Tools API (`factchecktools/v1alpha1`), 7 methods in the catalog
-- Accelerated Mobile Pages (AMP) URL API (`acceleratedmobilepageurl/v1`), 1 methods in the catalog
-- Abusive Experience Report API (`abusiveexperiencereport/v1`), 2 methods in the catalog
-- Ad Experience Report API (`adexperiencereport/v1`), 2 methods in the catalog
-- Web Fonts Developer API (`webfonts/v1`), 1 methods in the catalog
-- Web Risk API (`webrisk/v1`), 8 methods in the catalog
-- Google Civic Information API (`civicinfo/v2`), 4 methods in the catalog
-- Digital Asset Links API (`digitalassetlinks/v1`), 3 methods in the catalog
-- versionhistory.googleapis.com API (`versionhistory/v1`), 4 methods in the catalog
-- Developer Knowledge API (`developerknowledge/v1`), 4 methods in the catalog
+Each API links to Google's documentation for it, as Google's Discovery directory names it (`documentationLink`, kept in `data/catalog.json`). The link is the API's documentation home, not a page per method: the directory gives no link per method, and Google's REST reference pages are laid out differently from product to product.
+
+- Custom Search API (`customsearch/v1`), 2 methods in the catalog. Documentation: <https://developers.google.com/custom-search/v1/introduction>
+- PageSpeed Insights API (`pagespeedonline/v5`), 1 methods in the catalog. Documentation: <https://developers.google.com/speed/docs/insights/v5/about>
+- Chrome UX Report API (`chromeuxreport/v1`), 2 methods in the catalog. Documentation: <https://developers.google.com/web/tools/chrome-user-experience-report/api/reference>
+- Knowledge Graph Search API (`kgsearch/v1`), 1 methods in the catalog. Documentation: <https://developers.google.com/knowledge-graph/>
+- Safe Browsing API (`safebrowsing/v5`), 5 methods in the catalog. Documentation: <https://developers.google.com/safe-browsing/>
+- Fact Check Tools API (`factchecktools/v1alpha1`), 7 methods in the catalog. Documentation: <https://developers.google.com/fact-check/tools/api/>
+- Accelerated Mobile Pages (AMP) URL API (`acceleratedmobilepageurl/v1`), 1 methods in the catalog. Documentation: <https://developers.google.com/amp/cache/>
+- Abusive Experience Report API (`abusiveexperiencereport/v1`), 2 methods in the catalog. Documentation: <https://developers.google.com/abusive-experience-report/>
+- Ad Experience Report API (`adexperiencereport/v1`), 2 methods in the catalog. Documentation: <https://developers.google.com/ad-experience-report/>
+- Web Fonts Developer API (`webfonts/v1`), 1 methods in the catalog. Documentation: <https://developers.google.com/fonts/docs/developer_api>
+- Web Risk API (`webrisk/v1`), 8 methods in the catalog. Documentation: <https://cloud.google.com/web-risk/>
+- Google Civic Information API (`civicinfo/v2`), 4 methods in the catalog. Documentation: <https://developers.google.com/civic-information/>
+- Digital Asset Links API (`digitalassetlinks/v1`), 3 methods in the catalog. Documentation: <https://developers.google.com/digital-asset-links/>
+- versionhistory.googleapis.com API (`versionhistory/v1`), 4 methods in the catalog. Documentation: <https://developer.chrome.com/docs/web-platform/versionhistory/guide>
+- Developer Knowledge API (`developerknowledge/v1`), 4 methods in the catalog. Documentation: <https://developers.google.com/knowledge>
 
 ## Gateway APIs (reached through api_search, api_describe, api_call)
 
-- Developer Knowledge API (`developerknowledge/v1alpha`), 4 methods
-- Safe Browsing API (`safebrowsing/v4`), 7 methods
+- Developer Knowledge API (`developerknowledge/v1alpha`), 4 methods. Documentation: <https://developers.google.com/knowledge>
+- Safe Browsing API (`safebrowsing/v4`), 7 methods. Documentation: <https://developers.google.com/safe-browsing/>
 

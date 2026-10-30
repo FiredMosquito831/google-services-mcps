@@ -117,13 +117,15 @@ The tools that match Google's official MCP server for this product (https://deve
 
 ## Generated APIs
 
-- People API (`people/v1`), 24 methods in the catalog
-- Google Health API (`health/v4`), 27 methods in the catalog
-- Data Portability API (`dataportability/v1`), 6 methods in the catalog
-- Google OAuth2 API (`oauth2/v2`), 3 methods in the catalog
+Each API links to Google's documentation for it, as Google's Discovery directory names it (`documentationLink`, kept in `data/catalog.json`). The link is the API's documentation home, not a page per method: the directory gives no link per method, and Google's REST reference pages are laid out differently from product to product.
+
+- People API (`people/v1`), 24 methods in the catalog. Documentation: <https://developers.google.com/people/>
+- Google Health API (`health/v4`), 27 methods in the catalog. Documentation: <https://developers.google.com/health>
+- Data Portability API (`dataportability/v1`), 6 methods in the catalog. Documentation: <https://developers.google.com/data-portability>
+- Google OAuth2 API (`oauth2/v2`), 3 methods in the catalog. Documentation: <https://developers.google.com/accounts/docs/OAuth2>
 
 ## Gateway APIs (reached through api_search, api_describe, api_call)
 
-- Data Portability API (`dataportability/v1beta`), 6 methods
-- Google Health API (`health/v4beta`), 27 methods
+- Data Portability API (`dataportability/v1beta`), 6 methods. Documentation: <https://developers.google.com/data-portability>
+- Google Health API (`health/v4beta`), 27 methods. Documentation: <https://developers.google.com/health>
 

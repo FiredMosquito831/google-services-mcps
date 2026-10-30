@@ -178,10 +178,12 @@ Google has no official MCP server for this product. The google toolset is a lean
 
 ## Generated APIs
 
-- YouTube Data API v3 (`youtube/v3`), 83 methods in the catalog
-- YouTube Analytics API (`youtubeAnalytics/v2`), 8 methods in the catalog
-- YouTube Reporting API (`youtubereporting/v1`), 8 methods in the catalog
-- Blogger API (`blogger/v3`), 33 methods in the catalog
+Each API links to Google's documentation for it, as Google's Discovery directory names it (`documentationLink`, kept in `data/catalog.json`). The link is the API's documentation home, not a page per method: the directory gives no link per method, and Google's REST reference pages are laid out differently from product to product.
+
+- YouTube Data API v3 (`youtube/v3`), 83 methods in the catalog. Documentation: <https://developers.google.com/youtube/>
+- YouTube Analytics API (`youtubeAnalytics/v2`), 8 methods in the catalog. Documentation: <https://developers.google.com/youtube/analytics>
+- YouTube Reporting API (`youtubereporting/v1`), 8 methods in the catalog. Documentation: <https://developers.google.com/youtube/reporting/v1/reports/>
+- Blogger API (`blogger/v3`), 33 methods in the catalog. Documentation: <https://developers.google.com/blogger/docs/3.0/getting_started>
 
 ## Gateway APIs (reached through api_search, api_describe, api_call)
 

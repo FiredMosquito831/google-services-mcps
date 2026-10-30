@@ -424,23 +424,25 @@ Google has no official MCP server for this product. The google toolset is a lean
 
 ## Generated APIs
 
-- Admin SDK API (`admin/reports_v1`), 6 methods in the catalog
-- Google Workspace Alert Center API (`alertcenter/v1beta1`), 11 methods in the catalog
-- Cloud Identity API (`cloudidentity/v1`), 70 methods in the catalog
-- Chrome Policy API (`chromepolicy/v1`), 14 methods in the catalog
-- Groups Settings API (`groupssettings/v1`), 3 methods in the catalog
-- Google Vault API (`vault/v1`), 33 methods in the catalog
-- Google Workspace Reseller API (`reseller/v1`), 17 methods in the catalog
-- Enterprise License Manager API (`licensing/v1`), 7 methods in the catalog
-- Chrome Verified Access API (`verifiedaccess/v2`), 2 methods in the catalog
-- Cloud Search API (`cloudsearch/v1`), 49 methods in the catalog
-- Admin SDK API (`admin/datatransfer_v1`), 5 methods in the catalog
-- Admin SDK API (`admin/directory_v1`), 128 methods in the catalog
+Each API links to Google's documentation for it, as Google's Discovery directory names it (`documentationLink`, kept in `data/catalog.json`). The link is the API's documentation home, not a page per method: the directory gives no link per method, and Google's REST reference pages are laid out differently from product to product.
+
+- Admin SDK API (`admin/reports_v1`), 6 methods in the catalog. Documentation: <https://developers.google.com/workspace/admin/>
+- Google Workspace Alert Center API (`alertcenter/v1beta1`), 11 methods in the catalog. Documentation: <https://developers.google.com/workspace/admin/alertcenter/>
+- Cloud Identity API (`cloudidentity/v1`), 70 methods in the catalog. Documentation: <https://cloud.google.com/identity/>
+- Chrome Policy API (`chromepolicy/v1`), 14 methods in the catalog. Documentation: <http://developers.google.com/chrome/policy>
+- Groups Settings API (`groupssettings/v1`), 3 methods in the catalog. Documentation: <https://developers.google.com/admin-sdk/groups-settings>
+- Google Vault API (`vault/v1`), 33 methods in the catalog. Documentation: <https://developers.google.com/vault>
+- Google Workspace Reseller API (`reseller/v1`), 17 methods in the catalog. Documentation: <https://developers.google.com/google-apps/reseller/>
+- Enterprise License Manager API (`licensing/v1`), 7 methods in the catalog. Documentation: <https://developers.google.com/workspace/admin/licensing/>
+- Chrome Verified Access API (`verifiedaccess/v2`), 2 methods in the catalog. Documentation: <https://developers.google.com/chrome/verified-access>
+- Cloud Search API (`cloudsearch/v1`), 49 methods in the catalog. Documentation: <https://developers.google.com/workspace/cloud-search/docs/guides/>
+- Admin SDK API (`admin/datatransfer_v1`), 5 methods in the catalog. Documentation: <https://developers.google.com/workspace/admin/>
+- Admin SDK API (`admin/directory_v1`), 128 methods in the catalog. Documentation: <https://developers.google.com/workspace/admin/>
 
 ## Gateway APIs (reached through api_search, api_describe, api_call)
 
-- Groups Migration API (`groupsmigration/v1`), 1 methods
-- Chrome Management API (`chromemanagement/v1`), 70 methods
-- Cloud Identity API (`cloudidentity/v1beta1`), 71 methods
-- Chrome Verified Access API (`verifiedaccess/v1`), 2 methods
+- Groups Migration API (`groupsmigration/v1`), 1 methods. Documentation: <https://developers.google.com/google-apps/groups-migration/>
+- Chrome Management API (`chromemanagement/v1`), 70 methods. Documentation: <https://developers.google.com/chrome/management/>
+- Cloud Identity API (`cloudidentity/v1beta1`), 71 methods. Documentation: <https://cloud.google.com/identity/>
+- Chrome Verified Access API (`verifiedaccess/v1`), 2 methods. Documentation: <https://developers.google.com/chrome/verified-access>
 

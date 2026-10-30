@@ -2,7 +2,7 @@
 
 Install with the simplest command: `npx google-services-mcps install --agent claude --plugin <id>` (see docs/TUTORIAL.md).
 
-Google Play developer publishing and reporting, Play Games Services, Android Enterprise and Management, Play Integrity and device APIs. It has 353 tools. The gateway adds Android Management, Google Wallet and Chrome Web Store.
+Google Play developer publishing and reporting, Play Games Services, Android Enterprise and Management, Play Integrity and device APIs. It has 362 tools. The gateway adds Android Management, Google Wallet and Chrome Web Store.
 
 ## When to install it
 

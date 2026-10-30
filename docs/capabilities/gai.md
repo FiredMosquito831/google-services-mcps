@@ -411,60 +411,62 @@ The tools that match Google's official MCP server for this product (https://docs
 
 ## Generated APIs
 
-- Discovery Engine API (`discoveryengine/v1`), 278 methods in the catalog
-- Cloud Vision API (`vision/v1`), 38 methods in the catalog
-- Cloud Speech-to-Text API (`speech/v1`), 14 methods in the catalog
-- Cloud Text-to-Speech API (`texttospeech/v1`), 7 methods in the catalog
-- Cloud Natural Language API (`language/v2`), 5 methods in the catalog
-- Cloud Video Intelligence API (`videointelligence/v1`), 8 methods in the catalog
+Each API links to Google's documentation for it, as Google's Discovery directory names it (`documentationLink`, kept in `data/catalog.json`). The link is the API's documentation home, not a page per method: the directory gives no link per method, and Google's REST reference pages are laid out differently from product to product.
+
+- Discovery Engine API (`discoveryengine/v1`), 278 methods in the catalog. Documentation: <https://cloud.google.com/generative-ai-app-builder/docs/>
+- Cloud Vision API (`vision/v1`), 38 methods in the catalog. Documentation: <https://cloud.google.com/vision/>
+- Cloud Speech-to-Text API (`speech/v1`), 14 methods in the catalog. Documentation: <https://cloud.google.com/speech-to-text/docs/quickstart-protocol>
+- Cloud Text-to-Speech API (`texttospeech/v1`), 7 methods in the catalog. Documentation: <https://cloud.google.com/text-to-speech/>
+- Cloud Natural Language API (`language/v2`), 5 methods in the catalog. Documentation: <https://cloud.google.com/natural-language/>
+- Cloud Video Intelligence API (`videointelligence/v1`), 8 methods in the catalog. Documentation: <https://cloud.google.com/video-intelligence/docs/>
 
 ## Gateway APIs (reached through api_search, api_describe, api_call)
 
-- Cloud Translation API (`translate/v3`), 51 methods
-- Cloud Document AI API (`documentai/v1`), 42 methods
-- Dialogflow API (`dialogflow/v3`), 158 methods
-- Gemini Enterprise for Customer Experience API (`ces/v1`), 73 methods
-- Agent Registry API (`agentregistry/v1`), 36 methods
-- Agent Identity API (`agentidentity/v1`), 24 methods
-- Agent Identity Credentials API (`agentidentitycredentials/v1`), 2 methods
-- AI Platform Training & Prediction API (`ml/v1`), 46 methods
-- Notebooks API (`notebooks/v2`), 28 methods
-- AI Commerce Search API (`retail/v2`), 71 methods
-- Contact Center AI Insights API (`contactcenterinsights/v1`), 192 methods
-- Contact Center AI Platform API (`contactcenteraiplatform/v1alpha1`), 13 methods
-- Cloud Talent Solution API (`jobs/v4`), 23 methods
-- Recommendations AI (Beta) (`recommendationengine/v1beta1`), 22 methods
-- Agent Platform API (`aiplatform/v1`), 1128 methods
-- Agent Identity API (`agentidentity/v1alpha`), 25 methods
-- Agent Identity API (`agentidentity/v1beta`), 25 methods
-- Agent Identity Credentials API (`agentidentitycredentials/v1alpha`), 3 methods
-- Agent Identity Credentials API (`agentidentitycredentials/v1beta`), 2 methods
-- Agent Registry API (`agentregistry/v1alpha`), 51 methods
-- Agent Platform API (`aiplatform/v1beta1`), 1538 methods
-- Gemini Enterprise for Customer Experience API (`ces/v1beta`), 117 methods
-- Dialogflow API (`dialogflow/v2`), 284 methods
-- Dialogflow API (`dialogflow/v2beta1`), 271 methods
-- Dialogflow API (`dialogflow/v3beta1`), 162 methods
-- Discovery Engine API (`discoveryengine/v1alpha`), 386 methods
-- Discovery Engine API (`discoveryengine/v1beta`), 276 methods
-- Cloud Document AI API (`documentai/v1beta3`), 48 methods
-- Cloud Talent Solution API (`jobs/v3`), 15 methods
-- Cloud Talent Solution API (`jobs/v3p1beta1`), 16 methods
-- Cloud Natural Language API (`language/v1`), 7 methods
-- Cloud Natural Language API (`language/v1beta2`), 7 methods
-- Notebooks API (`notebooks/v1`), 62 methods
-- AI Commerce Search API (`retail/v2alpha`), 88 methods
-- AI Commerce Search API (`retail/v2beta`), 76 methods
-- Cloud Speech-to-Text API (`speech/v1p1beta1`), 14 methods
-- Cloud Text-to-Speech API (`texttospeech/v1beta1`), 5 methods
-- Cloud Translation API (`translate/v2`), 5 methods
-- Cloud Translation API (`translate/v3beta1`), 21 methods
-- Cloud Video Intelligence API (`videointelligence/v1beta2`), 1 methods
-- Cloud Video Intelligence API (`videointelligence/v1p1beta1`), 1 methods
-- Cloud Video Intelligence API (`videointelligence/v1p2beta1`), 1 methods
-- Cloud Video Intelligence API (`videointelligence/v1p3beta1`), 1 methods
-- Cloud Vision API (`vision/v1p1beta1`), 12 methods
-- Cloud Vision API (`vision/v1p2beta1`), 12 methods
-- Gemini API (`generativelanguage/v1beta`), 86 methods
-- Gemini API (`generativelanguage/v1`), 47 methods
+- Cloud Translation API (`translate/v3`), 51 methods. Documentation: <https://cloud.google.com/translate/docs/quickstarts>
+- Cloud Document AI API (`documentai/v1`), 42 methods. Documentation: <https://cloud.google.com/document-ai/docs/>
+- Dialogflow API (`dialogflow/v3`), 158 methods. Documentation: <https://cloud.google.com/dialogflow/>
+- Gemini Enterprise for Customer Experience API (`ces/v1`), 73 methods. Documentation: <https://docs.cloud.google.com/customer-engagement-ai/conversational-agents/ps>
+- Agent Registry API (`agentregistry/v1`), 36 methods. Documentation: <https://docs.cloud.google.com/agent-registry/overview>
+- Agent Identity API (`agentidentity/v1`), 24 methods. Documentation: <https://cloud.google.com/iam/docs/>
+- Agent Identity Credentials API (`agentidentitycredentials/v1`), 2 methods. Documentation: <https://cloud.google.com/iam/docs/>
+- AI Platform Training & Prediction API (`ml/v1`), 46 methods. Documentation: <https://cloud.google.com/ml/>
+- Notebooks API (`notebooks/v2`), 28 methods. Documentation: <https://cloud.google.com/notebooks/docs/>
+- AI Commerce Search API (`retail/v2`), 71 methods. Documentation: <https://cloud.google.com/recommendations>
+- Contact Center AI Insights API (`contactcenterinsights/v1`), 192 methods. Documentation: <https://cloud.google.com/contact-center/insights/docs>
+- Contact Center AI Platform API (`contactcenteraiplatform/v1alpha1`), 13 methods. Documentation: <https://cloud.google.com/solutions/contact-center-ai-platform>
+- Cloud Talent Solution API (`jobs/v4`), 23 methods. Documentation: <https://cloud.google.com/talent-solution/job-search/docs/>
+- Recommendations AI (Beta) (`recommendationengine/v1beta1`), 22 methods. Documentation: <https://cloud.google.com/recommendations-ai/docs>
+- Agent Platform API (`aiplatform/v1`), 1128 methods. Documentation: <https://cloud.google.com/vertex-ai/>
+- Agent Identity API (`agentidentity/v1alpha`), 25 methods. Documentation: <https://cloud.google.com/iam/docs/>
+- Agent Identity API (`agentidentity/v1beta`), 25 methods. Documentation: <https://cloud.google.com/iam/docs/>
+- Agent Identity Credentials API (`agentidentitycredentials/v1alpha`), 3 methods. Documentation: <https://cloud.google.com/iam/docs/>
+- Agent Identity Credentials API (`agentidentitycredentials/v1beta`), 2 methods. Documentation: <https://cloud.google.com/iam/docs/>
+- Agent Registry API (`agentregistry/v1alpha`), 51 methods. Documentation: <https://docs.cloud.google.com/agent-registry/overview>
+- Agent Platform API (`aiplatform/v1beta1`), 1538 methods. Documentation: <https://cloud.google.com/vertex-ai/>
+- Gemini Enterprise for Customer Experience API (`ces/v1beta`), 117 methods. Documentation: <https://docs.cloud.google.com/customer-engagement-ai/conversational-agents/ps>
+- Dialogflow API (`dialogflow/v2`), 284 methods. Documentation: <https://cloud.google.com/dialogflow/>
+- Dialogflow API (`dialogflow/v2beta1`), 271 methods. Documentation: <https://cloud.google.com/dialogflow/>
+- Dialogflow API (`dialogflow/v3beta1`), 162 methods. Documentation: <https://cloud.google.com/dialogflow/>
+- Discovery Engine API (`discoveryengine/v1alpha`), 386 methods. Documentation: <https://cloud.google.com/generative-ai-app-builder/docs/>
+- Discovery Engine API (`discoveryengine/v1beta`), 276 methods. Documentation: <https://cloud.google.com/generative-ai-app-builder/docs/>
+- Cloud Document AI API (`documentai/v1beta3`), 48 methods. Documentation: <https://cloud.google.com/document-ai/docs/>
+- Cloud Talent Solution API (`jobs/v3`), 15 methods. Documentation: <https://cloud.google.com/talent-solution/job-search/docs/>
+- Cloud Talent Solution API (`jobs/v3p1beta1`), 16 methods. Documentation: <https://cloud.google.com/talent-solution/job-search/docs/>
+- Cloud Natural Language API (`language/v1`), 7 methods. Documentation: <https://cloud.google.com/natural-language/>
+- Cloud Natural Language API (`language/v1beta2`), 7 methods. Documentation: <https://cloud.google.com/natural-language/>
+- Notebooks API (`notebooks/v1`), 62 methods. Documentation: <https://cloud.google.com/notebooks/docs/>
+- AI Commerce Search API (`retail/v2alpha`), 88 methods. Documentation: <https://cloud.google.com/recommendations>
+- AI Commerce Search API (`retail/v2beta`), 76 methods. Documentation: <https://cloud.google.com/recommendations>
+- Cloud Speech-to-Text API (`speech/v1p1beta1`), 14 methods. Documentation: <https://cloud.google.com/speech-to-text/docs/quickstart-protocol>
+- Cloud Text-to-Speech API (`texttospeech/v1beta1`), 5 methods. Documentation: <https://cloud.google.com/text-to-speech/>
+- Cloud Translation API (`translate/v2`), 5 methods. Documentation: <https://cloud.google.com/translate/docs/quickstarts>
+- Cloud Translation API (`translate/v3beta1`), 21 methods. Documentation: <https://cloud.google.com/translate/docs/quickstarts>
+- Cloud Video Intelligence API (`videointelligence/v1beta2`), 1 methods. Documentation: <https://cloud.google.com/video-intelligence/docs/>
+- Cloud Video Intelligence API (`videointelligence/v1p1beta1`), 1 methods. Documentation: <https://cloud.google.com/video-intelligence/docs/>
+- Cloud Video Intelligence API (`videointelligence/v1p2beta1`), 1 methods. Documentation: <https://cloud.google.com/video-intelligence/docs/>
+- Cloud Video Intelligence API (`videointelligence/v1p3beta1`), 1 methods. Documentation: <https://cloud.google.com/video-intelligence/docs/>
+- Cloud Vision API (`vision/v1p1beta1`), 12 methods. Documentation: <https://cloud.google.com/vision/>
+- Cloud Vision API (`vision/v1p2beta1`), 12 methods. Documentation: <https://cloud.google.com/vision/>
+- Gemini API (`generativelanguage/v1beta`), 86 methods. Documentation: <https://developers.generativeai.google/api>
+- Gemini API (`generativelanguage/v1`), 47 methods. Documentation: <https://developers.generativeai.google/api>
 

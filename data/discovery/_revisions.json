@@ -1,0 +1,577 @@
+{
+  "$comment": "Written by scripts/snapshot-discovery.mjs. For each snapshot in this folder: the revision field of the Discovery document Google served and the time it was fetched (ISO, UTC). \"unknown (snapshot 2026-10-15)\" marks a snapshot written before revisions were recorded; the date is that of the commit that last changed the file. scripts/check-discovery-freshness.mjs compares these records with Google's current documents.",
+  "snapshots": {
+    "abusiveexperiencereport.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "acceleratedmobilepageurl.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "addressvalidation.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "adexperiencereport.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "admin.datatransfer_v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "admin.directory_v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "admin.reports_v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "admob.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "airquality.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "alertcenter.v1beta1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "analyticsadmin.v1beta": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "analyticsdata.v1beta": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "androiddeveloperidstatus.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "androiddeviceprovisioning.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "androidenterprise.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "androidpublisher.v3": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "apikeys.v2": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "appsmarket.v2": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "areainsights.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "bigquery.v2": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "blogger.v3": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "books.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "businessprofileperformance.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "calendar.v3": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "chat.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "chromepolicy.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "chromeuxreport.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "chromewebstore.v2": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "civicinfo.v2": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "classroom.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "cloudasset.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "cloudbilling.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "cloudidentity.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "cloudprofiler.v2": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "cloudresourcemanager.v3": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "cloudsearch.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "cloudtrace.v2": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "css.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "customsearch.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "dataportability.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "developerknowledge.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "devicerun.v1alpha": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "digitalassetlinks.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "discoveryengine.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "displayvideo.v4": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "docs.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "doubleclickbidmanager.v2": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "drive.v3": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "driveactivity.v2": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "drivelabels.v2": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "factchecktools.v1alpha1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "fcm.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "fcmdata.v1beta1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "firebase.v1beta1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "firebaseappcheck.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "firebaseappdistribution.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "firebaseapphosting.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "firebasecrashlytics.v1alpha": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "firebasedatabase.v1beta": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "firebasedataconnect.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "firebasehosting.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "firebaseml.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "firebaserules.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "firebasestorage.v1beta": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "forms.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "games.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "gamesConfiguration.v1configuration": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "gamesManagement.v1management": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "gmail.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "gmailpostmastertools.v2": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "googleads.v26": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "groupssettings.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "health.v4": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "iam.v2": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "identitytoolkit.v3": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "indexing.v3": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "keep.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "kgsearch.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "language.v2": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "licensing.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "manufacturers.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "meet.v2": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "merchantapi.accounts_v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "merchantapi.conversions_v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "merchantapi.datasources_v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "merchantapi.inventories_v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "merchantapi.issueresolution_v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "merchantapi.lfp_v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "merchantapi.loyaltycustomers_v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "merchantapi.notifications_v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "merchantapi.ordertracking_v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "merchantapi.products_v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "merchantapi.promotions_v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "merchantapi.quota_v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "merchantapi.reports_v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "merchantapi.reviews_v1beta": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "monitoring.v3": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "mybusinessaccountmanagement.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "mybusinessbusinessinformation.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "mybusinesslodging.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "mybusinessnotifications.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "mybusinessplaceactions.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "mybusinessverifications.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "oauth2.v2": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "pagespeedonline.v5": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "people.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "places.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "playdeveloperreporting.v1beta1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "playgrouping.v1alpha1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "playintegrity.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "policytroubleshooter.v3": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "pollen.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "reseller.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "safebrowsing.v5": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "script.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "searchads360.v23": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "searchconsole.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "serviceusage.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "sheets.v4": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "siteVerification.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "slides.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "smartdevicemanagement.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "solar.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "speech.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "storage.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "streetviewpublish.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "tagmanager.v2": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "tasks.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "testing.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "texttospeech.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "toolresults.v1beta3": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "travelimpactmodel.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "vault.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "verifiedaccess.v2": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "versionhistory.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "videointelligence.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "vision.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "webfonts.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "webrisk.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "workspaceevents.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "youtube.v3": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "youtubeAnalytics.v2": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    },
+    "youtubereporting.v1": {
+      "revision": "unknown (snapshot 2026-10-15)",
+      "fetchedAt": null
+    }
+  }
+}

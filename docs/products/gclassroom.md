@@ -2,7 +2,7 @@
 
 Install with the simplest command: `npx google-services-mcps install --agent claude --plugin <id>` (see docs/TUTORIAL.md).
 
-Google Classroom courses, coursework and course materials, announcements, submissions, students, teachers, groups and rubrics. It reads and manages class work for the courses that the signed-in user can access. It has 105 tools and no gateway.
+Google Classroom courses, coursework and course materials, announcements, submissions, students, teachers, groups and rubrics. It reads and manages class work for the courses that the signed-in user can access. It has 119 tools and no gateway.
 
 ## When to install it
 

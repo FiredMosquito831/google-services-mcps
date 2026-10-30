@@ -2,7 +2,7 @@
 
 Install with the simplest command: `npx google-services-mcps install --agent claude --plugin <id>` (see docs/TUTORIAL.md).
 
-Google Ads API, with accounts, campaigns, ad groups, ads, keywords, budgets, conversions, assets and GAQL reporting. It also covers Search Ads 360, Display & Video 360, Campaign Manager 360, Ad Exchange Buyer, Real-time Bidding, AdSense, AdMob and more through the gateway. It has 330 tools.
+Google Ads API, with accounts, campaigns, ad groups, ads, keywords, budgets, conversions, assets and GAQL reporting. It also covers Search Ads 360, Display & Video 360, Campaign Manager 360, Ad Exchange Buyer, Real-time Bidding, AdSense, AdMob and more through the gateway. It has 331 tools.
 
 ## When to install it
 

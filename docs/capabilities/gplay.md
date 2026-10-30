@@ -426,26 +426,28 @@ The tools that match Google's official MCP server for this product (https://andr
 
 ## Generated APIs
 
-- Google Play Android Developer API (`androidpublisher/v3`), 145 methods in the catalog
-- Google Play Developer Reporting API (`playdeveloperreporting/v1beta1`), 25 methods in the catalog
-- Google Play Games Services API (`games/v1`), 40 methods in the catalog
-- Google Play Games Services Management API (`gamesManagement/v1management`), 18 methods in the catalog
-- Google Play Games Services Publishing API (`gamesConfiguration/v1configuration`), 10 methods in the catalog
-- Google Play EMM API (`androidenterprise/v1`), 77 methods in the catalog
-- Android Device Provisioning Partner API (`androiddeviceprovisioning/v1`), 27 methods in the catalog
-- Google Play Integrity API (`playintegrity/v1`), 3 methods in the catalog
-- Google Play Grouping API (`playgrouping/v1alpha1`), 2 methods in the catalog
-- Android Developer ID Status API (`androiddeveloperidstatus/v1`), 1 methods in the catalog
-- Chrome Web Store API (`chromewebstore/v2`), 5 methods in the catalog
-- Smart Device Management API (`smartdevicemanagement/v1`), 7 methods in the catalog
+Each API links to Google's documentation for it, as Google's Discovery directory names it (`documentationLink`, kept in `data/catalog.json`). The link is the API's documentation home, not a page per method: the directory gives no link per method, and Google's REST reference pages are laid out differently from product to product.
+
+- Google Play Android Developer API (`androidpublisher/v3`), 145 methods in the catalog. Documentation: <https://developers.google.com/android-publisher>
+- Google Play Developer Reporting API (`playdeveloperreporting/v1beta1`), 25 methods in the catalog. Documentation: <https://developers.google.com/play/developer/reporting>
+- Google Play Games Services API (`games/v1`), 40 methods in the catalog. Documentation: <https://developers.google.com/games/>
+- Google Play Games Services Management API (`gamesManagement/v1management`), 18 methods in the catalog. Documentation: <https://developers.google.com/games/>
+- Google Play Games Services Publishing API (`gamesConfiguration/v1configuration`), 10 methods in the catalog. Documentation: <https://developers.google.com/games/>
+- Google Play EMM API (`androidenterprise/v1`), 77 methods in the catalog. Documentation: <https://developers.google.com/android/work/play/emm-api>
+- Android Device Provisioning Partner API (`androiddeviceprovisioning/v1`), 27 methods in the catalog. Documentation: <https://developers.google.com/zero-touch/>
+- Google Play Integrity API (`playintegrity/v1`), 3 methods in the catalog. Documentation: <https://developer.android.com/google/play/integrity>
+- Google Play Grouping API (`playgrouping/v1alpha1`), 2 methods in the catalog. Documentation: <https://cloud.google.com/playgrouping/>
+- Android Developer ID Status API (`androiddeveloperidstatus/v1`), 1 methods in the catalog. Documentation: <https://developer.android.com/developer-verification/guides/check-registration-status>
+- Chrome Web Store API (`chromewebstore/v2`), 5 methods in the catalog. Documentation: <https://developer.chrome.com/docs/webstore/api>
+- Smart Device Management API (`smartdevicemanagement/v1`), 7 methods in the catalog. Documentation: <https://developers.google.com/nest/device-access>
 
 ## Gateway APIs (reached through api_search, api_describe, api_call)
 
-- Android Management API (`androidmanagement/v1`), 36 methods
-- HomeGraph API (`homegraph/v1`), 5 methods
-- Payments Reseller Subscription API (`paymentsresellersubscription/v1`), 14 methods
-- Google Wallet API (`walletobjects/v1`), 99 methods
-- Google Play Custom App Publishing API (`playcustomapp/v1`), 1 methods
-- Chrome Web Store API (`chromewebstore/v1.1`), 4 methods
-- Google Play Developer Reporting API (`playdeveloperreporting/v1alpha1`), 25 methods
+- Android Management API (`androidmanagement/v1`), 36 methods. Documentation: <https://developers.google.com/android/management>
+- HomeGraph API (`homegraph/v1`), 5 methods. Documentation: <https://developers.home.google.com/cloud-to-cloud/get-started>
+- Payments Reseller Subscription API (`paymentsresellersubscription/v1`), 14 methods. Documentation: <https://developers.google.com/payments/reseller/subscription/>
+- Google Wallet API (`walletobjects/v1`), 99 methods. Documentation: <https://developers.google.com/pay/passes>
+- Google Play Custom App Publishing API (`playcustomapp/v1`), 1 methods. Documentation: <https://developers.google.com/android/work/play/custom-app-api/>
+- Chrome Web Store API (`chromewebstore/v1.1`), 4 methods. Documentation: <https://developer.chrome.com/docs/webstore/api>
+- Google Play Developer Reporting API (`playdeveloperreporting/v1alpha1`), 25 methods. Documentation: <https://developers.google.com/play/developer/reporting>
 
