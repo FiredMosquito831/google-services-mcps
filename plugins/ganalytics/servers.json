@@ -11,8 +11,8 @@
       "name": "ganalytics",
       "plugin": "ganalytics",
       "group": "business",
-      "kind": "discovery",
-      "curated": null,
+      "kind": "curated+discovery",
+      "curated": "src/servers/ganalytics.ts",
       "apis": [
         {
           "api": "analyticsadmin",
@@ -28,6 +28,24 @@
           "api": "analyticsadmin",
           "version": "v1alpha"
         }
+      ],
+      "toolsets": {
+        "google": [
+          "gaadmin_account_summarie_list",
+          "gaadmin_properties_get",
+          "gaadmin_propert_google_a_list",
+          "gadata_properties_get_metadat",
+          "ga_run_report",
+          "ga_run_realtime_report",
+          "ga_run_funnel_report",
+          "ga_annotations_list",
+          "ga_annotation_create"
+        ]
+      },
+      "scopes": [
+        "https://www.googleapis.com/auth/analytics",
+        "https://www.googleapis.com/auth/analytics.edit",
+        "https://www.googleapis.com/auth/analytics.readonly"
       ],
       "label": "Google Analytics: Google Analytics admin and data APIs for GA4 properties, configuration and reports."
     }

@@ -158,9 +158,38 @@ test('requirements: curated keeps the curated tools and, with api_call, the gate
 test('requirements: a toolset a product does not have counts every tool, and says so', async () => {
   const { cfg } = tempTokens();
   const lines = [];
-  const google = await requirementsFor(['gyoutube'], cfg, { warn: (l) => lines.push(l), toolset: 'google' });
-  assert.deepEqual(google, await requirementsFor(['gyoutube'], cfg, quiet));
-  assert.deepEqual(lines, ['[gyoutube] toolset google is not defined for this product yet; every tool counts toward the scopes.']);
+  // gfirebase has no google list (gyoutube has a lean one since 1.19.0).
+  const google = await requirementsFor(['gfirebase'], cfg, { warn: (l) => lines.push(l), toolset: 'google' });
+  assert.deepEqual(google, await requirementsFor(['gfirebase'], cfg, quiet));
+  assert.deepEqual(lines, ['[gfirebase] toolset google is not defined for this product yet; every tool counts toward the scopes.']);
+});
+
+test('requirements: the lean gtm, gyoutube and gbusiness lists resolve to the narrow scopes of their tools', async () => {
+  const { cfg } = tempTokens();
+  // Saving a version needs tagmanager.edit.containerversions and publishing tagmanager.publish; neither has a read-only form.
+  const GTM_READWRITE = [G('tagmanager.edit.containers'), G('tagmanager.edit.containerversions'), G('tagmanager.publish')];
+  const YT_READONLY = [G('youtube.readonly')];
+  const YT_READWRITE = [G('youtube'), G('youtube.force-ssl')];
+  const resolved = async (id) => {
+    const reqs = await requirementsFor([id], cfg, { ...quiet, toolset: 'google' });
+    return { n: reqs.length, gateway: reqs.filter((r) => r.gateway).length, readonly: resolveScopes(reqs, 'readonly'), readwrite: resolveScopes(reqs, 'readwrite').scopes };
+  };
+  const gtm = await resolved('gtm');
+  assert.equal(gtm.n, 13);
+  assert.equal(gtm.gateway, 0, 'the tagmanager v1 gateway does not count: no api_call in the list');
+  assert.deepEqual(gtm.readonly.scopes, [G('tagmanager.readonly')]);
+  assert.deepEqual(gtm.readwrite, GTM_READWRITE);
+  const yt = await resolved('gyoutube');
+  assert.equal(yt.n, 10);
+  assert.deepEqual(yt.readonly.scopes, YT_READONLY);
+  // commentThreads.list and captions.list list only youtube.force-ssl (or youtubepartner), which have no read-only form.
+  for (const tool of ['youtube_comment_threads_list', 'youtube_captions_list']) assert.ok(yt.readonly.uncovered.includes(`gyoutube/${tool}`), tool);
+  assert.deepEqual(yt.readwrite, YT_READWRITE);
+  const gb = await resolved('gbusiness');
+  assert.equal(gb.n, 8);
+  // Google's Business Profile Discovery documents list no scope, so neither do these tools (as in the all toolset).
+  assert.deepEqual(gb.readonly.scopes, []);
+  assert.deepEqual(gb.readwrite, []);
 });
 
 test('requirements: the lean gsc google list resolves to webmasters.readonly (readonly) and webmasters with indexing (readwrite)', async () => {
@@ -256,6 +285,44 @@ test('requirements: the lean gmeet, gtasks and gapps lists resolve to the narrow
   // full takes the broadest scope scripts.run lists, the full Gmail scope; readwrite does not.
   assert.ok(apps.full.includes('https://mail.google.com/'));
   assert.equal(apps.readwrite.includes('https://mail.google.com/'), false);
+});
+
+test('requirements: the gads google list (3 reads, no gateway) resolves to adwords; adwords has no read-only form', async () => {
+  const { cfg } = tempTokens();
+  const google = await requirementsFor(['gads'], cfg, { ...quiet, toolset: 'google' });
+  assert.deepEqual(toolsOf(google), ['ads_list_customers', 'ads_resource_metadata', 'ads_search']);
+  assert.equal(google.filter((r) => r.gateway).length, 0, 'no api_call in the list, so no gateway method counts');
+  // Google Ads publishes no read-only scope, so a readonly login covers none of the three, as with the all toolset.
+  const readonly = resolveScopes(google, 'readonly');
+  assert.deepEqual(readonly.scopes, []);
+  assert.deepEqual(readonly.uncovered.sort(), ['gads/ads_list_customers', 'gads/ads_resource_metadata', 'gads/ads_search']);
+  assert.deepEqual(resolveScopes(google, 'readwrite').scopes, [G('adwords')]);
+  assert.deepEqual(resolveScopes(google, 'full').scopes, [G('adwords')]);
+});
+
+test('requirements: the ganalytics google list resolves to analytics.readonly, and adds analytics.edit for readwrite, as Google asks', async () => {
+  const { cfg } = tempTokens();
+  const google = await requirementsFor(['ganalytics'], cfg, { ...quiet, toolset: 'google' });
+  assert.equal(google.length, 9);
+  assert.equal(google.filter((r) => r.gateway).length, 0, 'no api_call in the list, so no gateway method counts');
+  const readonly = resolveScopes(google, 'readonly');
+  assert.deepEqual(readonly.scopes, [G('analytics.readonly')]);
+  // The one write: Google's server asks for analytics.edit only with --allow-write.
+  assert.deepEqual(readonly.uncovered, ['ganalytics/ga_annotation_create']);
+  assert.deepEqual(resolveScopes(google, 'readwrite').scopes, [G('analytics.edit'), G('analytics.readonly')]);
+  // The all toolset counts the gateway (analyticsadmin v1alpha) and resolves as before 1.17.0.
+  const all = await requirementsFor(['ganalytics'], cfg, quiet);
+  assert.deepEqual(resolveScopes(all, 'readwrite').scopes, [G('analytics'), G('analytics.edit'), G('analytics.manage.users')]);
+});
+
+test('requirements: the gmerchant google list (13 generated tools, no gateway) needs content, which has no read-only form', async () => {
+  const { cfg } = tempTokens();
+  const google = await requirementsFor(['gmerchant'], cfg, { ...quiet, toolset: 'google' });
+  assert.equal(google.length, 13);
+  assert.equal(google.filter((r) => r.gateway).length, 0);
+  assert.deepEqual(resolveScopes(google, 'readonly').scopes, []);
+  assert.deepEqual(resolveScopes(google, 'readwrite').scopes, [G('content')]);
+  // The service-account key's scopes are fixed (androidpublisher and content), so these figures size nothing at sign-in.
 });
 
 test('--toolset: parsed for login, scopes and setup-admin; an unknown value is a usage error', () => {

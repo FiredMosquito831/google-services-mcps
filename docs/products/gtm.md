@@ -43,6 +43,8 @@ Start with `--profile readonly`. Changes need a `readwrite` login and the plugin
 
 The full list is in `docs/capabilities/gtm.md`.
 
+Google has no official MCP server for Tag Manager. With the plugin option `toolset: google`, the server lists a small set chosen here: accounts, containers, workspaces, tags, triggers and variables (list and get), the live version, the version headers, saving a version and publishing it, plus `health` and the sign-in tools.
+
 ## Example requests
 
 - "List the tags in container GTM-ABC123 that fire on every page view." Claude lists tags and triggers. No prompt.

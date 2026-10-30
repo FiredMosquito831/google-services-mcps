@@ -92,6 +92,14 @@
     "title": "Change Google Ads resources"
   },
   {
+    "name": "mcp__plugin_gads_gads__ads_resource_metadata",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "title": "Fields of a Google Ads resource"
+  },
+  {
     "name": "mcp__plugin_gads_gads__ads_search",
     "kind": "read",
     "scopes": [

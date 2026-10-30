@@ -8,7 +8,24 @@ YouTube Data, YouTube Analytics and YouTube Reporting APIs, plus Blogger.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 134, google 134 (all), curated 134 (all) tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 134, google 19, curated 134 (all) tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+
+## Toolset google (10)
+
+Google has no official MCP server for this product. The google toolset is a lean set chosen here: No official Google MCP server for YouTube was found (Google's Cloud and Workspace MCP lists and Google's GitHub organisations, 2026-10-29; a negative, not confirmed by Google); a lean set chosen here..
+
+| Tool | Google's tool | Note |
+|---|---|---|
+| `youtube_search_list` | (none) | Search YouTube for videos, channels and playlists. Each call costs 100 units of the project's daily YouTube quota. |
+| `youtube_channels_list` | (none) | Channels by id, by handle, or your own (mine): statistics and the id of the uploads playlist. |
+| `youtube_videos_list` | (none) | Videos by id, or the most popular chart: title, description, statistics and duration. |
+| `youtube_playlists_list` | (none) | The playlists of a channel, or by id. |
+| `youtube_playlist_items_list` | (none) | The videos of a playlist; a channel's uploads playlist lists all its videos. |
+| `youtube_comment_threads_list` | (none) | Top-level comments of a video or channel, with replies. Discovery lists only youtube.force-ssl for it, which has no read-only form, so a readonly login does not cover it. |
+| `youtube_captions_list` | (none) | The caption tracks of a video (not their text). Needs youtube.force-ssl, like the comment threads. |
+| `ytanalyt_reports_query` | (none) | YouTube Analytics for your channel: views, watch time, subscribers and more, by day, video or country. |
+| `youtube_videos_update` | (none) | Changes a video's title, description, tags, category or privacy. A write, so it asks first; the change is public. |
+| `youtube_comments_insert` | (none) | Posts a reply to a comment (parentId); a new top-level comment is commentThreads.insert, in the all toolset. A write, so it asks first; the reply is public. |
 
 ## Curated tools (9)
 

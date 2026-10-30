@@ -85,12 +85,13 @@ const googleError = (status, body) =>
 
 // ---- tool metadata ----
 
-test('the three ads tools: names, kinds, the adwords scope and the name length', () => {
+test('the four ads tools: names, kinds, the adwords scope and the name length', () => {
   assert.deepEqual(
     tools.map((t) => [t.name, t.kind]).sort(),
     [
       ['ads_list_customers', 'read'],
       ['ads_mutate', 'dynamic'],
+      ['ads_resource_metadata', 'read'],
       ['ads_search', 'read'],
     ],
   );

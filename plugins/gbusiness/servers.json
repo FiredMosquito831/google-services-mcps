@@ -43,6 +43,18 @@
           "version": "v1"
         }
       ],
+      "toolsets": {
+        "google": [
+          "mbaccount_accounts_list",
+          "mbinfo_accounts_locations_list",
+          "mbinfo_locations_get",
+          "bpperf_locations_get_daily_metr",
+          "bpperf_locations_fetch_multi_da",
+          "bpperf_loca_sear_impr_mont_list",
+          "mbverify_location_verifica_list",
+          "mbinfo_locations_patch"
+        ]
+      },
       "label": "Business Profile: Business Profile accounts, locations, verifications, lodging, place actions, notifications and performance."
     }
   ],

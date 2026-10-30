@@ -2415,7 +2415,7 @@
       "group": "business",
       "server": {
         "name": "ganalytics",
-        "curated": null
+        "curated": "analytics"
       },
       "generated": [
         {
@@ -2433,6 +2433,63 @@
           "version": "v1alpha"
         }
       ],
+      "toolsets": {
+        "google": {
+          "source": "https://github.com/googleanalytics/google-analytics-mcp",
+          "tools": [
+            "gaadmin_account_summarie_list",
+            "gaadmin_properties_get",
+            "gaadmin_propert_google_a_list",
+            "gadata_properties_get_metadat",
+            "ga_run_report",
+            "ga_run_realtime_report",
+            "ga_run_funnel_report",
+            "ga_annotations_list",
+            "ga_annotation_create"
+          ],
+          "matches": {
+            "gaadmin_account_summarie_list": [
+              "get_account_summaries"
+            ],
+            "gaadmin_properties_get": [
+              "get_property_details"
+            ],
+            "gaadmin_propert_google_a_list": [
+              "list_google_ads_links"
+            ],
+            "gadata_properties_get_metadat": [
+              "get_custom_dimensions_and_metrics"
+            ],
+            "ga_run_report": [
+              "run_report",
+              "run_conversions_report"
+            ],
+            "ga_run_realtime_report": [
+              "run_realtime_report"
+            ],
+            "ga_run_funnel_report": [
+              "run_funnel_report"
+            ],
+            "ga_annotations_list": [
+              "list_property_annotations"
+            ],
+            "ga_annotation_create": [
+              "create_property_annotation"
+            ]
+          },
+          "notes": {
+            "gaadmin_account_summarie_list": "The accounts and properties the signed-in user can see (Admin API v1beta accountSummaries.list). Start here for a property id.",
+            "gaadmin_properties_get": "One property's details: name, time zone, currency, industry, service level (Admin API v1beta).",
+            "gaadmin_propert_google_a_list": "The Google Ads accounts linked to a property (Admin API v1beta).",
+            "gadata_properties_get_metadat": "Every dimension and metric the property can report on, custom ones flagged with customDefinition; Google's tool returns only the custom ones. Pass name properties/<id>/metadata.",
+            "ga_run_report": "A report with rows keyed by dimension and metric name, row_count, next_offset and, on request, the property's quota. With conversion_spec it runs Google's conversions report on Data API v1alpha, as run_conversions_report does.",
+            "ga_run_realtime_report": "The last 30 minutes. The Data API has no offset for realtime reports, so there is none here (Google's tool lists one).",
+            "ga_run_funnel_report": "Data API v1alpha runFunnelReport, which no generated tool or gateway method of this server reaches; steps as event names or filter expressions.",
+            "ga_annotations_list": "Admin API v1alpha, which the generated tools do not cover (it is a gateway API here).",
+            "ga_annotation_create": "A write: it asks first, and the approval shows the exact annotation. Needs analytics.edit, which Google's server asks for only with --allow-write."
+          }
+        }
+      },
       "generatedToolCount": 66
     },
     "gtm": {
@@ -2455,6 +2512,56 @@
           "version": "v1"
         }
       ],
+      "toolsets": {
+        "google": {
+          "source": "No official Google MCP server for Google Tag Manager was found (Google's Cloud and Workspace MCP lists and Google's GitHub organisations, 2026-10-29; a negative, not confirmed by Google); a lean set chosen here.",
+          "tools": [
+            "tagmgr_accounts_list",
+            "tagmgr_accounts_containers_list",
+            "tagmgr_accounts_containers_workspaces_list",
+            "tagmgr_accounts_containe_workspac_tags_list",
+            "tagmgr_accounts_containe_workspace_tags_get",
+            "tagmgr_account_contain_workspa_trigger_list",
+            "tagmgr_account_contain_workspa_triggers_get",
+            "tagmgr_account_contain_workspa_variabl_list",
+            "tagmgr_account_contain_workspa_variable_get",
+            "tagmgr_accounts_containers_versions_live",
+            "tagmgr_accounts_containers_version_hea_list",
+            "tagmgr_accounts_containe_workspac_create_ve",
+            "tagmgr_accounts_containers_versions_publish"
+          ],
+          "matches": {
+            "tagmgr_accounts_list": [],
+            "tagmgr_accounts_containers_list": [],
+            "tagmgr_accounts_containers_workspaces_list": [],
+            "tagmgr_accounts_containe_workspac_tags_list": [],
+            "tagmgr_accounts_containe_workspace_tags_get": [],
+            "tagmgr_account_contain_workspa_trigger_list": [],
+            "tagmgr_account_contain_workspa_triggers_get": [],
+            "tagmgr_account_contain_workspa_variabl_list": [],
+            "tagmgr_account_contain_workspa_variable_get": [],
+            "tagmgr_accounts_containers_versions_live": [],
+            "tagmgr_accounts_containers_version_hea_list": [],
+            "tagmgr_accounts_containe_workspac_create_ve": [],
+            "tagmgr_accounts_containers_versions_publish": []
+          },
+          "notes": {
+            "tagmgr_accounts_list": "The Tag Manager accounts the signed-in user can see. Start here.",
+            "tagmgr_accounts_containers_list": "The containers of an account (web, iOS, Android, AMP, server) with their public ids (GTM-XXXX).",
+            "tagmgr_accounts_containers_workspaces_list": "The workspaces of a container. Changes are made in a workspace, saved as a version, then published.",
+            "tagmgr_accounts_containe_workspac_tags_list": "The tags of a workspace.",
+            "tagmgr_accounts_containe_workspace_tags_get": "One tag with its type, parameters and firing and blocking triggers.",
+            "tagmgr_account_contain_workspa_trigger_list": "The triggers of a workspace.",
+            "tagmgr_account_contain_workspa_triggers_get": "One trigger with its type and filters.",
+            "tagmgr_account_contain_workspa_variabl_list": "The user-defined variables of a workspace.",
+            "tagmgr_account_contain_workspa_variable_get": "One variable with its type and parameters.",
+            "tagmgr_accounts_containers_versions_live": "The version that is live now, with its tags, triggers and variables.",
+            "tagmgr_accounts_containers_version_hea_list": "The versions of a container as headers: name, number and counts.",
+            "tagmgr_accounts_containe_workspac_create_ve": "Saves a workspace as a new container version. A write, so it asks first; nothing goes live.",
+            "tagmgr_accounts_containers_versions_publish": "Publishes a version: it goes live on every site or app that loads the container. A write, so it asks first; check the version before."
+          }
+        }
+      },
       "generatedToolCount": 106
     },
     "gyoutube": {
@@ -2484,6 +2591,47 @@
         }
       ],
       "gateway": [],
+      "toolsets": {
+        "google": {
+          "source": "No official Google MCP server for YouTube was found (Google's Cloud and Workspace MCP lists and Google's GitHub organisations, 2026-10-29; a negative, not confirmed by Google); a lean set chosen here.",
+          "tools": [
+            "youtube_search_list",
+            "youtube_channels_list",
+            "youtube_videos_list",
+            "youtube_playlists_list",
+            "youtube_playlist_items_list",
+            "youtube_comment_threads_list",
+            "youtube_captions_list",
+            "ytanalyt_reports_query",
+            "youtube_videos_update",
+            "youtube_comments_insert"
+          ],
+          "matches": {
+            "youtube_search_list": [],
+            "youtube_channels_list": [],
+            "youtube_videos_list": [],
+            "youtube_playlists_list": [],
+            "youtube_playlist_items_list": [],
+            "youtube_comment_threads_list": [],
+            "youtube_captions_list": [],
+            "ytanalyt_reports_query": [],
+            "youtube_videos_update": [],
+            "youtube_comments_insert": []
+          },
+          "notes": {
+            "youtube_search_list": "Search YouTube for videos, channels and playlists. Each call costs 100 units of the project's daily YouTube quota.",
+            "youtube_channels_list": "Channels by id, by handle, or your own (mine): statistics and the id of the uploads playlist.",
+            "youtube_videos_list": "Videos by id, or the most popular chart: title, description, statistics and duration.",
+            "youtube_playlists_list": "The playlists of a channel, or by id.",
+            "youtube_playlist_items_list": "The videos of a playlist; a channel's uploads playlist lists all its videos.",
+            "youtube_comment_threads_list": "Top-level comments of a video or channel, with replies. Discovery lists only youtube.force-ssl for it, which has no read-only form, so a readonly login does not cover it.",
+            "youtube_captions_list": "The caption tracks of a video (not their text). Needs youtube.force-ssl, like the comment threads.",
+            "ytanalyt_reports_query": "YouTube Analytics for your channel: views, watch time, subscribers and more, by day, video or country.",
+            "youtube_videos_update": "Changes a video's title, description, tags, category or privacy. A write, so it asks first; the change is public.",
+            "youtube_comments_insert": "Posts a reply to a comment (parentId); a new top-level comment is commentThreads.insert, in the all toolset. A write, so it asks first; the reply is public."
+          }
+        }
+      },
       "generatedToolCount": 124
     },
     "gbusiness": {
@@ -2525,6 +2673,41 @@
         }
       ],
       "gateway": [],
+      "toolsets": {
+        "google": {
+          "source": "No official Google MCP server for Google Business Profile was found (Google's Cloud and Workspace MCP lists and Google's GitHub organisations, 2026-10-29; a negative, not confirmed by Google); a lean set chosen here.",
+          "tools": [
+            "mbaccount_accounts_list",
+            "mbinfo_accounts_locations_list",
+            "mbinfo_locations_get",
+            "bpperf_locations_get_daily_metr",
+            "bpperf_locations_fetch_multi_da",
+            "bpperf_loca_sear_impr_mont_list",
+            "mbverify_location_verifica_list",
+            "mbinfo_locations_patch"
+          ],
+          "matches": {
+            "mbaccount_accounts_list": [],
+            "mbinfo_accounts_locations_list": [],
+            "mbinfo_locations_get": [],
+            "bpperf_locations_get_daily_metr": [],
+            "bpperf_locations_fetch_multi_da": [],
+            "bpperf_loca_sear_impr_mont_list": [],
+            "mbverify_location_verifica_list": [],
+            "mbinfo_locations_patch": []
+          },
+          "notes": {
+            "mbaccount_accounts_list": "The Business Profile accounts the signed-in user can manage. Start here. Google's Business Profile Discovery documents list no OAuth scope, so these tools declare none and no login profile adds business.manage for them (as in the all toolset).",
+            "mbinfo_accounts_locations_list": "The locations of an account; readMask names the fields to return, such as name,title,storefrontAddress.",
+            "mbinfo_locations_get": "One location with the fields readMask names: hours, categories, phone, website and so on.",
+            "bpperf_locations_get_daily_metr": "One daily metric of a location over a date range, such as calls or website clicks.",
+            "bpperf_locations_fetch_multi_da": "Several daily metrics of a location over a date range in one call.",
+            "bpperf_loca_sear_impr_mont_list": "The search keywords that showed the location, with monthly impressions.",
+            "mbverify_location_verifica_list": "The verifications of a location and their state.",
+            "mbinfo_locations_patch": "Changes the fields updateMask names. A write, so it asks first; the change is public on Google Search and Maps."
+          }
+        }
+      },
       "generatedToolCount": 51
     },
     "gads": {
@@ -2720,6 +2903,35 @@
           "version": "v26"
         }
       ],
+      "toolsets": {
+        "google": {
+          "source": [
+            "https://developers.google.com/google-ads/api/docs/developer-toolkit/mcp-server",
+            "https://github.com/googleads/google-ads-mcp"
+          ],
+          "tools": [
+            "ads_list_customers",
+            "ads_search",
+            "ads_resource_metadata"
+          ],
+          "matches": {
+            "ads_list_customers": [
+              "list_accessible_customers"
+            ],
+            "ads_search": [
+              "search"
+            ],
+            "ads_resource_metadata": [
+              "get_resource_metadata"
+            ]
+          },
+          "notes": {
+            "ads_list_customers": "The customer resource names the signed-in user can reach; the digits are the customer_id of the other tools. Google's server exposes it as customers_list_accessible_customers.",
+            "ads_search": "One page of GAQL, at most 500 rows, given as text or as fields, resource, conditions, orderings and limit (Google's structured form, with PARAMETERS omit_unselected_resource_names=true). It calls googleAds:search, not searchStream, and never sends pageSize. Google's server is read-only, so ads_mutate (validate first, then gated changes) is not in this list; it stays in the all and curated toolsets. The manager account is GSM_ADS_LOGIN_CUSTOMER_ID, not a per-call login_customer_id.",
+            "ads_resource_metadata": "The two field queries Google's get_resource_metadata runs (the resource's attributes, then every field selectable with it), as selectable, filterable and sortable name lists."
+          }
+        }
+      },
       "generatedToolCount": 323
     },
     "gmerchant": {
@@ -2846,6 +3058,82 @@
           "version": "reports_v1beta"
         }
       ],
+      "toolsets": {
+        "google": {
+          "source": "https://developers.google.com/merchant/api/guides/agentic-tools/merchant-data-mcp",
+          "tools": [
+            "merchantap_accounts_list",
+            "merchantap_accounts_issues_list",
+            "merchantap_account_program_list",
+            "merchantap_accoun_automa_get_au",
+            "merchantap_acco_produ_list_6ad8",
+            "merchantap_account_products_get",
+            "merchantap_account_aggrega_list",
+            "merchantap_accoun_report_search",
+            "merchantap_account_data_so_list",
+            "merchantap_account_data_sou_get",
+            "merchantap_accoun_data_s_create",
+            "merchantap_accoun_data_so_fetch",
+            "merchantap_accou_data_file_get"
+          ],
+          "matches": {
+            "merchantap_accounts_list": [
+              "list_accounts"
+            ],
+            "merchantap_accounts_issues_list": [
+              "list_account_issues"
+            ],
+            "merchantap_account_program_list": [
+              "list_programs"
+            ],
+            "merchantap_accoun_automa_get_au": [
+              "get_automatic_improvements"
+            ],
+            "merchantap_acco_produ_list_6ad8": [
+              "list_products"
+            ],
+            "merchantap_account_products_get": [
+              "get_product_by_name"
+            ],
+            "merchantap_account_aggrega_list": [
+              "list_aggregate_product_statuses"
+            ],
+            "merchantap_accoun_report_search": [
+              "report_search"
+            ],
+            "merchantap_account_data_so_list": [
+              "list_data_sources"
+            ],
+            "merchantap_account_data_sou_get": [
+              "get_data_source"
+            ],
+            "merchantap_accoun_data_s_create": [
+              "create_data_source"
+            ],
+            "merchantap_accoun_data_so_fetch": [
+              "fetch_data_source"
+            ],
+            "merchantap_accou_data_file_get": [
+              "get_file_upload"
+            ]
+          },
+          "notes": {
+            "merchantap_accounts_list": "The Merchant Center accounts the service account can reach (accounts.list). Start here for an account id.",
+            "merchantap_accounts_issues_list": "Account-level issues that affect the whole account.",
+            "merchantap_account_program_list": "Programs, such as free listings and Shopping ads, with their state, regions and unmet requirements.",
+            "merchantap_accoun_automa_get_au": "Automatic improvement settings: item updates, image improvements and shipping improvements.",
+            "merchantap_acco_produ_list_6ad8": "The products of an account, a page at a time (products.list; the name ends in a hash because of the 64-character budget).",
+            "merchantap_account_products_get": "One product by its exact resource name, accounts/{account}/products/{product}.",
+            "merchantap_account_aggrega_list": "Product issues aggregated by reporting context and country, for the health of the product data.",
+            "merchantap_accoun_report_search": "A Merchant reports query (product performance, statuses, price insights, competitive visibility) in the Merchant Center Query Language.",
+            "merchantap_account_data_so_list": "The data sources of an account.",
+            "merchantap_account_data_sou_get": "One data source.",
+            "merchantap_accoun_data_s_create": "Creates a data source. A write, so it asks first.",
+            "merchantap_accoun_data_so_fetch": "Fetches and processes a data source's file now. Google says it triggers processing; the classifier counts this POST as a read, so it does not ask. Changing that kind is a separate change (D2).",
+            "merchantap_accou_data_file_get": "The latest file upload of a data source and its processing state (accounts/{account}/dataSources/{datasource}/fileUploads/latest)."
+          }
+        }
+      },
       "generatedToolCount": 154
     },
     "gplay": {

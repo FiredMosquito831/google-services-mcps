@@ -198,6 +198,13 @@
           "version": "v26"
         }
       ],
+      "toolsets": {
+        "google": [
+          "ads_list_customers",
+          "ads_search",
+          "ads_resource_metadata"
+        ]
+      },
       "scopes": [
         "https://www.googleapis.com/auth/adwords"
       ],

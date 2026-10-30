@@ -33,7 +33,8 @@ Access comes from the Cloud project of the OAuth client. The project needs a Goo
 | Area | Tools | Safety | What it does |
 |---|---|---|---|
 | Accounts (hand-written) | `ads_list_customers` | read | List the Google Ads accounts the user can reach |
-| Reporting (hand-written) | `ads_search` | read | Run a read-only GAQL query. It accepts SELECT only. |
+| Reporting (hand-written) | `ads_search` | read | Run a read-only GAQL query, as text or as fields, resource, conditions, orderings and limit. It accepts SELECT only. |
+| Fields (hand-written) | `ads_resource_metadata` | read | The fields a resource can select, filter by and sort by |
 | Changes (hand-written) | `ads_mutate` | dynamic | Change Google Ads resources. A validate-only check asks nothing. A removal is destructive. Any other change is a write. |
 | Per-method (323) | | mixed | Google Ads API (175 methods), Search Ads 360 (161), Display & Video 360 (179), AdMob, Bid Manager |
 | Gateway (25 APIs) | `api_search`, `api_describe`, `api_call` | read, read, dynamic | AdSense, Ad Exchange Buyer II, Campaign Manager 360, Real-time Bidding, Authorized Buyers, Data Manager and others |
@@ -43,6 +44,7 @@ The full list is in `docs/capabilities/gads.md`.
 ## Example requests
 
 - "Which campaigns spent the most last month?" Claude runs `ads_search` with a GAQL SELECT. No prompt.
+- "Which fields can I report on for ad groups?" Claude runs `ads_resource_metadata` with `resource: "ad_group"`. No prompt.
 - "List the Google Ads accounts I can use." Claude runs `ads_list_customers`. No prompt.
 - "Check whether this budget change would work." Claude runs `ads_mutate` with validate-only set. It asks nothing, and nothing changes.
 - "Raise the daily budget of Brand Search to 50 USD." Claude runs `ads_mutate`. It asks first. The change is live on the account.
@@ -51,7 +53,8 @@ The full list is in `docs/capabilities/gads.md`.
 ## Safety
 
 - `ads_mutate` can change live campaigns. Validate first, then approve the real change.
-- `ads_search` cannot change data. It rejects anything but SELECT.
+- `ads_search` cannot change data. It rejects anything but SELECT, and checks the parts of a structured query before sending it.
+- With the plugin option `toolset` set to `google`, gads lists only `ads_list_customers`, `ads_search` and `ads_resource_metadata`, the tools of Google's read-only Google Ads MCP server.
 - Reads never ask. Writes ask first. Removals ask twice.
 - The gateway reaches APIs that have no per-method tool. Check each call with `api_describe`.
 - The `confirmation` option defaults to `every-change`. Change it with `printf '%s' '{"confirmation":"destructive-only"}' | claude plugin configure gads@google-services-mcps --values-stdin` (JSON on stdin), or `/plugin configure gads@google-services-mcps` in Claude Code.

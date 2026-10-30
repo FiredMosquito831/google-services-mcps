@@ -4,13 +4,29 @@ Google Analytics admin and data APIs for GA4 properties, configuration and repor
 
 - Plugin: `ganalytics`, MCP server: `ganalytics`, login: Desktop OAuth client, then `login business`
 - Install: `claude plugin install ganalytics@google-services-mcps`
-- Tools: 79 total. Curated 9, per-method 66, gateway 3. Read 38, write 30, destructive 10, dynamic 1.
+- Tools: 84 total. Curated 14, per-method 66, gateway 3. Read 42, write 31, destructive 10, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 79, google 79 (all), curated 12 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 84, google 18, curated 17 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
 
-## Curated tools (9)
+## Toolset google (9)
+
+The tools that match Google's official MCP server for this product (https://github.com/googleanalytics/google-analytics-mcp).
+
+| Tool | Google's tool | Note |
+|---|---|---|
+| `gaadmin_account_summarie_list` | `get_account_summaries` | The accounts and properties the signed-in user can see (Admin API v1beta accountSummaries.list). Start here for a property id. |
+| `gaadmin_properties_get` | `get_property_details` | One property's details: name, time zone, currency, industry, service level (Admin API v1beta). |
+| `gaadmin_propert_google_a_list` | `list_google_ads_links` | The Google Ads accounts linked to a property (Admin API v1beta). |
+| `gadata_properties_get_metadat` | `get_custom_dimensions_and_metrics` | Every dimension and metric the property can report on, custom ones flagged with customDefinition; Google's tool returns only the custom ones. Pass name properties/<id>/metadata. |
+| `ga_run_report` | `run_report`, `run_conversions_report` | A report with rows keyed by dimension and metric name, row_count, next_offset and, on request, the property's quota. With conversion_spec it runs Google's conversions report on Data API v1alpha, as run_conversions_report does. |
+| `ga_run_realtime_report` | `run_realtime_report` | The last 30 minutes. The Data API has no offset for realtime reports, so there is none here (Google's tool lists one). |
+| `ga_run_funnel_report` | `run_funnel_report` | Data API v1alpha runFunnelReport, which no generated tool or gateway method of this server reaches; steps as event names or filter expressions. |
+| `ga_annotations_list` | `list_property_annotations` | Admin API v1alpha, which the generated tools do not cover (it is a gateway API here). |
+| `ga_annotation_create` | `create_property_annotation` | A write: it asks first, and the approval shows the exact annotation. Needs analytics.edit, which Google's server asks for only with --allow-write. |
+
+## Curated tools (14)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
@@ -22,6 +38,11 @@ Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 79, google 79 (all), 
 | `auth_setup_client` | write | Save the Google OAuth client | (none) |
 | `auth_setup_service_account` | write | Set up the service account key | (none) |
 | `auth_status` | read | Sign-in status | (none) |
+| `ga_annotation_create` | write | Create a Google Analytics annotation | analytics.edit |
+| `ga_annotations_list` | read | List Google Analytics annotations | analytics.edit, analytics.readonly |
+| `ga_run_funnel_report` | read | Run a Google Analytics funnel report | analytics, analytics.readonly |
+| `ga_run_realtime_report` | read | Run a Google Analytics realtime report | analytics, analytics.readonly |
+| `ga_run_report` | read | Run a Google Analytics report | analytics, analytics.readonly |
 | `health` | read | Server health | (none) |
 
 ## Per-method tools (66)

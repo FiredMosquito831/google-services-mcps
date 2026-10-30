@@ -2,6 +2,54 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.19.0 - 2026-10-30
+
+### New: lean google toolsets for Tag Manager, YouTube and Business Profile
+- Google has no official MCP server for these products (none was found on 2026-10-29), so their `google` toolset is a small set of existing tools chosen here. Each tool has a note in `config/products.json`. No tool is added or changed.
+- gtm (13): accounts, containers and workspaces; tags, triggers and variables, list and get; the live version and the version headers; `tagmgr_accounts_containe_workspac_create_ve` and `tagmgr_accounts_containers_versions_publish` (writes). `readonly`: `tagmanager.readonly`; `readwrite`: `tagmanager.edit.containers`, `tagmanager.edit.containerversions`, `tagmanager.publish`.
+- gyoutube (10): search, channels, videos, playlists, playlist items, comment threads, captions, `ytanalyt_reports_query`, and `youtube_videos_update` and `youtube_comments_insert` (writes). `readonly`: `youtube.readonly` (comment threads and captions need `youtube.force-ssl`, which has no read-only form); `readwrite`: `youtube`, `youtube.force-ssl`.
+- gbusiness (8): accounts, locations list and get, daily metrics (one or several), search keyword impressions, verifications, and `mbinfo_locations_patch` (write). Google's Business Profile Discovery documents list no OAuth scope, so these tools declare none, here as in `all`.
+
+### Not changed
+- The tools these plugins list with `all`, their schemas, scopes of the `all` toolset (every server's requirements are byte-identical), the write gate and the hook.
+- Tests that need a product without a google list use gfirebase now.
+
+## 1.18.0 - 2026-10-30
+
+### New: a google toolset for Merchant Center that matches Google's Merchant API MCP server
+- The 13 tools of Google's Merchant API MCP server (alpha) are generated tools here already; the `google` toolset of gmerchant lists them: accounts, account issues, programs, automatic improvements, products list and get, aggregate product statuses, report search, data sources list, get, create (a write) and fetch, and the latest file upload. Data only: no tool is added or changed.
+- Google says a data source fetch triggers processing. It is classified as a read here and does not ask; reviewing that kind is a separate change.
+- The service account key's scopes are fixed, so the toolset changes no scope.
+
+### Not changed
+- The tools gmerchant lists with `all`, their schemas, scopes of the `all` toolset (every server's requirements are byte-identical), the write gate and the hook.
+
+## 1.17.0 - 2026-10-30
+
+### New: Google Analytics tools that match Google's Google Analytics MCP server
+Each description names the Google tool it matches.
+- `ga_run_report` (`run_report`, and `run_conversions_report` with `conversion_spec`): metrics by dimensions over date ranges, with the Data API's filters and orders, `limit`, `offset`, a currency and the property's quota on request. Rows come back as objects keyed by the dimension and metric names, with `row_count` and `next_offset`. The conversions report runs on the Data API v1alpha.
+- `ga_run_realtime_report` (`run_realtime_report`): the last 30 minutes, rows keyed by name. No offset: the Data API has none for realtime reports.
+- `ga_run_funnel_report` (`run_funnel_report`): Data API v1alpha, which nothing in the plugin reached before. Steps as event names or filter expressions; open or closed, breakdown, next action, trended; the funnel table and visualization.
+- `ga_annotations_list` (`list_property_annotations`) and `ga_annotation_create` (`create_property_annotation`): Admin API v1alpha. The create is a write: it checks the dates first, asks, and the approval shows the exact annotation.
+- The reports are declared reads, as Google's server marks them. The kinds of the generated and gateway methods are not changed (`batchRunPivotReports` and `audienceExports.query` stay writes until their own change).
+- The `google` toolset of ganalytics: these five and the generated account summaries, property details, Google Ads links and metadata tools (9 tools for Google's 10). A `readonly` login with it asks for `analytics.readonly`; a `readwrite` login for `analytics.readonly` and `analytics.edit`.
+
+### Not changed
+- Scopes of the `all` toolset (ganalytics' resolve the same; its login requirements grow by the five tools), the gateway, the write gate and the hook. Every other plugin lists the same tools with the same schemas.
+- Not tested against the live Google Analytics APIs (Google's HTTP layer stubbed; the request shapes are checked against Google's Discovery documents).
+
+## 1.16.0 - 2026-10-30
+
+### New: Google Ads tools that match Google's Google Ads MCP server
+- `ads_search` (`search`) also takes the query as parts, as Google's server does: `fields`, `resource`, `conditions` (joined with AND), `orderings` and `limit`. The tool writes the SELECT, with `PARAMETERS omit_unselected_resource_names=true`, and returns it with the rows. Field and resource names must be plain GAQL names, and a condition may not hold SELECT, FROM, WHERE, ORDER, LIMIT, PARAMETERS or a semicolon outside a quoted value; both are checked before anything is sent. A query given as text works as before, and `pageSize` is still never sent.
+- `ads_resource_metadata` (`get_resource_metadata`): the fields a resource can select, filter by and sort by, from the two field queries Google's tool runs (the resource's attributes, then every field selectable with it). A read.
+- The `google` toolset of gads: `ads_list_customers`, `ads_search` and `ads_resource_metadata`. Google's server is read-only, so `ads_mutate` is not in it (it stays in `all` and `curated`). Google Ads has no read-only scope: a `readwrite` login with it asks for `adwords`; a `readonly` login covers none of the three, as with `all`.
+
+### Not changed
+- `ads_list_customers` and `ads_mutate`, scopes of the `all` toolset (gads' resolve the same; its login requirements grow by one tool), the gateway, the write gate and the hook. Every other plugin lists the same tools with the same schemas.
+- Not tested against the live Google Ads API (Google's HTTP layer stubbed; the request shapes are checked against Google's Discovery document).
+
 ## 1.15.0 - 2026-10-30
 
 ### New: lean google toolsets for Meet, Tasks and Keep, and Apps Script

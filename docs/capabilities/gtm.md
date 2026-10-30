@@ -8,7 +8,27 @@ Google Tag Manager accounts, containers, tags, triggers and variables.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 119, google 119 (all), curated 12 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 119, google 22, curated 12 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+
+## Toolset google (13)
+
+Google has no official MCP server for this product. The google toolset is a lean set chosen here: No official Google MCP server for Google Tag Manager was found (Google's Cloud and Workspace MCP lists and Google's GitHub organisations, 2026-10-29; a negative, not confirmed by Google); a lean set chosen here..
+
+| Tool | Google's tool | Note |
+|---|---|---|
+| `tagmgr_accounts_list` | (none) | The Tag Manager accounts the signed-in user can see. Start here. |
+| `tagmgr_accounts_containers_list` | (none) | The containers of an account (web, iOS, Android, AMP, server) with their public ids (GTM-XXXX). |
+| `tagmgr_accounts_containers_workspaces_list` | (none) | The workspaces of a container. Changes are made in a workspace, saved as a version, then published. |
+| `tagmgr_accounts_containe_workspac_tags_list` | (none) | The tags of a workspace. |
+| `tagmgr_accounts_containe_workspace_tags_get` | (none) | One tag with its type, parameters and firing and blocking triggers. |
+| `tagmgr_account_contain_workspa_trigger_list` | (none) | The triggers of a workspace. |
+| `tagmgr_account_contain_workspa_triggers_get` | (none) | One trigger with its type and filters. |
+| `tagmgr_account_contain_workspa_variabl_list` | (none) | The user-defined variables of a workspace. |
+| `tagmgr_account_contain_workspa_variable_get` | (none) | One variable with its type and parameters. |
+| `tagmgr_accounts_containers_versions_live` | (none) | The version that is live now, with its tags, triggers and variables. |
+| `tagmgr_accounts_containers_version_hea_list` | (none) | The versions of a container as headers: name, number and counts. |
+| `tagmgr_accounts_containe_workspac_create_ve` | (none) | Saves a workspace as a new container version. A write, so it asks first; nothing goes live. |
+| `tagmgr_accounts_containers_versions_publish` | (none) | Publishes a version: it goes live on every site or app that loads the container. A write, so it asks first; check the version before. |
 
 ## Curated tools (9)
 

@@ -32,6 +32,8 @@ You need a GA4 property ID and an account with access to that property. Start wi
 
 | Area | Tools | Safety | What it does |
 |---|---|---|---|
+| Reports (hand-written) | `ga_run_report`, `ga_run_realtime_report`, `ga_run_funnel_report` | read | Run a report, a realtime report or a funnel report; rows come back keyed by dimension and metric name |
+| Annotations (hand-written) | `ga_annotations_list`, `ga_annotation_create` | read, write | List a property's annotations, or add one for a date or a date range |
 | Reports (Data API) | run access report, report calls | read | Run GA4 reports and read the data |
 | Accounts and properties (read) | account, property, data stream, conversion event, custom dimension list and get | read | Read the property setup |
 | Setup changes (write) | create and patch properties, data streams, conversion events, custom dimensions | write | Change property setup |
@@ -42,9 +44,14 @@ You need a GA4 property ID and an account with access to that property. Start wi
 
 The full list is in `docs/capabilities/ganalytics.md`.
 
+The five hand-written tools match tools of Google's Google Analytics MCP server (https://github.com/googleanalytics/google-analytics-mcp): `run_report` and `run_conversions_report` (`ga_run_report`, with `conversion_spec` for the conversions report on the Data API v1alpha), `run_realtime_report`, `run_funnel_report` (Data API v1alpha), `list_property_annotations` and `create_property_annotation` (Admin API v1alpha). With the plugin option `toolset: google`, the server lists these five, the generated account summaries, property, Google Ads links and metadata tools (Google's other four tools), `health` and the sign-in tools. A `readonly` login with that toolset asks for `analytics.readonly`; a `readwrite` login adds `analytics.edit` for the annotation write, as Google's server does with `--allow-write`.
+
 ## Example requests
 
-- "What were my top 10 landing pages last month?" Claude runs a Data API report. No prompt.
+- "What were my top 10 landing pages last month?" Claude runs `ga_run_report` with `dimensions: ["landingPage"]`, `metrics: ["sessions"]`, an order and `limit: 10`. No prompt.
+- "How many people are on the site right now, by country?" Claude runs `ga_run_realtime_report`. No prompt.
+- "How many visitors went from the product page to checkout to purchase last month?" Claude runs `ga_run_funnel_report` with three steps. No prompt.
+- "Mark 1 October as the new site launch." Claude runs `ga_annotation_create`. It asks first, and the approval shows the annotation.
 - "List my GA4 properties and their data streams." Claude runs the account and property reads. No prompt.
 - "Add a conversion event named signup on property 123." Claude runs the conversion event create tool. It asks first.
 - "Delete the old test data stream." Claude runs the data stream delete tool. It asks twice.

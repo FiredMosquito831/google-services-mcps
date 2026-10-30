@@ -9,10 +9,10 @@ const here = dirname(fileURLToPath(import.meta.url));
 const dist = (p) => new URL(`../dist/${p}`, import.meta.url).href;
 
 // Every hand-written (curated) module. Each one exports buildTools and nothing that starts a server.
-const MODULES = ['cloud', 'gmail', 'gdrive', 'gcalendar', 'workspace-admin', 'searchconsole', 'gchat', 'gcontacts', 'gclassroom'];
+const MODULES = ['cloud', 'gmail', 'gdrive', 'gcalendar', 'workspace-admin', 'searchconsole', 'gchat', 'gcontacts', 'gclassroom', 'ganalytics'];
 // The product modules that must hold only their own area's tools.
-const AREA_PREFIX = { gmail: ['gmail'], gdrive: ['drive', 'sheets'], gcalendar: ['calendar'], gchat: ['chat'], gcontacts: ['contacts', 'profile'], gclassroom: ['classroom'] };
-const EXPECTED_COUNT = { gmail: 15, gdrive: 12, gcalendar: 9, gchat: 7, gcontacts: 3, gclassroom: 14 };
+const AREA_PREFIX = { gmail: ['gmail'], gdrive: ['drive', 'sheets'], gcalendar: ['calendar'], gchat: ['chat'], gcontacts: ['contacts', 'profile'], gclassroom: ['classroom'], ganalytics: ['ga'] };
+const EXPECTED_COUNT = { gmail: 15, gdrive: 12, gcalendar: 9, gchat: 7, gcontacts: 3, gclassroom: 14, ganalytics: 5 };
 const KINDS = new Set(['read', 'write', 'destructive']);
 
 const dir = mkdtempSync(join(tmpdir(), 'gsm-curated-'));
