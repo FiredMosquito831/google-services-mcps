@@ -8,7 +8,22 @@ Business Profile accounts, locations, verifications, lodging, place actions, not
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 61, google 61 (all), curated 61 (all) tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 61, google 17, curated 61 (all) tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+
+## Toolset google (8)
+
+Google has no official MCP server for this product. The google toolset is a lean set chosen here: No official Google MCP server for Google Business Profile was found (Google's Cloud and Workspace MCP lists and Google's GitHub organisations, 2026-10-29; a negative, not confirmed by Google); a lean set chosen here..
+
+| Tool | Google's tool | Note |
+|---|---|---|
+| `mbaccount_accounts_list` | (none) | The Business Profile accounts the signed-in user can manage. Start here. Google's Business Profile Discovery documents list no OAuth scope, so these tools declare none and no login profile adds business.manage for them (as in the all toolset). |
+| `mbinfo_accounts_locations_list` | (none) | The locations of an account; readMask names the fields to return, such as name,title,storefrontAddress. |
+| `mbinfo_locations_get` | (none) | One location with the fields readMask names: hours, categories, phone, website and so on. |
+| `bpperf_locations_get_daily_metr` | (none) | One daily metric of a location over a date range, such as calls or website clicks. |
+| `bpperf_locations_fetch_multi_da` | (none) | Several daily metrics of a location over a date range in one call. |
+| `bpperf_loca_sear_impr_mont_list` | (none) | The search keywords that showed the location, with monthly impressions. |
+| `mbverify_location_verifica_list` | (none) | The verifications of a location and their state. |
+| `mbinfo_locations_patch` | (none) | Changes the fields updateMask names. A write, so it asks first; the change is public on Google Search and Maps. |
 
 ## Curated tools (9)
 

@@ -48,6 +48,8 @@ The email on the request must be an owner or manager of the listing, and the web
 
 The full list is in `docs/capabilities/gbusiness.md`.
 
+Google has no official MCP server for Business Profile. With the plugin option `toolset: google`, the server lists a small set chosen here: accounts, locations list and get, daily metrics, search keyword impressions, verifications and a location update, plus `health` and the sign-in tools. Google's Business Profile Discovery documents list no OAuth scope, so these tools declare none, as in the `all` toolset.
+
 ## Example requests
 
 - "Show the hours and categories for our Denver location." Claude runs a location read. No prompt.

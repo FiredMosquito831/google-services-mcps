@@ -158,9 +158,38 @@ test('requirements: curated keeps the curated tools and, with api_call, the gate
 test('requirements: a toolset a product does not have counts every tool, and says so', async () => {
   const { cfg } = tempTokens();
   const lines = [];
-  const google = await requirementsFor(['gyoutube'], cfg, { warn: (l) => lines.push(l), toolset: 'google' });
-  assert.deepEqual(google, await requirementsFor(['gyoutube'], cfg, quiet));
-  assert.deepEqual(lines, ['[gyoutube] toolset google is not defined for this product yet; every tool counts toward the scopes.']);
+  // gfirebase has no google list (gyoutube has a lean one since 1.19.0).
+  const google = await requirementsFor(['gfirebase'], cfg, { warn: (l) => lines.push(l), toolset: 'google' });
+  assert.deepEqual(google, await requirementsFor(['gfirebase'], cfg, quiet));
+  assert.deepEqual(lines, ['[gfirebase] toolset google is not defined for this product yet; every tool counts toward the scopes.']);
+});
+
+test('requirements: the lean gtm, gyoutube and gbusiness lists resolve to the narrow scopes of their tools', async () => {
+  const { cfg } = tempTokens();
+  // Saving a version needs tagmanager.edit.containerversions and publishing tagmanager.publish; neither has a read-only form.
+  const GTM_READWRITE = [G('tagmanager.edit.containers'), G('tagmanager.edit.containerversions'), G('tagmanager.publish')];
+  const YT_READONLY = [G('youtube.readonly')];
+  const YT_READWRITE = [G('youtube'), G('youtube.force-ssl')];
+  const resolved = async (id) => {
+    const reqs = await requirementsFor([id], cfg, { ...quiet, toolset: 'google' });
+    return { n: reqs.length, gateway: reqs.filter((r) => r.gateway).length, readonly: resolveScopes(reqs, 'readonly'), readwrite: resolveScopes(reqs, 'readwrite').scopes };
+  };
+  const gtm = await resolved('gtm');
+  assert.equal(gtm.n, 13);
+  assert.equal(gtm.gateway, 0, 'the tagmanager v1 gateway does not count: no api_call in the list');
+  assert.deepEqual(gtm.readonly.scopes, [G('tagmanager.readonly')]);
+  assert.deepEqual(gtm.readwrite, GTM_READWRITE);
+  const yt = await resolved('gyoutube');
+  assert.equal(yt.n, 10);
+  assert.deepEqual(yt.readonly.scopes, YT_READONLY);
+  // commentThreads.list and captions.list list only youtube.force-ssl (or youtubepartner), which have no read-only form.
+  for (const tool of ['youtube_comment_threads_list', 'youtube_captions_list']) assert.ok(yt.readonly.uncovered.includes(`gyoutube/${tool}`), tool);
+  assert.deepEqual(yt.readwrite, YT_READWRITE);
+  const gb = await resolved('gbusiness');
+  assert.equal(gb.n, 8);
+  // Google's Business Profile Discovery documents list no scope, so neither do these tools (as in the all toolset).
+  assert.deepEqual(gb.readonly.scopes, []);
+  assert.deepEqual(gb.readwrite, []);
 });
 
 test('requirements: the lean gsc google list resolves to webmasters.readonly (readonly) and webmasters with indexing (readwrite)', async () => {

@@ -2,6 +2,18 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.19.0 - 2026-10-30
+
+### New: lean google toolsets for Tag Manager, YouTube and Business Profile
+- Google has no official MCP server for these products (none was found on 2026-10-29), so their `google` toolset is a small set of existing tools chosen here. Each tool has a note in `config/products.json`. No tool is added or changed.
+- gtm (13): accounts, containers and workspaces; tags, triggers and variables, list and get; the live version and the version headers; `tagmgr_accounts_containe_workspac_create_ve` and `tagmgr_accounts_containers_versions_publish` (writes). `readonly`: `tagmanager.readonly`; `readwrite`: `tagmanager.edit.containers`, `tagmanager.edit.containerversions`, `tagmanager.publish`.
+- gyoutube (10): search, channels, videos, playlists, playlist items, comment threads, captions, `ytanalyt_reports_query`, and `youtube_videos_update` and `youtube_comments_insert` (writes). `readonly`: `youtube.readonly` (comment threads and captions need `youtube.force-ssl`, which has no read-only form); `readwrite`: `youtube`, `youtube.force-ssl`.
+- gbusiness (8): accounts, locations list and get, daily metrics (one or several), search keyword impressions, verifications, and `mbinfo_locations_patch` (write). Google's Business Profile Discovery documents list no OAuth scope, so these tools declare none, here as in `all`.
+
+### Not changed
+- The tools these plugins list with `all`, their schemas, scopes of the `all` toolset (every server's requirements are byte-identical), the write gate and the hook.
+- Tests that need a product without a google list use gfirebase now.
+
 ## 1.18.0 - 2026-10-30
 
 ### New: a google toolset for Merchant Center that matches Google's Merchant API MCP server

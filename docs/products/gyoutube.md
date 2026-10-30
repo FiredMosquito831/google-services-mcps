@@ -44,6 +44,8 @@ Start with `--profile readonly`. Insert, update and delete always need user auth
 
 The full list is in `docs/capabilities/gyoutube.md`.
 
+Google has no official MCP server for YouTube. With the plugin option `toolset: google`, the server lists a small set chosen here: search, channels, videos, playlists, playlist items, comment threads, caption tracks, YouTube Analytics reports, a video update and a comment reply, plus `health` and the sign-in tools. Blogger stays in the `all` toolset.
+
 ## Example requests
 
 - "Show the top 10 comments on my last video." Claude runs a comment threads read. No prompt.

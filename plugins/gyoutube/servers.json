@@ -31,6 +31,20 @@
           "version": "v3"
         }
       ],
+      "toolsets": {
+        "google": [
+          "youtube_search_list",
+          "youtube_channels_list",
+          "youtube_videos_list",
+          "youtube_playlists_list",
+          "youtube_playlist_items_list",
+          "youtube_comment_threads_list",
+          "youtube_captions_list",
+          "ytanalyt_reports_query",
+          "youtube_videos_update",
+          "youtube_comments_insert"
+        ]
+      },
       "label": "YouTube and Blogger: YouTube Data, YouTube Analytics and YouTube Reporting APIs, plus Blogger."
     }
   ],

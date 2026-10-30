@@ -2512,6 +2512,56 @@
           "version": "v1"
         }
       ],
+      "toolsets": {
+        "google": {
+          "source": "No official Google MCP server for Google Tag Manager was found (Google's Cloud and Workspace MCP lists and Google's GitHub organisations, 2026-10-29; a negative, not confirmed by Google); a lean set chosen here.",
+          "tools": [
+            "tagmgr_accounts_list",
+            "tagmgr_accounts_containers_list",
+            "tagmgr_accounts_containers_workspaces_list",
+            "tagmgr_accounts_containe_workspac_tags_list",
+            "tagmgr_accounts_containe_workspace_tags_get",
+            "tagmgr_account_contain_workspa_trigger_list",
+            "tagmgr_account_contain_workspa_triggers_get",
+            "tagmgr_account_contain_workspa_variabl_list",
+            "tagmgr_account_contain_workspa_variable_get",
+            "tagmgr_accounts_containers_versions_live",
+            "tagmgr_accounts_containers_version_hea_list",
+            "tagmgr_accounts_containe_workspac_create_ve",
+            "tagmgr_accounts_containers_versions_publish"
+          ],
+          "matches": {
+            "tagmgr_accounts_list": [],
+            "tagmgr_accounts_containers_list": [],
+            "tagmgr_accounts_containers_workspaces_list": [],
+            "tagmgr_accounts_containe_workspac_tags_list": [],
+            "tagmgr_accounts_containe_workspace_tags_get": [],
+            "tagmgr_account_contain_workspa_trigger_list": [],
+            "tagmgr_account_contain_workspa_triggers_get": [],
+            "tagmgr_account_contain_workspa_variabl_list": [],
+            "tagmgr_account_contain_workspa_variable_get": [],
+            "tagmgr_accounts_containers_versions_live": [],
+            "tagmgr_accounts_containers_version_hea_list": [],
+            "tagmgr_accounts_containe_workspac_create_ve": [],
+            "tagmgr_accounts_containers_versions_publish": []
+          },
+          "notes": {
+            "tagmgr_accounts_list": "The Tag Manager accounts the signed-in user can see. Start here.",
+            "tagmgr_accounts_containers_list": "The containers of an account (web, iOS, Android, AMP, server) with their public ids (GTM-XXXX).",
+            "tagmgr_accounts_containers_workspaces_list": "The workspaces of a container. Changes are made in a workspace, saved as a version, then published.",
+            "tagmgr_accounts_containe_workspac_tags_list": "The tags of a workspace.",
+            "tagmgr_accounts_containe_workspace_tags_get": "One tag with its type, parameters and firing and blocking triggers.",
+            "tagmgr_account_contain_workspa_trigger_list": "The triggers of a workspace.",
+            "tagmgr_account_contain_workspa_triggers_get": "One trigger with its type and filters.",
+            "tagmgr_account_contain_workspa_variabl_list": "The user-defined variables of a workspace.",
+            "tagmgr_account_contain_workspa_variable_get": "One variable with its type and parameters.",
+            "tagmgr_accounts_containers_versions_live": "The version that is live now, with its tags, triggers and variables.",
+            "tagmgr_accounts_containers_version_hea_list": "The versions of a container as headers: name, number and counts.",
+            "tagmgr_accounts_containe_workspac_create_ve": "Saves a workspace as a new container version. A write, so it asks first; nothing goes live.",
+            "tagmgr_accounts_containers_versions_publish": "Publishes a version: it goes live on every site or app that loads the container. A write, so it asks first; check the version before."
+          }
+        }
+      },
       "generatedToolCount": 106
     },
     "gyoutube": {
@@ -2541,6 +2591,47 @@
         }
       ],
       "gateway": [],
+      "toolsets": {
+        "google": {
+          "source": "No official Google MCP server for YouTube was found (Google's Cloud and Workspace MCP lists and Google's GitHub organisations, 2026-10-29; a negative, not confirmed by Google); a lean set chosen here.",
+          "tools": [
+            "youtube_search_list",
+            "youtube_channels_list",
+            "youtube_videos_list",
+            "youtube_playlists_list",
+            "youtube_playlist_items_list",
+            "youtube_comment_threads_list",
+            "youtube_captions_list",
+            "ytanalyt_reports_query",
+            "youtube_videos_update",
+            "youtube_comments_insert"
+          ],
+          "matches": {
+            "youtube_search_list": [],
+            "youtube_channels_list": [],
+            "youtube_videos_list": [],
+            "youtube_playlists_list": [],
+            "youtube_playlist_items_list": [],
+            "youtube_comment_threads_list": [],
+            "youtube_captions_list": [],
+            "ytanalyt_reports_query": [],
+            "youtube_videos_update": [],
+            "youtube_comments_insert": []
+          },
+          "notes": {
+            "youtube_search_list": "Search YouTube for videos, channels and playlists. Each call costs 100 units of the project's daily YouTube quota.",
+            "youtube_channels_list": "Channels by id, by handle, or your own (mine): statistics and the id of the uploads playlist.",
+            "youtube_videos_list": "Videos by id, or the most popular chart: title, description, statistics and duration.",
+            "youtube_playlists_list": "The playlists of a channel, or by id.",
+            "youtube_playlist_items_list": "The videos of a playlist; a channel's uploads playlist lists all its videos.",
+            "youtube_comment_threads_list": "Top-level comments of a video or channel, with replies. Discovery lists only youtube.force-ssl for it, which has no read-only form, so a readonly login does not cover it.",
+            "youtube_captions_list": "The caption tracks of a video (not their text). Needs youtube.force-ssl, like the comment threads.",
+            "ytanalyt_reports_query": "YouTube Analytics for your channel: views, watch time, subscribers and more, by day, video or country.",
+            "youtube_videos_update": "Changes a video's title, description, tags, category or privacy. A write, so it asks first; the change is public.",
+            "youtube_comments_insert": "Posts a reply to a comment (parentId); a new top-level comment is commentThreads.insert, in the all toolset. A write, so it asks first; the reply is public."
+          }
+        }
+      },
       "generatedToolCount": 124
     },
     "gbusiness": {
@@ -2582,6 +2673,41 @@
         }
       ],
       "gateway": [],
+      "toolsets": {
+        "google": {
+          "source": "No official Google MCP server for Google Business Profile was found (Google's Cloud and Workspace MCP lists and Google's GitHub organisations, 2026-10-29; a negative, not confirmed by Google); a lean set chosen here.",
+          "tools": [
+            "mbaccount_accounts_list",
+            "mbinfo_accounts_locations_list",
+            "mbinfo_locations_get",
+            "bpperf_locations_get_daily_metr",
+            "bpperf_locations_fetch_multi_da",
+            "bpperf_loca_sear_impr_mont_list",
+            "mbverify_location_verifica_list",
+            "mbinfo_locations_patch"
+          ],
+          "matches": {
+            "mbaccount_accounts_list": [],
+            "mbinfo_accounts_locations_list": [],
+            "mbinfo_locations_get": [],
+            "bpperf_locations_get_daily_metr": [],
+            "bpperf_locations_fetch_multi_da": [],
+            "bpperf_loca_sear_impr_mont_list": [],
+            "mbverify_location_verifica_list": [],
+            "mbinfo_locations_patch": []
+          },
+          "notes": {
+            "mbaccount_accounts_list": "The Business Profile accounts the signed-in user can manage. Start here. Google's Business Profile Discovery documents list no OAuth scope, so these tools declare none and no login profile adds business.manage for them (as in the all toolset).",
+            "mbinfo_accounts_locations_list": "The locations of an account; readMask names the fields to return, such as name,title,storefrontAddress.",
+            "mbinfo_locations_get": "One location with the fields readMask names: hours, categories, phone, website and so on.",
+            "bpperf_locations_get_daily_metr": "One daily metric of a location over a date range, such as calls or website clicks.",
+            "bpperf_locations_fetch_multi_da": "Several daily metrics of a location over a date range in one call.",
+            "bpperf_loca_sear_impr_mont_list": "The search keywords that showed the location, with monthly impressions.",
+            "mbverify_location_verifica_list": "The verifications of a location and their state.",
+            "mbinfo_locations_patch": "Changes the fields updateMask names. A write, so it asks first; the change is public on Google Search and Maps."
+          }
+        }
+      },
       "generatedToolCount": 51
     },
     "gads": {

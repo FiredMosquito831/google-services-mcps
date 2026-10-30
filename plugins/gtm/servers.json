@@ -25,6 +25,23 @@
           "version": "v1"
         }
       ],
+      "toolsets": {
+        "google": [
+          "tagmgr_accounts_list",
+          "tagmgr_accounts_containers_list",
+          "tagmgr_accounts_containers_workspaces_list",
+          "tagmgr_accounts_containe_workspac_tags_list",
+          "tagmgr_accounts_containe_workspace_tags_get",
+          "tagmgr_account_contain_workspa_trigger_list",
+          "tagmgr_account_contain_workspa_triggers_get",
+          "tagmgr_account_contain_workspa_variabl_list",
+          "tagmgr_account_contain_workspa_variable_get",
+          "tagmgr_accounts_containers_versions_live",
+          "tagmgr_accounts_containers_version_hea_list",
+          "tagmgr_accounts_containe_workspac_create_ve",
+          "tagmgr_accounts_containers_versions_publish"
+        ]
+      },
       "label": "Tag Manager: Google Tag Manager accounts, containers, tags, triggers and variables."
     }
   ],

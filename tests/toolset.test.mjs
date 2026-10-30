@@ -154,6 +154,46 @@ const MERCHANT_GOOGLE = [
   'merchantap_accoun_data_so_fetch',
   'merchantap_accou_data_file_get',
 ];
+/** The lean lists of the business products with no official Google MCP server (1.19.0). */
+const BUSINESS_LEAN = {
+  gtm: [
+    'tagmgr_accounts_list',
+    'tagmgr_accounts_containers_list',
+    'tagmgr_accounts_containers_workspaces_list',
+    'tagmgr_accounts_containe_workspac_tags_list',
+    'tagmgr_accounts_containe_workspace_tags_get',
+    'tagmgr_account_contain_workspa_trigger_list',
+    'tagmgr_account_contain_workspa_triggers_get',
+    'tagmgr_account_contain_workspa_variabl_list',
+    'tagmgr_account_contain_workspa_variable_get',
+    'tagmgr_accounts_containers_versions_live',
+    'tagmgr_accounts_containers_version_hea_list',
+    'tagmgr_accounts_containe_workspac_create_ve',
+    'tagmgr_accounts_containers_versions_publish',
+  ],
+  gyoutube: [
+    'youtube_search_list',
+    'youtube_channels_list',
+    'youtube_videos_list',
+    'youtube_playlists_list',
+    'youtube_playlist_items_list',
+    'youtube_comment_threads_list',
+    'youtube_captions_list',
+    'ytanalyt_reports_query',
+    'youtube_videos_update',
+    'youtube_comments_insert',
+  ],
+  gbusiness: [
+    'mbaccount_accounts_list',
+    'mbinfo_accounts_locations_list',
+    'mbinfo_locations_get',
+    'bpperf_locations_get_daily_metr',
+    'bpperf_locations_fetch_multi_da',
+    'bpperf_loca_sear_impr_mont_list',
+    'mbverify_location_verifica_list',
+    'mbinfo_locations_patch',
+  ],
+};
 /** The tools runServer adds for a server of an OAuth group. No toolset removes them. */
 const RUNTIME_OAUTH = ['account_remove', 'account_set_default', 'accounts_list', 'auth_login', 'auth_setup_client', 'auth_status', 'health'];
 
@@ -442,7 +482,8 @@ test('both registry loaders carry the toolsets: the CLI conversion of config/pro
   assert.deepEqual(reg.servers.find((s) => s.name === 'gads').toolsets, { google: ADS_GOOGLE });
   assert.deepEqual(reg.servers.find((s) => s.name === 'ganalytics').toolsets, { google: ANALYTICS_GOOGLE });
   assert.deepEqual(reg.servers.find((s) => s.name === 'gmerchant').toolsets, { google: MERCHANT_GOOGLE });
-  assert.equal(reg.servers.find((s) => s.name === 'gyoutube').toolsets, undefined);
+  for (const [id, tools] of Object.entries(BUSINESS_LEAN)) assert.deepEqual(reg.servers.find((s) => s.name === id).toolsets, { google: tools }, id);
+  assert.equal(reg.servers.find((s) => s.name === 'gfirebase').toolsets, undefined);
   const plugin = loadRegistryFile(join(ROOT, 'plugins', 'gmail', 'servers.json'));
   assert.deepEqual(plugin.servers[0].toolsets, { google: GMAIL_GOOGLE });
 });
@@ -542,16 +583,19 @@ function gmailEntry(dir) {
   return entry;
 }
 
-/** The YouTube server: generated tools only, no toolset listed. (gtasks has a lean list since 1.15.0.) */
-function gyoutubeEntry(dir) {
-  const entry = join(dir, 'gyoutube-entry.mjs');
+/**
+ * The Firebase server's generated tools, no toolset listed (developer group). gtasks has a lean list since 1.15.0 and
+ * gyoutube since 1.19.0.
+ */
+function gfirebaseEntry(dir) {
+  const entry = join(dir, 'gfirebase-entry.mjs');
   writeFileSync(
     entry,
     [
       `import { withOrigin } from '${dist('core/toolset.js')}';`,
       `import { discoveryToolsFor } from '${dist('core/discovery/tools.js')}';`,
       `import { runServer } from '${dist('core/tools.js')}';`,
-      `await runServer({ name: 'gyoutube', version: '0.0.0', buildTools: async (cfg) => withOrigin('generated', await discoveryToolsFor('gyoutube', cfg, [])) });`,
+      `await runServer({ name: 'gfirebase', version: '0.0.0', buildTools: async (cfg) => withOrigin('generated', await discoveryToolsFor('gfirebase', cfg, [])) });`,
       '',
     ].join('\n'),
   );
@@ -665,8 +709,8 @@ test('runServer: unset and all list the same tools; google lists the gmail list 
 
 test('runServer: google on a product without a list shows every tool, and health and auth_status say why', async () => {
   const dir = tempDir('gsm-toolset-fallback-');
-  const entry = gyoutubeEntry(dir);
-  const tokenDir = fakeLogin(dir, 'gyoutube', 'business');
+  const entry = gfirebaseEntry(dir);
+  const tokenDir = fakeLogin(dir, 'gfirebase', 'developer');
   const unset = await withClient(entry, childEnv(dir, tokenDir), listTools);
   await withClient(entry, childEnv(dir, tokenDir, { GSM_TOOLSET: 'google' }), async (c) => {
     assert.deepEqual(await listTools(c), unset);
@@ -762,6 +806,44 @@ function generatedEntry(dir, name) {
   );
   return entry;
 }
+
+test('the gtm, gyoutube and gbusiness google lists are lean sets: no official server, every tool says why it is kept', () => {
+  const products = readJson('config', 'products.json').products;
+  const names = { gtm: 'Google Tag Manager', gyoutube: 'YouTube', gbusiness: 'Google Business Profile' };
+  for (const [id, tools] of Object.entries(BUSINESS_LEAN)) {
+    const google = products[id].toolsets.google;
+    assert.deepEqual(google.tools, tools, id);
+    assert.ok(google.source.startsWith(`No official Google MCP server for ${names[id]} was found`), id);
+    for (const tool of tools) {
+      assert.deepEqual(google.matches[tool], [], `${id}/${tool}`);
+      assert.ok(typeof google.notes[tool] === 'string' && google.notes[tool].length > 10, `${id}/${tool} has a note`);
+    }
+  }
+  const kindOf = (id, tool) => readJson('plugins', id, 'tool-map.json').find((t) => t.name === `mcp__plugin_${id}_${id}__${tool}`).kind;
+  // The writes of the lists, and every other tool a read; no delete is in any of them.
+  const writes = ['tagmgr_accounts_containe_workspac_create_ve', 'tagmgr_accounts_containers_versions_publish', 'youtube_videos_update', 'youtube_comments_insert', 'mbinfo_locations_patch'];
+  for (const [id, tools] of Object.entries(BUSINESS_LEAN)) {
+    for (const tool of tools) assert.equal(kindOf(id, tool), writes.includes(tool) ? 'write' : 'read', `${id}/${tool}`);
+  }
+  for (const name of ['tagmgr_account_contain_workspac_tags_delete', 'youtube_videos_delete', 'mbinfo_locations_delete']) {
+    assert.equal(Object.values(BUSINESS_LEAN).flat().includes(name), false, name);
+  }
+  assert.match(products.gtm.toolsets.google.notes.tagmgr_accounts_containers_versions_publish, /goes live/);
+  assert.match(products.gbusiness.toolsets.google.notes.mbaccount_accounts_list, /list no OAuth scope/);
+});
+
+test('runServer: google on gtm, gyoutube and gbusiness lists the lean list and the runtime tools, with the same schemas as all', async () => {
+  for (const [id, tools] of Object.entries(BUSINESS_LEAN)) {
+    const dir = tempDir(`gsm-toolset-${id}-`);
+    const entry = generatedEntry(dir, id);
+    const tokenDir = fakeLogin(dir, id, 'business');
+    const unset = await withClient(entry, childEnv(dir, tokenDir), listTools);
+    const google = await withClient(entry, childEnv(dir, tokenDir, { GSM_TOOLSET: 'google' }), async (c) => ({ tools: await listTools(c), health: await health(c) }));
+    assert.deepEqual(google.tools.map((t) => t.name), [...tools, ...RUNTIME_OAUTH].sort(), id);
+    for (const t of google.tools) assert.deepEqual(t, unset.find((u) => u.name === t.name), `${id}/${t.name}`);
+    assert.deepEqual(google.health.toolset, { requested: 'google', effective: 'google', outsideToolset: unset.length - google.tools.length }, id);
+  }
+});
 
 test("the gmerchant google list covers the 13 tools of Google's Merchant API MCP server; fetch_data_source keeps today's kind", () => {
   const google = readJson('config', 'products.json').products.gmerchant.toolsets.google;
