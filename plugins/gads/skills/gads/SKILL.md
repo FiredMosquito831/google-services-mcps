@@ -49,3 +49,4 @@ Reads never ask for approval. Changes and deletions ask first, unless the user h
 - Search Ads 360 Reporting API (searchads360 v0), reached through api_search, api_describe and api_call
 - Display & Video 360 API (displayvideo v4), reached through api_search, api_describe and api_call
 - Google Ads API (googleads v26), reached through api_search, api_describe and api_call
+- Display & Video 360 API (displayvideo v5), reached through api_search, api_describe and api_call

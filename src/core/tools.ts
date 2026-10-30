@@ -25,7 +25,7 @@ import { toolMapFromDefs } from './dump.js';
 import { serverHealth } from './health.js';
 import { createSignIn, runGsmCommand, type SignInMethod, type SignInProfile } from './inchat-login.js';
 import { findGcloud } from './adc.js';
-import { apiOfMethod, policyFields, resolveScopes, type Requirement } from './scopes.js';
+import { apiOfMethod, policyFields, resolveScopes, serverPreferFields, type Requirement } from './scopes.js';
 import { fileURLToPath } from 'node:url';
 import { loadRegistry, serverByName, type AuthGroup, type ScopePolicy } from './registry.js';
 import { invocation, invocationFor, setInvocation } from './invocation.js';
@@ -427,11 +427,13 @@ export async function runServer(opts: {
   // The scopes an ADC login for this server asks for: the scopes its tools need, resolved as the OAuth login resolves them.
   // Only the tools of the toolset count (`defined`), as for the OAuth sign-in (--toolset in the child's argv).
   const adcScopesFor = (profile: SignInProfile, include: readonly string[]): string[] => {
+    const prefer = serverPreferFields(opts.name, selection.effective); // the toolset's preferred scopes, as the OAuth login takes them
     const requirements: Requirement[] = defined.map((tool) => ({
       tool: tool.name,
       kind: tool.kind,
       scopes: [...(tool.scopes ?? [])],
       ...policyFields(policy, apiOfMethod(tool.methodId)),
+      ...prefer,
     }));
     return withIdentityScope(resolveScopes(requirements, profile, include).scopes);
   };

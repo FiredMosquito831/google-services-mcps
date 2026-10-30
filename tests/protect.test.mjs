@@ -42,7 +42,8 @@ function fakeServiceKey(dir, { name = 'service-key', type = 'service_account', o
   return file;
 }
 
-function gsm(args, env, timeout = 120_000) {
+// The DPAPI runs start several PowerShell children each, which can take minutes on a loaded machine.
+function gsm(args, env, timeout = 300_000) {
   return spawnSync(process.execPath, [GSM, ...args], { env: { ...process.env, ...env }, encoding: 'utf8', timeout });
 }
 
@@ -275,7 +276,7 @@ test('gsm protect moves the secrets into the DPAPI store and back, with no plain
     const readBack = spawnSync(
       process.execPath,
       ['--input-type=module', '-e', `const { loadUserTokens } = await import(${JSON.stringify(DIST('core/auth.js'))}); const { loadConfig } = await import(${JSON.stringify(DIST('core/config.js'))}); console.log(JSON.stringify(loadUserTokens('workspace-user', loadConfig())));`],
-      { env: { ...process.env, ...env }, encoding: 'utf8', timeout: 120_000 },
+      { env: { ...process.env, ...env }, encoding: 'utf8', timeout: 300_000 },
     );
     assert.equal(readBack.status, 0, readBack.stderr);
     assert.equal(JSON.parse(readBack.stdout.trim()).refresh_token, 'rt-protect-test');

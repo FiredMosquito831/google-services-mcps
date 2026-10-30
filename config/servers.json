@@ -49,7 +49,41 @@
         },
         {
           "api": "cloudresourcemanager",
-          "version": "v3"
+          "version": "v3",
+          "include": [
+            "v3",
+            "fetchResourceSemantics",
+            "folders.create",
+            "folders.delete",
+            "folders.get",
+            "folders.getIamPolicy",
+            "folders.list",
+            "folders.move",
+            "folders.patch",
+            "folders.search",
+            "folders.setIamPolicy",
+            "folders.testIamPermissions",
+            "folders.undelete",
+            "folders.capabilityConfigs",
+            "folders.capabilities",
+            "projects",
+            "projects.capabilityConfigs",
+            "organizations.get",
+            "organizations.getIamPolicy",
+            "organizations.search",
+            "organizations.setIamPolicy",
+            "organizations.testIamPermissions",
+            "organizations.capabilityConfigs",
+            "tagValues",
+            "tagValues.tagHolds",
+            "operations",
+            "liens",
+            "tagBindings",
+            "locations.effectiveTagBindingCollections",
+            "locations.tagBindingCollections",
+            "effectiveTags",
+            "tagKeys"
+          ]
         },
         {
           "api": "apikeys",
@@ -1200,6 +1234,18 @@
         {
           "api": "workstations",
           "version": "v1beta"
+        },
+        {
+          "api": "cloudresourcemanager",
+          "version": "v3"
+        },
+        {
+          "api": "compute",
+          "version": "2026-11-01"
+        },
+        {
+          "api": "compute",
+          "version": "2026-12-01-preview"
         }
       ],
       "toolsets": {
@@ -1552,6 +1598,15 @@
           "calendar_respond"
         ]
       },
+      "toolsetScopes": {
+        "google": {
+          "readwrite": [
+            "https://www.googleapis.com/auth/calendar.events",
+            "https://www.googleapis.com/auth/calendar.calendarlist.readonly",
+            "https://www.googleapis.com/auth/calendar.events.freebusy"
+          ]
+        }
+      },
       "label": "Google Calendar: Google Calendar calendars, events and calendar settings."
     },
     {
@@ -1582,6 +1637,16 @@
           "chat_users_spaces_space_notificatio_get",
           "chat_users_spaces_space_notificat_patch"
         ]
+      },
+      "toolsetScopes": {
+        "google": {
+          "readwrite": [
+            "https://www.googleapis.com/auth/chat.spaces.readonly",
+            "https://www.googleapis.com/auth/chat.memberships.readonly",
+            "https://www.googleapis.com/auth/chat.messages.readonly",
+            "https://www.googleapis.com/auth/chat.messages.create"
+          ]
+        }
       },
       "label": "Google Chat: Google Chat spaces, messages and members, plus Workspace Events subscriptions."
     },
@@ -1654,6 +1719,13 @@
           "profile_me"
         ]
       },
+      "toolsetScopes": {
+        "google": {
+          "readwrite": [
+            "https://www.googleapis.com/auth/contacts.readonly"
+          ]
+        }
+      },
       "label": "Contacts and Profile: Google Contacts and People, personal health metrics, Data Portability, and the OAuth2 userinfo endpoints."
     },
     {
@@ -1683,6 +1755,13 @@
           "keep_notes_list",
           "keep_notes_get"
         ]
+      },
+      "toolsetScopes": {
+        "google": {
+          "readwrite": [
+            "https://www.googleapis.com/auth/keep.readonly"
+          ]
+        }
       },
       "label": "Tasks and Keep: Google Tasks task lists and tasks, plus Google Keep notes."
     },
@@ -1721,6 +1800,15 @@
           "classroom_create_announcement",
           "classroom_get_guardians"
         ]
+      },
+      "toolsetScopes": {
+        "google": {
+          "readwrite": [
+            "https://www.googleapis.com/auth/classroom.courses.readonly",
+            "https://www.googleapis.com/auth/classroom.rosters.readonly",
+            "https://www.googleapis.com/auth/classroom.guardianlinks.students.readonly"
+          ]
+        }
       },
       "label": "Google Classroom: Google Classroom courses, coursework, submissions, students and teachers."
     },
@@ -1842,6 +1930,16 @@
           "admin_group_member_add"
         ]
       },
+      "toolsetScopes": {
+        "google": {
+          "readwrite": [
+            "https://www.googleapis.com/auth/admin.directory.group.readonly",
+            "https://www.googleapis.com/auth/admin.directory.group.member",
+            "https://www.googleapis.com/auth/admin.directory.orgunit.readonly",
+            "https://www.googleapis.com/auth/admin.directory.domain.readonly"
+          ]
+        }
+      },
       "label": "Workspace Admin: Google Workspace administration: Cloud Identity, Chrome management and policy, Groups Settings, licensing, reports, alerts, Vault, reseller and Cloud Search admin."
     },
     {
@@ -1915,6 +2013,13 @@
           "tagmgr_accounts_containe_workspac_create_ve",
           "tagmgr_accounts_containers_versions_publish"
         ]
+      },
+      "toolsetScopes": {
+        "google": {
+          "readwrite": [
+            "https://www.googleapis.com/auth/tagmanager.readonly"
+          ]
+        }
       },
       "label": "Tag Manager: Google Tag Manager accounts, containers, tags, triggers and variables."
     },
@@ -2220,6 +2325,10 @@
         {
           "api": "googleads",
           "version": "v26"
+        },
+        {
+          "api": "displayvideo",
+          "version": "v5"
         }
       ],
       "toolsets": {
@@ -2592,6 +2701,10 @@
         {
           "api": "identitytoolkit",
           "version": "v2"
+        },
+        {
+          "api": "devicerun",
+          "version": "v1"
         }
       ],
       "toolsets": {

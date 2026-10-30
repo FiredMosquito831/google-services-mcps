@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-15T15:08:21.313Z",
+  "generatedAt": "2026-10-30T15:12:58.580Z",
   "apiCount": 12,
   "methodCount": 120,
   "apis": [
@@ -16,45 +16,9 @@
       "servicePath": "",
       "methods": [
         [
-          "merchantapi.accounts.createTestAccount",
+          "merchantapi.accounts.createAndConfigure",
           "POST",
-          "accounts/v1beta/{+parent}:createTestAccount",
-          [
-            "https://www.googleapis.com/auth/content"
-          ],
-          ""
-        ],
-        [
-          "merchantapi.accounts.delete",
-          "DELETE",
-          "accounts/v1beta/{+name}",
-          [
-            "https://www.googleapis.com/auth/content"
-          ],
-          ""
-        ],
-        [
-          "merchantapi.accounts.listSubaccounts",
-          "GET",
-          "accounts/v1beta/{+provider}:listSubaccounts",
-          [
-            "https://www.googleapis.com/auth/content"
-          ],
-          ""
-        ],
-        [
-          "merchantapi.accounts.list",
-          "GET",
-          "accounts/v1beta/accounts",
-          [
-            "https://www.googleapis.com/auth/content"
-          ],
-          ""
-        ],
-        [
-          "merchantapi.accounts.patch",
-          "PATCH",
-          "accounts/v1beta/{+name}",
+          "accounts/v1beta/accounts:createAndConfigure",
           [
             "https://www.googleapis.com/auth/content"
           ],
@@ -70,9 +34,216 @@
           ""
         ],
         [
-          "merchantapi.accounts.createAndConfigure",
+          "merchantapi.accounts.list",
+          "GET",
+          "accounts/v1beta/accounts",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.delete",
+          "DELETE",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.patch",
+          "PATCH",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.createTestAccount",
           "POST",
-          "accounts/v1beta/accounts:createAndConfigure",
+          "accounts/v1beta/{+parent}:createTestAccount",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.listSubaccounts",
+          "GET",
+          "accounts/v1beta/{+provider}:listSubaccounts",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.businessInfo.getBusinessInfo",
+          "GET",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.businessInfo.updateBusinessInfo",
+          "PATCH",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.issues.list",
+          "GET",
+          "accounts/v1beta/{+parent}/issues",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.shippingSettings.getShippingSettings",
+          "GET",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.shippingSettings.insert",
+          "POST",
+          "accounts/v1beta/{+parent}/shippingSettings:insert",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.omnichannelSettings.create",
+          "POST",
+          "accounts/v1beta/{+parent}/omnichannelSettings",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.omnichannelSettings.patch",
+          "PATCH",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.omnichannelSettings.list",
+          "GET",
+          "accounts/v1beta/{+parent}/omnichannelSettings",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.omnichannelSettings.get",
+          "GET",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.omnichannelSettings.requestInventoryVerification",
+          "POST",
+          "accounts/v1beta/{+name}:requestInventoryVerification",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.omnichannelSettings.lfpProviders.linkLfpProvider",
+          "POST",
+          "accounts/v1beta/{+name}:linkLfpProvider",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.omnichannelSettings.lfpProviders.find",
+          "GET",
+          "accounts/v1beta/{+parent}/lfpProviders:find",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.homepage.updateHomepage",
+          "PATCH",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.homepage.getHomepage",
+          "GET",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.homepage.unclaim",
+          "POST",
+          "accounts/v1beta/{+name}:unclaim",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.homepage.claim",
+          "POST",
+          "accounts/v1beta/{+name}:claim",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.relationships.list",
+          "GET",
+          "accounts/v1beta/{+parent}/relationships",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.relationships.patch",
+          "PATCH",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.relationships.get",
+          "GET",
+          "accounts/v1beta/{+name}",
           [
             "https://www.googleapis.com/auth/content"
           ],
@@ -89,123 +260,6 @@
         ],
         [
           "merchantapi.accounts.emailPreferences.updateEmailPreferences",
-          "PATCH",
-          "accounts/v1beta/{+name}",
-          [
-            "https://www.googleapis.com/auth/content"
-          ],
-          ""
-        ],
-        [
-          "merchantapi.accounts.businessIdentity.getBusinessIdentity",
-          "GET",
-          "accounts/v1beta/{+name}",
-          [
-            "https://www.googleapis.com/auth/content"
-          ],
-          ""
-        ],
-        [
-          "merchantapi.accounts.businessIdentity.updateBusinessIdentity",
-          "PATCH",
-          "accounts/v1beta/{+name}",
-          [
-            "https://www.googleapis.com/auth/content"
-          ],
-          ""
-        ],
-        [
-          "merchantapi.accounts.users.list",
-          "GET",
-          "accounts/v1beta/{+parent}/users",
-          [
-            "https://www.googleapis.com/auth/content"
-          ],
-          ""
-        ],
-        [
-          "merchantapi.accounts.users.get",
-          "GET",
-          "accounts/v1beta/{+name}",
-          [
-            "https://www.googleapis.com/auth/content"
-          ],
-          ""
-        ],
-        [
-          "merchantapi.accounts.users.delete",
-          "DELETE",
-          "accounts/v1beta/{+name}",
-          [
-            "https://www.googleapis.com/auth/content"
-          ],
-          ""
-        ],
-        [
-          "merchantapi.accounts.users.patch",
-          "PATCH",
-          "accounts/v1beta/{+name}",
-          [
-            "https://www.googleapis.com/auth/content"
-          ],
-          ""
-        ],
-        [
-          "merchantapi.accounts.users.create",
-          "POST",
-          "accounts/v1beta/{+parent}/users",
-          [
-            "https://www.googleapis.com/auth/content"
-          ],
-          ""
-        ],
-        [
-          "merchantapi.accounts.users.me.verifySelf",
-          "PATCH",
-          "accounts/v1beta/{+account}/users/me:verifySelf",
-          [
-            "https://www.googleapis.com/auth/content"
-          ],
-          ""
-        ],
-        [
-          "merchantapi.accounts.regions.list",
-          "GET",
-          "accounts/v1beta/{+parent}/regions",
-          [
-            "https://www.googleapis.com/auth/content"
-          ],
-          ""
-        ],
-        [
-          "merchantapi.accounts.regions.delete",
-          "DELETE",
-          "accounts/v1beta/{+name}",
-          [
-            "https://www.googleapis.com/auth/content"
-          ],
-          ""
-        ],
-        [
-          "merchantapi.accounts.regions.get",
-          "GET",
-          "accounts/v1beta/{+name}",
-          [
-            "https://www.googleapis.com/auth/content"
-          ],
-          ""
-        ],
-        [
-          "merchantapi.accounts.regions.create",
-          "POST",
-          "accounts/v1beta/{+parent}/regions",
-          [
-            "https://www.googleapis.com/auth/content"
-          ],
-          ""
-        ],
-        [
-          "merchantapi.accounts.regions.patch",
           "PATCH",
           "accounts/v1beta/{+name}",
           [
@@ -232,25 +286,43 @@
           ""
         ],
         [
-          "merchantapi.accounts.issues.list",
+          "merchantapi.accounts.regions.list",
           "GET",
-          "accounts/v1beta/{+parent}/issues",
+          "accounts/v1beta/{+parent}/regions",
           [
             "https://www.googleapis.com/auth/content"
           ],
           ""
         ],
         [
-          "merchantapi.accounts.programs.enable",
+          "merchantapi.accounts.regions.delete",
+          "DELETE",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.regions.patch",
+          "PATCH",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.regions.create",
           "POST",
-          "accounts/v1beta/{+name}:enable",
+          "accounts/v1beta/{+parent}/regions",
           [
             "https://www.googleapis.com/auth/content"
           ],
           ""
         ],
         [
-          "merchantapi.accounts.programs.get",
+          "merchantapi.accounts.regions.get",
           "GET",
           "accounts/v1beta/{+name}",
           [
@@ -259,9 +331,81 @@
           ""
         ],
         [
-          "merchantapi.accounts.programs.disable",
+          "merchantapi.accounts.termsOfServiceAgreementStates.get",
+          "GET",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.termsOfServiceAgreementStates.retrieveForApplication",
+          "GET",
+          "accounts/v1beta/{+parent}/termsOfServiceAgreementStates:retrieveForApplication",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.businessIdentity.updateBusinessIdentity",
+          "PATCH",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.businessIdentity.getBusinessIdentity",
+          "GET",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.services.approve",
           "POST",
-          "accounts/v1beta/{+name}:disable",
+          "accounts/v1beta/{+name}:approve",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.services.reject",
+          "POST",
+          "accounts/v1beta/{+name}:reject",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.services.propose",
+          "POST",
+          "accounts/v1beta/{+parent}/services:propose",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.services.list",
+          "GET",
+          "accounts/v1beta/{+parent}/services",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.services.get",
+          "GET",
+          "accounts/v1beta/{+name}",
           [
             "https://www.googleapis.com/auth/content"
           ],
@@ -277,9 +421,36 @@
           ""
         ],
         [
-          "merchantapi.accounts.programs.checkoutSettings.create",
+          "merchantapi.accounts.programs.enable",
           "POST",
-          "accounts/v1beta/{+parent}/checkoutSettings",
+          "accounts/v1beta/{+name}:enable",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.programs.disable",
+          "POST",
+          "accounts/v1beta/{+name}:disable",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.programs.get",
+          "GET",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.programs.checkoutSettings.updateCheckoutSettings",
+          "PATCH",
+          "accounts/v1beta/{+name}",
           [
             "https://www.googleapis.com/auth/content"
           ],
@@ -295,9 +466,9 @@
           ""
         ],
         [
-          "merchantapi.accounts.programs.checkoutSettings.updateCheckoutSettings",
-          "PATCH",
-          "accounts/v1beta/{+name}",
+          "merchantapi.accounts.programs.checkoutSettings.create",
+          "POST",
+          "accounts/v1beta/{+parent}/checkoutSettings",
           [
             "https://www.googleapis.com/auth/content"
           ],
@@ -331,206 +502,8 @@
           ""
         ],
         [
-          "merchantapi.accounts.gbpAccounts.list",
-          "GET",
-          "accounts/v1beta/{+parent}/gbpAccounts",
-          [
-            "https://www.googleapis.com/auth/content"
-          ],
-          ""
-        ],
-        [
-          "merchantapi.accounts.gbpAccounts.linkGbpAccount",
-          "POST",
-          "accounts/v1beta/{+parent}/gbpAccounts:linkGbpAccount",
-          [
-            "https://www.googleapis.com/auth/content"
-          ],
-          ""
-        ],
-        [
-          "merchantapi.accounts.services.list",
-          "GET",
-          "accounts/v1beta/{+parent}/services",
-          [
-            "https://www.googleapis.com/auth/content"
-          ],
-          ""
-        ],
-        [
-          "merchantapi.accounts.services.get",
-          "GET",
-          "accounts/v1beta/{+name}",
-          [
-            "https://www.googleapis.com/auth/content"
-          ],
-          ""
-        ],
-        [
-          "merchantapi.accounts.services.propose",
-          "POST",
-          "accounts/v1beta/{+parent}/services:propose",
-          [
-            "https://www.googleapis.com/auth/content"
-          ],
-          ""
-        ],
-        [
-          "merchantapi.accounts.services.reject",
-          "POST",
-          "accounts/v1beta/{+name}:reject",
-          [
-            "https://www.googleapis.com/auth/content"
-          ],
-          ""
-        ],
-        [
-          "merchantapi.accounts.services.approve",
-          "POST",
-          "accounts/v1beta/{+name}:approve",
-          [
-            "https://www.googleapis.com/auth/content"
-          ],
-          ""
-        ],
-        [
-          "merchantapi.accounts.relationships.patch",
-          "PATCH",
-          "accounts/v1beta/{+name}",
-          [
-            "https://www.googleapis.com/auth/content"
-          ],
-          ""
-        ],
-        [
-          "merchantapi.accounts.relationships.list",
-          "GET",
-          "accounts/v1beta/{+parent}/relationships",
-          [
-            "https://www.googleapis.com/auth/content"
-          ],
-          ""
-        ],
-        [
-          "merchantapi.accounts.relationships.get",
-          "GET",
-          "accounts/v1beta/{+name}",
-          [
-            "https://www.googleapis.com/auth/content"
-          ],
-          ""
-        ],
-        [
-          "merchantapi.accounts.omnichannelSettings.patch",
-          "PATCH",
-          "accounts/v1beta/{+name}",
-          [
-            "https://www.googleapis.com/auth/content"
-          ],
-          ""
-        ],
-        [
-          "merchantapi.accounts.omnichannelSettings.create",
-          "POST",
-          "accounts/v1beta/{+parent}/omnichannelSettings",
-          [
-            "https://www.googleapis.com/auth/content"
-          ],
-          ""
-        ],
-        [
-          "merchantapi.accounts.omnichannelSettings.get",
-          "GET",
-          "accounts/v1beta/{+name}",
-          [
-            "https://www.googleapis.com/auth/content"
-          ],
-          ""
-        ],
-        [
-          "merchantapi.accounts.omnichannelSettings.requestInventoryVerification",
-          "POST",
-          "accounts/v1beta/{+name}:requestInventoryVerification",
-          [
-            "https://www.googleapis.com/auth/content"
-          ],
-          ""
-        ],
-        [
-          "merchantapi.accounts.omnichannelSettings.list",
-          "GET",
-          "accounts/v1beta/{+parent}/omnichannelSettings",
-          [
-            "https://www.googleapis.com/auth/content"
-          ],
-          ""
-        ],
-        [
-          "merchantapi.accounts.omnichannelSettings.lfpProviders.linkLfpProvider",
-          "POST",
-          "accounts/v1beta/{+name}:linkLfpProvider",
-          [
-            "https://www.googleapis.com/auth/content"
-          ],
-          ""
-        ],
-        [
-          "merchantapi.accounts.omnichannelSettings.lfpProviders.find",
-          "GET",
-          "accounts/v1beta/{+parent}/lfpProviders:find",
-          [
-            "https://www.googleapis.com/auth/content"
-          ],
-          ""
-        ],
-        [
-          "merchantapi.accounts.termsOfServiceAgreementStates.get",
-          "GET",
-          "accounts/v1beta/{+name}",
-          [
-            "https://www.googleapis.com/auth/content"
-          ],
-          ""
-        ],
-        [
-          "merchantapi.accounts.termsOfServiceAgreementStates.retrieveForApplication",
-          "GET",
-          "accounts/v1beta/{+parent}/termsOfServiceAgreementStates:retrieveForApplication",
-          [
-            "https://www.googleapis.com/auth/content"
-          ],
-          ""
-        ],
-        [
-          "merchantapi.accounts.onlineReturnPolicies.list",
-          "GET",
-          "accounts/v1beta/{+parent}/onlineReturnPolicies",
-          [
-            "https://www.googleapis.com/auth/content"
-          ],
-          ""
-        ],
-        [
-          "merchantapi.accounts.onlineReturnPolicies.get",
-          "GET",
-          "accounts/v1beta/{+name}",
-          [
-            "https://www.googleapis.com/auth/content"
-          ],
-          ""
-        ],
-        [
           "merchantapi.accounts.onlineReturnPolicies.delete",
           "DELETE",
-          "accounts/v1beta/{+name}",
-          [
-            "https://www.googleapis.com/auth/content"
-          ],
-          ""
-        ],
-        [
-          "merchantapi.accounts.onlineReturnPolicies.patch",
-          "PATCH",
           "accounts/v1beta/{+name}",
           [
             "https://www.googleapis.com/auth/content"
@@ -547,7 +520,7 @@
           ""
         ],
         [
-          "merchantapi.accounts.businessInfo.updateBusinessInfo",
+          "merchantapi.accounts.onlineReturnPolicies.patch",
           "PATCH",
           "accounts/v1beta/{+name}",
           [
@@ -556,7 +529,7 @@
           ""
         ],
         [
-          "merchantapi.accounts.businessInfo.getBusinessInfo",
+          "merchantapi.accounts.onlineReturnPolicies.get",
           "GET",
           "accounts/v1beta/{+name}",
           [
@@ -565,63 +538,9 @@
           ""
         ],
         [
-          "merchantapi.accounts.shippingSettings.insert",
-          "POST",
-          "accounts/v1beta/{+parent}/shippingSettings:insert",
-          [
-            "https://www.googleapis.com/auth/content"
-          ],
-          ""
-        ],
-        [
-          "merchantapi.accounts.shippingSettings.getShippingSettings",
+          "merchantapi.accounts.onlineReturnPolicies.list",
           "GET",
-          "accounts/v1beta/{+name}",
-          [
-            "https://www.googleapis.com/auth/content"
-          ],
-          ""
-        ],
-        [
-          "merchantapi.accounts.homepage.claim",
-          "POST",
-          "accounts/v1beta/{+name}:claim",
-          [
-            "https://www.googleapis.com/auth/content"
-          ],
-          ""
-        ],
-        [
-          "merchantapi.accounts.homepage.unclaim",
-          "POST",
-          "accounts/v1beta/{+name}:unclaim",
-          [
-            "https://www.googleapis.com/auth/content"
-          ],
-          ""
-        ],
-        [
-          "merchantapi.accounts.homepage.updateHomepage",
-          "PATCH",
-          "accounts/v1beta/{+name}",
-          [
-            "https://www.googleapis.com/auth/content"
-          ],
-          ""
-        ],
-        [
-          "merchantapi.accounts.homepage.getHomepage",
-          "GET",
-          "accounts/v1beta/{+name}",
-          [
-            "https://www.googleapis.com/auth/content"
-          ],
-          ""
-        ],
-        [
-          "merchantapi.accounts.developerRegistration.getDeveloperRegistration",
-          "GET",
-          "accounts/v1beta/{+name}",
+          "accounts/v1beta/{+parent}/onlineReturnPolicies",
           [
             "https://www.googleapis.com/auth/content"
           ],
@@ -637,9 +556,9 @@
           ""
         ],
         [
-          "merchantapi.accounts.developerRegistration.unregisterGcp",
-          "POST",
-          "accounts/v1beta/{+name}:unregisterGcp",
+          "merchantapi.accounts.developerRegistration.getDeveloperRegistration",
+          "GET",
+          "accounts/v1beta/{+name}",
           [
             "https://www.googleapis.com/auth/content"
           ],
@@ -655,6 +574,87 @@
           ""
         ],
         [
+          "merchantapi.accounts.developerRegistration.unregisterGcp",
+          "POST",
+          "accounts/v1beta/{+name}:unregisterGcp",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.users.patch",
+          "PATCH",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.users.create",
+          "POST",
+          "accounts/v1beta/{+parent}/users",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.users.delete",
+          "DELETE",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.users.get",
+          "GET",
+          "accounts/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.users.list",
+          "GET",
+          "accounts/v1beta/{+parent}/users",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.users.me.verifySelf",
+          "PATCH",
+          "accounts/v1beta/{+account}/users/me:verifySelf",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.gbpAccounts.linkGbpAccount",
+          "POST",
+          "accounts/v1beta/{+parent}/gbpAccounts:linkGbpAccount",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.gbpAccounts.list",
+          "GET",
+          "accounts/v1beta/{+parent}/gbpAccounts",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
           "merchantapi.termsOfService.retrieveLatest",
           "GET",
           "accounts/v1beta/termsOfService:retrieveLatest",
@@ -664,18 +664,18 @@
           ""
         ],
         [
-          "merchantapi.termsOfService.get",
-          "GET",
-          "accounts/v1beta/{+name}",
+          "merchantapi.termsOfService.accept",
+          "POST",
+          "accounts/v1beta/{+name}:accept",
           [
             "https://www.googleapis.com/auth/content"
           ],
           ""
         ],
         [
-          "merchantapi.termsOfService.accept",
-          "POST",
-          "accounts/v1beta/{+name}:accept",
+          "merchantapi.termsOfService.get",
+          "GET",
+          "accounts/v1beta/{+name}",
           [
             "https://www.googleapis.com/auth/content"
           ],
@@ -696,8 +696,8 @@
       "servicePath": "",
       "methods": [
         [
-          "merchantapi.accounts.conversionSources.delete",
-          "DELETE",
+          "merchantapi.accounts.conversionSources.patch",
+          "PATCH",
           "conversions/v1beta/{+name}",
           [
             "https://www.googleapis.com/auth/content"
@@ -714,27 +714,27 @@
           ""
         ],
         [
-          "merchantapi.accounts.conversionSources.get",
-          "GET",
-          "conversions/v1beta/{+name}",
-          [
-            "https://www.googleapis.com/auth/content"
-          ],
-          ""
-        ],
-        [
-          "merchantapi.accounts.conversionSources.patch",
-          "PATCH",
-          "conversions/v1beta/{+name}",
-          [
-            "https://www.googleapis.com/auth/content"
-          ],
-          ""
-        ],
-        [
           "merchantapi.accounts.conversionSources.undelete",
           "POST",
           "conversions/v1beta/{+name}:undelete",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.conversionSources.delete",
+          "DELETE",
+          "conversions/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.conversionSources.get",
+          "GET",
+          "conversions/v1beta/{+name}",
           [
             "https://www.googleapis.com/auth/content"
           ],
@@ -764,6 +764,15 @@
       "servicePath": "",
       "methods": [
         [
+          "merchantapi.accounts.dataSources.fetch",
+          "POST",
+          "datasources/v1beta/{+name}:fetch",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
           "merchantapi.accounts.dataSources.list",
           "GET",
           "datasources/v1beta/{+parent}/dataSources",
@@ -782,9 +791,9 @@
           ""
         ],
         [
-          "merchantapi.accounts.dataSources.fetch",
-          "POST",
-          "datasources/v1beta/{+name}:fetch",
+          "merchantapi.accounts.dataSources.patch",
+          "PATCH",
+          "datasources/v1beta/{+name}",
           [
             "https://www.googleapis.com/auth/content"
           ],
@@ -802,15 +811,6 @@
         [
           "merchantapi.accounts.dataSources.get",
           "GET",
-          "datasources/v1beta/{+name}",
-          [
-            "https://www.googleapis.com/auth/content"
-          ],
-          ""
-        ],
-        [
-          "merchantapi.accounts.dataSources.patch",
-          "PATCH",
           "datasources/v1beta/{+name}",
           [
             "https://www.googleapis.com/auth/content"
@@ -841,6 +841,15 @@
       "servicePath": "",
       "methods": [
         [
+          "merchantapi.accounts.products.regionalInventories.insert",
+          "POST",
+          "inventories/v1beta/{+parent}/regionalInventories:insert",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
           "merchantapi.accounts.products.regionalInventories.delete",
           "DELETE",
           "inventories/v1beta/{+name}",
@@ -859,18 +868,9 @@
           ""
         ],
         [
-          "merchantapi.accounts.products.regionalInventories.insert",
-          "POST",
-          "inventories/v1beta/{+parent}/regionalInventories:insert",
-          [
-            "https://www.googleapis.com/auth/content"
-          ],
-          ""
-        ],
-        [
-          "merchantapi.accounts.products.localInventories.delete",
-          "DELETE",
-          "inventories/v1beta/{+name}",
+          "merchantapi.accounts.products.localInventories.list",
+          "GET",
+          "inventories/v1beta/{+parent}/localInventories",
           [
             "https://www.googleapis.com/auth/content"
           ],
@@ -886,9 +886,9 @@
           ""
         ],
         [
-          "merchantapi.accounts.products.localInventories.list",
-          "GET",
-          "inventories/v1beta/{+parent}/localInventories",
+          "merchantapi.accounts.products.localInventories.delete",
+          "DELETE",
+          "inventories/v1beta/{+name}",
           [
             "https://www.googleapis.com/auth/content"
           ],
@@ -909,9 +909,9 @@
       "servicePath": "",
       "methods": [
         [
-          "merchantapi.issueresolution.renderaccountissues",
+          "merchantapi.issueresolution.renderproductissues",
           "POST",
-          "issueresolution/v1beta/{+name}:renderaccountissues",
+          "issueresolution/v1beta/{+name}:renderproductissues",
           [
             "https://www.googleapis.com/auth/content"
           ],
@@ -927,9 +927,9 @@
           ""
         ],
         [
-          "merchantapi.issueresolution.renderproductissues",
+          "merchantapi.issueresolution.renderaccountissues",
           "POST",
-          "issueresolution/v1beta/{+name}:renderproductissues",
+          "issueresolution/v1beta/{+name}:renderaccountissues",
           [
             "https://www.googleapis.com/auth/content"
           ],
@@ -958,6 +958,33 @@
       "rootUrl": "https://merchantapi.googleapis.com/",
       "servicePath": "",
       "methods": [
+        [
+          "merchantapi.accounts.lfpInventories.insert",
+          "POST",
+          "lfp/v1beta/{+parent}/lfpInventories:insert",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.lfpMerchantStates.get",
+          "GET",
+          "lfp/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.lfpSales.insert",
+          "POST",
+          "lfp/v1beta/{+parent}/lfpSales:insert",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
         [
           "merchantapi.accounts.lfpStores.insert",
           "POST",
@@ -993,33 +1020,6 @@
             "https://www.googleapis.com/auth/content"
           ],
           ""
-        ],
-        [
-          "merchantapi.accounts.lfpMerchantStates.get",
-          "GET",
-          "lfp/v1beta/{+name}",
-          [
-            "https://www.googleapis.com/auth/content"
-          ],
-          ""
-        ],
-        [
-          "merchantapi.accounts.lfpInventories.insert",
-          "POST",
-          "lfp/v1beta/{+parent}/lfpInventories:insert",
-          [
-            "https://www.googleapis.com/auth/content"
-          ],
-          ""
-        ],
-        [
-          "merchantapi.accounts.lfpSales.insert",
-          "POST",
-          "lfp/v1beta/{+parent}/lfpSales:insert",
-          [
-            "https://www.googleapis.com/auth/content"
-          ],
-          ""
         ]
       ]
     },
@@ -1036,18 +1036,18 @@
       "servicePath": "",
       "methods": [
         [
-          "merchantapi.accounts.notificationsubscriptions.list",
+          "merchantapi.accounts.notificationsubscriptions.get",
           "GET",
-          "notifications/v1beta/{+parent}/notificationsubscriptions",
+          "notifications/v1beta/{+name}",
           [
             "https://www.googleapis.com/auth/content"
           ],
           ""
         ],
         [
-          "merchantapi.accounts.notificationsubscriptions.get",
-          "GET",
-          "notifications/v1beta/{+name}",
+          "merchantapi.accounts.notificationsubscriptions.create",
+          "POST",
+          "notifications/v1beta/{+parent}/notificationsubscriptions",
           [
             "https://www.googleapis.com/auth/content"
           ],
@@ -1063,8 +1063,8 @@
           ""
         ],
         [
-          "merchantapi.accounts.notificationsubscriptions.create",
-          "POST",
+          "merchantapi.accounts.notificationsubscriptions.list",
+          "GET",
           "notifications/v1beta/{+parent}/notificationsubscriptions",
           [
             "https://www.googleapis.com/auth/content"
@@ -1118,18 +1118,9 @@
       "servicePath": "",
       "methods": [
         [
-          "merchantapi.accounts.products.list",
-          "GET",
-          "products/v1beta/{+parent}/products",
-          [
-            "https://www.googleapis.com/auth/content"
-          ],
-          ""
-        ],
-        [
-          "merchantapi.accounts.products.get",
-          "GET",
-          "products/v1beta/{+name}",
+          "merchantapi.accounts.productInputs.insert",
+          "POST",
+          "products/v1beta/{+parent}/productInputs:insert",
           [
             "https://www.googleapis.com/auth/content"
           ],
@@ -1145,18 +1136,27 @@
           ""
         ],
         [
-          "merchantapi.accounts.productInputs.insert",
-          "POST",
-          "products/v1beta/{+parent}/productInputs:insert",
+          "merchantapi.accounts.productInputs.patch",
+          "PATCH",
+          "products/v1beta/{+name}",
           [
             "https://www.googleapis.com/auth/content"
           ],
           ""
         ],
         [
-          "merchantapi.accounts.productInputs.patch",
-          "PATCH",
+          "merchantapi.accounts.products.get",
+          "GET",
           "products/v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/content"
+          ],
+          ""
+        ],
+        [
+          "merchantapi.accounts.products.list",
+          "GET",
+          "products/v1beta/{+parent}/products",
           [
             "https://www.googleapis.com/auth/content"
           ],
@@ -1177,9 +1177,9 @@
       "servicePath": "",
       "methods": [
         [
-          "merchantapi.accounts.promotions.insert",
-          "POST",
-          "promotions/v1beta/{+parent}/promotions:insert",
+          "merchantapi.accounts.promotions.get",
+          "GET",
+          "promotions/v1beta/{+name}",
           [
             "https://www.googleapis.com/auth/content"
           ],
@@ -1195,9 +1195,9 @@
           ""
         ],
         [
-          "merchantapi.accounts.promotions.get",
-          "GET",
-          "promotions/v1beta/{+name}",
+          "merchantapi.accounts.promotions.insert",
+          "POST",
+          "promotions/v1beta/{+parent}/promotions:insert",
           [
             "https://www.googleapis.com/auth/content"
           ],

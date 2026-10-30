@@ -31,6 +31,15 @@
           "calendar_respond"
         ]
       },
+      "toolsetScopes": {
+        "google": {
+          "readwrite": [
+            "https://www.googleapis.com/auth/calendar.events",
+            "https://www.googleapis.com/auth/calendar.calendarlist.readonly",
+            "https://www.googleapis.com/auth/calendar.events.freebusy"
+          ]
+        }
+      },
       "scopes": [
         "https://www.googleapis.com/auth/calendar",
         "https://www.googleapis.com/auth/calendar.calendarlist",

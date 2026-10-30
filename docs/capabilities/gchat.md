@@ -4,11 +4,11 @@ Google Chat spaces, messages and members, plus Workspace Events subscriptions.
 
 - Plugin: `gchat`, MCP server: `gchat`, login: Desktop OAuth client, then `login workspace-user`
 - Install: `claude plugin install gchat@google-services-mcps`
-- Tools: 77 total. Curated 16, per-method 60, gateway 0. Read 35, write 34, destructive 8, dynamic 0.
+- Tools: 78 total. Curated 16, per-method 61, gateway 0. Read 35, write 35, destructive 8, dynamic 0.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 77, google 18, curated 16 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 78, google 18, curated 16 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
 
 ## Toolset google (9)
 
@@ -47,7 +47,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `chat_send_message` | write | Send a Chat message | chat.messages, chat.messages.create |
 | `health` | read | Server health | (none) |
 
-## Per-method tools (60)
+## Per-method tools (61)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
@@ -77,9 +77,10 @@ The tools that match Google's official MCP server for this product (https://deve
 | `chat_spaces_messages_get` | read | chat.spaces.messages.get | chat.app.messages.readonly, chat.bot |
 | `chat_spaces_messages_list` | read | chat.spaces.messages.list | chat.app.messages.readonly, chat.import |
 | `chat_spaces_messages_patch` | write | chat.spaces.messages.patch | chat.bot, chat.import |
-| `chat_spaces_messages_reactions_create` | write | chat.spaces.messages.reactions.create | chat.import, chat.messages |
-| `chat_spaces_messages_reactions_delete` | destructive | chat.spaces.messages.reactions.delete | chat.import, chat.messages |
+| `chat_spaces_messages_reactions_create` | write | chat.spaces.messages.reactions.create | chat.bot, chat.import |
+| `chat_spaces_messages_reactions_delete` | destructive | chat.spaces.messages.reactions.delete | chat.bot, chat.import |
 | `chat_spaces_messages_reactions_list` | read | chat.spaces.messages.reactions.list | chat.messages, chat.messages.reactions |
+| `chat_spaces_messages_replace_cards` | write | chat.spaces.messages.replaceCards | chat.bot |
 | `chat_spaces_messages_search` | read | chat.spaces.messages.search | chat.messages, chat.messages.readonly |
 | `chat_spaces_messages_update` | write | chat.spaces.messages.update | chat.bot, chat.import |
 | `chat_spaces_patch` | write | chat.spaces.patch | chat.admin.spaces, chat.app.spaces |
@@ -122,7 +123,7 @@ The tools that match Google's official MCP server for this product (https://deve
 
 Each API links to Google's documentation for it, as Google's Discovery directory names it (`documentationLink`, kept in `data/catalog.json`). The link is the API's documentation home, not a page per method: the directory gives no link per method, and Google's REST reference pages are laid out differently from product to product.
 
-- Google Chat API (`chat/v1`), 54 methods in the catalog. Documentation: <https://developers.google.com/workspace/chat>
+- Google Chat API (`chat/v1`), 55 methods in the catalog. Documentation: <https://developers.google.com/workspace/chat>
 - Google Workspace Events API (`workspaceevents/v1`), 7 methods in the catalog. Documentation: <https://developers.google.com/workspace/events>
 
 ## Gateway APIs (reached through api_search, api_describe, api_call)

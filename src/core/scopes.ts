@@ -13,7 +13,7 @@ import type { RuntimeConfig } from './config.js';
 import { gatewayMethodsOf, loadRegistry, serverByName, type AuthGroup, type Registry, type ScopePolicy, type ServerSpec } from './registry.js';
 import { buildServerTools } from '../servers/index.js';
 import type { ToolDef, ToolKind } from './tools.js';
-import { GATEWAY_TOOL_NAMES, selectToolset, type Toolset } from './toolset.js';
+import { GATEWAY_TOOL_NAMES, LISTED_TOOLSETS, selectToolset, type ListedToolset, type PreferredScopes, type Toolset } from './toolset.js';
 
 export const PROFILES = ['readonly', 'readwrite', 'full'] as const;
 export type Profile = (typeof PROFILES)[number];
@@ -37,6 +37,49 @@ export interface Requirement {
   optional?: string;
   /** The product's ScopePolicy.onlyIn: a scope listed there is requested for this requirement only by those profiles. */
   onlyIn?: Readonly<Record<string, readonly string[]>>;
+  /**
+   * The preferred scopes of the toolset the requirement's server runs, per profile (ServerSpec.toolsetScopes, see
+   * preferFields). resolveScopes takes them before its greedy rule. Absent for all, curated and a product without them.
+   */
+  prefer?: Readonly<PreferredScopes>;
+}
+
+/**
+ * The prefer field of a server's requirements for a toolset: its preferred scopes, when the toolset is a listed one in
+ * effect and the product gives some (config/products.json toolsets.<name>.preferScopes). Empty otherwise, so the
+ * requirements are the same as before preferences existed.
+ */
+export function preferFields(spec: Pick<ServerSpec, 'toolsetScopes'> | undefined, toolset: Toolset | undefined): Pick<Requirement, 'prefer'> {
+  if (toolset === undefined || !(LISTED_TOOLSETS as readonly string[]).includes(toolset)) return {};
+  const prefer = spec?.toolsetScopes?.[toolset as ListedToolset];
+  return prefer && Object.values(prefer).some((list) => (list?.length ?? 0) > 0) ? { prefer } : {};
+}
+
+/**
+ * preferFields for a server named in the server map, with the toolset its selection put in effect (a toolset that fell
+ * back to all has none). Empty when the map cannot be read. Used where a server builds its own requirements (the ADC
+ * sign-in in tools.ts).
+ */
+export function serverPreferFields(serverName: string, effective: Toolset): Pick<Requirement, 'prefer'> {
+  if (effective === 'all') return {};
+  try {
+    return preferFields(serverByName(loadRegistry(), serverName), effective);
+  } catch {
+    return {};
+  }
+}
+
+/** The preferred scopes the requirements carry for a profile, in their order, each once. Empty for full. */
+function preferredScopes(requirements: readonly Requirement[], profile: Profile): string[] {
+  if (profile === 'full') return [];
+  const out: string[] = [];
+  const seen = new Set<Readonly<PreferredScopes>>();
+  for (const r of requirements) {
+    if (!r.prefer || seen.has(r.prefer)) continue;
+    seen.add(r.prefer);
+    for (const scope of r.prefer[profile] ?? []) if (!out.includes(scope)) out.push(scope);
+  }
+  return out;
 }
 
 /**
@@ -137,6 +180,15 @@ export function resolveScopes(requirements: readonly Requirement[], profile: Pro
   const targets = requirements.filter((r) => (profile !== 'readonly' || r.kind === 'read') && isIncluded(r, include));
   let open = targets.filter((r) => r.scopes.some((scope) => usableFor(r, scope)));
   const chosen: string[] = [];
+
+  // A toolset's preferred scopes first, in their order: each one this profile may use for a target still open is taken,
+  // and the targets it covers are closed, as the greedy step closes them. Then the greedy rule covers what is left.
+  // Without a preference (all, curated, and products that give none) this loop does nothing, so the result is as before.
+  for (const scope of preferredScopes(requirements, profile)) {
+    if (!open.some((r) => r.scopes.includes(scope) && usableFor(r, scope))) continue;
+    chosen.push(scope);
+    open = open.filter((r) => !r.scopes.includes(scope));
+  }
 
   while (open.length > 0) {
     const covers = new Map<string, number>();
@@ -320,6 +372,8 @@ export async function requirementsForSpecs(
     const tools = await buildServerTools(spec, cfg);
     // The tools of the toolset, when one other than all is asked for. Undefined: every tool counts, as before toolsets.
     const kept = toolsetNames(spec, tools, opts.toolset, warn);
+    // The toolset's preferred scopes, only when the toolset is in effect for this server (not all, not a fallback).
+    const prefer = kept !== undefined ? preferFields(spec, opts.toolset) : {};
     for (const tool of tools) {
       if (kept !== undefined && !kept.has(tool.name)) continue;
       out.push({
@@ -327,6 +381,7 @@ export async function requirementsForSpecs(
         kind: tool.kind,
         scopes: [...(tool.scopes ?? [])],
         ...policyFields(policy, apiOfMethod(tool.methodId)),
+        ...prefer,
       });
     }
     if (!spec.gatewayApis?.length) continue;
@@ -342,7 +397,7 @@ export async function requirementsForSpecs(
       warn(`[${spec.name}] not in the API catalog, so their methods are not counted: ${gateway.missingApis.join(', ')}`);
     }
     for (const m of gateway.methods) {
-      out.push({ tool: `${spec.name}/${m.id}`, kind: m.kind, scopes: [...m.scopes], gateway: true, ...policyFields(policy, apiOfMethod(m.id)) });
+      out.push({ tool: `${spec.name}/${m.id}`, kind: m.kind, scopes: [...m.scopes], gateway: true, ...policyFields(policy, apiOfMethod(m.id)), ...prefer });
     }
   }
   if (withoutCatalog.length > 0) {

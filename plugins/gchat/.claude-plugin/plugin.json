@@ -1,7 +1,7 @@
 {
   "name": "gchat",
   "displayName": "Google Chat",
-  "version": "1.24.4",
+  "version": "1.26.0",
   "description": "Google Chat spaces, messages and members, plus Workspace Events subscriptions.",
   "author": {
     "name": "FiredMosquito831"

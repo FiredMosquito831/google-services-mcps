@@ -2701,7 +2701,7 @@
   },
   {
     "name": "mcp__plugin_gcloud_gcloud__monitor_projects_time_series_query",
-    "kind": "write",
+    "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform",
       "https://www.googleapis.com/auth/monitoring",

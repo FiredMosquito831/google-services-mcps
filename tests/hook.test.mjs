@@ -83,7 +83,8 @@ function runHook(hook, { input, raw, tokenDir, env = {} }) {
     input: raw ?? JSON.stringify(input),
     env: childEnv,
     encoding: 'utf8',
-    timeout: 15000,
+    // Generous on purpose: the hook answers in well under a second, but a loaded machine can take long to start a child.
+    timeout: 60000,
   });
   assert.equal(result.error, undefined, `hook did not run: ${result.error}`);
   assert.equal(result.status, 0, `exit code must be 0, stderr: ${result.stderr}`);

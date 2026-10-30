@@ -1023,7 +1023,7 @@
   },
   {
     "name": "mcp__plugin_gmail_gmail__gmailpostm_domain_stats_batch_query",
-    "kind": "write",
+    "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/postmaster",
       "https://www.googleapis.com/auth/postmaster.traffic.readonly"
@@ -1053,7 +1053,7 @@
   },
   {
     "name": "mcp__plugin_gmail_gmail__gmailpostm_domains_domain_stats_query",
-    "kind": "write",
+    "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/postmaster",
       "https://www.googleapis.com/auth/postmaster.traffic.readonly"

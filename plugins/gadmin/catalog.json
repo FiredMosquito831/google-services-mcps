@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-15T15:08:21.313Z",
+  "generatedAt": "2026-10-30T15:12:58.580Z",
   "apiCount": 4,
   "methodCount": 144,
   "apis": [
@@ -16,71 +16,17 @@
       "servicePath": "",
       "methods": [
         [
-          "chromemanagement.customers.enterprise.securityInsights.enable",
+          "chromemanagement.customers.enrollmentTokens.get",
+          "GET",
+          "v1/{+name}",
+          [],
+          ""
+        ],
+        [
+          "chromemanagement.customers.enrollmentTokens.create",
           "POST",
-          "v1/{+customer}/enterprise/securityInsights:enable",
-          [
-            "https://www.googleapis.com/auth/chrome.management.securityinsights"
-          ],
-          ""
-        ],
-        [
-          "chromemanagement.customers.enterprise.securityInsights.queryContentTransfersBreakdowns",
-          "GET",
-          "v1/{+customer}/enterprise/securityInsights:queryContentTransfersBreakdowns",
-          [
-            "https://www.googleapis.com/auth/chrome.management.securityinsights",
-            "https://www.googleapis.com/auth/chrome.management.securityinsights.readonly"
-          ],
-          ""
-        ],
-        [
-          "chromemanagement.customers.enterprise.securityInsights.checkEnablementStatus",
-          "GET",
-          "v1/{+customer}/enterprise/securityInsights:checkEnablementStatus",
-          [
-            "https://www.googleapis.com/auth/chrome.management.securityinsights",
-            "https://www.googleapis.com/auth/chrome.management.securityinsights.readonly"
-          ],
-          ""
-        ],
-        [
-          "chromemanagement.customers.enterprise.securityInsights.queryUrlVisits",
-          "GET",
-          "v1/{+customer}/enterprise/securityInsights:queryUrlVisits",
-          [
-            "https://www.googleapis.com/auth/chrome.management.securityinsights",
-            "https://www.googleapis.com/auth/chrome.management.securityinsights.readonly"
-          ],
-          ""
-        ],
-        [
-          "chromemanagement.customers.enterprise.securityInsights.disable",
-          "POST",
-          "v1/{+customer}/enterprise/securityInsights:disable",
-          [
-            "https://www.googleapis.com/auth/chrome.management.securityinsights"
-          ],
-          ""
-        ],
-        [
-          "chromemanagement.customers.enterprise.securityInsights.queryUrlVisitsBreakdowns",
-          "GET",
-          "v1/{+customer}/enterprise/securityInsights:queryUrlVisitsBreakdowns",
-          [
-            "https://www.googleapis.com/auth/chrome.management.securityinsights",
-            "https://www.googleapis.com/auth/chrome.management.securityinsights.readonly"
-          ],
-          ""
-        ],
-        [
-          "chromemanagement.customers.enterprise.securityInsights.queryContentTransfers",
-          "GET",
-          "v1/{+customer}/enterprise/securityInsights:queryContentTransfers",
-          [
-            "https://www.googleapis.com/auth/chrome.management.securityinsights",
-            "https://www.googleapis.com/auth/chrome.management.securityinsights.readonly"
-          ],
+          "v1/{+parent}/enrollmentTokens",
+          [],
           ""
         ],
         [
@@ -98,223 +44,19 @@
           ""
         ],
         [
-          "chromemanagement.customers.enrollmentTokens.get",
-          "GET",
-          "v1/{+name}",
-          [],
-          ""
-        ],
-        [
-          "chromemanagement.customers.enrollmentTokens.create",
+          "chromemanagement.customers.thirdPartyProfileUsers.move",
           "POST",
-          "v1/{+parent}/enrollmentTokens",
+          "v1/{+name}:move",
+          [
+            "https://www.googleapis.com/auth/chrome.management.profiles"
+          ],
+          ""
+        ],
+        [
+          "chromemanagement.customers.connectorConfigs.list",
+          "GET",
+          "v1/{+parent}/connectorConfigs",
           [],
-          ""
-        ],
-        [
-          "chromemanagement.customers.chromeBrowsers.list",
-          "GET",
-          "v1/{+parent}/chromeBrowsers",
-          [],
-          ""
-        ],
-        [
-          "chromemanagement.customers.chromeBrowsers.get",
-          "GET",
-          "v1/{+name}",
-          [],
-          ""
-        ],
-        [
-          "chromemanagement.customers.chromeBrowsers.patch",
-          "PATCH",
-          "v1/{+name}",
-          [],
-          ""
-        ],
-        [
-          "chromemanagement.customers.chromeBrowsers.delete",
-          "DELETE",
-          "v1/{+name}",
-          [],
-          ""
-        ],
-        [
-          "chromemanagement.customers.chromeBrowsers.move",
-          "POST",
-          "v1/{+parent}/chromeBrowsers:move",
-          [],
-          ""
-        ],
-        [
-          "chromemanagement.customers.reports.countChromeBrowsersNeedingAttention",
-          "GET",
-          "v1/{+customer}/reports:countChromeBrowsersNeedingAttention",
-          [
-            "https://www.googleapis.com/auth/chrome.management.reports.readonly"
-          ],
-          ""
-        ],
-        [
-          "chromemanagement.customers.reports.countDevicesPerBootType",
-          "GET",
-          "v1/{+customer}/reports:countDevicesPerBootType",
-          [
-            "https://www.googleapis.com/auth/chrome.management.reports.readonly"
-          ],
-          ""
-        ],
-        [
-          "chromemanagement.customers.reports.countChromeDevicesReachingAutoExpirationDate",
-          "GET",
-          "v1/{+customer}/reports:countChromeDevicesReachingAutoExpirationDate",
-          [
-            "https://www.googleapis.com/auth/chrome.management.reports.readonly"
-          ],
-          ""
-        ],
-        [
-          "chromemanagement.customers.reports.countActiveDevices",
-          "GET",
-          "v1/{+customer}/reports:countActiveDevices",
-          [
-            "https://www.googleapis.com/auth/chrome.management.reports.readonly"
-          ],
-          ""
-        ],
-        [
-          "chromemanagement.customers.reports.countChromeProfileVersions",
-          "GET",
-          "v1/{+customer}/reports:countChromeProfileVersions",
-          [
-            "https://www.googleapis.com/auth/chrome.management.reports.readonly"
-          ],
-          ""
-        ],
-        [
-          "chromemanagement.customers.reports.findInstalledAppDevices",
-          "GET",
-          "v1/{+customer}/reports:findInstalledAppDevices",
-          [
-            "https://www.googleapis.com/auth/chrome.management.reports.readonly"
-          ],
-          ""
-        ],
-        [
-          "chromemanagement.customers.reports.countChromeHardwareFleetDevices",
-          "GET",
-          "v1/{+customer}/reports:countChromeHardwareFleetDevices",
-          [
-            "https://www.googleapis.com/auth/chrome.management.reports.readonly"
-          ],
-          ""
-        ],
-        [
-          "chromemanagement.customers.reports.findSaasUsage",
-          "GET",
-          "v1/{+customer}/reports:findSaasUsage",
-          [
-            "https://www.googleapis.com/auth/chrome.management.reports.readonly"
-          ],
-          ""
-        ],
-        [
-          "chromemanagement.customers.reports.countChromeCrashEvents",
-          "GET",
-          "v1/{+customer}/reports:countChromeCrashEvents",
-          [
-            "https://www.googleapis.com/auth/chrome.management.reports.readonly"
-          ],
-          ""
-        ],
-        [
-          "chromemanagement.customers.reports.countDevicesPerReleaseChannel",
-          "GET",
-          "v1/{+customer}/reports:countDevicesPerReleaseChannel",
-          [
-            "https://www.googleapis.com/auth/chrome.management.reports.readonly"
-          ],
-          ""
-        ],
-        [
-          "chromemanagement.customers.reports.findSaasUsageBrowsers",
-          "GET",
-          "v1/{+customer}/reports:findSaasUsageBrowsers",
-          [
-            "https://www.googleapis.com/auth/chrome.management.reports.readonly"
-          ],
-          ""
-        ],
-        [
-          "chromemanagement.customers.reports.countPrintJobsByUser",
-          "GET",
-          "v1/{+customer}/reports:countPrintJobsByUser",
-          [
-            "https://www.googleapis.com/auth/chrome.management.reports.readonly"
-          ],
-          ""
-        ],
-        [
-          "chromemanagement.customers.reports.countInstalledApps",
-          "GET",
-          "v1/{+customer}/reports:countInstalledApps",
-          [
-            "https://www.googleapis.com/auth/chrome.management.reports.readonly"
-          ],
-          ""
-        ],
-        [
-          "chromemanagement.customers.reports.countChromeVersions",
-          "GET",
-          "v1/{+customer}/reports:countChromeVersions",
-          [
-            "https://www.googleapis.com/auth/chrome.management.reports.readonly"
-          ],
-          ""
-        ],
-        [
-          "chromemanagement.customers.reports.findInstalledAppProfiles",
-          "GET",
-          "v1/{+customer}/reports:findInstalledAppProfiles",
-          [
-            "https://www.googleapis.com/auth/chrome.management.reports.readonly"
-          ],
-          ""
-        ],
-        [
-          "chromemanagement.customers.reports.countChromeDevicesThatNeedAttention",
-          "GET",
-          "v1/{+customer}/reports:countChromeDevicesThatNeedAttention",
-          [
-            "https://www.googleapis.com/auth/chrome.management.reports.readonly"
-          ],
-          ""
-        ],
-        [
-          "chromemanagement.customers.reports.countPrintJobsByPrinter",
-          "GET",
-          "v1/{+customer}/reports:countPrintJobsByPrinter",
-          [
-            "https://www.googleapis.com/auth/chrome.management.reports.readonly"
-          ],
-          ""
-        ],
-        [
-          "chromemanagement.customers.reports.enumeratePrintJobs",
-          "GET",
-          "v1/{+customer}/reports:enumeratePrintJobs",
-          [
-            "https://www.googleapis.com/auth/chrome.management.reports.readonly"
-          ],
-          ""
-        ],
-        [
-          "chromemanagement.customers.reports.findSaasUsageProfiles",
-          "GET",
-          "v1/{+customer}/reports:findSaasUsageProfiles",
-          [
-            "https://www.googleapis.com/auth/chrome.management.reports.readonly"
-          ],
           ""
         ],
         [
@@ -325,9 +67,9 @@
           ""
         ],
         [
-          "chromemanagement.customers.connectorConfigs.list",
-          "GET",
-          "v1/{+parent}/connectorConfigs",
+          "chromemanagement.customers.connectorConfigs.delete",
+          "DELETE",
+          "v1/{+name}",
           [],
           ""
         ],
@@ -346,133 +88,174 @@
           ""
         ],
         [
-          "chromemanagement.customers.connectorConfigs.delete",
-          "DELETE",
-          "v1/{+name}",
-          [],
-          ""
-        ],
-        [
-          "chromemanagement.customers.telemetry.users.get",
+          "chromemanagement.customers.reports.countPrintJobsByUser",
           "GET",
-          "v1/{+name}",
+          "v1/{+customer}/reports:countPrintJobsByUser",
           [
-            "https://www.googleapis.com/auth/chrome.management.telemetry.readonly"
+            "https://www.googleapis.com/auth/chrome.management.reports.readonly"
           ],
           ""
         ],
         [
-          "chromemanagement.customers.telemetry.users.list",
+          "chromemanagement.customers.reports.countActiveDevices",
           "GET",
-          "v1/{+parent}/telemetry/users",
+          "v1/{+customer}/reports:countActiveDevices",
           [
-            "https://www.googleapis.com/auth/chrome.management.telemetry.readonly"
+            "https://www.googleapis.com/auth/chrome.management.reports.readonly"
           ],
           ""
         ],
         [
-          "chromemanagement.customers.telemetry.devices.list",
+          "chromemanagement.customers.reports.countChromeCrashEvents",
           "GET",
-          "v1/{+parent}/telemetry/devices",
+          "v1/{+customer}/reports:countChromeCrashEvents",
           [
-            "https://www.googleapis.com/auth/chrome.management.telemetry.readonly"
+            "https://www.googleapis.com/auth/chrome.management.reports.readonly"
           ],
           ""
         ],
         [
-          "chromemanagement.customers.telemetry.devices.get",
+          "chromemanagement.customers.reports.countInstalledApps",
           "GET",
-          "v1/{+name}",
+          "v1/{+customer}/reports:countInstalledApps",
           [
-            "https://www.googleapis.com/auth/chrome.management.telemetry.readonly"
+            "https://www.googleapis.com/auth/chrome.management.reports.readonly"
           ],
           ""
         ],
         [
-          "chromemanagement.customers.telemetry.notificationConfigs.create",
-          "POST",
-          "v1/{+parent}/telemetry/notificationConfigs",
-          [
-            "https://www.googleapis.com/auth/chrome.management.telemetry.readonly"
-          ],
-          ""
-        ],
-        [
-          "chromemanagement.customers.telemetry.notificationConfigs.delete",
-          "DELETE",
-          "v1/{+name}",
-          [
-            "https://www.googleapis.com/auth/chrome.management.telemetry.readonly"
-          ],
-          ""
-        ],
-        [
-          "chromemanagement.customers.telemetry.notificationConfigs.list",
+          "chromemanagement.customers.reports.enumeratePrintJobs",
           "GET",
-          "v1/{+parent}/telemetry/notificationConfigs",
+          "v1/{+customer}/reports:enumeratePrintJobs",
           [
-            "https://www.googleapis.com/auth/chrome.management.telemetry.readonly"
+            "https://www.googleapis.com/auth/chrome.management.reports.readonly"
           ],
           ""
         ],
         [
-          "chromemanagement.customers.telemetry.events.list",
+          "chromemanagement.customers.reports.findInstalledAppProfiles",
           "GET",
-          "v1/{+parent}/telemetry/events",
+          "v1/{+customer}/reports:findInstalledAppProfiles",
           [
-            "https://www.googleapis.com/auth/chrome.management.telemetry.readonly"
+            "https://www.googleapis.com/auth/chrome.management.reports.readonly"
           ],
           ""
         ],
         [
-          "chromemanagement.customers.thirdPartyProfileUsers.move",
-          "POST",
-          "v1/{+name}:move",
+          "chromemanagement.customers.reports.countChromeProfileVersions",
+          "GET",
+          "v1/{+customer}/reports:countChromeProfileVersions",
           [
-            "https://www.googleapis.com/auth/chrome.management.profiles"
+            "https://www.googleapis.com/auth/chrome.management.reports.readonly"
           ],
           ""
         ],
         [
-          "chromemanagement.customers.certificateProvisioningProcesses.setFailure",
-          "POST",
-          "v1/{+name}:setFailure",
-          [],
-          ""
-        ],
-        [
-          "chromemanagement.customers.certificateProvisioningProcesses.signData",
-          "POST",
-          "v1/{+name}:signData",
-          [],
-          ""
-        ],
-        [
-          "chromemanagement.customers.certificateProvisioningProcesses.claim",
-          "POST",
-          "v1/{+name}:claim",
-          [],
-          ""
-        ],
-        [
-          "chromemanagement.customers.certificateProvisioningProcesses.get",
+          "chromemanagement.customers.reports.countDevicesPerBootType",
           "GET",
-          "v1/{+name}",
-          [],
+          "v1/{+customer}/reports:countDevicesPerBootType",
+          [
+            "https://www.googleapis.com/auth/chrome.management.reports.readonly"
+          ],
           ""
         ],
         [
-          "chromemanagement.customers.certificateProvisioningProcesses.uploadCertificate",
-          "POST",
-          "v1/{+name}:uploadCertificate",
-          [],
-          ""
-        ],
-        [
-          "chromemanagement.customers.certificateProvisioningProcesses.operations.get",
+          "chromemanagement.customers.reports.countChromeVersions",
           "GET",
-          "v1/{+name}",
-          [],
+          "v1/{+customer}/reports:countChromeVersions",
+          [
+            "https://www.googleapis.com/auth/chrome.management.reports.readonly"
+          ],
+          ""
+        ],
+        [
+          "chromemanagement.customers.reports.countDevicesPerReleaseChannel",
+          "GET",
+          "v1/{+customer}/reports:countDevicesPerReleaseChannel",
+          [
+            "https://www.googleapis.com/auth/chrome.management.reports.readonly"
+          ],
+          ""
+        ],
+        [
+          "chromemanagement.customers.reports.countChromeDevicesReachingAutoExpirationDate",
+          "GET",
+          "v1/{+customer}/reports:countChromeDevicesReachingAutoExpirationDate",
+          [
+            "https://www.googleapis.com/auth/chrome.management.reports.readonly"
+          ],
+          ""
+        ],
+        [
+          "chromemanagement.customers.reports.findSaasUsageProfiles",
+          "GET",
+          "v1/{+customer}/reports:findSaasUsageProfiles",
+          [
+            "https://www.googleapis.com/auth/chrome.management.reports.readonly"
+          ],
+          ""
+        ],
+        [
+          "chromemanagement.customers.reports.findSaasUsageBrowsers",
+          "GET",
+          "v1/{+customer}/reports:findSaasUsageBrowsers",
+          [
+            "https://www.googleapis.com/auth/chrome.management.reports.readonly"
+          ],
+          ""
+        ],
+        [
+          "chromemanagement.customers.reports.countChromeBrowsersNeedingAttention",
+          "GET",
+          "v1/{+customer}/reports:countChromeBrowsersNeedingAttention",
+          [
+            "https://www.googleapis.com/auth/chrome.management.reports.readonly"
+          ],
+          ""
+        ],
+        [
+          "chromemanagement.customers.reports.findSaasUsage",
+          "GET",
+          "v1/{+customer}/reports:findSaasUsage",
+          [
+            "https://www.googleapis.com/auth/chrome.management.reports.readonly"
+          ],
+          ""
+        ],
+        [
+          "chromemanagement.customers.reports.countChromeDevicesThatNeedAttention",
+          "GET",
+          "v1/{+customer}/reports:countChromeDevicesThatNeedAttention",
+          [
+            "https://www.googleapis.com/auth/chrome.management.reports.readonly"
+          ],
+          ""
+        ],
+        [
+          "chromemanagement.customers.reports.countChromeHardwareFleetDevices",
+          "GET",
+          "v1/{+customer}/reports:countChromeHardwareFleetDevices",
+          [
+            "https://www.googleapis.com/auth/chrome.management.reports.readonly"
+          ],
+          ""
+        ],
+        [
+          "chromemanagement.customers.reports.findInstalledAppDevices",
+          "GET",
+          "v1/{+customer}/reports:findInstalledAppDevices",
+          [
+            "https://www.googleapis.com/auth/chrome.management.reports.readonly"
+          ],
+          ""
+        ],
+        [
+          "chromemanagement.customers.reports.countPrintJobsByPrinter",
+          "GET",
+          "v1/{+customer}/reports:countPrintJobsByPrinter",
+          [
+            "https://www.googleapis.com/auth/chrome.management.reports.readonly"
+          ],
           ""
         ],
         [
@@ -512,15 +295,6 @@
           ""
         ],
         [
-          "chromemanagement.customers.apps.android.get",
-          "GET",
-          "v1/{+name}",
-          [
-            "https://www.googleapis.com/auth/chrome.management.appdetails.readonly"
-          ],
-          ""
-        ],
-        [
           "chromemanagement.customers.apps.web.get",
           "GET",
           "v1/{+name}",
@@ -530,11 +304,21 @@
           ""
         ],
         [
-          "chromemanagement.customers.profiles.delete",
-          "DELETE",
+          "chromemanagement.customers.apps.android.get",
+          "GET",
           "v1/{+name}",
           [
-            "https://www.googleapis.com/auth/chrome.management.profiles"
+            "https://www.googleapis.com/auth/chrome.management.appdetails.readonly"
+          ],
+          ""
+        ],
+        [
+          "chromemanagement.customers.profiles.list",
+          "GET",
+          "v1/{+parent}/profiles",
+          [
+            "https://www.googleapis.com/auth/chrome.management.profiles",
+            "https://www.googleapis.com/auth/chrome.management.profiles.readonly"
           ],
           ""
         ],
@@ -549,9 +333,27 @@
           ""
         ],
         [
-          "chromemanagement.customers.profiles.list",
+          "chromemanagement.customers.profiles.delete",
+          "DELETE",
+          "v1/{+name}",
+          [
+            "https://www.googleapis.com/auth/chrome.management.profiles"
+          ],
+          ""
+        ],
+        [
+          "chromemanagement.customers.profiles.commands.create",
+          "POST",
+          "v1/{+parent}/commands",
+          [
+            "https://www.googleapis.com/auth/chrome.management.profiles"
+          ],
+          ""
+        ],
+        [
+          "chromemanagement.customers.profiles.commands.get",
           "GET",
-          "v1/{+parent}/profiles",
+          "v1/{+name}",
           [
             "https://www.googleapis.com/auth/chrome.management.profiles",
             "https://www.googleapis.com/auth/chrome.management.profiles.readonly"
@@ -569,28 +371,219 @@
           ""
         ],
         [
-          "chromemanagement.customers.profiles.commands.get",
+          "chromemanagement.customers.enterprise.securityInsights.enable",
+          "POST",
+          "v1/{+customer}/enterprise/securityInsights:enable",
+          [
+            "https://www.googleapis.com/auth/chrome.management.securityinsights"
+          ],
+          ""
+        ],
+        [
+          "chromemanagement.customers.enterprise.securityInsights.queryContentTransfers",
+          "GET",
+          "v1/{+customer}/enterprise/securityInsights:queryContentTransfers",
+          [
+            "https://www.googleapis.com/auth/chrome.management.securityinsights",
+            "https://www.googleapis.com/auth/chrome.management.securityinsights.readonly"
+          ],
+          ""
+        ],
+        [
+          "chromemanagement.customers.enterprise.securityInsights.queryContentTransfersBreakdowns",
+          "GET",
+          "v1/{+customer}/enterprise/securityInsights:queryContentTransfersBreakdowns",
+          [
+            "https://www.googleapis.com/auth/chrome.management.securityinsights",
+            "https://www.googleapis.com/auth/chrome.management.securityinsights.readonly"
+          ],
+          ""
+        ],
+        [
+          "chromemanagement.customers.enterprise.securityInsights.queryUrlVisits",
+          "GET",
+          "v1/{+customer}/enterprise/securityInsights:queryUrlVisits",
+          [
+            "https://www.googleapis.com/auth/chrome.management.securityinsights",
+            "https://www.googleapis.com/auth/chrome.management.securityinsights.readonly"
+          ],
+          ""
+        ],
+        [
+          "chromemanagement.customers.enterprise.securityInsights.queryUrlVisitsBreakdowns",
+          "GET",
+          "v1/{+customer}/enterprise/securityInsights:queryUrlVisitsBreakdowns",
+          [
+            "https://www.googleapis.com/auth/chrome.management.securityinsights",
+            "https://www.googleapis.com/auth/chrome.management.securityinsights.readonly"
+          ],
+          ""
+        ],
+        [
+          "chromemanagement.customers.enterprise.securityInsights.disable",
+          "POST",
+          "v1/{+customer}/enterprise/securityInsights:disable",
+          [
+            "https://www.googleapis.com/auth/chrome.management.securityinsights"
+          ],
+          ""
+        ],
+        [
+          "chromemanagement.customers.enterprise.securityInsights.checkEnablementStatus",
+          "GET",
+          "v1/{+customer}/enterprise/securityInsights:checkEnablementStatus",
+          [
+            "https://www.googleapis.com/auth/chrome.management.securityinsights",
+            "https://www.googleapis.com/auth/chrome.management.securityinsights.readonly"
+          ],
+          ""
+        ],
+        [
+          "chromemanagement.customers.certificateProvisioningProcesses.setFailure",
+          "POST",
+          "v1/{+name}:setFailure",
+          [],
+          ""
+        ],
+        [
+          "chromemanagement.customers.certificateProvisioningProcesses.signData",
+          "POST",
+          "v1/{+name}:signData",
+          [],
+          ""
+        ],
+        [
+          "chromemanagement.customers.certificateProvisioningProcesses.uploadCertificate",
+          "POST",
+          "v1/{+name}:uploadCertificate",
+          [],
+          ""
+        ],
+        [
+          "chromemanagement.customers.certificateProvisioningProcesses.get",
+          "GET",
+          "v1/{+name}",
+          [],
+          ""
+        ],
+        [
+          "chromemanagement.customers.certificateProvisioningProcesses.claim",
+          "POST",
+          "v1/{+name}:claim",
+          [],
+          ""
+        ],
+        [
+          "chromemanagement.customers.certificateProvisioningProcesses.operations.get",
+          "GET",
+          "v1/{+name}",
+          [],
+          ""
+        ],
+        [
+          "chromemanagement.customers.telemetry.devices.get",
           "GET",
           "v1/{+name}",
           [
-            "https://www.googleapis.com/auth/chrome.management.profiles",
-            "https://www.googleapis.com/auth/chrome.management.profiles.readonly"
+            "https://www.googleapis.com/auth/chrome.management.telemetry.readonly"
           ],
           ""
         ],
         [
-          "chromemanagement.customers.profiles.commands.create",
-          "POST",
-          "v1/{+parent}/commands",
+          "chromemanagement.customers.telemetry.devices.list",
+          "GET",
+          "v1/{+parent}/telemetry/devices",
           [
-            "https://www.googleapis.com/auth/chrome.management.profiles"
+            "https://www.googleapis.com/auth/chrome.management.telemetry.readonly"
           ],
           ""
         ],
         [
-          "chromemanagement.operations.cancel",
+          "chromemanagement.customers.telemetry.events.list",
+          "GET",
+          "v1/{+parent}/telemetry/events",
+          [
+            "https://www.googleapis.com/auth/chrome.management.telemetry.readonly"
+          ],
+          ""
+        ],
+        [
+          "chromemanagement.customers.telemetry.notificationConfigs.list",
+          "GET",
+          "v1/{+parent}/telemetry/notificationConfigs",
+          [
+            "https://www.googleapis.com/auth/chrome.management.telemetry.readonly"
+          ],
+          ""
+        ],
+        [
+          "chromemanagement.customers.telemetry.notificationConfigs.create",
           "POST",
-          "v1/{+name}:cancel",
+          "v1/{+parent}/telemetry/notificationConfigs",
+          [
+            "https://www.googleapis.com/auth/chrome.management.telemetry.readonly"
+          ],
+          ""
+        ],
+        [
+          "chromemanagement.customers.telemetry.notificationConfigs.delete",
+          "DELETE",
+          "v1/{+name}",
+          [
+            "https://www.googleapis.com/auth/chrome.management.telemetry.readonly"
+          ],
+          ""
+        ],
+        [
+          "chromemanagement.customers.telemetry.users.get",
+          "GET",
+          "v1/{+name}",
+          [
+            "https://www.googleapis.com/auth/chrome.management.telemetry.readonly"
+          ],
+          ""
+        ],
+        [
+          "chromemanagement.customers.telemetry.users.list",
+          "GET",
+          "v1/{+parent}/telemetry/users",
+          [
+            "https://www.googleapis.com/auth/chrome.management.telemetry.readonly"
+          ],
+          ""
+        ],
+        [
+          "chromemanagement.customers.chromeBrowsers.delete",
+          "DELETE",
+          "v1/{+name}",
+          [],
+          ""
+        ],
+        [
+          "chromemanagement.customers.chromeBrowsers.patch",
+          "PATCH",
+          "v1/{+name}",
+          [],
+          ""
+        ],
+        [
+          "chromemanagement.customers.chromeBrowsers.get",
+          "GET",
+          "v1/{+name}",
+          [],
+          ""
+        ],
+        [
+          "chromemanagement.customers.chromeBrowsers.move",
+          "POST",
+          "v1/{+parent}/chromeBrowsers:move",
+          [],
+          ""
+        ],
+        [
+          "chromemanagement.customers.chromeBrowsers.list",
+          "GET",
+          "v1/{+parent}/chromeBrowsers",
           [],
           ""
         ],
@@ -605,6 +598,13 @@
           "chromemanagement.operations.list",
           "GET",
           "v1/{+name}",
+          [],
+          ""
+        ],
+        [
+          "chromemanagement.operations.cancel",
+          "POST",
+          "v1/{+name}:cancel",
           [],
           ""
         ]
@@ -623,27 +623,91 @@
       "servicePath": "",
       "methods": [
         [
+          "cloudidentity.customers.userinvitations.send",
+          "POST",
+          "v1beta1/{+name}:send",
+          [],
+          ""
+        ],
+        [
+          "cloudidentity.customers.userinvitations.cancel",
+          "POST",
+          "v1beta1/{+name}:cancel",
+          [],
+          ""
+        ],
+        [
+          "cloudidentity.customers.userinvitations.list",
+          "GET",
+          "v1beta1/{+parent}/userinvitations",
+          [],
+          ""
+        ],
+        [
+          "cloudidentity.customers.userinvitations.isInvitableUser",
+          "GET",
+          "v1beta1/{+name}:isInvitableUser",
+          [],
+          ""
+        ],
+        [
+          "cloudidentity.customers.userinvitations.get",
+          "GET",
+          "v1beta1/{+name}",
+          [],
+          ""
+        ],
+        [
+          "cloudidentity.policies.create",
+          "POST",
+          "v1beta1/policies",
+          [
+            "https://www.googleapis.com/auth/cloud-identity.policies"
+          ],
+          ""
+        ],
+        [
+          "cloudidentity.policies.patch",
+          "PATCH",
+          "v1beta1/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-identity.policies"
+          ],
+          ""
+        ],
+        [
+          "cloudidentity.policies.list",
+          "GET",
+          "v1beta1/policies",
+          [
+            "https://www.googleapis.com/auth/cloud-identity.policies",
+            "https://www.googleapis.com/auth/cloud-identity.policies.readonly"
+          ],
+          ""
+        ],
+        [
+          "cloudidentity.policies.get",
+          "GET",
+          "v1beta1/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-identity.policies",
+            "https://www.googleapis.com/auth/cloud-identity.policies.readonly"
+          ],
+          ""
+        ],
+        [
+          "cloudidentity.policies.delete",
+          "DELETE",
+          "v1beta1/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-identity.policies"
+          ],
+          ""
+        ],
+        [
           "cloudidentity.devices.create",
           "POST",
           "v1beta1/devices",
-          [
-            "https://www.googleapis.com/auth/cloud-identity.devices"
-          ],
-          ""
-        ],
-        [
-          "cloudidentity.devices.cancelWipe",
-          "POST",
-          "v1beta1/{+name}:cancelWipe",
-          [
-            "https://www.googleapis.com/auth/cloud-identity.devices"
-          ],
-          ""
-        ],
-        [
-          "cloudidentity.devices.delete",
-          "DELETE",
-          "v1beta1/{+name}",
           [
             "https://www.googleapis.com/auth/cloud-identity.devices"
           ],
@@ -670,20 +734,29 @@
           ""
         ],
         [
-          "cloudidentity.devices.wipe",
+          "cloudidentity.devices.cancelWipe",
           "POST",
-          "v1beta1/{+name}:wipe",
+          "v1beta1/{+name}:cancelWipe",
           [
             "https://www.googleapis.com/auth/cloud-identity.devices"
           ],
           ""
         ],
         [
-          "cloudidentity.devices.deviceUsers.lookup",
-          "GET",
-          "v1beta1/{+parent}:lookup",
+          "cloudidentity.devices.delete",
+          "DELETE",
+          "v1beta1/{+name}",
           [
-            "https://www.googleapis.com/auth/cloud-identity.devices.lookup"
+            "https://www.googleapis.com/auth/cloud-identity.devices"
+          ],
+          ""
+        ],
+        [
+          "cloudidentity.devices.wipe",
+          "POST",
+          "v1beta1/{+name}:wipe",
+          [
+            "https://www.googleapis.com/auth/cloud-identity.devices"
           ],
           ""
         ],
@@ -697,30 +770,12 @@
           ""
         ],
         [
-          "cloudidentity.devices.deviceUsers.approve",
-          "POST",
-          "v1beta1/{+name}:approve",
-          [
-            "https://www.googleapis.com/auth/cloud-identity.devices"
-          ],
-          ""
-        ],
-        [
           "cloudidentity.devices.deviceUsers.get",
           "GET",
           "v1beta1/{+name}",
           [
             "https://www.googleapis.com/auth/cloud-identity.devices",
             "https://www.googleapis.com/auth/cloud-identity.devices.readonly"
-          ],
-          ""
-        ],
-        [
-          "cloudidentity.devices.deviceUsers.delete",
-          "DELETE",
-          "v1beta1/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-identity.devices"
           ],
           ""
         ],
@@ -743,6 +798,15 @@
           ""
         ],
         [
+          "cloudidentity.devices.deviceUsers.approve",
+          "POST",
+          "v1beta1/{+name}:approve",
+          [
+            "https://www.googleapis.com/auth/cloud-identity.devices"
+          ],
+          ""
+        ],
+        [
           "cloudidentity.devices.deviceUsers.list",
           "GET",
           "v1beta1/{+parent}/deviceUsers",
@@ -753,8 +817,17 @@
           ""
         ],
         [
-          "cloudidentity.devices.deviceUsers.clientStates.patch",
-          "PATCH",
+          "cloudidentity.devices.deviceUsers.lookup",
+          "GET",
+          "v1beta1/{+parent}:lookup",
+          [
+            "https://www.googleapis.com/auth/cloud-identity.devices.lookup"
+          ],
+          ""
+        ],
+        [
+          "cloudidentity.devices.deviceUsers.delete",
+          "DELETE",
           "v1beta1/{+name}",
           [
             "https://www.googleapis.com/auth/cloud-identity.devices"
@@ -772,194 +845,225 @@
           ""
         ],
         [
-          "cloudidentity.orgUnits.memberships.list",
+          "cloudidentity.devices.deviceUsers.clientStates.patch",
+          "PATCH",
+          "v1beta1/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-identity.devices"
+          ],
+          ""
+        ],
+        [
+          "cloudidentity.groups.updateSecuritySettings",
+          "PATCH",
+          "v1beta1/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-identity.groups",
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "cloudidentity.groups.lookup",
+          "GET",
+          "v1beta1/groups:lookup",
+          [
+            "https://www.googleapis.com/auth/cloud-identity.groups",
+            "https://www.googleapis.com/auth/cloud-identity.groups.readonly",
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "cloudidentity.groups.patch",
+          "PATCH",
+          "v1beta1/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-identity.groups",
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "cloudidentity.groups.getSecuritySettings",
+          "GET",
+          "v1beta1/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-identity.groups",
+            "https://www.googleapis.com/auth/cloud-identity.groups.readonly",
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "cloudidentity.groups.delete",
+          "DELETE",
+          "v1beta1/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-identity.groups",
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "cloudidentity.groups.search",
+          "GET",
+          "v1beta1/groups:search",
+          [
+            "https://www.googleapis.com/auth/cloud-identity.groups",
+            "https://www.googleapis.com/auth/cloud-identity.groups.readonly",
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "cloudidentity.groups.list",
+          "GET",
+          "v1beta1/groups",
+          [
+            "https://www.googleapis.com/auth/cloud-identity.groups",
+            "https://www.googleapis.com/auth/cloud-identity.groups.readonly",
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "cloudidentity.groups.get",
+          "GET",
+          "v1beta1/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-identity.groups",
+            "https://www.googleapis.com/auth/cloud-identity.groups.readonly",
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "cloudidentity.groups.create",
+          "POST",
+          "v1beta1/groups",
+          [
+            "https://www.googleapis.com/auth/cloud-identity.groups",
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "cloudidentity.groups.memberships.modifyMembershipRoles",
+          "POST",
+          "v1beta1/{+name}:modifyMembershipRoles",
+          [
+            "https://www.googleapis.com/auth/cloud-identity.groups",
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "cloudidentity.groups.memberships.list",
           "GET",
           "v1beta1/{+parent}/memberships",
           [
-            "https://www.googleapis.com/auth/cloud-identity.orgunits",
-            "https://www.googleapis.com/auth/cloud-identity.orgunits.readonly"
+            "https://www.googleapis.com/auth/cloud-identity.groups",
+            "https://www.googleapis.com/auth/cloud-identity.groups.readonly",
+            "https://www.googleapis.com/auth/cloud-platform"
           ],
           ""
         ],
         [
-          "cloudidentity.orgUnits.memberships.move",
-          "POST",
-          "v1beta1/{+name}:move",
+          "cloudidentity.groups.memberships.searchDirectGroups",
+          "GET",
+          "v1beta1/{+parent}/memberships:searchDirectGroups",
           [
-            "https://www.googleapis.com/auth/cloud-identity.orgunits"
+            "https://www.googleapis.com/auth/cloud-identity.groups",
+            "https://www.googleapis.com/auth/cloud-identity.groups.readonly",
+            "https://www.googleapis.com/auth/cloud-platform"
           ],
           ""
         ],
         [
-          "cloudidentity.allowlistedDomains.get",
+          "cloudidentity.groups.memberships.create",
+          "POST",
+          "v1beta1/{+parent}/memberships",
+          [
+            "https://www.googleapis.com/auth/cloud-identity.groups",
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "cloudidentity.groups.memberships.getMembershipGraph",
+          "GET",
+          "v1beta1/{+parent}/memberships:getMembershipGraph",
+          [
+            "https://www.googleapis.com/auth/cloud-identity.groups",
+            "https://www.googleapis.com/auth/cloud-identity.groups.readonly",
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "cloudidentity.groups.memberships.checkTransitiveMembership",
+          "GET",
+          "v1beta1/{+parent}/memberships:checkTransitiveMembership",
+          [
+            "https://www.googleapis.com/auth/cloud-identity.groups",
+            "https://www.googleapis.com/auth/cloud-identity.groups.readonly",
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "cloudidentity.groups.memberships.get",
           "GET",
           "v1beta1/{+name}",
           [
-            "https://www.googleapis.com/auth/cloud-identity.allowlisteddomains",
-            "https://www.googleapis.com/auth/cloud-identity.allowlisteddomains.readonly"
+            "https://www.googleapis.com/auth/cloud-identity.groups",
+            "https://www.googleapis.com/auth/cloud-identity.groups.readonly",
+            "https://www.googleapis.com/auth/cloud-platform"
           ],
           ""
         ],
         [
-          "cloudidentity.allowlistedDomains.delete",
+          "cloudidentity.groups.memberships.delete",
           "DELETE",
           "v1beta1/{+name}",
           [
-            "https://www.googleapis.com/auth/cloud-identity.allowlisteddomains"
-          ],
-          ""
-        ],
-        [
-          "cloudidentity.allowlistedDomains.list",
-          "GET",
-          "v1beta1/allowlistedDomains",
-          [
-            "https://www.googleapis.com/auth/cloud-identity.allowlisteddomains",
-            "https://www.googleapis.com/auth/cloud-identity.allowlisteddomains.readonly"
-          ],
-          ""
-        ],
-        [
-          "cloudidentity.allowlistedDomains.create",
-          "POST",
-          "v1beta1/allowlistedDomains",
-          [
-            "https://www.googleapis.com/auth/cloud-identity.allowlisteddomains"
-          ],
-          ""
-        ],
-        [
-          "cloudidentity.inboundOidcSsoProfiles.create",
-          "POST",
-          "v1beta1/inboundOidcSsoProfiles",
-          [
-            "https://www.googleapis.com/auth/cloud-identity.inboundsso",
+            "https://www.googleapis.com/auth/cloud-identity.groups",
             "https://www.googleapis.com/auth/cloud-platform"
           ],
           ""
         ],
         [
-          "cloudidentity.inboundOidcSsoProfiles.list",
+          "cloudidentity.groups.memberships.searchTransitiveGroups",
           "GET",
-          "v1beta1/inboundOidcSsoProfiles",
+          "v1beta1/{+parent}/memberships:searchTransitiveGroups",
           [
-            "https://www.googleapis.com/auth/cloud-identity.inboundsso",
-            "https://www.googleapis.com/auth/cloud-identity.inboundsso.readonly",
+            "https://www.googleapis.com/auth/cloud-identity.groups",
+            "https://www.googleapis.com/auth/cloud-identity.groups.readonly",
             "https://www.googleapis.com/auth/cloud-platform"
           ],
           ""
         ],
         [
-          "cloudidentity.inboundOidcSsoProfiles.delete",
-          "DELETE",
-          "v1beta1/{+name}",
+          "cloudidentity.groups.memberships.searchTransitiveMemberships",
+          "GET",
+          "v1beta1/{+parent}/memberships:searchTransitiveMemberships",
           [
-            "https://www.googleapis.com/auth/cloud-identity.inboundsso",
+            "https://www.googleapis.com/auth/cloud-identity.groups",
+            "https://www.googleapis.com/auth/cloud-identity.groups.readonly",
             "https://www.googleapis.com/auth/cloud-platform"
           ],
           ""
         ],
         [
-          "cloudidentity.inboundOidcSsoProfiles.patch",
-          "PATCH",
-          "v1beta1/{+name}",
+          "cloudidentity.groups.memberships.lookup",
+          "GET",
+          "v1beta1/{+parent}/memberships:lookup",
           [
-            "https://www.googleapis.com/auth/cloud-identity.inboundsso",
+            "https://www.googleapis.com/auth/cloud-identity.groups",
+            "https://www.googleapis.com/auth/cloud-identity.groups.readonly",
             "https://www.googleapis.com/auth/cloud-platform"
           ],
-          ""
-        ],
-        [
-          "cloudidentity.inboundOidcSsoProfiles.get",
-          "GET",
-          "v1beta1/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-identity.inboundsso",
-            "https://www.googleapis.com/auth/cloud-identity.inboundsso.readonly",
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
-          "cloudidentity.policies.list",
-          "GET",
-          "v1beta1/policies",
-          [
-            "https://www.googleapis.com/auth/cloud-identity.policies",
-            "https://www.googleapis.com/auth/cloud-identity.policies.readonly"
-          ],
-          ""
-        ],
-        [
-          "cloudidentity.policies.create",
-          "POST",
-          "v1beta1/policies",
-          [
-            "https://www.googleapis.com/auth/cloud-identity.policies"
-          ],
-          ""
-        ],
-        [
-          "cloudidentity.policies.patch",
-          "PATCH",
-          "v1beta1/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-identity.policies"
-          ],
-          ""
-        ],
-        [
-          "cloudidentity.policies.delete",
-          "DELETE",
-          "v1beta1/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-identity.policies"
-          ],
-          ""
-        ],
-        [
-          "cloudidentity.policies.get",
-          "GET",
-          "v1beta1/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-identity.policies",
-            "https://www.googleapis.com/auth/cloud-identity.policies.readonly"
-          ],
-          ""
-        ],
-        [
-          "cloudidentity.customers.userinvitations.get",
-          "GET",
-          "v1beta1/{+name}",
-          [],
-          ""
-        ],
-        [
-          "cloudidentity.customers.userinvitations.send",
-          "POST",
-          "v1beta1/{+name}:send",
-          [],
-          ""
-        ],
-        [
-          "cloudidentity.customers.userinvitations.list",
-          "GET",
-          "v1beta1/{+parent}/userinvitations",
-          [],
-          ""
-        ],
-        [
-          "cloudidentity.customers.userinvitations.isInvitableUser",
-          "GET",
-          "v1beta1/{+name}:isInvitableUser",
-          [],
-          ""
-        ],
-        [
-          "cloudidentity.customers.userinvitations.cancel",
-          "POST",
-          "v1beta1/{+name}:cancel",
-          [],
           ""
         ],
         [
@@ -973,22 +1077,22 @@
           ""
         ],
         [
-          "cloudidentity.inboundSamlSsoProfiles.delete",
-          "DELETE",
-          "v1beta1/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-identity.inboundsso",
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
           "cloudidentity.inboundSamlSsoProfiles.get",
           "GET",
           "v1beta1/{+name}",
           [
             "https://www.googleapis.com/auth/cloud-identity.inboundsso",
             "https://www.googleapis.com/auth/cloud-identity.inboundsso.readonly",
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "cloudidentity.inboundSamlSsoProfiles.delete",
+          "DELETE",
+          "v1beta1/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-identity.inboundsso",
             "https://www.googleapis.com/auth/cloud-platform"
           ],
           ""
@@ -1057,214 +1161,78 @@
           ""
         ],
         [
-          "cloudidentity.groups.create",
+          "cloudidentity.orgUnits.memberships.move",
           "POST",
-          "v1beta1/groups",
+          "v1beta1/{+name}:move",
           [
-            "https://www.googleapis.com/auth/cloud-identity.groups",
-            "https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-identity.orgunits"
           ],
           ""
         ],
         [
-          "cloudidentity.groups.lookup",
-          "GET",
-          "v1beta1/groups:lookup",
-          [
-            "https://www.googleapis.com/auth/cloud-identity.groups",
-            "https://www.googleapis.com/auth/cloud-identity.groups.readonly",
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
-          "cloudidentity.groups.patch",
-          "PATCH",
-          "v1beta1/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-identity.groups",
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
-          "cloudidentity.groups.getSecuritySettings",
-          "GET",
-          "v1beta1/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-identity.groups",
-            "https://www.googleapis.com/auth/cloud-identity.groups.readonly",
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
-          "cloudidentity.groups.get",
-          "GET",
-          "v1beta1/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-identity.groups",
-            "https://www.googleapis.com/auth/cloud-identity.groups.readonly",
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
-          "cloudidentity.groups.list",
-          "GET",
-          "v1beta1/groups",
-          [
-            "https://www.googleapis.com/auth/cloud-identity.groups",
-            "https://www.googleapis.com/auth/cloud-identity.groups.readonly",
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
-          "cloudidentity.groups.updateSecuritySettings",
-          "PATCH",
-          "v1beta1/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-identity.groups",
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
-          "cloudidentity.groups.delete",
-          "DELETE",
-          "v1beta1/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-identity.groups",
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
-          "cloudidentity.groups.search",
-          "GET",
-          "v1beta1/groups:search",
-          [
-            "https://www.googleapis.com/auth/cloud-identity.groups",
-            "https://www.googleapis.com/auth/cloud-identity.groups.readonly",
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
-          "cloudidentity.groups.memberships.getMembershipGraph",
-          "GET",
-          "v1beta1/{+parent}/memberships:getMembershipGraph",
-          [
-            "https://www.googleapis.com/auth/cloud-identity.groups",
-            "https://www.googleapis.com/auth/cloud-identity.groups.readonly",
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
-          "cloudidentity.groups.memberships.list",
+          "cloudidentity.orgUnits.memberships.list",
           "GET",
           "v1beta1/{+parent}/memberships",
           [
-            "https://www.googleapis.com/auth/cloud-identity.groups",
-            "https://www.googleapis.com/auth/cloud-identity.groups.readonly",
-            "https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-identity.orgunits",
+            "https://www.googleapis.com/auth/cloud-identity.orgunits.readonly"
           ],
           ""
         ],
         [
-          "cloudidentity.groups.memberships.checkTransitiveMembership",
-          "GET",
-          "v1beta1/{+parent}/memberships:checkTransitiveMembership",
+          "cloudidentity.allowlistedDomains.create",
+          "POST",
+          "v1beta1/allowlistedDomains",
           [
-            "https://www.googleapis.com/auth/cloud-identity.groups",
-            "https://www.googleapis.com/auth/cloud-identity.groups.readonly",
-            "https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-identity.allowlisteddomains"
           ],
           ""
         ],
         [
-          "cloudidentity.groups.memberships.searchTransitiveMemberships",
+          "cloudidentity.allowlistedDomains.get",
           "GET",
-          "v1beta1/{+parent}/memberships:searchTransitiveMemberships",
+          "v1beta1/{+name}",
           [
-            "https://www.googleapis.com/auth/cloud-identity.groups",
-            "https://www.googleapis.com/auth/cloud-identity.groups.readonly",
-            "https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-identity.allowlisteddomains",
+            "https://www.googleapis.com/auth/cloud-identity.allowlisteddomains.readonly"
           ],
           ""
         ],
         [
-          "cloudidentity.groups.memberships.searchDirectGroups",
+          "cloudidentity.allowlistedDomains.list",
           "GET",
-          "v1beta1/{+parent}/memberships:searchDirectGroups",
+          "v1beta1/allowlistedDomains",
           [
-            "https://www.googleapis.com/auth/cloud-identity.groups",
-            "https://www.googleapis.com/auth/cloud-identity.groups.readonly",
-            "https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-identity.allowlisteddomains",
+            "https://www.googleapis.com/auth/cloud-identity.allowlisteddomains.readonly"
           ],
           ""
         ],
         [
-          "cloudidentity.groups.memberships.delete",
+          "cloudidentity.allowlistedDomains.delete",
           "DELETE",
           "v1beta1/{+name}",
           [
-            "https://www.googleapis.com/auth/cloud-identity.groups",
-            "https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-identity.allowlisteddomains"
           ],
           ""
         ],
         [
-          "cloudidentity.groups.memberships.create",
-          "POST",
-          "v1beta1/{+parent}/memberships",
-          [
-            "https://www.googleapis.com/auth/cloud-identity.groups",
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
-          "cloudidentity.groups.memberships.lookup",
-          "GET",
-          "v1beta1/{+parent}/memberships:lookup",
-          [
-            "https://www.googleapis.com/auth/cloud-identity.groups",
-            "https://www.googleapis.com/auth/cloud-identity.groups.readonly",
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
-          "cloudidentity.groups.memberships.modifyMembershipRoles",
-          "POST",
-          "v1beta1/{+name}:modifyMembershipRoles",
-          [
-            "https://www.googleapis.com/auth/cloud-identity.groups",
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
-          "cloudidentity.groups.memberships.searchTransitiveGroups",
-          "GET",
-          "v1beta1/{+parent}/memberships:searchTransitiveGroups",
-          [
-            "https://www.googleapis.com/auth/cloud-identity.groups",
-            "https://www.googleapis.com/auth/cloud-identity.groups.readonly",
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
-          "cloudidentity.groups.memberships.get",
-          "GET",
+          "cloudidentity.inboundSsoAssignments.patch",
+          "PATCH",
           "v1beta1/{+name}",
           [
-            "https://www.googleapis.com/auth/cloud-identity.groups",
-            "https://www.googleapis.com/auth/cloud-identity.groups.readonly",
+            "https://www.googleapis.com/auth/cloud-identity.inboundsso",
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "cloudidentity.inboundSsoAssignments.create",
+          "POST",
+          "v1beta1/inboundSsoAssignments",
+          [
+            "https://www.googleapis.com/auth/cloud-identity.inboundsso",
             "https://www.googleapis.com/auth/cloud-platform"
           ],
           ""
@@ -1281,16 +1249,6 @@
           ""
         ],
         [
-          "cloudidentity.inboundSsoAssignments.create",
-          "POST",
-          "v1beta1/inboundSsoAssignments",
-          [
-            "https://www.googleapis.com/auth/cloud-identity.inboundsso",
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
           "cloudidentity.inboundSsoAssignments.get",
           "GET",
           "v1beta1/{+name}",
@@ -1302,7 +1260,17 @@
           ""
         ],
         [
-          "cloudidentity.inboundSsoAssignments.patch",
+          "cloudidentity.inboundSsoAssignments.delete",
+          "DELETE",
+          "v1beta1/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-identity.inboundsso",
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "cloudidentity.inboundOidcSsoProfiles.patch",
           "PATCH",
           "v1beta1/{+name}",
           [
@@ -1312,11 +1280,43 @@
           ""
         ],
         [
-          "cloudidentity.inboundSsoAssignments.delete",
+          "cloudidentity.inboundOidcSsoProfiles.delete",
           "DELETE",
           "v1beta1/{+name}",
           [
             "https://www.googleapis.com/auth/cloud-identity.inboundsso",
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "cloudidentity.inboundOidcSsoProfiles.create",
+          "POST",
+          "v1beta1/inboundOidcSsoProfiles",
+          [
+            "https://www.googleapis.com/auth/cloud-identity.inboundsso",
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "cloudidentity.inboundOidcSsoProfiles.list",
+          "GET",
+          "v1beta1/inboundOidcSsoProfiles",
+          [
+            "https://www.googleapis.com/auth/cloud-identity.inboundsso",
+            "https://www.googleapis.com/auth/cloud-identity.inboundsso.readonly",
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "cloudidentity.inboundOidcSsoProfiles.get",
+          "GET",
+          "v1beta1/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-identity.inboundsso",
+            "https://www.googleapis.com/auth/cloud-identity.inboundsso.readonly",
             "https://www.googleapis.com/auth/cloud-platform"
           ],
           ""
@@ -1359,18 +1359,18 @@
       "servicePath": "",
       "methods": [
         [
-          "verifiedaccess.challenge.verify",
+          "verifiedaccess.challenge.create",
           "POST",
-          "v1/challenge:verify",
+          "v1/challenge",
           [
             "https://www.googleapis.com/auth/verifiedaccess"
           ],
           ""
         ],
         [
-          "verifiedaccess.challenge.create",
+          "verifiedaccess.challenge.verify",
           "POST",
-          "v1/challenge",
+          "v1/challenge:verify",
           [
             "https://www.googleapis.com/auth/verifiedaccess"
           ],

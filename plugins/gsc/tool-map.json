@@ -165,7 +165,7 @@
   },
   {
     "name": "mcp__plugin_gsc_gsc__searchcons_searchanalytics_query",
-    "kind": "write",
+    "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/webmasters",
       "https://www.googleapis.com/auth/webmasters.readonly"

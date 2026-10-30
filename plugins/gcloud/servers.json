@@ -20,7 +20,41 @@
         },
         {
           "api": "cloudresourcemanager",
-          "version": "v3"
+          "version": "v3",
+          "include": [
+            "v3",
+            "fetchResourceSemantics",
+            "folders.create",
+            "folders.delete",
+            "folders.get",
+            "folders.getIamPolicy",
+            "folders.list",
+            "folders.move",
+            "folders.patch",
+            "folders.search",
+            "folders.setIamPolicy",
+            "folders.testIamPermissions",
+            "folders.undelete",
+            "folders.capabilityConfigs",
+            "folders.capabilities",
+            "projects",
+            "projects.capabilityConfigs",
+            "organizations.get",
+            "organizations.getIamPolicy",
+            "organizations.search",
+            "organizations.setIamPolicy",
+            "organizations.testIamPermissions",
+            "organizations.capabilityConfigs",
+            "tagValues",
+            "tagValues.tagHolds",
+            "operations",
+            "liens",
+            "tagBindings",
+            "locations.effectiveTagBindingCollections",
+            "locations.tagBindingCollections",
+            "effectiveTags",
+            "tagKeys"
+          ]
         },
         {
           "api": "apikeys",
@@ -1171,6 +1205,18 @@
         {
           "api": "workstations",
           "version": "v1beta"
+        },
+        {
+          "api": "cloudresourcemanager",
+          "version": "v3"
+        },
+        {
+          "api": "compute",
+          "version": "2026-11-01"
+        },
+        {
+          "api": "compute",
+          "version": "2026-12-01-preview"
         }
       ],
       "toolsets": {

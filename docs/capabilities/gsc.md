@@ -4,7 +4,7 @@ Search Console sites, sitemaps, search analytics, URL indexing and site verifica
 
 - Plugin: `gsc`, MCP server: `gsc`, login: Desktop OAuth client, then `login searchconsole`
 - Install: `claude plugin install gsc@google-services-mcps`
-- Tools: 40 total. Curated 19, per-method 20, gateway 0. Read 18, write 17, destructive 5, dynamic 0.
+- Tools: 40 total. Curated 19, per-method 20, gateway 0. Read 19, write 16, destructive 5, dynamic 0.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
@@ -18,7 +18,7 @@ Google has no official MCP server for this product. The google toolset is a lean
 |---|---|---|
 | `sc_sites_list` | (none) | The properties the account can see, with its permission level. Start here. |
 | `sc_site_get` | (none) | One property and the account's permission on it. |
-| `sc_search_analytics_query` | (none) | Clicks, impressions, CTR and position by query, page, country, device, date or search appearance. A read here; the generated searchcons_searchanalytics_query is a write, as classifyMethod classifies the POST query. |
+| `sc_search_analytics_query` | (none) | Clicks, impressions, CTR and position by query, page, country, device, date or search appearance. A read, as the generated searchcons_searchanalytics_query is since 1.24.5 (config/tool-kinds.json; before, the POST query was a write by its name). |
 | `sc_url_inspect` | (none) | The index status of one URL: coverage, last crawl, canonical, mobile usability and rich results. |
 | `sc_sitemaps_list` | (none) | The sitemaps of a property with their submitted and indexed counts (the indexed count can lag; check a sample with sc_url_inspect). |
 | `sc_sitemap_get` | (none) | One sitemap: its status, errors, warnings and counts. |
@@ -56,7 +56,7 @@ Google has no official MCP server for this product. The google toolset is a lean
 |---|---|---|---|
 | `indexing_url_notifications_get_metadata` | read | indexing.urlNotifications.getMetadata | indexing |
 | `indexing_url_notifications_publish` | write | indexing.urlNotifications.publish | indexing |
-| `searchcons_searchanalytics_query` | write | webmasters.searchanalytics.query | webmasters, webmasters.readonly |
+| `searchcons_searchanalytics_query` | read | webmasters.searchanalytics.query | webmasters, webmasters.readonly |
 | `searchcons_sitemaps_delete` | destructive | webmasters.sitemaps.delete | webmasters |
 | `searchcons_sitemaps_get` | read | webmasters.sitemaps.get | webmasters, webmasters.readonly |
 | `searchcons_sitemaps_list` | read | webmasters.sitemaps.list | webmasters, webmasters.readonly |

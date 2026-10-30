@@ -2,6 +2,52 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.26.0 - 2026-10-30
+
+### Changed: Discovery snapshots and the API catalog refreshed from Google (2026-10-30)
+- All 143 snapshots in `data/discovery/` were fetched again (`data/discovery/_revisions.json` now records each document's revision and fetch time), and `data/catalog.json` was rebuilt: 541 API versions (was 536) and 31,633 methods (was 29,205).
+- New per-method tools, from methods Google added: `chat_spaces_messages_replace_cards` (gchat, a write), `classroom_cou_cou_add_stu_lis` (gclassroom, add-on attachment student submissions, a read) and `firebasecr_project_apps_generat` (gfirebase, Crashlytics `generateAlertPolicy`, a write by the POST rule). Three Chat methods now also list `chat.bot`.
+- gcloud keeps its 350 per-method tools: Cloud Resource Manager v3 gained 14 methods (boundaries and boundary configs of organizations and folders), which would pass the 350 cap, so its generated entry now lists its previous methods (`include`), and the whole API is also a gateway API of gcloud, so the 14 new methods are reachable with `api_search`, `api_describe` and `api_call`.
+- New catalog versions are reached through the gateway, beside the versions already used: Compute Engine `2026-11-01` and `2026-12-01-preview` (gcloud), Display & Video 360 `v5` (gads), Device Run `v1` (gfirebase). The per-method tools keep their versions (Display & Video 360 `v4`, Device Run `v1alpha`).
+- The gateway lost 35 methods that Google removed (Vertex AI v1beta1 evaluation-task operations, Contact Center AI Insights assistant sessions, BeyondCorp connector and gateway create, patch and status methods, SaaS Runtime v1beta1 releases and unit groups, Compute Engine preview `instances.troubleshoot`); calling them would fail at Google. No per-method tool was removed or renamed, no tool's kind changed, and no method lost a scope.
+- `rapidmigrationassessment v1`, a gcloud gateway API, answers HTTP 502 at Google's Discovery URLs today; its catalog entry is kept as it was (built from the copy of 2026-10-15).
+
+### Not changed
+- The scopes of every login: each plugin's `gsm scopes`, every toolset and profile, gives the same lists as 1.25.0.
+- Deep Review API (`deepreview v1`, new in Google's directory) is listed as unassigned, with a reason: which product it belongs to is the owner's decision.
+
+## 1.25.0 - 2026-10-30
+
+### Added: narrower scopes for the google toolset, with the same reach
+- A product's listed toolset can name the scopes its login takes first, per profile (`preferScopes` under `toolsets.google` in `config/products.json`; `scripts/gen-servers.mjs` copies it into the server map as `toolsetScopes`). The login takes those first, then the usual rule covers what is left. A scope is preferred only where Google's scope documentation gives the toolset's tools the same reach as the broader scope the login took before, so no tool of the list loses data or actions.
+- With `toolset: google`, a `readwrite` login now asks for:
+  - Calendar: `calendar.events`, `calendar.calendarlist.readonly`, `calendar.events.freebusy` (was `calendar`, which also changes calendars and their sharing).
+  - Chat: `chat.spaces.readonly`, `chat.memberships.readonly`, `chat.messages.readonly`, `chat.messages.create`, `chat.users.readstate`, `chat.users.spacesettings` (was `chat.spaces`, `chat.memberships`, `chat.messages`, which also edit and delete).
+  - Contacts: `contacts.readonly` (was `contacts`), with `directory.readonly` and `userinfo.email`.
+  - Tasks and Keep: `keep.readonly` (was `keep`), with `tasks`.
+  - Classroom: the read-only scopes of courses, rosters and guardian links (were their read-write scopes); announcements, coursework, materials and topics unchanged.
+  - Tag Manager: `tagmanager.readonly` (was `tagmanager.edit.containers`), with `tagmanager.edit.containerversions` and `tagmanager.publish`.
+  - Workspace admin (`setup-admin --toolset google`): `admin.directory.group.readonly`, `admin.directory.group.member`, `admin.directory.orgunit.readonly`, `admin.directory.domain.readonly` (were the group, org unit and domain write scopes), with `admin.directory.user`, the audit scope and `apps.alerts`.
+- The terminal login, `gsm scopes`, `setup-admin`, the sign-in from the chat and the ADC sign-in from the chat all use the same preference.
+- `scripts/gen-servers.mjs` refuses a preference that names a profile other than `readonly` or `readwrite`, a scope twice, a scope that is not read-only for `readonly`, or a scope no tool of the toolset accepts; `scripts/bundle.mjs` checks the last again against the tools it builds.
+
+### Not changed
+- Drive keeps `drive` (`drive_files_copy` copies any of your files, which `drive.file` cannot reach), Gmail keeps `gmail.modify`, Cloud keeps `cloud-platform` (and `bigquery`, which `cloud-platform` already covers), and the other products' `google` lists ask for what they asked before: a narrower scope with the same reach does not exist there.
+- The `all` and `curated` toolsets, every `readonly` and `full` login, and the scopes a tool needs to register. A token that holds the old, broader scopes keeps working: each tool still registers when the token holds any scope it accepts.
+- Not tested against Google: the scopes were compared in the suite, and the sign-ins stopped at the URL (OAuth) or ran a stand-in gcloud (ADC).
+
+## 1.24.5 - 2026-10-30
+
+### Fixed: seventeen more POST queries are reads
+- These `POST` methods only read, but their names made them writes, so they asked first and were hidden with writes off: Search Console `searchanalytics.query`; the Monitoring v1 Prometheus queries `query`, `query_range`, `query_exemplars`, `series` and `labels`, and Monitoring v3 `timeSeries.query`; Postmaster Tools v2 `domains.domainStats.query` and `domainStats.batchQuery`; Vertex AI `generateContent` (publisher models and endpoints, with and without a project and location) and `embedContent`; Identity Toolkit `accounts.query` (project and tenant); Firestore `documents.runQuery`. Each is now a read in `config/tool-kinds.json`, for every version the catalog carries.
+- What moves: four generated tools (`searchcons_searchanalytics_query` in gsc, `monitor_projects_time_series_query` in gcloud, `gmailpostm_domains_domain_stats_query` and `gmailpostm_domain_stats_batch_query` in gmail) and thirteen gateway methods (gai 5, gcloud 6, gfirebase 2). The curated tools that call these methods (`sc_search_analytics_query`, `monitoring_query_promql`, `vertex_generate_content`, `vertex_embed_content`, `firestore_query_collection`, `auth_get_users`) were reads already; their generated and gateway copies now agree with them.
+
+### Not changed
+- BigQuery `jobs.query` stays a write (it runs any SQL, DML and DDL included).
+- Vertex AI `countTokens` stays a write: its name holds "token", one of the credential words, and that rule is not overridden. The curated `vertex_count_tokens` is a read, as before.
+- The scopes every login asks for: `gsm scopes` gives the same lists before and after for every group, profile and toolset, and for every server alone.
+- The write gate, the hook and every other kind.
+
 ## 1.24.4 - 2026-10-30
 
 ### Fixed: each service-account plugin asks for its own scopes only

@@ -42,7 +42,7 @@ Start with `--profile readonly`. Event changes need a `readwrite` login and the 
 
 The full list is in `docs/capabilities/gcalendar.md`.
 
-With the plugin option `toolset: google`, the server lists the 8 tools that match Google's Calendar MCP server (`list_calendars`, `list_events`, `get_event`, `suggest_time`, `create_event`, `update_event`, `delete_event`, `respond_to_event`; its `search_events` is a semantic search with no public API, so `calendar_list_events` with `q` stands in for it), plus `health` and the sign-in tools.
+With the plugin option `toolset: google`, the server lists the 8 tools that match Google's Calendar MCP server (`list_calendars`, `list_events`, `get_event`, `suggest_time`, `create_event`, `update_event`, `delete_event`, `respond_to_event`; its `search_events` is a semantic search with no public API, so `calendar_list_events` with `q` stands in for it), plus `health` and the sign-in tools. A `readonly` login with that toolset asks for `calendar.readonly`; a `readwrite` login (since 1.25.0) for `calendar.events`, `calendar.calendarlist.readonly` and `calendar.events.freebusy`, the scopes of Google's Calendar MCP server, instead of `calendar`, which also changes calendars and their sharing (no tool of the list does).
 
 ## Example requests
 

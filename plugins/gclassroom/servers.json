@@ -43,6 +43,15 @@
           "classroom_get_guardians"
         ]
       },
+      "toolsetScopes": {
+        "google": {
+          "readwrite": [
+            "https://www.googleapis.com/auth/classroom.courses.readonly",
+            "https://www.googleapis.com/auth/classroom.rosters.readonly",
+            "https://www.googleapis.com/auth/classroom.guardianlinks.students.readonly"
+          ]
+        }
+      },
       "scopes": [
         "https://www.googleapis.com/auth/classroom.announcements",
         "https://www.googleapis.com/auth/classroom.announcements.readonly",

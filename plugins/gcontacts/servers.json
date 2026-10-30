@@ -48,6 +48,13 @@
           "profile_me"
         ]
       },
+      "toolsetScopes": {
+        "google": {
+          "readwrite": [
+            "https://www.googleapis.com/auth/contacts.readonly"
+          ]
+        }
+      },
       "scopes": [
         "https://www.googleapis.com/auth/contacts",
         "https://www.googleapis.com/auth/contacts.readonly",

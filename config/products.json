@@ -16,7 +16,41 @@
         },
         {
           "api": "cloudresourcemanager",
-          "version": "v3"
+          "version": "v3",
+          "include": [
+            "v3",
+            "fetchResourceSemantics",
+            "folders.create",
+            "folders.delete",
+            "folders.get",
+            "folders.getIamPolicy",
+            "folders.list",
+            "folders.move",
+            "folders.patch",
+            "folders.search",
+            "folders.setIamPolicy",
+            "folders.testIamPermissions",
+            "folders.undelete",
+            "folders.capabilityConfigs",
+            "folders.capabilities",
+            "projects",
+            "projects.capabilityConfigs",
+            "organizations.get",
+            "organizations.getIamPolicy",
+            "organizations.search",
+            "organizations.setIamPolicy",
+            "organizations.testIamPermissions",
+            "organizations.capabilityConfigs",
+            "tagValues",
+            "tagValues.tagHolds",
+            "operations",
+            "liens",
+            "tagBindings",
+            "locations.effectiveTagBindingCollections",
+            "locations.tagBindingCollections",
+            "effectiveTags",
+            "tagKeys"
+          ]
         },
         {
           "api": "apikeys",
@@ -1167,6 +1201,18 @@
         {
           "api": "workstations",
           "version": "v1beta"
+        },
+        {
+          "api": "cloudresourcemanager",
+          "version": "v3"
+        },
+        {
+          "api": "compute",
+          "version": "2026-11-01"
+        },
+        {
+          "api": "compute",
+          "version": "2026-12-01-preview"
         }
       ],
       "toolsets": {
@@ -1432,7 +1478,7 @@
             "iam_roles_list": "Reads only. Google's create_role, update_role, delete_role and undelete_role (IAM v1) are reached with the gateway (api_call) in the all toolset. IAM lists only the cloud-platform scope for roles, so a readonly login cannot run it.",
             "iam_role_get": "IAM lists only the cloud-platform scope for roles, so a readonly login cannot run it.",
             "logging_entries_list": "Google's list_log_names, list_buckets, list_views (and the observability server's sinks and log scopes) are reached with the gateway (api_call) in the all toolset. Without a time limit the last day is searched, as gcloud logging read does.",
-            "monitoring_query_promql": "Also runs instant queries (Prometheus /query) when no range is given. Our kind is read, as Google marks query_range; the gateway classifies the two Prometheus POST methods as writes by their names.",
+            "monitoring_query_promql": "Also runs instant queries (Prometheus /query) when no range is given. Our kind is read, as Google marks query_range; since 1.24.5 the gateway's Prometheus POST queries (query, query_range, query_exemplars, series, labels) are reads too (config/tool-kinds.json).",
             "gcs_read_text": "Google's read_text is deprecated in favour of read_object; kept for text, decoded with the object's charset.",
             "gcs_write_text": "Unlike Google's write_text it does not replace an existing object unless overwrite is true (ifGenerationMatch=0). It also uploads a local file (local_path)."
           }
@@ -1491,7 +1537,7 @@
           "notes": {
             "sc_sites_list": "The properties the account can see, with its permission level. Start here.",
             "sc_site_get": "One property and the account's permission on it.",
-            "sc_search_analytics_query": "Clicks, impressions, CTR and position by query, page, country, device, date or search appearance. A read here; the generated searchcons_searchanalytics_query is a write, as classifyMethod classifies the POST query.",
+            "sc_search_analytics_query": "Clicks, impressions, CTR and position by query, page, country, device, date or search appearance. A read, as the generated searchcons_searchanalytics_query is since 1.24.5 (config/tool-kinds.json; before, the POST query was a write by its name).",
             "sc_url_inspect": "The index status of one URL: coverage, last crawl, canonical, mobile usability and rich results.",
             "sc_sitemaps_list": "The sitemaps of a property with their submitted and indexed counts (the indexed count can lag; check a sample with sc_url_inspect).",
             "sc_sitemap_get": "One sitemap: its status, errors, warnings and counts.",
@@ -1903,6 +1949,13 @@
       "toolsets": {
         "google": {
           "source": "https://developers.google.com/workspace/calendar/api/v3/reference/mcp/tools_list",
+          "preferScopes": {
+            "readwrite": [
+              "https://www.googleapis.com/auth/calendar.events",
+              "https://www.googleapis.com/auth/calendar.calendarlist.readonly",
+              "https://www.googleapis.com/auth/calendar.events.freebusy"
+            ]
+          },
           "tools": [
             "calendar_list_calendars",
             "calendar_list_events",
@@ -1971,6 +2024,14 @@
       "toolsets": {
         "google": {
           "source": "https://developers.google.com/workspace/chat/api/reference/mcp/tools_list",
+          "preferScopes": {
+            "readwrite": [
+              "https://www.googleapis.com/auth/chat.spaces.readonly",
+              "https://www.googleapis.com/auth/chat.memberships.readonly",
+              "https://www.googleapis.com/auth/chat.messages.readonly",
+              "https://www.googleapis.com/auth/chat.messages.create"
+            ]
+          },
           "tools": [
             "chat_search_conversations",
             "chat_list_messages",
@@ -2021,7 +2082,7 @@
           }
         }
       },
-      "generatedToolCount": 60
+      "generatedToolCount": 61
     },
     "gmeet": {
       "title": "Google Meet",
@@ -2120,6 +2181,11 @@
       "toolsets": {
         "google": {
           "source": "https://developers.google.com/people/api/mcp/tools_list",
+          "preferScopes": {
+            "readwrite": [
+              "https://www.googleapis.com/auth/contacts.readonly"
+            ]
+          },
           "tools": [
             "contacts_search_directory",
             "contacts_search",
@@ -2167,6 +2233,11 @@
       "toolsets": {
         "google": {
           "source": "No official Google MCP server for Google Tasks or Google Keep was found (Google's Cloud and Workspace MCP lists, 2026-10-29; a negative, not confirmed by Google); a lean set chosen here.",
+          "preferScopes": {
+            "readwrite": [
+              "https://www.googleapis.com/auth/keep.readonly"
+            ]
+          },
           "tools": [
             "tasks_tasklists_list",
             "tasks_tasks_list",
@@ -2219,6 +2290,13 @@
       "toolsets": {
         "google": {
           "source": "https://developers.google.com/workspace/classroom/reference/mcp/tools_list",
+          "preferScopes": {
+            "readwrite": [
+              "https://www.googleapis.com/auth/classroom.courses.readonly",
+              "https://www.googleapis.com/auth/classroom.rosters.readonly",
+              "https://www.googleapis.com/auth/classroom.guardianlinks.students.readonly"
+            ]
+          },
           "tools": [
             "classroom_list_courses",
             "classroom_get_course",
@@ -2314,7 +2392,7 @@
           }
         }
       },
-      "generatedToolCount": 104
+      "generatedToolCount": 105
     },
     "gapps": {
       "title": "Apps Script",
@@ -2451,6 +2529,14 @@
       "toolsets": {
         "google": {
           "source": "No official Google MCP server for Google Workspace administration (the Admin SDK, reports and the alert center) was found in Google's Workspace and Cloud MCP lists on 2026-10-29; a lean set chosen here.",
+          "preferScopes": {
+            "readwrite": [
+              "https://www.googleapis.com/auth/admin.directory.group.readonly",
+              "https://www.googleapis.com/auth/admin.directory.group.member",
+              "https://www.googleapis.com/auth/admin.directory.orgunit.readonly",
+              "https://www.googleapis.com/auth/admin.directory.domain.readonly"
+            ]
+          },
           "tools": [
             "admin_users_list",
             "admin_user_get",
@@ -2597,6 +2683,11 @@
       "toolsets": {
         "google": {
           "source": "No official Google MCP server for Google Tag Manager was found (Google's Cloud and Workspace MCP lists and Google's GitHub organisations, 2026-10-29; a negative, not confirmed by Google); a lean set chosen here.",
+          "preferScopes": {
+            "readwrite": [
+              "https://www.googleapis.com/auth/tagmanager.readonly"
+            ]
+          },
           "tools": [
             "tagmgr_accounts_list",
             "tagmgr_accounts_containers_list",
@@ -3006,6 +3097,10 @@
         {
           "api": "googleads",
           "version": "v26"
+        },
+        {
+          "api": "displayvideo",
+          "version": "v5"
         }
       ],
       "toolsets": {
@@ -3518,6 +3613,10 @@
         {
           "api": "identitytoolkit",
           "version": "v2"
+        },
+        {
+          "api": "devicerun",
+          "version": "v1"
         }
       ],
       "toolsets": {
@@ -3699,7 +3798,7 @@
           }
         }
       },
-      "generatedToolCount": 297
+      "generatedToolCount": 298
     },
     "gmaps": {
       "title": "Maps and Location",
@@ -4096,6 +4195,11 @@
       "api": "prod_tt_sasportal",
       "version": "v1alpha1",
       "reason": "Test-environment mirror of sasportal (SAS Portal API (Testing)). Not a product API."
+    },
+    {
+      "api": "deepreview",
+      "version": "v1",
+      "reason": "New in Google's Discovery directory (Deep Review API, 11 methods), first seen on 2026-10-30. Not assigned to a product yet: which product it belongs to is the owner's decision."
     }
   ],
   "notes": {

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-15T15:08:21.313Z",
+  "generatedAt": "2026-10-30T15:12:58.580Z",
   "apiCount": 7,
   "methodCount": 184,
   "apis": [
@@ -17,6 +17,33 @@
       "methods": [
         [
           "androidmanagement.provisioningInfo.get",
+          "GET",
+          "v1/{+name}",
+          [
+            "https://www.googleapis.com/auth/androidmanagement"
+          ],
+          ""
+        ],
+        [
+          "androidmanagement.signupUrls.create",
+          "POST",
+          "v1/signupUrls",
+          [
+            "https://www.googleapis.com/auth/androidmanagement"
+          ],
+          ""
+        ],
+        [
+          "androidmanagement.enterprises.delete",
+          "DELETE",
+          "v1/{+name}",
+          [
+            "https://www.googleapis.com/auth/androidmanagement"
+          ],
+          ""
+        ],
+        [
+          "androidmanagement.enterprises.get",
           "GET",
           "v1/{+name}",
           [
@@ -43,17 +70,8 @@
           ""
         ],
         [
-          "androidmanagement.enterprises.delete",
-          "DELETE",
-          "v1/{+name}",
-          [
-            "https://www.googleapis.com/auth/androidmanagement"
-          ],
-          ""
-        ],
-        [
-          "androidmanagement.enterprises.get",
-          "GET",
+          "androidmanagement.enterprises.patch",
+          "PATCH",
           "v1/{+name}",
           [
             "https://www.googleapis.com/auth/androidmanagement"
@@ -70,90 +88,18 @@
           ""
         ],
         [
-          "androidmanagement.enterprises.patch",
-          "PATCH",
-          "v1/{+name}",
-          [
-            "https://www.googleapis.com/auth/androidmanagement"
-          ],
-          ""
-        ],
-        [
-          "androidmanagement.enterprises.enrollmentTokens.get",
-          "GET",
-          "v1/{+name}",
-          [
-            "https://www.googleapis.com/auth/androidmanagement"
-          ],
-          ""
-        ],
-        [
-          "androidmanagement.enterprises.enrollmentTokens.create",
+          "androidmanagement.enterprises.webTokens.create",
           "POST",
-          "v1/{+parent}/enrollmentTokens",
+          "v1/{+parent}/webTokens",
           [
             "https://www.googleapis.com/auth/androidmanagement"
           ],
           ""
         ],
         [
-          "androidmanagement.enterprises.enrollmentTokens.delete",
-          "DELETE",
-          "v1/{+name}",
-          [
-            "https://www.googleapis.com/auth/androidmanagement"
-          ],
-          ""
-        ],
-        [
-          "androidmanagement.enterprises.enrollmentTokens.list",
+          "androidmanagement.enterprises.devices.list",
           "GET",
-          "v1/{+parent}/enrollmentTokens",
-          [
-            "https://www.googleapis.com/auth/androidmanagement"
-          ],
-          ""
-        ],
-        [
-          "androidmanagement.enterprises.webApps.list",
-          "GET",
-          "v1/{+parent}/webApps",
-          [
-            "https://www.googleapis.com/auth/androidmanagement"
-          ],
-          ""
-        ],
-        [
-          "androidmanagement.enterprises.webApps.delete",
-          "DELETE",
-          "v1/{+name}",
-          [
-            "https://www.googleapis.com/auth/androidmanagement"
-          ],
-          ""
-        ],
-        [
-          "androidmanagement.enterprises.webApps.create",
-          "POST",
-          "v1/{+parent}/webApps",
-          [
-            "https://www.googleapis.com/auth/androidmanagement"
-          ],
-          ""
-        ],
-        [
-          "androidmanagement.enterprises.webApps.get",
-          "GET",
-          "v1/{+name}",
-          [
-            "https://www.googleapis.com/auth/androidmanagement"
-          ],
-          ""
-        ],
-        [
-          "androidmanagement.enterprises.webApps.patch",
-          "PATCH",
-          "v1/{+name}",
+          "v1/{+parent}/devices",
           [
             "https://www.googleapis.com/auth/androidmanagement"
           ],
@@ -162,15 +108,6 @@
         [
           "androidmanagement.enterprises.devices.delete",
           "DELETE",
-          "v1/{+name}",
-          [
-            "https://www.googleapis.com/auth/androidmanagement"
-          ],
-          ""
-        ],
-        [
-          "androidmanagement.enterprises.devices.get",
-          "GET",
           "v1/{+name}",
           [
             "https://www.googleapis.com/auth/androidmanagement"
@@ -187,18 +124,27 @@
           ""
         ],
         [
-          "androidmanagement.enterprises.devices.list",
-          "GET",
-          "v1/{+parent}/devices",
+          "androidmanagement.enterprises.devices.patch",
+          "PATCH",
+          "v1/{+name}",
           [
             "https://www.googleapis.com/auth/androidmanagement"
           ],
           ""
         ],
         [
-          "androidmanagement.enterprises.devices.patch",
-          "PATCH",
+          "androidmanagement.enterprises.devices.get",
+          "GET",
           "v1/{+name}",
+          [
+            "https://www.googleapis.com/auth/androidmanagement"
+          ],
+          ""
+        ],
+        [
+          "androidmanagement.enterprises.devices.operations.cancel",
+          "POST",
+          "v1/{+name}:cancel",
           [
             "https://www.googleapis.com/auth/androidmanagement"
           ],
@@ -223,71 +169,17 @@
           ""
         ],
         [
-          "androidmanagement.enterprises.devices.operations.cancel",
-          "POST",
-          "v1/{+name}:cancel",
-          [
-            "https://www.googleapis.com/auth/androidmanagement"
-          ],
-          ""
-        ],
-        [
-          "androidmanagement.enterprises.applications.get",
-          "GET",
-          "v1/{+name}",
-          [
-            "https://www.googleapis.com/auth/androidmanagement"
-          ],
-          ""
-        ],
-        [
-          "androidmanagement.enterprises.migrationTokens.list",
-          "GET",
-          "v1/{+parent}/migrationTokens",
-          [
-            "https://www.googleapis.com/auth/androidmanagement"
-          ],
-          ""
-        ],
-        [
-          "androidmanagement.enterprises.migrationTokens.create",
-          "POST",
-          "v1/{+parent}/migrationTokens",
-          [
-            "https://www.googleapis.com/auth/androidmanagement"
-          ],
-          ""
-        ],
-        [
-          "androidmanagement.enterprises.migrationTokens.get",
-          "GET",
-          "v1/{+name}",
-          [
-            "https://www.googleapis.com/auth/androidmanagement"
-          ],
-          ""
-        ],
-        [
-          "androidmanagement.enterprises.policies.modifyPolicyApplications",
-          "POST",
-          "v1/{+name}:modifyPolicyApplications",
-          [
-            "https://www.googleapis.com/auth/androidmanagement"
-          ],
-          ""
-        ],
-        [
-          "androidmanagement.enterprises.policies.removePolicyApplications",
-          "POST",
-          "v1/{+name}:removePolicyApplications",
-          [
-            "https://www.googleapis.com/auth/androidmanagement"
-          ],
-          ""
-        ],
-        [
           "androidmanagement.enterprises.policies.delete",
           "DELETE",
+          "v1/{+name}",
+          [
+            "https://www.googleapis.com/auth/androidmanagement"
+          ],
+          ""
+        ],
+        [
+          "androidmanagement.enterprises.policies.get",
+          "GET",
           "v1/{+name}",
           [
             "https://www.googleapis.com/auth/androidmanagement"
@@ -304,6 +196,15 @@
           ""
         ],
         [
+          "androidmanagement.enterprises.policies.removePolicyApplications",
+          "POST",
+          "v1/{+name}:removePolicyApplications",
+          [
+            "https://www.googleapis.com/auth/androidmanagement"
+          ],
+          ""
+        ],
+        [
           "androidmanagement.enterprises.policies.list",
           "GET",
           "v1/{+parent}/policies",
@@ -313,7 +214,25 @@
           ""
         ],
         [
-          "androidmanagement.enterprises.policies.get",
+          "androidmanagement.enterprises.policies.modifyPolicyApplications",
+          "POST",
+          "v1/{+name}:modifyPolicyApplications",
+          [
+            "https://www.googleapis.com/auth/androidmanagement"
+          ],
+          ""
+        ],
+        [
+          "androidmanagement.enterprises.webApps.delete",
+          "DELETE",
+          "v1/{+name}",
+          [
+            "https://www.googleapis.com/auth/androidmanagement"
+          ],
+          ""
+        ],
+        [
+          "androidmanagement.enterprises.webApps.get",
           "GET",
           "v1/{+name}",
           [
@@ -322,18 +241,99 @@
           ""
         ],
         [
-          "androidmanagement.enterprises.webTokens.create",
+          "androidmanagement.enterprises.webApps.create",
           "POST",
-          "v1/{+parent}/webTokens",
+          "v1/{+parent}/webApps",
           [
             "https://www.googleapis.com/auth/androidmanagement"
           ],
           ""
         ],
         [
-          "androidmanagement.signupUrls.create",
+          "androidmanagement.enterprises.webApps.patch",
+          "PATCH",
+          "v1/{+name}",
+          [
+            "https://www.googleapis.com/auth/androidmanagement"
+          ],
+          ""
+        ],
+        [
+          "androidmanagement.enterprises.webApps.list",
+          "GET",
+          "v1/{+parent}/webApps",
+          [
+            "https://www.googleapis.com/auth/androidmanagement"
+          ],
+          ""
+        ],
+        [
+          "androidmanagement.enterprises.enrollmentTokens.create",
           "POST",
-          "v1/signupUrls",
+          "v1/{+parent}/enrollmentTokens",
+          [
+            "https://www.googleapis.com/auth/androidmanagement"
+          ],
+          ""
+        ],
+        [
+          "androidmanagement.enterprises.enrollmentTokens.get",
+          "GET",
+          "v1/{+name}",
+          [
+            "https://www.googleapis.com/auth/androidmanagement"
+          ],
+          ""
+        ],
+        [
+          "androidmanagement.enterprises.enrollmentTokens.list",
+          "GET",
+          "v1/{+parent}/enrollmentTokens",
+          [
+            "https://www.googleapis.com/auth/androidmanagement"
+          ],
+          ""
+        ],
+        [
+          "androidmanagement.enterprises.enrollmentTokens.delete",
+          "DELETE",
+          "v1/{+name}",
+          [
+            "https://www.googleapis.com/auth/androidmanagement"
+          ],
+          ""
+        ],
+        [
+          "androidmanagement.enterprises.migrationTokens.get",
+          "GET",
+          "v1/{+name}",
+          [
+            "https://www.googleapis.com/auth/androidmanagement"
+          ],
+          ""
+        ],
+        [
+          "androidmanagement.enterprises.migrationTokens.create",
+          "POST",
+          "v1/{+parent}/migrationTokens",
+          [
+            "https://www.googleapis.com/auth/androidmanagement"
+          ],
+          ""
+        ],
+        [
+          "androidmanagement.enterprises.migrationTokens.list",
+          "GET",
+          "v1/{+parent}/migrationTokens",
+          [
+            "https://www.googleapis.com/auth/androidmanagement"
+          ],
+          ""
+        ],
+        [
+          "androidmanagement.enterprises.applications.get",
+          "GET",
+          "v1/{+name}",
           [
             "https://www.googleapis.com/auth/androidmanagement"
           ],
@@ -354,13 +354,13 @@
       "servicePath": "",
       "methods": [
         [
-          "chromewebstore.items.publish",
-          "POST",
-          "chromewebstore/v1.1/items/{itemId}/publish",
+          "chromewebstore.items.update",
+          "PUT",
+          "chromewebstore/v1.1/items/{itemId}",
           [
             "https://www.googleapis.com/auth/chromewebstore"
           ],
-          ""
+          "u"
         ],
         [
           "chromewebstore.items.get",
@@ -373,18 +373,18 @@
           ""
         ],
         [
-          "chromewebstore.items.insert",
+          "chromewebstore.items.publish",
           "POST",
-          "chromewebstore/v1.1/items",
+          "chromewebstore/v1.1/items/{itemId}/publish",
           [
             "https://www.googleapis.com/auth/chromewebstore"
           ],
-          "u"
+          ""
         ],
         [
-          "chromewebstore.items.update",
-          "PUT",
-          "chromewebstore/v1.1/items/{itemId}",
+          "chromewebstore.items.insert",
+          "POST",
+          "chromewebstore/v1.1/items",
           [
             "https://www.googleapis.com/auth/chromewebstore"
           ],
@@ -405,9 +405,9 @@
       "servicePath": "",
       "methods": [
         [
-          "homegraph.agentUsers.delete",
-          "DELETE",
-          "v1/{+agentUserId}",
+          "homegraph.devices.query",
+          "POST",
+          "v1/devices:query",
           [
             "https://www.googleapis.com/auth/homegraph"
           ],
@@ -441,9 +441,9 @@
           ""
         ],
         [
-          "homegraph.devices.query",
-          "POST",
-          "v1/devices:query",
+          "homegraph.agentUsers.delete",
+          "DELETE",
+          "v1/{+agentUserId}",
           [
             "https://www.googleapis.com/auth/homegraph"
           ],
@@ -464,96 +464,6 @@
       "servicePath": "",
       "methods": [
         [
-          "paymentsresellersubscription.partners.subscriptions.resume",
-          "POST",
-          "v1/{+name}:resume",
-          [
-            "https://www.googleapis.com/auth/sdm.service"
-          ],
-          ""
-        ],
-        [
-          "paymentsresellersubscription.partners.subscriptions.extend",
-          "POST",
-          "v1/{+name}:extend",
-          [
-            "https://www.googleapis.com/auth/sdm.service"
-          ],
-          ""
-        ],
-        [
-          "paymentsresellersubscription.partners.subscriptions.entitle",
-          "POST",
-          "v1/{+name}:entitle",
-          [
-            "https://www.googleapis.com/auth/sdm.service"
-          ],
-          ""
-        ],
-        [
-          "paymentsresellersubscription.partners.subscriptions.suspend",
-          "POST",
-          "v1/{+name}:suspend",
-          [
-            "https://www.googleapis.com/auth/sdm.service"
-          ],
-          ""
-        ],
-        [
-          "paymentsresellersubscription.partners.subscriptions.undoCancel",
-          "POST",
-          "v1/{+name}:undoCancel",
-          [
-            "https://www.googleapis.com/auth/sdm.service"
-          ],
-          ""
-        ],
-        [
-          "paymentsresellersubscription.partners.subscriptions.provision",
-          "POST",
-          "v1/{+parent}/subscriptions:provision",
-          [
-            "https://www.googleapis.com/auth/sdm.service"
-          ],
-          ""
-        ],
-        [
-          "paymentsresellersubscription.partners.subscriptions.get",
-          "GET",
-          "v1/{+name}",
-          [
-            "https://www.googleapis.com/auth/sdm.service"
-          ],
-          ""
-        ],
-        [
-          "paymentsresellersubscription.partners.subscriptions.create",
-          "POST",
-          "v1/{+parent}/subscriptions",
-          [
-            "https://www.googleapis.com/auth/sdm.service"
-          ],
-          ""
-        ],
-        [
-          "paymentsresellersubscription.partners.subscriptions.cancel",
-          "POST",
-          "v1/{+name}:cancel",
-          [
-            "https://www.googleapis.com/auth/sdm.service"
-          ],
-          ""
-        ],
-        [
-          "paymentsresellersubscription.partners.subscriptions.lineItems.patch",
-          "PATCH",
-          "v1/{+name}",
-          [
-            "https://www.googleapis.com/auth/sdm.service"
-          ],
-          ""
-        ],
-        [
           "paymentsresellersubscription.partners.promotions.list",
           "GET",
           "v1/{+parent}/promotions",
@@ -572,6 +482,15 @@
           ""
         ],
         [
+          "paymentsresellersubscription.partners.userSessions.generate",
+          "POST",
+          "v1/{+parent}/userSessions:generate",
+          [
+            "https://www.googleapis.com/auth/sdm.service"
+          ],
+          ""
+        ],
+        [
           "paymentsresellersubscription.partners.products.list",
           "GET",
           "v1/{+parent}/products",
@@ -581,9 +500,90 @@
           ""
         ],
         [
-          "paymentsresellersubscription.partners.userSessions.generate",
+          "paymentsresellersubscription.partners.subscriptions.undoCancel",
           "POST",
-          "v1/{+parent}/userSessions:generate",
+          "v1/{+name}:undoCancel",
+          [
+            "https://www.googleapis.com/auth/sdm.service"
+          ],
+          ""
+        ],
+        [
+          "paymentsresellersubscription.partners.subscriptions.suspend",
+          "POST",
+          "v1/{+name}:suspend",
+          [
+            "https://www.googleapis.com/auth/sdm.service"
+          ],
+          ""
+        ],
+        [
+          "paymentsresellersubscription.partners.subscriptions.cancel",
+          "POST",
+          "v1/{+name}:cancel",
+          [
+            "https://www.googleapis.com/auth/sdm.service"
+          ],
+          ""
+        ],
+        [
+          "paymentsresellersubscription.partners.subscriptions.create",
+          "POST",
+          "v1/{+parent}/subscriptions",
+          [
+            "https://www.googleapis.com/auth/sdm.service"
+          ],
+          ""
+        ],
+        [
+          "paymentsresellersubscription.partners.subscriptions.get",
+          "GET",
+          "v1/{+name}",
+          [
+            "https://www.googleapis.com/auth/sdm.service"
+          ],
+          ""
+        ],
+        [
+          "paymentsresellersubscription.partners.subscriptions.provision",
+          "POST",
+          "v1/{+parent}/subscriptions:provision",
+          [
+            "https://www.googleapis.com/auth/sdm.service"
+          ],
+          ""
+        ],
+        [
+          "paymentsresellersubscription.partners.subscriptions.resume",
+          "POST",
+          "v1/{+name}:resume",
+          [
+            "https://www.googleapis.com/auth/sdm.service"
+          ],
+          ""
+        ],
+        [
+          "paymentsresellersubscription.partners.subscriptions.entitle",
+          "POST",
+          "v1/{+name}:entitle",
+          [
+            "https://www.googleapis.com/auth/sdm.service"
+          ],
+          ""
+        ],
+        [
+          "paymentsresellersubscription.partners.subscriptions.extend",
+          "POST",
+          "v1/{+name}:extend",
+          [
+            "https://www.googleapis.com/auth/sdm.service"
+          ],
+          ""
+        ],
+        [
+          "paymentsresellersubscription.partners.subscriptions.lineItems.patch",
+          "PATCH",
+          "v1/{+name}",
           [
             "https://www.googleapis.com/auth/sdm.service"
           ],
@@ -654,7 +654,16 @@
           ""
         ],
         [
-          "playdeveloperreporting.vitals.crashrate.get",
+          "playdeveloperreporting.vitals.slowstartrate.query",
+          "POST",
+          "v1alpha1/{+name}:query",
+          [
+            "https://www.googleapis.com/auth/playdeveloperreporting"
+          ],
+          ""
+        ],
+        [
+          "playdeveloperreporting.vitals.slowstartrate.get",
           "GET",
           "v1alpha1/{+name}",
           [
@@ -663,43 +672,7 @@
           ""
         ],
         [
-          "playdeveloperreporting.vitals.crashrate.query",
-          "POST",
-          "v1alpha1/{+name}:query",
-          [
-            "https://www.googleapis.com/auth/playdeveloperreporting"
-          ],
-          ""
-        ],
-        [
-          "playdeveloperreporting.vitals.errors.issues.search",
-          "GET",
-          "v1alpha1/{+parent}/errorIssues:search",
-          [
-            "https://www.googleapis.com/auth/playdeveloperreporting"
-          ],
-          ""
-        ],
-        [
-          "playdeveloperreporting.vitals.errors.reports.search",
-          "GET",
-          "v1alpha1/{+parent}/errorReports:search",
-          [
-            "https://www.googleapis.com/auth/playdeveloperreporting"
-          ],
-          ""
-        ],
-        [
-          "playdeveloperreporting.vitals.errors.counts.query",
-          "POST",
-          "v1alpha1/{+name}:query",
-          [
-            "https://www.googleapis.com/auth/playdeveloperreporting"
-          ],
-          ""
-        ],
-        [
-          "playdeveloperreporting.vitals.errors.counts.get",
+          "playdeveloperreporting.vitals.slowrenderingrate.get",
           "GET",
           "v1alpha1/{+name}",
           [
@@ -717,16 +690,7 @@
           ""
         ],
         [
-          "playdeveloperreporting.vitals.slowrenderingrate.get",
-          "GET",
-          "v1alpha1/{+name}",
-          [
-            "https://www.googleapis.com/auth/playdeveloperreporting"
-          ],
-          ""
-        ],
-        [
-          "playdeveloperreporting.vitals.stuckbackgroundwakelockrate.query",
+          "playdeveloperreporting.vitals.crashrate.query",
           "POST",
           "v1alpha1/{+name}:query",
           [
@@ -735,9 +699,117 @@
           ""
         ],
         [
-          "playdeveloperreporting.vitals.stuckbackgroundwakelockrate.get",
+          "playdeveloperreporting.vitals.crashrate.get",
           "GET",
           "v1alpha1/{+name}",
+          [
+            "https://www.googleapis.com/auth/playdeveloperreporting"
+          ],
+          ""
+        ],
+        [
+          "playdeveloperreporting.vitals.excessivewakeuprate.query",
+          "POST",
+          "v1alpha1/{+name}:query",
+          [
+            "https://www.googleapis.com/auth/playdeveloperreporting"
+          ],
+          ""
+        ],
+        [
+          "playdeveloperreporting.vitals.excessivewakeuprate.get",
+          "GET",
+          "v1alpha1/{+name}",
+          [
+            "https://www.googleapis.com/auth/playdeveloperreporting"
+          ],
+          ""
+        ],
+        [
+          "playdeveloperreporting.vitals.bitmapmemoryusage.get",
+          "GET",
+          "v1alpha1/{+name}",
+          [
+            "https://www.googleapis.com/auth/playdeveloperreporting"
+          ],
+          ""
+        ],
+        [
+          "playdeveloperreporting.vitals.bitmapmemoryusage.query",
+          "POST",
+          "v1alpha1/{+name}:query",
+          [
+            "https://www.googleapis.com/auth/playdeveloperreporting"
+          ],
+          ""
+        ],
+        [
+          "playdeveloperreporting.vitals.errors.issues.search",
+          "GET",
+          "v1alpha1/{+parent}/errorIssues:search",
+          [
+            "https://www.googleapis.com/auth/playdeveloperreporting"
+          ],
+          ""
+        ],
+        [
+          "playdeveloperreporting.vitals.errors.counts.get",
+          "GET",
+          "v1alpha1/{+name}",
+          [
+            "https://www.googleapis.com/auth/playdeveloperreporting"
+          ],
+          ""
+        ],
+        [
+          "playdeveloperreporting.vitals.errors.counts.query",
+          "POST",
+          "v1alpha1/{+name}:query",
+          [
+            "https://www.googleapis.com/auth/playdeveloperreporting"
+          ],
+          ""
+        ],
+        [
+          "playdeveloperreporting.vitals.errors.reports.search",
+          "GET",
+          "v1alpha1/{+parent}/errorReports:search",
+          [
+            "https://www.googleapis.com/auth/playdeveloperreporting"
+          ],
+          ""
+        ],
+        [
+          "playdeveloperreporting.vitals.anrrate.query",
+          "POST",
+          "v1alpha1/{+name}:query",
+          [
+            "https://www.googleapis.com/auth/playdeveloperreporting"
+          ],
+          ""
+        ],
+        [
+          "playdeveloperreporting.vitals.anrrate.get",
+          "GET",
+          "v1alpha1/{+name}",
+          [
+            "https://www.googleapis.com/auth/playdeveloperreporting"
+          ],
+          ""
+        ],
+        [
+          "playdeveloperreporting.vitals.anonrssandswapmemoryusage.get",
+          "GET",
+          "v1alpha1/{+name}",
+          [
+            "https://www.googleapis.com/auth/playdeveloperreporting"
+          ],
+          ""
+        ],
+        [
+          "playdeveloperreporting.vitals.anonrssandswapmemoryusage.query",
+          "POST",
+          "v1alpha1/{+name}:query",
           [
             "https://www.googleapis.com/auth/playdeveloperreporting"
           ],
@@ -762,16 +834,7 @@
           ""
         ],
         [
-          "playdeveloperreporting.vitals.slowstartrate.query",
-          "POST",
-          "v1alpha1/{+name}:query",
-          [
-            "https://www.googleapis.com/auth/playdeveloperreporting"
-          ],
-          ""
-        ],
-        [
-          "playdeveloperreporting.vitals.slowstartrate.get",
+          "playdeveloperreporting.vitals.stuckbackgroundwakelockrate.get",
           "GET",
           "v1alpha1/{+name}",
           [
@@ -780,70 +843,7 @@
           ""
         ],
         [
-          "playdeveloperreporting.vitals.anonrssandswapmemoryusage.query",
-          "POST",
-          "v1alpha1/{+name}:query",
-          [
-            "https://www.googleapis.com/auth/playdeveloperreporting"
-          ],
-          ""
-        ],
-        [
-          "playdeveloperreporting.vitals.anonrssandswapmemoryusage.get",
-          "GET",
-          "v1alpha1/{+name}",
-          [
-            "https://www.googleapis.com/auth/playdeveloperreporting"
-          ],
-          ""
-        ],
-        [
-          "playdeveloperreporting.vitals.anrrate.get",
-          "GET",
-          "v1alpha1/{+name}",
-          [
-            "https://www.googleapis.com/auth/playdeveloperreporting"
-          ],
-          ""
-        ],
-        [
-          "playdeveloperreporting.vitals.anrrate.query",
-          "POST",
-          "v1alpha1/{+name}:query",
-          [
-            "https://www.googleapis.com/auth/playdeveloperreporting"
-          ],
-          ""
-        ],
-        [
-          "playdeveloperreporting.vitals.bitmapmemoryusage.query",
-          "POST",
-          "v1alpha1/{+name}:query",
-          [
-            "https://www.googleapis.com/auth/playdeveloperreporting"
-          ],
-          ""
-        ],
-        [
-          "playdeveloperreporting.vitals.bitmapmemoryusage.get",
-          "GET",
-          "v1alpha1/{+name}",
-          [
-            "https://www.googleapis.com/auth/playdeveloperreporting"
-          ],
-          ""
-        ],
-        [
-          "playdeveloperreporting.vitals.excessivewakeuprate.get",
-          "GET",
-          "v1alpha1/{+name}",
-          [
-            "https://www.googleapis.com/auth/playdeveloperreporting"
-          ],
-          ""
-        ],
-        [
-          "playdeveloperreporting.vitals.excessivewakeuprate.query",
+          "playdeveloperreporting.vitals.stuckbackgroundwakelockrate.query",
           "POST",
           "v1alpha1/{+name}:query",
           [
@@ -866,9 +866,666 @@
       "servicePath": "",
       "methods": [
         [
-          "walletobjects.flightclass.insert",
+          "walletobjects.offerobject.update",
+          "PUT",
+          "walletobjects/v1/offerObject/{resourceId}",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.offerobject.patch",
+          "PATCH",
+          "walletobjects/v1/offerObject/{resourceId}",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.offerobject.list",
+          "GET",
+          "walletobjects/v1/offerObject",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.offerobject.addmessage",
           "POST",
-          "walletobjects/v1/flightClass",
+          "walletobjects/v1/offerObject/{resourceId}/addMessage",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.offerobject.get",
+          "GET",
+          "walletobjects/v1/offerObject/{resourceId}",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.offerobject.insert",
+          "POST",
+          "walletobjects/v1/offerObject",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.eventticketobject.update",
+          "PUT",
+          "walletobjects/v1/eventTicketObject/{resourceId}",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.eventticketobject.list",
+          "GET",
+          "walletobjects/v1/eventTicketObject",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.eventticketobject.patch",
+          "PATCH",
+          "walletobjects/v1/eventTicketObject/{resourceId}",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.eventticketobject.addmessage",
+          "POST",
+          "walletobjects/v1/eventTicketObject/{resourceId}/addMessage",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.eventticketobject.get",
+          "GET",
+          "walletobjects/v1/eventTicketObject/{resourceId}",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.eventticketobject.insert",
+          "POST",
+          "walletobjects/v1/eventTicketObject",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.eventticketobject.modifylinkedofferobjects",
+          "POST",
+          "walletobjects/v1/eventTicketObject/{resourceId}/modifyLinkedOfferObjects",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.flightobject.insert",
+          "POST",
+          "walletobjects/v1/flightObject",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.flightobject.get",
+          "GET",
+          "walletobjects/v1/flightObject/{resourceId}",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.flightobject.list",
+          "GET",
+          "walletobjects/v1/flightObject",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.flightobject.update",
+          "PUT",
+          "walletobjects/v1/flightObject/{resourceId}",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.flightobject.patch",
+          "PATCH",
+          "walletobjects/v1/flightObject/{resourceId}",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.flightobject.addmessage",
+          "POST",
+          "walletobjects/v1/flightObject/{resourceId}/addMessage",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.loyaltyclass.insert",
+          "POST",
+          "walletobjects/v1/loyaltyClass",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.loyaltyclass.get",
+          "GET",
+          "walletobjects/v1/loyaltyClass/{resourceId}",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.loyaltyclass.addmessage",
+          "POST",
+          "walletobjects/v1/loyaltyClass/{resourceId}/addMessage",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.loyaltyclass.list",
+          "GET",
+          "walletobjects/v1/loyaltyClass",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.loyaltyclass.patch",
+          "PATCH",
+          "walletobjects/v1/loyaltyClass/{resourceId}",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.loyaltyclass.update",
+          "PUT",
+          "walletobjects/v1/loyaltyClass/{resourceId}",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.giftcardobject.patch",
+          "PATCH",
+          "walletobjects/v1/giftCardObject/{resourceId}",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.giftcardobject.insert",
+          "POST",
+          "walletobjects/v1/giftCardObject",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.giftcardobject.addmessage",
+          "POST",
+          "walletobjects/v1/giftCardObject/{resourceId}/addMessage",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.giftcardobject.update",
+          "PUT",
+          "walletobjects/v1/giftCardObject/{resourceId}",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.giftcardobject.get",
+          "GET",
+          "walletobjects/v1/giftCardObject/{resourceId}",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.giftcardobject.list",
+          "GET",
+          "walletobjects/v1/giftCardObject",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.smarttap.insert",
+          "POST",
+          "walletobjects/v1/smartTap",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.transitclass.insert",
+          "POST",
+          "walletobjects/v1/transitClass",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.transitclass.list",
+          "GET",
+          "walletobjects/v1/transitClass",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.transitclass.get",
+          "GET",
+          "walletobjects/v1/transitClass/{resourceId}",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.transitclass.addmessage",
+          "POST",
+          "walletobjects/v1/transitClass/{resourceId}/addMessage",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.transitclass.update",
+          "PUT",
+          "walletobjects/v1/transitClass/{resourceId}",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.transitclass.patch",
+          "PATCH",
+          "walletobjects/v1/transitClass/{resourceId}",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.offerclass.update",
+          "PUT",
+          "walletobjects/v1/offerClass/{resourceId}",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.offerclass.addmessage",
+          "POST",
+          "walletobjects/v1/offerClass/{resourceId}/addMessage",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.offerclass.insert",
+          "POST",
+          "walletobjects/v1/offerClass",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.offerclass.list",
+          "GET",
+          "walletobjects/v1/offerClass",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.offerclass.patch",
+          "PATCH",
+          "walletobjects/v1/offerClass/{resourceId}",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.offerclass.get",
+          "GET",
+          "walletobjects/v1/offerClass/{resourceId}",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.eventticketclass.update",
+          "PUT",
+          "walletobjects/v1/eventTicketClass/{resourceId}",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.eventticketclass.addmessage",
+          "POST",
+          "walletobjects/v1/eventTicketClass/{resourceId}/addMessage",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.eventticketclass.get",
+          "GET",
+          "walletobjects/v1/eventTicketClass/{resourceId}",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.eventticketclass.insert",
+          "POST",
+          "walletobjects/v1/eventTicketClass",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.eventticketclass.patch",
+          "PATCH",
+          "walletobjects/v1/eventTicketClass/{resourceId}",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.eventticketclass.list",
+          "GET",
+          "walletobjects/v1/eventTicketClass",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.genericclass.patch",
+          "PATCH",
+          "walletobjects/v1/genericClass/{resourceId}",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.genericclass.insert",
+          "POST",
+          "walletobjects/v1/genericClass",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.genericclass.update",
+          "PUT",
+          "walletobjects/v1/genericClass/{resourceId}",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.genericclass.list",
+          "GET",
+          "walletobjects/v1/genericClass",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.genericclass.get",
+          "GET",
+          "walletobjects/v1/genericClass/{resourceId}",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.genericclass.addmessage",
+          "POST",
+          "walletobjects/v1/genericClass/{resourceId}/addMessage",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.jwt.validate",
+          "POST",
+          "walletobjects/v1/jwt/validate",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.jwt.insert",
+          "POST",
+          "walletobjects/v1/jwt",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.media.upload",
+          "POST",
+          "walletobjects/v1/transitObject/{resourceId}/uploadRotatingBarcodeValues",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          "u"
+        ],
+        [
+          "walletobjects.media.download",
+          "GET",
+          "walletobjects/v1/transitObject/{resourceId}/downloadRotatingBarcodeValues",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          "d"
+        ],
+        [
+          "walletobjects.permissions.update",
+          "PUT",
+          "walletobjects/v1/permissions/{resourceId}",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.permissions.get",
+          "GET",
+          "walletobjects/v1/permissions/{resourceId}",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.giftcardclass.list",
+          "GET",
+          "walletobjects/v1/giftCardClass",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.giftcardclass.insert",
+          "POST",
+          "walletobjects/v1/giftCardClass",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.giftcardclass.patch",
+          "PATCH",
+          "walletobjects/v1/giftCardClass/{resourceId}",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.giftcardclass.addmessage",
+          "POST",
+          "walletobjects/v1/giftCardClass/{resourceId}/addMessage",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.giftcardclass.get",
+          "GET",
+          "walletobjects/v1/giftCardClass/{resourceId}",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.giftcardclass.update",
+          "PUT",
+          "walletobjects/v1/giftCardClass/{resourceId}",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.transitobject.list",
+          "GET",
+          "walletobjects/v1/transitObject",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.transitobject.patch",
+          "PATCH",
+          "walletobjects/v1/transitObject/{resourceId}",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.transitobject.insert",
+          "POST",
+          "walletobjects/v1/transitObject",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.transitobject.get",
+          "GET",
+          "walletobjects/v1/transitObject/{resourceId}",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.transitobject.update",
+          "PUT",
+          "walletobjects/v1/transitObject/{resourceId}",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.transitobject.addmessage",
+          "POST",
+          "walletobjects/v1/transitObject/{resourceId}/addMessage",
           [
             "https://www.googleapis.com/auth/wallet_object.issuer"
           ],
@@ -877,15 +1534,6 @@
         [
           "walletobjects.flightclass.patch",
           "PATCH",
-          "walletobjects/v1/flightClass/{resourceId}",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.flightclass.get",
-          "GET",
           "walletobjects/v1/flightClass/{resourceId}",
           [
             "https://www.googleapis.com/auth/wallet_object.issuer"
@@ -911,6 +1559,24 @@
           ""
         ],
         [
+          "walletobjects.flightclass.insert",
+          "POST",
+          "walletobjects/v1/flightClass",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.flightclass.get",
+          "GET",
+          "walletobjects/v1/flightClass/{resourceId}",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
           "walletobjects.flightclass.update",
           "PUT",
           "walletobjects/v1/flightClass/{resourceId}",
@@ -920,180 +1586,90 @@
           ""
         ],
         [
-          "walletobjects.eventticketclass.update",
+          "walletobjects.walletobjects.v1.privateContent.setPassUpdateNotice",
+          "POST",
+          "walletobjects/v1/privateContent/setPassUpdateNotice",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.loyaltyobject.insert",
+          "POST",
+          "walletobjects/v1/loyaltyObject",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.loyaltyobject.list",
+          "GET",
+          "walletobjects/v1/loyaltyObject",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.loyaltyobject.modifylinkedofferobjects",
+          "POST",
+          "walletobjects/v1/loyaltyObject/{resourceId}/modifyLinkedOfferObjects",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.loyaltyobject.get",
+          "GET",
+          "walletobjects/v1/loyaltyObject/{resourceId}",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.loyaltyobject.update",
           "PUT",
-          "walletobjects/v1/eventTicketClass/{resourceId}",
+          "walletobjects/v1/loyaltyObject/{resourceId}",
           [
             "https://www.googleapis.com/auth/wallet_object.issuer"
           ],
           ""
         ],
         [
-          "walletobjects.eventticketclass.patch",
+          "walletobjects.loyaltyobject.addmessage",
+          "POST",
+          "walletobjects/v1/loyaltyObject/{resourceId}/addMessage",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.loyaltyobject.patch",
           "PATCH",
-          "walletobjects/v1/eventTicketClass/{resourceId}",
+          "walletobjects/v1/loyaltyObject/{resourceId}",
           [
             "https://www.googleapis.com/auth/wallet_object.issuer"
           ],
           ""
         ],
         [
-          "walletobjects.eventticketclass.get",
+          "walletobjects.issuer.get",
           "GET",
-          "walletobjects/v1/eventTicketClass/{resourceId}",
+          "walletobjects/v1/issuer/{resourceId}",
           [
             "https://www.googleapis.com/auth/wallet_object.issuer"
           ],
           ""
         ],
         [
-          "walletobjects.eventticketclass.list",
-          "GET",
-          "walletobjects/v1/eventTicketClass",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.eventticketclass.insert",
-          "POST",
-          "walletobjects/v1/eventTicketClass",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.eventticketclass.addmessage",
-          "POST",
-          "walletobjects/v1/eventTicketClass/{resourceId}/addMessage",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.transitclass.update",
-          "PUT",
-          "walletobjects/v1/transitClass/{resourceId}",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.transitclass.get",
-          "GET",
-          "walletobjects/v1/transitClass/{resourceId}",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.transitclass.list",
-          "GET",
-          "walletobjects/v1/transitClass",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.transitclass.addmessage",
-          "POST",
-          "walletobjects/v1/transitClass/{resourceId}/addMessage",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.transitclass.patch",
+          "walletobjects.issuer.patch",
           "PATCH",
-          "walletobjects/v1/transitClass/{resourceId}",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.transitclass.insert",
-          "POST",
-          "walletobjects/v1/transitClass",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.giftcardobject.update",
-          "PUT",
-          "walletobjects/v1/giftCardObject/{resourceId}",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.giftcardobject.addmessage",
-          "POST",
-          "walletobjects/v1/giftCardObject/{resourceId}/addMessage",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.giftcardobject.list",
-          "GET",
-          "walletobjects/v1/giftCardObject",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.giftcardobject.insert",
-          "POST",
-          "walletobjects/v1/giftCardObject",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.giftcardobject.patch",
-          "PATCH",
-          "walletobjects/v1/giftCardObject/{resourceId}",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.giftcardobject.get",
-          "GET",
-          "walletobjects/v1/giftCardObject/{resourceId}",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.jwt.insert",
-          "POST",
-          "walletobjects/v1/jwt",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.jwt.validate",
-          "POST",
-          "walletobjects/v1/jwt/validate",
+          "walletobjects/v1/issuer/{resourceId}",
           [
             "https://www.googleapis.com/auth/wallet_object.issuer"
           ],
@@ -1127,251 +1703,17 @@
           ""
         ],
         [
-          "walletobjects.issuer.patch",
-          "PATCH",
-          "walletobjects/v1/issuer/{resourceId}",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.issuer.get",
-          "GET",
-          "walletobjects/v1/issuer/{resourceId}",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.giftcardclass.addmessage",
-          "POST",
-          "walletobjects/v1/giftCardClass/{resourceId}/addMessage",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.giftcardclass.insert",
-          "POST",
-          "walletobjects/v1/giftCardClass",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.giftcardclass.list",
-          "GET",
-          "walletobjects/v1/giftCardClass",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.giftcardclass.update",
-          "PUT",
-          "walletobjects/v1/giftCardClass/{resourceId}",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.giftcardclass.get",
-          "GET",
-          "walletobjects/v1/giftCardClass/{resourceId}",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.giftcardclass.patch",
-          "PATCH",
-          "walletobjects/v1/giftCardClass/{resourceId}",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.eventticketobject.list",
-          "GET",
-          "walletobjects/v1/eventTicketObject",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.eventticketobject.update",
-          "PUT",
-          "walletobjects/v1/eventTicketObject/{resourceId}",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.eventticketobject.get",
-          "GET",
-          "walletobjects/v1/eventTicketObject/{resourceId}",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.eventticketobject.modifylinkedofferobjects",
-          "POST",
-          "walletobjects/v1/eventTicketObject/{resourceId}/modifyLinkedOfferObjects",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.eventticketobject.insert",
-          "POST",
-          "walletobjects/v1/eventTicketObject",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.eventticketobject.patch",
-          "PATCH",
-          "walletobjects/v1/eventTicketObject/{resourceId}",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.eventticketobject.addmessage",
-          "POST",
-          "walletobjects/v1/eventTicketObject/{resourceId}/addMessage",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.offerobject.insert",
-          "POST",
-          "walletobjects/v1/offerObject",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.offerobject.addmessage",
-          "POST",
-          "walletobjects/v1/offerObject/{resourceId}/addMessage",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.offerobject.patch",
-          "PATCH",
-          "walletobjects/v1/offerObject/{resourceId}",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.offerobject.list",
-          "GET",
-          "walletobjects/v1/offerObject",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.offerobject.get",
-          "GET",
-          "walletobjects/v1/offerObject/{resourceId}",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.offerobject.update",
-          "PUT",
-          "walletobjects/v1/offerObject/{resourceId}",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.loyaltyclass.insert",
-          "POST",
-          "walletobjects/v1/loyaltyClass",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.loyaltyclass.patch",
-          "PATCH",
-          "walletobjects/v1/loyaltyClass/{resourceId}",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.loyaltyclass.update",
-          "PUT",
-          "walletobjects/v1/loyaltyClass/{resourceId}",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.loyaltyclass.list",
-          "GET",
-          "walletobjects/v1/loyaltyClass",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.loyaltyclass.get",
-          "GET",
-          "walletobjects/v1/loyaltyClass/{resourceId}",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.loyaltyclass.addmessage",
-          "POST",
-          "walletobjects/v1/loyaltyClass/{resourceId}/addMessage",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
           "walletobjects.genericobject.get",
           "GET",
+          "walletobjects/v1/genericObject/{resourceId}",
+          [
+            "https://www.googleapis.com/auth/wallet_object.issuer"
+          ],
+          ""
+        ],
+        [
+          "walletobjects.genericobject.patch",
+          "PATCH",
           "walletobjects/v1/genericObject/{resourceId}",
           [
             "https://www.googleapis.com/auth/wallet_object.issuer"
@@ -1406,351 +1748,9 @@
           ""
         ],
         [
-          "walletobjects.genericobject.patch",
-          "PATCH",
-          "walletobjects/v1/genericObject/{resourceId}",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
           "walletobjects.genericobject.insert",
           "POST",
           "walletobjects/v1/genericObject",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.permissions.update",
-          "PUT",
-          "walletobjects/v1/permissions/{resourceId}",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.permissions.get",
-          "GET",
-          "walletobjects/v1/permissions/{resourceId}",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.media.upload",
-          "POST",
-          "walletobjects/v1/transitObject/{resourceId}/uploadRotatingBarcodeValues",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          "u"
-        ],
-        [
-          "walletobjects.media.download",
-          "GET",
-          "walletobjects/v1/transitObject/{resourceId}/downloadRotatingBarcodeValues",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          "d"
-        ],
-        [
-          "walletobjects.smarttap.insert",
-          "POST",
-          "walletobjects/v1/smartTap",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.walletobjects.v1.privateContent.setPassUpdateNotice",
-          "POST",
-          "walletobjects/v1/privateContent/setPassUpdateNotice",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.loyaltyobject.addmessage",
-          "POST",
-          "walletobjects/v1/loyaltyObject/{resourceId}/addMessage",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.loyaltyobject.insert",
-          "POST",
-          "walletobjects/v1/loyaltyObject",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.loyaltyobject.modifylinkedofferobjects",
-          "POST",
-          "walletobjects/v1/loyaltyObject/{resourceId}/modifyLinkedOfferObjects",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.loyaltyobject.update",
-          "PUT",
-          "walletobjects/v1/loyaltyObject/{resourceId}",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.loyaltyobject.list",
-          "GET",
-          "walletobjects/v1/loyaltyObject",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.loyaltyobject.get",
-          "GET",
-          "walletobjects/v1/loyaltyObject/{resourceId}",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.loyaltyobject.patch",
-          "PATCH",
-          "walletobjects/v1/loyaltyObject/{resourceId}",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.flightobject.update",
-          "PUT",
-          "walletobjects/v1/flightObject/{resourceId}",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.flightobject.get",
-          "GET",
-          "walletobjects/v1/flightObject/{resourceId}",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.flightobject.addmessage",
-          "POST",
-          "walletobjects/v1/flightObject/{resourceId}/addMessage",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.flightobject.patch",
-          "PATCH",
-          "walletobjects/v1/flightObject/{resourceId}",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.flightobject.insert",
-          "POST",
-          "walletobjects/v1/flightObject",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.flightobject.list",
-          "GET",
-          "walletobjects/v1/flightObject",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.offerclass.update",
-          "PUT",
-          "walletobjects/v1/offerClass/{resourceId}",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.offerclass.addmessage",
-          "POST",
-          "walletobjects/v1/offerClass/{resourceId}/addMessage",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.offerclass.patch",
-          "PATCH",
-          "walletobjects/v1/offerClass/{resourceId}",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.offerclass.list",
-          "GET",
-          "walletobjects/v1/offerClass",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.offerclass.insert",
-          "POST",
-          "walletobjects/v1/offerClass",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.offerclass.get",
-          "GET",
-          "walletobjects/v1/offerClass/{resourceId}",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.transitobject.get",
-          "GET",
-          "walletobjects/v1/transitObject/{resourceId}",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.transitobject.patch",
-          "PATCH",
-          "walletobjects/v1/transitObject/{resourceId}",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.transitobject.insert",
-          "POST",
-          "walletobjects/v1/transitObject",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.transitobject.list",
-          "GET",
-          "walletobjects/v1/transitObject",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.transitobject.addmessage",
-          "POST",
-          "walletobjects/v1/transitObject/{resourceId}/addMessage",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.transitobject.update",
-          "PUT",
-          "walletobjects/v1/transitObject/{resourceId}",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.genericclass.insert",
-          "POST",
-          "walletobjects/v1/genericClass",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.genericclass.patch",
-          "PATCH",
-          "walletobjects/v1/genericClass/{resourceId}",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.genericclass.addmessage",
-          "POST",
-          "walletobjects/v1/genericClass/{resourceId}/addMessage",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.genericclass.get",
-          "GET",
-          "walletobjects/v1/genericClass/{resourceId}",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.genericclass.list",
-          "GET",
-          "walletobjects/v1/genericClass",
-          [
-            "https://www.googleapis.com/auth/wallet_object.issuer"
-          ],
-          ""
-        ],
-        [
-          "walletobjects.genericclass.update",
-          "PUT",
-          "walletobjects/v1/genericClass/{resourceId}",
           [
             "https://www.googleapis.com/auth/wallet_object.issuer"
           ],

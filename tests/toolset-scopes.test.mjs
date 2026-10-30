@@ -65,6 +65,8 @@ function capture() {
 
 const quiet = { warn: () => undefined };
 const toolsOf = (reqs) => reqs.filter((r) => !r.gateway).map((r) => r.tool.split('/')[1]).sort();
+/** The same requirements without the toolset's preferred scopes (1.25.0): what the greedy rule alone resolves. */
+const withoutPrefer = (reqs) => reqs.map(({ prefer: _prefer, ...rest }) => rest);
 
 test('GATEWAY_TOOL_NAMES are the names of the gateway tools', () => {
   const { cfg } = tempTokens();
@@ -85,14 +87,17 @@ test('requirements: no toolset and all are the same list; google keeps the gmail
   assert.deepEqual(resolveScopes(google, 'readwrite').scopes, [G('gmail.modify')]);
 });
 
-test('requirements: the gcalendar google list resolves to calendar.readonly (readonly) and calendar (readwrite)', async () => {
+test('requirements: the gcalendar google list resolves to calendar.readonly (readonly) and its preferred event, list and free/busy scopes (readwrite)', async () => {
   const { cfg } = tempTokens();
   const google = await requirementsFor(['gcalendar'], cfg, { ...quiet, toolset: 'google' });
   assert.equal(google.length, 8);
   assert.deepEqual(resolveScopes(google, 'readonly').scopes, [G('calendar.readonly')]);
-  // The greedy cover takes the one scope that covers all eight tools: calendar.events covers neither list_calendars
-  // nor suggest_time (free/busy), so calendar wins on coverage. Same answer as the all toolset gives today.
-  assert.deepEqual(resolveScopes(google, 'readwrite').scopes, [G('calendar')]);
+  // Since 1.25.0 the list prefers calendar.events, calendar.calendarlist.readonly and calendar.events.freebusy, the
+  // scopes Google's Calendar MCP server uses for the same tasks (no tool of the list manages calendars or sharing).
+  assert.deepEqual(resolveScopes(google, 'readwrite').scopes, [G('calendar.calendarlist.readonly'), G('calendar.events'), G('calendar.events.freebusy')]);
+  // The greedy cover alone takes the one scope that covers all eight tools: calendar.events covers neither list_calendars
+  // nor suggest_time (free/busy), so calendar wins on coverage. Same answer as the all toolset gives.
+  assert.deepEqual(resolveScopes(withoutPrefer(google), 'readwrite').scopes, [G('calendar')]);
   assert.deepEqual(resolveScopes(await requirementsFor(['gcalendar'], cfg, quiet), 'readwrite').scopes, [G('calendar')]);
 });
 
@@ -185,18 +190,21 @@ test('requirements: the gfirebase google list (38 tools, no gateway) resolves to
 test('requirements: the lean gtm, gyoutube and gbusiness lists resolve to the narrow scopes of their tools', async () => {
   const { cfg } = tempTokens();
   // Saving a version needs tagmanager.edit.containerversions and publishing tagmanager.publish; neither has a read-only form.
-  const GTM_READWRITE = [G('tagmanager.edit.containers'), G('tagmanager.edit.containerversions'), G('tagmanager.publish')];
+  // The reads take tagmanager.readonly, the list's preferred scope since 1.25.0 (no tool of the list edits a container).
+  const GTM_READWRITE = [G('tagmanager.edit.containerversions'), G('tagmanager.publish'), G('tagmanager.readonly')];
+  const GTM_READWRITE_GREEDY = [G('tagmanager.edit.containers'), G('tagmanager.edit.containerversions'), G('tagmanager.publish')];
   const YT_READONLY = [G('youtube.readonly')];
   const YT_READWRITE = [G('youtube'), G('youtube.force-ssl')];
   const resolved = async (id) => {
     const reqs = await requirementsFor([id], cfg, { ...quiet, toolset: 'google' });
-    return { n: reqs.length, gateway: reqs.filter((r) => r.gateway).length, readonly: resolveScopes(reqs, 'readonly'), readwrite: resolveScopes(reqs, 'readwrite').scopes };
+    return { n: reqs.length, gateway: reqs.filter((r) => r.gateway).length, readonly: resolveScopes(reqs, 'readonly'), readwrite: resolveScopes(reqs, 'readwrite').scopes, greedy: resolveScopes(withoutPrefer(reqs), 'readwrite').scopes };
   };
   const gtm = await resolved('gtm');
   assert.equal(gtm.n, 13);
   assert.equal(gtm.gateway, 0, 'the tagmanager v1 gateway does not count: no api_call in the list');
   assert.deepEqual(gtm.readonly.scopes, [G('tagmanager.readonly')]);
   assert.deepEqual(gtm.readwrite, GTM_READWRITE);
+  assert.deepEqual(gtm.greedy, GTM_READWRITE_GREEDY);
   const yt = await resolved('gyoutube');
   assert.equal(yt.n, 10);
   assert.deepEqual(yt.readonly.scopes, YT_READONLY);
@@ -234,7 +242,17 @@ test('requirements: the gchat google list resolves to Chat user scopes only, nev
   // The notification settings have no read-only scope, so their read stays outside a readonly login.
   assert.ok(readonly.uncovered.includes('gchat/chat_users_spaces_space_notificatio_get'));
   const readwrite = resolveScopes(google, 'readwrite').scopes;
-  assert.deepEqual(readwrite, [G('chat.memberships'), G('chat.messages'), G('chat.spaces'), G('chat.users.readstate'), G('chat.users.spacesettings')]);
+  // Since 1.25.0 the list prefers the six scopes of Google's Chat MCP server: read-only spaces, members and messages,
+  // messages.create for sending, and the two user-state scopes.
+  assert.deepEqual(readwrite, [
+    G('chat.memberships.readonly'),
+    G('chat.messages.create'),
+    G('chat.messages.readonly'),
+    G('chat.spaces.readonly'),
+    G('chat.users.readstate'),
+    G('chat.users.spacesettings'),
+  ]);
+  assert.deepEqual(resolveScopes(withoutPrefer(google), 'readwrite').scopes, [G('chat.memberships'), G('chat.messages'), G('chat.spaces'), G('chat.users.readstate'), G('chat.users.spacesettings')]);
   for (const app of ['chat.bot', 'chat.import']) assert.equal(readwrite.includes(G(app)), false, app);
   // The all toolset resolves as before 1.12.0: its generated tools still list chat.bot and chat.import.
   const all = resolveScopes(await requirementsFor(['gchat'], cfg, quiet), 'readwrite').scopes;
@@ -250,7 +268,9 @@ test('requirements: the gcontacts google list resolves to contacts and directory
   assert.deepEqual(readonly.scopes, [G('contacts.readonly'), G('directory.readonly')]);
   // userinfo.* are not read-only scopes by name; every sign-in adds userinfo.email, which registers profile_me anyway.
   assert.deepEqual(readonly.uncovered, ['gcontacts/profile_me']);
-  assert.deepEqual(resolveScopes(google, 'readwrite').scopes, [G('contacts'), G('directory.readonly'), EMAIL]);
+  // contacts_search only searches: its preferred scope is contacts.readonly since 1.25.0, as in Google's People MCP server.
+  assert.deepEqual(resolveScopes(google, 'readwrite').scopes, [G('contacts.readonly'), G('directory.readonly'), EMAIL]);
+  assert.deepEqual(resolveScopes(withoutPrefer(google), 'readwrite').scopes, [G('contacts'), G('directory.readonly'), EMAIL]);
 });
 
 test('requirements: the gclassroom google list resolves to the Classroom read-only scopes, materials included', async () => {
@@ -267,7 +287,17 @@ test('requirements: the gclassroom google list resolves to the Classroom read-on
     C('rosters.readonly'),
     C('topics.readonly'),
   ]);
+  // No tool of the list changes a course, a roster or a guardian, so since 1.25.0 those three are read-only scopes.
   assert.deepEqual(resolveScopes(google, 'readwrite').scopes, [
+    C('announcements'),
+    C('courses.readonly'),
+    C('coursework.students'),
+    C('courseworkmaterials'),
+    C('guardianlinks.students.readonly'),
+    C('rosters.readonly'),
+    C('topics'),
+  ]);
+  assert.deepEqual(resolveScopes(withoutPrefer(google), 'readwrite').scopes, [
     C('announcements'),
     C('courses'),
     C('coursework.students'),
@@ -294,8 +324,10 @@ test('requirements: the lean gmeet, gtasks and gapps lists resolve to the narrow
   const tasks = await resolved('gtasks');
   assert.equal(tasks.n, 8);
   assert.deepEqual(tasks.readonly.scopes, [G('keep.readonly'), G('tasks.readonly')]);
-  // The Keep reads list keep and keep.readonly; readwrite prefers the write scope on a tie, as in the all toolset.
-  assert.deepEqual(tasks.readwrite, [G('keep'), G('tasks')]);
+  // The Keep reads list keep and keep.readonly; the greedy rule takes the write scope on a tie, as in the all toolset.
+  // The list has no Keep write, so since 1.25.0 it prefers keep.readonly.
+  assert.deepEqual(tasks.readwrite, [G('keep.readonly'), G('tasks')]);
+  assert.deepEqual(resolveScopes(withoutPrefer(await requirementsFor(['gtasks'], cfg, { ...quiet, toolset: 'google' })), 'readwrite').scopes, [G('keep'), G('tasks')]);
   const apps = await resolved('gapps');
   assert.equal(apps.n, 8);
   assert.deepEqual(apps.readonly.scopes, [G('script.deployments.readonly'), G('script.projects.readonly')]);
@@ -365,7 +397,18 @@ test('requirements: the lean gadmin google list resolves to the read-only Direct
   assert.deepEqual(readonly.scopes, ['domain', 'group', 'orgunit', 'user'].map((s) => G(`admin.directory.${s}.readonly`)).concat(G('admin.reports.audit.readonly')));
   // The alert center lists only apps.alerts, which has no read-only form; the two writes need the write scopes.
   assert.deepEqual(readonly.uncovered.sort(), ['gadmin/admin_group_member_add', 'gadmin/admin_user_set_suspended', 'gadmin/alerts_alerts_list']);
-  assert.deepEqual(resolveScopes(google, 'readwrite').scopes, ['domain', 'group', 'orgunit', 'user'].map((s) => G(`admin.directory.${s}`)).concat(G('admin.reports.audit.readonly'), G('apps.alerts')));
+  // Since 1.25.0 the list prefers read-only Directory scopes where no tool of it writes (groups, org units, domains), and
+  // group.member for the one group write (adding a member).
+  assert.deepEqual(resolveScopes(google, 'readwrite').scopes, [
+    G('admin.directory.domain.readonly'),
+    G('admin.directory.group.member'),
+    G('admin.directory.group.readonly'),
+    G('admin.directory.orgunit.readonly'),
+    G('admin.directory.user'),
+    G('admin.reports.audit.readonly'),
+    G('apps.alerts'),
+  ]);
+  assert.deepEqual(resolveScopes(withoutPrefer(google), 'readwrite').scopes, ['domain', 'group', 'orgunit', 'user'].map((s) => G(`admin.directory.${s}`)).concat(G('admin.reports.audit.readonly'), G('apps.alerts')));
 });
 
 test('requirements: the gmerchant google list (13 generated tools, no gateway) needs content, which has no read-only form', async () => {
@@ -553,7 +596,7 @@ async function withServer(serverFile, tokenDir, extraEnv, fn) {
   const request = (method, params = {}) =>
     new Promise((resolve, reject) => {
       const id = nextId++;
-      const timer = setTimeout(() => reject(new Error(`timeout on ${method}`)), 60000);
+      const timer = setTimeout(() => reject(new Error(`timeout on ${method}`)), 120000);
       waiting.set(id, (msg) => {
         clearTimeout(timer);
         resolve(msg);

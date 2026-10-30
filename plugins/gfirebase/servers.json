@@ -119,6 +119,10 @@
         {
           "api": "identitytoolkit",
           "version": "v2"
+        },
+        {
+          "api": "devicerun",
+          "version": "v1"
         }
       ],
       "toolsets": {

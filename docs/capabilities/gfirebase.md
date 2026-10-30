@@ -4,11 +4,11 @@ Firebase management, App Check, App Distribution, Crashlytics, Hosting, Data Con
 
 - Plugin: `gfirebase`, MCP server: `gfirebase`, login: Desktop OAuth client, then `login developer`
 - Install: `claude plugin install gfirebase@google-services-mcps`
-- Tools: 315 total. Curated 14, per-method 297, gateway 3. Read 147, write 123, destructive 44, dynamic 1.
+- Tools: 316 total. Curated 14, per-method 298, gateway 3. Read 147, write 124, destructive 44, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 315, google 47, curated 17 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 316, google 47, curated 17 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
 
 ## Toolset google (38)
 
@@ -74,7 +74,7 @@ The tools that match Google's official MCP server for this product (https://gith
 | `health` | read | Server health | (none) |
 | `remoteconfig_get_template` | read | Get the Remote Config template | cloud-platform |
 
-## Per-method tools (297)
+## Per-method tools (298)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
@@ -245,6 +245,7 @@ The tools that match Google's official MCP server for this product (https://gith
 | `firebasecr_proj_apps_user_delet` | destructive | firebasecrashlytics.projects.apps.users.deleteCrashReports | cloud-platform, firebase |
 | `firebasecr_proje_apps_issue_get` | read | firebasecrashlytics.projects.apps.issues.get | cloud-platform, firebase |
 | `firebasecr_proje_apps_repor_get` | read | firebasecrashlytics.projects.apps.reports.get | cloud-platform, firebase |
+| `firebasecr_project_apps_generat` | write | firebasecrashlytics.projects.apps.generateAlertPolicy | cloud-platform, firebase |
 | `firebaseda_pro_loc_ser_con_674d` | write | firebasedataconnect.projects.locations.services.connectors.impersonateQuery | cloud-platform |
 | `firebaseda_pro_loc_ser_con_9a6d` | write | firebasedataconnect.projects.locations.services.connectors.executeQuery | cloud-platform |
 | `firebaseda_pro_loc_ser_con_c6c3` | write | firebasedataconnect.projects.locations.services.connectors.impersonateMutation | cloud-platform |
@@ -398,7 +399,7 @@ Each API links to Google's documentation for it, as Google's Discovery directory
 - Firebase App Check API (`firebaseappcheck/v1`), 46 methods in the catalog. Documentation: <https://firebase.google.com/docs/app-check>
 - Firebase App Distribution API (`firebaseappdistribution/v1`), 26 methods in the catalog. Documentation: <https://firebase.google.com/products/app-distribution>
 - Firebase App Hosting API (`firebaseapphosting/v1`), 25 methods in the catalog. Documentation: <https://firebase.google.com/docs/app-hosting>
-- Firebase Crashlytics API (`firebasecrashlytics/v1alpha`), 11 methods in the catalog. Documentation: <https://firebase.google.com/docs/crashlytics>
+- Firebase Crashlytics API (`firebasecrashlytics/v1alpha`), 12 methods in the catalog. Documentation: <https://firebase.google.com/docs/crashlytics>
 - Firebase Realtime Database Management API (`firebasedatabase/v1beta`), 7 methods in the catalog. Documentation: <https://firebase.google.com/docs/reference/rest/database/database-management/rest/>
 - Firebase SQL Connect API (`firebasedataconnect/v1`), 38 methods in the catalog. Documentation: <https://firebase.google.com/docs/data-connect>
 - Firebase Hosting API (`firebasehosting/v1`), 5 methods in the catalog. Documentation: <https://firebase.google.com/docs/hosting/>
@@ -423,4 +424,5 @@ Each API links to Google's documentation for it, as Google's Discovery directory
 - Firebase ML API (`firebaseml/v2beta`), 3 methods. Documentation: <https://firebase.google.com>
 - Identity Toolkit API (`identitytoolkit/v1`), 41 methods. Documentation: <https://cloud.google.com/identity-platform>
 - Identity Toolkit API (`identitytoolkit/v2`), 50 methods. Documentation: <https://cloud.google.com/identity-platform>
+- Device Run API (`devicerun/v1`), 10 methods. Documentation: <https://docs.cloud.google.com/developer-device-platform/device-run>
 

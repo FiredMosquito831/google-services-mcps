@@ -11,7 +11,7 @@ import { classifyMethod } from './discovery/methods.js';
 import { loadToolKinds } from './discovery/tools.js';
 import { catalogPath } from './gateway.js';
 import type { ToolKind } from './tools.js';
-import type { ServerToolsets } from './toolset.js';
+import type { ServerToolsets, ServerToolsetScopes } from './toolset.js';
 
 /**
  * One auth group per token file, or 'apikey' for products that take an API key
@@ -48,6 +48,12 @@ export interface ServerSpec {
    * { google: [...] }. Absent for a product that lists none. all and curated are never listed (see core/toolset.ts).
    */
   toolsets?: ServerToolsets;
+  /**
+   * The scopes a listed toolset's login takes first, per profile (config/products.json toolsets.<name>.preferScopes),
+   * such as { google: { readwrite: [...] } }. Each one is narrower than what the greedy rule would pick for the tools it
+   * covers, with the same reach for those tools. Absent for a product that has none, whose logins resolve as before.
+   */
+  toolsetScopes?: ServerToolsetScopes;
   /**
    * Per generated API of the product, the scopes a method of that API asks for when its Discovery document lists none
    * (config/products.json scopeOverrides; Google's Business Profile documents list no scope). A method that lists scopes

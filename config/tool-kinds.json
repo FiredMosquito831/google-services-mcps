@@ -68,5 +68,23 @@
   "analyticsdata.properties.audienceExports.query": "read",
   "calendar.freebusy.query": "read",
 
+  "webmasters.searchanalytics.query": "read",
+  "monitoring.projects.location.prometheus.api.v1.query": "read",
+  "monitoring.projects.location.prometheus.api.v1.query_range": "read",
+  "monitoring.projects.location.prometheus.api.v1.query_exemplars": "read",
+  "monitoring.projects.location.prometheus.api.v1.series": "read",
+  "monitoring.projects.location.prometheus.api.v1.labels": "read",
+  "monitoring.projects.timeSeries.query": "read",
+  "gmailpostmastertools.domains.domainStats.query": "read",
+  "gmailpostmastertools.domainStats.batchQuery": "read",
+  "aiplatform.projects.locations.publishers.models.generateContent": "read",
+  "aiplatform.publishers.models.generateContent": "read",
+  "aiplatform.projects.locations.endpoints.generateContent": "read",
+  "aiplatform.endpoints.generateContent": "read",
+  "aiplatform.projects.locations.publishers.models.embedContent": "read",
+  "identitytoolkit.projects.accounts.query": "read",
+  "identitytoolkit.projects.tenants.accounts.query": "read",
+  "firestore.projects.databases.documents.runQuery": "read",
+
   "merchantapi.accounts.dataSources.fetch": "write"
 }

@@ -43,7 +43,7 @@ Start with `--profile readonly`. Changes need a `readwrite` login and the plugin
 
 The full list is in `docs/capabilities/gtasks.md`.
 
-Google has no official MCP server for Tasks or Keep (none was found on 2026-10-29). With the plugin option `toolset: google`, the server lists a small set chosen here instead: `tasks_tasklists_list`, `tasks_tasks_list`, `tasks_tasks_get`, `tasks_tasks_insert`, `tasks_tasks_patch`, `tasks_tasks_delete` (asks twice), `keep_notes_list` and `keep_notes_get` (8 tools), plus `health` and the sign-in tools. List changes, clearing completed tasks and the Keep writes stay in the `all` toolset. A `readonly` login with that toolset asks for `tasks.readonly` and `keep.readonly`; a `readwrite` login for `tasks` and `keep`.
+Google has no official MCP server for Tasks or Keep (none was found on 2026-10-29). With the plugin option `toolset: google`, the server lists a small set chosen here instead: `tasks_tasklists_list`, `tasks_tasks_list`, `tasks_tasks_get`, `tasks_tasks_insert`, `tasks_tasks_patch`, `tasks_tasks_delete` (asks twice), `keep_notes_list` and `keep_notes_get` (8 tools), plus `health` and the sign-in tools. List changes, clearing completed tasks and the Keep writes stay in the `all` toolset. A `readonly` login with that toolset asks for `tasks.readonly` and `keep.readonly`; a `readwrite` login for `tasks` and, since 1.25.0, `keep.readonly` (the list only reads Keep; before, `keep`).
 
 ## Example requests
 

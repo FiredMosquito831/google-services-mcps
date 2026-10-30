@@ -12,7 +12,7 @@ import { existsSync, readFileSync, statSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import type { AuthGroup, Registry, ScopePolicy, ServerSpec } from '../core/registry.js';
 import type { InstallRoots } from './paths.js';
-import { LISTED_TOOLSETS, type ServerToolsets } from '../core/toolset.js';
+import { LISTED_TOOLSETS, PREFER_PROFILES, type PreferredScopes, type ServerToolsets, type ServerToolsetScopes } from '../core/toolset.js';
 
 /** One line per auth group, shown in help-like output and kept in the converted registry. */
 export const GROUP_TEXT: Record<string, string> = {
@@ -69,6 +69,8 @@ export function registryFromProducts(raw: unknown, dataRoot: string): Registry {
         : {}),
       // The product's listed toolsets, as tool names (scripts/gen-servers.mjs writes the same into config/servers.json).
       ...toolsetsField(value.toolsets),
+      // Their preferred scopes per profile (preferScopes), as gen-servers writes them (toolsetScopes).
+      ...toolsetScopesField(value.toolsets),
       label,
     });
   }
@@ -88,6 +90,26 @@ function toolsetsField(value: unknown): { toolsets?: ServerToolsets } {
     if (Array.isArray(tools)) out[name] = tools.filter((t): t is string => typeof t === 'string');
   }
   return Object.keys(out).length > 0 ? { toolsets: out } : {};
+}
+
+/**
+ * The toolsetScopes field of a server entry: per listed toolset, its "preferScopes" ({ readonly?, readwrite? }: scope
+ * lists). Empty when no toolset gives any. Checked by scripts/gen-servers.mjs.
+ */
+function toolsetScopesField(value: unknown): { toolsetScopes?: ServerToolsetScopes } {
+  if (typeof value !== 'object' || value === null || Array.isArray(value)) return {};
+  const out: ServerToolsetScopes = {};
+  for (const name of LISTED_TOOLSETS) {
+    const prefer = ((value as Record<string, unknown>)[name] as { preferScopes?: unknown } | undefined)?.preferScopes;
+    if (typeof prefer !== 'object' || prefer === null || Array.isArray(prefer)) continue;
+    const lists: PreferredScopes = {};
+    for (const profile of PREFER_PROFILES) {
+      const list = (prefer as Record<string, unknown>)[profile];
+      if (Array.isArray(list)) lists[profile] = list.filter((s): s is string => typeof s === 'string');
+    }
+    if (Object.keys(lists).length > 0) out[name] = lists;
+  }
+  return Object.keys(out).length > 0 ? { toolsetScopes: out } : {};
 }
 
 /** The API entries in a JSON list. Entries without a string api and version are dropped. */

@@ -308,3 +308,6 @@ Reads never ask for approval. Changes and deletions ask first, unless the user h
 - Workflow Executions API (workflowexecutions v1beta), reached through api_search, api_describe and api_call
 - Workflows API (workflows v1beta), reached through api_search, api_describe and api_call
 - Cloud Workstations API (workstations v1beta), reached through api_search, api_describe and api_call
+- Cloud Resource Manager API (cloudresourcemanager v3), reached through api_search, api_describe and api_call
+- Compute Engine API (compute 2026-11-01), reached through api_search, api_describe and api_call
+- Compute Engine API (compute 2026-12-01-preview), reached through api_search, api_describe and api_call

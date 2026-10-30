@@ -2,576 +2,576 @@
   "$comment": "Written by scripts/snapshot-discovery.mjs. For each snapshot in this folder: the revision field of the Discovery document Google served and the time it was fetched (ISO, UTC). \"unknown (snapshot 2026-10-15)\" marks a snapshot written before revisions were recorded; the date is that of the commit that last changed the file. scripts/check-discovery-freshness.mjs compares these records with Google's current documents.",
   "snapshots": {
     "abusiveexperiencereport.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261028",
+      "fetchedAt": "2026-10-30T15:03:48.483Z"
     },
     "acceleratedmobilepageurl.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261028",
+      "fetchedAt": "2026-10-30T15:03:47.734Z"
     },
     "addressvalidation.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261028",
+      "fetchedAt": "2026-10-30T15:04:29.448Z"
     },
     "adexperiencereport.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261028",
+      "fetchedAt": "2026-10-30T15:03:48.761Z"
     },
     "admin.datatransfer_v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261026",
+      "fetchedAt": "2026-10-30T15:04:02.780Z"
     },
     "admin.directory_v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261026",
+      "fetchedAt": "2026-10-30T15:04:02.893Z"
     },
     "admin.reports_v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261026",
+      "fetchedAt": "2026-10-30T15:03:58.735Z"
     },
     "admob.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261029",
+      "fetchedAt": "2026-10-30T15:04:10.973Z"
     },
     "airquality.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261028",
+      "fetchedAt": "2026-10-30T15:04:29.799Z"
     },
     "alertcenter.v1beta1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261030",
+      "fetchedAt": "2026-10-30T15:03:58.814Z"
     },
     "analyticsadmin.v1beta": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261027",
+      "fetchedAt": "2026-10-30T15:04:03.300Z"
     },
     "analyticsdata.v1beta": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261028",
+      "fetchedAt": "2026-10-30T15:04:03.630Z"
     },
     "androiddeveloperidstatus.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261028",
+      "fetchedAt": "2026-10-30T15:04:18.688Z"
     },
     "androiddeviceprovisioning.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261028",
+      "fetchedAt": "2026-10-30T15:04:17.840Z"
     },
     "androidenterprise.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261028",
+      "fetchedAt": "2026-10-30T15:04:17.543Z"
     },
     "androidpublisher.v3": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261029",
+      "fetchedAt": "2026-10-30T15:04:15.943Z"
     },
     "apikeys.v2": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261022",
+      "fetchedAt": "2026-10-30T15:03:43.805Z"
     },
     "appsmarket.v2": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261026",
+      "fetchedAt": "2026-10-30T15:03:58.672Z"
     },
     "areainsights.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261028",
+      "fetchedAt": "2026-10-30T15:04:30.690Z"
     },
     "bigquery.v2": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261009",
+      "fetchedAt": "2026-10-30T15:03:44.357Z"
     },
     "blogger.v3": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261029",
+      "fetchedAt": "2026-10-30T15:04:05.047Z"
     },
     "books.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261027",
+      "fetchedAt": "2026-10-30T15:03:53.230Z"
     },
     "businessprofileperformance.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261028",
+      "fetchedAt": "2026-10-30T15:04:08.059Z"
     },
     "calendar.v3": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261026",
+      "fetchedAt": "2026-10-30T15:03:53.896Z"
     },
     "chat.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261026",
+      "fetchedAt": "2026-10-30T15:03:54.224Z"
     },
     "chromepolicy.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261027",
+      "fetchedAt": "2026-10-30T15:03:59.852Z"
     },
     "chromeuxreport.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261028",
+      "fetchedAt": "2026-10-30T15:03:46.481Z"
     },
     "chromewebstore.v2": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261028",
+      "fetchedAt": "2026-10-30T15:04:18.915Z"
     },
     "civicinfo.v2": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261028",
+      "fetchedAt": "2026-10-30T15:03:49.724Z"
     },
     "classroom.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261027",
+      "fetchedAt": "2026-10-30T15:03:57.513Z"
     },
     "cloudasset.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261017",
+      "fetchedAt": "2026-10-30T15:03:45.467Z"
     },
     "cloudbilling.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261016",
+      "fetchedAt": "2026-10-30T15:03:44.000Z"
     },
     "cloudidentity.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261026",
+      "fetchedAt": "2026-10-30T15:03:59.030Z"
     },
     "cloudprofiler.v2": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261019",
+      "fetchedAt": "2026-10-30T15:03:45.641Z"
     },
     "cloudresourcemanager.v3": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261021",
+      "fetchedAt": "2026-10-30T15:03:43.005Z"
     },
     "cloudsearch.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20260819",
+      "fetchedAt": "2026-10-30T15:04:02.726Z"
     },
     "cloudtrace.v2": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261023",
+      "fetchedAt": "2026-10-30T15:03:45.573Z"
     },
     "css.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261028",
+      "fetchedAt": "2026-10-30T15:04:11.951Z"
     },
     "customsearch.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261028",
+      "fetchedAt": "2026-10-30T15:03:46.224Z"
     },
     "dataportability.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261029",
+      "fetchedAt": "2026-10-30T15:03:55.983Z"
     },
     "developerknowledge.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261025",
+      "fetchedAt": "2026-10-30T15:03:50.964Z"
     },
     "devicerun.v1alpha": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261028",
+      "fetchedAt": "2026-10-30T15:04:28.873Z"
     },
     "digitalassetlinks.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261024",
+      "fetchedAt": "2026-10-30T15:03:49.800Z"
     },
     "discoveryengine.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261022",
+      "fetchedAt": "2026-10-30T15:04:33.658Z"
     },
     "displayvideo.v4": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261029",
+      "fetchedAt": "2026-10-30T15:04:10.274Z"
     },
     "docs.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261021",
+      "fetchedAt": "2026-10-30T15:03:52.023Z"
     },
     "doubleclickbidmanager.v2": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261021",
+      "fetchedAt": "2026-10-30T15:04:11.296Z"
     },
     "drive.v3": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261028",
+      "fetchedAt": "2026-10-30T15:03:51.167Z"
     },
     "driveactivity.v2": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261027",
+      "fetchedAt": "2026-10-30T15:03:51.448Z"
     },
     "drivelabels.v2": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261028",
+      "fetchedAt": "2026-10-30T15:03:51.806Z"
     },
     "factchecktools.v1alpha1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261025",
+      "fetchedAt": "2026-10-30T15:03:47.609Z"
     },
     "fcm.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261023",
+      "fetchedAt": "2026-10-30T15:04:26.230Z"
     },
     "fcmdata.v1beta1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261025",
+      "fetchedAt": "2026-10-30T15:04:26.582Z"
     },
     "firebase.v1beta1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261023",
+      "fetchedAt": "2026-10-30T15:04:19.344Z"
     },
     "firebaseappcheck.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261024",
+      "fetchedAt": "2026-10-30T15:04:19.594Z"
     },
     "firebaseappdistribution.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261028",
+      "fetchedAt": "2026-10-30T15:04:19.968Z"
     },
     "firebaseapphosting.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261022",
+      "fetchedAt": "2026-10-30T15:04:20.956Z"
     },
     "firebasecrashlytics.v1alpha": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261029",
+      "fetchedAt": "2026-10-30T15:04:22.219Z"
     },
     "firebasedatabase.v1beta": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261025",
+      "fetchedAt": "2026-10-30T15:04:23.143Z"
     },
     "firebasedataconnect.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261025",
+      "fetchedAt": "2026-10-30T15:04:24.162Z"
     },
     "firebasehosting.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261018",
+      "fetchedAt": "2026-10-30T15:04:24.498Z"
     },
     "firebaseml.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261025",
+      "fetchedAt": "2026-10-30T15:04:24.796Z"
     },
     "firebaserules.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261023",
+      "fetchedAt": "2026-10-30T15:04:25.469Z"
     },
     "firebasestorage.v1beta": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261023",
+      "fetchedAt": "2026-10-30T15:04:25.995Z"
     },
     "forms.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261030",
+      "fetchedAt": "2026-10-30T15:03:53.050Z"
     },
     "games.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261001",
+      "fetchedAt": "2026-10-30T15:04:17.213Z"
     },
     "gamesConfiguration.v1configuration": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261001",
+      "fetchedAt": "2026-10-30T15:04:17.340Z"
     },
     "gamesManagement.v1management": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261001",
+      "fetchedAt": "2026-10-30T15:04:17.278Z"
     },
     "gmail.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261026",
+      "fetchedAt": "2026-10-30T15:03:53.294Z"
     },
     "gmailpostmastertools.v2": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261028",
+      "fetchedAt": "2026-10-30T15:03:53.831Z"
     },
     "googleads.v26": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261029",
+      "fetchedAt": "2026-10-30T15:04:08.775Z"
     },
     "groupssettings.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20220614",
+      "fetchedAt": "2026-10-30T15:04:00.609Z"
     },
     "health.v4": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261028",
+      "fetchedAt": "2026-10-30T15:03:55.604Z"
     },
     "iam.v2": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261023",
+      "fetchedAt": "2026-10-30T15:03:45.365Z"
     },
     "identitytoolkit.v3": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20180723",
+      "fetchedAt": "2026-10-30T15:04:26.099Z"
     },
     "indexing.v3": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261026",
+      "fetchedAt": "2026-10-30T15:03:46.168Z"
     },
     "keep.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261026",
+      "fetchedAt": "2026-10-30T15:03:56.471Z"
     },
     "kgsearch.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20260424",
+      "fetchedAt": "2026-10-30T15:03:47.243Z"
     },
     "language.v2": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261025",
+      "fetchedAt": "2026-10-30T15:04:34.425Z"
     },
     "licensing.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261024",
+      "fetchedAt": "2026-10-30T15:04:01.667Z"
     },
     "manufacturers.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261023",
+      "fetchedAt": "2026-10-30T15:04:12.625Z"
     },
     "meet.v2": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261027",
+      "fetchedAt": "2026-10-30T15:03:55.100Z"
     },
     "merchantapi.accounts_v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261028",
+      "fetchedAt": "2026-10-30T15:04:12.890Z"
     },
     "merchantapi.conversions_v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261028",
+      "fetchedAt": "2026-10-30T15:04:13.109Z"
     },
     "merchantapi.datasources_v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261028",
+      "fetchedAt": "2026-10-30T15:04:13.339Z"
     },
     "merchantapi.inventories_v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261028",
+      "fetchedAt": "2026-10-30T15:04:13.564Z"
     },
     "merchantapi.issueresolution_v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261028",
+      "fetchedAt": "2026-10-30T15:04:13.774Z"
     },
     "merchantapi.lfp_v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261028",
+      "fetchedAt": "2026-10-30T15:04:13.981Z"
     },
     "merchantapi.loyaltycustomers_v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261028",
+      "fetchedAt": "2026-10-30T15:04:14.197Z"
     },
     "merchantapi.notifications_v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261028",
+      "fetchedAt": "2026-10-30T15:04:14.430Z"
     },
     "merchantapi.ordertracking_v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261028",
+      "fetchedAt": "2026-10-30T15:04:14.642Z"
     },
     "merchantapi.products_v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261028",
+      "fetchedAt": "2026-10-30T15:04:14.891Z"
     },
     "merchantapi.promotions_v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261028",
+      "fetchedAt": "2026-10-30T15:04:15.134Z"
     },
     "merchantapi.quota_v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261028",
+      "fetchedAt": "2026-10-30T15:04:15.355Z"
     },
     "merchantapi.reports_v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261028",
+      "fetchedAt": "2026-10-30T15:04:15.593Z"
     },
     "merchantapi.reviews_v1beta": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261028",
+      "fetchedAt": "2026-10-30T15:04:11.627Z"
     },
     "monitoring.v3": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261022",
+      "fetchedAt": "2026-10-30T15:03:44.132Z"
     },
     "mybusinessaccountmanagement.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261028",
+      "fetchedAt": "2026-10-30T15:04:05.474Z"
     },
     "mybusinessbusinessinformation.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261028",
+      "fetchedAt": "2026-10-30T15:04:05.909Z"
     },
     "mybusinesslodging.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261028",
+      "fetchedAt": "2026-10-30T15:04:06.516Z"
     },
     "mybusinessnotifications.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261028",
+      "fetchedAt": "2026-10-30T15:04:06.953Z"
     },
     "mybusinessplaceactions.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261028",
+      "fetchedAt": "2026-10-30T15:04:07.373Z"
     },
     "mybusinessverifications.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261028",
+      "fetchedAt": "2026-10-30T15:04:07.715Z"
     },
     "oauth2.v2": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20200213",
+      "fetchedAt": "2026-10-30T15:03:56.044Z"
     },
     "pagespeedonline.v5": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261028",
+      "fetchedAt": "2026-10-30T15:03:46.280Z"
     },
     "people.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261028",
+      "fetchedAt": "2026-10-30T15:03:55.170Z"
     },
     "places.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261028",
+      "fetchedAt": "2026-10-30T15:04:29.105Z"
     },
     "playdeveloperreporting.v1beta1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261029",
+      "fetchedAt": "2026-10-30T15:04:17.146Z"
     },
     "playgrouping.v1alpha1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261029",
+      "fetchedAt": "2026-10-30T15:04:18.438Z"
     },
     "playintegrity.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261029",
+      "fetchedAt": "2026-10-30T15:04:18.130Z"
     },
     "policytroubleshooter.v3": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261025",
+      "fetchedAt": "2026-10-30T15:03:45.919Z"
     },
     "pollen.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261028",
+      "fetchedAt": "2026-10-30T15:04:31.672Z"
     },
     "reseller.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261026",
+      "fetchedAt": "2026-10-30T15:04:01.503Z"
     },
     "safebrowsing.v5": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261025",
+      "fetchedAt": "2026-10-30T15:03:47.494Z"
     },
     "script.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261011",
+      "fetchedAt": "2026-10-30T15:03:58.190Z"
     },
     "searchads360.v23": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20260820",
+      "fetchedAt": "2026-10-30T15:04:09.545Z"
     },
     "searchconsole.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261028",
+      "fetchedAt": "2026-10-30T15:03:46.000Z"
     },
     "serviceusage.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261022",
+      "fetchedAt": "2026-10-30T15:03:42.792Z"
     },
     "sheets.v4": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261026",
+      "fetchedAt": "2026-10-30T15:03:52.398Z"
     },
     "siteVerification.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20191119",
+      "fetchedAt": "2026-10-30T15:03:46.053Z"
     },
     "slides.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261026",
+      "fetchedAt": "2026-10-30T15:03:52.621Z"
     },
     "smartdevicemanagement.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261019",
+      "fetchedAt": "2026-10-30T15:04:19.246Z"
     },
     "solar.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261028",
+      "fetchedAt": "2026-10-30T15:04:32.678Z"
     },
     "speech.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20260924",
+      "fetchedAt": "2026-10-30T15:04:33.939Z"
     },
     "storage.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261026",
+      "fetchedAt": "2026-10-30T15:03:44.254Z"
     },
     "streetviewpublish.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261028",
+      "fetchedAt": "2026-10-30T15:04:32.793Z"
     },
     "tagmanager.v2": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261028",
+      "fetchedAt": "2026-10-30T15:04:04.444Z"
     },
     "tasks.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261027",
+      "fetchedAt": "2026-10-30T15:03:56.214Z"
     },
     "testing.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261027",
+      "fetchedAt": "2026-10-30T15:04:27.263Z"
     },
     "texttospeech.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20260827",
+      "fetchedAt": "2026-10-30T15:04:34.008Z"
     },
     "toolresults.v1beta3": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261029",
+      "fetchedAt": "2026-10-30T15:04:27.943Z"
     },
     "travelimpactmodel.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261028",
+      "fetchedAt": "2026-10-30T15:04:33.068Z"
     },
     "vault.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261022",
+      "fetchedAt": "2026-10-30T15:04:00.842Z"
     },
     "verifiedaccess.v2": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261028",
+      "fetchedAt": "2026-10-30T15:04:01.916Z"
     },
     "versionhistory.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261028",
+      "fetchedAt": "2026-10-30T15:03:50.083Z"
     },
     "videointelligence.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20260428",
+      "fetchedAt": "2026-10-30T15:04:34.551Z"
     },
     "vision.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261016",
+      "fetchedAt": "2026-10-30T15:04:33.814Z"
     },
     "webfonts.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20260903",
+      "fetchedAt": "2026-10-30T15:03:48.889Z"
     },
     "webrisk.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261025",
+      "fetchedAt": "2026-10-30T15:03:49.084Z"
     },
     "workspaceevents.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261025",
+      "fetchedAt": "2026-10-30T15:03:54.628Z"
     },
     "youtube.v3": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261029",
+      "fetchedAt": "2026-10-30T15:04:04.647Z"
     },
     "youtubeAnalytics.v2": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261028",
+      "fetchedAt": "2026-10-30T15:04:04.809Z"
     },
     "youtubereporting.v1": {
-      "revision": "unknown (snapshot 2026-10-15)",
-      "fetchedAt": null
+      "revision": "20261028",
+      "fetchedAt": "2026-10-30T15:04:04.899Z"
     }
   }
 }

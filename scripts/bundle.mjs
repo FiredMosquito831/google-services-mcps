@@ -34,7 +34,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const AUTHOR = { name: 'FiredMosquito831' };
-const MANIFEST_VERSION = '1.24.4';
+const MANIFEST_VERSION = '1.26.0';
 const TOOL_NAME_MAX = 64;
 /** When two API versions give one method two kinds, the riskier one is kept. A dynamic method is kept as dynamic (decided per call). */
 const RANK = { read: 0, write: 1, dynamic: 2, destructive: 3 };
@@ -462,6 +462,16 @@ async function buildPlugin(id, product, ctx) {
   for (const [toolset, names] of Object.entries(server.toolsets ?? {})) {
     const missing = names.filter((name) => !dumpedNames.has(name));
     if (missing.length) throw new Error(`toolset ${toolset} of ${id} names tools the server does not have: ${missing.join(', ')}`);
+  }
+  // A toolset's preferred scopes (config/products.json toolsets.<name>.preferScopes) must each be accepted by a tool of
+  // that toolset, as the server builds it, so a preference never asks for a scope no tool of the toolset uses.
+  for (const [toolset, byProfile] of Object.entries(server.toolsetScopes ?? {})) {
+    const listed = new Set(server.toolsets?.[toolset] ?? []);
+    const accepted = new Set(dumped.filter((t) => listed.has(t.name)).flatMap((t) => t.scopes ?? []));
+    for (const [profile, scopes] of Object.entries(byProfile)) {
+      const unused = scopes.filter((scope) => !accepted.has(scope));
+      if (unused.length) throw new Error(`toolset ${toolset} of ${id} prefers for ${profile} scopes no tool of the toolset accepts: ${unused.join(', ')}`);
+    }
   }
 
   // Registry and scope subsets for this plugin. A curated server's scopes come from its curated tools.

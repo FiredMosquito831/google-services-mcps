@@ -1719,6 +1719,16 @@
     "title": "firebasecrashlytics.projects.apps.reports.get"
   },
   {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebasecr_project_apps_generat",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebasecrashlytics.projects.apps.generateAlertPolicy",
+    "title": "firebasecrashlytics.projects.apps.generateAlertPolicy"
+  },
+  {
     "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_pro_loc_ser_con_674d",
     "kind": "write",
     "scopes": [

@@ -135,7 +135,7 @@ function toolsetsOf(value, id) {
     if (!LISTED_TOOLSETS.includes(name)) fail(`${where}: unknown toolset "${name}" (listed toolsets: ${LISTED_TOOLSETS.join(', ')})`);
     const at = `${where}.${name}`;
     if (typeof entry !== 'object' || entry === null || Array.isArray(entry)) fail(`${at} must be an object with tools and matches`);
-    for (const key of Object.keys(entry)) if (!['tools', 'matches', 'notes', 'source'].includes(key)) fail(`${at} has an unknown key "${key}"`);
+    for (const key of Object.keys(entry)) if (!['tools', 'matches', 'notes', 'source', 'preferScopes'].includes(key)) fail(`${at} has an unknown key "${key}"`);
     const tools = entry.tools;
     if (!Array.isArray(tools) || tools.length === 0 || !tools.every((t) => typeof t === 'string' && TOOL_NAME_PATTERN.test(t))) {
       fail(`${at}.tools must be a non-empty list of tool names`);
@@ -164,6 +164,67 @@ function toolsetsOf(value, id) {
       if (!ok) fail(`${at}.source must be a URL or a list of URLs${noOfficial ? ', or text that says there is no official server' : ''}`);
     }
     out[name] = [...tools];
+  }
+  return Object.keys(out).length > 0 ? out : undefined;
+}
+
+/** The profiles a toolset may prefer scopes for (PREFER_PROFILES in src/core/toolset.ts). full takes no preference. */
+const PREFER_PROFILES = ['readonly', 'readwrite'];
+
+/** A read-only scope by the suite's rule (isReadonlyScope in src/core/scopes.ts): the resolver uses no other for readonly. */
+function isReadonlyScope(scope) {
+  const last = scope.slice(scope.lastIndexOf('/') + 1);
+  return last === 'readonly' || last === 'read-only' || last.endsWith('.readonly') || last.endsWith('.read-only');
+}
+
+/**
+ * The scopes each tool of a product accepts, from its built tool map (plugins/<id>/tool-map.json), keyed by the short
+ * tool name. Undefined when the plugin is not built yet; scripts/bundle.mjs checks the preferences again against the
+ * tools it builds.
+ */
+function toolScopesOf(id, serverName) {
+  const file = join(ROOT, 'plugins', id, 'tool-map.json');
+  if (!existsSync(file)) return undefined;
+  const prefix = `mcp__plugin_${id}_${serverName}__`;
+  return new Map(readJson(file).map((t) => [t.name.startsWith(prefix) ? t.name.slice(prefix.length) : t.name, t.scopes ?? []]));
+}
+
+/**
+ * The preferred scopes of a product's listed toolsets (toolsets.<name>.preferScopes): per profile (readonly, readwrite),
+ * the scopes the toolset's login takes first. Each list is non-empty, holds scope URLs once, holds only read-only scopes
+ * for readonly, and every scope in it is accepted by at least one tool of the toolset (checked against the plugin's tool
+ * map when it is built). Returns { google: { readwrite: [...] } } for config/servers.json, or undefined when none.
+ */
+function toolsetScopesOf(value, id, serverName) {
+  if (value === undefined) return undefined;
+  const out = {};
+  const toolScopes = toolScopesOf(id, serverName);
+  for (const [name, entry] of Object.entries(value)) {
+    if (entry?.preferScopes === undefined) continue;
+    const at = `product ${id} toolsets.${name}.preferScopes`;
+    const prefer = entry.preferScopes;
+    if (typeof prefer !== 'object' || prefer === null || Array.isArray(prefer) || Object.keys(prefer).length === 0) {
+      fail(`${at} must be an object with a scope list per profile (${PREFER_PROFILES.join(', ')})`);
+    }
+    const lists = {};
+    for (const [profile, scopes] of Object.entries(prefer)) {
+      if (!PREFER_PROFILES.includes(profile)) fail(`${at}: "${profile}" is not a profile that takes a preference (${PREFER_PROFILES.join(', ')}; full asks for the broadest scopes)`);
+      if (!Array.isArray(scopes) || scopes.length === 0 || !scopes.every((s) => typeof s === 'string' && s.startsWith('https://'))) {
+        fail(`${at}.${profile} must be a non-empty list of scope URLs`);
+      }
+      if (new Set(scopes).size !== scopes.length) fail(`${at}.${profile} lists a scope twice`);
+      if (profile === 'readonly') {
+        const notReadonly = scopes.filter((s) => !isReadonlyScope(s));
+        if (notReadonly.length) fail(`${at}.readonly may hold only read-only scopes: ${notReadonly.join(', ')}`);
+      }
+      if (toolScopes) {
+        const accepted = new Set(entry.tools.flatMap((tool) => toolScopes.get(tool) ?? []));
+        const unused = scopes.filter((s) => !accepted.has(s));
+        if (unused.length) fail(`${at}.${profile}: no tool of the toolset accepts ${unused.join(', ')}`);
+      }
+      lists[profile] = [...scopes];
+    }
+    out[name] = lists;
   }
   return Object.keys(out).length > 0 ? out : undefined;
 }
@@ -256,6 +317,9 @@ function main() {
     // Only a product that lists a toolset gets the key, so the entries of the others stay as they were.
     const toolsets = toolsetsOf(p.toolsets, id);
     if (toolsets) server.toolsets = toolsets;
+    // Only a product whose toolset prefers scopes gets the key, so the entries of the others stay as they were.
+    const toolsetScopes = toolsetScopesOf(p.toolsets, id, p.server.name);
+    if (toolsetScopes) server.toolsetScopes = toolsetScopes;
     // The service-account key's scopes for this product (scripts/gen-service-account-scopes.mjs reads them). Checked
     // here, not copied: the key's list is compiled into src/core/service-account-scopes.ts.
     serviceAccountScopesOf(p, id);
