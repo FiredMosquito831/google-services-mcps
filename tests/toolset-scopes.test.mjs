@@ -205,9 +205,11 @@ test('requirements: the lean gtm, gyoutube and gbusiness lists resolve to the na
   assert.deepEqual(yt.readwrite, YT_READWRITE);
   const gb = await resolved('gbusiness');
   assert.equal(gb.n, 8);
-  // Google's Business Profile Discovery documents list no scope, so neither do these tools (as in the all toolset).
+  // Google's Business Profile Discovery documents list no scope; the product declares business.manage for them (scopeOverrides,
+  // 1.24.1). It has no read-only form, so a readonly login covers none of the eight (as in the all toolset).
   assert.deepEqual(gb.readonly.scopes, []);
-  assert.deepEqual(gb.readwrite, []);
+  assert.equal(gb.readonly.uncovered.length, 8);
+  assert.deepEqual(gb.readwrite, [G('business.manage')]);
 });
 
 test('requirements: the lean gsc google list resolves to webmasters.readonly (readonly) and webmasters with indexing (readwrite)', async () => {

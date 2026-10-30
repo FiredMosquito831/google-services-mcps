@@ -1006,7 +1006,7 @@ test('the gtm, gyoutube and gbusiness google lists are lean sets: no official se
     assert.equal(Object.values(BUSINESS_LEAN).flat().includes(name), false, name);
   }
   assert.match(products.gtm.toolsets.google.notes.tagmgr_accounts_containers_versions_publish, /goes live/);
-  assert.match(products.gbusiness.toolsets.google.notes.mbaccount_accounts_list, /list no OAuth scope/);
+  assert.match(products.gbusiness.toolsets.google.notes.mbaccount_accounts_list, /declares business\.manage/);
 });
 
 test('runServer: google on gtm, gyoutube and gbusiness lists the lean list and the runtime tools, with the same schemas as all', async () => {

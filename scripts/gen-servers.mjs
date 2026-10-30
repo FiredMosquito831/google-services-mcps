@@ -169,6 +169,24 @@ function toolsetsOf(value, id) {
 }
 
 /**
+ * A product's "scopeOverrides" (ServerSpec.scopeOverrides in src/core/registry.ts), checked and copied as is: per
+ * generated API of the product, the scopes a method of that API asks for when its Discovery document lists none (Google's
+ * Business Profile documents list no scope). A method that lists scopes keeps its own.
+ */
+function scopeOverridesOf(value, id, apiNames) {
+  if (value === undefined) return undefined;
+  const where = `product ${id} scopeOverrides`;
+  if (typeof value !== 'object' || value === null || Array.isArray(value) || Object.keys(value).length === 0) fail(`${where} must be a non-empty object`);
+  for (const [api, scopes] of Object.entries(value)) {
+    if (!apiNames.has(api)) fail(`${where}: "${api}" is not a generated API of the product (${[...apiNames].join(', ')})`);
+    if (!Array.isArray(scopes) || scopes.length === 0 || !scopes.every((s) => typeof s === 'string' && s.startsWith('https://'))) {
+      fail(`${where}["${api}"] must be a non-empty list of scope URLs`);
+    }
+  }
+  return value;
+}
+
+/**
  * A product's "serviceAccountScopes": required for a product of the service-account group, and only there. "methods"
  * (every scope the product's methods declare) or a non-empty list of scope URLs.
  */
@@ -232,6 +250,9 @@ function main() {
     // Only a product with a scope policy gets the key, so the entries of the others stay as they were.
     const policy = scopePolicyOf(p.scopePolicy, id, new Set([...apis, ...gatewayApis].map((a) => a.api)));
     if (policy) server.scopePolicy = policy;
+    // Only a product with scope overrides gets the key, so the entries of the others stay as they were.
+    const overrides = scopeOverridesOf(p.scopeOverrides, id, new Set(apis.map((a) => a.api)));
+    if (overrides) server.scopeOverrides = overrides;
     // Only a product that lists a toolset gets the key, so the entries of the others stay as they were.
     const toolsets = toolsetsOf(p.toolsets, id);
     if (toolsets) server.toolsets = toolsets;

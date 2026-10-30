@@ -2720,6 +2720,29 @@
       "title": "Business Profile",
       "description": "Business Profile accounts, locations, verifications, lodging, place actions, notifications and performance.",
       "group": "business",
+      "scopeOverrides": {
+        "mybusinessaccountmanagement": [
+          "https://www.googleapis.com/auth/business.manage"
+        ],
+        "mybusinessbusinessinformation": [
+          "https://www.googleapis.com/auth/business.manage"
+        ],
+        "mybusinesslodging": [
+          "https://www.googleapis.com/auth/business.manage"
+        ],
+        "mybusinessnotifications": [
+          "https://www.googleapis.com/auth/business.manage"
+        ],
+        "mybusinessplaceactions": [
+          "https://www.googleapis.com/auth/business.manage"
+        ],
+        "mybusinessverifications": [
+          "https://www.googleapis.com/auth/business.manage"
+        ],
+        "businessprofileperformance": [
+          "https://www.googleapis.com/auth/business.manage"
+        ]
+      },
       "server": {
         "name": "gbusiness",
         "curated": null
@@ -2779,7 +2802,7 @@
             "mbinfo_locations_patch": []
           },
           "notes": {
-            "mbaccount_accounts_list": "The Business Profile accounts the signed-in user can manage. Start here. Google's Business Profile Discovery documents list no OAuth scope, so these tools declare none and no login profile adds business.manage for them (as in the all toolset).",
+            "mbaccount_accounts_list": "The Business Profile accounts the signed-in user can manage. Start here. Google's Business Profile Discovery documents list no OAuth scope; since 1.24.1 the product declares business.manage for them (scopeOverrides), so a readwrite login asks for it. It has no read-only form, so a readonly login covers none of these tools.",
             "mbinfo_accounts_locations_list": "The locations of an account; readMask names the fields to return, such as name,title,storefrontAddress.",
             "mbinfo_locations_get": "One location with the fields readMask names: hours, categories, phone, website and so on.",
             "bpperf_locations_get_daily_metr": "One daily metric of a location over a date range, such as calls or website clicks.",

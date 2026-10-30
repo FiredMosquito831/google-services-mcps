@@ -16,7 +16,7 @@ Google has no official MCP server for this product. The google toolset is a lean
 
 | Tool | Google's tool | Note |
 |---|---|---|
-| `mbaccount_accounts_list` | (none) | The Business Profile accounts the signed-in user can manage. Start here. Google's Business Profile Discovery documents list no OAuth scope, so these tools declare none and no login profile adds business.manage for them (as in the all toolset). |
+| `mbaccount_accounts_list` | (none) | The Business Profile accounts the signed-in user can manage. Start here. Google's Business Profile Discovery documents list no OAuth scope; since 1.24.1 the product declares business.manage for them (scopeOverrides), so a readwrite login asks for it. It has no read-only form, so a readonly login covers none of these tools. |
 | `mbinfo_accounts_locations_list` | (none) | The locations of an account; readMask names the fields to return, such as name,title,storefrontAddress. |
 | `mbinfo_locations_get` | (none) | One location with the fields readMask names: hours, categories, phone, website and so on. |
 | `bpperf_locations_get_daily_metr` | (none) | One daily metric of a location over a date range, such as calls or website clicks. |
@@ -43,57 +43,57 @@ Google has no official MCP server for this product. The google toolset is a lean
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
-| `bpperf_loca_sear_impr_mont_list` | read | businessprofileperformance.locations.searchkeywords.impressions.monthly.list | (none) |
-| `bpperf_locations_fetch_multi_da` | read | businessprofileperformance.locations.fetchMultiDailyMetricsTimeSeries | (none) |
-| `bpperf_locations_get_daily_metr` | read | businessprofileperformance.locations.getDailyMetricsTimeSeries | (none) |
-| `mbaccount_accoun_invita_decline` | write | mybusinessaccountmanagement.accounts.invitations.decline | (none) |
-| `mbaccount_accoun_invitat_accept` | write | mybusinessaccountmanagement.accounts.invitations.accept | (none) |
-| `mbaccount_account_admins_create` | write | mybusinessaccountmanagement.accounts.admins.create | (none) |
-| `mbaccount_account_admins_delete` | destructive | mybusinessaccountmanagement.accounts.admins.delete | (none) |
-| `mbaccount_account_invitati_list` | read | mybusinessaccountmanagement.accounts.invitations.list | (none) |
-| `mbaccount_accounts_admins_list` | read | mybusinessaccountmanagement.accounts.admins.list | (none) |
-| `mbaccount_accounts_admins_patch` | write | mybusinessaccountmanagement.accounts.admins.patch | (none) |
-| `mbaccount_accounts_create` | write | mybusinessaccountmanagement.accounts.create | (none) |
-| `mbaccount_accounts_get` | read | mybusinessaccountmanagement.accounts.get | (none) |
-| `mbaccount_accounts_list` | read | mybusinessaccountmanagement.accounts.list | (none) |
-| `mbaccount_accounts_patch` | write | mybusinessaccountmanagement.accounts.patch | (none) |
-| `mbaccount_locatio_admins_create` | write | mybusinessaccountmanagement.locations.admins.create | (none) |
-| `mbaccount_locatio_admins_delete` | destructive | mybusinessaccountmanagement.locations.admins.delete | (none) |
-| `mbaccount_location_admins_patch` | write | mybusinessaccountmanagement.locations.admins.patch | (none) |
-| `mbaccount_locations_admins_list` | read | mybusinessaccountmanagement.locations.admins.list | (none) |
-| `mbaccount_locations_transfer` | write | mybusinessaccountmanagement.locations.transfer | (none) |
-| `mbinfo_accounts_location_create` | write | mybusinessbusinessinformation.accounts.locations.create | (none) |
-| `mbinfo_accounts_locations_list` | read | mybusinessbusinessinformation.accounts.locations.list | (none) |
-| `mbinfo_attributes_list` | read | mybusinessbusinessinformation.attributes.list | (none) |
-| `mbinfo_categories_batch_get` | read | mybusinessbusinessinformation.categories.batchGet | (none) |
-| `mbinfo_categories_list` | read | mybusinessbusinessinformation.categories.list | (none) |
-| `mbinfo_chains_get` | read | mybusinessbusinessinformation.chains.get | (none) |
-| `mbinfo_chains_search` | read | mybusinessbusinessinformation.chains.search | (none) |
-| `mbinfo_google_locations_search` | read | mybusinessbusinessinformation.googleLocations.search | (none) |
-| `mbinfo_locatio_attribu_get_goog` | read | mybusinessbusinessinformation.locations.attributes.getGoogleUpdated | (none) |
-| `mbinfo_locations_delete` | destructive | mybusinessbusinessinformation.locations.delete | (none) |
-| `mbinfo_locations_get` | read | mybusinessbusinessinformation.locations.get | (none) |
-| `mbinfo_locations_get_attributes` | read | mybusinessbusinessinformation.locations.getAttributes | (none) |
-| `mbinfo_locations_get_google_upd` | read | mybusinessbusinessinformation.locations.getGoogleUpdated | (none) |
-| `mbinfo_locations_patch` | write | mybusinessbusinessinformation.locations.patch | (none) |
-| `mbinfo_locations_update_attribu` | write | mybusinessbusinessinformation.locations.updateAttributes | (none) |
-| `mbnotify_accounts_get_notificat` | read | mybusinessnotifications.accounts.getNotificationSetting | (none) |
-| `mbnotify_accounts_update_notifi` | write | mybusinessnotifications.accounts.updateNotificationSetting | (none) |
-| `mbverify_locati_verific_complet` | write | mybusinessverifications.locations.verifications.complete | (none) |
-| `mbverify_location_verifica_list` | read | mybusinessverifications.locations.verifications.list | (none) |
-| `mbverify_locations_fetch_verifi` | read | mybusinessverifications.locations.fetchVerificationOptions | (none) |
-| `mbverify_locations_get_voice_of` | read | mybusinessverifications.locations.getVoiceOfMerchantState | (none) |
-| `mbverify_locations_verify` | write | mybusinessverifications.locations.verify | (none) |
-| `mbverify_verification_generate` | write | mybusinessverifications.verificationTokens.generate | (none) |
-| `mybusiness_locati_lodgin_get_go` | read | mybusinesslodging.locations.lodging.getGoogleUpdated | (none) |
-| `mybusiness_locati_place_a_patch` | write | mybusinessplaceactions.locations.placeActionLinks.patch | (none) |
-| `mybusiness_locati_place_create` | write | mybusinessplaceactions.locations.placeActionLinks.create | (none) |
-| `mybusiness_locati_place_delete` | destructive | mybusinessplaceactions.locations.placeActionLinks.delete | (none) |
-| `mybusiness_locatio_place_a_list` | read | mybusinessplaceactions.locations.placeActionLinks.list | (none) |
-| `mybusiness_locatio_place_ac_get` | read | mybusinessplaceactions.locations.placeActionLinks.get | (none) |
-| `mybusiness_locations_get_lodgin` | read | mybusinesslodging.locations.getLodging | (none) |
-| `mybusiness_locations_update_lod` | write | mybusinesslodging.locations.updateLodging | (none) |
-| `mybusiness_place_action_ty_list` | read | mybusinessplaceactions.placeActionTypeMetadata.list | (none) |
+| `bpperf_loca_sear_impr_mont_list` | read | businessprofileperformance.locations.searchkeywords.impressions.monthly.list | business.manage |
+| `bpperf_locations_fetch_multi_da` | read | businessprofileperformance.locations.fetchMultiDailyMetricsTimeSeries | business.manage |
+| `bpperf_locations_get_daily_metr` | read | businessprofileperformance.locations.getDailyMetricsTimeSeries | business.manage |
+| `mbaccount_accoun_invita_decline` | write | mybusinessaccountmanagement.accounts.invitations.decline | business.manage |
+| `mbaccount_accoun_invitat_accept` | write | mybusinessaccountmanagement.accounts.invitations.accept | business.manage |
+| `mbaccount_account_admins_create` | write | mybusinessaccountmanagement.accounts.admins.create | business.manage |
+| `mbaccount_account_admins_delete` | destructive | mybusinessaccountmanagement.accounts.admins.delete | business.manage |
+| `mbaccount_account_invitati_list` | read | mybusinessaccountmanagement.accounts.invitations.list | business.manage |
+| `mbaccount_accounts_admins_list` | read | mybusinessaccountmanagement.accounts.admins.list | business.manage |
+| `mbaccount_accounts_admins_patch` | write | mybusinessaccountmanagement.accounts.admins.patch | business.manage |
+| `mbaccount_accounts_create` | write | mybusinessaccountmanagement.accounts.create | business.manage |
+| `mbaccount_accounts_get` | read | mybusinessaccountmanagement.accounts.get | business.manage |
+| `mbaccount_accounts_list` | read | mybusinessaccountmanagement.accounts.list | business.manage |
+| `mbaccount_accounts_patch` | write | mybusinessaccountmanagement.accounts.patch | business.manage |
+| `mbaccount_locatio_admins_create` | write | mybusinessaccountmanagement.locations.admins.create | business.manage |
+| `mbaccount_locatio_admins_delete` | destructive | mybusinessaccountmanagement.locations.admins.delete | business.manage |
+| `mbaccount_location_admins_patch` | write | mybusinessaccountmanagement.locations.admins.patch | business.manage |
+| `mbaccount_locations_admins_list` | read | mybusinessaccountmanagement.locations.admins.list | business.manage |
+| `mbaccount_locations_transfer` | write | mybusinessaccountmanagement.locations.transfer | business.manage |
+| `mbinfo_accounts_location_create` | write | mybusinessbusinessinformation.accounts.locations.create | business.manage |
+| `mbinfo_accounts_locations_list` | read | mybusinessbusinessinformation.accounts.locations.list | business.manage |
+| `mbinfo_attributes_list` | read | mybusinessbusinessinformation.attributes.list | business.manage |
+| `mbinfo_categories_batch_get` | read | mybusinessbusinessinformation.categories.batchGet | business.manage |
+| `mbinfo_categories_list` | read | mybusinessbusinessinformation.categories.list | business.manage |
+| `mbinfo_chains_get` | read | mybusinessbusinessinformation.chains.get | business.manage |
+| `mbinfo_chains_search` | read | mybusinessbusinessinformation.chains.search | business.manage |
+| `mbinfo_google_locations_search` | read | mybusinessbusinessinformation.googleLocations.search | business.manage |
+| `mbinfo_locatio_attribu_get_goog` | read | mybusinessbusinessinformation.locations.attributes.getGoogleUpdated | business.manage |
+| `mbinfo_locations_delete` | destructive | mybusinessbusinessinformation.locations.delete | business.manage |
+| `mbinfo_locations_get` | read | mybusinessbusinessinformation.locations.get | business.manage |
+| `mbinfo_locations_get_attributes` | read | mybusinessbusinessinformation.locations.getAttributes | business.manage |
+| `mbinfo_locations_get_google_upd` | read | mybusinessbusinessinformation.locations.getGoogleUpdated | business.manage |
+| `mbinfo_locations_patch` | write | mybusinessbusinessinformation.locations.patch | business.manage |
+| `mbinfo_locations_update_attribu` | write | mybusinessbusinessinformation.locations.updateAttributes | business.manage |
+| `mbnotify_accounts_get_notificat` | read | mybusinessnotifications.accounts.getNotificationSetting | business.manage |
+| `mbnotify_accounts_update_notifi` | write | mybusinessnotifications.accounts.updateNotificationSetting | business.manage |
+| `mbverify_locati_verific_complet` | write | mybusinessverifications.locations.verifications.complete | business.manage |
+| `mbverify_location_verifica_list` | read | mybusinessverifications.locations.verifications.list | business.manage |
+| `mbverify_locations_fetch_verifi` | read | mybusinessverifications.locations.fetchVerificationOptions | business.manage |
+| `mbverify_locations_get_voice_of` | read | mybusinessverifications.locations.getVoiceOfMerchantState | business.manage |
+| `mbverify_locations_verify` | write | mybusinessverifications.locations.verify | business.manage |
+| `mbverify_verification_generate` | write | mybusinessverifications.verificationTokens.generate | business.manage |
+| `mybusiness_locati_lodgin_get_go` | read | mybusinesslodging.locations.lodging.getGoogleUpdated | business.manage |
+| `mybusiness_locati_place_a_patch` | write | mybusinessplaceactions.locations.placeActionLinks.patch | business.manage |
+| `mybusiness_locati_place_create` | write | mybusinessplaceactions.locations.placeActionLinks.create | business.manage |
+| `mybusiness_locati_place_delete` | destructive | mybusinessplaceactions.locations.placeActionLinks.delete | business.manage |
+| `mybusiness_locatio_place_a_list` | read | mybusinessplaceactions.locations.placeActionLinks.list | business.manage |
+| `mybusiness_locatio_place_ac_get` | read | mybusinessplaceactions.locations.placeActionLinks.get | business.manage |
+| `mybusiness_locations_get_lodgin` | read | mybusinesslodging.locations.getLodging | business.manage |
+| `mybusiness_locations_update_lod` | write | mybusinesslodging.locations.updateLodging | business.manage |
+| `mybusiness_place_action_ty_list` | read | mybusinessplaceactions.placeActionTypeMetadata.list | business.manage |
 
 ## Listing tool (1)
 

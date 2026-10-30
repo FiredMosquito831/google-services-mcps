@@ -16,7 +16,7 @@ Google Business Profile accounts, locations, admins, verifications, lodging, pla
 ```
 claude plugin install gbusiness@google-services-mcps --scope user
 node <plugin>/bin/gsm.mjs setup-client <client_secret.json>
-node <plugin>/bin/gsm.mjs login business --profile readonly
+node <plugin>/bin/gsm.mjs login business --profile readwrite
 node <plugin>/bin/gsm.mjs status
 ```
 
@@ -26,7 +26,9 @@ node <plugin>/bin/gsm.mjs status
 2. In a Google Cloud project, enable the Business Profile APIs. Request Basic API Access through the Business Profile API contact form. A project with a quota of 0 has not been approved. Do not ask for an increase while the quota is 0.
 3. Set up the OAuth consent screen. Create an OAuth client ID of type Desktop app, download the JSON file, then run `setup-client` and `login business`. Restart the MCP server (`/mcp`) after login.
 
-The email on the request must be an owner or manager of the listing, and the website domain must match that email domain. Start with `--profile readonly`. Edits need a `readwrite` login and the plugin option `allow_writes`.
+The email on the request must be an owner or manager of the listing, and the website domain must match that email domain.
+
+Every Business Profile API uses one OAuth scope, `business.manage`, which has no read-only form. Google's Discovery documents for these APIs list no scope, so the suite declares it in `config/products.json` (`scopeOverrides`, since 1.24.1): a `readwrite` login asks for it, and the tools register only once the login holds it. A `readonly` login covers no gbusiness tool, reads included. Edits also need the plugin option `allow_writes`. Before 1.24.1 the tools registered without a login and no profile asked for the scope, so calls failed unless the login held it for another reason.
 
 ## What it can do
 

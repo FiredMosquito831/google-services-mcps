@@ -2,6 +2,17 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.24.1 - 2026-10-30
+
+### Fixed: gbusiness tools ask for business.manage
+- Google's Business Profile Discovery documents list no OAuth scope, so no gbusiness tool declared one: the tools registered before any login, and no `login business` profile asked for `business.manage`, Google's documented scope for these APIs. A call worked only when the login held that scope for another reason.
+- `config/products.json` now declares it as data: `scopeOverrides` gives, per generated API of a product, the scopes a method asks for when its Discovery document lists none. gbusiness declares `business.manage` for its seven APIs. A method that lists its own scopes keeps them; no other product has overrides, so no other tool changes.
+- So every gbusiness tool (51 generated ones) declares `business.manage`: a `readwrite` (or `full`) business login asks for it, gbusiness registers its tools only once the login holds it, and before that it lists only `health`, the sign-in tools and `api_methods`. `business.manage` has no read-only form, so a `readonly` login covers no gbusiness tool, as with Google Ads.
+- A terminal `login business --profile readwrite` without `--servers` covers every server of the group, so it now asks for `business.manage` too; the chat sign-in of another business plugin asks only for its own server's scopes.
+
+### Not changed
+- The tools any server lists with a login that holds the scopes, every other product's tools, scopes and requirements, the write gate and the hook. The tool maps change only in gbusiness (the scopes of its 51 generated tools); the business plugins' servers.json carry `business.manage` in the group's scope list.
+
 ## 1.24.0 - 2026-10-30
 
 ### New: Android Management tools that match Google's Android Device Management MCP server, and a google toolset for gplay

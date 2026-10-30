@@ -1994,6 +1994,29 @@
           "version": "v1"
         }
       ],
+      "scopeOverrides": {
+        "mybusinessaccountmanagement": [
+          "https://www.googleapis.com/auth/business.manage"
+        ],
+        "mybusinessbusinessinformation": [
+          "https://www.googleapis.com/auth/business.manage"
+        ],
+        "mybusinesslodging": [
+          "https://www.googleapis.com/auth/business.manage"
+        ],
+        "mybusinessnotifications": [
+          "https://www.googleapis.com/auth/business.manage"
+        ],
+        "mybusinessplaceactions": [
+          "https://www.googleapis.com/auth/business.manage"
+        ],
+        "mybusinessverifications": [
+          "https://www.googleapis.com/auth/business.manage"
+        ],
+        "businessprofileperformance": [
+          "https://www.googleapis.com/auth/business.manage"
+        ]
+      },
       "toolsets": {
         "google": [
           "mbaccount_accounts_list",
