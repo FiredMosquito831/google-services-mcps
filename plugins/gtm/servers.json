@@ -42,6 +42,13 @@
           "tagmgr_accounts_containers_versions_publish"
         ]
       },
+      "toolsetScopes": {
+        "google": {
+          "readwrite": [
+            "https://www.googleapis.com/auth/tagmanager.readonly"
+          ]
+        }
+      },
       "label": "Tag Manager: Google Tag Manager accounts, containers, tags, triggers and variables."
     }
   ],

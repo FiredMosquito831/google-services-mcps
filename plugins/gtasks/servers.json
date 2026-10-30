@@ -35,6 +35,13 @@
           "keep_notes_get"
         ]
       },
+      "toolsetScopes": {
+        "google": {
+          "readwrite": [
+            "https://www.googleapis.com/auth/keep.readonly"
+          ]
+        }
+      },
       "label": "Tasks and Keep: Google Tasks task lists and tasks, plus Google Keep notes."
     }
   ],

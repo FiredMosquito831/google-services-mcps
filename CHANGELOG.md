@@ -2,6 +2,26 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.25.0 - 2026-10-30
+
+### Added: narrower scopes for the google toolset, with the same reach
+- A product's listed toolset can name the scopes its login takes first, per profile (`preferScopes` under `toolsets.google` in `config/products.json`; `scripts/gen-servers.mjs` copies it into the server map as `toolsetScopes`). The login takes those first, then the usual rule covers what is left. A scope is preferred only where Google's scope documentation gives the toolset's tools the same reach as the broader scope the login took before, so no tool of the list loses data or actions.
+- With `toolset: google`, a `readwrite` login now asks for:
+  - Calendar: `calendar.events`, `calendar.calendarlist.readonly`, `calendar.events.freebusy` (was `calendar`, which also changes calendars and their sharing).
+  - Chat: `chat.spaces.readonly`, `chat.memberships.readonly`, `chat.messages.readonly`, `chat.messages.create`, `chat.users.readstate`, `chat.users.spacesettings` (was `chat.spaces`, `chat.memberships`, `chat.messages`, which also edit and delete).
+  - Contacts: `contacts.readonly` (was `contacts`), with `directory.readonly` and `userinfo.email`.
+  - Tasks and Keep: `keep.readonly` (was `keep`), with `tasks`.
+  - Classroom: the read-only scopes of courses, rosters and guardian links (were their read-write scopes); announcements, coursework, materials and topics unchanged.
+  - Tag Manager: `tagmanager.readonly` (was `tagmanager.edit.containers`), with `tagmanager.edit.containerversions` and `tagmanager.publish`.
+  - Workspace admin (`setup-admin --toolset google`): `admin.directory.group.readonly`, `admin.directory.group.member`, `admin.directory.orgunit.readonly`, `admin.directory.domain.readonly` (were the group, org unit and domain write scopes), with `admin.directory.user`, the audit scope and `apps.alerts`.
+- The terminal login, `gsm scopes`, `setup-admin`, the sign-in from the chat and the ADC sign-in from the chat all use the same preference.
+- `scripts/gen-servers.mjs` refuses a preference that names a profile other than `readonly` or `readwrite`, a scope twice, a scope that is not read-only for `readonly`, or a scope no tool of the toolset accepts; `scripts/bundle.mjs` checks the last again against the tools it builds.
+
+### Not changed
+- Drive keeps `drive` (`drive_files_copy` copies any of your files, which `drive.file` cannot reach), Gmail keeps `gmail.modify`, Cloud keeps `cloud-platform` (and `bigquery`, which `cloud-platform` already covers), and the other products' `google` lists ask for what they asked before: a narrower scope with the same reach does not exist there.
+- The `all` and `curated` toolsets, every `readonly` and `full` login, and the scopes a tool needs to register. A token that holds the old, broader scopes keeps working: each tool still registers when the token holds any scope it accepts.
+- Not tested against Google: the scopes were compared in the suite, and the sign-ins stopped at the URL (OAuth) or ran a stand-in gcloud (ADC).
+
 ## 1.24.5 - 2026-10-30
 
 ### Fixed: seventeen more POST queries are reads

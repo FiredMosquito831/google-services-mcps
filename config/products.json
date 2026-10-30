@@ -1903,6 +1903,13 @@
       "toolsets": {
         "google": {
           "source": "https://developers.google.com/workspace/calendar/api/v3/reference/mcp/tools_list",
+          "preferScopes": {
+            "readwrite": [
+              "https://www.googleapis.com/auth/calendar.events",
+              "https://www.googleapis.com/auth/calendar.calendarlist.readonly",
+              "https://www.googleapis.com/auth/calendar.events.freebusy"
+            ]
+          },
           "tools": [
             "calendar_list_calendars",
             "calendar_list_events",
@@ -1971,6 +1978,14 @@
       "toolsets": {
         "google": {
           "source": "https://developers.google.com/workspace/chat/api/reference/mcp/tools_list",
+          "preferScopes": {
+            "readwrite": [
+              "https://www.googleapis.com/auth/chat.spaces.readonly",
+              "https://www.googleapis.com/auth/chat.memberships.readonly",
+              "https://www.googleapis.com/auth/chat.messages.readonly",
+              "https://www.googleapis.com/auth/chat.messages.create"
+            ]
+          },
           "tools": [
             "chat_search_conversations",
             "chat_list_messages",
@@ -2120,6 +2135,11 @@
       "toolsets": {
         "google": {
           "source": "https://developers.google.com/people/api/mcp/tools_list",
+          "preferScopes": {
+            "readwrite": [
+              "https://www.googleapis.com/auth/contacts.readonly"
+            ]
+          },
           "tools": [
             "contacts_search_directory",
             "contacts_search",
@@ -2167,6 +2187,11 @@
       "toolsets": {
         "google": {
           "source": "No official Google MCP server for Google Tasks or Google Keep was found (Google's Cloud and Workspace MCP lists, 2026-10-29; a negative, not confirmed by Google); a lean set chosen here.",
+          "preferScopes": {
+            "readwrite": [
+              "https://www.googleapis.com/auth/keep.readonly"
+            ]
+          },
           "tools": [
             "tasks_tasklists_list",
             "tasks_tasks_list",
@@ -2219,6 +2244,13 @@
       "toolsets": {
         "google": {
           "source": "https://developers.google.com/workspace/classroom/reference/mcp/tools_list",
+          "preferScopes": {
+            "readwrite": [
+              "https://www.googleapis.com/auth/classroom.courses.readonly",
+              "https://www.googleapis.com/auth/classroom.rosters.readonly",
+              "https://www.googleapis.com/auth/classroom.guardianlinks.students.readonly"
+            ]
+          },
           "tools": [
             "classroom_list_courses",
             "classroom_get_course",
@@ -2451,6 +2483,14 @@
       "toolsets": {
         "google": {
           "source": "No official Google MCP server for Google Workspace administration (the Admin SDK, reports and the alert center) was found in Google's Workspace and Cloud MCP lists on 2026-10-29; a lean set chosen here.",
+          "preferScopes": {
+            "readwrite": [
+              "https://www.googleapis.com/auth/admin.directory.group.readonly",
+              "https://www.googleapis.com/auth/admin.directory.group.member",
+              "https://www.googleapis.com/auth/admin.directory.orgunit.readonly",
+              "https://www.googleapis.com/auth/admin.directory.domain.readonly"
+            ]
+          },
           "tools": [
             "admin_users_list",
             "admin_user_get",
@@ -2597,6 +2637,11 @@
       "toolsets": {
         "google": {
           "source": "No official Google MCP server for Google Tag Manager was found (Google's Cloud and Workspace MCP lists and Google's GitHub organisations, 2026-10-29; a negative, not confirmed by Google); a lean set chosen here.",
+          "preferScopes": {
+            "readwrite": [
+              "https://www.googleapis.com/auth/tagmanager.readonly"
+            ]
+          },
           "tools": [
             "tagmgr_accounts_list",
             "tagmgr_accounts_containers_list",

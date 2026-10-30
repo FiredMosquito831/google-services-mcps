@@ -41,6 +41,19 @@ export type ListedToolset = (typeof LISTED_TOOLSETS)[number];
 /** A server's listed toolsets: tool names per toolset (ServerSpec.toolsets). */
 export type ServerToolsets = Partial<Record<ListedToolset, string[]>>;
 
+/**
+ * The profiles a listed toolset may prefer scopes for (config/products.json toolsets.<name>.preferScopes). full asks for
+ * the broadest scopes on purpose, so it takes no preference.
+ */
+export const PREFER_PROFILES = ['readonly', 'readwrite'] as const;
+export type PreferProfile = (typeof PREFER_PROFILES)[number];
+
+/** The scopes a toolset's login takes first, per profile, before the greedy rule covers the rest. */
+export type PreferredScopes = Partial<Record<PreferProfile, string[]>>;
+
+/** A server's preferred scopes per listed toolset (ServerSpec.toolsetScopes). */
+export type ServerToolsetScopes = Partial<Record<ListedToolset, PreferredScopes>>;
+
 /** Where a tool comes from: a curated module, a Discovery document, or the gateway. Set where a server's tools are assembled. */
 export type ToolOrigin = 'curated' | 'generated' | 'gateway';
 
