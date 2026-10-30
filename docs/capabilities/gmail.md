@@ -4,7 +4,7 @@ Gmail mailboxes, messages, labels and settings, plus Gmail Postmaster Tools.
 
 - Plugin: `gmail`, MCP server: `gmail`, login: Desktop OAuth client, then `login workspace-user`
 - Install: `claude plugin install gmail@google-services-mcps`
-- Tools: 115 total. Curated 24, per-method 87, gateway 3. Read 49, write 44, destructive 21, dynamic 1.
+- Tools: 115 total. Curated 24, per-method 87, gateway 3. Read 51, write 42, destructive 21, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
@@ -137,10 +137,10 @@ The tools that match Google's official MCP server for this product (https://deve
 | `gmail_users_threads_trash` | destructive | gmail.users.threads.trash | https://mail.google.com/, gmail.modify |
 | `gmail_users_threads_untrash` | write | gmail.users.threads.untrash | https://mail.google.com/, gmail.modify |
 | `gmail_users_watch` | write | gmail.users.watch | https://mail.google.com/, gmail.metadata |
-| `gmailpostm_domain_stats_batch_query` | write | gmailpostmastertools.domainStats.batchQuery | postmaster, postmaster.traffic.readonly |
+| `gmailpostm_domain_stats_batch_query` | read | gmailpostmastertools.domainStats.batchQuery | postmaster, postmaster.traffic.readonly |
 | `gmailpostm_domains_create` | write | gmailpostmastertools.domains.create | postmaster, postmaster.domain |
 | `gmailpostm_domains_delete` | destructive | gmailpostmastertools.domains.delete | postmaster, postmaster.domain |
-| `gmailpostm_domains_domain_stats_query` | write | gmailpostmastertools.domains.domainStats.query | postmaster, postmaster.traffic.readonly |
+| `gmailpostm_domains_domain_stats_query` | read | gmailpostmastertools.domains.domainStats.query | postmaster, postmaster.traffic.readonly |
 | `gmailpostm_domains_get` | read | gmailpostmastertools.domains.get | postmaster, postmaster.domain |
 | `gmailpostm_domains_get_compliance_statu` | read | gmailpostmastertools.domains.getComplianceStatus | postmaster, postmaster.traffic.readonly |
 | `gmailpostm_domains_get_verification_tok` | read | gmailpostmastertools.domains.getVerificationToken | postmaster, postmaster.domain |

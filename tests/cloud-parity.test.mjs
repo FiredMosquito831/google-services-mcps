@@ -116,7 +116,8 @@ test('kinds follow classifyMethod, except the PromQL query, which only evaluates
   assert.equal(tools.get('gcs_read_object').kind, classifyMethod('GET', 'get', 'storage.objects.get'));
   assert.equal(tools.get('gcs_write_text').kind, classifyMethod('POST', 'insert', 'storage.objects.insert'));
   assert.equal(tools.get('gcs_write_text').kind, 'write');
-  // The gateway classifies the Prometheus POST methods by name, so as writes; the curated tool is a read on purpose.
+  // The verb and name rules alone make the Prometheus POST methods writes; since 1.24.5 config/tool-kinds.json makes them
+  // reads, as the curated tool is (tests/kinds-postreads.test.mjs pins the override).
   assert.equal(classifyMethod('POST', 'query_range', 'monitoring.projects.location.prometheus.api.v1.query_range'), 'write');
   assert.equal(tools.get('monitoring_query_promql').kind, 'read');
   for (const name of NEW_TOOLS.filter((n) => n !== 'gcs_write_text')) assert.equal(tools.get(name).kind, 'read', name);

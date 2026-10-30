@@ -47,6 +47,7 @@ The gate needs to know whether a call changes data. For generated and gateway to
 - Anything else is a write.
 - `config/tool-kinds.json` overrides any method by its full id. A dynamic override is decided per call.
 - Since 1.24.2 it lists as reads twelve `POST` methods that Google marks read-only and that change nothing: Data Connect `executeGraphqlRead`, `generateQuery` and `generateSchema`, Firebase Rules `projects.test`, the three bindings of Discovery Engine `servingConfigs.answer`, Developer Knowledge `answerQuery`, Places `autocomplete`, Analytics Data `batchRunPivotReports` and `audienceExports.query`, and Calendar `freebusy.query`. It lists Merchant API `accounts.dataSources.fetch` as a write, because Google says it starts processing the data source's file. A credential name stays a write.
+- Since 1.24.5 it also lists as reads seventeen `POST` methods that only query: Search Console `searchanalytics.query`; the Monitoring Prometheus queries (`query`, `query_range`, `query_exemplars`, `series`, `labels`) and `timeSeries.query`; Postmaster v2 `domainStats.query` and `batchQuery`; Vertex AI `generateContent` (four bindings) and `embedContent`; Identity Toolkit `accounts.query` (project and tenant); Firestore `documents.runQuery`. BigQuery `jobs.query` stays a write, because it runs any SQL, DML and DDL included. Vertex AI `countTokens` stays a write: its name holds "token", and the credential rule is not overridden.
 
 The read rule for `POST` is a name prefix. It is not a check of what the method does. See the first known limit below.
 

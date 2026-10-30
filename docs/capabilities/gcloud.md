@@ -4,7 +4,7 @@ Google Cloud console APIs: projects, service enablement, API keys, billing, moni
 
 - Plugin: `gcloud`, MCP server: `gcloud`, login: Desktop OAuth client, then `login cloud`
 - Install: `claude plugin install gcloud@google-services-mcps`
-- Tools: 395 total. Curated 41, per-method 350, gateway 3. Read 196, write 147, destructive 51, dynamic 1.
+- Tools: 395 total. Curated 41, per-method 350, gateway 3. Read 197, write 146, destructive 51, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
@@ -58,7 +58,7 @@ The tools that match Google's official MCP server for this product (https://docs
 | `iam_role_get` | `get_role` | IAM lists only the cloud-platform scope for roles, so a readonly login cannot run it. |
 | `logging_entries_list` | `list_log_entries` | Google's list_log_names, list_buckets, list_views (and the observability server's sinks and log scopes) are reached with the gateway (api_call) in the all toolset. Without a time limit the last day is searched, as gcloud logging read does. |
 | `monitor_projects_time_series_list` | `list_timeseries` |  |
-| `monitoring_query_promql` | `query_range` | Also runs instant queries (Prometheus /query) when no range is given. Our kind is read, as Google marks query_range; the gateway classifies the two Prometheus POST methods as writes by their names. |
+| `monitoring_query_promql` | `query_range` | Also runs instant queries (Prometheus /query) when no range is given. Our kind is read, as Google marks query_range; since 1.24.5 the gateway's Prometheus POST queries (query, query_range, query_exemplars, series, labels) are reads too (config/tool-kinds.json). |
 | `monitor_projects_metric_descript_list` | `list_metric_descriptors` |  |
 | `monitor_projects_alert_policies_list` | `list_alert_policies` |  |
 | `monitor_projects_alert_policies_get` | `get_alert_policy` |  |
@@ -360,7 +360,7 @@ The tools that match Google's official MCP server for this product (https://docs
 | `monitor_projects_time_seri_create_ser` | write | monitoring.projects.timeSeries.createService | cloud-platform, monitoring |
 | `monitor_projects_time_series_create` | write | monitoring.projects.timeSeries.create | cloud-platform, monitoring |
 | `monitor_projects_time_series_list` | read | monitoring.projects.timeSeries.list | cloud-platform, monitoring |
-| `monitor_projects_time_series_query` | write | monitoring.projects.timeSeries.query | cloud-platform, monitoring |
+| `monitor_projects_time_series_query` | read | monitoring.projects.timeSeries.query | cloud-platform, monitoring |
 | `monitor_projects_uptime_check_c_patch` | write | monitoring.projects.uptimeCheckConfigs.patch | cloud-platform, monitoring |
 | `monitor_projects_uptime_check_co_list` | read | monitoring.projects.uptimeCheckConfigs.list | cloud-platform, monitoring |
 | `monitor_projects_uptime_check_con_get` | read | monitoring.projects.uptimeCheckConfigs.get | cloud-platform, monitoring |

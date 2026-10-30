@@ -2,6 +2,18 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.24.5 - 2026-10-30
+
+### Fixed: seventeen more POST queries are reads
+- These `POST` methods only read, but their names made them writes, so they asked first and were hidden with writes off: Search Console `searchanalytics.query`; the Monitoring v1 Prometheus queries `query`, `query_range`, `query_exemplars`, `series` and `labels`, and Monitoring v3 `timeSeries.query`; Postmaster Tools v2 `domains.domainStats.query` and `domainStats.batchQuery`; Vertex AI `generateContent` (publisher models and endpoints, with and without a project and location) and `embedContent`; Identity Toolkit `accounts.query` (project and tenant); Firestore `documents.runQuery`. Each is now a read in `config/tool-kinds.json`, for every version the catalog carries.
+- What moves: four generated tools (`searchcons_searchanalytics_query` in gsc, `monitor_projects_time_series_query` in gcloud, `gmailpostm_domains_domain_stats_query` and `gmailpostm_domain_stats_batch_query` in gmail) and thirteen gateway methods (gai 5, gcloud 6, gfirebase 2). The curated tools that call these methods (`sc_search_analytics_query`, `monitoring_query_promql`, `vertex_generate_content`, `vertex_embed_content`, `firestore_query_collection`, `auth_get_users`) were reads already; their generated and gateway copies now agree with them.
+
+### Not changed
+- BigQuery `jobs.query` stays a write (it runs any SQL, DML and DDL included).
+- Vertex AI `countTokens` stays a write: its name holds "token", one of the credential words, and that rule is not overridden. The curated `vertex_count_tokens` is a read, as before.
+- The scopes every login asks for: `gsm scopes` gives the same lists before and after for every group, profile and toolset, and for every server alone.
+- The write gate, the hook and every other kind.
+
 ## 1.24.4 - 2026-10-30
 
 ### Fixed: each service-account plugin asks for its own scopes only
