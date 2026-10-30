@@ -2,6 +2,36 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.11.0 - 2026-10-30
+
+### New: a lean google toolset for Search Console
+- Google has no official MCP server for Search Console (none was found on 2026-10-29), so the `google` toolset of gsc is a small set chosen here, as the owner decided for products without one: `sc_sites_list`, `sc_site_get`, `sc_search_analytics_query`, `sc_url_inspect`, `sc_sitemaps_list`, `sc_sitemap_get`, `sc_sitemap_submit` (write), `indexing_url_notifications_get_metadata` and `indexing_url_notifications_publish` (write; Google takes it only for JobPosting or BroadcastEvent pages). Each tool has a note in `config/products.json`. No tool is added or changed.
+- A `readonly` login with it asks for `webmasters.readonly`; a `readwrite` login for `webmasters` and `indexing` (the `all` toolset adds `siteverification`).
+- The help text and the plugin option say that `google` is Google's set, or a small set chosen here where Google has no server.
+
+### Not changed
+- The tools gsc lists with `all`, their schemas, scopes of the `all` toolset, the write gate and the hook. Every other plugin lists the same tools.
+
+## 1.10.0 - 2026-10-30
+
+### New: Google Cloud tools that match Google's Cloud MCP servers
+Each description names the Google tool it matches. All are reads except `gcs_write_text`.
+- `logging_entries_list` (`list_log_entries`): Cloud Logging entries of a project, or of folders, organizations, billing accounts or log views. Narrow with a Logging query, `severity` (that level and above), `resource_type` (for example `cloud_run_revision`, `cloud_function`) and a window (`start_time`/`end_time` or `freshness` such as `6h`). Without any time limit it searches the last day, as `gcloud logging read` does, and says so. Newest first; short rows by default, `view: full` for Google's entries.
+- `monitoring_query_promql` (`query_range`): a PromQL range query (`start_time`, `end_time`, `step`) or instant query on Cloud Monitoring (the Managed Service for Prometheus query API). It is a read: it only evaluates the query, as Google marks it. The gateway still classifies the two Prometheus POST methods as writes by their names.
+- `monitoring_dashboards_list` and `monitoring_dashboard_get` (`list_dashboards`, `get_dashboard`).
+- `iam_roles_list` and `iam_role_get` (`list_roles`, `get_role`): predefined roles, or a project's or organization's custom roles, with their permissions. IAM lists only `cloud-platform` for these methods, so a `readonly` login cannot run them.
+- `billing_price_lookup` (`list_prices`, `get_price`, `list_billing_account_prices`, `get_billing_account_price`): the latest price of one SKU (Cloud Billing v1beta), or the SKUs of a service found by words and region with their list prices (v1), and with `billing_account` that account's own price for each SKU.
+- `gcs_read_text` and `gcs_read_object` (`read_text`, `read_object`): a Cloud Storage object's content as text (decoded with its charset; binary refused) or as base64. At most `max_bytes` (default 8 MiB, at most 64 MiB) and at most what fits the result limit (`GSM_MAX_RESULT_CHARS`); `next_offset` continues. The content is read at the generation the metadata names.
+- `gcs_write_text` (write; `write_text`): text or a local file to an object in one upload (`uploadType=media`). It sends `ifGenerationMatch=0` unless `overwrite` is true, so an existing object is reported and left as it is. The approval shows the destination, the size, the content type and the overwrite choice. `local_path` goes through the same guard as Gmail attachments and Drive uploads.
+- The `google` toolset of gcloud: 59 tools for the tools of Google's Resource Manager, API Keys, BigQuery, Cloud Billing, IAM, Logging, Monitoring and Cloud Storage MCP servers. Google's `run_gcloud_command` and `run_bq_command` are not copied (a shell command would bypass the approval of each change). A `readonly` login with it asks for `cloud-platform.read-only` and `cloud-billing.readonly`, a `readwrite` login for `cloud-platform` and `bigquery`.
+
+### Changed
+- `config/products.json`: a toolset's `source` may be a list of pages (gcloud is made of several of Google's servers). `scripts/gen-servers.mjs` checks it.
+
+### Not changed
+- Scopes of the `all` toolset (gcloud's resolve the same; its login requirements grow by the ten tools), the write gate and the hook. Every other plugin lists the same tools with the same schemas.
+- Not tested against live Google Cloud APIs (Google's HTTP layer stubbed; the request shapes are checked against Google's Discovery documents).
+
 ## 1.9.0 - 2026-10-30
 
 ### New: Drive and Sheets tools that match Google's Drive, Docs, Sheets and Slides MCP servers

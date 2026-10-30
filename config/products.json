@@ -1169,6 +1169,275 @@
           "version": "v1beta"
         }
       ],
+      "toolsets": {
+        "google": {
+          "source": [
+            "https://docs.cloud.google.com/resource-manager/reference/mcp",
+            "https://docs.cloud.google.com/api-keys/docs/reference/mcp/tools_list",
+            "https://docs.cloud.google.com/bigquery/docs/reference/mcp/tools_list",
+            "https://docs.cloud.google.com/billing/docs/reference/mcp/tools_list",
+            "https://docs.cloud.google.com/iam/docs/reference/mcp/tools_list",
+            "https://docs.cloud.google.com/logging/docs/reference/v2_mcp/mcp/tools_list",
+            "https://docs.cloud.google.com/monitoring/api/ref_v3_mcp/mcp/tools_list",
+            "https://docs.cloud.google.com/storage/docs/reference/mcp/tools_list"
+          ],
+          "tools": [
+            "cloud_projects_search",
+            "cloud_project_iam_policy",
+            "cloud_apikeys_list",
+            "cloud_apikey_get",
+            "cloud_apikey_reveal",
+            "cloud_apikey_create",
+            "apikeys_projects_locations_keys_patch",
+            "cloud_apikey_delete",
+            "apikeys_project_locatio_keys_undelete",
+            "apikeys_keys_lookup_key",
+            "bq_dataset_list",
+            "bigquery_datasets_get",
+            "bq_table_list",
+            "bq_table_get",
+            "bq_table_preview",
+            "bq_query_read",
+            "bigquery_jobs_query",
+            "bq_job_get",
+            "bigquery_jobs_get",
+            "bigquery_jobs_cancel",
+            "billing_billing_accounts_list",
+            "billing_billing_accounts_get",
+            "billing_billing_accounts_create",
+            "billing_billing_accounts_move",
+            "billing_billing_accoun_get_iam_policy",
+            "billing_billing_accoun_set_iam_policy",
+            "billing_billing_accoun_test_iam_permi",
+            "billing_projects_get_billing_info",
+            "billing_billing_account_projects_list",
+            "billing_services_list",
+            "billing_services_skus_list",
+            "billing_price_lookup",
+            "iam_policies_list_policies",
+            "iam_policies_get",
+            "iam_policies_create_policy",
+            "iam_policies_update",
+            "iam_policies_delete",
+            "iam_policies_operations_get",
+            "iam_roles_list",
+            "iam_role_get",
+            "logging_entries_list",
+            "monitor_projects_time_series_list",
+            "monitoring_query_promql",
+            "monitor_projects_metric_descript_list",
+            "monitor_projects_alert_policies_list",
+            "monitor_projects_alert_policies_get",
+            "monitor_projects_alerts_list",
+            "monitor_projects_alerts_get",
+            "monitoring_dashboards_list",
+            "monitoring_dashboard_get",
+            "storage_buckets_list",
+            "storage_buckets_insert",
+            "storage_buckets_delete",
+            "storage_objects_list",
+            "storage_objects_get",
+            "gcs_read_text",
+            "gcs_read_object",
+            "gcs_write_text",
+            "storage_objects_delete"
+          ],
+          "matches": {
+            "cloud_projects_search": [
+              "search_projects"
+            ],
+            "cloud_project_iam_policy": [],
+            "cloud_apikeys_list": [
+              "apikeys_list_keys"
+            ],
+            "cloud_apikey_get": [
+              "apikeys_get_key"
+            ],
+            "cloud_apikey_reveal": [
+              "apikeys_get_key_string"
+            ],
+            "cloud_apikey_create": [
+              "apikeys_create_key"
+            ],
+            "apikeys_projects_locations_keys_patch": [
+              "apikeys_update_key"
+            ],
+            "cloud_apikey_delete": [
+              "apikeys_delete_key"
+            ],
+            "apikeys_project_locatio_keys_undelete": [
+              "apikeys_undelete_key"
+            ],
+            "apikeys_keys_lookup_key": [
+              "apikeys_lookup_key"
+            ],
+            "bq_dataset_list": [
+              "list_dataset_ids"
+            ],
+            "bigquery_datasets_get": [
+              "get_dataset_info"
+            ],
+            "bq_table_list": [
+              "list_table_ids"
+            ],
+            "bq_table_get": [
+              "get_table_info"
+            ],
+            "bq_table_preview": [],
+            "bq_query_read": [
+              "execute_sql_readonly"
+            ],
+            "bigquery_jobs_query": [
+              "execute_sql"
+            ],
+            "bq_job_get": [
+              "get_query_results"
+            ],
+            "bigquery_jobs_get": [
+              "get_job"
+            ],
+            "bigquery_jobs_cancel": [
+              "cancel_job"
+            ],
+            "billing_billing_accounts_list": [
+              "list_billing_accounts"
+            ],
+            "billing_billing_accounts_get": [
+              "get_billing_account"
+            ],
+            "billing_billing_accounts_create": [
+              "create_billing_account"
+            ],
+            "billing_billing_accounts_move": [
+              "move_billing_account"
+            ],
+            "billing_billing_accoun_get_iam_policy": [
+              "get_iam_policy"
+            ],
+            "billing_billing_accoun_set_iam_policy": [
+              "set_iam_policy"
+            ],
+            "billing_billing_accoun_test_iam_permi": [
+              "test_iam_permissions"
+            ],
+            "billing_projects_get_billing_info": [
+              "get_project_billing_info"
+            ],
+            "billing_billing_account_projects_list": [
+              "list_project_billing_info"
+            ],
+            "billing_services_list": [
+              "list_services",
+              "get_service"
+            ],
+            "billing_services_skus_list": [
+              "list_skus",
+              "get_sku"
+            ],
+            "billing_price_lookup": [
+              "list_prices",
+              "get_price",
+              "list_billing_account_prices",
+              "get_billing_account_price"
+            ],
+            "iam_policies_list_policies": [
+              "list_deny_policies"
+            ],
+            "iam_policies_get": [
+              "get_deny_policy"
+            ],
+            "iam_policies_create_policy": [
+              "create_deny_policy"
+            ],
+            "iam_policies_update": [
+              "update_deny_policy"
+            ],
+            "iam_policies_delete": [
+              "delete_deny_policy"
+            ],
+            "iam_policies_operations_get": [
+              "get_deny_policy_status"
+            ],
+            "iam_roles_list": [
+              "list_roles"
+            ],
+            "iam_role_get": [
+              "get_role"
+            ],
+            "logging_entries_list": [
+              "list_log_entries"
+            ],
+            "monitor_projects_time_series_list": [
+              "list_timeseries"
+            ],
+            "monitoring_query_promql": [
+              "query_range"
+            ],
+            "monitor_projects_metric_descript_list": [
+              "list_metric_descriptors"
+            ],
+            "monitor_projects_alert_policies_list": [
+              "list_alert_policies"
+            ],
+            "monitor_projects_alert_policies_get": [
+              "get_alert_policy"
+            ],
+            "monitor_projects_alerts_list": [
+              "list_alerts"
+            ],
+            "monitor_projects_alerts_get": [
+              "get_alert"
+            ],
+            "monitoring_dashboards_list": [
+              "list_dashboards"
+            ],
+            "monitoring_dashboard_get": [
+              "get_dashboard"
+            ],
+            "storage_buckets_list": [
+              "list_buckets"
+            ],
+            "storage_buckets_insert": [
+              "create_bucket"
+            ],
+            "storage_buckets_delete": [
+              "delete_bucket"
+            ],
+            "storage_objects_list": [
+              "list_objects"
+            ],
+            "storage_objects_get": [
+              "get_object_metadata"
+            ],
+            "gcs_read_text": [
+              "read_text"
+            ],
+            "gcs_read_object": [
+              "read_object"
+            ],
+            "gcs_write_text": [
+              "write_text"
+            ],
+            "storage_objects_delete": [
+              "delete_object"
+            ]
+          },
+          "notes": {
+            "cloud_project_iam_policy": "Google's IAM server reads deny policies and roles, not who holds a role on a project. Kept because that is the first IAM question; Resource Manager's getIamPolicy, a read.",
+            "bq_table_preview": "No tool of Google's BigQuery server reads rows without a query. Kept: tabledata.list, which has no query cost.",
+            "bq_query_read": "A dry run first refuses any statement that is not a SELECT, so it stays a read; bigquery_jobs_query (execute_sql) runs any statement and asks first.",
+            "billing_services_list": "Google's get_service has no method in Cloud Billing v1; the list covers it.",
+            "billing_services_skus_list": "Google's get_sku has no method in Cloud Billing v1; the list covers it, and billing_price_lookup finds SKUs by words.",
+            "billing_price_lookup": "Prices of one SKU (v1beta skus.price.get), or SKUs of a service found by words and region with their list prices, and a billing account's own prices (v1beta billingAccounts.skus.price.get). Google's SKU-group and billing-account SKU and service listings are reached with the gateway (api_call) in the all toolset.",
+            "iam_roles_list": "Reads only. Google's create_role, update_role, delete_role and undelete_role (IAM v1) are reached with the gateway (api_call) in the all toolset. IAM lists only the cloud-platform scope for roles, so a readonly login cannot run it.",
+            "iam_role_get": "IAM lists only the cloud-platform scope for roles, so a readonly login cannot run it.",
+            "logging_entries_list": "Google's list_log_names, list_buckets, list_views (and the observability server's sinks and log scopes) are reached with the gateway (api_call) in the all toolset. Without a time limit the last day is searched, as gcloud logging read does.",
+            "monitoring_query_promql": "Also runs instant queries (Prometheus /query) when no range is given. Our kind is read, as Google marks query_range; the gateway classifies the two Prometheus POST methods as writes by their names.",
+            "gcs_read_text": "Google's read_text is deprecated in favour of read_object; kept for text, decoded with the object's charset.",
+            "gcs_write_text": "Unlike Google's write_text it does not replace an existing object unless overwrite is true (ifGenerationMatch=0). It also uploads a local file (local_path)."
+          }
+        }
+      },
       "generatedToolCount": 350
     },
     "gsc": {
@@ -1194,6 +1463,44 @@
         }
       ],
       "gateway": [],
+      "toolsets": {
+        "google": {
+          "source": "No official Google MCP server for Search Console was found (Google's Cloud and Workspace MCP lists, 2026-10-29; a negative, not confirmed by Google); a lean set chosen here.",
+          "tools": [
+            "sc_sites_list",
+            "sc_site_get",
+            "sc_search_analytics_query",
+            "sc_url_inspect",
+            "sc_sitemaps_list",
+            "sc_sitemap_get",
+            "sc_sitemap_submit",
+            "indexing_url_notifications_get_metadata",
+            "indexing_url_notifications_publish"
+          ],
+          "matches": {
+            "sc_sites_list": [],
+            "sc_site_get": [],
+            "sc_search_analytics_query": [],
+            "sc_url_inspect": [],
+            "sc_sitemaps_list": [],
+            "sc_sitemap_get": [],
+            "sc_sitemap_submit": [],
+            "indexing_url_notifications_get_metadata": [],
+            "indexing_url_notifications_publish": []
+          },
+          "notes": {
+            "sc_sites_list": "The properties the account can see, with its permission level. Start here.",
+            "sc_site_get": "One property and the account's permission on it.",
+            "sc_search_analytics_query": "Clicks, impressions, CTR and position by query, page, country, device, date or search appearance. A read here; the generated searchcons_searchanalytics_query is a write, as classifyMethod classifies the POST query.",
+            "sc_url_inspect": "The index status of one URL: coverage, last crawl, canonical, mobile usability and rich results.",
+            "sc_sitemaps_list": "The sitemaps of a property with their submitted and indexed counts (the indexed count can lag; check a sample with sc_url_inspect).",
+            "sc_sitemap_get": "One sitemap: its status, errors, warnings and counts.",
+            "sc_sitemap_submit": "Submits or resubmits a sitemap. A write, so it asks first.",
+            "indexing_url_notifications_get_metadata": "When the Indexing API was last told about a URL. Needs the indexing scope, which has no read-only form.",
+            "indexing_url_notifications_publish": "Tells Google a URL was updated or deleted. Google accepts it only for pages with JobPosting or BroadcastEvent (in a VideoObject) markup. A write, so it asks first."
+          }
+        }
+      },
       "generatedToolCount": 20
     },
     "gsearch": {

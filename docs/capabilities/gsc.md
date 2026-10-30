@@ -8,7 +8,23 @@ Search Console sites, sitemaps, search analytics, URL indexing and site verifica
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 40, google 40 (all), curated 19 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 40, google 18, curated 19 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+
+## Toolset google (9)
+
+Google has no official MCP server for this product. The google toolset is a lean set chosen here: No official Google MCP server for Search Console was found (Google's Cloud and Workspace MCP lists, 2026-10-29; a negative, not confirmed by Google); a lean set chosen here..
+
+| Tool | Google's tool | Note |
+|---|---|---|
+| `sc_sites_list` | (none) | The properties the account can see, with its permission level. Start here. |
+| `sc_site_get` | (none) | One property and the account's permission on it. |
+| `sc_search_analytics_query` | (none) | Clicks, impressions, CTR and position by query, page, country, device, date or search appearance. A read here; the generated searchcons_searchanalytics_query is a write, as classifyMethod classifies the POST query. |
+| `sc_url_inspect` | (none) | The index status of one URL: coverage, last crawl, canonical, mobile usability and rich results. |
+| `sc_sitemaps_list` | (none) | The sitemaps of a property with their submitted and indexed counts (the indexed count can lag; check a sample with sc_url_inspect). |
+| `sc_sitemap_get` | (none) | One sitemap: its status, errors, warnings and counts. |
+| `sc_sitemap_submit` | (none) | Submits or resubmits a sitemap. A write, so it asks first. |
+| `indexing_url_notifications_get_metadata` | (none) | When the Indexing API was last told about a URL. Needs the indexing scope, which has no read-only form. |
+| `indexing_url_notifications_publish` | (none) | Tells Google a URL was updated or deleted. Google accepts it only for pages with JobPosting or BroadcastEvent (in a VideoObject) markup. A write, so it asks first. |
 
 ## Curated tools (19)
 

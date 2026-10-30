@@ -2,8 +2,9 @@
  * Toolsets: how many of a server's tools it registers (GSM_TOOLSET, the plugin option "toolset").
  *
  *   all      every tool. The default, and the same tool list as before toolsets existed.
- *   google   the tools that match Google's official MCP server for the product, listed by name in config/products.json
- *            (toolsets.google). A product without that list falls back to all, and says so.
+ *   google   the tools that match Google's official MCP server for the product, or a small set chosen here for a product
+ *            Google has no server for (gsc), listed by name in config/products.json (toolsets.google). A product without
+ *            that list falls back to all, and says so.
  *   curated  the hand-written tools of the server and its gateway tools (api_search, api_describe, api_call). Derived
  *            from each tool's origin, not listed. A product with neither falls back to all, and says so.
  *
@@ -26,7 +27,7 @@ export const DEFAULT_TOOLSET: Toolset = 'all';
 /** One line per toolset, for help text and settings. */
 export const TOOLSET_TEXT: Record<Toolset, string> = {
   all: 'every tool (the default)',
-  google: "the tools that match Google's official MCP server for the product; all tools where that list is not defined yet",
+  google: "the tools that match Google's official MCP server for the product, or a small set chosen here where Google has no server; all tools where that list is not defined yet",
   curated: 'the hand-written tools and the gateway tools (api_search, api_describe, api_call); all tools where a product has neither',
 };
 

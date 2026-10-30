@@ -49,6 +49,18 @@ const GMAIL_GOOGLE = [
   'gmail_trash',
   'gmail_untrash',
 ];
+/** The lean gsc list (no official Google MCP server for Search Console, 1.11.0). */
+const GSC_GOOGLE = [
+  'sc_sites_list',
+  'sc_site_get',
+  'sc_search_analytics_query',
+  'sc_url_inspect',
+  'sc_sitemaps_list',
+  'sc_sitemap_get',
+  'sc_sitemap_submit',
+  'indexing_url_notifications_get_metadata',
+  'indexing_url_notifications_publish',
+];
 /** The tools runServer adds for a server of an OAuth group. No toolset removes them. */
 const RUNTIME_OAUTH = ['account_remove', 'account_set_default', 'accounts_list', 'auth_login', 'auth_setup_client', 'auth_status', 'health'];
 
@@ -215,10 +227,55 @@ test('the gdrive google list covers the 20 tools of Google\'s Drive, Docs, Sheet
   assert.match(google.notes.drive_read_text, /PDF and image text is not read/);
 });
 
+test("the gcloud google list covers the tools of Google's Cloud MCP servers for its APIs, without a shell command", () => {
+  const google = readJson('config', 'products.json').products.gcloud.toolsets.google;
+  assert.equal(google.tools.length, 59);
+  assert.equal(google.source.length, 8);
+  const official = new Set(Object.values(google.matches).flat());
+  // docs.cloud.google.com/<product>/.../mcp/tools_list: Resource Manager, API Keys, BigQuery, IAM, Logging, Monitoring,
+  // Cloud Storage, and the Cloud Billing tools that are not SKU groups or billing-account SKU and service listings.
+  const expected = {
+    resourcemanager: ['search_projects'],
+    apikeys: ['apikeys_list_keys', 'apikeys_get_key', 'apikeys_get_key_string', 'apikeys_create_key', 'apikeys_update_key', 'apikeys_delete_key', 'apikeys_undelete_key', 'apikeys_lookup_key'],
+    bigquery: ['list_dataset_ids', 'get_dataset_info', 'list_table_ids', 'get_table_info', 'execute_sql_readonly', 'execute_sql', 'get_query_results', 'cancel_job', 'get_job'],
+    billing: [
+      'get_billing_account', 'list_billing_accounts', 'create_billing_account', 'move_billing_account', 'get_iam_policy', 'set_iam_policy', 'test_iam_permissions',
+      'get_project_billing_info', 'list_project_billing_info', 'list_prices', 'get_price', 'list_billing_account_prices', 'get_billing_account_price',
+      'list_services', 'get_service', 'list_skus', 'get_sku',
+    ],
+    iam: ['list_deny_policies', 'get_deny_policy', 'create_deny_policy', 'update_deny_policy', 'delete_deny_policy', 'get_deny_policy_status', 'list_roles', 'get_role'],
+    logging: ['list_log_entries'],
+    monitoring: ['list_timeseries', 'query_range', 'get_alert_policy', 'list_alert_policies', 'get_alert', 'list_alerts', 'list_metric_descriptors', 'list_dashboards', 'get_dashboard'],
+    storage: ['list_buckets', 'list_objects', 'create_bucket', 'delete_bucket', 'read_text', 'read_object', 'write_text', 'delete_object', 'get_object_metadata'],
+  };
+  for (const [area, names] of Object.entries(expected)) for (const name of names) assert.ok(official.has(name), `${area}: no tool of ours matches ${name}`);
+  assert.equal(official.size, Object.values(expected).flat().length);
+  // Not copied: Google's shell-command tools would bypass the approval gate.
+  assert.equal(google.tools.some((t) => /gcloud_command|bq_command/.test(t)), false);
+  assert.equal(official.has('run_gcloud_command'), false);
+  for (const name of ['cloud_project_iam_policy', 'bq_table_preview']) assert.deepEqual(google.matches[name], [], name);
+  assert.match(google.notes.gcs_write_text, /does not replace an existing object unless overwrite is true/);
+  assert.match(google.notes.iam_roles_list, /readonly login cannot run it/);
+});
+
+test('the gsc google list is a lean set: no official server, so every tool says why it is kept', () => {
+  const google = readJson('config', 'products.json').products.gsc.toolsets.google;
+  assert.deepEqual(google.tools, GSC_GOOGLE);
+  assert.match(google.source, /^No official Google MCP server for Search Console was found/);
+  for (const tool of google.tools) {
+    assert.deepEqual(google.matches[tool], [], tool);
+    assert.ok(typeof google.notes[tool] === 'string' && google.notes[tool].length > 10, `${tool} has a note`);
+  }
+  // The deletes, the property add and the generated duplicates stay in the all toolset.
+  for (const name of ['sc_site_delete', 'sc_sitemap_delete', 'sc_site_add', 'searchcons_searchanalytics_query']) assert.equal(google.tools.includes(name), false, name);
+  assert.match(google.notes.indexing_url_notifications_publish, /JobPosting or BroadcastEvent/);
+});
+
 test('both registry loaders carry the toolsets: the CLI conversion of config/products.json and a plugin servers.json', () => {
   const reg = registryFromProducts(readJson('config', 'products.json'), ROOT);
   assert.deepEqual(reg.servers.find((s) => s.name === 'gmail').toolsets, { google: GMAIL_GOOGLE });
-  assert.equal(reg.servers.find((s) => s.name === 'gsc').toolsets, undefined);
+  assert.deepEqual(reg.servers.find((s) => s.name === 'gsc').toolsets, { google: GSC_GOOGLE });
+  assert.equal(reg.servers.find((s) => s.name === 'gtasks').toolsets, undefined);
   const plugin = loadRegistryFile(join(ROOT, 'plugins', 'gmail', 'servers.json'));
   assert.deepEqual(plugin.servers[0].toolsets, { google: GMAIL_GOOGLE });
 });
@@ -253,7 +310,19 @@ test('gen-servers copies a valid toolset and rejects unknown or implicit names, 
     [{ google: { tools: ['a', 'a'], matches: { a: ['x'] } } }, /lists a tool twice/],
     [{ google: { tools: [], matches: {} } }, /non-empty list/],
     [{ google: ['a'] }, /must be an object with tools and matches/],
+    // source: a URL or a list of URLs; text only when no tool matches an official one.
+    [{ google: { tools: ['a'], matches: { a: ['x'] }, source: 'Google has none' } }, /source must be a URL or a list of URLs$/m],
+    [{ google: { tools: ['a'], matches: { a: ['x'] }, source: [] } }, /source must be a URL or a list of URLs/],
+    [{ google: { tools: ['a'], matches: { a: ['x'] }, source: ['https://a', 'b'] } }, /source must be a URL or a list of URLs/],
+    [{ google: { tools: ['a'], matches: { a: [] }, notes: { a: 'n' }, source: '  ' } }, /or text that says there is no official server/],
   ];
+  for (const source of ['https://a.example/tools', ['https://a.example', 'https://b.example']]) {
+    const res = genServers({ toolsets: { google: { tools: ['a'], matches: { a: ['x'] }, source } } });
+    assert.equal(res.status, 0, res.stderr);
+  }
+  const lean = genServers({ toolsets: { google: { tools: ['a'], matches: { a: [] }, notes: { a: 'n' }, source: 'No official Google MCP server; a lean set chosen here.' } } });
+  assert.equal(lean.status, 0, lean.stderr);
+  assert.deepEqual(lean.map.servers[0].toolsets, { google: ['a'] }, 'the source stays in config/products.json');
   for (const [toolsets, message] of refused) {
     const res = genServers({ toolsets });
     assert.notEqual(res.status, 0, JSON.stringify(toolsets));
@@ -306,7 +375,23 @@ function gmailEntry(dir) {
   return entry;
 }
 
-/** The search console server (curated and generated, no toolset listed). */
+/** The tasks server: generated tools only, no toolset listed. */
+function gtasksEntry(dir) {
+  const entry = join(dir, 'gtasks-entry.mjs');
+  writeFileSync(
+    entry,
+    [
+      `import { withOrigin } from '${dist('core/toolset.js')}';`,
+      `import { discoveryToolsFor } from '${dist('core/discovery/tools.js')}';`,
+      `import { runServer } from '${dist('core/tools.js')}';`,
+      `await runServer({ name: 'gtasks', version: '0.0.0', buildTools: async (cfg) => withOrigin('generated', await discoveryToolsFor('gtasks', cfg, [])) });`,
+      '',
+    ].join('\n'),
+  );
+  return entry;
+}
+
+/** The search console server (curated and generated; its google toolset is the lean list). */
 function gscEntry(dir) {
   const entry = join(dir, 'gsc-entry.mjs');
   writeFileSync(
@@ -393,8 +478,8 @@ test('runServer: unset and all list the same tools; google lists the gmail list 
 
 test('runServer: google on a product without a list shows every tool, and health and auth_status say why', async () => {
   const dir = tempDir('gsm-toolset-fallback-');
-  const entry = gscEntry(dir);
-  const tokenDir = fakeLogin(dir, 'gsc', 'searchconsole');
+  const entry = gtasksEntry(dir);
+  const tokenDir = fakeLogin(dir, 'gtasks', 'workspace-user');
   const unset = await withClient(entry, childEnv(dir, tokenDir), listTools);
   await withClient(entry, childEnv(dir, tokenDir, { GSM_TOOLSET: 'google' }), async (c) => {
     assert.deepEqual(await listTools(c), unset);
@@ -405,4 +490,15 @@ test('runServer: google on a product without a list shows every tool, and health
   });
   const statusAll = await withClient(entry, childEnv(dir, tokenDir), async (c) => (await c.callTool({ name: 'auth_status', arguments: {} })).content[0].text);
   assert.equal(statusAll.includes('Toolset'), false, 'the default status line is unchanged');
+});
+
+test('runServer: google on gsc lists the lean list and the runtime tools, with the same schemas as all', async () => {
+  const dir = tempDir('gsm-toolset-gsc-');
+  const entry = gscEntry(dir);
+  const tokenDir = fakeLogin(dir, 'gsc', 'searchconsole');
+  const unset = await withClient(entry, childEnv(dir, tokenDir), listTools);
+  const google = await withClient(entry, childEnv(dir, tokenDir, { GSM_TOOLSET: 'google' }), async (c) => ({ tools: await listTools(c), health: await health(c) }));
+  assert.deepEqual(google.tools.map((t) => t.name), [...GSC_GOOGLE, ...RUNTIME_OAUTH].sort());
+  for (const t of google.tools) assert.deepEqual(t, unset.find((u) => u.name === t.name), t.name);
+  assert.deepEqual(google.health.toolset, { requested: 'google', effective: 'google', outsideToolset: unset.length - google.tools.length });
 });

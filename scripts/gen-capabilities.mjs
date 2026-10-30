@@ -162,7 +162,13 @@ for (const p of perProduct) {
   if (p.google) {
     lines.push(`## Toolset google (${p.google.tools.length})`);
     lines.push('');
-    lines.push(`The tools that match Google's official MCP server for this product${p.google.source ? ` (${p.google.source})` : ''}.`);
+    const official = p.google.tools.some((tool) => (p.google.matches?.[tool] ?? []).length > 0);
+    const source = Array.isArray(p.google.source) ? p.google.source.join(', ') : p.google.source;
+    lines.push(
+      official
+        ? `The tools that match Google's official MCP server for this product${source ? ` (${source})` : ''}.`
+        : `Google has no official MCP server for this product. The google toolset is a lean set chosen here${source ? `: ${source}` : ''}.`,
+    );
     lines.push('');
     lines.push("| Tool | Google's tool | Note |");
     lines.push('|---|---|---|');
@@ -223,7 +229,7 @@ for (const p of perProduct) {
 }
 out.push('');
 out.push(
-  `Toolsets: the plugin option \`toolset\` (\`GSM_TOOLSET\`, \`gsm install --toolset\`) picks which tools a server lists. all is every tool (the default). google is the tools that match Google's official MCP server for the product. curated is the hand-written tools and the gateway tools. "(all)" means the product has no such toolset yet, so it lists every tool. Each count includes the ${RUNTIME_TOOL_NAMES.length} runtime tools of the tool map (health, sign-in and account tools); a server lists only those of its sign-in kind, and write tools only when writes are allowed. Antigravity is reported to refuse a server with more than 100 tools (not verified); \`gsm install --agent agy\` warns.`,
+  `Toolsets: the plugin option \`toolset\` (\`GSM_TOOLSET\`, \`gsm install --toolset\`) picks which tools a server lists. all is every tool (the default). google is the tools that match Google's official MCP server for the product, or a small set chosen here where Google has no server (gsc). curated is the hand-written tools and the gateway tools. "(all)" means the product has no such toolset yet, so it lists every tool. Each count includes the ${RUNTIME_TOOL_NAMES.length} runtime tools of the tool map (health, sign-in and account tools); a server lists only those of its sign-in kind, and write tools only when writes are allowed. Antigravity is reported to refuse a server with more than 100 tools (not verified); \`gsm install --agent agy\` warns.`,
 );
 out.push('');
 out.push('## What the safety classes mean');

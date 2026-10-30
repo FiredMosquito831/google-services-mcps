@@ -135,8 +135,11 @@ test('tool counts per toolset from the tool map: gmail all, google and curated',
   assert.deepEqual(toolsetCount(map, 'gmail', 'gmail', 'google', gmail.toolsets), { count: 14 + runtime, effective: 'google' });
   // curated: the 15 hand-written Gmail tools and the 3 gateway tools.
   assert.deepEqual(toolsetCount(map, 'gmail', 'gmail', 'curated', gmail.toolsets), { count: 18 + runtime, effective: 'curated' });
+  // gtasks has no google list, so google counts every tool. (gsc has a lean list since 1.11.0.)
+  const gtasks = env.registry.servers.find((s) => s.plugin === 'gtasks');
+  assert.equal(toolsetCount(join(REPO, 'plugins', 'gtasks', 'tool-map.json'), 'gtasks', 'gtasks', 'google', gtasks.toolsets).effective, 'all');
   const gsc = env.registry.servers.find((s) => s.plugin === 'gsc');
-  assert.equal(toolsetCount(join(REPO, 'plugins', 'gsc', 'tool-map.json'), 'gsc', 'gsc', 'google', gsc.toolsets).effective, 'all');
+  assert.equal(toolsetCount(join(REPO, 'plugins', 'gsc', 'tool-map.json'), 'gsc', 'gsc', 'google', gsc.toolsets).effective, 'google');
 });
 
 test('agy warnings: a product over the limit is named with the counts of the other toolsets; one under it is not', () => {
@@ -144,11 +147,13 @@ test('agy warnings: a product over the limit is named with the counts of the oth
   assert.equal(AGY_TOOL_LIMIT, 100);
   const lines = agyToolWarnings({}, env, ['gcloud', 'gmail', 'gsc']);
   assert.equal(lines.length, 2, lines.join('\n'));
-  assert.match(lines[0], /^\[agy\] warning: gcloud can list up to \d+ tools with toolset all\. Antigravity is reported to refuse a server with more than 100 tools \(not verified by gsm\)\. Fewer tools: --toolset curated: up to \d+\.$/);
+  // gcloud has a google list since 1.10.0 (59 tools and the runtime tools).
+  assert.match(lines[0], /^\[agy\] warning: gcloud can list up to \d+ tools with toolset all\. Antigravity is reported to refuse a server with more than 100 tools \(not verified by gsm\)\. Fewer tools: --toolset google: up to 68, --toolset curated: up to \d+\.$/);
   assert.match(lines[1], /^\[agy\] warning: gmail can list up to 115 tools with toolset all\. .* Fewer tools: --toolset google: up to 23, --toolset curated: up to 27\.$/);
-  const google = agyToolWarnings({ toolset: 'google' }, env, ['gcloud', 'gmail']);
-  assert.equal(google.length, 1);
-  assert.match(google[0], /^\[agy\] warning: gcloud can list up to \d+ tools with toolset google \(it has no google list, so all tools\)\./);
+  // With google, gcloud and gmail are under the limit; gai has no google list, so it lists all its tools.
+  const google = agyToolWarnings({ toolset: 'google' }, env, ['gcloud', 'gmail', 'gai']);
+  assert.equal(google.length, 1, google.join('\n'));
+  assert.match(google[0], /^\[agy\] warning: gai can list up to \d+ tools with toolset google \(it has no google list, so all tools\)\./);
 });
 
 /** The built CLI with a temp token folder and --home, and no GSM_* setting from this shell. */

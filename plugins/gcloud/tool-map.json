@@ -1045,6 +1045,16 @@
     "title": "cloudbilling.organizations.billingAccounts.move"
   },
   {
+    "name": "mcp__plugin_gcloud_gcloud__billing_price_lookup",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-billing.readonly",
+      "https://www.googleapis.com/auth/cloud-billing",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "title": "Look up Google Cloud prices"
+  },
+  {
     "name": "mcp__plugin_gcloud_gcloud__billing_projects_get_billing_info",
     "kind": "read",
     "scopes": [
@@ -2151,6 +2161,40 @@
     "title": "cloudresourcemanager.fetchResourceSemantics"
   },
   {
+    "name": "mcp__plugin_gcloud_gcloud__gcs_read_object",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/devstorage.read_only",
+      "https://www.googleapis.com/auth/cloud-platform.read-only",
+      "https://www.googleapis.com/auth/devstorage.read_write",
+      "https://www.googleapis.com/auth/devstorage.full_control",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "title": "Read a Cloud Storage object as base64"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__gcs_read_text",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/devstorage.read_only",
+      "https://www.googleapis.com/auth/cloud-platform.read-only",
+      "https://www.googleapis.com/auth/devstorage.read_write",
+      "https://www.googleapis.com/auth/devstorage.full_control",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "title": "Read a Cloud Storage object as text"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__gcs_write_text",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/devstorage.read_write",
+      "https://www.googleapis.com/auth/devstorage.full_control",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "title": "Write a Cloud Storage object"
+  },
+  {
     "name": "mcp__plugin_gcloud_gcloud__health",
     "kind": "read",
     "scopes": [],
@@ -2209,6 +2253,33 @@
     ],
     "methodId": "iam.policies.update",
     "title": "iam.policies.update"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__iam_role_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "title": "Get an IAM role"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__iam_roles_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "title": "List IAM roles"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__logging_entries_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/logging.read",
+      "https://www.googleapis.com/auth/cloud-platform.read-only",
+      "https://www.googleapis.com/auth/logging.admin",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "title": "List log entries"
   },
   {
     "name": "mcp__plugin_gcloud_gcloud__monitor_folders_time_series_list",
@@ -2805,6 +2876,36 @@
     ],
     "methodId": "monitoring.uptimeCheckIps.list",
     "title": "monitoring.uptimeCheckIps.list"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__monitoring_dashboard_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/monitoring.read",
+      "https://www.googleapis.com/auth/monitoring",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "title": "Get a monitoring dashboard"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__monitoring_dashboards_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/monitoring.read",
+      "https://www.googleapis.com/auth/monitoring",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "title": "List monitoring dashboards"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__monitoring_query_promql",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/monitoring.read",
+      "https://www.googleapis.com/auth/monitoring",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "title": "Query Cloud Monitoring with PromQL"
   },
   {
     "name": "mcp__plugin_gcloud_gcloud__policytrou_iam_troubleshoot",

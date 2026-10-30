@@ -44,6 +44,8 @@ Prerequisite: a Search Console property that the signed-in Google account can ac
 
 The full list is in `docs/capabilities/gsc.md`.
 
+Google has no official MCP server for Search Console (none was found on 2026-10-29). With the plugin option `toolset: google`, the server lists a small set chosen here instead: `sc_sites_list`, `sc_site_get`, `sc_search_analytics_query`, `sc_url_inspect`, `sc_sitemaps_list`, `sc_sitemap_get`, `sc_sitemap_submit` and the two Indexing API tools, plus `health` and the sign-in tools. The deletes, the property add and Site Verification stay in the `all` toolset. A `readonly` login with that toolset asks for `webmasters.readonly`; a `readwrite` login for `webmasters` and `indexing` (no `siteverification`).
+
 ## Example requests
 
 - "Which queries brought the most clicks to example.com last month?" Claude runs `sc_search_analytics_query`. No prompt.

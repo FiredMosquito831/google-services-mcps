@@ -106,6 +106,25 @@ test('requirements: the gdrive google list resolves to drive.readonly (readonly)
   assert.deepEqual(resolveScopes(google, 'readwrite').scopes, [G('drive')]);
 });
 
+test('requirements: the gcloud google list (59 tools, no gateway) resolves to Cloud read-only scopes and to cloud-platform', async () => {
+  const { cfg } = tempTokens();
+  const google = await requirementsFor(['gcloud'], cfg, { ...quiet, toolset: 'google' });
+  assert.equal(google.length, 59);
+  assert.equal(google.filter((r) => r.gateway).length, 0, 'no api_call in the list, so no gateway method counts');
+  const readonly = resolveScopes(google, 'readonly');
+  assert.deepEqual(readonly.scopes, [G('cloud-billing.readonly'), G('cloud-platform.read-only')]);
+  // IAM lists only cloud-platform, and monitoring.read is not taken for a read-only scope by its name, so these reads
+  // stay outside a readonly login, as with the all toolset.
+  for (const tool of ['iam_roles_list', 'iam_role_get', 'iam_policies_get', 'monitoring_query_promql', 'monitoring_dashboards_list']) {
+    assert.ok(readonly.uncovered.includes(`gcloud/${tool}`), tool);
+  }
+  for (const tool of ['logging_entries_list', 'gcs_read_text', 'billing_price_lookup', 'bq_query_read', 'cloud_projects_search']) {
+    assert.ok(readonly.covered.includes(`gcloud/${tool}`), tool);
+  }
+  // cloud-platform covers every tool but the curated BigQuery reads, which list bigquery and not cloud-platform.
+  assert.deepEqual(resolveScopes(google, 'readwrite').scopes, [G('bigquery'), G('cloud-platform')]);
+});
+
 test('requirements: curated keeps the curated tools and, with api_call, the gateway methods', async () => {
   const { cfg } = tempTokens();
   const all = await requirementsFor(['gmail'], cfg, quiet);
@@ -139,9 +158,22 @@ test('requirements: curated keeps the curated tools and, with api_call, the gate
 test('requirements: a toolset a product does not have counts every tool, and says so', async () => {
   const { cfg } = tempTokens();
   const lines = [];
-  const google = await requirementsFor(['gsc'], cfg, { warn: (l) => lines.push(l), toolset: 'google' });
-  assert.deepEqual(google, await requirementsFor(['gsc'], cfg, quiet));
-  assert.deepEqual(lines, ['[gsc] toolset google is not defined for this product yet; every tool counts toward the scopes.']);
+  const google = await requirementsFor(['gtasks'], cfg, { warn: (l) => lines.push(l), toolset: 'google' });
+  assert.deepEqual(google, await requirementsFor(['gtasks'], cfg, quiet));
+  assert.deepEqual(lines, ['[gtasks] toolset google is not defined for this product yet; every tool counts toward the scopes.']);
+});
+
+test('requirements: the lean gsc google list resolves to webmasters.readonly (readonly) and webmasters with indexing (readwrite)', async () => {
+  const { cfg } = tempTokens();
+  const google = await requirementsFor(['gsc'], cfg, { ...quiet, toolset: 'google' });
+  assert.equal(google.length, 9);
+  const readonly = resolveScopes(google, 'readonly');
+  assert.deepEqual(readonly.scopes, [G('webmasters.readonly')]);
+  // The Indexing API has no read-only scope, so its metadata read stays outside a readonly login.
+  assert.ok(readonly.uncovered.includes('gsc/indexing_url_notifications_get_metadata'));
+  assert.deepEqual(resolveScopes(google, 'readwrite').scopes, [G('indexing'), G('webmasters')]);
+  // The all toolset also asks for siteverification (the Site Verification tools), which the lean list does not hold.
+  assert.deepEqual(resolveScopes(await requirementsFor(['gsc'], cfg, quiet), 'readwrite').scopes, [G('indexing'), G('siteverification'), G('webmasters')]);
 });
 
 test('--toolset: parsed for login, scopes and setup-admin; an unknown value is a usage error', () => {

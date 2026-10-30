@@ -126,7 +126,15 @@ const DOCS = [
   'bigquery.v2',
   'googleads.v26',
   'admin.directory_v1',
+  'cloudbilling.v1',
+  'storage.v1',
 ];
+
+/**
+ * APIs the curated gcloud tools call that have no per-method tools, so data/discovery has no snapshot of them:
+ * trimmed copies of Google's documents in tests/fixtures/discovery (the methods called and their request schemas).
+ */
+const FIXTURE_DOCS = ['logging.v2', 'monitoring.v1', 'iam.v1', 'cloudbilling.v1beta'];
 
 /**
  * Other hosts a document's methods are called on. sc_* tools use @googleapis/webmasters, which calls the Search Console
@@ -150,8 +158,9 @@ function templateRegex(template) {
 
 const methods = [];
 const docs = {};
-for (const file of DOCS) {
-  const doc = JSON.parse(readFileSync(join(REPO, 'data', 'discovery', `${file}.json`), 'utf8'));
+for (const file of [...DOCS, ...FIXTURE_DOCS]) {
+  const dir = FIXTURE_DOCS.includes(file) ? join(REPO, 'tests', 'fixtures', 'discovery') : join(REPO, 'data', 'discovery');
+  const doc = JSON.parse(readFileSync(join(dir, `${file}.json`), 'utf8'));
   docs[file] = doc;
   const bases = [`${doc.rootUrl}${doc.servicePath ?? ''}`, ...(HOST_ALIASES[file] ?? []).map((root) => `${root}${doc.servicePath ?? ''}`)];
   const add = (m) => {
@@ -566,6 +575,67 @@ const CASES = {
   cloud_project_delete: [{ args: { project_id: 'my-project-123' }, preview: true, expect: ['cloudresourcemanager.projects.delete'] }],
   cloud_service_disable: [{ args: { project_id: 'my-project-123', service: 'gmail.googleapis.com', disable_dependent_services: false }, preview: true, expect: ['serviceusage.services.disable'] }],
   cloud_apikey_delete: [{ args: { key_name: 'projects/123456789012/locations/global/keys/key-1' }, preview: true, expect: ['apikeys.projects.locations.keys.delete'] }],
+  // 1.10.0: Logging, Monitoring, IAM roles, Billing prices, Cloud Storage objects.
+  logging_entries_list: [
+    {
+      args: { project_id: 'my-project-123', filter: 'textPayload:"timeout"', severity: 'ERROR', resource_type: 'cloud_run_revision', freshness: '6h', page_size: 20, page_token: 'p1' },
+      expect: ['logging.entries.list'],
+    },
+    {
+      args: { resource_names: ['folders/123', 'projects/my-project-123'], start_time: '2026-10-29T00:00:00Z', end_time: '2026-10-30T00:00:00Z', order: 'oldest', view: 'full' },
+      expect: ['logging.entries.list'],
+    },
+  ],
+  monitoring_query_promql: [
+    {
+      args: { project_id: 'my-project-123', query: 'sum(rate(run_googleapis_com:request_count[5m]))', start_time: '2026-10-30T00:00:00Z', end_time: '2026-10-30T01:00:00Z', step: '60s', timeout: '30s' },
+      expect: ['monitoring.projects.location.prometheus.api.v1.query_range'],
+      respond: () => ({ status: 'success', data: { resultType: 'matrix', result: [] } }),
+    },
+    { args: { project_id: 'my-project-123', query: 'up', time: '2026-10-30T00:00:00Z' }, expect: ['monitoring.projects.location.prometheus.api.v1.query'], respond: () => ({ status: 'success', data: { resultType: 'vector', result: [] } }) },
+  ],
+  monitoring_dashboards_list: [{ args: { project_id: 'my-project-123', page_size: 10, page_token: 'p1' }, expect: ['monitoring.projects.dashboards.list'] }],
+  monitoring_dashboard_get: [
+    { args: { project_id: 'my-project-123', dashboard_id: 'dash-1' }, expect: ['monitoring.projects.dashboards.get'] },
+    { args: { name: 'projects/my-project-123/dashboards/dash-2' }, expect: ['monitoring.projects.dashboards.get'] },
+  ],
+  iam_roles_list: [
+    { args: { view: 'full', page_size: 10, page_token: 'p1' }, expect: ['iam.roles.list'] },
+    { args: { project_id: 'my-project-123', show_deleted: true }, expect: ['iam.projects.roles.list'] },
+    { args: { organization_id: '123456789' }, expect: ['iam.organizations.roles.list'] },
+  ],
+  iam_role_get: [
+    { args: { name: 'roles/viewer' }, expect: ['iam.roles.get'] },
+    { args: { name: 'projects/my-project-123/roles/auditor' }, expect: ['iam.projects.roles.get'] },
+    { args: { name: 'organizations/123456789/roles/auditor' }, expect: ['iam.organizations.roles.get'] },
+  ],
+  billing_price_lookup: [
+    { args: { sku_id: 'D041-B8A1-6E0B', currency_code: 'EUR' }, expect: ['cloudbilling.skus.price.get'] },
+    {
+      args: { service: 'Compute Engine', query: 'N2 core', region: 'us-central1', billing_account: '012345-6789AB-CDEF01', currency_code: 'EUR', max_skus: 5 },
+      expect: ['cloudbilling.services.list', 'cloudbilling.services.skus.list', 'cloudbilling.billingAccounts.skus.price.get'],
+      respond: (call) =>
+        call.url.endsWith('/v1/services')
+          ? { services: [{ serviceId: '6F81-5844-456A', displayName: 'Compute Engine' }] }
+          : call.url.endsWith('/skus')
+            ? { skus: [{ skuId: 'AAAA-BBBB-CCCC', description: 'N2 Instance Core running in Americas', serviceRegions: ['us-central1'] }] }
+            : {},
+    },
+  ],
+  gcs_read_text: [
+    {
+      args: { bucket: 'my-bucket', object: 'logs/app.txt', generation: '7', read_offset: 2, max_bytes: 100 },
+      expect: ['storage.objects.get'],
+      respond: (call) => (call.query.alt === 'media' ? 'llo text' : { size: '10', contentType: 'text/plain', generation: '7' }),
+    },
+  ],
+  gcs_read_object: [
+    { args: { bucket: 'my-bucket', object: 'img/logo.png' }, expect: ['storage.objects.get'], respond: (call) => (call.query.alt === 'media' ? 'PNG' : { size: '3', contentType: 'image/png', generation: '9' }) },
+  ],
+  gcs_write_text: [
+    { args: { bucket: 'my-bucket', object: 'notes/today.txt', text: 'hello' }, expect: ['storage.objects.insert'] },
+    { args: { bucket: 'my-bucket', object: 'notes/notes.txt', local_path: SMALL_FILE, content_type: 'text/plain', overwrite: true }, expect: ['storage.objects.insert'] },
+  ],
 
   // gads
   ads_list_customers: [{ args: {}, expect: ['googleads.customers.listAccessibleCustomers'] }],
@@ -615,7 +685,7 @@ test('every curated tool has a contract row, a skip reason or a known defect, an
   const listed = new Set([...Object.keys(CASES), ...Object.keys(SKIPPED), ...Object.keys(KNOWN_DEFECTS)]);
   assert.deepEqual([...tools.keys()].filter((name) => !listed.has(name)), [], 'curated tools without a row');
   assert.deepEqual([...listed].filter((name) => !tools.has(name)), [], 'rows for tools that do not exist');
-  assert.equal(tools.size, 90, 'the curated tool count; update the table when it changes');
+  assert.equal(tools.size, 100, 'the curated tool count; update the table when it changes');
 });
 
 for (const [name, cases] of Object.entries(CASES)) {

@@ -1,7 +1,7 @@
 {
   "name": "gsearch",
   "displayName": "Search and Web Quality",
-  "version": "1.9.0",
+  "version": "1.11.0",
   "description": "Public search and web-quality APIs (Custom Search, PageSpeed, CrUX, Safe Browsing, Web Risk, Fact Check) that take an API key instead of OAuth. The Custom Search JSON API is closed to new customers and is scheduled to be discontinued on 2027-01-01.",
   "author": {
     "name": "FiredMosquito831"
@@ -33,7 +33,7 @@
     "toolset": {
       "type": "string",
       "title": "Toolset",
-      "description": "Which tools this server lists. all: every tool (the default). google: the tools that match Google's official MCP server for this product; where that list is not defined yet, all tools, and health says so. curated: the hand-written tools and the gateway tools (api_search, api_describe, api_call); where a product has neither, all tools. It takes effect when the server starts again.",
+      "description": "Which tools this server lists. all: every tool (the default). google: the tools that match Google's official MCP server for this product, or a small set chosen here where Google has no server; where that list is not defined yet, all tools, and health says so. curated: the hand-written tools and the gateway tools (api_search, api_describe, api_call); where a product has neither, all tools. It takes effect when the server starts again.",
       "options": [
         "all",
         "google",

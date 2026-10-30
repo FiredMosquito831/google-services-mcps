@@ -1,0 +1,254 @@
+{
+ "_source": "Trimmed from Google's Discovery document iam v1, revision 20261012: only the methods the curated tools call (iam.organizations.roles.get, iam.organizations.roles.list, iam.projects.roles.get, iam.projects.roles.list, iam.roles.get, iam.roles.list) and the schemas their request bodies reach. For tests/curated-contract.test.mjs; this API has no per-method tools, so data/discovery has no snapshot of it.",
+ "name": "iam",
+ "version": "v1",
+ "title": "Identity and Access Management (IAM) API",
+ "rootUrl": "https://iam.googleapis.com/",
+ "servicePath": "",
+ "baseUrl": "https://iam.googleapis.com/",
+ "schemas": {},
+ "resources": {
+  "roles": {
+   "methods": {
+    "get": {
+     "id": "iam.roles.get",
+     "path": "v1/{+name}",
+     "flatPath": "v1/roles/{rolesId}",
+     "httpMethod": "GET",
+     "description": "Gets the definition of a Role.",
+     "parameters": [
+      {
+       "name": "name",
+       "location": "path",
+       "type": "string",
+       "required": true,
+       "description": "The `name` parameter's value depends on the target resource for the request, namely [roles](https://cloud.google.com/iam/docs/reference/rest/v1/roles), [projects](https://cloud.google.com/iam/docs/..."
+      }
+     ],
+     "parameterOrder": [
+      "name"
+     ],
+     "response": "Role",
+     "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+     ]
+    },
+    "list": {
+     "id": "iam.roles.list",
+     "path": "v1/roles",
+     "flatPath": "v1/roles",
+     "httpMethod": "GET",
+     "description": "Lists every predefined Role that IAM supports, or every custom role that is defined for an organization or project.",
+     "parameters": [
+      {
+       "name": "view",
+       "location": "query",
+       "type": "string",
+       "enum": [
+        "BASIC",
+        "FULL"
+       ],
+       "description": "Optional view for the returned Role objects. When `FULL` is specified, the `includedPermissions` field is returned, which includes a list of all permissions in the role. The default value is `BASIC..."
+      },
+      {
+       "name": "parent",
+       "location": "query",
+       "type": "string",
+       "description": "The `parent` parameter's value depends on the target resource for the request, namely [roles](https://cloud.google.com/iam/docs/reference/rest/v1/roles), [projects](https://cloud.google.com/iam/doc..."
+      },
+      {
+       "name": "showDeleted",
+       "location": "query",
+       "type": "boolean",
+       "description": "Include Roles that have been deleted."
+      },
+      {
+       "name": "pageSize",
+       "location": "query",
+       "type": "integer",
+       "format": "int32",
+       "description": "Optional limit on the number of roles to include in the response. The default is 300, and the maximum is 1,000."
+      },
+      {
+       "name": "pageToken",
+       "location": "query",
+       "type": "string",
+       "description": "Optional pagination token returned in an earlier ListRolesResponse."
+      }
+     ],
+     "parameterOrder": [],
+     "response": "ListRolesResponse",
+     "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+     ]
+    }
+   }
+  },
+  "projects": {
+   "resources": {
+    "roles": {
+     "methods": {
+      "list": {
+       "id": "iam.projects.roles.list",
+       "path": "v1/{+parent}/roles",
+       "flatPath": "v1/projects/{projectsId}/roles",
+       "httpMethod": "GET",
+       "description": "Lists every predefined Role that IAM supports, or every custom role that is defined for an organization or project.",
+       "parameters": [
+        {
+         "name": "view",
+         "location": "query",
+         "type": "string",
+         "enum": [
+          "BASIC",
+          "FULL"
+         ],
+         "description": "Optional view for the returned Role objects. When `FULL` is specified, the `includedPermissions` field is returned, which includes a list of all permissions in the role. The default value is `BASIC..."
+        },
+        {
+         "name": "pageSize",
+         "location": "query",
+         "type": "integer",
+         "format": "int32",
+         "description": "Optional limit on the number of roles to include in the response. The default is 300, and the maximum is 1,000."
+        },
+        {
+         "name": "pageToken",
+         "location": "query",
+         "type": "string",
+         "description": "Optional pagination token returned in an earlier ListRolesResponse."
+        },
+        {
+         "name": "parent",
+         "location": "path",
+         "type": "string",
+         "required": true,
+         "description": "The `parent` parameter's value depends on the target resource for the request, namely [roles](https://cloud.google.com/iam/docs/reference/rest/v1/roles), [projects](https://cloud.google.com/iam/doc..."
+        },
+        {
+         "name": "showDeleted",
+         "location": "query",
+         "type": "boolean",
+         "description": "Include Roles that have been deleted."
+        }
+       ],
+       "parameterOrder": [
+        "parent"
+       ],
+       "response": "ListRolesResponse",
+       "scopes": [
+        "https://www.googleapis.com/auth/cloud-platform"
+       ]
+      },
+      "get": {
+       "id": "iam.projects.roles.get",
+       "path": "v1/{+name}",
+       "flatPath": "v1/projects/{projectsId}/roles/{rolesId}",
+       "httpMethod": "GET",
+       "description": "Gets the definition of a Role.",
+       "parameters": [
+        {
+         "name": "name",
+         "location": "path",
+         "type": "string",
+         "required": true,
+         "description": "The `name` parameter's value depends on the target resource for the request, namely [roles](https://cloud.google.com/iam/docs/reference/rest/v1/roles), [projects](https://cloud.google.com/iam/docs/..."
+        }
+       ],
+       "parameterOrder": [
+        "name"
+       ],
+       "response": "Role",
+       "scopes": [
+        "https://www.googleapis.com/auth/cloud-platform"
+       ]
+      }
+     }
+    }
+   }
+  },
+  "organizations": {
+   "resources": {
+    "roles": {
+     "methods": {
+      "get": {
+       "id": "iam.organizations.roles.get",
+       "path": "v1/{+name}",
+       "flatPath": "v1/organizations/{organizationsId}/roles/{rolesId}",
+       "httpMethod": "GET",
+       "description": "Gets the definition of a Role.",
+       "parameters": [
+        {
+         "name": "name",
+         "location": "path",
+         "type": "string",
+         "required": true,
+         "description": "The `name` parameter's value depends on the target resource for the request, namely [roles](https://cloud.google.com/iam/docs/reference/rest/v1/roles), [projects](https://cloud.google.com/iam/docs/..."
+        }
+       ],
+       "parameterOrder": [
+        "name"
+       ],
+       "response": "Role",
+       "scopes": [
+        "https://www.googleapis.com/auth/cloud-platform"
+       ]
+      },
+      "list": {
+       "id": "iam.organizations.roles.list",
+       "path": "v1/{+parent}/roles",
+       "flatPath": "v1/organizations/{organizationsId}/roles",
+       "httpMethod": "GET",
+       "description": "Lists every predefined Role that IAM supports, or every custom role that is defined for an organization or project.",
+       "parameters": [
+        {
+         "name": "parent",
+         "location": "path",
+         "type": "string",
+         "required": true,
+         "description": "The `parent` parameter's value depends on the target resource for the request, namely [roles](https://cloud.google.com/iam/docs/reference/rest/v1/roles), [projects](https://cloud.google.com/iam/doc..."
+        },
+        {
+         "name": "pageSize",
+         "location": "query",
+         "type": "integer",
+         "format": "int32",
+         "description": "Optional limit on the number of roles to include in the response. The default is 300, and the maximum is 1,000."
+        },
+        {
+         "name": "showDeleted",
+         "location": "query",
+         "type": "boolean",
+         "description": "Include Roles that have been deleted."
+        },
+        {
+         "name": "pageToken",
+         "location": "query",
+         "type": "string",
+         "description": "Optional pagination token returned in an earlier ListRolesResponse."
+        },
+        {
+         "name": "view",
+         "location": "query",
+         "type": "string",
+         "enum": [
+          "BASIC",
+          "FULL"
+         ],
+         "description": "Optional view for the returned Role objects. When `FULL` is specified, the `includedPermissions` field is returned, which includes a list of all permissions in the role. The default value is `BASIC..."
+        }
+       ],
+       "parameterOrder": [
+        "parent"
+       ],
+       "response": "ListRolesResponse",
+       "scopes": [
+        "https://www.googleapis.com/auth/cloud-platform"
+       ]
+      }
+     }
+    }
+   }
+  }
+ }
+}

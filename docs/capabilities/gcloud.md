@@ -4,13 +4,79 @@ Google Cloud console APIs: projects, service enablement, API keys, billing, moni
 
 - Plugin: `gcloud`, MCP server: `gcloud`, login: Desktop OAuth client, then `login cloud`
 - Install: `claude plugin install gcloud@google-services-mcps`
-- Tools: 385 total. Curated 31, per-method 350, gateway 3. Read 187, write 146, destructive 51, dynamic 1.
+- Tools: 395 total. Curated 41, per-method 350, gateway 3. Read 196, write 147, destructive 51, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 385, google 385 (all), curated 34 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 395, google 68, curated 44 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
 
-## Curated tools (31)
+## Toolset google (59)
+
+The tools that match Google's official MCP server for this product (https://docs.cloud.google.com/resource-manager/reference/mcp, https://docs.cloud.google.com/api-keys/docs/reference/mcp/tools_list, https://docs.cloud.google.com/bigquery/docs/reference/mcp/tools_list, https://docs.cloud.google.com/billing/docs/reference/mcp/tools_list, https://docs.cloud.google.com/iam/docs/reference/mcp/tools_list, https://docs.cloud.google.com/logging/docs/reference/v2_mcp/mcp/tools_list, https://docs.cloud.google.com/monitoring/api/ref_v3_mcp/mcp/tools_list, https://docs.cloud.google.com/storage/docs/reference/mcp/tools_list).
+
+| Tool | Google's tool | Note |
+|---|---|---|
+| `cloud_projects_search` | `search_projects` |  |
+| `cloud_project_iam_policy` | (none) | Google's IAM server reads deny policies and roles, not who holds a role on a project. Kept because that is the first IAM question; Resource Manager's getIamPolicy, a read. |
+| `cloud_apikeys_list` | `apikeys_list_keys` |  |
+| `cloud_apikey_get` | `apikeys_get_key` |  |
+| `cloud_apikey_reveal` | `apikeys_get_key_string` |  |
+| `cloud_apikey_create` | `apikeys_create_key` |  |
+| `apikeys_projects_locations_keys_patch` | `apikeys_update_key` |  |
+| `cloud_apikey_delete` | `apikeys_delete_key` |  |
+| `apikeys_project_locatio_keys_undelete` | `apikeys_undelete_key` |  |
+| `apikeys_keys_lookup_key` | `apikeys_lookup_key` |  |
+| `bq_dataset_list` | `list_dataset_ids` |  |
+| `bigquery_datasets_get` | `get_dataset_info` |  |
+| `bq_table_list` | `list_table_ids` |  |
+| `bq_table_get` | `get_table_info` |  |
+| `bq_table_preview` | (none) | No tool of Google's BigQuery server reads rows without a query. Kept: tabledata.list, which has no query cost. |
+| `bq_query_read` | `execute_sql_readonly` | A dry run first refuses any statement that is not a SELECT, so it stays a read; bigquery_jobs_query (execute_sql) runs any statement and asks first. |
+| `bigquery_jobs_query` | `execute_sql` |  |
+| `bq_job_get` | `get_query_results` |  |
+| `bigquery_jobs_get` | `get_job` |  |
+| `bigquery_jobs_cancel` | `cancel_job` |  |
+| `billing_billing_accounts_list` | `list_billing_accounts` |  |
+| `billing_billing_accounts_get` | `get_billing_account` |  |
+| `billing_billing_accounts_create` | `create_billing_account` |  |
+| `billing_billing_accounts_move` | `move_billing_account` |  |
+| `billing_billing_accoun_get_iam_policy` | `get_iam_policy` |  |
+| `billing_billing_accoun_set_iam_policy` | `set_iam_policy` |  |
+| `billing_billing_accoun_test_iam_permi` | `test_iam_permissions` |  |
+| `billing_projects_get_billing_info` | `get_project_billing_info` |  |
+| `billing_billing_account_projects_list` | `list_project_billing_info` |  |
+| `billing_services_list` | `list_services`, `get_service` | Google's get_service has no method in Cloud Billing v1; the list covers it. |
+| `billing_services_skus_list` | `list_skus`, `get_sku` | Google's get_sku has no method in Cloud Billing v1; the list covers it, and billing_price_lookup finds SKUs by words. |
+| `billing_price_lookup` | `list_prices`, `get_price`, `list_billing_account_prices`, `get_billing_account_price` | Prices of one SKU (v1beta skus.price.get), or SKUs of a service found by words and region with their list prices, and a billing account's own prices (v1beta billingAccounts.skus.price.get). Google's SKU-group and billing-account SKU and service listings are reached with the gateway (api_call) in the all toolset. |
+| `iam_policies_list_policies` | `list_deny_policies` |  |
+| `iam_policies_get` | `get_deny_policy` |  |
+| `iam_policies_create_policy` | `create_deny_policy` |  |
+| `iam_policies_update` | `update_deny_policy` |  |
+| `iam_policies_delete` | `delete_deny_policy` |  |
+| `iam_policies_operations_get` | `get_deny_policy_status` |  |
+| `iam_roles_list` | `list_roles` | Reads only. Google's create_role, update_role, delete_role and undelete_role (IAM v1) are reached with the gateway (api_call) in the all toolset. IAM lists only the cloud-platform scope for roles, so a readonly login cannot run it. |
+| `iam_role_get` | `get_role` | IAM lists only the cloud-platform scope for roles, so a readonly login cannot run it. |
+| `logging_entries_list` | `list_log_entries` | Google's list_log_names, list_buckets, list_views (and the observability server's sinks and log scopes) are reached with the gateway (api_call) in the all toolset. Without a time limit the last day is searched, as gcloud logging read does. |
+| `monitor_projects_time_series_list` | `list_timeseries` |  |
+| `monitoring_query_promql` | `query_range` | Also runs instant queries (Prometheus /query) when no range is given. Our kind is read, as Google marks query_range; the gateway classifies the two Prometheus POST methods as writes by their names. |
+| `monitor_projects_metric_descript_list` | `list_metric_descriptors` |  |
+| `monitor_projects_alert_policies_list` | `list_alert_policies` |  |
+| `monitor_projects_alert_policies_get` | `get_alert_policy` |  |
+| `monitor_projects_alerts_list` | `list_alerts` |  |
+| `monitor_projects_alerts_get` | `get_alert` |  |
+| `monitoring_dashboards_list` | `list_dashboards` |  |
+| `monitoring_dashboard_get` | `get_dashboard` |  |
+| `storage_buckets_list` | `list_buckets` |  |
+| `storage_buckets_insert` | `create_bucket` |  |
+| `storage_buckets_delete` | `delete_bucket` |  |
+| `storage_objects_list` | `list_objects` |  |
+| `storage_objects_get` | `get_object_metadata` |  |
+| `gcs_read_text` | `read_text` | Google's read_text is deprecated in favour of read_object; kept for text, decoded with the object's charset. |
+| `gcs_read_object` | `read_object` |  |
+| `gcs_write_text` | `write_text` | Unlike Google's write_text it does not replace an existing object unless overwrite is true (ifGenerationMatch=0). It also uploads a local file (local_path). |
+| `storage_objects_delete` | `delete_object` |  |
+
+## Curated tools (41)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
@@ -22,6 +88,7 @@ Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 385, google 385 (all)
 | `auth_setup_client` | write | Save the Google OAuth client | (none) |
 | `auth_setup_service_account` | write | Set up the service account key | (none) |
 | `auth_status` | read | Sign-in status | (none) |
+| `billing_price_lookup` | read | Look up Google Cloud prices | cloud-billing.readonly, cloud-billing |
 | `bq_dataset_list` | read | List BigQuery datasets | bigquery.readonly, cloud-platform.read-only |
 | `bq_job_get` | read | Get BigQuery job rows | bigquery.readonly, cloud-platform.read-only |
 | `bq_query_read` | read | Run read-only BigQuery query | bigquery.readonly, cloud-platform.read-only |
@@ -42,7 +109,16 @@ Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 385, google 385 (all)
 | `cloud_service_disable` | destructive | Disable API | cloud-platform, service.management |
 | `cloud_service_enable` | write | Enable API | cloud-platform, service.management |
 | `cloud_services_list` | read | List APIs on a project | cloud-platform, cloud-platform.read-only |
+| `gcs_read_object` | read | Read a Cloud Storage object as base64 | devstorage.read_only, cloud-platform.read-only |
+| `gcs_read_text` | read | Read a Cloud Storage object as text | devstorage.read_only, cloud-platform.read-only |
+| `gcs_write_text` | write | Write a Cloud Storage object | devstorage.read_write, devstorage.full_control |
 | `health` | read | Server health | (none) |
+| `iam_role_get` | read | Get an IAM role | cloud-platform |
+| `iam_roles_list` | read | List IAM roles | cloud-platform |
+| `logging_entries_list` | read | List log entries | logging.read, cloud-platform.read-only |
+| `monitoring_dashboard_get` | read | Get a monitoring dashboard | monitoring.read, monitoring |
+| `monitoring_dashboards_list` | read | List monitoring dashboards | monitoring.read, monitoring |
+| `monitoring_query_promql` | read | Query Cloud Monitoring with PromQL | monitoring.read, monitoring |
 | `project_enable_missing` | write | Enable the APIs the MCPs need | cloud-platform, service.management |
 | `project_readiness` | read | Check a project for the MCPs | cloud-platform, cloud-platform.read-only |
 
