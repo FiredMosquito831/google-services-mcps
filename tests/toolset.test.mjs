@@ -98,6 +98,32 @@ const CLASSROOM_GOOGLE = [
   'classroom_create_announcement',
   'classroom_get_guardians',
 ];
+/** The lean lists of the products with no official Google MCP server (1.15.0). */
+const LEAN_GOOGLE = {
+  gmeet: [
+    'meet_spaces_create',
+    'meet_spaces_get',
+    'meet_conference_records_list',
+    'meet_conference_records_get',
+    'meet_conference_recor_participants_list',
+    'meet_conference_record_transcripts_list',
+    'meet_conference_transcript_entries_list',
+    'meet_conference_records_recordings_list',
+    'meet_conference_record_smart_notes_list',
+    'meet_conference_records_smart_notes_get',
+  ],
+  gtasks: ['tasks_tasklists_list', 'tasks_tasks_list', 'tasks_tasks_get', 'tasks_tasks_insert', 'tasks_tasks_patch', 'tasks_tasks_delete', 'keep_notes_list', 'keep_notes_get'],
+  gapps: [
+    'appsscript_projects_get',
+    'appsscript_projects_get_content',
+    'appsscript_projects_update_content',
+    'appsscript_projects_versions_create',
+    'appsscript_projects_deployments_list',
+    'appsscript_projects_deployments_create',
+    'appsscript_processes_list',
+    'appsscript_scripts_run',
+  ],
+};
 /** The tools runServer adds for a server of an OAuth group. No toolset removes them. */
 const RUNTIME_OAUTH = ['account_remove', 'account_set_default', 'accounts_list', 'auth_login', 'auth_setup_client', 'auth_status', 'health'];
 
@@ -350,6 +376,31 @@ test("the gclassroom google list covers 15 of the 16 tools of Google's Classroom
   assert.deepEqual(google.matches.classroom_get_course, []);
 });
 
+test('the gmeet, gtasks and gapps google lists are lean sets: no official server, every tool says why it is kept', () => {
+  const products = readJson('config', 'products.json').products;
+  const names = { gmeet: 'Google Meet', gtasks: 'Google Tasks or Google Keep', gapps: 'Apps Script' };
+  for (const [id, tools] of Object.entries(LEAN_GOOGLE)) {
+    const google = products[id].toolsets.google;
+    assert.deepEqual(google.tools, tools, id);
+    assert.ok(google.source.startsWith(`No official Google MCP server for ${names[id]} was found`), id);
+    for (const tool of tools) {
+      assert.deepEqual(google.matches[tool], [], `${id}/${tool}`);
+      assert.ok(typeof google.notes[tool] === 'string' && google.notes[tool].length > 10, `${id}/${tool} has a note`);
+    }
+  }
+  // Kept out: the member and space deletes of Meet, the list deletes and clear of Tasks, the Keep writes, the Apps Script
+  // deployment delete and the Marketplace licence reads.
+  for (const name of ['meet_spaces_members_delete', 'meet_spaces_end_active_conference']) assert.equal(LEAN_GOOGLE.gmeet.includes(name), false, name);
+  for (const name of ['tasks_tasklists_delete', 'tasks_tasks_clear', 'keep_notes_create', 'keep_notes_delete']) assert.equal(LEAN_GOOGLE.gtasks.includes(name), false, name);
+  for (const name of ['appsscript_projects_deployments_delete', 'appsmarket_user_license_get']) assert.equal(LEAN_GOOGLE.gapps.includes(name), false, name);
+  // The kinds in the plugin tool maps: scripts.run is destructive, tasks.delete is destructive, the rest as classified.
+  const kindOf = (id, tool) => readJson('plugins', id, 'tool-map.json').find((t) => t.name === `mcp__plugin_${id}_${id}__${tool}`).kind;
+  assert.equal(kindOf('gapps', 'appsscript_scripts_run'), 'destructive');
+  assert.equal(kindOf('gtasks', 'tasks_tasks_delete'), 'destructive');
+  assert.equal(kindOf('gmeet', 'meet_spaces_create'), 'write');
+  assert.match(products.gapps.toolsets.google.notes.appsscript_scripts_run, /asks twice/);
+});
+
 test('both registry loaders carry the toolsets: the CLI conversion of config/products.json and a plugin servers.json', () => {
   const reg = registryFromProducts(readJson('config', 'products.json'), ROOT);
   assert.deepEqual(reg.servers.find((s) => s.name === 'gmail').toolsets, { google: GMAIL_GOOGLE });
@@ -357,7 +408,8 @@ test('both registry loaders carry the toolsets: the CLI conversion of config/pro
   assert.deepEqual(reg.servers.find((s) => s.name === 'gchat').toolsets, { google: CHAT_GOOGLE });
   assert.deepEqual(reg.servers.find((s) => s.name === 'gcontacts').toolsets, { google: CONTACTS_GOOGLE });
   assert.deepEqual(reg.servers.find((s) => s.name === 'gclassroom').toolsets, { google: CLASSROOM_GOOGLE });
-  assert.equal(reg.servers.find((s) => s.name === 'gtasks').toolsets, undefined);
+  for (const [id, tools] of Object.entries(LEAN_GOOGLE)) assert.deepEqual(reg.servers.find((s) => s.name === id).toolsets, { google: tools }, id);
+  assert.equal(reg.servers.find((s) => s.name === 'gyoutube').toolsets, undefined);
   const plugin = loadRegistryFile(join(ROOT, 'plugins', 'gmail', 'servers.json'));
   assert.deepEqual(plugin.servers[0].toolsets, { google: GMAIL_GOOGLE });
 });
@@ -457,16 +509,16 @@ function gmailEntry(dir) {
   return entry;
 }
 
-/** The tasks server: generated tools only, no toolset listed. */
-function gtasksEntry(dir) {
-  const entry = join(dir, 'gtasks-entry.mjs');
+/** The YouTube server: generated tools only, no toolset listed. (gtasks has a lean list since 1.15.0.) */
+function gyoutubeEntry(dir) {
+  const entry = join(dir, 'gyoutube-entry.mjs');
   writeFileSync(
     entry,
     [
       `import { withOrigin } from '${dist('core/toolset.js')}';`,
       `import { discoveryToolsFor } from '${dist('core/discovery/tools.js')}';`,
       `import { runServer } from '${dist('core/tools.js')}';`,
-      `await runServer({ name: 'gtasks', version: '0.0.0', buildTools: async (cfg) => withOrigin('generated', await discoveryToolsFor('gtasks', cfg, [])) });`,
+      `await runServer({ name: 'gyoutube', version: '0.0.0', buildTools: async (cfg) => withOrigin('generated', await discoveryToolsFor('gyoutube', cfg, [])) });`,
       '',
     ].join('\n'),
   );
@@ -580,8 +632,8 @@ test('runServer: unset and all list the same tools; google lists the gmail list 
 
 test('runServer: google on a product without a list shows every tool, and health and auth_status say why', async () => {
   const dir = tempDir('gsm-toolset-fallback-');
-  const entry = gtasksEntry(dir);
-  const tokenDir = fakeLogin(dir, 'gtasks', 'workspace-user');
+  const entry = gyoutubeEntry(dir);
+  const tokenDir = fakeLogin(dir, 'gyoutube', 'business');
   const unset = await withClient(entry, childEnv(dir, tokenDir), listTools);
   await withClient(entry, childEnv(dir, tokenDir, { GSM_TOOLSET: 'google' }), async (c) => {
     assert.deepEqual(await listTools(c), unset);
@@ -635,4 +687,33 @@ test('runServer: google on gclassroom lists its 20 tools and the runtime tools, 
   const google = await withClient(entry, childEnv(dir, tokenDir, { GSM_TOOLSET: 'google' }), listTools);
   assert.deepEqual(google.map((t) => t.name), [...CLASSROOM_GOOGLE, ...RUNTIME_OAUTH].sort());
   for (const t of google) assert.deepEqual(t, unset.find((u) => u.name === t.name), t.name);
+});
+
+/** A server of generated tools only, as scripts/bundle.mjs writes its entry. */
+function generatedEntry(dir, name) {
+  const entry = join(dir, `${name}-entry.mjs`);
+  writeFileSync(
+    entry,
+    [
+      `import { withOrigin } from '${dist('core/toolset.js')}';`,
+      `import { discoveryToolsFor } from '${dist('core/discovery/tools.js')}';`,
+      `import { runServer } from '${dist('core/tools.js')}';`,
+      `await runServer({ name: '${name}', version: '0.0.0', buildTools: async (cfg) => withOrigin('generated', await discoveryToolsFor('${name}', cfg, [])) });`,
+      '',
+    ].join('\n'),
+  );
+  return entry;
+}
+
+test('runServer: google on gmeet, gtasks and gapps lists the lean list and the runtime tools, with the same schemas as all', async () => {
+  for (const [id, tools] of Object.entries(LEAN_GOOGLE)) {
+    const dir = tempDir(`gsm-toolset-${id}-`);
+    const entry = generatedEntry(dir, id);
+    const tokenDir = fakeLogin(dir, id, 'workspace-user');
+    const unset = await withClient(entry, childEnv(dir, tokenDir), listTools);
+    const google = await withClient(entry, childEnv(dir, tokenDir, { GSM_TOOLSET: 'google' }), async (c) => ({ tools: await listTools(c), health: await health(c) }));
+    assert.deepEqual(google.tools.map((t) => t.name), [...tools, ...RUNTIME_OAUTH].sort(), id);
+    for (const t of google.tools) assert.deepEqual(t, unset.find((u) => u.name === t.name), `${id}/${t.name}`);
+    assert.deepEqual(google.health.toolset, { requested: 'google', effective: 'google', outsideToolset: unset.length - google.tools.length }, id);
+  }
 });

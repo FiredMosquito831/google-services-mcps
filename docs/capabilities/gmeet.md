@@ -8,7 +8,24 @@ Google Meet spaces, conference records, participants and recordings.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 34, google 34 (all), curated 34 (all) tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 34, google 19, curated 34 (all) tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+
+## Toolset google (10)
+
+Google has no official MCP server for this product. The google toolset is a lean set chosen here: No official Google MCP server for Google Meet was found (Google's Cloud and Workspace MCP lists, 2026-10-29; a negative, not confirmed by Google); a lean set chosen here..
+
+| Tool | Google's tool | Note |
+|---|---|---|
+| `meet_spaces_create` | (none) | Makes a new meeting space and returns its meeting link and code. A write, so it asks first. |
+| `meet_spaces_get` | (none) | A meeting space by its name (spaces/{space}) or meeting code: its link, code and settings. |
+| `meet_conference_records_list` | (none) | Past and current conferences (one per meeting held in a space), newest first; filter by space or time. Start here for a meeting that took place. |
+| `meet_conference_records_get` | (none) | One conference: its space, start and end time. |
+| `meet_conference_recor_participants_list` | (none) | Who joined a conference, with join and leave times. |
+| `meet_conference_record_transcripts_list` | (none) | The transcripts of a conference and their Google Docs. |
+| `meet_conference_transcript_entries_list` | (none) | The spoken text of a transcript, entry by entry with the speaker and time. |
+| `meet_conference_records_recordings_list` | (none) | The recordings of a conference and their Drive files. |
+| `meet_conference_record_smart_notes_list` | (none) | The notes Gemini took in a conference (smart notes) and their Google Docs. |
+| `meet_conference_records_smart_notes_get` | (none) | One smart notes entry and the Google Doc that holds it. |
 
 ## Curated tools (9)
 

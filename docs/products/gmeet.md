@@ -46,6 +46,8 @@ Start with `--profile readonly`. Creating or changing spaces needs a `readwrite`
 
 The full list is in `docs/capabilities/gmeet.md`.
 
+Google has no official MCP server for Meet (none was found on 2026-10-29). With the plugin option `toolset: google`, the server lists a small set chosen here instead: `meet_spaces_create`, `meet_spaces_get`, the conference record list and get, participants, transcripts and transcript entries, recordings, and smart notes list and get (10 tools), plus `health` and the sign-in tools. The member changes and ending a conference stay in the `all` toolset. A `readonly` login with that toolset asks for `meetings.space.readonly`; a `readwrite` login for `meetings.space.created`.
+
 ## Example requests
 
 - "Create a Meet space for the board call and give me the link." Claude runs `meet_spaces_create`. It asks first.

@@ -19,6 +19,20 @@
           "version": "v2"
         }
       ],
+      "toolsets": {
+        "google": [
+          "meet_spaces_create",
+          "meet_spaces_get",
+          "meet_conference_records_list",
+          "meet_conference_records_get",
+          "meet_conference_recor_participants_list",
+          "meet_conference_record_transcripts_list",
+          "meet_conference_transcript_entries_list",
+          "meet_conference_records_recordings_list",
+          "meet_conference_record_smart_notes_list",
+          "meet_conference_records_smart_notes_get"
+        ]
+      },
       "label": "Google Meet: Google Meet spaces, conference records, participants and recordings."
     }
   ],

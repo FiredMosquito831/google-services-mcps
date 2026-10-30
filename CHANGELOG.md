@@ -2,6 +2,18 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.15.0 - 2026-10-30
+
+### New: lean google toolsets for Meet, Tasks and Keep, and Apps Script
+- Google has no official MCP server for these products (none was found on 2026-10-29), so their `google` toolset is a small set of existing tools chosen here, as for Search Console. Each tool has a note in `config/products.json`. No tool is added or changed.
+- gmeet (10): `meet_spaces_create` (write), `meet_spaces_get`, the conference record list and get, participants, transcripts and transcript entries, recordings, smart notes list and get. `readonly`: `meetings.space.readonly`; `readwrite`: `meetings.space.created`.
+- gtasks (8): `tasks_tasklists_list`, `tasks_tasks_list`, `tasks_tasks_get`, `tasks_tasks_insert` and `tasks_tasks_patch` (writes), `tasks_tasks_delete` (destructive), `keep_notes_list`, `keep_notes_get`. `readonly`: `tasks.readonly`, `keep.readonly`; `readwrite`: `tasks`, `keep`.
+- gapps (8): `appsscript_projects_get`, `appsscript_projects_get_content`, `appsscript_projects_update_content`, `appsscript_projects_versions_create` and `appsscript_projects_deployments_create` (writes), `appsscript_projects_deployments_list`, `appsscript_processes_list`, `appsscript_scripts_run` (destructive). `readonly`: `script.projects.readonly`, `script.deployments.readonly`; `readwrite`: `script.projects`, `script.deployments`, `script.processes`, `userinfo.email`.
+
+### Not changed
+- The tools these plugins list with `all`, their schemas, scopes of the `all` toolset (every server's requirements are byte-identical), the write gate and the hook.
+- Tests that need a product without a google list use gyoutube now.
+
 ## 1.14.0 - 2026-10-30
 
 ### New: readable Classroom tools that match Google's Classroom MCP server
