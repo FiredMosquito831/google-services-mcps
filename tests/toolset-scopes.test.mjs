@@ -158,9 +158,22 @@ test('requirements: curated keeps the curated tools and, with api_call, the gate
 test('requirements: a toolset a product does not have counts every tool, and says so', async () => {
   const { cfg } = tempTokens();
   const lines = [];
-  const google = await requirementsFor(['gsc'], cfg, { warn: (l) => lines.push(l), toolset: 'google' });
-  assert.deepEqual(google, await requirementsFor(['gsc'], cfg, quiet));
-  assert.deepEqual(lines, ['[gsc] toolset google is not defined for this product yet; every tool counts toward the scopes.']);
+  const google = await requirementsFor(['gtasks'], cfg, { warn: (l) => lines.push(l), toolset: 'google' });
+  assert.deepEqual(google, await requirementsFor(['gtasks'], cfg, quiet));
+  assert.deepEqual(lines, ['[gtasks] toolset google is not defined for this product yet; every tool counts toward the scopes.']);
+});
+
+test('requirements: the lean gsc google list resolves to webmasters.readonly (readonly) and webmasters with indexing (readwrite)', async () => {
+  const { cfg } = tempTokens();
+  const google = await requirementsFor(['gsc'], cfg, { ...quiet, toolset: 'google' });
+  assert.equal(google.length, 9);
+  const readonly = resolveScopes(google, 'readonly');
+  assert.deepEqual(readonly.scopes, [G('webmasters.readonly')]);
+  // The Indexing API has no read-only scope, so its metadata read stays outside a readonly login.
+  assert.ok(readonly.uncovered.includes('gsc/indexing_url_notifications_get_metadata'));
+  assert.deepEqual(resolveScopes(google, 'readwrite').scopes, [G('indexing'), G('webmasters')]);
+  // The all toolset also asks for siteverification (the Site Verification tools), which the lean list does not hold.
+  assert.deepEqual(resolveScopes(await requirementsFor(['gsc'], cfg, quiet), 'readwrite').scopes, [G('indexing'), G('siteverification'), G('webmasters')]);
 });
 
 test('--toolset: parsed for login, scopes and setup-admin; an unknown value is a usage error', () => {

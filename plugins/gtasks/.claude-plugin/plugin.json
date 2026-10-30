@@ -1,7 +1,7 @@
 {
   "name": "gtasks",
   "displayName": "Tasks and Keep",
-  "version": "1.10.0",
+  "version": "1.11.0",
   "description": "Google Tasks task lists and tasks, plus Google Keep notes.",
   "author": {
     "name": "FiredMosquito831"
@@ -33,7 +33,7 @@
     "toolset": {
       "type": "string",
       "title": "Toolset",
-      "description": "Which tools this server lists. all: every tool (the default). google: the tools that match Google's official MCP server for this product; where that list is not defined yet, all tools, and health says so. curated: the hand-written tools and the gateway tools (api_search, api_describe, api_call); where a product has neither, all tools. It takes effect when the server starts again.",
+      "description": "Which tools this server lists. all: every tool (the default). google: the tools that match Google's official MCP server for this product, or a small set chosen here where Google has no server; where that list is not defined yet, all tools, and health says so. curated: the hand-written tools and the gateway tools (api_search, api_describe, api_call); where a product has neither, all tools. It takes effect when the server starts again.",
       "options": [
         "all",
         "google",

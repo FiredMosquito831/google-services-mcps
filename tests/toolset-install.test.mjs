@@ -135,8 +135,11 @@ test('tool counts per toolset from the tool map: gmail all, google and curated',
   assert.deepEqual(toolsetCount(map, 'gmail', 'gmail', 'google', gmail.toolsets), { count: 14 + runtime, effective: 'google' });
   // curated: the 15 hand-written Gmail tools and the 3 gateway tools.
   assert.deepEqual(toolsetCount(map, 'gmail', 'gmail', 'curated', gmail.toolsets), { count: 18 + runtime, effective: 'curated' });
+  // gtasks has no google list, so google counts every tool. (gsc has a lean list since 1.11.0.)
+  const gtasks = env.registry.servers.find((s) => s.plugin === 'gtasks');
+  assert.equal(toolsetCount(join(REPO, 'plugins', 'gtasks', 'tool-map.json'), 'gtasks', 'gtasks', 'google', gtasks.toolsets).effective, 'all');
   const gsc = env.registry.servers.find((s) => s.plugin === 'gsc');
-  assert.equal(toolsetCount(join(REPO, 'plugins', 'gsc', 'tool-map.json'), 'gsc', 'gsc', 'google', gsc.toolsets).effective, 'all');
+  assert.equal(toolsetCount(join(REPO, 'plugins', 'gsc', 'tool-map.json'), 'gsc', 'gsc', 'google', gsc.toolsets).effective, 'google');
 });
 
 test('agy warnings: a product over the limit is named with the counts of the other toolsets; one under it is not', () => {

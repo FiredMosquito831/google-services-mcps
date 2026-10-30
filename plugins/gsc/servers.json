@@ -27,6 +27,19 @@
           "version": "v3"
         }
       ],
+      "toolsets": {
+        "google": [
+          "sc_sites_list",
+          "sc_site_get",
+          "sc_search_analytics_query",
+          "sc_url_inspect",
+          "sc_sitemaps_list",
+          "sc_sitemap_get",
+          "sc_sitemap_submit",
+          "indexing_url_notifications_get_metadata",
+          "indexing_url_notifications_publish"
+        ]
+      },
       "scopes": [
         "https://www.googleapis.com/auth/webmasters",
         "https://www.googleapis.com/auth/webmasters.readonly"

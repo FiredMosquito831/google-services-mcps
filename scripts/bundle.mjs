@@ -34,7 +34,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const AUTHOR = { name: 'FiredMosquito831' };
-const MANIFEST_VERSION = '1.10.0';
+const MANIFEST_VERSION = '1.11.0';
 const TOOL_NAME_MAX = 64;
 /** When two API versions give one method two kinds, the riskier one is kept. A dynamic method is kept as dynamic (decided per call). */
 const RANK = { read: 0, write: 1, dynamic: 2, destructive: 3 };
@@ -117,7 +117,7 @@ const CONSENT_CONFIG = {
     type: 'string',
     title: 'Toolset',
     description:
-      "Which tools this server lists. all: every tool (the default). google: the tools that match Google's official MCP server for this product; where that list is not defined yet, all tools, and health says so. curated: the hand-written tools and the gateway tools (api_search, api_describe, api_call); where a product has neither, all tools. It takes effect when the server starts again.",
+      "Which tools this server lists. all: every tool (the default). google: the tools that match Google's official MCP server for this product, or a small set chosen here where Google has no server; where that list is not defined yet, all tools, and health says so. curated: the hand-written tools and the gateway tools (api_search, api_describe, api_call); where a product has neither, all tools. It takes effect when the server starts again.",
     options: ['all', 'google', 'curated'],
     default: 'all',
   },

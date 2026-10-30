@@ -2,6 +2,16 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.11.0 - 2026-10-30
+
+### New: a lean google toolset for Search Console
+- Google has no official MCP server for Search Console (none was found on 2026-10-29), so the `google` toolset of gsc is a small set chosen here, as the owner decided for products without one: `sc_sites_list`, `sc_site_get`, `sc_search_analytics_query`, `sc_url_inspect`, `sc_sitemaps_list`, `sc_sitemap_get`, `sc_sitemap_submit` (write), `indexing_url_notifications_get_metadata` and `indexing_url_notifications_publish` (write; Google takes it only for JobPosting or BroadcastEvent pages). Each tool has a note in `config/products.json`. No tool is added or changed.
+- A `readonly` login with it asks for `webmasters.readonly`; a `readwrite` login for `webmasters` and `indexing` (the `all` toolset adds `siteverification`).
+- The help text and the plugin option say that `google` is Google's set, or a small set chosen here where Google has no server.
+
+### Not changed
+- The tools gsc lists with `all`, their schemas, scopes of the `all` toolset, the write gate and the hook. Every other plugin lists the same tools.
+
 ## 1.10.0 - 2026-10-30
 
 ### New: Google Cloud tools that match Google's Cloud MCP servers

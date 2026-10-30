@@ -1287,6 +1287,19 @@
           "version": "v3"
         }
       ],
+      "toolsets": {
+        "google": [
+          "sc_sites_list",
+          "sc_site_get",
+          "sc_search_analytics_query",
+          "sc_url_inspect",
+          "sc_sitemaps_list",
+          "sc_sitemap_get",
+          "sc_sitemap_submit",
+          "indexing_url_notifications_get_metadata",
+          "indexing_url_notifications_publish"
+        ]
+      },
       "label": "Search Console: Search Console sites, sitemaps, search analytics, URL indexing and site verification."
     },
     {

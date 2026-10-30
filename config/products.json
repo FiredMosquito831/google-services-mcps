@@ -1463,6 +1463,44 @@
         }
       ],
       "gateway": [],
+      "toolsets": {
+        "google": {
+          "source": "No official Google MCP server for Search Console was found (Google's Cloud and Workspace MCP lists, 2026-10-29; a negative, not confirmed by Google); a lean set chosen here.",
+          "tools": [
+            "sc_sites_list",
+            "sc_site_get",
+            "sc_search_analytics_query",
+            "sc_url_inspect",
+            "sc_sitemaps_list",
+            "sc_sitemap_get",
+            "sc_sitemap_submit",
+            "indexing_url_notifications_get_metadata",
+            "indexing_url_notifications_publish"
+          ],
+          "matches": {
+            "sc_sites_list": [],
+            "sc_site_get": [],
+            "sc_search_analytics_query": [],
+            "sc_url_inspect": [],
+            "sc_sitemaps_list": [],
+            "sc_sitemap_get": [],
+            "sc_sitemap_submit": [],
+            "indexing_url_notifications_get_metadata": [],
+            "indexing_url_notifications_publish": []
+          },
+          "notes": {
+            "sc_sites_list": "The properties the account can see, with its permission level. Start here.",
+            "sc_site_get": "One property and the account's permission on it.",
+            "sc_search_analytics_query": "Clicks, impressions, CTR and position by query, page, country, device, date or search appearance. A read here; the generated searchcons_searchanalytics_query is a write, as classifyMethod classifies the POST query.",
+            "sc_url_inspect": "The index status of one URL: coverage, last crawl, canonical, mobile usability and rich results.",
+            "sc_sitemaps_list": "The sitemaps of a property with their submitted and indexed counts (the indexed count can lag; check a sample with sc_url_inspect).",
+            "sc_sitemap_get": "One sitemap: its status, errors, warnings and counts.",
+            "sc_sitemap_submit": "Submits or resubmits a sitemap. A write, so it asks first.",
+            "indexing_url_notifications_get_metadata": "When the Indexing API was last told about a URL. Needs the indexing scope, which has no read-only form.",
+            "indexing_url_notifications_publish": "Tells Google a URL was updated or deleted. Google accepts it only for pages with JobPosting or BroadcastEvent (in a VideoObject) markup. A write, so it asks first."
+          }
+        }
+      },
       "generatedToolCount": 20
     },
     "gsearch": {
