@@ -907,6 +907,78 @@
     "title": "androidenterprise.webapps.update"
   },
   {
+    "name": "mcp__plugin_gplay_gplay__androidmgmt_get_application",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidmanagement"
+    ],
+    "title": "Get an app for an enterprise"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidmgmt_get_device",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidmanagement"
+    ],
+    "title": "Get a device of an enterprise"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidmgmt_get_enterprise",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidmanagement"
+    ],
+    "title": "Get an Android Management enterprise"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidmgmt_get_policy",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidmanagement"
+    ],
+    "title": "Get a policy of an enterprise"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidmgmt_get_web_app",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidmanagement"
+    ],
+    "title": "Get a web app of an enterprise"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidmgmt_list_devices",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidmanagement"
+    ],
+    "title": "List the devices of an enterprise"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidmgmt_list_enterprises",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidmanagement"
+    ],
+    "title": "List Android Management enterprises"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidmgmt_list_policies",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidmanagement"
+    ],
+    "title": "List the policies of an enterprise"
+  },
+  {
+    "name": "mcp__plugin_gplay_gplay__androidmgmt_list_web_apps",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidmanagement"
+    ],
+    "title": "List the web apps of an enterprise"
+  },
+  {
     "name": "mcp__plugin_gplay_gplay__androidpub_applica_tracks_releases_list",
     "kind": "read",
     "scopes": [

@@ -3,7 +3,7 @@
  *
  *   all      every tool. The default, and the same tool list as before toolsets existed.
  *   google   the tools that match Google's official MCP server for the product, or a small set chosen here for a product
- *            Google has no server for (gsc, gmeet, gtasks, gapps, gtm, gyoutube, gbusiness), listed by name in config/products.json (toolsets.google). A product without
+ *            Google has no server for (gsc, gmeet, gtasks, gapps, gtm, gyoutube, gbusiness, gadmin; most of gsearch), listed by name in config/products.json (toolsets.google). A product without
  *            that list falls back to all, and says so.
  *   curated  the hand-written tools of the server and its gateway tools (api_search, api_describe, api_call). Derived
  *            from each tool's origin, not listed. A product with neither falls back to all, and says so.

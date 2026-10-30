@@ -1380,6 +1380,18 @@
           "version": "v4"
         }
       ],
+      "toolsets": {
+        "google": [
+          "developerk_documents_search_documen",
+          "developerk_documents_batch_get",
+          "developerk_v1_answer_query",
+          "pagespeedo_pagespeedap_runpagespeed",
+          "chromeuxre_records_query_record",
+          "kgsearch_entities_search",
+          "factcheckt_claims_search",
+          "webrisk_uris_search"
+        ]
+      },
       "label": "Search and Web Quality: Public search and web-quality APIs (Custom Search, PageSpeed, CrUX, Safe Browsing, Web Risk, Fact Check) that take an API key instead of OAuth. The Custom Search JSON API is closed to new customers and is scheduled to be discontinued on 2027-01-01."
     },
     {
@@ -1816,6 +1828,20 @@
           "version": "v1"
         }
       ],
+      "toolsets": {
+        "google": [
+          "admin_users_list",
+          "admin_user_get",
+          "admin_groups_list",
+          "admin_group_members_list",
+          "admin_orgunits_list",
+          "admin_domains_list",
+          "admin_activities_list",
+          "alerts_alerts_list",
+          "admin_user_set_suspended",
+          "admin_group_member_add"
+        ]
+      },
       "label": "Workspace Admin: Google Workspace administration: Cloud Identity, Chrome management and policy, Groups Settings, licensing, reports, alerts, Vault, reseller and Cloud Search admin."
     },
     {
@@ -1968,6 +1994,29 @@
           "version": "v1"
         }
       ],
+      "scopeOverrides": {
+        "mybusinessaccountmanagement": [
+          "https://www.googleapis.com/auth/business.manage"
+        ],
+        "mybusinessbusinessinformation": [
+          "https://www.googleapis.com/auth/business.manage"
+        ],
+        "mybusinesslodging": [
+          "https://www.googleapis.com/auth/business.manage"
+        ],
+        "mybusinessnotifications": [
+          "https://www.googleapis.com/auth/business.manage"
+        ],
+        "mybusinessplaceactions": [
+          "https://www.googleapis.com/auth/business.manage"
+        ],
+        "mybusinessverifications": [
+          "https://www.googleapis.com/auth/business.manage"
+        ],
+        "businessprofileperformance": [
+          "https://www.googleapis.com/auth/business.manage"
+        ]
+      },
       "toolsets": {
         "google": [
           "mbaccount_accounts_list",
@@ -2327,8 +2376,8 @@
       "name": "gplay",
       "plugin": "gplay",
       "group": "service-account",
-      "kind": "discovery",
-      "curated": null,
+      "kind": "curated+discovery",
+      "curated": "src/servers/gplay.ts",
       "apis": [
         {
           "api": "androidpublisher",
@@ -2409,14 +2458,34 @@
           "version": "v1alpha1"
         }
       ],
+      "toolsets": {
+        "google": [
+          "androidmgmt_list_enterprises",
+          "androidmgmt_get_enterprise",
+          "androidmgmt_get_application",
+          "androidmgmt_list_devices",
+          "androidmgmt_get_device",
+          "androidmgmt_list_policies",
+          "androidmgmt_get_policy",
+          "androidmgmt_list_web_apps",
+          "androidmgmt_get_web_app",
+          "androidpub_reviews_list",
+          "androidpub_reviews_reply",
+          "androidpub_applica_tracks_releases_list",
+          "androidpub_edits_tracks_list",
+          "androidpub_purchases_subscriptionsv_get",
+          "androidpub_monetizatio_subscriptio_list",
+          "androidpub_orders_get"
+        ]
+      },
       "label": "Google Play: Google Play developer publishing and reporting, Play Games Services, Android Enterprise and Management, Play Integrity and device APIs."
     },
     {
       "name": "gfirebase",
       "plugin": "gfirebase",
       "group": "developer",
-      "kind": "discovery",
-      "curated": null,
+      "kind": "curated+discovery",
+      "curated": "src/servers/gfirebase.ts",
       "apis": [
         {
           "api": "firebase",
@@ -2525,14 +2594,56 @@
           "version": "v2"
         }
       ],
+      "toolsets": {
+        "google": [
+          "firebase_projects_list",
+          "firebase_projects_get",
+          "firebase_projects_search_apps",
+          "firebase_projec_web_app_get_con",
+          "firebase_projec_android_get_con",
+          "firebase_projec_ios_app_get_con",
+          "firebase_projects_add_firebase",
+          "firebase_project_web_app_create",
+          "firebase_project_android_create",
+          "firebase_project_ios_app_create",
+          "firebase_proje_andro_sha_create",
+          "firebaseru_project_release_list",
+          "firebaseru_project_rulesets_get",
+          "firebaseru_projects_test",
+          "firebaseap_proj_loca_backe_list",
+          "firebaseap_proj_locat_backe_get",
+          "firebasecr_proje_apps_issue_get",
+          "firebasecr_proj_apps_issu_patch",
+          "firebasecr_proj_apps_event_list",
+          "firebasecr_proj_apps_even_batch",
+          "firebasecr_proje_apps_repor_get",
+          "firebasecr_pro_app_iss_not_list",
+          "firebasecr_pro_app_iss_not_crea",
+          "firebasecr_pro_app_iss_not_dele",
+          "firebaseda_project_locatio_list",
+          "firebaseda_proj_loca_servi_list",
+          "firebaseda_pro_loc_ser_sch_list",
+          "firebaseda_pro_loc_ser_con_list",
+          "firebaseda_pro_loc_ser_exe_1fce",
+          "firebaseda_pro_loc_ser_exe_3072",
+          "firebaseda_pro_loc_ser_gen_8f53",
+          "firebaseda_pro_loc_ser_gen_cf40",
+          "fcm_projects_messages_send",
+          "firestore_get_document",
+          "firestore_list_documents",
+          "firestore_query_collection",
+          "remoteconfig_get_template",
+          "auth_get_users"
+        ]
+      },
       "label": "Firebase: Firebase management, App Check, App Distribution, Crashlytics, Hosting, Data Connect, Rules, Test Lab, FCM and Identity Toolkit."
     },
     {
       "name": "gmaps",
       "plugin": "gmaps",
       "group": "apikey",
-      "kind": "discovery",
-      "curated": null,
+      "kind": "curated+discovery",
+      "curated": "src/servers/gmaps.ts",
       "apis": [
         {
           "api": "places",
@@ -2567,14 +2678,22 @@
           "version": "v1"
         }
       ],
+      "toolsets": {
+        "google": [
+          "places_places_search_text",
+          "places_places_get",
+          "maps_compute_routes",
+          "maps_lookup_weather"
+        ]
+      },
       "label": "Maps and Location: Maps Platform and location APIs: Places, Address Validation, Solar, Air Quality, Pollen, Street View Publish and related datasets."
     },
     {
       "name": "gai",
       "plugin": "gai",
       "group": "cloud",
-      "kind": "discovery",
-      "curated": null,
+      "kind": "curated+discovery",
+      "curated": "src/servers/gai.ts",
       "apis": [
         {
           "api": "discoveryengine",
@@ -2791,6 +2910,16 @@
           "version": "v1"
         }
       ],
+      "toolsets": {
+        "google": [
+          "vertex_generate_content",
+          "vertex_count_tokens",
+          "vertex_embed_content",
+          "discoverye_pro_loc_coll_engi_serv_sear_a054",
+          "discoverye_proj_loca_coll_engin_servi_answe",
+          "discoverye_projec_locati_collec_engine_list"
+        ]
+      },
       "label": "AI and ML: Generative and classic AI APIs: Discovery Engine, Vertex AI, Dialogflow, Vision, Speech, Translate, Document AI and agent services."
     }
   ]

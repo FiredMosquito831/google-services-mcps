@@ -1,0 +1,790 @@
+{
+ "_source": "Trimmed from Google's Discovery document firestore v1, revision 20260928: only the methods the curated tools call (firestore.projects.databases.documents.get, firestore.projects.databases.documents.list, firestore.projects.databases.documents.runQuery) and the schemas their request bodies reach. For tests/curated-contract.test.mjs; Firestore is a gcloud API here (no per-method tools in any server), so data/discovery has no snapshot of it.",
+ "name": "firestore",
+ "version": "v1",
+ "title": "Cloud Firestore API",
+ "rootUrl": "https://firestore.googleapis.com/",
+ "servicePath": "",
+ "baseUrl": "https://firestore.googleapis.com/",
+ "schemas": {
+  "RunQueryRequest": {
+   "id": "RunQueryRequest",
+   "properties": {
+    "structuredQuery": {
+     "$ref": "StructuredQuery",
+     "description": "A structured query."
+    },
+    "newTransaction": {
+     "description": "Starts a new transaction and reads the documents. Defaults to a read-only transaction. The new transaction ID will be returned as the first response in the stream.",
+     "$ref": "TransactionOptions"
+    },
+    "requestOptions": {
+     "description": "Optional. The request options for this request.",
+     "$ref": "RequestOptions"
+    },
+    "transaction": {
+     "description": "Run the query within an already active transaction. The value here is the opaque transaction ID to execute the query in.",
+     "format": "byte",
+     "type": "string"
+    },
+    "explainOptions": {
+     "$ref": "ExplainOptions",
+     "description": "Optional. Explain options for the query. If set, additional query statistics will be returned. If not, only query results will be returned."
+    },
+    "readTime": {
+     "format": "google-datetime",
+     "type": "string",
+     "description": "Reads documents as they were at the given time. This must be a microsecond precision timestamp within the past one hour, or if Point-in-Time Recovery is enabled, can additionally be a whole minute timestamp within the past 7 days."
+    }
+   },
+   "type": "object",
+   "description": "The request for Firestore.RunQuery."
+  },
+  "StructuredQuery": {
+   "type": "object",
+   "description": "A Firestore query. The query stages are executed in the following order: 1. from 2. where 3. select 4. order_by + start_at + end_at 5. offset 6. limit 7. find_nearest",
+   "properties": {
+    "findNearest": {
+     "$ref": "FindNearest",
+     "description": "Optional. A potential nearest neighbors search. Applies after all other filters and ordering. Finds the closest vector embeddings to the given query vector."
+    },
+    "orderBy": {
+     "type": "array",
+     "items": {
+      "$ref": "Order"
+     },
+     "description": "The order to apply to the query results. Callers can provide a full ordering, a partial ordering, or no ordering at all. While Firestore will always respect the provided order, the behavior for queries without a full ordering is different per database edition: In Standard edition, Firestore guarantees a stable ordering through the following rules: * The `order_by` is required to reference all fields used with an inequality filter. * All fields that are required to be in the `order_by` but are not already present are appended in lexicographical ordering of the field name. * If an order on `__name__` is not specified, it is appended by default. Fields are appended with the same sort direction as the last order specified, or 'ASCENDING' if no order was specified. For example: * `ORDER BY a` becomes `ORDER BY a ASC, __name__ ASC` * `ORDER BY a DESC` becomes `ORDER BY a DESC, __name__ DESC` * `WHERE a > 1` becomes `WHERE a > 1 ORDER BY a ASC, __name__ ASC` * `WHERE __name__ > ... AND a > 1` becomes `WHERE __name__ > ... AND a > 1 ORDER BY a ASC, __name__ ASC` In Enterprise edition, Firestore does not guarantee a stable ordering. Instead it will pick the most efficient ordering based on the indexes available at the time of query execution. This will result in a different ordering for queries that are otherwise identical. To ensure a stable ordering, always include a unique field in the `order_by` clause, such as `__name__`."
+    },
+    "startAt": {
+     "$ref": "Cursor",
+     "description": "A potential prefix of a position in the result set to start the query at. The ordering of the result set is based on the `ORDER BY` clause of the original query. ``` SELECT * FROM k WHERE a = 1 AND b > 2 ORDER BY b ASC, __name__ ASC; ``` This query's results are ordered by `(b ASC, __name__ ASC)`. Cursors can reference either the full ordering or a prefix of the location, though it cannot reference more fields than what are in the provided `ORDER BY`. Continuing off the example above, attaching the following start cursors will have varying impact: - `START BEFORE (2, /k/123)`: start the query right before `a = 1 AND b > 2 AND __name__ > /k/123`. - `START AFTER (10)`: start the query right after `a = 1 AND b > 10`. Unlike `OFFSET` which requires scanning over the first N results to skip, a start cursor allows the query to begin at a logical position. This position is not required to match an actual result, it will scan forward from this position to find the next document. Requires: * The number of values cannot be greater than the number of fields specified in the `ORDER BY` clause."
+    },
+    "select": {
+     "description": "Optional sub-set of the fields to return. This acts as a DocumentMask over the documents returned from a query. When not set, assumes that the caller wants all fields returned.",
+     "$ref": "Projection"
+    },
+    "offset": {
+     "type": "integer",
+     "description": "The number of documents to skip before returning the first result. This applies after the constraints specified by the `WHERE`, `START AT`, & `END AT` but before the `LIMIT` clause. Requires: * The value must be greater than or equal to zero if specified.",
+     "format": "int32"
+    },
+    "limit": {
+     "description": "The maximum number of results to return. Applies after all other constraints. Requires: * The value must be greater than or equal to zero if specified.",
+     "format": "int32",
+     "type": "integer"
+    },
+    "where": {
+     "description": "The filter to apply.",
+     "$ref": "Filter"
+    },
+    "endAt": {
+     "$ref": "Cursor",
+     "description": "A potential prefix of a position in the result set to end the query at. This is similar to `START_AT` but with it controlling the end position rather than the start position. Requires: * The number of values cannot be greater than the number of fields specified in the `ORDER BY` clause."
+    },
+    "from": {
+     "description": "The collections to query.",
+     "items": {
+      "$ref": "CollectionSelector"
+     },
+     "type": "array"
+    }
+   },
+   "id": "StructuredQuery"
+  },
+  "TransactionOptions": {
+   "type": "object",
+   "description": "Options for creating a new transaction.",
+   "id": "TransactionOptions",
+   "properties": {
+    "readWrite": {
+     "description": "The transaction can be used for both read and write operations.",
+     "$ref": "ReadWrite"
+    },
+    "readOnly": {
+     "$ref": "ReadOnly",
+     "description": "The transaction can only be used for read operations."
+    }
+   }
+  },
+  "RequestOptions": {
+   "type": "object",
+   "description": "Options for a request.",
+   "id": "RequestOptions",
+   "properties": {
+    "requestTags": {
+     "type": "array",
+     "description": "Optional. The request tags for the request. Request tags are user-provided strings used for usage monitoring, cost management, and observability. Callers can associate custom application context (such as component, microservice, feature name, or operation type) with database requests. These tags are collected and aggregated in usage and monitoring reports, allowing billable operations and usage metrics to be sliced and analyzed by tag. These tags *only* show up in monitoring and are visible in administrative operations (such as usage reports). They do not affect data storage, query semantics, or request execution. Cardinality and Best Practices: - Request tags are most effective when using a bounded set of distinct values (e.g., fewer than 100 distinct tags across an entire database). Using a large number of distinct tags may result in tags being omitted from top usage dashboards. - Use structured identifiers (for example: `app=cart`, `env=prod`, `service=checkout`) and avoid high-cardinality values such as UUIDs, request IDs, timestamps, user IDs, or document keys. - Do not include sensitive data or personally identifiable information (PII) in request tags, as they show up in administrative monitoring. The tags are processed as follows: - Leading and trailing whitespace is trimmed. - Empty tags (after trimming) are filtered out. - Truncated to a maximum of 510 characters. - Deduplicated within the same request. - Limited to a maximum of 50 tags per request (excess tags are silently discarded).",
+     "items": {
+      "type": "string"
+     }
+    }
+   }
+  },
+  "ExplainOptions": {
+   "id": "ExplainOptions",
+   "type": "object",
+   "properties": {
+    "analyze": {
+     "description": "Optional. Whether to execute this query. When false (the default), the query will be planned, returning only metrics from the planning stages. When true, the query will be planned and executed, returning the full query results along with both planning and execution stage metrics.",
+     "type": "boolean"
+    }
+   },
+   "description": "Explain options for the query."
+  },
+  "FindNearest": {
+   "description": "Nearest Neighbors search config. The ordering provided by FindNearest supersedes the order_by stage. If multiple documents have the same vector distance, the returned document order is not guaranteed to be stable between queries.",
+   "properties": {
+    "distanceThreshold": {
+     "type": "number",
+     "description": "Optional. Option to specify a threshold for which no less similar documents will be returned. The behavior of the specified `distance_measure` will affect the meaning of the distance threshold. Since DOT_PRODUCT distances increase when the vectors are more similar, the comparison is inverted. * For EUCLIDEAN, COSINE: `WHERE distance <= distance_threshold` * For DOT_PRODUCT: `WHERE distance >= distance_threshold`",
+     "format": "double"
+    },
+    "queryVector": {
+     "description": "Required. The query vector that we are searching on. Must be a vector of no more than 2048 dimensions.",
+     "$ref": "Value"
+    },
+    "distanceResultField": {
+     "type": "string",
+     "description": "Optional. Optional name of the field to output the result of the vector distance calculation. Must conform to document field name limitations."
+    },
+    "limit": {
+     "format": "int32",
+     "type": "integer",
+     "description": "Required. The number of nearest neighbors to return. Must be a positive integer of no more than 1000."
+    },
+    "distanceMeasure": {
+     "type": "string",
+     "enum": [
+      "DISTANCE_MEASURE_UNSPECIFIED",
+      "EUCLIDEAN",
+      "COSINE",
+      "DOT_PRODUCT"
+     ],
+     "description": "Required. The distance measure to use, required.",
+     "enumDescriptions": [
+      "Should not be set.",
+      "Measures the EUCLIDEAN distance between the vectors. See [Euclidean](https://en.wikipedia.org/wiki/Euclidean_distance) to learn more. The resulting distance decreases the more similar two vectors are.",
+      "COSINE distance compares vectors based on the angle between them, which allows you to measure similarity that isn't based on the vectors magnitude. We recommend using DOT_PRODUCT with unit normalized vectors instead of COSINE distance, which is mathematically equivalent with better performance. See [Cosine Similarity](https://en.wikipedia.org/wiki/Cosine_similarity) to learn more about COSINE similarity and COSINE distance. The resulting COSINE distance decreases the more similar two vectors are.",
+      "Similar to cosine but is affected by the magnitude of the vectors. See [Dot Product](https://en.wikipedia.org/wiki/Dot_product) to learn more. The resulting distance increases the more similar two vectors are."
+     ]
+    },
+    "vectorField": {
+     "$ref": "FieldReference",
+     "description": "Required. An indexed vector field to search upon. Only documents which contain vectors whose dimensionality match the query_vector can be returned."
+    }
+   },
+   "id": "FindNearest",
+   "type": "object"
+  },
+  "Order": {
+   "description": "An order on a field.",
+   "id": "Order",
+   "type": "object",
+   "properties": {
+    "direction": {
+     "enum": [
+      "DIRECTION_UNSPECIFIED",
+      "ASCENDING",
+      "DESCENDING"
+     ],
+     "type": "string",
+     "enumDescriptions": [
+      "Unspecified.",
+      "Ascending.",
+      "Descending."
+     ],
+     "description": "The direction to order by. Defaults to `ASCENDING`."
+    },
+    "field": {
+     "$ref": "FieldReference",
+     "description": "The field to order by."
+    }
+   }
+  },
+  "Cursor": {
+   "description": "A position in a query result set.",
+   "properties": {
+    "values": {
+     "type": "array",
+     "items": {
+      "$ref": "Value"
+     },
+     "description": "The values that represent a position, in the order they appear in the order by clause of a query. Can contain fewer values than specified in the order by clause."
+    },
+    "before": {
+     "description": "If the position is just before or just after the given values, relative to the sort order defined by the query.",
+     "type": "boolean"
+    }
+   },
+   "id": "Cursor",
+   "type": "object"
+  },
+  "Projection": {
+   "type": "object",
+   "properties": {
+    "fields": {
+     "description": "The fields to return. If empty, all fields are returned. To only return the name of the document, use `['__name__']`.",
+     "type": "array",
+     "items": {
+      "$ref": "FieldReference"
+     }
+    }
+   },
+   "id": "Projection",
+   "description": "The projection of document's fields to return."
+  },
+  "Filter": {
+   "type": "object",
+   "id": "Filter",
+   "description": "A filter.",
+   "properties": {
+    "unaryFilter": {
+     "$ref": "UnaryFilter",
+     "description": "A filter that takes exactly one argument."
+    },
+    "compositeFilter": {
+     "description": "A composite filter.",
+     "$ref": "CompositeFilter"
+    },
+    "fieldFilter": {
+     "$ref": "FieldFilter",
+     "description": "A filter on a document field."
+    }
+   }
+  },
+  "CollectionSelector": {
+   "type": "object",
+   "properties": {
+    "collectionId": {
+     "description": "The collection ID. When set, selects only collections with this ID.",
+     "type": "string"
+    },
+    "allDescendants": {
+     "description": "When false, selects only collections that are immediate children of the `parent` specified in the containing `RunQueryRequest`. When true, selects all descendant collections.",
+     "type": "boolean"
+    }
+   },
+   "description": "A selection of a collection, such as `messages as m1`.",
+   "id": "CollectionSelector"
+  },
+  "ReadWrite": {
+   "type": "object",
+   "id": "ReadWrite",
+   "properties": {
+    "concurrencyMode": {
+     "enumDescriptions": [
+      "Start the transaction with the database-level default concurrency mode.",
+      "Use optimistic concurrency control for the new transaction.",
+      "Use pessimistic concurrency control for the new transaction."
+     ],
+     "type": "string",
+     "enum": [
+      "CONCURRENCY_MODE_UNSPECIFIED",
+      "OPTIMISTIC",
+      "PESSIMISTIC"
+     ],
+     "description": "Optional. The concurrency control mode to use for this transaction. A database is able to use different concurrency modes for different transactions simultaneously. 3rd party auth requests are only allowed to create optimistic read-write transactions and must specify that here even if the database-level setting is already configured to optimistic."
+    },
+    "retryTransaction": {
+     "format": "byte",
+     "description": "An optional transaction to retry.",
+     "type": "string"
+    }
+   },
+   "description": "Options for a transaction that can be used to read and write documents."
+  },
+  "ReadOnly": {
+   "description": "Options for a transaction that can only be used to read documents.",
+   "id": "ReadOnly",
+   "type": "object",
+   "properties": {
+    "readTime": {
+     "description": "Reads documents at the given time. This must be a microsecond precision timestamp within the past one hour, or if Point-in-Time Recovery is enabled, can additionally be a whole minute timestamp within the past 7 days.",
+     "type": "string",
+     "format": "google-datetime"
+    }
+   }
+  },
+  "Value": {
+   "properties": {
+    "geoPointValue": {
+     "$ref": "LatLng",
+     "description": "A geo point value representing a point on the surface of Earth."
+    },
+    "integerValue": {
+     "description": "An integer value.",
+     "type": "string",
+     "format": "int64"
+    },
+    "timestampValue": {
+     "description": "A timestamp value. Precise only to microseconds. When stored, any additional precision is rounded down.",
+     "format": "google-datetime",
+     "type": "string"
+    },
+    "fieldReferenceValue": {
+     "description": "Value which references a field. This is considered relative (vs absolute) since it only refers to a field and not a field within a particular document. **Requires:** * Must follow field reference limitations. * Not allowed to be used when writing documents.",
+     "type": "string"
+    },
+    "mapValue": {
+     "description": "A map value.",
+     "$ref": "MapValue"
+    },
+    "referenceValue": {
+     "description": "A reference to a document. For example: `projects/{project_id}/databases/{database_id}/documents/{document_path}`.",
+     "type": "string"
+    },
+    "pipelineValue": {
+     "$ref": "Pipeline",
+     "description": "A value that represents an unevaluated pipeline. **Requires:** * Not allowed to be used when writing documents."
+    },
+    "booleanValue": {
+     "type": "boolean",
+     "description": "A boolean value."
+    },
+    "functionValue": {
+     "description": "A value that represents an unevaluated expression. **Requires:** * Not allowed to be used when writing documents.",
+     "$ref": "Function"
+    },
+    "doubleValue": {
+     "description": "A double value.",
+     "type": "number",
+     "format": "double"
+    },
+    "arrayValue": {
+     "$ref": "ArrayValue",
+     "description": "An array value. In Standard edition databases, an array value cannot directly contain another array value, though it can contain a map which contains another array. In Enterprise edition databases, an array value can contain another array value."
+    },
+    "nullValue": {
+     "enumDescriptions": [
+      "Null value."
+     ],
+     "description": "A null value.",
+     "enum": [
+      "NULL_VALUE"
+     ],
+     "type": "string"
+    },
+    "variableReferenceValue": {
+     "type": "string",
+     "description": "Pointer to a variable defined elsewhere in a pipeline. Unlike `field_reference_value` which references a field within a document, this refers to a variable, defined in a separate namespace than the fields of a document."
+    },
+    "stringValue": {
+     "description": "A string value. In Standard edition databases: * The string, represented as UTF-8, must not exceed 1 MiB - 89 bytes. * Only the first 1,500 bytes of the UTF-8 representation are considered by queries. In Enterprise edition databases, there is no limit on the size of the value. However, it is still subject to document and index entry size limits.",
+     "type": "string"
+    },
+    "bytesValue": {
+     "type": "string",
+     "description": "A bytes value. In Standard edition databases: * The value must not exceed 1 MiB - 89 bytes. * Only the first 1,500 bytes are considered by queries. In Enterprise edition databases, there is no limit on the size of the value. However, it is still subject to document and index entry size limits.",
+     "format": "byte"
+    }
+   },
+   "id": "Value",
+   "description": "A message that can hold any of the supported value types.",
+   "type": "object"
+  },
+  "FieldReference": {
+   "type": "object",
+   "description": "A reference to a field in a document, ex: `stats.operations`.",
+   "id": "FieldReference",
+   "properties": {
+    "fieldPath": {
+     "description": "A reference to a field in a document. Requires: * MUST be a dot-delimited (`.`) string of segments, where each segment conforms to document field name limitations.",
+     "type": "string"
+    }
+   }
+  },
+  "UnaryFilter": {
+   "type": "object",
+   "description": "A filter with a single operand.",
+   "properties": {
+    "field": {
+     "$ref": "FieldReference",
+     "description": "The field to which to apply the operator."
+    },
+    "op": {
+     "type": "string",
+     "enum": [
+      "OPERATOR_UNSPECIFIED",
+      "IS_NAN",
+      "IS_NULL",
+      "IS_NOT_NAN",
+      "IS_NOT_NULL"
+     ],
+     "description": "The unary operator to apply.",
+     "enumDescriptions": [
+      "Unspecified. This value must not be used.",
+      "The given `field` is equal to `NaN`.",
+      "The given `field` is equal to `NULL`.",
+      "The given `field` is not equal to `NaN`. Requires: * No other `NOT_EQUAL`, `NOT_IN`, `IS_NOT_NULL`, or `IS_NOT_NAN`. * That `field` comes first in the `order_by`.",
+      "The given `field` is not equal to `NULL`. Requires: * A single `NOT_EQUAL`, `NOT_IN`, `IS_NOT_NULL`, or `IS_NOT_NAN`. * That `field` comes first in the `order_by`."
+     ]
+    }
+   },
+   "id": "UnaryFilter"
+  },
+  "CompositeFilter": {
+   "id": "CompositeFilter",
+   "description": "A filter that merges multiple other filters using the given operator.",
+   "properties": {
+    "op": {
+     "enumDescriptions": [
+      "Unspecified. This value must not be used.",
+      "Documents are required to satisfy all of the combined filters.",
+      "Documents are required to satisfy at least one of the combined filters."
+     ],
+     "description": "The operator for combining multiple filters.",
+     "enum": [
+      "OPERATOR_UNSPECIFIED",
+      "AND",
+      "OR"
+     ],
+     "type": "string"
+    },
+    "filters": {
+     "type": "array",
+     "items": {
+      "$ref": "Filter"
+     },
+     "description": "The list of filters to combine. Requires: * At least one filter is present."
+    }
+   },
+   "type": "object"
+  },
+  "FieldFilter": {
+   "properties": {
+    "op": {
+     "enumDescriptions": [
+      "Unspecified. This value must not be used.",
+      "The given `field` is less than the given `value`. Requires: * That `field` come first in `order_by`.",
+      "The given `field` is less than or equal to the given `value`. Requires: * That `field` come first in `order_by`.",
+      "The given `field` is greater than the given `value`. Requires: * That `field` come first in `order_by`.",
+      "The given `field` is greater than or equal to the given `value`. Requires: * That `field` come first in `order_by`.",
+      "The given `field` is equal to the given `value`.",
+      "The given `field` is not equal to the given `value`. Requires: * No other `NOT_EQUAL`, `NOT_IN`, `IS_NOT_NULL`, or `IS_NOT_NAN`. * That `field` comes first in the `order_by`.",
+      "The given `field` is an array that contains the given `value`.",
+      "The given `field` is equal to at least one value in the given array. Requires: * That `value` is a non-empty `ArrayValue`, subject to disjunction limits. * No `NOT_IN` filters in the same query.",
+      "The given `field` is an array that contains any of the values in the given array. Requires: * That `value` is a non-empty `ArrayValue`, subject to disjunction limits. * No other `ARRAY_CONTAINS_ANY` filters within the same disjunction. * No `NOT_IN` filters in the same query.",
+      "The value of the `field` is not in the given array. Requires: * That `value` is a non-empty `ArrayValue` with at most 10 values. * No other `OR`, `IN`, `ARRAY_CONTAINS_ANY`, `NOT_IN`, `NOT_EQUAL`, `IS_NOT_NULL`, or `IS_NOT_NAN`. * That `field` comes first in the `order_by`."
+     ],
+     "type": "string",
+     "enum": [
+      "OPERATOR_UNSPECIFIED",
+      "LESS_THAN",
+      "LESS_THAN_OR_EQUAL",
+      "GREATER_THAN",
+      "GREATER_THAN_OR_EQUAL",
+      "EQUAL",
+      "NOT_EQUAL",
+      "ARRAY_CONTAINS",
+      "IN",
+      "ARRAY_CONTAINS_ANY",
+      "NOT_IN"
+     ],
+     "description": "The operator to filter by."
+    },
+    "field": {
+     "description": "The field to filter by.",
+     "$ref": "FieldReference"
+    },
+    "value": {
+     "$ref": "Value",
+     "description": "The value to compare to."
+    }
+   },
+   "description": "A filter on a specific field.",
+   "type": "object",
+   "id": "FieldFilter"
+  },
+  "LatLng": {
+   "properties": {
+    "longitude": {
+     "type": "number",
+     "description": "The longitude in degrees. It must be in the range [-180.0, +180.0].",
+     "format": "double"
+    },
+    "latitude": {
+     "format": "double",
+     "type": "number",
+     "description": "The latitude in degrees. It must be in the range [-90.0, +90.0]."
+    }
+   },
+   "type": "object",
+   "description": "An object that represents a latitude/longitude pair. This is expressed as a pair of doubles to represent degrees latitude and degrees longitude. Unless specified otherwise, this object must conform to the WGS84 standard. Values must be within normalized ranges.",
+   "id": "LatLng"
+  },
+  "MapValue": {
+   "description": "A map value.",
+   "type": "object",
+   "properties": {
+    "fields": {
+     "type": "object",
+     "description": "The map's fields. The map keys represent field names. Field names matching the regular expression `__.*__` are reserved. Reserved field names are forbidden except in certain documented contexts. The map keys, represented as UTF-8, must not exceed 1,500 bytes and cannot be empty.",
+     "additionalProperties": {
+      "$ref": "Value"
+     }
+    }
+   },
+   "id": "MapValue"
+  },
+  "Pipeline": {
+   "id": "Pipeline",
+   "description": "A Firestore query represented as an ordered list of operations / stages.",
+   "type": "object",
+   "properties": {
+    "stages": {
+     "description": "Required. Ordered list of stages to evaluate.",
+     "type": "array",
+     "items": {
+      "$ref": "Stage"
+     }
+    }
+   }
+  },
+  "Function": {
+   "id": "Function",
+   "description": "Represents an unevaluated scalar expression. For example, the expression `like(user_name, \"%alice%\")` is represented as: ``` name: \"like\" args { field_reference: \"user_name\" } args { string_value: \"%alice%\" } ```",
+   "type": "object",
+   "properties": {
+    "name": {
+     "description": "Required. The name of the function to evaluate. **Requires:** * must be in snake case (lower case with underscore separator).",
+     "type": "string"
+    },
+    "options": {
+     "additionalProperties": {
+      "$ref": "Value"
+     },
+     "description": "Optional. Optional named arguments that certain functions may support.",
+     "type": "object"
+    },
+    "args": {
+     "description": "Optional. Ordered list of arguments the given function expects.",
+     "type": "array",
+     "items": {
+      "$ref": "Value"
+     }
+    }
+   }
+  },
+  "ArrayValue": {
+   "properties": {
+    "values": {
+     "type": "array",
+     "items": {
+      "$ref": "Value"
+     },
+     "description": "Values in the array."
+    }
+   },
+   "type": "object",
+   "description": "An array value.",
+   "id": "ArrayValue"
+  },
+  "Stage": {
+   "description": "A single operation within a pipeline. A stage is made up of a unique name, and a list of arguments. The exact number of arguments & types is dependent on the stage type. To give an example, the stage `filter(state = \"MD\")` would be encoded as: ``` name: \"filter\" args { function_value { name: \"eq\" args { field_reference_value: \"state\" } args { string_value: \"MD\" } } } ``` See public documentation for the full list.",
+   "type": "object",
+   "properties": {
+    "options": {
+     "description": "Optional. Optional named arguments that certain functions may support.",
+     "additionalProperties": {
+      "$ref": "Value"
+     },
+     "type": "object"
+    },
+    "name": {
+     "description": "Required. The name of the stage to evaluate. **Requires:** * must be in snake case (lower case with underscore separator).",
+     "type": "string"
+    },
+    "args": {
+     "description": "Optional. Ordered list of arguments the given stage expects.",
+     "type": "array",
+     "items": {
+      "$ref": "Value"
+     }
+    }
+   },
+   "id": "Stage"
+  }
+ },
+ "resources": {
+  "projects": {
+   "resources": {
+    "databases": {
+     "resources": {
+      "documents": {
+       "methods": {
+        "get": {
+         "id": "firestore.projects.databases.documents.get",
+         "path": "v1/{+name}",
+         "flatPath": "v1/projects/{projectsId}/databases/{databasesId}/documents/{documentsId}/{documentsId1}",
+         "httpMethod": "GET",
+         "description": "Gets a single document.",
+         "parameters": [
+          {
+           "name": "name",
+           "location": "path",
+           "type": "string",
+           "required": true,
+           "description": "Required. The resource name of the Document to get. In the format: `projects/{project_id}/databases/{database_id}/documents/{document_path}`."
+          },
+          {
+           "name": "requestOptions.requestTags",
+           "location": "query",
+           "type": "string",
+           "repeated": true,
+           "description": "Optional. The request tags for the request. Request tags are user-provided strings used for usage monitoring, cost management, and observability. Callers can associate custom application context (s..."
+          },
+          {
+           "name": "mask.fieldPaths",
+           "location": "query",
+           "type": "string",
+           "repeated": true,
+           "description": "The list of field paths in the mask. See Document.fields for a field path syntax reference."
+          },
+          {
+           "name": "readTime",
+           "location": "query",
+           "type": "string",
+           "format": "google-datetime",
+           "description": "Reads the version of the document at the given time. This must be a microsecond precision timestamp within the past one hour, or if Point-in-Time Recovery is enabled, can additionally be a whole mi..."
+          },
+          {
+           "name": "transaction",
+           "location": "query",
+           "type": "string",
+           "format": "byte",
+           "description": "Reads the document in a transaction."
+          }
+         ],
+         "parameterOrder": [
+          "name"
+         ],
+         "response": "Document",
+         "scopes": [
+          "https://www.googleapis.com/auth/cloud-platform",
+          "https://www.googleapis.com/auth/datastore"
+         ]
+        },
+        "list": {
+         "id": "firestore.projects.databases.documents.list",
+         "path": "v1/{+parent}/{collectionId}",
+         "flatPath": "v1/projects/{projectsId}/databases/{databasesId}/documents/{documentsId}/{documentsId1}/{collectionId}",
+         "httpMethod": "GET",
+         "description": "Lists documents.",
+         "parameters": [
+          {
+           "name": "collectionId",
+           "location": "path",
+           "type": "string",
+           "required": true,
+           "description": "Optional. The collection ID, relative to `parent`, to list. For example: `chatrooms` or `messages`. This is optional, and when not provided, Firestore will list documents from all collections under..."
+          },
+          {
+           "name": "mask.fieldPaths",
+           "location": "query",
+           "type": "string",
+           "repeated": true,
+           "description": "The list of field paths in the mask. See Document.fields for a field path syntax reference."
+          },
+          {
+           "name": "transaction",
+           "location": "query",
+           "type": "string",
+           "format": "byte",
+           "description": "Perform the read as part of an already active transaction."
+          },
+          {
+           "name": "pageToken",
+           "location": "query",
+           "type": "string",
+           "description": "Optional. A page token, received from a previous `ListDocuments` response. Provide this to retrieve the subsequent page. When paginating, all other parameters (with the exception of `page_size`) mu..."
+          },
+          {
+           "name": "showMissing",
+           "location": "query",
+           "type": "boolean",
+           "description": "If the list should show missing documents. A document is missing if it does not exist, but there are sub-documents nested underneath it. When true, such missing documents will be returned with a ke..."
+          },
+          {
+           "name": "requestOptions.requestTags",
+           "location": "query",
+           "type": "string",
+           "repeated": true,
+           "description": "Optional. The request tags for the request. Request tags are user-provided strings used for usage monitoring, cost management, and observability. Callers can associate custom application context (s..."
+          },
+          {
+           "name": "recursive",
+           "location": "query",
+           "type": "boolean",
+           "description": "Optional. If the list should recursively include all documents nested under the parent at any level. If the request specifies a `collection_id`, then the list will include all nested documents in t..."
+          },
+          {
+           "name": "parent",
+           "location": "path",
+           "type": "string",
+           "required": true,
+           "description": "Required. The parent resource name. In the format: `projects/{project_id}/databases/{database_id}/documents` or `projects/{project_id}/databases/{database_id}/documents/{document_path}`. For exampl..."
+          },
+          {
+           "name": "readTime",
+           "location": "query",
+           "type": "string",
+           "format": "google-datetime",
+           "description": "Perform the read at the provided time. This must be a microsecond precision timestamp within the past one hour, or if Point-in-Time Recovery is enabled, can additionally be a whole minute timestamp..."
+          },
+          {
+           "name": "pageSize",
+           "location": "query",
+           "type": "integer",
+           "format": "int32",
+           "description": "Optional. The maximum number of documents to return in a single response. Firestore may return fewer than this value."
+          },
+          {
+           "name": "orderBy",
+           "location": "query",
+           "type": "string",
+           "description": "Optional. The optional ordering of the documents to return. For example: `priority desc, __name__ desc`. This mirrors the `ORDER BY` used in Firestore queries but in a string representation. When a..."
+          }
+         ],
+         "parameterOrder": [
+          "parent",
+          "collectionId"
+         ],
+         "response": "ListDocumentsResponse",
+         "scopes": [
+          "https://www.googleapis.com/auth/cloud-platform",
+          "https://www.googleapis.com/auth/datastore"
+         ]
+        },
+        "runQuery": {
+         "id": "firestore.projects.databases.documents.runQuery",
+         "path": "v1/{+parent}:runQuery",
+         "flatPath": "v1/projects/{projectsId}/databases/{databasesId}/documents/{documentsId}/{documentsId1}:runQuery",
+         "httpMethod": "POST",
+         "description": "Runs a query.",
+         "parameters": [
+          {
+           "name": "parent",
+           "location": "path",
+           "type": "string",
+           "required": true,
+           "description": "Required. The parent resource name. In the format: `projects/{project_id}/databases/{database_id}/documents` or `projects/{project_id}/databases/{database_id}/documents/{document_path}`. For exampl..."
+          }
+         ],
+         "parameterOrder": [
+          "parent"
+         ],
+         "request": "RunQueryRequest",
+         "response": "RunQueryResponse",
+         "scopes": [
+          "https://www.googleapis.com/auth/cloud-platform",
+          "https://www.googleapis.com/auth/datastore"
+         ]
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+}

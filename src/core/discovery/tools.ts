@@ -79,6 +79,11 @@ export interface DiscoverySource {
    * the API, without its name. Absent means every method.
    */
   include?: readonly string[];
+  /**
+   * Scopes a method of this API asks for when the Discovery document lists none (ServerSpec.scopeOverrides, declared in
+   * config/products.json). A method that lists scopes keeps its own. Absent: a method without scopes declares none.
+   */
+  scopesWhenNone?: readonly string[];
 }
 
 /** True when the method is in the subset (see DiscoverySource.include). */
@@ -292,6 +297,7 @@ function buildMethodTool(
   group: AuthGroup,
   cfg: RuntimeConfig,
   note: string | undefined,
+  scopesWhenNone?: readonly string[],
 ): ToolDef {
   const shape: ZodRawShape = {};
   const fields: RequestField[] = [];
@@ -336,8 +342,9 @@ function buildMethodTool(
     methodId: m.fullId,
     description: parts.join(' '),
     kind: m.kind,
-    // The method's own scope list from the Discovery document (any one of them grants it).
-    scopes: m.scopes.length > 0 ? [...m.scopes] : undefined,
+    // The method's own scope list from the Discovery document (any one of them grants it). When the document lists none,
+    // the product's declared scopes for that API (scopeOverrides), if it has them.
+    scopes: m.scopes.length > 0 ? [...m.scopes] : scopesWhenNone?.length ? [...scopesWhenNone] : undefined,
     inputSchema: shape,
     async handler(args, ctx) {
       const req = buildRequest(plan, args as Record<string, unknown>);
@@ -410,7 +417,7 @@ export function generateDiscoveryTools(
   maxNameLength: number = MAX_TOOL_NAME,
   reserved: readonly string[] = [],
 ): GeneratedTools {
-  const entries: Array<{ method: MethodRecord; doc: DiscoveryDoc }> = [];
+  const entries: Array<{ method: MethodRecord; doc: DiscoveryDoc; scopesWhenNone?: readonly string[] }> = [];
   const skippedUploads: string[] = [];
 
   for (const src of sources) {
@@ -420,7 +427,7 @@ export function generateDiscoveryTools(
         skippedUploads.push(method.fullId);
         continue;
       }
-      entries.push({ method, doc: src.doc });
+      entries.push({ method, doc: src.doc, ...(src.scopesWhenNone ? { scopesWhenNone: src.scopesWhenNone } : {}) });
     }
   }
 
@@ -443,7 +450,7 @@ export function generateDiscoveryTools(
   entries.forEach((entry, i) => {
     const name = names[i]!;
     const m = entry.method;
-    tools.push(buildMethodTool(m, name, entry.doc, group, cfg, kinds.notes[m.apiName]));
+    tools.push(buildMethodTool(m, name, entry.doc, group, cfg, kinds.notes[m.apiName], entry.scopesWhenNone));
     rows.push({
       method: m.fullId,
       tool: name,
@@ -503,6 +510,7 @@ export async function discoveryToolsFor(serverName: string, cfg: RuntimeConfig, 
       apiVersion: a.version,
       doc: JSON.parse(readFileSync(file, 'utf8')) as DiscoveryDoc,
       include: a.include,
+      ...(server.scopeOverrides?.[a.api] ? { scopesWhenNone: server.scopeOverrides[a.api] } : {}),
     });
   }
   if (missing.length > 0) {

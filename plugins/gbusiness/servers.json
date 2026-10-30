@@ -43,6 +43,29 @@
           "version": "v1"
         }
       ],
+      "scopeOverrides": {
+        "mybusinessaccountmanagement": [
+          "https://www.googleapis.com/auth/business.manage"
+        ],
+        "mybusinessbusinessinformation": [
+          "https://www.googleapis.com/auth/business.manage"
+        ],
+        "mybusinesslodging": [
+          "https://www.googleapis.com/auth/business.manage"
+        ],
+        "mybusinessnotifications": [
+          "https://www.googleapis.com/auth/business.manage"
+        ],
+        "mybusinessplaceactions": [
+          "https://www.googleapis.com/auth/business.manage"
+        ],
+        "mybusinessverifications": [
+          "https://www.googleapis.com/auth/business.manage"
+        ],
+        "businessprofileperformance": [
+          "https://www.googleapis.com/auth/business.manage"
+        ]
+      },
       "toolsets": {
         "google": [
           "mbaccount_accounts_list",
@@ -75,6 +98,7 @@
       "https://www.googleapis.com/auth/authorized-buyers-marketplace",
       "https://www.googleapis.com/auth/blogger",
       "https://www.googleapis.com/auth/blogger.readonly",
+      "https://www.googleapis.com/auth/business.manage",
       "https://www.googleapis.com/auth/curation-partners",
       "https://www.googleapis.com/auth/datamanager",
       "https://www.googleapis.com/auth/datamanager.partnerlink",

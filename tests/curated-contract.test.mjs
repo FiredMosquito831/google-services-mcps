@@ -29,17 +29,22 @@ const tokenDir = mkdtempSync(join(tmpdir(), 'gsm-contract-'));
 after(() => rmSync(tokenDir, { recursive: true, force: true }));
 writeFileSync(join(tokenDir, 'client_secret.json'), JSON.stringify({ installed: { client_id: 'test-client', client_secret: 'test-secret' } }));
 const token = { access_token: 'test-token', refresh_token: 'test-refresh', expiry_date: Date.now() + 3600_000, token_type: 'Bearer' };
-for (const group of ['cloud', 'workspace-user', 'searchconsole', 'business']) {
+for (const group of ['cloud', 'workspace-user', 'searchconsole', 'business', 'developer']) {
   writeFileSync(join(tokenDir, `${group}.token.json`), JSON.stringify(token));
 }
 const { privateKey } = generateKeyPairSync('rsa', { modulusLength: 2048, privateKeyEncoding: { type: 'pkcs8', format: 'pem' }, publicKeyEncoding: { type: 'spki', format: 'pem' } });
-const keyFile = join(tokenDir, 'service-account.json');
+// Not named service-account.json: that name is the service-account group's setup record (below).
+const keyFile = join(tokenDir, 'sa-key.json');
 writeFileSync(keyFile, JSON.stringify({ type: 'service_account', client_email: 'sa@test-project.iam.gserviceaccount.com', private_key: privateKey, private_key_id: 'k1' }));
+// The service-account group (gplay) uses the same throwaway key, as `gsm setup-service-account` records it.
+writeFileSync(join(tokenDir, 'service-account.json'), JSON.stringify({ keyFile, clientEmail: 'sa@test-project.iam.gserviceaccount.com', savedAt: '2026-10-30T00:00:00Z' }));
 const cfg = loadConfig({
   GSM_TOKEN_DIR: tokenDir,
   GSM_ALLOW_WRITES: 'true',
   GSM_SERVICE_ACCOUNT_KEY_FILE: keyFile,
   GSM_ADMIN_SUBJECT: 'admin@example.com',
+  // A fake key for the apikey group (gmaps). Never sent anywhere: fetch is stubbed below.
+  GSM_API_KEY: 'test-api-key',
 });
 
 // ---------------------------------------------------------------------------
@@ -73,6 +78,17 @@ async function fakeRequest(opts) {
 }
 OAuth2Client.prototype.request = fakeRequest;
 if (Object.prototype.hasOwnProperty.call(JWT.prototype, 'request')) JWT.prototype.request = fakeRequest;
+
+// The apikey group's client (gmaps) sends with fetch; its test seam records the same shape.
+const { setFetchForTests } = await import(DIST('core/discovery/apikey-client.js'));
+setFetchForTests(async (input, init = {}) => {
+  const url = new URL(String(input));
+  const body = typeof init.body === 'string' ? JSON.parse(init.body) : undefined;
+  const call = { method: String(init.method ?? 'GET').toUpperCase(), url: `${url.origin}${url.pathname}`, query: Object.fromEntries(url.searchParams), body, multipart: false };
+  calls.push(call);
+  return new Response(JSON.stringify(await respond(call)), { status: 200, headers: { 'content-type': 'application/json' } });
+});
+after(() => setFetchForTests(undefined));
 
 /**
  * A response that most handlers can read: one item in each list (so list-then-get tools make their get calls), done
@@ -136,10 +152,26 @@ const DOCS = [
 ];
 
 /**
- * APIs the curated gcloud and ganalytics tools call that have no per-method tools, so data/discovery has no snapshot of
- * them: trimmed copies of Google's documents in tests/fixtures/discovery (the methods called and their request schemas).
+ * APIs the curated gcloud, ganalytics and gfirebase tools call that have no per-method tools, so data/discovery has no
+ * snapshot of them: trimmed copies of Google's documents in tests/fixtures/discovery (the methods called and their
+ * request schemas).
  */
-const FIXTURE_DOCS = ['logging.v2', 'monitoring.v1', 'iam.v1', 'cloudbilling.v1beta', 'analyticsdata.v1alpha', 'analyticsadmin.v1alpha'];
+const FIXTURE_DOCS = [
+  'logging.v2',
+  'monitoring.v1',
+  'iam.v1',
+  'cloudbilling.v1beta',
+  'analyticsdata.v1alpha',
+  'analyticsadmin.v1alpha',
+  'firestore.v1',
+  'firebaseremoteconfig.v1',
+  'identitytoolkit.v1',
+  'aiplatform.v1',
+  'weather.v1',
+  // Hand-written from Google's REST reference: the Routes API's Discovery document needs an API key (see its _source).
+  'routes.v2',
+  'androidmanagement.v1',
+];
 
 /**
  * Other hosts a document's methods are called on. sc_* tools use @googleapis/webmasters, which calls the Search Console
@@ -167,7 +199,9 @@ for (const file of [...DOCS, ...FIXTURE_DOCS]) {
   const dir = FIXTURE_DOCS.includes(file) ? join(REPO, 'tests', 'fixtures', 'discovery') : join(REPO, 'data', 'discovery');
   const doc = JSON.parse(readFileSync(join(dir, `${file}.json`), 'utf8'));
   docs[file] = doc;
-  const bases = [`${doc.rootUrl}${doc.servicePath ?? ''}`, ...(HOST_ALIASES[file] ?? []).map((root) => `${root}${doc.servicePath ?? ''}`)];
+  // A document's regional hosts (Discovery "endpoints", such as us-central1-aiplatform.googleapis.com) serve its paths too.
+  const regional = (doc.endpoints ?? []).map((e) => e.endpointUrl);
+  const bases = [`${doc.rootUrl}${doc.servicePath ?? ''}`, ...[...(HOST_ALIASES[file] ?? []), ...regional].map((root) => `${root}${doc.servicePath ?? ''}`)];
   const add = (m) => {
     const templates = bases.flatMap((base) => [m.path, m.flatPath].filter(Boolean).map((p) => `${base}${p}`));
     // Media uploads go to the same path under /upload/, such as /upload/drive/v3/files. Discovery lists the protocols;
@@ -268,7 +302,7 @@ function problemsOf(call) {
 // ---------------------------------------------------------------------------
 // The servers and their tools.
 
-const SERVERS = ['gmail', 'gcalendar', 'gdrive', 'searchconsole', 'cloud', 'gads', 'workspace-admin', 'gchat', 'gcontacts', 'gclassroom', 'ganalytics'];
+const SERVERS = ['gmail', 'gcalendar', 'gdrive', 'searchconsole', 'cloud', 'gads', 'workspace-admin', 'gchat', 'gcontacts', 'gclassroom', 'ganalytics', 'gfirebase', 'gai', 'gmaps', 'gplay'];
 const tools = new Map();
 for (const mod of SERVERS) {
   const { buildTools } = await import(DIST(`servers/${mod}.js`));
@@ -817,6 +851,122 @@ const CASES = {
     { args: { property_id: '123', title: 'Launch', start_date: '2026-10-01', description: 'New site', color: 'BLUE' }, expect: ['analyticsadmin.properties.reportingDataAnnotations.create'] },
     { args: { property_id: '123', title: 'Sale', start_date: '2026-10-05', end_date: '2026-10-09' }, expect: ['analyticsadmin.properties.reportingDataAnnotations.create'] },
   ],
+
+  // gfirebase (1.20.0)
+  firestore_get_document: [
+    { args: { project_id: 'my-app-1234', document_path: 'users/alice', field_paths: ['name', 'address.city'], read_time: '2026-10-30T00:00:00Z' }, expect: ['firestore.projects.databases.documents.get'] },
+    // A deeper path (users/alice/orders/o1) is a get as well, but its URL also fits documents.list's template
+    // (v1/{+parent}/{collectionId}), which has more fixed text, so the checker would name list; a two-part path is used.
+    { args: { project_id: 'my-app-1234', database: 'orders-db', document_path: 'users/bob' }, expect: ['firestore.projects.databases.documents.get'] },
+  ],
+  firestore_list_documents: [
+    {
+      args: { project_id: 'my-app-1234', collection_path: 'users', page_size: 10, page_token: 'p1', order_by: 'name desc', field_paths: ['name'], show_missing: true },
+      expect: ['firestore.projects.databases.documents.list'],
+    },
+    { args: { project_id: 'my-app-1234', collection_path: 'users/alice/orders' }, expect: ['firestore.projects.databases.documents.list'] },
+  ],
+  firestore_query_collection: [
+    {
+      args: {
+        project_id: 'my-app-1234',
+        collection_path: 'users',
+        filters: [
+          { field: 'status', op: 'EQUAL', value: 'active' },
+          { field: 'age', op: 'GREATER_THAN_OR_EQUAL', value: 18 },
+          { field: 'tags', op: 'ARRAY_CONTAINS_ANY', value: ['a', 'b'] },
+          { field: 'deletedAt', op: 'IS_NULL' },
+          { field: 'createdAt', op: 'LESS_THAN', value: { timestampValue: '2026-10-30T00:00:00Z' } },
+        ],
+        order_by: [{ field: 'age', direction: 'DESCENDING' }],
+        limit: 5,
+      },
+      expect: ['firestore.projects.databases.documents.runQuery'],
+      respond: () => [{ document: { name: 'projects/my-app-1234/databases/(default)/documents/users/alice', fields: {} } }],
+    },
+    { args: { project_id: 'my-app-1234', collection_path: 'users/alice/orders', all_descendants: true }, expect: ['firestore.projects.databases.documents.runQuery'], respond: () => [] },
+  ],
+  remoteconfig_get_template: [
+    { args: { project_id: 'my-app-1234' }, expect: ['firebaseremoteconfig.projects.getRemoteConfig'] },
+    { args: { project_id: 'my-app-1234', version_number: 7 }, expect: ['firebaseremoteconfig.projects.getRemoteConfig'] },
+  ],
+  auth_get_users: [
+    { args: { project_id: 'my-app-1234', uids: ['u1'], emails: ['a@example.com'], phone_numbers: ['+15555550100'] }, expect: ['identitytoolkit.projects.accounts.lookup'] },
+    { args: { project_id: 'my-app-1234', limit: 20 }, expect: ['identitytoolkit.projects.accounts.query'] },
+  ],
+
+  // gai (1.21.0)
+  vertex_generate_content: [
+    {
+      args: {
+        project_id: 'my-project-123',
+        model: 'gemini-2.5-flash',
+        prompt: 'Hello',
+        system_instruction: 'Be brief.',
+        generation_config: { temperature: 0.2, maxOutputTokens: 256 },
+        safety_settings: [{ category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_ONLY_HIGH' }],
+        tools: [{ functionDeclarations: [{ name: 'lookup', description: 'Look up a word.' }] }],
+        tool_config: { functionCallingConfig: { mode: 'AUTO' } },
+        labels: { team: 'search' },
+      },
+      expect: ['aiplatform.projects.locations.publishers.models.generateContent'],
+    },
+    // A region's own host, and a model deployed to an endpoint.
+    {
+      args: { project_id: 'my-project-123', region: 'us-central1', model: 'endpoints/1234567890', contents: [{ role: 'user', parts: [{ text: 'Hi' }] }], cached_content: 'projects/my-project-123/locations/us-central1/cachedContents/c1' },
+      expect: ['aiplatform.projects.locations.endpoints.generateContent'],
+    },
+  ],
+  vertex_count_tokens: [
+    { args: { project_id: 'my-project-123', region: 'europe-west4', model: 'publishers/google/models/gemini-2.5-pro', prompt: 'Hello', system_instruction: 'Be brief.', generation_config: { temperature: 0 } }, expect: ['aiplatform.projects.locations.publishers.models.countTokens'] },
+    { args: { project_id: 'my-project-123', model: 'endpoints/1234567890', contents: [{ role: 'user', parts: [{ text: 'Hi' }] }] }, expect: ['aiplatform.projects.locations.endpoints.countTokens'] },
+  ],
+  vertex_embed_content: [
+    {
+      args: { project_id: 'my-project-123', region: 'us-central1', model: 'gemini-embedding-001', text: 'A sentence.', task_type: 'RETRIEVAL_DOCUMENT', title: 'Doc', output_dimensionality: 256, auto_truncate: false },
+      expect: ['aiplatform.projects.locations.publishers.models.embedContent'],
+    },
+  ],
+
+  // gmaps (1.22.0), with the API key
+  maps_compute_routes: [
+    {
+      args: {
+        origin: 'Brandenburger Tor, Berlin',
+        destination: { latitude: 52.5251, longitude: 13.3694 },
+        intermediates: [{ place_id: 'ChIJ2V-Mo_l1nkcRfZixfUq4DAE' }],
+        travel_mode: 'DRIVE',
+        routing_preference: 'TRAFFIC_AWARE',
+        departure_time: '2026-11-02T08:00:00+01:00',
+        compute_alternative_routes: false,
+        include_polyline: true,
+        language_code: 'de-DE',
+        region_code: 'de',
+        units: 'METRIC',
+      },
+      expect: ['routes.computeRoutes'],
+    },
+    { args: { origin: 'A', destination: 'B', intermediates: ['C'], pass_through_intermediates: true, travel_mode: 'TRANSIT', arrival_time: '2026-11-02T09:00:00Z', field_mask: ['routes.duration'] }, expect: ['routes.computeRoutes'] },
+  ],
+  maps_lookup_weather: [
+    { args: { latitude: 48.85, longitude: 2.35, units_system: 'IMPERIAL', language_code: 'fr' }, expect: ['weather.currentConditions.lookup'] },
+    { args: { latitude: 48.85, longitude: 2.35, forecast: 'hourly', hours: 12, page_size: 6, page_token: 'p1' }, expect: ['weather.forecast.hours.lookup'] },
+    { args: { latitude: 48.85, longitude: 2.35, forecast: 'daily', days: 3, page_size: 3 }, expect: ['weather.forecast.days.lookup'] },
+  ],
+
+  // gplay (1.24.0), with the service account key
+  androidmgmt_list_enterprises: [{ args: { project_id: 'my-emm-project', view: 'BASIC', page_size: 10, page_token: 'p1' }, expect: ['androidmanagement.enterprises.list'] }],
+  androidmgmt_get_enterprise: [{ args: { enterprise: 'LC0123abcd' }, expect: ['androidmanagement.enterprises.get'] }],
+  androidmgmt_get_application: [{ args: { enterprise: 'enterprises/LC0123abcd', package_name: 'com.google.android.gm', language_code: 'de' }, expect: ['androidmanagement.enterprises.applications.get'] }],
+  androidmgmt_list_devices: [{ args: { enterprise: 'LC0123abcd', page_size: 5, page_token: 'p1' }, expect: ['androidmanagement.enterprises.devices.list'] }],
+  androidmgmt_get_device: [
+    { args: { enterprise: 'LC0123abcd', device: '3a1b' }, expect: ['androidmanagement.enterprises.devices.get'] },
+    { args: { device: 'enterprises/LC0123abcd/devices/3a1b' }, expect: ['androidmanagement.enterprises.devices.get'] },
+  ],
+  androidmgmt_list_policies: [{ args: { enterprise: 'LC0123abcd', page_size: 5 }, expect: ['androidmanagement.enterprises.policies.list'] }],
+  androidmgmt_get_policy: [{ args: { enterprise: 'LC0123abcd', policy: 'default' }, expect: ['androidmanagement.enterprises.policies.get'] }],
+  androidmgmt_list_web_apps: [{ args: { enterprise: 'LC0123abcd', page_token: 'p1' }, expect: ['androidmanagement.enterprises.webApps.list'] }],
+  androidmgmt_get_web_app: [{ args: { enterprise: 'LC0123abcd', web_app: 'w1' }, expect: ['androidmanagement.enterprises.webApps.get'] }],
 };
 
 /** Tools that cannot run here, with the reason. Counted. */
@@ -829,7 +979,7 @@ test('every curated tool has a contract row, a skip reason or a known defect, an
   const listed = new Set([...Object.keys(CASES), ...Object.keys(SKIPPED), ...Object.keys(KNOWN_DEFECTS)]);
   assert.deepEqual([...tools.keys()].filter((name) => !listed.has(name)), [], 'curated tools without a row');
   assert.deepEqual([...listed].filter((name) => !tools.has(name)), [], 'rows for tools that do not exist');
-  assert.equal(tools.size, 130, 'the curated tool count; update the table when it changes');
+  assert.equal(tools.size, 149, 'the curated tool count; update the table when it changes');
 });
 
 for (const [name, cases] of Object.entries(CASES)) {

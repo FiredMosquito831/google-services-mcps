@@ -10,13 +10,17 @@ import type { ToolDef } from '../core/tools.js';
 import { withOrigin } from '../core/toolset.js';
 import { buildTools as buildCloud } from './cloud.js';
 import { buildTools as buildGads } from './gads.js';
+import { buildTools as buildGai } from './gai.js';
 import { buildTools as buildGanalytics } from './ganalytics.js';
 import { buildTools as buildGcalendar } from './gcalendar.js';
 import { buildTools as buildGchat } from './gchat.js';
 import { buildTools as buildGclassroom } from './gclassroom.js';
 import { buildTools as buildGcontacts } from './gcontacts.js';
 import { buildTools as buildGdrive } from './gdrive.js';
+import { buildTools as buildGfirebase } from './gfirebase.js';
 import { buildTools as buildGmail } from './gmail.js';
+import { buildTools as buildGmaps } from './gmaps.js';
+import { buildTools as buildGplay } from './gplay.js';
 import { buildTools as buildSearchConsole } from './searchconsole.js';
 import { buildTools as buildWorkspaceAdmin } from './workspace-admin.js';
 
@@ -34,6 +38,10 @@ const CURATED: Record<string, Builder> = {
   'src/servers/gcontacts.ts': buildGcontacts,
   'src/servers/gclassroom.ts': buildGclassroom,
   'src/servers/ganalytics.ts': buildGanalytics,
+  'src/servers/gfirebase.ts': buildGfirebase,
+  'src/servers/gai.ts': buildGai,
+  'src/servers/gmaps.ts': buildGmaps,
+  'src/servers/gplay.ts': buildGplay,
 };
 
 /**

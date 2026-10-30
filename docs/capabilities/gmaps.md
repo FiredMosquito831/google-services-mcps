@@ -4,13 +4,24 @@ Maps Platform and location APIs: Places, Address Validation, Solar, Air Quality,
 
 - Plugin: `gmaps`, MCP server: `gmaps`, login: API key, then `setup-apikey` (no login)
 - Install: `claude plugin install gmaps@google-services-mcps`
-- Tools: 45 total. Curated 9, per-method 35, gateway 0. Read 23, write 19, destructive 3, dynamic 0.
+- Tools: 47 total. Curated 11, per-method 35, gateway 0. Read 25, write 19, destructive 3, dynamic 0.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 45, google 45 (all), curated 45 (all) tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 47, google 13, curated 11 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
 
-## Curated tools (9)
+## Toolset google (4)
+
+The tools that match Google's official MCP server for this product (https://developers.google.com/maps/ai/maps-experience-agent-tools/reference/mcp/search_places, https://developers.google.com/maps/ai/maps-experience-agent-tools/reference/mcp/compute_routes, https://developers.google.com/maps/ai/maps-experience-agent-tools/reference/mcp/lookup_weather).
+
+| Tool | Google's tool | Note |
+|---|---|---|
+| `places_places_search_text` | `search_places` | Places API (New) searchText: places by a text query, with an optional location bias. Google's search_places also returns a summary written by its server; this returns Places data. |
+| `places_places_get` | (none) | One place's details by its id (Places API places.get), the extended details Google's search_places adds on request. Google's resolve_names and resolve_maps_urls call a REST surface only Google's own server reaches (no public API), so they have no tool here. |
+| `maps_compute_routes` | `compute_routes` | Routes API computeRoutes with a response field mask (a short summary by default). Routes API is not in Google's Discovery directory; called directly with the API key. |
+| `maps_lookup_weather` | `lookup_weather` | Weather API current conditions, hourly forecast or daily forecast, by latitude and longitude. Not in Google's Discovery directory; called directly with the API key. |
+
+## Curated tools (11)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
@@ -23,6 +34,8 @@ Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 45, google 45 (all), 
 | `auth_setup_service_account` | write | Set up the service account key | (none) |
 | `auth_status` | read | Sign-in status | (none) |
 | `health` | read | Server health | (none) |
+| `maps_compute_routes` | read | Compute a route | cloud-platform |
+| `maps_lookup_weather` | read | Look up the weather | cloud-platform |
 
 ## Per-method tools (35)
 

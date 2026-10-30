@@ -56,21 +56,27 @@
   {
     "name": "mcp__plugin_gbusiness_gbusiness__bpperf_loca_sear_impr_mont_list",
     "kind": "read",
-    "scopes": [],
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
     "methodId": "businessprofileperformance.locations.searchkeywords.impressions.monthly.list",
     "title": "businessprofileperformance.locations.searchkeywords.impressions.monthly.list"
   },
   {
     "name": "mcp__plugin_gbusiness_gbusiness__bpperf_locations_fetch_multi_da",
     "kind": "read",
-    "scopes": [],
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
     "methodId": "businessprofileperformance.locations.fetchMultiDailyMetricsTimeSeries",
     "title": "businessprofileperformance.locations.fetchMultiDailyMetricsTimeSeries"
   },
   {
     "name": "mcp__plugin_gbusiness_gbusiness__bpperf_locations_get_daily_metr",
     "kind": "read",
-    "scopes": [],
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
     "methodId": "businessprofileperformance.locations.getDailyMetricsTimeSeries",
     "title": "businessprofileperformance.locations.getDailyMetricsTimeSeries"
   },
@@ -83,336 +89,432 @@
   {
     "name": "mcp__plugin_gbusiness_gbusiness__mbaccount_accoun_invita_decline",
     "kind": "write",
-    "scopes": [],
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
     "methodId": "mybusinessaccountmanagement.accounts.invitations.decline",
     "title": "mybusinessaccountmanagement.accounts.invitations.decline"
   },
   {
     "name": "mcp__plugin_gbusiness_gbusiness__mbaccount_accoun_invitat_accept",
     "kind": "write",
-    "scopes": [],
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
     "methodId": "mybusinessaccountmanagement.accounts.invitations.accept",
     "title": "mybusinessaccountmanagement.accounts.invitations.accept"
   },
   {
     "name": "mcp__plugin_gbusiness_gbusiness__mbaccount_account_admins_create",
     "kind": "write",
-    "scopes": [],
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
     "methodId": "mybusinessaccountmanagement.accounts.admins.create",
     "title": "mybusinessaccountmanagement.accounts.admins.create"
   },
   {
     "name": "mcp__plugin_gbusiness_gbusiness__mbaccount_account_admins_delete",
     "kind": "destructive",
-    "scopes": [],
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
     "methodId": "mybusinessaccountmanagement.accounts.admins.delete",
     "title": "mybusinessaccountmanagement.accounts.admins.delete"
   },
   {
     "name": "mcp__plugin_gbusiness_gbusiness__mbaccount_account_invitati_list",
     "kind": "read",
-    "scopes": [],
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
     "methodId": "mybusinessaccountmanagement.accounts.invitations.list",
     "title": "mybusinessaccountmanagement.accounts.invitations.list"
   },
   {
     "name": "mcp__plugin_gbusiness_gbusiness__mbaccount_accounts_admins_list",
     "kind": "read",
-    "scopes": [],
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
     "methodId": "mybusinessaccountmanagement.accounts.admins.list",
     "title": "mybusinessaccountmanagement.accounts.admins.list"
   },
   {
     "name": "mcp__plugin_gbusiness_gbusiness__mbaccount_accounts_admins_patch",
     "kind": "write",
-    "scopes": [],
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
     "methodId": "mybusinessaccountmanagement.accounts.admins.patch",
     "title": "mybusinessaccountmanagement.accounts.admins.patch"
   },
   {
     "name": "mcp__plugin_gbusiness_gbusiness__mbaccount_accounts_create",
     "kind": "write",
-    "scopes": [],
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
     "methodId": "mybusinessaccountmanagement.accounts.create",
     "title": "mybusinessaccountmanagement.accounts.create"
   },
   {
     "name": "mcp__plugin_gbusiness_gbusiness__mbaccount_accounts_get",
     "kind": "read",
-    "scopes": [],
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
     "methodId": "mybusinessaccountmanagement.accounts.get",
     "title": "mybusinessaccountmanagement.accounts.get"
   },
   {
     "name": "mcp__plugin_gbusiness_gbusiness__mbaccount_accounts_list",
     "kind": "read",
-    "scopes": [],
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
     "methodId": "mybusinessaccountmanagement.accounts.list",
     "title": "mybusinessaccountmanagement.accounts.list"
   },
   {
     "name": "mcp__plugin_gbusiness_gbusiness__mbaccount_accounts_patch",
     "kind": "write",
-    "scopes": [],
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
     "methodId": "mybusinessaccountmanagement.accounts.patch",
     "title": "mybusinessaccountmanagement.accounts.patch"
   },
   {
     "name": "mcp__plugin_gbusiness_gbusiness__mbaccount_locatio_admins_create",
     "kind": "write",
-    "scopes": [],
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
     "methodId": "mybusinessaccountmanagement.locations.admins.create",
     "title": "mybusinessaccountmanagement.locations.admins.create"
   },
   {
     "name": "mcp__plugin_gbusiness_gbusiness__mbaccount_locatio_admins_delete",
     "kind": "destructive",
-    "scopes": [],
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
     "methodId": "mybusinessaccountmanagement.locations.admins.delete",
     "title": "mybusinessaccountmanagement.locations.admins.delete"
   },
   {
     "name": "mcp__plugin_gbusiness_gbusiness__mbaccount_location_admins_patch",
     "kind": "write",
-    "scopes": [],
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
     "methodId": "mybusinessaccountmanagement.locations.admins.patch",
     "title": "mybusinessaccountmanagement.locations.admins.patch"
   },
   {
     "name": "mcp__plugin_gbusiness_gbusiness__mbaccount_locations_admins_list",
     "kind": "read",
-    "scopes": [],
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
     "methodId": "mybusinessaccountmanagement.locations.admins.list",
     "title": "mybusinessaccountmanagement.locations.admins.list"
   },
   {
     "name": "mcp__plugin_gbusiness_gbusiness__mbaccount_locations_transfer",
     "kind": "write",
-    "scopes": [],
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
     "methodId": "mybusinessaccountmanagement.locations.transfer",
     "title": "mybusinessaccountmanagement.locations.transfer"
   },
   {
     "name": "mcp__plugin_gbusiness_gbusiness__mbinfo_accounts_location_create",
     "kind": "write",
-    "scopes": [],
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
     "methodId": "mybusinessbusinessinformation.accounts.locations.create",
     "title": "mybusinessbusinessinformation.accounts.locations.create"
   },
   {
     "name": "mcp__plugin_gbusiness_gbusiness__mbinfo_accounts_locations_list",
     "kind": "read",
-    "scopes": [],
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
     "methodId": "mybusinessbusinessinformation.accounts.locations.list",
     "title": "mybusinessbusinessinformation.accounts.locations.list"
   },
   {
     "name": "mcp__plugin_gbusiness_gbusiness__mbinfo_attributes_list",
     "kind": "read",
-    "scopes": [],
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
     "methodId": "mybusinessbusinessinformation.attributes.list",
     "title": "mybusinessbusinessinformation.attributes.list"
   },
   {
     "name": "mcp__plugin_gbusiness_gbusiness__mbinfo_categories_batch_get",
     "kind": "read",
-    "scopes": [],
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
     "methodId": "mybusinessbusinessinformation.categories.batchGet",
     "title": "mybusinessbusinessinformation.categories.batchGet"
   },
   {
     "name": "mcp__plugin_gbusiness_gbusiness__mbinfo_categories_list",
     "kind": "read",
-    "scopes": [],
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
     "methodId": "mybusinessbusinessinformation.categories.list",
     "title": "mybusinessbusinessinformation.categories.list"
   },
   {
     "name": "mcp__plugin_gbusiness_gbusiness__mbinfo_chains_get",
     "kind": "read",
-    "scopes": [],
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
     "methodId": "mybusinessbusinessinformation.chains.get",
     "title": "mybusinessbusinessinformation.chains.get"
   },
   {
     "name": "mcp__plugin_gbusiness_gbusiness__mbinfo_chains_search",
     "kind": "read",
-    "scopes": [],
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
     "methodId": "mybusinessbusinessinformation.chains.search",
     "title": "mybusinessbusinessinformation.chains.search"
   },
   {
     "name": "mcp__plugin_gbusiness_gbusiness__mbinfo_google_locations_search",
     "kind": "read",
-    "scopes": [],
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
     "methodId": "mybusinessbusinessinformation.googleLocations.search",
     "title": "mybusinessbusinessinformation.googleLocations.search"
   },
   {
     "name": "mcp__plugin_gbusiness_gbusiness__mbinfo_locatio_attribu_get_goog",
     "kind": "read",
-    "scopes": [],
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
     "methodId": "mybusinessbusinessinformation.locations.attributes.getGoogleUpdated",
     "title": "mybusinessbusinessinformation.locations.attributes.getGoogleUpdated"
   },
   {
     "name": "mcp__plugin_gbusiness_gbusiness__mbinfo_locations_delete",
     "kind": "destructive",
-    "scopes": [],
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
     "methodId": "mybusinessbusinessinformation.locations.delete",
     "title": "mybusinessbusinessinformation.locations.delete"
   },
   {
     "name": "mcp__plugin_gbusiness_gbusiness__mbinfo_locations_get",
     "kind": "read",
-    "scopes": [],
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
     "methodId": "mybusinessbusinessinformation.locations.get",
     "title": "mybusinessbusinessinformation.locations.get"
   },
   {
     "name": "mcp__plugin_gbusiness_gbusiness__mbinfo_locations_get_attributes",
     "kind": "read",
-    "scopes": [],
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
     "methodId": "mybusinessbusinessinformation.locations.getAttributes",
     "title": "mybusinessbusinessinformation.locations.getAttributes"
   },
   {
     "name": "mcp__plugin_gbusiness_gbusiness__mbinfo_locations_get_google_upd",
     "kind": "read",
-    "scopes": [],
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
     "methodId": "mybusinessbusinessinformation.locations.getGoogleUpdated",
     "title": "mybusinessbusinessinformation.locations.getGoogleUpdated"
   },
   {
     "name": "mcp__plugin_gbusiness_gbusiness__mbinfo_locations_patch",
     "kind": "write",
-    "scopes": [],
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
     "methodId": "mybusinessbusinessinformation.locations.patch",
     "title": "mybusinessbusinessinformation.locations.patch"
   },
   {
     "name": "mcp__plugin_gbusiness_gbusiness__mbinfo_locations_update_attribu",
     "kind": "write",
-    "scopes": [],
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
     "methodId": "mybusinessbusinessinformation.locations.updateAttributes",
     "title": "mybusinessbusinessinformation.locations.updateAttributes"
   },
   {
     "name": "mcp__plugin_gbusiness_gbusiness__mbnotify_accounts_get_notificat",
     "kind": "read",
-    "scopes": [],
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
     "methodId": "mybusinessnotifications.accounts.getNotificationSetting",
     "title": "mybusinessnotifications.accounts.getNotificationSetting"
   },
   {
     "name": "mcp__plugin_gbusiness_gbusiness__mbnotify_accounts_update_notifi",
     "kind": "write",
-    "scopes": [],
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
     "methodId": "mybusinessnotifications.accounts.updateNotificationSetting",
     "title": "mybusinessnotifications.accounts.updateNotificationSetting"
   },
   {
     "name": "mcp__plugin_gbusiness_gbusiness__mbverify_locati_verific_complet",
     "kind": "write",
-    "scopes": [],
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
     "methodId": "mybusinessverifications.locations.verifications.complete",
     "title": "mybusinessverifications.locations.verifications.complete"
   },
   {
     "name": "mcp__plugin_gbusiness_gbusiness__mbverify_location_verifica_list",
     "kind": "read",
-    "scopes": [],
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
     "methodId": "mybusinessverifications.locations.verifications.list",
     "title": "mybusinessverifications.locations.verifications.list"
   },
   {
     "name": "mcp__plugin_gbusiness_gbusiness__mbverify_locations_fetch_verifi",
     "kind": "read",
-    "scopes": [],
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
     "methodId": "mybusinessverifications.locations.fetchVerificationOptions",
     "title": "mybusinessverifications.locations.fetchVerificationOptions"
   },
   {
     "name": "mcp__plugin_gbusiness_gbusiness__mbverify_locations_get_voice_of",
     "kind": "read",
-    "scopes": [],
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
     "methodId": "mybusinessverifications.locations.getVoiceOfMerchantState",
     "title": "mybusinessverifications.locations.getVoiceOfMerchantState"
   },
   {
     "name": "mcp__plugin_gbusiness_gbusiness__mbverify_locations_verify",
     "kind": "write",
-    "scopes": [],
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
     "methodId": "mybusinessverifications.locations.verify",
     "title": "mybusinessverifications.locations.verify"
   },
   {
     "name": "mcp__plugin_gbusiness_gbusiness__mbverify_verification_generate",
     "kind": "write",
-    "scopes": [],
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
     "methodId": "mybusinessverifications.verificationTokens.generate",
     "title": "mybusinessverifications.verificationTokens.generate"
   },
   {
     "name": "mcp__plugin_gbusiness_gbusiness__mybusiness_locati_lodgin_get_go",
     "kind": "read",
-    "scopes": [],
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
     "methodId": "mybusinesslodging.locations.lodging.getGoogleUpdated",
     "title": "mybusinesslodging.locations.lodging.getGoogleUpdated"
   },
   {
     "name": "mcp__plugin_gbusiness_gbusiness__mybusiness_locati_place_a_patch",
     "kind": "write",
-    "scopes": [],
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
     "methodId": "mybusinessplaceactions.locations.placeActionLinks.patch",
     "title": "mybusinessplaceactions.locations.placeActionLinks.patch"
   },
   {
     "name": "mcp__plugin_gbusiness_gbusiness__mybusiness_locati_place_create",
     "kind": "write",
-    "scopes": [],
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
     "methodId": "mybusinessplaceactions.locations.placeActionLinks.create",
     "title": "mybusinessplaceactions.locations.placeActionLinks.create"
   },
   {
     "name": "mcp__plugin_gbusiness_gbusiness__mybusiness_locati_place_delete",
     "kind": "destructive",
-    "scopes": [],
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
     "methodId": "mybusinessplaceactions.locations.placeActionLinks.delete",
     "title": "mybusinessplaceactions.locations.placeActionLinks.delete"
   },
   {
     "name": "mcp__plugin_gbusiness_gbusiness__mybusiness_locatio_place_a_list",
     "kind": "read",
-    "scopes": [],
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
     "methodId": "mybusinessplaceactions.locations.placeActionLinks.list",
     "title": "mybusinessplaceactions.locations.placeActionLinks.list"
   },
   {
     "name": "mcp__plugin_gbusiness_gbusiness__mybusiness_locatio_place_ac_get",
     "kind": "read",
-    "scopes": [],
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
     "methodId": "mybusinessplaceactions.locations.placeActionLinks.get",
     "title": "mybusinessplaceactions.locations.placeActionLinks.get"
   },
   {
     "name": "mcp__plugin_gbusiness_gbusiness__mybusiness_locations_get_lodgin",
     "kind": "read",
-    "scopes": [],
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
     "methodId": "mybusinesslodging.locations.getLodging",
     "title": "mybusinesslodging.locations.getLodging"
   },
   {
     "name": "mcp__plugin_gbusiness_gbusiness__mybusiness_locations_update_lod",
     "kind": "write",
-    "scopes": [],
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
     "methodId": "mybusinesslodging.locations.updateLodging",
     "title": "mybusinesslodging.locations.updateLodging"
   },
   {
     "name": "mcp__plugin_gbusiness_gbusiness__mybusiness_place_action_ty_list",
     "kind": "read",
-    "scopes": [],
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
     "methodId": "mybusinessplaceactions.placeActionTypeMetadata.list",
     "title": "mybusinessplaceactions.placeActionTypeMetadata.list"
   }

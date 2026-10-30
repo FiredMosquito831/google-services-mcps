@@ -8,7 +8,24 @@ Google Workspace administration: Cloud Identity, Chrome management and policy, G
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 375, google 375 (all), curated 31 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 375, google 19, curated 31 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+
+## Toolset google (10)
+
+Google has no official MCP server for this product. The google toolset is a lean set chosen here: No official Google MCP server for Google Workspace administration (the Admin SDK, reports and the alert center) was found in Google's Workspace and Cloud MCP lists on 2026-10-29; a lean set chosen here..
+
+| Tool | Google's tool | Note |
+|---|---|---|
+| `admin_users_list` | (none) | The domain's users, searchable by name or email (Directory API users.list). Start here for a user key. |
+| `admin_user_get` | (none) | One user, with the groups they belong to (Directory API users.get and groups.list). |
+| `admin_groups_list` | (none) | The account's groups, or the groups of one user (Directory API groups.list). |
+| `admin_group_members_list` | (none) | The members of a group and their roles (Directory API members.list). |
+| `admin_orgunits_list` | (none) | The organizational units (Directory API orgunits.list). |
+| `admin_domains_list` | (none) | The domains of the account (Directory API domains.list). |
+| `admin_activities_list` | (none) | Audit activity of the domain: logins, admin console changes, Drive and others (Reports API activities.list). |
+| `alerts_alerts_list` | (none) | Security and system alerts of the domain (Alert Center API alerts.list). |
+| `admin_user_set_suspended` | (none) | Suspends or restores a user. A write: it asks first. |
+| `admin_group_member_add` | (none) | Adds a member to a group. A write: it asks first. |
 
 ## Curated tools (28)
 

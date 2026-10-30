@@ -48,6 +48,12 @@ export interface ServerSpec {
    * { google: [...] }. Absent for a product that lists none. all and curated are never listed (see core/toolset.ts).
    */
   toolsets?: ServerToolsets;
+  /**
+   * Per generated API of the product, the scopes a method of that API asks for when its Discovery document lists none
+   * (config/products.json scopeOverrides; Google's Business Profile documents list no scope). A method that lists scopes
+   * keeps its own. Absent for a product that has none.
+   */
+  scopeOverrides?: Record<string, string[]>;
   label: string;
 }
 
@@ -274,7 +280,9 @@ export function scopesForServer(reg: Registry, name: string): string[] {
   if (!all) {
     throw new Error(`scopesForServer: scopes.json not found under ${reg.dataRoot}. Run: node scripts/snapshot-discovery.mjs`);
   }
-  return unique([...curated, ...(all[name] ?? []), ...gateway]);
+  // The scopes the product declares for methods whose Discovery document lists none (scopeOverrides).
+  const overrides = Object.values(server.scopeOverrides ?? {}).flat();
+  return unique([...curated, ...(all[name] ?? []), ...gateway, ...overrides]);
 }
 
 /** Union of scopes across every server in an auth group, optionally narrowed to some servers. */

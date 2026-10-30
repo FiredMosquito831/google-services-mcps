@@ -48,6 +48,10 @@ const CURATED_FILES = {
   contacts: 'src/servers/gcontacts.ts',
   classroom: 'src/servers/gclassroom.ts',
   analytics: 'src/servers/ganalytics.ts',
+  firebase: 'src/servers/gfirebase.ts',
+  ai: 'src/servers/gai.ts',
+  maps: 'src/servers/gmaps.ts',
+  play: 'src/servers/gplay.ts',
 };
 
 const ID_PATTERN = /^[a-z]+$/;
@@ -164,6 +168,38 @@ function toolsetsOf(value, id) {
   return Object.keys(out).length > 0 ? out : undefined;
 }
 
+/**
+ * A product's "scopeOverrides" (ServerSpec.scopeOverrides in src/core/registry.ts), checked and copied as is: per
+ * generated API of the product, the scopes a method of that API asks for when its Discovery document lists none (Google's
+ * Business Profile documents list no scope). A method that lists scopes keeps its own.
+ */
+function scopeOverridesOf(value, id, apiNames) {
+  if (value === undefined) return undefined;
+  const where = `product ${id} scopeOverrides`;
+  if (typeof value !== 'object' || value === null || Array.isArray(value) || Object.keys(value).length === 0) fail(`${where} must be a non-empty object`);
+  for (const [api, scopes] of Object.entries(value)) {
+    if (!apiNames.has(api)) fail(`${where}: "${api}" is not a generated API of the product (${[...apiNames].join(', ')})`);
+    if (!Array.isArray(scopes) || scopes.length === 0 || !scopes.every((s) => typeof s === 'string' && s.startsWith('https://'))) {
+      fail(`${where}["${api}"] must be a non-empty list of scope URLs`);
+    }
+  }
+  return value;
+}
+
+/**
+ * A product's "serviceAccountScopes": required for a product of the service-account group, and only there. "methods"
+ * (every scope the product's methods declare) or a non-empty list of scope URLs.
+ */
+function serviceAccountScopesOf(p, id) {
+  const value = p.serviceAccountScopes;
+  if (p.group !== 'service-account') {
+    if (value !== undefined) fail(`product ${id}: serviceAccountScopes is only for the service-account group`);
+    return;
+  }
+  const ok = value === 'methods' || (Array.isArray(value) && value.length > 0 && value.every((s) => typeof s === 'string' && s.startsWith('https://')));
+  if (!ok) fail(`product ${id}: serviceAccountScopes must be "methods" or a non-empty list of scope URLs`);
+}
+
 function kindOf(curated, apis) {
   if (curated && apis.length) return 'curated+discovery';
   if (curated) return 'curated';
@@ -214,9 +250,15 @@ function main() {
     // Only a product with a scope policy gets the key, so the entries of the others stay as they were.
     const policy = scopePolicyOf(p.scopePolicy, id, new Set([...apis, ...gatewayApis].map((a) => a.api)));
     if (policy) server.scopePolicy = policy;
+    // Only a product with scope overrides gets the key, so the entries of the others stay as they were.
+    const overrides = scopeOverridesOf(p.scopeOverrides, id, new Set(apis.map((a) => a.api)));
+    if (overrides) server.scopeOverrides = overrides;
     // Only a product that lists a toolset gets the key, so the entries of the others stay as they were.
     const toolsets = toolsetsOf(p.toolsets, id);
     if (toolsets) server.toolsets = toolsets;
+    // The service-account key's scopes for this product (scripts/gen-service-account-scopes.mjs reads them). Checked
+    // here, not copied: the key's list is compiled into src/core/service-account-scopes.ts.
+    serviceAccountScopesOf(p, id);
     server.label = `${p.title}: ${p.description}`;
     servers.push(server);
   }

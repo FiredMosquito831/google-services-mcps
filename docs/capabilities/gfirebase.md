@@ -4,25 +4,75 @@ Firebase management, App Check, App Distribution, Crashlytics, Hosting, Data Con
 
 - Plugin: `gfirebase`, MCP server: `gfirebase`, login: Desktop OAuth client, then `login developer`
 - Install: `claude plugin install gfirebase@google-services-mcps`
-- Tools: 310 total. Curated 9, per-method 297, gateway 3. Read 138, write 127, destructive 44, dynamic 1.
+- Tools: 315 total. Curated 14, per-method 297, gateway 3. Read 143, write 127, destructive 44, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 310, google 310 (all), curated 12 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 315, google 47, curated 17 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
 
-## Curated tools (9)
+## Toolset google (38)
+
+The tools that match Google's official MCP server for this product (https://github.com/firebase/firebase-tools/tree/e432e8bb47dc9c2a3960fc610fb40492bf84c1ae/src/mcp).
+
+| Tool | Google's tool | Note |
+|---|---|---|
+| `firebase_projects_list` | `firebase_list_projects` |  |
+| `firebase_projects_get` | `firebase_get_project` |  |
+| `firebase_projects_search_apps` | `firebase_list_apps` | Every app of a project (iOS, Android and web) in one list; Google's tool filters by platform. |
+| `firebase_projec_web_app_get_con` | `firebase_get_sdk_config` | The web app's SDK configuration; Google's one tool takes the platform, here there is one tool per platform. |
+| `firebase_projec_android_get_con` | `firebase_get_sdk_config` |  |
+| `firebase_projec_ios_app_get_con` | `firebase_get_sdk_config` |  |
+| `firebase_projects_add_firebase` | `firebase_create_project` |  |
+| `firebase_project_web_app_create` | `firebase_create_app` |  |
+| `firebase_project_android_create` | `firebase_create_app` |  |
+| `firebase_project_ios_app_create` | `firebase_create_app` |  |
+| `firebase_proje_andro_sha_create` | `firebase_create_android_sha` |  |
+| `firebaseru_project_release_list` | `firebase_get_security_rules` | The rules releases of a project; with firebaseru_project_rulesets_get it gives the rules source, as Google's tool does. Realtime Database rules are not covered (no API here). |
+| `firebaseru_project_rulesets_get` | `firebase_get_security_rules` |  |
+| `firebaseru_projects_test` | `firebase_validate_security_rules` | Checks a rules source. Google marks it read-only; the classifier counts this POST as a write, so it asks first. Changing that kind is a separate change (D2). |
+| `firebaseap_proj_loca_backe_list` | `apphosting_list_backends` |  |
+| `firebaseap_proj_locat_backe_get` | `apphosting_fetch_logs` | The backend and its state. Google's tool also reads its build and run logs, which are Cloud Logging: use the gcloud server's logging_entries_list. |
+| `firebasecr_proje_apps_issue_get` | `crashlytics_get_issue` |  |
+| `firebasecr_proj_apps_issu_patch` | `crashlytics_update_issue` |  |
+| `firebasecr_proj_apps_event_list` | `crashlytics_list_events` |  |
+| `firebasecr_proj_apps_even_batch` | `crashlytics_batch_get_events` |  |
+| `firebasecr_proje_apps_repor_get` | `crashlytics_get_report` |  |
+| `firebasecr_pro_app_iss_not_list` | `crashlytics_list_notes` |  |
+| `firebasecr_pro_app_iss_not_crea` | `crashlytics_create_note` |  |
+| `firebasecr_pro_app_iss_not_dele` | `crashlytics_delete_note` |  |
+| `firebaseda_project_locatio_list` | `dataconnect_list_locations` |  |
+| `firebaseda_proj_loca_servi_list` | `dataconnect_list_services` |  |
+| `firebaseda_pro_loc_ser_sch_list` | `dataconnect_list_services` | The schemas of a Data Connect service; Google's list_services returns them with the services. |
+| `firebaseda_pro_loc_ser_con_list` | `dataconnect_list_services` | The connectors of a Data Connect service; Google's list_services returns them with the services. |
+| `firebaseda_pro_loc_ser_exe_1fce` | `dataconnect_execute_graphql` | Runs any GraphQL operation, mutations too. A write, so it asks first. |
+| `firebaseda_pro_loc_ser_exe_3072` | `dataconnect_execute_graphql_read` | Runs a GraphQL query. Google marks it read-only; the classifier counts this POST as a write, so it asks first. Changing that kind is a separate change (D2). |
+| `firebaseda_pro_loc_ser_gen_8f53` | `dataconnect_generate_query` | Writes a GraphQL query from a prompt. Google marks it read-only; the classifier counts this POST as a write, so it asks first (D2). |
+| `firebaseda_pro_loc_ser_gen_cf40` | `dataconnect_generate_schema` | Writes a Data Connect schema from a prompt. Google marks it read-only; the classifier counts this POST as a write, so it asks first (D2). |
+| `fcm_projects_messages_send` | `messaging_send_message` | Sends a push message to a device or topic. Destructive here (it cannot be taken back), so it asks twice. |
+| `firestore_get_document` | `firestore_get_document` | Firestore is a gcloud API in this suite; this curated tool reads one document here. Fields come back as plain JSON. |
+| `firestore_list_documents` | `firestore_list_documents` |  |
+| `firestore_query_collection` | `firestore_query_collection` | Firestore runQuery: field conditions joined with AND, an order and a limit; values as plain JSON. A read, as Google marks it. |
+| `remoteconfig_get_template` | `remoteconfig_get_template` | Remote Config is in no API list here; this curated tool reads the active template or a given version. |
+| `auth_get_users` | `auth_get_users` | Identity Toolkit v1 accounts.lookup (by uid, email or phone) or accounts.query (a page). Password hashes and salts are left out. |
+
+## Curated tools (14)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
 | `account_remove` | write | Remove a signed-in account | (none) |
 | `account_set_default` | write | Set the default account | (none) |
 | `accounts_list` | read | Signed-in accounts | (none) |
+| `auth_get_users` | read | Get Firebase Authentication users | cloud-platform |
 | `auth_login` | write | Sign in to Google | (none) |
 | `auth_setup_admin` | write | Set up the workspace admin account | (none) |
 | `auth_setup_client` | write | Save the Google OAuth client | (none) |
 | `auth_setup_service_account` | write | Set up the service account key | (none) |
 | `auth_status` | read | Sign-in status | (none) |
+| `firestore_get_document` | read | Get a Firestore document | cloud-platform, datastore |
+| `firestore_list_documents` | read | List Firestore documents | cloud-platform, datastore |
+| `firestore_query_collection` | read | Query a Firestore collection | cloud-platform, datastore |
 | `health` | read | Server health | (none) |
+| `remoteconfig_get_template` | read | Get the Remote Config template | cloud-platform |
 
 ## Per-method tools (297)
 

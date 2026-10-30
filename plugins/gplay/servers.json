@@ -11,8 +11,8 @@
       "name": "gplay",
       "plugin": "gplay",
       "group": "service-account",
-      "kind": "discovery",
-      "curated": null,
+      "kind": "curated+discovery",
+      "curated": "src/servers/gplay.ts",
       "apis": [
         {
           "api": "androidpublisher",
@@ -92,6 +92,29 @@
           "api": "playdeveloperreporting",
           "version": "v1alpha1"
         }
+      ],
+      "toolsets": {
+        "google": [
+          "androidmgmt_list_enterprises",
+          "androidmgmt_get_enterprise",
+          "androidmgmt_get_application",
+          "androidmgmt_list_devices",
+          "androidmgmt_get_device",
+          "androidmgmt_list_policies",
+          "androidmgmt_get_policy",
+          "androidmgmt_list_web_apps",
+          "androidmgmt_get_web_app",
+          "androidpub_reviews_list",
+          "androidpub_reviews_reply",
+          "androidpub_applica_tracks_releases_list",
+          "androidpub_edits_tracks_list",
+          "androidpub_purchases_subscriptionsv_get",
+          "androidpub_monetizatio_subscriptio_list",
+          "androidpub_orders_get"
+        ]
+      },
+      "scopes": [
+        "https://www.googleapis.com/auth/androidmanagement"
       ],
       "label": "Google Play: Google Play developer publishing and reporting, Play Games Services, Android Enterprise and Management, Play Integrity and device APIs."
     }

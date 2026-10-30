@@ -63,6 +63,10 @@ export function registryFromProducts(raw: unknown, dataRoot: string): Registry {
       apis: generated,
       // The product's scope rules (checked by scripts/gen-servers.mjs). Only a product that has them gets the key.
       ...(typeof policy === 'object' && policy !== null && !Array.isArray(policy) ? { scopePolicy: policy as ScopePolicy } : {}),
+      // The product's scopes for methods whose Discovery document lists none (checked by scripts/gen-servers.mjs).
+      ...(typeof value.scopeOverrides === 'object' && value.scopeOverrides !== null && !Array.isArray(value.scopeOverrides)
+        ? { scopeOverrides: value.scopeOverrides as Record<string, string[]> }
+        : {}),
       // The product's listed toolsets, as tool names (scripts/gen-servers.mjs writes the same into config/servers.json).
       ...toolsetsField(value.toolsets),
       label,

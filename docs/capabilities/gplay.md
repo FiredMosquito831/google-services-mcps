@@ -4,19 +4,51 @@ Google Play developer publishing and reporting, Play Games Services, Android Ent
 
 - Plugin: `gplay`, MCP server: `gplay`, login: Service account key, then `setup-service-account` (no login)
 - Install: `claude plugin install gplay@google-services-mcps`
-- Tools: 362 total. Curated 9, per-method 349, gateway 3. Read 153, write 166, destructive 42, dynamic 1.
+- Tools: 371 total. Curated 18, per-method 349, gateway 3. Read 162, write 166, destructive 42, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 362, google 362 (all), curated 12 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 371, google 25, curated 21 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
 
-## Curated tools (9)
+## Toolset google (16)
+
+The tools that match Google's official MCP server for this product (https://androidmanagement.googleapis.com/mcp).
+
+| Tool | Google's tool | Note |
+|---|---|---|
+| `androidmgmt_list_enterprises` | `list_enterprises` | Android Management API, called directly (a gateway API here); the service-account key asks for its scope since 1.23.1. The service account must belong to the project that manages the enterprises. |
+| `androidmgmt_get_enterprise` | `get_enterprise` |  |
+| `androidmgmt_get_application` | `get_application` |  |
+| `androidmgmt_list_devices` | `list_devices` |  |
+| `androidmgmt_get_device` | `get_device` |  |
+| `androidmgmt_list_policies` | `list_policies` |  |
+| `androidmgmt_get_policy` | `get_policy` |  |
+| `androidmgmt_list_web_apps` | `list_web_apps` |  |
+| `androidmgmt_get_web_app` | `get_web_app` |  |
+| `androidpub_reviews_list` | (none) | No official Google MCP server covers Play publishing; kept for the app's recent user reviews (Play Developer API reviews.list). |
+| `androidpub_reviews_reply` | (none) | Replies to a user review; the reply is public. A write: it asks first. |
+| `androidpub_applica_tracks_releases_list` | (none) | The releases of a track (production, beta, ...) without opening an edit (applications.tracks.releases.list). |
+| `androidpub_edits_tracks_list` | (none) | The tracks of an edit; it needs an edit id, which androidpub_edits_insert (a write) opens. |
+| `androidpub_purchases_subscriptionsv_get` | (none) | One subscription purchase by its token (purchases.subscriptionsv2.get). |
+| `androidpub_monetizatio_subscriptio_list` | (none) | The app's subscription products (monetization.subscriptions.list). |
+| `androidpub_orders_get` | (none) | One order by its id (orders.get). |
+
+## Curated tools (18)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
 | `account_remove` | write | Remove a signed-in account | (none) |
 | `account_set_default` | write | Set the default account | (none) |
 | `accounts_list` | read | Signed-in accounts | (none) |
+| `androidmgmt_get_application` | read | Get an app for an enterprise | androidmanagement |
+| `androidmgmt_get_device` | read | Get a device of an enterprise | androidmanagement |
+| `androidmgmt_get_enterprise` | read | Get an Android Management enterprise | androidmanagement |
+| `androidmgmt_get_policy` | read | Get a policy of an enterprise | androidmanagement |
+| `androidmgmt_get_web_app` | read | Get a web app of an enterprise | androidmanagement |
+| `androidmgmt_list_devices` | read | List the devices of an enterprise | androidmanagement |
+| `androidmgmt_list_enterprises` | read | List Android Management enterprises | androidmanagement |
+| `androidmgmt_list_policies` | read | List the policies of an enterprise | androidmanagement |
+| `androidmgmt_list_web_apps` | read | List the web apps of an enterprise | androidmanagement |
 | `auth_login` | write | Sign in to Google | (none) |
 | `auth_setup_admin` | write | Set up the workspace admin account | (none) |
 | `auth_setup_client` | write | Save the Google OAuth client | (none) |

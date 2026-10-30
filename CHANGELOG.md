@@ -2,6 +2,93 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.24.1 - 2026-10-30
+
+### Fixed: gbusiness tools ask for business.manage
+- Google's Business Profile Discovery documents list no OAuth scope, so no gbusiness tool declared one: the tools registered before any login, and no `login business` profile asked for `business.manage`, Google's documented scope for these APIs. A call worked only when the login held that scope for another reason.
+- `config/products.json` now declares it as data: `scopeOverrides` gives, per generated API of a product, the scopes a method asks for when its Discovery document lists none. gbusiness declares `business.manage` for its seven APIs. A method that lists its own scopes keeps them; no other product has overrides, so no other tool changes.
+- So every gbusiness tool (51 generated ones) declares `business.manage`: a `readwrite` (or `full`) business login asks for it, gbusiness registers its tools only once the login holds it, and before that it lists only `health`, the sign-in tools and `api_methods`. `business.manage` has no read-only form, so a `readonly` login covers no gbusiness tool, as with Google Ads.
+- A terminal `login business --profile readwrite` without `--servers` covers every server of the group, so it now asks for `business.manage` too; the chat sign-in of another business plugin asks only for its own server's scopes.
+
+### Not changed
+- The tools any server lists with a login that holds the scopes, every other product's tools, scopes and requirements, the write gate and the hook. The tool maps change only in gbusiness (the scopes of its 51 generated tools); the business plugins' servers.json carry `business.manage` in the group's scope list.
+
+## 1.24.0 - 2026-10-30
+
+### New: Android Management tools that match Google's Android Device Management MCP server, and a google toolset for gplay
+Each description names the Google tool it matches. All nine are reads, with the service account key.
+- `androidmgmt_list_enterprises` (`list_enterprises`), `androidmgmt_get_enterprise` (`get_enterprise`), `androidmgmt_get_application` (`get_application`), `androidmgmt_list_devices` (`list_devices`), `androidmgmt_get_device` (`get_device`), `androidmgmt_list_policies` (`list_policies`), `androidmgmt_get_policy` (`get_policy`), `androidmgmt_list_web_apps` (`list_web_apps`) and `androidmgmt_get_web_app` (`get_web_app`). The Android Management API is a gateway API of gplay (its per-method tools would pass the 350 generated tools of a server), so these call it directly. The key asks for its scope since 1.23.1; Google answers only for an enterprise the key's project manages.
+- The `google` toolset of gplay: these nine and a small Play publishing set chosen here (Google has no official MCP server for Play publishing): reviews list and reply (a write), a track's releases, an edit's tracks, a subscription purchase, the subscription products and an order. 16 tools. Every product now has a `google` list.
+
+### Not changed
+- The tools every other plugin lists, their schemas, the tool maps outside gplay, the service account key's scopes, the write gate and the hook.
+- Not tested against the live Android Management API (Google's HTTP layer stubbed; the requests are checked against Google's Discovery document).
+
+## 1.23.1 - 2026-10-30
+
+### Fixed: the service account key asks for the scopes of every API gplay carries
+- The service-account key (gplay, gmerchant) asked only for `androidpublisher` and `content`, while gplay carries 17 APIs. With a key set up, gplay registered 189 of its tools; Android Enterprise, Play Games Services and Games Management, Play Developer Reporting, Play Integrity, the Chrome Web Store and Smart Device Management registered none, and the gateway's Android Management, Home Graph and Wallet calls had no scope.
+- The key now asks for every scope gplay's methods declare (`androidenterprise`, `androidmanagement`, `androidpublisher`, `chromewebstore`, `chromewebstore.readonly`, `drive.appdata`, `games`, `homegraph`, `playdeveloperreporting`, `playintegrity`, `sdm.service`, `wallet_object.issuer`) and `content` for Merchant Center: 13 scopes. With a key set up, gplay lists 356 tools (167 more). gmerchant is unchanged (Manufacturer Center is not added).
+- The list is derived, not written by hand: each product of the group declares `serviceAccountScopes` in `config/products.json` (`"methods"` for gplay, `["…/auth/content"]` for gmerchant), and `scripts/gen-service-account-scopes.mjs` writes `src/core/service-account-scopes.ts`, which `src/core/auth.ts` reads. A test runs the generator's check.
+- A scope only lets the key ask. Android Management, Android Enterprise, the Chrome Web Store, Google Wallet, Home Graph and Smart Device Management each accept the service account only once it is set up on their side; docs/SETUP.md says how. docs/products/gplay.md now describes the service-account setup (it described an OAuth login).
+
+### Not changed
+- The tools every plugin lists without a service-account setup, the tool maps, the login scopes of every OAuth group, the write gate and the hook.
+- Not tested against Google with a real key.
+
+## 1.23.0 - 2026-10-30
+
+### New: google toolsets for gsearch and gadmin
+- gsearch (8): `developerk_documents_search_documen`, `developerk_documents_batch_get` and `developerk_v1_answer_query`, which match Google's Developer Knowledge MCP server (`search_documents`, `get_documents`, `answer_query`), and a small set chosen here for the APIs no official server covers: PageSpeed Insights, the Chrome UX Report record query, Knowledge Graph search, Fact Check claims search and Web Risk URL search. The answer tool keeps today's write kind (it asks first), though Google marks it read-only; reviewing that kind is a separate change.
+- gadmin (10): Google has no official MCP server for Workspace administration, so a small set chosen here: users list and get, groups list, group members, org units, domains, audit activity, alerts, and two writes (`admin_user_set_suspended`, `admin_group_member_add`). No delete. `readonly`: the read-only Directory scopes and `admin.reports.audit.readonly`; `readwrite`: the Directory write scopes, the audit scope and `apps.alerts`.
+- Data only: no tool is added or changed.
+
+### Not changed
+- The tools every plugin lists with `all`, their schemas, the tool maps, scopes of the `all` toolset (every server's requirements are byte-identical), the write gate and the hook.
+
+## 1.22.0 - 2026-10-30
+
+### New: route and weather tools that match Google's Maps Grounding Lite MCP server
+Each description names the Google tool it matches. Both are reads, and both use the gmaps API key (`setup-apikey`).
+- `maps_compute_routes` (`compute_routes`): a route between an origin and a destination (an address, a latitude and longitude, or a place id), with up to 25 stops, for driving, cycling, walking, two-wheelers or transit, with a traffic preference, a departure or arrival time, alternatives and the polyline on request. Routes API v2 computeRoutes. Google requires a response field mask; the tool always sends one: a short summary by default, or the fields named in `field_mask` (no wildcard).
+- `maps_lookup_weather` (`lookup_weather`): the current conditions, an hourly forecast (up to 240 hours) or a daily forecast (up to 10 days) at a latitude and longitude. Weather API v1.
+- The key goes in the `X-Goog-Api-Key` header, never in a URL, and is removed from every answer and error. The API key client sends it that way only when a request asks for it (`keyInHeader`); every other gmaps and gsearch call sends it as before.
+- The `google` toolset of gmaps: these two, `places_places_search_text` (Google's `search_places`) and `places_places_get` (place details). Google's `resolve_names` and `resolve_maps_urls` have no public API, so they have no tool here.
+- docs/products/gmaps.md now describes the API key setup (gmaps is in the API key group); it described an OAuth login before.
+
+### Not changed
+- The tools every other plugin lists, their schemas, the tool maps outside gmaps, scopes of the `all` toolset (gmaps' resolve the same), the write gate and the hook.
+- Not tested against the live Routes and Weather APIs (fetch stubbed; the Weather request is checked against Google's public Discovery document, the Routes request against a contract written from Google's REST reference, because the Routes Discovery document needs an API key).
+
+## 1.21.0 - 2026-10-30
+
+### New: Vertex AI tools that match Google's Agent Platform MCP server
+Each description names the Google tool it matches. All three are reads.
+- `vertex_generate_content` (`generate_content`): a prompt, or a conversation as Vertex `contents`, to a Gemini or other Vertex AI model, with a system instruction, a generation config, safety settings, tools and labels. Returns the text, why it stopped, any function calls, the token usage and the model version; `raw: true` returns Google's whole response.
+- `vertex_count_tokens` (`count_tokens`): the tokens and billable characters of a prompt.
+- `vertex_embed_content` (`embed_content`): an embedding vector for a text (or a multimodal content), with a task type and a dimension count.
+- Each takes the project, the model (an id such as `gemini-2.5-flash`, `publishers/<publisher>/models/<id>`, or `endpoints/<id>`) and the region (`global` by default; another region uses that region's host). They compute and change nothing, so they are declared reads, as Google's server marks them: they do not ask, though Google bills them per token.
+- The `google` toolset of gai: these three and the generated Discovery Engine search, answer and engine list tools, which match Google's Agent Search tools (6 tools). Google's other 53 Agent Platform tools have no tool here; full Agent Platform parity is out of scope. A `readonly` login with it asks for `cloud-platform.read-only`; a `readwrite` login for `cloud-platform`. The Discovery Engine answer tool keeps today's write kind (it asks first), though Google marks it read-only; reviewing that kind is a separate change.
+
+### Not changed
+- Scopes of the `all` toolset (gai's resolve the same; its login requirements grow by the three tools), the gateway, the write gate and the hook. Every other plugin lists the same tools with the same schemas.
+- Not tested against the live Vertex AI API (Google's HTTP layer stubbed; the request shapes are checked against Google's Discovery document, regional hosts included).
+
+## 1.20.0 - 2026-10-30
+
+### New: Firebase tools that match Google's Firebase MCP server
+Each description names the Google tool it matches. All five are reads.
+- `firestore_get_document` (`firestore_get_document`), `firestore_list_documents` (`firestore_list_documents`) and `firestore_query_collection` (`firestore_query_collection`): read a document by its path, list a collection a page at a time, or find documents by field conditions joined with AND, with an order and a limit. Fields come back as plain JSON (integers as numbers, or as strings when too large to be exact); `raw_values: true` gives Firestore's typed values. Firestore is a gcloud API in this suite, so gfirebase calls it directly.
+- `remoteconfig_get_template` (`remoteconfig_get_template`): the active Remote Config template or a given version. Remote Config is in no API list here.
+- `auth_get_users` (`auth_get_users`): Firebase Authentication users by uid, email or phone number (Identity Toolkit accounts.lookup), or a page of users (accounts.query). Password hashes and salts are left out of the answer.
+- The `google` toolset of gfirebase: these five and the generated tools that match Google's other Firebase tools that call an API (projects, apps, SDK configs, project and app creation, Android SHA certificates, security rules, App Hosting backends, Crashlytics, Data Connect, Cloud Messaging), 38 tools. Google's tools that drive the local Firebase CLI (init, deploy, the emulators) are not copied. A `readonly` login with it asks for `firebase.readonly`; a `readwrite` login for `cloud-platform`.
+- The rules test and the Data Connect GraphQL read, query generation and schema generation stay writes (they ask first), though Google marks them read-only; reviewing those kinds is a separate change.
+
+### Not changed
+- Scopes of the `all` toolset (gfirebase's resolve the same; its login requirements grow by the five tools), the gateway, the write gate and the hook. Every other plugin lists the same tools with the same schemas.
+- Tests that need a product without a google list strip gfirebase's list from a copy (a copy of the built plugin, or its server entry) instead of using a real product.
+- Not tested against the live Firebase APIs (Google's HTTP layer stubbed; the request shapes are checked against Google's Discovery documents).
+
 ## 1.19.0 - 2026-10-30
 
 ### New: lean google toolsets for Tag Manager, YouTube and Business Profile

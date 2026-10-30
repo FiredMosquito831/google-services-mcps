@@ -1,0 +1,225 @@
+{
+ "_source": "Trimmed from Google's Discovery document identitytoolkit v1, revision 20260924: only the methods the curated tools call (identitytoolkit.projects.accounts.lookup, identitytoolkit.projects.accounts.query) and the schemas their request bodies reach. For tests/curated-contract.test.mjs; identitytoolkit v1 is a gateway API of gfirebase (no per-method tools), so data/discovery has no snapshot of it.",
+ "name": "identitytoolkit",
+ "version": "v1",
+ "title": "Identity Toolkit API",
+ "rootUrl": "https://identitytoolkit.googleapis.com/",
+ "servicePath": "",
+ "baseUrl": "https://identitytoolkit.googleapis.com/",
+ "schemas": {
+  "GoogleCloudIdentitytoolkitV1QueryUserInfoRequest": {
+   "id": "GoogleCloudIdentitytoolkitV1QueryUserInfoRequest",
+   "type": "object",
+   "description": "Request message for QueryUserInfo.",
+   "properties": {
+    "tenantId": {
+     "description": "The ID of the tenant to which the result is scoped.",
+     "type": "string"
+    },
+    "sortBy": {
+     "type": "string",
+     "enum": [
+      "SORT_BY_FIELD_UNSPECIFIED",
+      "USER_ID",
+      "NAME",
+      "CREATED_AT",
+      "LAST_LOGIN_AT",
+      "USER_EMAIL"
+     ],
+     "enumDescriptions": [
+      "Sort field is not specified.",
+      "Sort result by userId.",
+      "Sort result by name.",
+      "Sort result by createdAt.",
+      "Sort result by lastLoginAt.",
+      "Sort result by userEmail."
+     ]
+    },
+    "expression": {
+     "type": "array",
+     "items": {
+      "$ref": "GoogleCloudIdentitytoolkitV1SqlExpression"
+     }
+    },
+    "offset": {
+     "format": "int64",
+     "description": "The number of accounts to skip from the beginning of matching records. Only valid when `return_user_info` is set to `true`.",
+     "type": "string"
+    },
+    "returnUserInfo": {
+     "type": "boolean",
+     "description": "If `true`, this request will return the accounts matching the query. If `false`, only the __count__ of accounts matching the query will be returned. Defaults to `true`."
+    },
+    "limit": {
+     "description": "The maximum number of accounts to return with an upper limit of __500__. Defaults to _500_. Only valid when `return_user_info` is set to `true`.",
+     "format": "int64",
+     "type": "string"
+    },
+    "order": {
+     "type": "string",
+     "enum": [
+      "ORDER_UNSPECIFIED",
+      "ASC",
+      "DESC"
+     ],
+     "enumDescriptions": [
+      "Order is not specified.",
+      "Sort on ascending order.",
+      "Sort on descending order."
+     ]
+    }
+   }
+  },
+  "GoogleCloudIdentitytoolkitV1GetAccountInfoRequest": {
+   "description": "Request message for GetAccountInfo.",
+   "type": "object",
+   "id": "GoogleCloudIdentitytoolkitV1GetAccountInfoRequest",
+   "properties": {
+    "targetProjectId": {
+     "description": "The ID of the Google Cloud project that the account or the Identity Platform tenant specified by `tenant_id` belongs to. Should only be specified by authenticated requests bearing a Google OAuth 2.0 credential with proper [permissions](https://cloud.google.com/identity-platform/docs/access-control).",
+     "type": "string"
+    },
+    "delegatedProjectNumber": {
+     "deprecated": true,
+     "format": "int64",
+     "type": "string"
+    },
+    "federatedUserId": {
+     "type": "array",
+     "items": {
+      "$ref": "GoogleCloudIdentitytoolkitV1FederatedUserIdentifier"
+     }
+    },
+    "localId": {
+     "description": "The ID of one or more accounts to fetch. Should only be specified by authenticated requests bearing a Google OAuth 2.0 credential with proper [permissions](https://cloud.google.com/identity-platform/docs/access-control).",
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "email": {
+     "description": "The email address of one or more accounts to fetch. The length of email should be less than 256 characters and in the format of `name@domain.tld`. The email should also match the [RFC 822](https://tools.ietf.org/html/rfc822) addr-spec production. Should only be specified by authenticated requests from a developer.",
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "initialEmail": {
+     "type": "array",
+     "description": "The initial email of one or more accounts to fetch. The length of email should be less than 256 characters and in the format of `name@domain.tld`. The email should also match the [RFC 822](https://tools.ietf.org/html/rfc822) addr-spec production. Should only be specified by authenticated requests from a developer.",
+     "items": {
+      "type": "string"
+     }
+    },
+    "idToken": {
+     "description": "The Identity Platform ID token of the account to fetch. Require to be specified for requests from end users.",
+     "type": "string"
+    },
+    "phoneNumber": {
+     "items": {
+      "type": "string"
+     },
+     "description": "The phone number of one or more accounts to fetch. Should only be specified by authenticated requests from a developer and should be in E.164 format, for example, +15555555555.",
+     "type": "array"
+    },
+    "tenantId": {
+     "type": "string",
+     "description": "The ID of the tenant that the account belongs to. Should only be specified by authenticated requests from a developer."
+    }
+   }
+  },
+  "GoogleCloudIdentitytoolkitV1SqlExpression": {
+   "properties": {
+    "userId": {
+     "description": "A string that the account's local ID should match. Only one of `email`, `phone_number`, or `user_id` should be specified in a SqlExpression If more than one is specified, only the first (in that order) will be applied.",
+     "type": "string"
+    },
+    "phoneNumber": {
+     "description": "A string that the account's phone number should match. Only one of `email`, `phone_number`, or `user_id` should be specified in a SqlExpression. If more than one is specified, only the first (in that order) will be applied.",
+     "type": "string"
+    },
+    "email": {
+     "description": "A case insensitive string that the account's email should match. Only one of `email`, `phone_number`, or `user_id` should be specified in a SqlExpression. If more than one is specified, only the first (in that order) will be applied.",
+     "type": "string"
+    }
+   },
+   "description": "Query conditions used to filter results.",
+   "type": "object",
+   "id": "GoogleCloudIdentitytoolkitV1SqlExpression"
+  },
+  "GoogleCloudIdentitytoolkitV1FederatedUserIdentifier": {
+   "properties": {
+    "providerId": {
+     "type": "string",
+     "description": "The ID of supported identity providers. This should be a provider ID enabled for sign-in, which is either from the list of [default supported IdPs](https://cloud.google.com/identity-platform/docs/reference/rest/v2/defaultSupportedIdps/list), or of the format `oidc.*` or `saml.*`. Some examples are `google.com`, `facebook.com`, `oidc.testapp`, and `saml.testapp`."
+    },
+    "rawId": {
+     "type": "string",
+     "description": "The user ID of the account at the third-party Identity Provider specified by `provider_id`."
+    }
+   },
+   "id": "GoogleCloudIdentitytoolkitV1FederatedUserIdentifier",
+   "type": "object",
+   "description": "Federated user identifier at an Identity Provider."
+  }
+ },
+ "resources": {
+  "projects": {
+   "resources": {
+    "accounts": {
+     "methods": {
+      "query": {
+       "id": "identitytoolkit.projects.accounts.query",
+       "path": "v1/projects/{+targetProjectId}/accounts:query",
+       "flatPath": "v1/projects/{projectsId}/accounts:query",
+       "httpMethod": "POST",
+       "description": "Looks up user accounts within a project or a tenant based on conditions in the request.",
+       "parameters": [
+        {
+         "name": "targetProjectId",
+         "location": "path",
+         "type": "string",
+         "required": true,
+         "description": "The ID of the project to which the result is scoped."
+        }
+       ],
+       "parameterOrder": [
+        "targetProjectId"
+       ],
+       "request": "GoogleCloudIdentitytoolkitV1QueryUserInfoRequest",
+       "response": "GoogleCloudIdentitytoolkitV1QueryUserInfoResponse",
+       "scopes": [
+        "https://www.googleapis.com/auth/cloud-platform",
+        "https://www.googleapis.com/auth/firebase"
+       ]
+      },
+      "lookup": {
+       "id": "identitytoolkit.projects.accounts.lookup",
+       "path": "v1/projects/{+targetProjectId}/accounts:lookup",
+       "flatPath": "v1/projects/{projectsId}/accounts:lookup",
+       "httpMethod": "POST",
+       "description": "Gets account information for all matched accounts. For an end user request, retrieves the account of the end user. For an admin request with Google OAuth 2.0 credential, retrieves one or multiple account(s) with matching criteria.",
+       "parameters": [
+        {
+         "name": "targetProjectId",
+         "location": "path",
+         "type": "string",
+         "required": true,
+         "description": "The ID of the Google Cloud project that the account or the Identity Platform tenant specified by `tenant_id` belongs to. Should only be specified by authenticated requests bearing a Google OAuth 2...."
+        }
+       ],
+       "parameterOrder": [
+        "targetProjectId"
+       ],
+       "request": "GoogleCloudIdentitytoolkitV1GetAccountInfoRequest",
+       "response": "GoogleCloudIdentitytoolkitV1GetAccountInfoResponse",
+       "scopes": [
+        "https://www.googleapis.com/auth/cloud-platform"
+       ]
+      }
+     }
+    }
+   }
+  }
+ }
+}

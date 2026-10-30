@@ -42,6 +42,14 @@
     "title": "Search API methods"
   },
   {
+    "name": "mcp__plugin_gfirebase_gfirebase__auth_get_users",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "title": "Get Firebase Authentication users"
+  },
+  {
     "name": "mcp__plugin_gfirebase_gfirebase__auth_login",
     "kind": "write",
     "scopes": [],
@@ -2381,6 +2389,33 @@
     "title": "firebasestorage.projects.getDefaultBucket"
   },
   {
+    "name": "mcp__plugin_gfirebase_gfirebase__firestore_get_document",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/datastore"
+    ],
+    "title": "Get a Firestore document"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firestore_list_documents",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/datastore"
+    ],
+    "title": "List Firestore documents"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firestore_query_collection",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/datastore"
+    ],
+    "title": "Query a Firestore collection"
+  },
+  {
     "name": "mcp__plugin_gfirebase_gfirebase__health",
     "kind": "read",
     "scopes": [],
@@ -2567,6 +2602,14 @@
     ],
     "methodId": "identitytoolkit.relyingparty.verifyPhoneNumber",
     "title": "identitytoolkit.relyingparty.verifyPhoneNumber"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__remoteconfig_get_template",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "title": "Get the Remote Config template"
   },
   {
     "name": "mcp__plugin_gfirebase_gfirebase__testing_application_get_apk_det",

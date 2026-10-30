@@ -1,13 +1,13 @@
 ---
 name: gai
-description: Generative and classic AI APIs: Discovery Engine, Vertex AI, Dialogflow, Vision, Speech, Translate, Document AI and agent services. Served by the gai MCP server with 363 tools. Use for requests about these Google APIs.
+description: Generative and classic AI APIs: Discovery Engine, Vertex AI, Dialogflow, Vision, Speech, Translate, Document AI and agent services. Served by the gai MCP server with 366 tools. Use for requests about these Google APIs.
 ---
 
 # AI and ML
 
 Generative and classic AI APIs: Discovery Engine, Vertex AI, Dialogflow, Vision, Speech, Translate, Document AI and agent services.
 
-The `gai` MCP server exposes 363 tools. Per-method tools cover the Discovery APIs listed below. Gateway APIs are reached through three generic tools: api_search finds a method, api_describe shows its parameters, and api_call runs it.
+The `gai` MCP server exposes 366 tools. Per-method tools cover the Discovery APIs listed below. Gateway APIs are reached through three generic tools: api_search finds a method, api_describe shows its parameters, and api_call runs it.
 
 ## Log in
 

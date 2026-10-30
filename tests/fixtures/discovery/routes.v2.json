@@ -1,0 +1,81 @@
+{
+ "_source": "Hand-written from Google's Routes API REST reference, not from a Discovery document: https://routes.googleapis.com/$discovery/rest?version=v2 answers 403 to a caller without an API key, and the suite makes no keyed call to build a fixture. Method: https://developers.google.com/maps/documentation/routes/reference/rest/v2/TopLevel/computeRoutes (request body fields and the X-Goog-FieldMask rule); Waypoint: https://developers.google.com/maps/documentation/routes/reference/rest/v2/Waypoint. The enums from the RouteTravelMode, RoutingPreference and Units pages of the same reference. All read on 2026-10-30. Only the method the curated tool calls and the schemas of its request body; Location and LatLng as the reference names them (Location: latLng, heading; google.type.LatLng: latitude, longitude). Schemas the tool never sends (RouteModifiers, TransitPreferences) are named but not described, so the contract test checks no field inside them. The method id is written here as routes.computeRoutes (the reference calls it v2.computeRoutes). For tests/curated-contract.test.mjs.",
+ "name": "routes",
+ "version": "v2",
+ "title": "Routes API",
+ "rootUrl": "https://routes.googleapis.com/",
+ "servicePath": "",
+ "baseUrl": "https://routes.googleapis.com/",
+ "schemas": {
+  "ComputeRoutesRequest": {
+   "id": "ComputeRoutesRequest",
+   "type": "object",
+   "properties": {
+    "origin": { "$ref": "Waypoint" },
+    "destination": { "$ref": "Waypoint" },
+    "intermediates": { "type": "array", "items": { "$ref": "Waypoint" } },
+    "travelMode": { "type": "string", "enum": ["TRAVEL_MODE_UNSPECIFIED", "DRIVE", "BICYCLE", "WALK", "TWO_WHEELER", "TRUCK", "TRANSIT"] },
+    "routingPreference": { "type": "string", "enum": ["ROUTING_PREFERENCE_UNSPECIFIED", "TRAFFIC_UNAWARE", "TRAFFIC_AWARE", "TRAFFIC_AWARE_OPTIMAL"] },
+    "polylineQuality": { "type": "string", "enum": ["POLYLINE_QUALITY_UNSPECIFIED", "HIGH_QUALITY", "OVERVIEW"] },
+    "polylineEncoding": { "type": "string", "enum": ["POLYLINE_ENCODING_UNSPECIFIED", "ENCODED_POLYLINE", "GEO_JSON_LINESTRING"] },
+    "departureTime": { "type": "string", "format": "google-datetime" },
+    "arrivalTime": { "type": "string", "format": "google-datetime" },
+    "computeAlternativeRoutes": { "type": "boolean" },
+    "routeModifiers": { "$ref": "RouteModifiers" },
+    "languageCode": { "type": "string" },
+    "regionCode": { "type": "string" },
+    "units": { "type": "string", "enum": ["UNITS_UNSPECIFIED", "METRIC", "IMPERIAL"] },
+    "optimizeWaypointOrder": { "type": "boolean" },
+    "requestedReferenceRoutes": { "type": "array", "items": { "type": "string" } },
+    "extraComputations": { "type": "array", "items": { "type": "string" } },
+    "trafficModel": { "type": "string" },
+    "transitPreferences": { "$ref": "TransitPreferences" }
+   }
+  },
+  "Waypoint": {
+   "id": "Waypoint",
+   "type": "object",
+   "properties": {
+    "via": { "type": "boolean" },
+    "vehicleStopover": { "type": "boolean" },
+    "sideOfRoad": { "type": "boolean" },
+    "location": { "$ref": "Location" },
+    "placeId": { "type": "string" },
+    "address": { "type": "string" },
+    "navigationPointToken": { "type": "string" }
+   }
+  },
+  "Location": {
+   "id": "Location",
+   "type": "object",
+   "properties": {
+    "latLng": { "$ref": "LatLng" },
+    "heading": { "type": "integer" }
+   }
+  },
+  "LatLng": {
+   "id": "LatLng",
+   "type": "object",
+   "properties": {
+    "latitude": { "type": "number", "format": "double" },
+    "longitude": { "type": "number", "format": "double" }
+   }
+  }
+ },
+ "resources": {
+  "v2": {
+   "methods": {
+    "computeRoutes": {
+     "id": "routes.computeRoutes",
+     "path": "directions/v2:computeRoutes",
+     "flatPath": "directions/v2:computeRoutes",
+     "httpMethod": "POST",
+     "description": "Returns the primary route along with optional alternate routes, given a set of terminal and intermediate waypoints. Requires a response field mask (X-Goog-FieldMask header, or the $fields / fields URL parameter).",
+     "parameters": [],
+     "request": "ComputeRoutesRequest",
+     "response": "ComputeRoutesResponse"
+    }
+   }
+  }
+ }
+}

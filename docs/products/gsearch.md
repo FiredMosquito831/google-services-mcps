@@ -39,6 +39,8 @@ There is no scopes profile, because a key is not an OAuth token. The write and d
 
 The full list is in `docs/capabilities/gsearch.md`.
 
+With the plugin option `toolset: google`, the server lists the three Developer Knowledge tools that match Google's Developer Knowledge MCP server (https://developerknowledge.googleapis.com/mcp: `search_documents`, `get_documents`, `answer_query`), and a small set chosen here for the APIs no official server covers: PageSpeed Insights, the Chrome UX Report record query, Knowledge Graph search, Fact Check claims search and Web Risk URL search. 8 tools, with `health`. The answer tool asks first (it is a POST the suite counts as a write; Google marks it read-only).
+
 ## Example requests
 
 - "Is https://example-shop.test/login flagged for malware?" Claude runs the Safe Browsing URL search. No prompt.

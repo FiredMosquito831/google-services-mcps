@@ -99,6 +99,18 @@ These two use a service account key, not a login. Google recommends a service ac
 
 Google accepts calls only for accounts that Play Console or Merchant Center lists. `status --check` checks the key with Google, and it does not check that access.
 
+The key asks Google for the scopes of every API the two plugins carry: for gplay, `androidpublisher`, `androidenterprise`, `androidmanagement`, `chromewebstore` and `chromewebstore.readonly`, `drive.appdata` and `games` (Play Games Services), `homegraph`, `playdeveloperreporting`, `playintegrity`, `sdm.service` (Smart Device Management) and `wallet_object.issuer`; for gmerchant, `content`. `node gsm.mjs status` prints the list. A scope only lets the key ask; each product still decides whether this service account may act, and most need it set up there first:
+
+- Play Console, Play Developer Reporting, Play Integrity and Play Games Services: the service account added in Play Console with the rights you need (Play Integrity and Games use the Cloud project linked to the app).
+- Android Management: the service account must belong to the Google Cloud project that manages the enterprise (the project that created it).
+- Android Enterprise (Google Play EMM API): the service account of an approved EMM project.
+- Chrome Web Store: the service account added as a publisher of the items.
+- Google Wallet: the service account added as a user of the issuer account in the Wallet console.
+- Home Graph: the service account of the smart home Action's Cloud project.
+- Smart Device Management: a Device Access project; Google may refuse a service account here, because it serves the devices of a signed-in user.
+
+Until a product accepts the account, its calls end in an HTTP 403 from Google; the tools still register. Before 1.23.1 the key asked only for `androidpublisher` and `content`, so most gplay tools did not register.
+
 If `GOOGLE_APPLICATION_CREDENTIALS` points to a service account key, these servers use that key, with no setup step.
 
 ## Google Maps (gmaps)

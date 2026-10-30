@@ -18,7 +18,7 @@ const { runScopes } = await import(DIST('cli/scopes.js'));
 const { parseCliArgs, parseToolset, parseSetupAdminArgs } = await import(DIST('cli/args.js'));
 const { loadConfig } = await import(DIST('core/config.js'));
 const { loadRegistry } = await import(DIST('core/registry.js'));
-const { resolveScopes, requirementsFor } = await import(DIST('core/scopes.js'));
+const { resolveScopes, requirementsFor, requirementsForSpecs } = await import(DIST('core/scopes.js'));
 const { GATEWAY_TOOL_NAMES } = await import(DIST('core/toolset.js'));
 const { gatewayTools } = await import(DIST('core/gateway.js'));
 const { createSignIn } = await import(DIST('core/inchat-login.js'));
@@ -158,10 +158,28 @@ test('requirements: curated keeps the curated tools and, with api_call, the gate
 test('requirements: a toolset a product does not have counts every tool, and says so', async () => {
   const { cfg } = tempTokens();
   const lines = [];
-  // gfirebase has no google list (gyoutube has a lean one since 1.19.0).
-  const google = await requirementsFor(['gfirebase'], cfg, { warn: (l) => lines.push(l), toolset: 'google' });
+  // gfirebase's server entry without its google list (it has one since 1.20.0), as a product without a list is.
+  const { toolsets: _dropped, ...spec } = registry().servers.find((s) => s.name === 'gfirebase');
+  const google = await requirementsForSpecs([spec], cfg, { warn: (l) => lines.push(l), toolset: 'google' });
   assert.deepEqual(google, await requirementsFor(['gfirebase'], cfg, quiet));
   assert.deepEqual(lines, ['[gfirebase] toolset google is not defined for this product yet; every tool counts toward the scopes.']);
+});
+
+test('requirements: the gfirebase google list (38 tools, no gateway) resolves to firebase.readonly and to cloud-platform', async () => {
+  const { cfg } = tempTokens();
+  const google = await requirementsFor(['gfirebase'], cfg, { ...quiet, toolset: 'google' });
+  assert.equal(google.length, 38);
+  assert.equal(google.filter((r) => r.gateway).length, 0, 'no api_call in the list, so no gateway method counts');
+  const readonly = resolveScopes(google, 'readonly');
+  assert.deepEqual(readonly.scopes, [G('firebase.readonly')]);
+  // Firestore, Remote Config, Authentication users, Crashlytics and Data Connect publish no read-only scope, so a
+  // readonly login covers none of them, in the all toolset as well.
+  for (const tool of ['firestore_get_document', 'firestore_query_collection', 'remoteconfig_get_template', 'auth_get_users']) assert.ok(readonly.uncovered.includes(`gfirebase/${tool}`), tool);
+  assert.deepEqual(resolveScopes(google, 'readwrite').scopes, [G('cloud-platform')]);
+  // The all toolset resolves as before 1.20.0: the five curated tools need no scope it does not already ask for.
+  const all = await requirementsFor(['gfirebase'], cfg, quiet);
+  assert.deepEqual(resolveScopes(all, 'readonly').scopes, [G('cloud-platform.read-only'), G('firebase.readonly')]);
+  assert.deepEqual(resolveScopes(all, 'readwrite').scopes, [G('cloud-platform')]);
 });
 
 test('requirements: the lean gtm, gyoutube and gbusiness lists resolve to the narrow scopes of their tools', async () => {
@@ -187,9 +205,11 @@ test('requirements: the lean gtm, gyoutube and gbusiness lists resolve to the na
   assert.deepEqual(yt.readwrite, YT_READWRITE);
   const gb = await resolved('gbusiness');
   assert.equal(gb.n, 8);
-  // Google's Business Profile Discovery documents list no scope, so neither do these tools (as in the all toolset).
+  // Google's Business Profile Discovery documents list no scope; the product declares business.manage for them (scopeOverrides,
+  // 1.24.1). It has no read-only form, so a readonly login covers none of the eight (as in the all toolset).
   assert.deepEqual(gb.readonly.scopes, []);
-  assert.deepEqual(gb.readwrite, []);
+  assert.equal(gb.readonly.uncovered.length, 8);
+  assert.deepEqual(gb.readwrite, [G('business.manage')]);
 });
 
 test('requirements: the lean gsc google list resolves to webmasters.readonly (readonly) and webmasters with indexing (readwrite)', async () => {
@@ -315,6 +335,39 @@ test('requirements: the ganalytics google list resolves to analytics.readonly, a
   assert.deepEqual(resolveScopes(all, 'readwrite').scopes, [G('analytics'), G('analytics.edit'), G('analytics.manage.users')]);
 });
 
+test('requirements: the gai google list (6 tools, no gateway) resolves to cloud-platform.read-only and to cloud-platform', async () => {
+  const { cfg } = tempTokens();
+  const google = await requirementsFor(['gai'], cfg, { ...quiet, toolset: 'google' });
+  assert.equal(google.length, 6);
+  assert.equal(google.filter((r) => r.gateway).length, 0, 'no api_call in the list, so no gateway method counts');
+  const readonly = resolveScopes(google, 'readonly');
+  assert.deepEqual(readonly.scopes, [G('cloud-platform.read-only')]);
+  // Discovery lists cloud-platform.read-only for generateContent and embedContent, but not for countTokens or Agent Search.
+  assert.deepEqual(readonly.uncovered.sort(), [
+    'gai/discoverye_pro_loc_coll_engi_serv_sear_a054',
+    'gai/discoverye_proj_loca_coll_engin_servi_answe',
+    'gai/discoverye_projec_locati_collec_engine_list',
+    'gai/vertex_count_tokens',
+  ]);
+  assert.deepEqual(resolveScopes(google, 'readwrite').scopes, [G('cloud-platform')]);
+  // The all toolset resolves as before 1.21.0.
+  const all = await requirementsFor(['gai'], cfg, quiet);
+  assert.deepEqual(resolveScopes(all, 'readonly').scopes, [G('cloud-platform.read-only')]);
+  assert.deepEqual(resolveScopes(all, 'readwrite').scopes, [G('cloud-platform'), G('devstorage.read_only')]);
+});
+
+test('requirements: the lean gadmin google list resolves to the read-only Directory and audit scopes, and adds the write scopes and alerts for readwrite', async () => {
+  const { cfg } = tempTokens();
+  const google = await requirementsFor(['gadmin'], cfg, { ...quiet, toolset: 'google' });
+  assert.equal(google.length, 10);
+  assert.equal(google.filter((r) => r.gateway).length, 0);
+  const readonly = resolveScopes(google, 'readonly');
+  assert.deepEqual(readonly.scopes, ['domain', 'group', 'orgunit', 'user'].map((s) => G(`admin.directory.${s}.readonly`)).concat(G('admin.reports.audit.readonly')));
+  // The alert center lists only apps.alerts, which has no read-only form; the two writes need the write scopes.
+  assert.deepEqual(readonly.uncovered.sort(), ['gadmin/admin_group_member_add', 'gadmin/admin_user_set_suspended', 'gadmin/alerts_alerts_list']);
+  assert.deepEqual(resolveScopes(google, 'readwrite').scopes, ['domain', 'group', 'orgunit', 'user'].map((s) => G(`admin.directory.${s}`)).concat(G('admin.reports.audit.readonly'), G('apps.alerts')));
+});
+
 test('requirements: the gmerchant google list (13 generated tools, no gateway) needs content, which has no read-only form', async () => {
   const { cfg } = tempTokens();
   const google = await requirementsFor(['gmerchant'], cfg, { ...quiet, toolset: 'google' });
@@ -322,7 +375,7 @@ test('requirements: the gmerchant google list (13 generated tools, no gateway) n
   assert.equal(google.filter((r) => r.gateway).length, 0);
   assert.deepEqual(resolveScopes(google, 'readonly').scopes, []);
   assert.deepEqual(resolveScopes(google, 'readwrite').scopes, [G('content')]);
-  // The service-account key's scopes are fixed (androidpublisher and content), so these figures size nothing at sign-in.
+  // The service-account key's scopes are fixed (src/core/service-account-scopes.ts), so these figures size nothing at sign-in.
 });
 
 test('--toolset: parsed for login, scopes and setup-admin; an unknown value is a usage error', () => {

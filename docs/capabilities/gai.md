@@ -4,13 +4,26 @@ Generative and classic AI APIs: Discovery Engine, Vertex AI, Dialogflow, Vision,
 
 - Plugin: `gai`, MCP server: `gai`, login: Desktop OAuth client, then `login cloud`
 - Install: `claude plugin install gai@google-services-mcps`
-- Tools: 363 total. Curated 9, per-method 350, gateway 3. Read 156, write 149, destructive 57, dynamic 1.
+- Tools: 366 total. Curated 12, per-method 350, gateway 3. Read 159, write 149, destructive 57, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 363, google 363 (all), curated 12 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 366, google 15, curated 15 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
 
-## Curated tools (9)
+## Toolset google (6)
+
+The tools that match Google's official MCP server for this product (https://docs.cloud.google.com/gemini-enterprise-agent-platform/reference/use-agent-platform-mcp, https://docs.cloud.google.com/gemini-enterprise-agent-platform/reference/mcp/tools_list/generate_content, https://docs.cloud.google.com/generative-ai-app-builder/docs/reference/mcp/tools_list/search).
+
+| Tool | Google's tool | Note |
+|---|---|---|
+| `vertex_generate_content` | `generate_content` | The Vertex basics of Google's Agent Platform MCP server (its generate toolset). Google's other 53 Agent Platform tools (Colab Enterprise, notebook executions, endpoints, models, tuning, RAG, evaluation, prompts, predict and raw_predict) have no tool here and are not in this list; api_call reaches their methods in the all and curated toolsets. |
+| `vertex_count_tokens` | `count_tokens` | countTokens on the model, or on an endpoint. Discovery lists only cloud-platform for it. |
+| `vertex_embed_content` | `embed_content` | embedContent on a publisher embedding model, such as gemini-embedding-001. |
+| `discoverye_pro_loc_coll_engi_serv_sear_a054` | `search` | Agent Search (Vertex AI Search) on an engine's serving config: Discovery Engine v1 servingConfigs.search. |
+| `discoverye_proj_loca_coll_engin_servi_answe` | `conversational_search` | Discovery Engine v1 servingConfigs.answer. Google marks it read-only; the classifier counts this POST as a write, so it asks first. Changing that kind is a separate change (D2). |
+| `discoverye_projec_locati_collec_engine_list` | `list_engines` | The engines (search and chat apps) of a collection. |
+
+## Curated tools (12)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
@@ -23,6 +36,9 @@ Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 363, google 363 (all)
 | `auth_setup_service_account` | write | Set up the service account key | (none) |
 | `auth_status` | read | Sign-in status | (none) |
 | `health` | read | Server health | (none) |
+| `vertex_count_tokens` | read | Count the tokens of a Vertex AI prompt | cloud-platform |
+| `vertex_embed_content` | read | Embed text with a Vertex AI model | aiplatform, cloud-platform |
+| `vertex_generate_content` | read | Generate content with a Vertex AI model | aiplatform, cloud-platform |
 
 ## Per-method tools (350)
 
