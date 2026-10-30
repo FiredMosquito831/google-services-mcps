@@ -2,6 +2,20 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.22.0 - 2026-10-30
+
+### New: route and weather tools that match Google's Maps Grounding Lite MCP server
+Each description names the Google tool it matches. Both are reads, and both use the gmaps API key (`setup-apikey`).
+- `maps_compute_routes` (`compute_routes`): a route between an origin and a destination (an address, a latitude and longitude, or a place id), with up to 25 stops, for driving, cycling, walking, two-wheelers or transit, with a traffic preference, a departure or arrival time, alternatives and the polyline on request. Routes API v2 computeRoutes. Google requires a response field mask; the tool always sends one: a short summary by default, or the fields named in `field_mask` (no wildcard).
+- `maps_lookup_weather` (`lookup_weather`): the current conditions, an hourly forecast (up to 240 hours) or a daily forecast (up to 10 days) at a latitude and longitude. Weather API v1.
+- The key goes in the `X-Goog-Api-Key` header, never in a URL, and is removed from every answer and error. The API key client sends it that way only when a request asks for it (`keyInHeader`); every other gmaps and gsearch call sends it as before.
+- The `google` toolset of gmaps: these two, `places_places_search_text` (Google's `search_places`) and `places_places_get` (place details). Google's `resolve_names` and `resolve_maps_urls` have no public API, so they have no tool here.
+- docs/products/gmaps.md now describes the API key setup (gmaps is in the API key group); it described an OAuth login before.
+
+### Not changed
+- The tools every other plugin lists, their schemas, the tool maps outside gmaps, scopes of the `all` toolset (gmaps' resolve the same), the write gate and the hook.
+- Not tested against the live Routes and Weather APIs (fetch stubbed; the Weather request is checked against Google's public Discovery document, the Routes request against a contract written from Google's REST reference, because the Routes Discovery document needs an API key).
+
 ## 1.21.0 - 2026-10-30
 
 ### New: Vertex AI tools that match Google's Agent Platform MCP server

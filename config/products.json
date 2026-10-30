@@ -3529,7 +3529,7 @@
       "group": "apikey",
       "server": {
         "name": "gmaps",
-        "curated": null
+        "curated": "maps"
       },
       "generated": [
         {
@@ -3566,6 +3566,39 @@
         }
       ],
       "gateway": [],
+      "toolsets": {
+        "google": {
+          "source": [
+            "https://developers.google.com/maps/ai/maps-experience-agent-tools/reference/mcp/search_places",
+            "https://developers.google.com/maps/ai/maps-experience-agent-tools/reference/mcp/compute_routes",
+            "https://developers.google.com/maps/ai/maps-experience-agent-tools/reference/mcp/lookup_weather"
+          ],
+          "tools": [
+            "places_places_search_text",
+            "places_places_get",
+            "maps_compute_routes",
+            "maps_lookup_weather"
+          ],
+          "matches": {
+            "places_places_search_text": [
+              "search_places"
+            ],
+            "places_places_get": [],
+            "maps_compute_routes": [
+              "compute_routes"
+            ],
+            "maps_lookup_weather": [
+              "lookup_weather"
+            ]
+          },
+          "notes": {
+            "places_places_search_text": "Places API (New) searchText: places by a text query, with an optional location bias. Google's search_places also returns a summary written by its server; this returns Places data.",
+            "places_places_get": "One place's details by its id (Places API places.get), the extended details Google's search_places adds on request. Google's resolve_names and resolve_maps_urls call a REST surface only Google's own server reaches (no public API), so they have no tool here.",
+            "maps_compute_routes": "Routes API computeRoutes with a response field mask (a short summary by default). Routes API is not in Google's Discovery directory; called directly with the API key.",
+            "maps_lookup_weather": "Weather API current conditions, hourly forecast or daily forecast, by latitude and longitude. Not in Google's Discovery directory; called directly with the API key."
+          }
+        }
+      },
       "generatedToolCount": 35
     },
     "gai": {

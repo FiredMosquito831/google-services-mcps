@@ -50,6 +50,7 @@ const CURATED_FILES = {
   analytics: 'src/servers/ganalytics.ts',
   firebase: 'src/servers/gfirebase.ts',
   ai: 'src/servers/gai.ts',
+  maps: 'src/servers/gmaps.ts',
 };
 
 const ID_PATTERN = /^[a-z]+$/;

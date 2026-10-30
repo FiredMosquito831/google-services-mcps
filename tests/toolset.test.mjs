@@ -247,6 +247,8 @@ const AI_GOOGLE = [
   'discoverye_proj_loca_coll_engin_servi_answe',
   'discoverye_projec_locati_collec_engine_list',
 ];
+/** The gmaps list (1.22.0): Google's Maps Grounding Lite tools that have a public API, and place details. */
+const MAPS_GOOGLE = ['places_places_search_text', 'places_places_get', 'maps_compute_routes', 'maps_lookup_weather'];
 /** The tools runServer adds for a server of an OAuth group. No toolset removes them. */
 const RUNTIME_OAUTH = ['account_remove', 'account_set_default', 'accounts_list', 'auth_login', 'auth_setup_client', 'auth_status', 'health'];
 
@@ -538,6 +540,7 @@ test('both registry loaders carry the toolsets: the CLI conversion of config/pro
   for (const [id, tools] of Object.entries(BUSINESS_LEAN)) assert.deepEqual(reg.servers.find((s) => s.name === id).toolsets, { google: tools }, id);
   assert.deepEqual(reg.servers.find((s) => s.name === 'gfirebase').toolsets, { google: FIREBASE_GOOGLE });
   assert.deepEqual(reg.servers.find((s) => s.name === 'gai').toolsets, { google: AI_GOOGLE });
+  assert.deepEqual(reg.servers.find((s) => s.name === 'gmaps').toolsets, { google: MAPS_GOOGLE });
   // A product without toolsets gets no key (the same products.json, gfirebase's toolsets left out).
   const products = readJson('config', 'products.json');
   const { toolsets: _dropped, ...bare } = products.products.gfirebase;
@@ -871,6 +874,22 @@ test('runServer: google on gai lists its 6 tools and the runtime tools, with the
   for (const t of google.tools) assert.deepEqual(t, unset.find((u) => u.name === t.name), t.name);
   for (const name of ['vertex_generate_content', 'vertex_count_tokens', 'vertex_embed_content']) assert.equal(google.tools.find((t) => t.name === name).annotations.readOnlyHint, true, name);
   assert.deepEqual(google.health.toolset, { requested: 'google', effective: 'google', outsideToolset: unset.length - google.tools.length });
+});
+
+test('runServer: google on gmaps (API key) lists its 4 tools and health, with the same schemas as all', async () => {
+  const dir = tempDir('gsm-toolset-gmaps-');
+  const entry = curatedEntry(dir, 'gmaps', 'gmaps');
+  const tokenDir = join(dir, 'tokens');
+  mkdirSync(tokenDir, { recursive: true });
+  // A fake key (never sent: tools/list and health only).
+  const env = (extra = {}) => childEnv(dir, tokenDir, { GSM_API_KEY: 'fake-key-for-tools-list', ...extra });
+  const unset = await withClient(entry, env(), listTools);
+  const google = await withClient(entry, env({ GSM_TOOLSET: 'google' }), async (c) => ({ tools: await listTools(c), health: await health(c) }));
+  assert.deepEqual(google.tools.map((t) => t.name), [...MAPS_GOOGLE, 'health'].sort());
+  for (const t of google.tools) assert.deepEqual(t, unset.find((u) => u.name === t.name), t.name);
+  for (const name of MAPS_GOOGLE) assert.equal(google.tools.find((t) => t.name === name).annotations.readOnlyHint, true, name);
+  assert.deepEqual(google.health.toolset, { requested: 'google', effective: 'google', outsideToolset: unset.length - google.tools.length });
+  assert.equal(JSON.stringify(google.health).includes('fake-key-for-tools-list'), false, 'health never shows the key');
 });
 
 /** A server of generated tools only, as scripts/bundle.mjs writes its entry. */

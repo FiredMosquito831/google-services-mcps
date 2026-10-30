@@ -11,8 +11,8 @@
       "name": "gmaps",
       "plugin": "gmaps",
       "group": "apikey",
-      "kind": "discovery",
-      "curated": null,
+      "kind": "curated+discovery",
+      "curated": "src/servers/gmaps.ts",
       "apis": [
         {
           "api": "places",
@@ -46,6 +46,17 @@
           "api": "travelimpactmodel",
           "version": "v1"
         }
+      ],
+      "toolsets": {
+        "google": [
+          "places_places_search_text",
+          "places_places_get",
+          "maps_compute_routes",
+          "maps_lookup_weather"
+        ]
+      },
+      "scopes": [
+        "https://www.googleapis.com/auth/cloud-platform"
       ],
       "label": "Maps and Location: Maps Platform and location APIs: Places, Address Validation, Solar, Air Quality, Pollen, Street View Publish and related datasets."
     }

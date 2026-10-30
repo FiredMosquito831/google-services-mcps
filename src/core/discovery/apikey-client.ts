@@ -1,6 +1,7 @@
 /**
  * Client for the apikey group: products that take a Google API key instead of an
- * OAuth login. The key goes in the key query parameter of every request. Nothing
+ * OAuth login. The key goes in the key query parameter of every request, or in the X-Goog-Api-Key header when the
+ * request asks for that (keyInHeader, used by the curated Maps tools). Nothing
  * is logged. The key never appears in an error or in a returned value: every
  * string that leaves this module has the key replaced with [redacted].
  */
@@ -24,6 +25,11 @@ export interface ApiKeyRequestOptions {
   params?: Record<string, unknown>;
   data?: unknown;
   headers?: Record<string, string>;
+  /**
+   * true sends the key in the X-Goog-Api-Key header instead of the key query parameter, so it is in no URL (the Routes
+   * and Weather APIs document the header). Unset: the key query parameter, as before.
+   */
+  keyInHeader?: boolean;
 }
 
 export interface ApiKeyResponse {
@@ -43,14 +49,18 @@ function redactKeyIn(value: unknown, key: string): unknown {
   return value;
 }
 
-/** The request URL with the query parameters and the key. The key is set last, so no caller value can replace it. */
-function withQuery(url: string, params: Record<string, unknown> | undefined, key: string): string {
+/**
+ * The request URL with the query parameters and, unless it goes in a header, the key. The key is set last, so no caller
+ * value can replace it. With the key in a header, a key parameter a caller gave is removed, so the URL holds none.
+ */
+function withQuery(url: string, params: Record<string, unknown> | undefined, key: string | undefined): string {
   const target = new URL(url);
   for (const [name, value] of Object.entries(params ?? {})) {
     if (value === undefined || value === null) continue;
     for (const item of Array.isArray(value) ? value : [value]) target.searchParams.append(name, String(item));
   }
-  target.searchParams.set('key', key);
+  if (key === undefined) target.searchParams.delete('key');
+  else target.searchParams.set('key', key);
   return target.toString();
 }
 
@@ -87,8 +97,13 @@ export class ApiKeyClient {
       body = JSON.stringify(options.data);
       if (!Object.keys(headers).some((name) => name.toLowerCase() === 'content-type')) headers['content-type'] = 'application/json';
     }
+    if (options.keyInHeader) {
+      // Set last, under the one spelling, so no caller header can replace it.
+      for (const name of Object.keys(headers)) if (name.toLowerCase() === 'x-goog-api-key') delete headers[name];
+      headers['X-Goog-Api-Key'] = key;
+    }
 
-    const url = withQuery(options.url, options.params, key);
+    const url = withQuery(options.url, options.params, options.keyInHeader ? undefined : key);
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
     let res: Response;

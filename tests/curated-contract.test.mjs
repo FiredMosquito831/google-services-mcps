@@ -40,6 +40,8 @@ const cfg = loadConfig({
   GSM_ALLOW_WRITES: 'true',
   GSM_SERVICE_ACCOUNT_KEY_FILE: keyFile,
   GSM_ADMIN_SUBJECT: 'admin@example.com',
+  // A fake key for the apikey group (gmaps). Never sent anywhere: fetch is stubbed below.
+  GSM_API_KEY: 'test-api-key',
 });
 
 // ---------------------------------------------------------------------------
@@ -73,6 +75,17 @@ async function fakeRequest(opts) {
 }
 OAuth2Client.prototype.request = fakeRequest;
 if (Object.prototype.hasOwnProperty.call(JWT.prototype, 'request')) JWT.prototype.request = fakeRequest;
+
+// The apikey group's client (gmaps) sends with fetch; its test seam records the same shape.
+const { setFetchForTests } = await import(DIST('core/discovery/apikey-client.js'));
+setFetchForTests(async (input, init = {}) => {
+  const url = new URL(String(input));
+  const body = typeof init.body === 'string' ? JSON.parse(init.body) : undefined;
+  const call = { method: String(init.method ?? 'GET').toUpperCase(), url: `${url.origin}${url.pathname}`, query: Object.fromEntries(url.searchParams), body, multipart: false };
+  calls.push(call);
+  return new Response(JSON.stringify(await respond(call)), { status: 200, headers: { 'content-type': 'application/json' } });
+});
+after(() => setFetchForTests(undefined));
 
 /**
  * A response that most handlers can read: one item in each list (so list-then-get tools make their get calls), done
@@ -151,6 +164,9 @@ const FIXTURE_DOCS = [
   'firebaseremoteconfig.v1',
   'identitytoolkit.v1',
   'aiplatform.v1',
+  'weather.v1',
+  // Hand-written from Google's REST reference: the Routes API's Discovery document needs an API key (see its _source).
+  'routes.v2',
 ];
 
 /**
@@ -282,7 +298,7 @@ function problemsOf(call) {
 // ---------------------------------------------------------------------------
 // The servers and their tools.
 
-const SERVERS = ['gmail', 'gcalendar', 'gdrive', 'searchconsole', 'cloud', 'gads', 'workspace-admin', 'gchat', 'gcontacts', 'gclassroom', 'ganalytics', 'gfirebase', 'gai'];
+const SERVERS = ['gmail', 'gcalendar', 'gdrive', 'searchconsole', 'cloud', 'gads', 'workspace-admin', 'gchat', 'gcontacts', 'gclassroom', 'ganalytics', 'gfirebase', 'gai', 'gmaps'];
 const tools = new Map();
 for (const mod of SERVERS) {
   const { buildTools } = await import(DIST(`servers/${mod}.js`));
@@ -907,6 +923,32 @@ const CASES = {
       expect: ['aiplatform.projects.locations.publishers.models.embedContent'],
     },
   ],
+
+  // gmaps (1.22.0), with the API key
+  maps_compute_routes: [
+    {
+      args: {
+        origin: 'Brandenburger Tor, Berlin',
+        destination: { latitude: 52.5251, longitude: 13.3694 },
+        intermediates: [{ place_id: 'ChIJ2V-Mo_l1nkcRfZixfUq4DAE' }],
+        travel_mode: 'DRIVE',
+        routing_preference: 'TRAFFIC_AWARE',
+        departure_time: '2026-11-02T08:00:00+01:00',
+        compute_alternative_routes: false,
+        include_polyline: true,
+        language_code: 'de-DE',
+        region_code: 'de',
+        units: 'METRIC',
+      },
+      expect: ['routes.computeRoutes'],
+    },
+    { args: { origin: 'A', destination: 'B', intermediates: ['C'], pass_through_intermediates: true, travel_mode: 'TRANSIT', arrival_time: '2026-11-02T09:00:00Z', field_mask: ['routes.duration'] }, expect: ['routes.computeRoutes'] },
+  ],
+  maps_lookup_weather: [
+    { args: { latitude: 48.85, longitude: 2.35, units_system: 'IMPERIAL', language_code: 'fr' }, expect: ['weather.currentConditions.lookup'] },
+    { args: { latitude: 48.85, longitude: 2.35, forecast: 'hourly', hours: 12, page_size: 6, page_token: 'p1' }, expect: ['weather.forecast.hours.lookup'] },
+    { args: { latitude: 48.85, longitude: 2.35, forecast: 'daily', days: 3, page_size: 3 }, expect: ['weather.forecast.days.lookup'] },
+  ],
 };
 
 /** Tools that cannot run here, with the reason. Counted. */
@@ -919,7 +961,7 @@ test('every curated tool has a contract row, a skip reason or a known defect, an
   const listed = new Set([...Object.keys(CASES), ...Object.keys(SKIPPED), ...Object.keys(KNOWN_DEFECTS)]);
   assert.deepEqual([...tools.keys()].filter((name) => !listed.has(name)), [], 'curated tools without a row');
   assert.deepEqual([...listed].filter((name) => !tools.has(name)), [], 'rows for tools that do not exist');
-  assert.equal(tools.size, 138, 'the curated tool count; update the table when it changes');
+  assert.equal(tools.size, 140, 'the curated tool count; update the table when it changes');
 });
 
 for (const [name, cases] of Object.entries(CASES)) {

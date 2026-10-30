@@ -1,0 +1,203 @@
+{
+ "_source": "Trimmed from Google's Discovery document weather v1, revision 20261028: only the methods the curated tools call (weather.currentConditions.lookup, weather.forecast.days.lookup, weather.forecast.hours.lookup) and the schemas their request bodies reach. For tests/curated-contract.test.mjs; Weather is in no API list of the suite (gmaps calls it with the API key), so data/discovery has no snapshot of it. Fetched from https://weather.googleapis.com/$discovery/rest?version=v1 on 2026-10-30.",
+ "name": "weather",
+ "version": "v1",
+ "title": "Weather API",
+ "rootUrl": "https://weather.googleapis.com/",
+ "servicePath": "",
+ "baseUrl": "https://weather.googleapis.com/",
+ "schemas": {},
+ "resources": {
+  "currentConditions": {
+   "methods": {
+    "lookup": {
+     "id": "weather.currentConditions.lookup",
+     "path": "v1/currentConditions:lookup",
+     "flatPath": "v1/currentConditions:lookup",
+     "httpMethod": "GET",
+     "description": "Returns the current weather conditions at a given location.",
+     "parameters": [
+      {
+       "name": "unitsSystem",
+       "location": "query",
+       "type": "string",
+       "enum": [
+        "UNITS_SYSTEM_UNSPECIFIED",
+        "IMPERIAL",
+        "METRIC"
+       ],
+       "description": "Optional. The units system to use for the returned weather conditions. If not provided, the returned weather conditions will be in the metric system (default = METRIC)."
+      },
+      {
+       "name": "location.longitude",
+       "location": "query",
+       "type": "number",
+       "format": "double",
+       "description": "The longitude in degrees. It must be in the range [-180.0, +180.0]."
+      },
+      {
+       "name": "location.latitude",
+       "location": "query",
+       "type": "number",
+       "format": "double",
+       "description": "The latitude in degrees. It must be in the range [-90.0, +90.0]."
+      },
+      {
+       "name": "languageCode",
+       "location": "query",
+       "type": "string",
+       "description": "Optional. Allows the client to choose the language for the response. If data cannot be provided for that language, the API uses the closest match. Allowed values rely on the IETF BCP-47 standard. T..."
+      }
+     ],
+     "parameterOrder": [],
+     "response": "LookupCurrentConditionsResponse",
+     "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+     ]
+    }
+   }
+  },
+  "forecast": {
+   "resources": {
+    "days": {
+     "methods": {
+      "lookup": {
+       "id": "weather.forecast.days.lookup",
+       "path": "v1/forecast/days:lookup",
+       "flatPath": "v1/forecast/days:lookup",
+       "httpMethod": "GET",
+       "description": "Returns up to 10 days of daily forecasts at a given location, starting from the current day.",
+       "parameters": [
+        {
+         "name": "days",
+         "location": "query",
+         "type": "integer",
+         "format": "int32",
+         "description": "Optional. Limits the amount of total days to fetch starting from the current day - a value from 1 to 10 (inclusive). The default value is the maximum allowed value of 10."
+        },
+        {
+         "name": "location.latitude",
+         "location": "query",
+         "type": "number",
+         "format": "double",
+         "description": "The latitude in degrees. It must be in the range [-90.0, +90.0]."
+        },
+        {
+         "name": "location.longitude",
+         "location": "query",
+         "type": "number",
+         "format": "double",
+         "description": "The longitude in degrees. It must be in the range [-180.0, +180.0]."
+        },
+        {
+         "name": "unitsSystem",
+         "location": "query",
+         "type": "string",
+         "enum": [
+          "UNITS_SYSTEM_UNSPECIFIED",
+          "IMPERIAL",
+          "METRIC"
+         ],
+         "description": "Optional. The units system to use for the returned weather conditions. If not provided, the returned weather conditions will be in the metric system (default = METRIC)."
+        },
+        {
+         "name": "languageCode",
+         "location": "query",
+         "type": "string",
+         "description": "Optional. Allows the client to choose the language for the response. If data cannot be provided for that language, the API uses the closest match. Allowed values rely on the IETF BCP-47 standard. T..."
+        },
+        {
+         "name": "pageToken",
+         "location": "query",
+         "type": "string",
+         "description": "Optional. A page token received from a previous request. It is used to retrieve the subsequent page."
+        },
+        {
+         "name": "pageSize",
+         "location": "query",
+         "type": "integer",
+         "format": "int32",
+         "description": "Optional. The maximum number of daily forecast records to return per page - a value from 1 to 10 (inclusive). The default value is 5."
+        }
+       ],
+       "parameterOrder": [],
+       "response": "LookupForecastDaysResponse",
+       "scopes": [
+        "https://www.googleapis.com/auth/cloud-platform"
+       ]
+      }
+     }
+    },
+    "hours": {
+     "methods": {
+      "lookup": {
+       "id": "weather.forecast.hours.lookup",
+       "path": "v1/forecast/hours:lookup",
+       "flatPath": "v1/forecast/hours:lookup",
+       "httpMethod": "GET",
+       "description": "Returns up to 240 hours of hourly forecasts at a given location, starting from the current hour. **Note:** For locations in Japan and South Korea, the maximum available hourly forecast horizon is 72 hours (3 days).",
+       "parameters": [
+        {
+         "name": "pageSize",
+         "location": "query",
+         "type": "integer",
+         "format": "int32",
+         "description": "Optional. The maximum number of hourly forecast records to return per page - a value from 1 to 24 (inclusive). The default is the maximum allowed value of 24."
+        },
+        {
+         "name": "location.latitude",
+         "location": "query",
+         "type": "number",
+         "format": "double",
+         "description": "The latitude in degrees. It must be in the range [-90.0, +90.0]."
+        },
+        {
+         "name": "unitsSystem",
+         "location": "query",
+         "type": "string",
+         "enum": [
+          "UNITS_SYSTEM_UNSPECIFIED",
+          "IMPERIAL",
+          "METRIC"
+         ],
+         "description": "Optional. The units system to use for the returned weather conditions. If not provided, the returned weather conditions will be in the metric system (default = METRIC)."
+        },
+        {
+         "name": "languageCode",
+         "location": "query",
+         "type": "string",
+         "description": "Optional. Allows the client to choose the language for the response. If data cannot be provided for that language, the API uses the closest match. Allowed values rely on the IETF BCP-47 standard. T..."
+        },
+        {
+         "name": "location.longitude",
+         "location": "query",
+         "type": "number",
+         "format": "double",
+         "description": "The longitude in degrees. It must be in the range [-180.0, +180.0]."
+        },
+        {
+         "name": "hours",
+         "location": "query",
+         "type": "integer",
+         "format": "int32",
+         "description": "Optional. Limits the amount of total hours to fetch starting from the current hour - a value from 1 to 240 (inclusive). The default is the maximum allowed value of 240."
+        },
+        {
+         "name": "pageToken",
+         "location": "query",
+         "type": "string",
+         "description": "Optional. A page token received from a previous request. It is used to retrieve the subsequent page."
+        }
+       ],
+       "parameterOrder": [],
+       "response": "LookupForecastHoursResponse",
+       "scopes": [
+        "https://www.googleapis.com/auth/cloud-platform"
+       ]
+      }
+     }
+    }
+   }
+  }
+ }
+}
