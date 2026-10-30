@@ -51,6 +51,7 @@ const CURATED_FILES = {
   firebase: 'src/servers/gfirebase.ts',
   ai: 'src/servers/gai.ts',
   maps: 'src/servers/gmaps.ts',
+  play: 'src/servers/gplay.ts',
 };
 
 const ID_PATTERN = /^[a-z]+$/;

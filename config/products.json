@@ -3228,7 +3228,7 @@
       "serviceAccountScopes": "methods",
       "server": {
         "name": "gplay",
-        "curated": null
+        "curated": "play"
       },
       "generated": [
         {
@@ -3310,6 +3310,75 @@
           "version": "v1alpha1"
         }
       ],
+      "toolsets": {
+        "google": {
+          "source": "https://androidmanagement.googleapis.com/mcp",
+          "tools": [
+            "androidmgmt_list_enterprises",
+            "androidmgmt_get_enterprise",
+            "androidmgmt_get_application",
+            "androidmgmt_list_devices",
+            "androidmgmt_get_device",
+            "androidmgmt_list_policies",
+            "androidmgmt_get_policy",
+            "androidmgmt_list_web_apps",
+            "androidmgmt_get_web_app",
+            "androidpub_reviews_list",
+            "androidpub_reviews_reply",
+            "androidpub_applica_tracks_releases_list",
+            "androidpub_edits_tracks_list",
+            "androidpub_purchases_subscriptionsv_get",
+            "androidpub_monetizatio_subscriptio_list",
+            "androidpub_orders_get"
+          ],
+          "matches": {
+            "androidmgmt_list_enterprises": [
+              "list_enterprises"
+            ],
+            "androidmgmt_get_enterprise": [
+              "get_enterprise"
+            ],
+            "androidmgmt_get_application": [
+              "get_application"
+            ],
+            "androidmgmt_list_devices": [
+              "list_devices"
+            ],
+            "androidmgmt_get_device": [
+              "get_device"
+            ],
+            "androidmgmt_list_policies": [
+              "list_policies"
+            ],
+            "androidmgmt_get_policy": [
+              "get_policy"
+            ],
+            "androidmgmt_list_web_apps": [
+              "list_web_apps"
+            ],
+            "androidmgmt_get_web_app": [
+              "get_web_app"
+            ],
+            "androidpub_reviews_list": [],
+            "androidpub_reviews_reply": [],
+            "androidpub_applica_tracks_releases_list": [],
+            "androidpub_edits_tracks_list": [],
+            "androidpub_purchases_subscriptionsv_get": [],
+            "androidpub_monetizatio_subscriptio_list": [],
+            "androidpub_orders_get": []
+          },
+          "notes": {
+            "androidmgmt_list_enterprises": "Android Management API, called directly (a gateway API here); the service-account key asks for its scope since 1.23.1. The service account must belong to the project that manages the enterprises.",
+            "androidpub_reviews_list": "No official Google MCP server covers Play publishing; kept for the app's recent user reviews (Play Developer API reviews.list).",
+            "androidpub_reviews_reply": "Replies to a user review; the reply is public. A write: it asks first.",
+            "androidpub_applica_tracks_releases_list": "The releases of a track (production, beta, ...) without opening an edit (applications.tracks.releases.list).",
+            "androidpub_edits_tracks_list": "The tracks of an edit; it needs an edit id, which androidpub_edits_insert (a write) opens.",
+            "androidpub_purchases_subscriptionsv_get": "One subscription purchase by its token (purchases.subscriptionsv2.get).",
+            "androidpub_monetizatio_subscriptio_list": "The app's subscription products (monetization.subscriptions.list).",
+            "androidpub_orders_get": "One order by its id (orders.get)."
+          }
+        }
+      },
       "generatedToolCount": 349
     },
     "gfirebase": {

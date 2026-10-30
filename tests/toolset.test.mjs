@@ -273,6 +273,25 @@ const ADMIN_GOOGLE = [
   'admin_user_set_suspended',
   'admin_group_member_add',
 ];
+/** The gplay list (1.24.0): Google's 9 Android Device Management MCP tools (curated) and a lean Play publishing set. */
+const PLAY_GOOGLE = [
+  'androidmgmt_list_enterprises',
+  'androidmgmt_get_enterprise',
+  'androidmgmt_get_application',
+  'androidmgmt_list_devices',
+  'androidmgmt_get_device',
+  'androidmgmt_list_policies',
+  'androidmgmt_get_policy',
+  'androidmgmt_list_web_apps',
+  'androidmgmt_get_web_app',
+  'androidpub_reviews_list',
+  'androidpub_reviews_reply',
+  'androidpub_applica_tracks_releases_list',
+  'androidpub_edits_tracks_list',
+  'androidpub_purchases_subscriptionsv_get',
+  'androidpub_monetizatio_subscriptio_list',
+  'androidpub_orders_get',
+];
 /** The tools runServer adds for a server of an OAuth group. No toolset removes them. */
 const RUNTIME_OAUTH = ['account_remove', 'account_set_default', 'accounts_list', 'auth_login', 'auth_setup_client', 'auth_status', 'health'];
 
@@ -567,6 +586,9 @@ test('both registry loaders carry the toolsets: the CLI conversion of config/pro
   assert.deepEqual(reg.servers.find((s) => s.name === 'gmaps').toolsets, { google: MAPS_GOOGLE });
   assert.deepEqual(reg.servers.find((s) => s.name === 'gsearch').toolsets, { google: SEARCH_GOOGLE });
   assert.deepEqual(reg.servers.find((s) => s.name === 'gadmin').toolsets, { google: ADMIN_GOOGLE });
+  assert.deepEqual(reg.servers.find((s) => s.name === 'gplay').toolsets, { google: PLAY_GOOGLE });
+  // Since 1.24.0 every product has a google list.
+  assert.deepEqual(reg.servers.filter((s) => s.toolsets?.google === undefined).map((s) => s.name), []);
   // A product without toolsets gets no key (the same products.json, gfirebase's toolsets left out).
   const products = readJson('config', 'products.json');
   const { toolsets: _dropped, ...bare } = products.products.gfirebase;
@@ -1074,6 +1096,25 @@ test('runServer: google on gsearch (API key) and gadmin lists the list and the r
   for (const t of agoogle.tools) assert.deepEqual(t, aall.find((u) => u.name === t.name), t.name);
   for (const t of agoogle.tools) assert.ok(ADMIN_GOOGLE.includes(t.name) || t.name === 'health' || t.name.startsWith('auth_') || t.name.startsWith('account'), `only runtime tools besides the list: ${t.name}`);
   assert.equal(agoogle.health.toolset.effective, 'google');
+});
+
+test('runServer: google on gplay (service account key) lists its 16 tools and the runtime tools, with the same schemas as all', async () => {
+  const dir = tempDir('gsm-toolset-gplay-');
+  const entry = curatedEntry(dir, 'gplay', 'gplay');
+  const { generateKeyPairSync } = await import('node:crypto');
+  const { privateKey } = generateKeyPairSync('rsa', { modulusLength: 2048, privateKeyEncoding: { type: 'pkcs8', format: 'pem' }, publicKeyEncoding: { type: 'spki', format: 'pem' } });
+  const tokenDir = join(dir, 'tokens');
+  mkdirSync(tokenDir, { recursive: true });
+  const keyFile = join(dir, 'key.json');
+  writeFileSync(keyFile, JSON.stringify({ type: 'service_account', client_email: 'sa@test-project.iam.gserviceaccount.com', private_key: privateKey, private_key_id: 'k1' }));
+  writeFileSync(join(tokenDir, 'service-account.json'), JSON.stringify({ keyFile, clientEmail: 'sa@test-project.iam.gserviceaccount.com', savedAt: '2026-10-30T00:00:00Z' }));
+  const env = (extra = {}) => childEnv(dir, tokenDir, extra);
+  const unset = await withClient(entry, env(), listTools);
+  const google = await withClient(entry, env({ GSM_TOOLSET: 'google' }), async (c) => ({ tools: await listTools(c), health: await health(c) }));
+  assert.deepEqual(google.tools.map((t) => t.name).filter((n) => PLAY_GOOGLE.includes(n)).sort(), [...PLAY_GOOGLE].sort());
+  for (const name of google.tools.map((t) => t.name).filter((n) => !PLAY_GOOGLE.includes(n))) assert.ok(name === 'health' || name.startsWith('auth_'), `only runtime tools besides the list: ${name}`);
+  for (const t of google.tools) assert.deepEqual(t, unset.find((u) => u.name === t.name), t.name);
+  assert.equal(google.health.toolset.effective, 'google');
 });
 
 test('runServer: google on gmeet, gtasks and gapps lists the lean list and the runtime tools, with the same schemas as all', async () => {

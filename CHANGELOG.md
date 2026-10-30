@@ -2,6 +2,17 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.24.0 - 2026-10-30
+
+### New: Android Management tools that match Google's Android Device Management MCP server, and a google toolset for gplay
+Each description names the Google tool it matches. All nine are reads, with the service account key.
+- `androidmgmt_list_enterprises` (`list_enterprises`), `androidmgmt_get_enterprise` (`get_enterprise`), `androidmgmt_get_application` (`get_application`), `androidmgmt_list_devices` (`list_devices`), `androidmgmt_get_device` (`get_device`), `androidmgmt_list_policies` (`list_policies`), `androidmgmt_get_policy` (`get_policy`), `androidmgmt_list_web_apps` (`list_web_apps`) and `androidmgmt_get_web_app` (`get_web_app`). The Android Management API is a gateway API of gplay (its per-method tools would pass the 350 generated tools of a server), so these call it directly. The key asks for its scope since 1.23.1; Google answers only for an enterprise the key's project manages.
+- The `google` toolset of gplay: these nine and a small Play publishing set chosen here (Google has no official MCP server for Play publishing): reviews list and reply (a write), a track's releases, an edit's tracks, a subscription purchase, the subscription products and an order. 16 tools. Every product now has a `google` list.
+
+### Not changed
+- The tools every other plugin lists, their schemas, the tool maps outside gplay, the service account key's scopes, the write gate and the hook.
+- Not tested against the live Android Management API (Google's HTTP layer stubbed; the requests are checked against Google's Discovery document).
+
 ## 1.23.1 - 2026-10-30
 
 ### Fixed: the service account key asks for the scopes of every API gplay carries

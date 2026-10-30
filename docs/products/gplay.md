@@ -31,6 +31,7 @@ The key asks for the scopes of every API gplay carries (since 1.23.1; before, on
 
 | Area | Tools | Safety | What it does |
 |---|---|---|---|
+| Android Management (hand-written) | `androidmgmt_list_enterprises`, `androidmgmt_get_enterprise`, `androidmgmt_get_application`, `androidmgmt_list_devices`, `androidmgmt_get_device`, `androidmgmt_list_policies`, `androidmgmt_get_policy`, `androidmgmt_list_web_apps`, `androidmgmt_get_web_app` | read | Read the enterprises your project manages, their devices, policies, apps and web apps |
 | Tracks and releases (read) | track and release list and get | read | Read tracks, releases and app details |
 | Edits and listings | edits, tracks create, update and patch | write | Stage store changes in an edit and change tracks |
 | | `androidpub_edits_commit` | write | Commit an edit, which publishes it |
@@ -43,7 +44,11 @@ The key asks for the scopes of every API gplay carries (since 1.23.1; before, on
 
 The full list is in `docs/capabilities/gplay.md`.
 
+The nine hand-written tools match the tools of Google's Android Device Management MCP server (https://androidmanagement.googleapis.com/mcp). The Android Management API is a gateway API here (its per-method tools would take gplay past the 350 generated tools a server may have), so these call it directly with the service account key; the account must belong to the Google Cloud project that manages the enterprise. With the plugin option `toolset: google`, the server lists these nine and a small Play publishing set chosen here (Google has no official MCP server for Play publishing): reviews list and reply (the reply is public and asks first), a track's releases, an edit's tracks, a subscription purchase, the subscription products and an order. 16 tools, with `health` and the setup tools.
+
 ## Example requests
+
+- "Which devices of enterprise LC0123abcd are not compliant?" Claude runs `androidmgmt_list_devices`. No prompt.
 
 - "Show the crash rate for my app this month." Claude runs a Reporting read. No prompt.
 - "List my release tracks and the version on each." Claude runs the tracks list. No prompt.

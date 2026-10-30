@@ -33,8 +33,11 @@ for (const group of ['cloud', 'workspace-user', 'searchconsole', 'business', 'de
   writeFileSync(join(tokenDir, `${group}.token.json`), JSON.stringify(token));
 }
 const { privateKey } = generateKeyPairSync('rsa', { modulusLength: 2048, privateKeyEncoding: { type: 'pkcs8', format: 'pem' }, publicKeyEncoding: { type: 'spki', format: 'pem' } });
-const keyFile = join(tokenDir, 'service-account.json');
+// Not named service-account.json: that name is the service-account group's setup record (below).
+const keyFile = join(tokenDir, 'sa-key.json');
 writeFileSync(keyFile, JSON.stringify({ type: 'service_account', client_email: 'sa@test-project.iam.gserviceaccount.com', private_key: privateKey, private_key_id: 'k1' }));
+// The service-account group (gplay) uses the same throwaway key, as `gsm setup-service-account` records it.
+writeFileSync(join(tokenDir, 'service-account.json'), JSON.stringify({ keyFile, clientEmail: 'sa@test-project.iam.gserviceaccount.com', savedAt: '2026-10-30T00:00:00Z' }));
 const cfg = loadConfig({
   GSM_TOKEN_DIR: tokenDir,
   GSM_ALLOW_WRITES: 'true',
@@ -167,6 +170,7 @@ const FIXTURE_DOCS = [
   'weather.v1',
   // Hand-written from Google's REST reference: the Routes API's Discovery document needs an API key (see its _source).
   'routes.v2',
+  'androidmanagement.v1',
 ];
 
 /**
@@ -298,7 +302,7 @@ function problemsOf(call) {
 // ---------------------------------------------------------------------------
 // The servers and their tools.
 
-const SERVERS = ['gmail', 'gcalendar', 'gdrive', 'searchconsole', 'cloud', 'gads', 'workspace-admin', 'gchat', 'gcontacts', 'gclassroom', 'ganalytics', 'gfirebase', 'gai', 'gmaps'];
+const SERVERS = ['gmail', 'gcalendar', 'gdrive', 'searchconsole', 'cloud', 'gads', 'workspace-admin', 'gchat', 'gcontacts', 'gclassroom', 'ganalytics', 'gfirebase', 'gai', 'gmaps', 'gplay'];
 const tools = new Map();
 for (const mod of SERVERS) {
   const { buildTools } = await import(DIST(`servers/${mod}.js`));
@@ -949,6 +953,20 @@ const CASES = {
     { args: { latitude: 48.85, longitude: 2.35, forecast: 'hourly', hours: 12, page_size: 6, page_token: 'p1' }, expect: ['weather.forecast.hours.lookup'] },
     { args: { latitude: 48.85, longitude: 2.35, forecast: 'daily', days: 3, page_size: 3 }, expect: ['weather.forecast.days.lookup'] },
   ],
+
+  // gplay (1.24.0), with the service account key
+  androidmgmt_list_enterprises: [{ args: { project_id: 'my-emm-project', view: 'BASIC', page_size: 10, page_token: 'p1' }, expect: ['androidmanagement.enterprises.list'] }],
+  androidmgmt_get_enterprise: [{ args: { enterprise: 'LC0123abcd' }, expect: ['androidmanagement.enterprises.get'] }],
+  androidmgmt_get_application: [{ args: { enterprise: 'enterprises/LC0123abcd', package_name: 'com.google.android.gm', language_code: 'de' }, expect: ['androidmanagement.enterprises.applications.get'] }],
+  androidmgmt_list_devices: [{ args: { enterprise: 'LC0123abcd', page_size: 5, page_token: 'p1' }, expect: ['androidmanagement.enterprises.devices.list'] }],
+  androidmgmt_get_device: [
+    { args: { enterprise: 'LC0123abcd', device: '3a1b' }, expect: ['androidmanagement.enterprises.devices.get'] },
+    { args: { device: 'enterprises/LC0123abcd/devices/3a1b' }, expect: ['androidmanagement.enterprises.devices.get'] },
+  ],
+  androidmgmt_list_policies: [{ args: { enterprise: 'LC0123abcd', page_size: 5 }, expect: ['androidmanagement.enterprises.policies.list'] }],
+  androidmgmt_get_policy: [{ args: { enterprise: 'LC0123abcd', policy: 'default' }, expect: ['androidmanagement.enterprises.policies.get'] }],
+  androidmgmt_list_web_apps: [{ args: { enterprise: 'LC0123abcd', page_token: 'p1' }, expect: ['androidmanagement.enterprises.webApps.list'] }],
+  androidmgmt_get_web_app: [{ args: { enterprise: 'LC0123abcd', web_app: 'w1' }, expect: ['androidmanagement.enterprises.webApps.get'] }],
 };
 
 /** Tools that cannot run here, with the reason. Counted. */
@@ -961,7 +979,7 @@ test('every curated tool has a contract row, a skip reason or a known defect, an
   const listed = new Set([...Object.keys(CASES), ...Object.keys(SKIPPED), ...Object.keys(KNOWN_DEFECTS)]);
   assert.deepEqual([...tools.keys()].filter((name) => !listed.has(name)), [], 'curated tools without a row');
   assert.deepEqual([...listed].filter((name) => !tools.has(name)), [], 'rows for tools that do not exist');
-  assert.equal(tools.size, 140, 'the curated tool count; update the table when it changes');
+  assert.equal(tools.size, 149, 'the curated tool count; update the table when it changes');
 });
 
 for (const [name, cases] of Object.entries(CASES)) {

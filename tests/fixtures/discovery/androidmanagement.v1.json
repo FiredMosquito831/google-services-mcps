@@ -1,0 +1,306 @@
+{
+ "_source": "Trimmed from Google's Discovery document androidmanagement v1, revision 20261014: only the methods the curated tools call (androidmanagement.enterprises.applications.get, androidmanagement.enterprises.devices.get, androidmanagement.enterprises.devices.list, androidmanagement.enterprises.get, androidmanagement.enterprises.list, androidmanagement.enterprises.policies.get, androidmanagement.enterprises.policies.list, androidmanagement.enterprises.webApps.get, androidmanagement.enterprises.webApps.list) and the schemas their request bodies reach. For tests/curated-contract.test.mjs; androidmanagement v1 is a gateway API of gplay (no per-method tools), so data/discovery has no snapshot of it.",
+ "name": "androidmanagement",
+ "version": "v1",
+ "title": "Android Management API",
+ "rootUrl": "https://androidmanagement.googleapis.com/",
+ "servicePath": "",
+ "baseUrl": "https://androidmanagement.googleapis.com/",
+ "schemas": {},
+ "resources": {
+  "enterprises": {
+   "methods": {
+    "get": {
+     "id": "androidmanagement.enterprises.get",
+     "path": "v1/{+name}",
+     "flatPath": "v1/enterprises/{enterprisesId}",
+     "httpMethod": "GET",
+     "description": "Gets an enterprise.",
+     "parameters": [
+      {
+       "name": "name",
+       "location": "path",
+       "type": "string",
+       "required": true,
+       "description": "The name of the enterprise in the form enterprises/{enterpriseId}."
+      }
+     ],
+     "parameterOrder": [
+      "name"
+     ],
+     "response": "Enterprise",
+     "scopes": [
+      "https://www.googleapis.com/auth/androidmanagement"
+     ]
+    },
+    "list": {
+     "id": "androidmanagement.enterprises.list",
+     "path": "v1/enterprises",
+     "flatPath": "v1/enterprises",
+     "httpMethod": "GET",
+     "description": "Lists EMM-managed enterprises. Only BASIC fields are returned.",
+     "parameters": [
+      {
+       "name": "pageToken",
+       "location": "query",
+       "type": "string",
+       "description": "A token identifying a page of results returned by the server."
+      },
+      {
+       "name": "view",
+       "location": "query",
+       "type": "string",
+       "enum": [
+        "ENTERPRISE_VIEW_UNSPECIFIED",
+        "BASIC"
+       ],
+       "description": "Specifies which Enterprise fields to return. This method only supports BASIC."
+      },
+      {
+       "name": "projectId",
+       "location": "query",
+       "type": "string",
+       "description": "Required. The Cloud project ID of the EMM managing the enterprises."
+      },
+      {
+       "name": "pageSize",
+       "location": "query",
+       "type": "integer",
+       "format": "int32",
+       "description": "The requested page size. The actual page size may be fixed to a min or max value."
+      }
+     ],
+     "parameterOrder": [],
+     "response": "ListEnterprisesResponse",
+     "scopes": [
+      "https://www.googleapis.com/auth/androidmanagement"
+     ]
+    }
+   },
+   "resources": {
+    "webApps": {
+     "methods": {
+      "list": {
+       "id": "androidmanagement.enterprises.webApps.list",
+       "path": "v1/{+parent}/webApps",
+       "flatPath": "v1/enterprises/{enterprisesId}/webApps",
+       "httpMethod": "GET",
+       "description": "Lists web apps for a given enterprise.",
+       "parameters": [
+        {
+         "name": "pageToken",
+         "location": "query",
+         "type": "string",
+         "description": "A token identifying a page of results returned by the server."
+        },
+        {
+         "name": "pageSize",
+         "location": "query",
+         "type": "integer",
+         "format": "int32",
+         "description": "The requested page size. This is a hint and the actual page size in the response may be different."
+        },
+        {
+         "name": "parent",
+         "location": "path",
+         "type": "string",
+         "required": true,
+         "description": "The name of the enterprise in the form enterprises/{enterpriseId}."
+        }
+       ],
+       "parameterOrder": [
+        "parent"
+       ],
+       "response": "ListWebAppsResponse",
+       "scopes": [
+        "https://www.googleapis.com/auth/androidmanagement"
+       ]
+      },
+      "get": {
+       "id": "androidmanagement.enterprises.webApps.get",
+       "path": "v1/{+name}",
+       "flatPath": "v1/enterprises/{enterprisesId}/webApps/{webAppsId}",
+       "httpMethod": "GET",
+       "description": "Gets a web app.",
+       "parameters": [
+        {
+         "name": "name",
+         "location": "path",
+         "type": "string",
+         "required": true,
+         "description": "The name of the web app in the form enterprises/{enterpriseId}/webApps/{packageName}."
+        }
+       ],
+       "parameterOrder": [
+        "name"
+       ],
+       "response": "WebApp",
+       "scopes": [
+        "https://www.googleapis.com/auth/androidmanagement"
+       ]
+      }
+     }
+    },
+    "devices": {
+     "methods": {
+      "get": {
+       "id": "androidmanagement.enterprises.devices.get",
+       "path": "v1/{+name}",
+       "flatPath": "v1/enterprises/{enterprisesId}/devices/{devicesId}",
+       "httpMethod": "GET",
+       "description": "Gets a device. Deleted devices will respond with a 404 error.",
+       "parameters": [
+        {
+         "name": "name",
+         "location": "path",
+         "type": "string",
+         "required": true,
+         "description": "The name of the device in the form enterprises/{enterpriseId}/devices/{deviceId}."
+        }
+       ],
+       "parameterOrder": [
+        "name"
+       ],
+       "response": "Device",
+       "scopes": [
+        "https://www.googleapis.com/auth/androidmanagement"
+       ]
+      },
+      "list": {
+       "id": "androidmanagement.enterprises.devices.list",
+       "path": "v1/{+parent}/devices",
+       "flatPath": "v1/enterprises/{enterprisesId}/devices",
+       "httpMethod": "GET",
+       "description": "Lists devices for a given enterprise. Deleted devices are not returned in the response.",
+       "parameters": [
+        {
+         "name": "pageToken",
+         "location": "query",
+         "type": "string",
+         "description": "A token identifying a page of results returned by the server."
+        },
+        {
+         "name": "parent",
+         "location": "path",
+         "type": "string",
+         "required": true,
+         "description": "The name of the enterprise in the form enterprises/{enterpriseId}."
+        },
+        {
+         "name": "pageSize",
+         "location": "query",
+         "type": "integer",
+         "format": "int32",
+         "description": "The requested page size. If unspecified, at most 10 devices will be returned. The maximum value is 100; values above 100 will be coerced to 100. The limits can change over time."
+        }
+       ],
+       "parameterOrder": [
+        "parent"
+       ],
+       "response": "ListDevicesResponse",
+       "scopes": [
+        "https://www.googleapis.com/auth/androidmanagement"
+       ]
+      }
+     }
+    },
+    "applications": {
+     "methods": {
+      "get": {
+       "id": "androidmanagement.enterprises.applications.get",
+       "path": "v1/{+name}",
+       "flatPath": "v1/enterprises/{enterprisesId}/applications/{applicationsId}",
+       "httpMethod": "GET",
+       "description": "Gets info about an application.",
+       "parameters": [
+        {
+         "name": "name",
+         "location": "path",
+         "type": "string",
+         "required": true,
+         "description": "The name of the application in the form enterprises/{enterpriseId}/applications/{package_name}."
+        },
+        {
+         "name": "languageCode",
+         "location": "query",
+         "type": "string",
+         "description": "The preferred language for localized application info, as a BCP47 tag (e.g. \"en-US\", \"de\"). If not specified the default language of the application will be used."
+        }
+       ],
+       "parameterOrder": [
+        "name"
+       ],
+       "response": "Application",
+       "scopes": [
+        "https://www.googleapis.com/auth/androidmanagement"
+       ]
+      }
+     }
+    },
+    "policies": {
+     "methods": {
+      "list": {
+       "id": "androidmanagement.enterprises.policies.list",
+       "path": "v1/{+parent}/policies",
+       "flatPath": "v1/enterprises/{enterprisesId}/policies",
+       "httpMethod": "GET",
+       "description": "Lists policies for a given enterprise.",
+       "parameters": [
+        {
+         "name": "parent",
+         "location": "path",
+         "type": "string",
+         "required": true,
+         "description": "The name of the enterprise in the form enterprises/{enterpriseId}."
+        },
+        {
+         "name": "pageSize",
+         "location": "query",
+         "type": "integer",
+         "format": "int32",
+         "description": "The requested page size. The actual page size may be fixed to a min or max value."
+        },
+        {
+         "name": "pageToken",
+         "location": "query",
+         "type": "string",
+         "description": "A token identifying a page of results returned by the server."
+        }
+       ],
+       "parameterOrder": [
+        "parent"
+       ],
+       "response": "ListPoliciesResponse",
+       "scopes": [
+        "https://www.googleapis.com/auth/androidmanagement"
+       ]
+      },
+      "get": {
+       "id": "androidmanagement.enterprises.policies.get",
+       "path": "v1/{+name}",
+       "flatPath": "v1/enterprises/{enterprisesId}/policies/{policiesId}",
+       "httpMethod": "GET",
+       "description": "Gets a policy.",
+       "parameters": [
+        {
+         "name": "name",
+         "location": "path",
+         "type": "string",
+         "required": true,
+         "description": "The name of the policy in the form enterprises/{enterpriseId}/policies/{policyId}."
+        }
+       ],
+       "parameterOrder": [
+        "name"
+       ],
+       "response": "Policy",
+       "scopes": [
+        "https://www.googleapis.com/auth/androidmanagement"
+       ]
+      }
+     }
+    }
+   }
+  }
+ }
+}
