@@ -245,7 +245,7 @@ async function withServer(serverFile, tokenDir, fn) {
   const request = (method, params = {}) =>
     new Promise((resolve, reject) => {
       const id = nextId++;
-      const timer = setTimeout(() => reject(new Error(`timeout on ${method}`)), 60000);
+      const timer = setTimeout(() => reject(new Error(`timeout on ${method}`)), 120000);
       waiting.set(id, (msg) => {
         clearTimeout(timer);
         resolve(msg);

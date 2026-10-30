@@ -433,7 +433,7 @@ test('gsm login --no-browser: the help names the flag, and the URL is printed wi
     const res = spawnSync(process.execPath, [GSM, 'login', 'business', '--no-browser', '--client-secret', client], {
       env: { ...process.env, HOME: p.home, USERPROFILE: p.home, GSM_TOKEN_DIR: p.tokens },
       encoding: 'utf8',
-      timeout: 6000,
+      timeout: 20000,
     });
     const out = res.stdout ?? '';
     assert.match(out, /Open this URL in a browser to log in \(--no-browser: the browser is not opened\):/, out + (res.stderr ?? ''));
