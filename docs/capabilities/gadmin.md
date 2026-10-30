@@ -4,7 +4,7 @@ Google Workspace administration: Cloud Identity, Chrome management and policy, G
 
 - Plugin: `gadmin`, MCP server: `gadmin`, login: Service account with domain-wide delegation, then `setup-admin`
 - Install: `claude plugin install gadmin@google-services-mcps`
-- Tools: 375 total. Curated 28, per-method 343, gateway 3. Read 156, write 158, destructive 60, dynamic 1.
+- Tools: 375 total. Curated 28, per-method 343, gateway 3. Read 155, write 159, destructive 60, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
@@ -202,7 +202,7 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `admin_users_watch` | write | directory.users.watch | admin.directory.user, admin.directory.user.readonly |
 | `admin_verification_codes_generate` | write | directory.verificationCodes.generate | admin.directory.user.security |
 | `admin_verification_codes_invalidate` | write | directory.verificationCodes.invalidate | admin.directory.user.security |
-| `admin_verification_codes_list` | read | directory.verificationCodes.list | admin.directory.user.security |
+| `admin_verification_codes_list` | write | directory.verificationCodes.list | admin.directory.user.security |
 | `alerts_alerts_batch_delete` | destructive | alertcenter.alerts.batchDelete | apps.alerts |
 | `alerts_alerts_batch_undelete` | write | alertcenter.alerts.batchUndelete | apps.alerts |
 | `alerts_alerts_delete` | destructive | alertcenter.alerts.delete | apps.alerts |

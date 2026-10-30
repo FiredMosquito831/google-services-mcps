@@ -2,6 +2,18 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.26.2 - 2026-10-31
+
+### Fixed: reads no longer hand the model a credential without a question
+- Seventeen methods that exist to return a credential were reads, so they ran with no prompt: Secret Manager `versions.access` (both bindings), Apigee app `keys.get` (developer and AppGroup apps), Application Integration `authConfigs.get` (both bindings, "the decrypted auth config"), Analytics `measurementProtocolSecrets.get`, Android Enterprise `enterprises.getServiceAccount` (private key data, new credentials each call), Android Management `enrollmentTokens.get` and `migrationTokens.get`, Identity Toolkit v3 `getOobConfirmationCode`, Admin SDK `verificationCodes.list` (2-Step Verification backup codes), Memorystore `instances.getAuthString`, Compute `interconnects.getMacsecConfig`, Vertex AI `vertexExpress.retrieveExpressProject` (the Express mode API key), and Parameter Manager `render` (parameter and template versions, which put Secret Manager values in). They are writes now: they ask first, and they are hidden while writes are off. Per-method tools that change kind: `gaadmin_prope_data_measur_get` (ganalytics), `androident_enterprises_get_service_acco` (gplay), `identityto_relyingpa_get_oob_co` (gfirebase), `admin_verification_codes_list` (gadmin); the others are reached through `api_call`.
+- Reads that return a credential among other fields keep working, and the credential field is replaced in their result: the YouTube stream key in `liveStreams.list`; Identity Toolkit password hashes and salts in account lookups, `batchGet`, `query`, `getAccountInfo` and `downloadAccount`, the IdP client secret and the password hash signer key in project config; Measurement Protocol secret values in their list; Application Integration decrypted credentials in `authConfigs.list` and client certificate keys; Android Management enrollment and migration tokens in their lists and sign-in tokens in `enterprises.get`; and a few more stored secrets and tokens (docs/SECURITY.md lists them all). The text names the write that shows the value, when there is one, for example `[redacted: Measurement Protocol secret; to see it, call analyticsadmin.properties.dataStreams.measurementProtocolSecrets.get, which asks first]`.
+- The list is one entry per Discovery schema property (`src/core/credential-fields.ts`), applied to the result of every read of a per-method tool and of `api_call`. A write's result is not changed. `api_call` keeps its own name-based redaction as before.
+- A new contract test walks every Discovery snapshot from each read's response schema and scans the catalog by method id: a credential field or method that appears after a Discovery refresh fails the test until it is listed, made a write, or reviewed as not a credential.
+
+### Not changed
+- Every other tool's kind, scopes and `tools/list` entry. Only the seventeen methods above change kind in the tool maps and the gateway kinds.
+- Hand-written tools: `auth_get_users` (gfirebase) already drops password hashes and salts. `androidmgmt_get_enterprise` and `ads_search` return what Google sends (see Known limits in docs/SECURITY.md).
+
 ## 1.26.1 - 2026-10-30
 
 ### Fixed: the terminal sign-in and `gsm scopes` count every tool, as the sign-in from the chat does

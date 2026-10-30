@@ -341,7 +341,7 @@
   },
   {
     "name": "mcp__plugin_gplay_gplay__androident_enterprises_get_service_acco",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/androidenterprise"
     ],

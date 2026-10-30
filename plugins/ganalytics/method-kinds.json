@@ -88,7 +88,7 @@
   "analyticsadmin.properties.dataStreams.list": "read",
   "analyticsadmin.properties.dataStreams.measurementProtocolSecrets.create": "write",
   "analyticsadmin.properties.dataStreams.measurementProtocolSecrets.delete": "destructive",
-  "analyticsadmin.properties.dataStreams.measurementProtocolSecrets.get": "read",
+  "analyticsadmin.properties.dataStreams.measurementProtocolSecrets.get": "write",
   "analyticsadmin.properties.dataStreams.measurementProtocolSecrets.list": "read",
   "analyticsadmin.properties.dataStreams.measurementProtocolSecrets.patch": "write",
   "analyticsadmin.properties.dataStreams.patch": "write",

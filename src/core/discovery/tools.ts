@@ -23,6 +23,7 @@ import { clipText, paramToZod, schemaToZod, PARAM_DESC_MAX } from './schema.js';
 import { ApiKeyClient } from './apikey-client.js';
 import { adsHeaders, isGoogleAdsUrl, redactedError } from '../ads.js';
 import { resolveDynamicKind } from '../dynamic.js';
+import { redactCredentials } from '../credential-fields.js';
 
 /**
  * Name of the per-server list tool. It is unique within its server, and short,
@@ -357,10 +358,12 @@ function buildMethodTool(
     inputSchema: shape,
     async handler(args, ctx) {
       const req = buildRequest(plan, args as Record<string, unknown>);
+      let callKind: ToolKind = m.kind;
       if (m.kind === 'dynamic') {
         // The kind depends on the request body. A call that changes something goes through the gate first.
         // Read calls (validateOnly) are not gated. A method with no dynamic rule asks, as destructive.
         const kind = resolveDynamicKind(m.fullId, req.data) ?? 'destructive';
+        callKind = kind;
         if (kind !== 'read') {
           if (typeof ctx?.gate !== 'function') {
             throw new Error(`${name} needs the approval gate, which is not wired for this call, so it was not run.`);
@@ -369,7 +372,8 @@ function buildMethodTool(
         }
       }
       const res = await sendAuthorized(group, cfg, req);
-      return res.data;
+      // A read never asks, so the credential fields it returns are replaced (core/credential-fields.ts). A write was approved.
+      return callKind === 'read' ? redactCredentials(res.data, { api: doc.name, schema: m.responseRef, schemas: doc.schemas }) : res.data;
     },
   };
 

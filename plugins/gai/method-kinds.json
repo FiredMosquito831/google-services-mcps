@@ -1647,7 +1647,7 @@
   "aiplatform.tuningJobs.operations.list": "read",
   "aiplatform.tuningJobs.operations.wait": "write",
   "aiplatform.vertexExpress.Eligibility.check": "read",
-  "aiplatform.vertexExpress.retrieveExpressProject": "read",
+  "aiplatform.vertexExpress.retrieveExpressProject": "write",
   "aiplatform.vertexExpress.signUp": "write",
   "ces.projects.locations.apps.agents.create": "write",
   "ces.projects.locations.apps.agents.delete": "destructive",

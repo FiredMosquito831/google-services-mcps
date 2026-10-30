@@ -2479,7 +2479,7 @@
   },
   {
     "name": "mcp__plugin_gfirebase_gfirebase__identityto_relyingpa_get_oob_co",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"
     ],

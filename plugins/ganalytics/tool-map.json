@@ -294,7 +294,7 @@
   },
   {
     "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_prope_data_measur_get",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/analytics.edit",
       "https://www.googleapis.com/auth/analytics.readonly"
