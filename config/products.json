@@ -2005,7 +2005,7 @@
       "group": "workspace-user",
       "server": {
         "name": "gcontacts",
-        "curated": null
+        "curated": "contacts"
       },
       "generated": [
         {
@@ -2035,6 +2035,32 @@
           "version": "v4beta"
         }
       ],
+      "toolsets": {
+        "google": {
+          "source": "https://developers.google.com/people/api/mcp/tools_list",
+          "tools": [
+            "contacts_search_directory",
+            "contacts_search",
+            "profile_me"
+          ],
+          "matches": {
+            "contacts_search_directory": [
+              "search_directory_people"
+            ],
+            "contacts_search": [
+              "search_contacts"
+            ],
+            "profile_me": [
+              "get_user_profile"
+            ]
+          },
+          "notes": {
+            "contacts_search_directory": "Sets the readMask (names, email addresses, phone numbers, organizations) and the source (domain profiles) that the generated people_people_search_directory needs from the caller. Carries Google's caution: confirm the person before a result goes into another tool.",
+            "contacts_search": "Sends the empty warm-up search Google asks for before each search, then the search, with a default readMask. Carries Google's caution.",
+            "profile_me": "From the OAuth2 userinfo endpoint. Every sign-in holds userinfo.email, so the email is always there; the name needs userinfo.profile, which a readonly login does not ask for (it is not a read-only scope by name)."
+          }
+        }
+      },
       "generatedToolCount": 60
     },
     "gtasks": {

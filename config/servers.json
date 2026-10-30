@@ -1591,8 +1591,8 @@
       "name": "gcontacts",
       "plugin": "gcontacts",
       "group": "workspace-user",
-      "kind": "discovery",
-      "curated": null,
+      "kind": "curated+discovery",
+      "curated": "src/servers/gcontacts.ts",
       "apis": [
         {
           "api": "people",
@@ -1621,6 +1621,13 @@
           "version": "v4beta"
         }
       ],
+      "toolsets": {
+        "google": [
+          "contacts_search_directory",
+          "contacts_search",
+          "profile_me"
+        ]
+      },
       "label": "Contacts and Profile: Google Contacts and People, personal health metrics, Data Portability, and the OAuth2 userinfo endpoints."
     },
     {

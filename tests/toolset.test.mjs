@@ -73,6 +73,8 @@ const CHAT_GOOGLE = [
   'chat_users_spaces_space_notificatio_get',
   'chat_users_spaces_space_notificat_patch',
 ];
+/** The gcontacts list (1.13.0): Google's 3 People MCP tools. */
+const CONTACTS_GOOGLE = ['contacts_search_directory', 'contacts_search', 'profile_me'];
 /** The tools runServer adds for a server of an OAuth group. No toolset removes them. */
 const RUNTIME_OAUTH = ['account_remove', 'account_set_default', 'accounts_list', 'auth_login', 'auth_setup_client', 'auth_status', 'health'];
 
@@ -299,11 +301,21 @@ test("the gchat google list covers the 9 tools of Google's Chat MCP server, with
   assert.match(google.notes.chat_mark_read, /no public REST method/);
 });
 
+test("the gcontacts google list covers the 3 tools of Google's People MCP server, and leaves out the gateway", () => {
+  const google = readJson('config', 'products.json').products.gcontacts.toolsets.google;
+  assert.deepEqual(google.tools, CONTACTS_GOOGLE);
+  assert.equal(google.source, 'https://developers.google.com/people/api/mcp/tools_list');
+  assert.deepEqual(google.matches, { contacts_search_directory: ['search_directory_people'], contacts_search: ['search_contacts'], profile_me: ['get_user_profile'] });
+  assert.equal(google.tools.includes('api_call'), false, 'no gateway method counts toward its scopes');
+  assert.match(google.notes.contacts_search, /warm-up/);
+});
+
 test('both registry loaders carry the toolsets: the CLI conversion of config/products.json and a plugin servers.json', () => {
   const reg = registryFromProducts(readJson('config', 'products.json'), ROOT);
   assert.deepEqual(reg.servers.find((s) => s.name === 'gmail').toolsets, { google: GMAIL_GOOGLE });
   assert.deepEqual(reg.servers.find((s) => s.name === 'gsc').toolsets, { google: GSC_GOOGLE });
   assert.deepEqual(reg.servers.find((s) => s.name === 'gchat').toolsets, { google: CHAT_GOOGLE });
+  assert.deepEqual(reg.servers.find((s) => s.name === 'gcontacts').toolsets, { google: CONTACTS_GOOGLE });
   assert.equal(reg.servers.find((s) => s.name === 'gtasks').toolsets, undefined);
   const plugin = loadRegistryFile(join(ROOT, 'plugins', 'gmail', 'servers.json'));
   assert.deepEqual(plugin.servers[0].toolsets, { google: GMAIL_GOOGLE });
@@ -561,4 +573,15 @@ test('runServer: google on gchat lists its 9 tools and the runtime tools, with t
   assert.deepEqual(google.tools.map((t) => t.name), [...CHAT_GOOGLE, ...RUNTIME_OAUTH].sort());
   for (const t of google.tools) assert.deepEqual(t, unset.find((u) => u.name === t.name), t.name);
   assert.deepEqual(google.health.toolset, { requested: 'google', effective: 'google', outsideToolset: unset.length - google.tools.length });
+});
+
+test('runServer: google on gcontacts lists its 3 tools and the runtime tools, with the same schemas as all', async () => {
+  const dir = tempDir('gsm-toolset-gcontacts-');
+  const entry = curatedEntry(dir, 'gcontacts', 'gcontacts');
+  const tokenDir = fakeLogin(dir, 'gcontacts', 'workspace-user');
+  const unset = await withClient(entry, childEnv(dir, tokenDir), listTools);
+  const google = await withClient(entry, childEnv(dir, tokenDir, { GSM_TOOLSET: 'google' }), listTools);
+  assert.deepEqual(google.map((t) => t.name), [...CONTACTS_GOOGLE, ...RUNTIME_OAUTH].sort());
+  for (const t of google) assert.deepEqual(t, unset.find((u) => u.name === t.name), t.name);
+  for (const name of CONTACTS_GOOGLE) assert.equal(google.find((t) => t.name === name).annotations.readOnlyHint, true, name);
 });

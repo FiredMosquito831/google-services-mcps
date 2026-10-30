@@ -33,6 +33,7 @@ Start with `--profile readonly`. Changes need a `readwrite` login and the plugin
 
 | Area | Tools | Safety | What it does |
 |---|---|---|---|
+| People (short answers) | `contacts_search_directory`, `contacts_search`, `profile_me` | read | Search the Workspace directory or your contacts with a ready readMask, read your own name and email |
 | Contacts | `people_people_search_contacts`, `people_people_get`, `people_contact_groups_list` | read | Search contacts, read a contact, list groups |
 | | `people_people_search_directory`, `people_people_list_directory_pe` | read | Search and list people in the directory |
 | | `people_people_create_contact`, `people_people_update_contact` | write | Create or change a contact |
@@ -48,9 +49,12 @@ Start with `--profile readonly`. Changes need a `readwrite` login and the plugin
 
 The full list is in `docs/capabilities/gcontacts.md`.
 
+The first three tools match the tools of Google's People MCP server (https://developers.google.com/people/api/mcp/tools_list). They set the person fields (names, email addresses, phone numbers, organizations; `fields` picks others), send the warm-up search Google asks for before a contact search, and tell the agent to let you confirm the person before a result goes into another tool. With the plugin option `toolset: google`, the server lists these three, plus `health` and the sign-in tools. A `readonly` login with that toolset asks for `contacts.readonly` and `directory.readonly`; a `readwrite` login for `contacts`, `directory.readonly` and `userinfo.email`. Every sign-in adds `userinfo.email`, so `profile_me` always shows your email; your name needs `userinfo.profile`, which none of the three profiles picks for this toolset (they take `userinfo.email` or `openid`); a login with an explicit scope list that names it gives the name too.
+
 ## Example requests
 
-- "Find Priya Shah's phone number in my contacts." Claude runs `people_people_search_contacts`. No prompt.
+- "Find Priya Shah's phone number in my contacts." Claude runs `contacts_search`, shows the match, and asks you to confirm. No prompt.
+- "What is Ana's email in our company directory?" Claude runs `contacts_search_directory`. No prompt.
 - "Add Tom Lee, tom@example.com, as a contact." Claude runs `people_people_create_contact`. It asks first.
 - "Delete the duplicate contact entries for Sam." Claude runs the contact delete tool. It asks twice.
 - "Show my recorded health data points for last week." Claude runs the health data point read tools. No prompt.

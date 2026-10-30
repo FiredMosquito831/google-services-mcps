@@ -2,6 +2,20 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.13.0 - 2026-10-30
+
+### New: Contacts and profile tools that match Google's People MCP server
+Each description names the Google tool it matches. All three are reads.
+- `contacts_search_directory` (`search_directory_people`): your organization's Workspace directory by name or email prefix; domain profiles by default, `sources` adds the domain shared contacts; 10 a page (at most 500).
+- `contacts_search` (`search_contacts`): your contacts by the start of a name, email, phone or organization, at most 30. It sends the empty warm-up search Google asks for before each search, so new contacts are found.
+- Both set the person fields (names, email addresses, phone numbers, organizations; `fields` picks others) that the generated tools need from the caller, return short entries (primary name and email first), and carry Google's caution: show the people found and let the person confirm before a result goes into another tool.
+- `profile_me` (`get_user_profile`): your email, and your name and picture when the sign-in holds `userinfo.profile`; the answer says when it does not.
+- The `google` toolset of gcontacts: these three. A `readonly` login with it asks for `contacts.readonly` and `directory.readonly`; a `readwrite` login for `contacts`, `directory.readonly` and `userinfo.email`. No profile asks for `userinfo.profile`, so the name needs an explicit scope list.
+
+### Not changed
+- Scopes of the `all` toolset (gcontacts' resolve the same; its login requirements grow by the three tools), the gateway, the write gate and the hook. Every other plugin lists the same tools with the same schemas.
+- Not tested against the live People API (Google's HTTP layer stubbed; the request shapes are checked against Google's Discovery documents).
+
 ## 1.12.0 - 2026-10-30
 
 ### New: Google Chat tools that match Google's Chat MCP server

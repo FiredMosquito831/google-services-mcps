@@ -45,6 +45,7 @@ const CURATED_FILES = {
   'search-console': 'src/servers/searchconsole.ts',
   ads: 'src/servers/gads.ts',
   chat: 'src/servers/gchat.ts',
+  contacts: 'src/servers/gcontacts.ts',
 };
 
 const ID_PATTERN = /^[a-z]+$/;

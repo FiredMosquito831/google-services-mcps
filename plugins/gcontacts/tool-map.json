@@ -72,6 +72,23 @@
     "title": "Sign-in status"
   },
   {
+    "name": "mcp__plugin_gcontacts_gcontacts__contacts_search",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/contacts",
+      "https://www.googleapis.com/auth/contacts.readonly"
+    ],
+    "title": "Search your contacts"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__contacts_search_directory",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/directory.readonly"
+    ],
+    "title": "Search the Workspace directory"
+  },
+  {
     "name": "mcp__plugin_gcontacts_gcontacts__dataportab_access_type_check",
     "kind": "read",
     "scopes": [
@@ -1170,5 +1187,15 @@
     ],
     "methodId": "people.people.updateContactPhoto",
     "title": "people.people.updateContactPhoto"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__profile_me",
+    "kind": "read",
+    "scopes": [
+      "openid",
+      "https://www.googleapis.com/auth/userinfo.email",
+      "https://www.googleapis.com/auth/userinfo.profile"
+    ],
+    "title": "Your Google profile"
   }
 ]

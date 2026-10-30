@@ -11,8 +11,8 @@
       "name": "gcontacts",
       "plugin": "gcontacts",
       "group": "workspace-user",
-      "kind": "discovery",
-      "curated": null,
+      "kind": "curated+discovery",
+      "curated": "src/servers/gcontacts.ts",
       "apis": [
         {
           "api": "people",
@@ -40,6 +40,21 @@
           "api": "health",
           "version": "v4beta"
         }
+      ],
+      "toolsets": {
+        "google": [
+          "contacts_search_directory",
+          "contacts_search",
+          "profile_me"
+        ]
+      },
+      "scopes": [
+        "https://www.googleapis.com/auth/contacts",
+        "https://www.googleapis.com/auth/contacts.readonly",
+        "https://www.googleapis.com/auth/directory.readonly",
+        "https://www.googleapis.com/auth/userinfo.email",
+        "https://www.googleapis.com/auth/userinfo.profile",
+        "openid"
       ],
       "label": "Contacts and Profile: Google Contacts and People, personal health metrics, Data Portability, and the OAuth2 userinfo endpoints."
     }

@@ -192,6 +192,18 @@ test('requirements: the gchat google list resolves to Chat user scopes only, nev
   assert.ok(all.includes(G('chat.bot')) && all.includes(G('chat.import')));
 });
 
+test('requirements: the gcontacts google list resolves to contacts and directory scopes, no gateway method', async () => {
+  const { cfg } = tempTokens();
+  const google = await requirementsFor(['gcontacts'], cfg, { ...quiet, toolset: 'google' });
+  assert.deepEqual(toolsOf(google), ['contacts_search', 'contacts_search_directory', 'profile_me']);
+  assert.equal(google.filter((r) => r.gateway).length, 0, 'the gateway methods (dataportability, health) do not count');
+  const readonly = resolveScopes(google, 'readonly');
+  assert.deepEqual(readonly.scopes, [G('contacts.readonly'), G('directory.readonly')]);
+  // userinfo.* are not read-only scopes by name; every sign-in adds userinfo.email, which registers profile_me anyway.
+  assert.deepEqual(readonly.uncovered, ['gcontacts/profile_me']);
+  assert.deepEqual(resolveScopes(google, 'readwrite').scopes, [G('contacts'), G('directory.readonly'), EMAIL]);
+});
+
 test('--toolset: parsed for login, scopes and setup-admin; an unknown value is a usage error', () => {
   assert.equal(parseToolset(undefined), undefined);
   assert.equal(parseToolset('Google'), 'google');

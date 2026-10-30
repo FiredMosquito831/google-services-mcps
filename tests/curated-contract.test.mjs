@@ -129,6 +129,8 @@ const DOCS = [
   'cloudbilling.v1',
   'storage.v1',
   'chat.v1',
+  'people.v1',
+  'oauth2.v2',
 ];
 
 /**
@@ -264,7 +266,7 @@ function problemsOf(call) {
 // ---------------------------------------------------------------------------
 // The servers and their tools.
 
-const SERVERS = ['gmail', 'gcalendar', 'gdrive', 'searchconsole', 'cloud', 'gads', 'workspace-admin', 'gchat'];
+const SERVERS = ['gmail', 'gcalendar', 'gdrive', 'searchconsole', 'cloud', 'gads', 'workspace-admin', 'gchat', 'gcontacts'];
 const tools = new Map();
 for (const mod of SERVERS) {
   const { buildTools } = await import(DIST(`servers/${mod}.js`));
@@ -701,6 +703,14 @@ const CASES = {
   ],
   chat_mark_read: [{ args: { conversation_ids: ['spaces/AAA', 'spaces/BBB'] }, expect: ['chat.users.spaces.updateSpaceReadState'] }],
   chat_mark_unread: [{ args: { conversation_id: 'spaces/AAA', last_read_time: '2026-10-29T08:00:00Z' }, expect: ['chat.users.spaces.updateSpaceReadState'] }],
+
+  // gcontacts (1.13.0)
+  contacts_search_directory: [
+    { args: { query: 'ana' }, expect: ['people.people.searchDirectoryPeople'] },
+    { args: { query: 'ana', sources: ['profile', 'contact'], fields: ['names', 'photos'], page_size: 50, page_token: 'p1' }, expect: ['people.people.searchDirectoryPeople'] },
+  ],
+  contacts_search: [{ args: { query: 'ana', fields: ['names', 'emailAddresses'], max_results: 5 }, expect: ['people.people.searchContacts'] }],
+  profile_me: [{ args: {}, expect: ['oauth2.userinfo.get'] }],
 };
 
 /** Tools that cannot run here, with the reason. Counted. */
@@ -713,7 +723,7 @@ test('every curated tool has a contract row, a skip reason or a known defect, an
   const listed = new Set([...Object.keys(CASES), ...Object.keys(SKIPPED), ...Object.keys(KNOWN_DEFECTS)]);
   assert.deepEqual([...tools.keys()].filter((name) => !listed.has(name)), [], 'curated tools without a row');
   assert.deepEqual([...listed].filter((name) => !tools.has(name)), [], 'rows for tools that do not exist');
-  assert.equal(tools.size, 107, 'the curated tool count; update the table when it changes');
+  assert.equal(tools.size, 110,'the curated tool count; update the table when it changes');
 });
 
 for (const [name, cases] of Object.entries(CASES)) {
