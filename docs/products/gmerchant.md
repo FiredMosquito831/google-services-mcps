@@ -45,6 +45,8 @@ Start with `--profile readonly`. Changes need a `readwrite` login and the plugin
 
 The full list is in `docs/capabilities/gmerchant.md`.
 
+Google's Merchant API MCP server (alpha, https://developers.google.com/merchant/api/guides/agentic-tools/merchant-data-mcp) has 13 tools; each is a generated tool here already. With the plugin option `toolset: google`, the server lists those 13 (accounts, account issues, programs, automatic improvements, products list and get, aggregate product statuses, report search, data sources list, get, create and fetch, the latest file upload), plus `health` and the sign-in tools. The data source create asks first. Google says a data source fetch triggers processing; here it is classified as a read and does not ask (a separate change will review that).
+
 ## Example requests
 
 - "Which products in our feed have issues?" Claude runs the product issue reads. No prompt.

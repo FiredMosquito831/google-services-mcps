@@ -138,6 +138,22 @@ const ANALYTICS_GOOGLE = [
   'ga_annotations_list',
   'ga_annotation_create',
 ];
+/** The gmerchant list (1.18.0): Google's 13 Merchant API MCP tools, all generated tools already. */
+const MERCHANT_GOOGLE = [
+  'merchantap_accounts_list',
+  'merchantap_accounts_issues_list',
+  'merchantap_account_program_list',
+  'merchantap_accoun_automa_get_au',
+  'merchantap_acco_produ_list_6ad8',
+  'merchantap_account_products_get',
+  'merchantap_account_aggrega_list',
+  'merchantap_accoun_report_search',
+  'merchantap_account_data_so_list',
+  'merchantap_account_data_sou_get',
+  'merchantap_accoun_data_s_create',
+  'merchantap_accoun_data_so_fetch',
+  'merchantap_accou_data_file_get',
+];
 /** The tools runServer adds for a server of an OAuth group. No toolset removes them. */
 const RUNTIME_OAUTH = ['account_remove', 'account_set_default', 'accounts_list', 'auth_login', 'auth_setup_client', 'auth_status', 'health'];
 
@@ -425,6 +441,7 @@ test('both registry loaders carry the toolsets: the CLI conversion of config/pro
   for (const [id, tools] of Object.entries(LEAN_GOOGLE)) assert.deepEqual(reg.servers.find((s) => s.name === id).toolsets, { google: tools }, id);
   assert.deepEqual(reg.servers.find((s) => s.name === 'gads').toolsets, { google: ADS_GOOGLE });
   assert.deepEqual(reg.servers.find((s) => s.name === 'ganalytics').toolsets, { google: ANALYTICS_GOOGLE });
+  assert.deepEqual(reg.servers.find((s) => s.name === 'gmerchant').toolsets, { google: MERCHANT_GOOGLE });
   assert.equal(reg.servers.find((s) => s.name === 'gyoutube').toolsets, undefined);
   const plugin = loadRegistryFile(join(ROOT, 'plugins', 'gmail', 'servers.json'));
   assert.deepEqual(plugin.servers[0].toolsets, { google: GMAIL_GOOGLE });
@@ -745,6 +762,51 @@ function generatedEntry(dir, name) {
   );
   return entry;
 }
+
+test("the gmerchant google list covers the 13 tools of Google's Merchant API MCP server; fetch_data_source keeps today's kind", () => {
+  const google = readJson('config', 'products.json').products.gmerchant.toolsets.google;
+  assert.deepEqual(google.tools, MERCHANT_GOOGLE);
+  assert.equal(google.source, 'https://developers.google.com/merchant/api/guides/agentic-tools/merchant-data-mcp');
+  const official = new Set(Object.values(google.matches).flat());
+  for (const name of [
+    'get_product_by_name', 'list_products', 'report_search', 'list_data_sources', 'get_data_source', 'create_data_source', 'fetch_data_source',
+    'get_file_upload', 'list_accounts', 'list_account_issues', 'list_programs', 'list_aggregate_product_statuses', 'get_automatic_improvements',
+  ]) {
+    assert.ok(official.has(name), `no tool of ours matches ${name}`);
+  }
+  assert.equal(official.size, 13);
+  const kindOf = (tool) => readJson('plugins', 'gmerchant', 'tool-map.json').find((t) => t.name === `mcp__plugin_gmerchant_gmerchant__${tool}`).kind;
+  assert.equal(kindOf('merchantap_accoun_data_s_create'), 'write');
+  // Google says fetch triggers processing; the classifier counts it as a read. Changing that is item D2, not this list.
+  assert.equal(kindOf('merchantap_accoun_data_so_fetch'), 'read');
+  assert.match(google.notes.merchantap_accoun_data_so_fetch, /triggers processing/);
+  for (const tool of MERCHANT_GOOGLE.filter((t) => t !== 'merchantap_accoun_data_s_create')) assert.equal(kindOf(tool), 'read', tool);
+});
+
+test('runServer: google on gmerchant (service account key) lists its 13 tools and the runtime tools, with the same schemas as all', async () => {
+  const dir = tempDir('gsm-toolset-gmerchant-');
+  const entry = generatedEntry(dir, 'gmerchant');
+  const { generateKeyPairSync } = await import('node:crypto');
+  const { privateKey } = generateKeyPairSync('rsa', { modulusLength: 2048, privateKeyEncoding: { type: 'pkcs8', format: 'pem' }, publicKeyEncoding: { type: 'spki', format: 'pem' } });
+  const tokenDir = join(dir, 'tokens');
+  mkdirSync(tokenDir, { recursive: true });
+  const keyFile = join(dir, 'key.json');
+  writeFileSync(keyFile, JSON.stringify({ type: 'service_account', client_email: 'sa@test-project.iam.gserviceaccount.com', private_key: privateKey, private_key_id: 'k1' }));
+  // What `gsm setup-service-account` stores: the key's path (a throwaway key in the temp folder).
+  writeFileSync(join(tokenDir, 'service-account.json'), JSON.stringify({ keyFile, clientEmail: 'sa@test-project.iam.gserviceaccount.com', savedAt: '2026-10-30T00:00:00Z' }));
+  const env = (extra = {}) => childEnv(dir, tokenDir, extra);
+  const unset = await withClient(entry, env(), listTools);
+  const google = await withClient(entry, env({ GSM_TOOLSET: 'google' }), async (c) => ({ tools: await listTools(c), health: await health(c) }));
+  const runtime = google.tools.map((t) => t.name).filter((n) => !MERCHANT_GOOGLE.includes(n));
+  assert.deepEqual(google.tools.map((t) => t.name).filter((n) => MERCHANT_GOOGLE.includes(n)).sort(), [...MERCHANT_GOOGLE].sort());
+  for (const name of runtime) assert.ok(name === 'health' || name.startsWith('auth_'), `only runtime tools besides the list: ${name}`);
+  for (const t of google.tools) assert.deepEqual(t, unset.find((u) => u.name === t.name), t.name);
+  // outsideToolset counts every defined tool outside the list, also those the key's fixed scopes never register (the
+  // Manufacturer Center and CSS tools), so it is more than the difference of the two lists.
+  assert.equal(google.health.toolset.requested, 'google');
+  assert.equal(google.health.toolset.effective, 'google');
+  assert.ok(google.health.toolset.outsideToolset >= unset.length - google.tools.length);
+});
 
 test('runServer: google on gmeet, gtasks and gapps lists the lean list and the runtime tools, with the same schemas as all', async () => {
   for (const [id, tools] of Object.entries(LEAN_GOOGLE)) {

@@ -2,6 +2,16 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.18.0 - 2026-10-30
+
+### New: a google toolset for Merchant Center that matches Google's Merchant API MCP server
+- The 13 tools of Google's Merchant API MCP server (alpha) are generated tools here already; the `google` toolset of gmerchant lists them: accounts, account issues, programs, automatic improvements, products list and get, aggregate product statuses, report search, data sources list, get, create (a write) and fetch, and the latest file upload. Data only: no tool is added or changed.
+- Google says a data source fetch triggers processing. It is classified as a read here and does not ask; reviewing that kind is a separate change.
+- The service account key's scopes are fixed, so the toolset changes no scope.
+
+### Not changed
+- The tools gmerchant lists with `all`, their schemas, scopes of the `all` toolset (every server's requirements are byte-identical), the write gate and the hook.
+
 ## 1.17.0 - 2026-10-30
 
 ### New: Google Analytics tools that match Google's Google Analytics MCP server

@@ -2261,6 +2261,23 @@
           "version": "reports_v1beta"
         }
       ],
+      "toolsets": {
+        "google": [
+          "merchantap_accounts_list",
+          "merchantap_accounts_issues_list",
+          "merchantap_account_program_list",
+          "merchantap_accoun_automa_get_au",
+          "merchantap_acco_produ_list_6ad8",
+          "merchantap_account_products_get",
+          "merchantap_account_aggrega_list",
+          "merchantap_accoun_report_search",
+          "merchantap_account_data_so_list",
+          "merchantap_account_data_sou_get",
+          "merchantap_accoun_data_s_create",
+          "merchantap_accoun_data_so_fetch",
+          "merchantap_accou_data_file_get"
+        ]
+      },
       "label": "Merchant Center: Merchant Center: Merchant API, Comparison Shopping Service and Manufacturer Center."
     },
     {

@@ -8,7 +8,27 @@ Merchant Center: Merchant API, Comparison Shopping Service and Manufacturer Cent
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 167, google 167 (all), curated 12 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 167, google 22, curated 12 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+
+## Toolset google (13)
+
+The tools that match Google's official MCP server for this product (https://developers.google.com/merchant/api/guides/agentic-tools/merchant-data-mcp).
+
+| Tool | Google's tool | Note |
+|---|---|---|
+| `merchantap_accounts_list` | `list_accounts` | The Merchant Center accounts the service account can reach (accounts.list). Start here for an account id. |
+| `merchantap_accounts_issues_list` | `list_account_issues` | Account-level issues that affect the whole account. |
+| `merchantap_account_program_list` | `list_programs` | Programs, such as free listings and Shopping ads, with their state, regions and unmet requirements. |
+| `merchantap_accoun_automa_get_au` | `get_automatic_improvements` | Automatic improvement settings: item updates, image improvements and shipping improvements. |
+| `merchantap_acco_produ_list_6ad8` | `list_products` | The products of an account, a page at a time (products.list; the name ends in a hash because of the 64-character budget). |
+| `merchantap_account_products_get` | `get_product_by_name` | One product by its exact resource name, accounts/{account}/products/{product}. |
+| `merchantap_account_aggrega_list` | `list_aggregate_product_statuses` | Product issues aggregated by reporting context and country, for the health of the product data. |
+| `merchantap_accoun_report_search` | `report_search` | A Merchant reports query (product performance, statuses, price insights, competitive visibility) in the Merchant Center Query Language. |
+| `merchantap_account_data_so_list` | `list_data_sources` | The data sources of an account. |
+| `merchantap_account_data_sou_get` | `get_data_source` | One data source. |
+| `merchantap_accoun_data_s_create` | `create_data_source` | Creates a data source. A write, so it asks first. |
+| `merchantap_accoun_data_so_fetch` | `fetch_data_source` | Fetches and processes a data source's file now. Google says it triggers processing; the classifier counts this POST as a read, so it does not ask. Changing that kind is a separate change (D2). |
+| `merchantap_accou_data_file_get` | `get_file_upload` | The latest file upload of a data source and its processing state (accounts/{account}/dataSources/{datasource}/fileUploads/latest). |
 
 ## Curated tools (9)
 

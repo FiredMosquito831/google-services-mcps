@@ -2932,6 +2932,82 @@
           "version": "reports_v1beta"
         }
       ],
+      "toolsets": {
+        "google": {
+          "source": "https://developers.google.com/merchant/api/guides/agentic-tools/merchant-data-mcp",
+          "tools": [
+            "merchantap_accounts_list",
+            "merchantap_accounts_issues_list",
+            "merchantap_account_program_list",
+            "merchantap_accoun_automa_get_au",
+            "merchantap_acco_produ_list_6ad8",
+            "merchantap_account_products_get",
+            "merchantap_account_aggrega_list",
+            "merchantap_accoun_report_search",
+            "merchantap_account_data_so_list",
+            "merchantap_account_data_sou_get",
+            "merchantap_accoun_data_s_create",
+            "merchantap_accoun_data_so_fetch",
+            "merchantap_accou_data_file_get"
+          ],
+          "matches": {
+            "merchantap_accounts_list": [
+              "list_accounts"
+            ],
+            "merchantap_accounts_issues_list": [
+              "list_account_issues"
+            ],
+            "merchantap_account_program_list": [
+              "list_programs"
+            ],
+            "merchantap_accoun_automa_get_au": [
+              "get_automatic_improvements"
+            ],
+            "merchantap_acco_produ_list_6ad8": [
+              "list_products"
+            ],
+            "merchantap_account_products_get": [
+              "get_product_by_name"
+            ],
+            "merchantap_account_aggrega_list": [
+              "list_aggregate_product_statuses"
+            ],
+            "merchantap_accoun_report_search": [
+              "report_search"
+            ],
+            "merchantap_account_data_so_list": [
+              "list_data_sources"
+            ],
+            "merchantap_account_data_sou_get": [
+              "get_data_source"
+            ],
+            "merchantap_accoun_data_s_create": [
+              "create_data_source"
+            ],
+            "merchantap_accoun_data_so_fetch": [
+              "fetch_data_source"
+            ],
+            "merchantap_accou_data_file_get": [
+              "get_file_upload"
+            ]
+          },
+          "notes": {
+            "merchantap_accounts_list": "The Merchant Center accounts the service account can reach (accounts.list). Start here for an account id.",
+            "merchantap_accounts_issues_list": "Account-level issues that affect the whole account.",
+            "merchantap_account_program_list": "Programs, such as free listings and Shopping ads, with their state, regions and unmet requirements.",
+            "merchantap_accoun_automa_get_au": "Automatic improvement settings: item updates, image improvements and shipping improvements.",
+            "merchantap_acco_produ_list_6ad8": "The products of an account, a page at a time (products.list; the name ends in a hash because of the 64-character budget).",
+            "merchantap_account_products_get": "One product by its exact resource name, accounts/{account}/products/{product}.",
+            "merchantap_account_aggrega_list": "Product issues aggregated by reporting context and country, for the health of the product data.",
+            "merchantap_accoun_report_search": "A Merchant reports query (product performance, statuses, price insights, competitive visibility) in the Merchant Center Query Language.",
+            "merchantap_account_data_so_list": "The data sources of an account.",
+            "merchantap_account_data_sou_get": "One data source.",
+            "merchantap_accoun_data_s_create": "Creates a data source. A write, so it asks first.",
+            "merchantap_accoun_data_so_fetch": "Fetches and processes a data source's file now. Google says it triggers processing; the classifier counts this POST as a read, so it does not ask. Changing that kind is a separate change (D2).",
+            "merchantap_accou_data_file_get": "The latest file upload of a data source and its processing state (accounts/{account}/dataSources/{datasource}/fileUploads/latest)."
+          }
+        }
+      },
       "generatedToolCount": 154
     },
     "gplay": {

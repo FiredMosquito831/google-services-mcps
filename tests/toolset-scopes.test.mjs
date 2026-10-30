@@ -286,6 +286,16 @@ test('requirements: the ganalytics google list resolves to analytics.readonly, a
   assert.deepEqual(resolveScopes(all, 'readwrite').scopes, [G('analytics'), G('analytics.edit'), G('analytics.manage.users')]);
 });
 
+test('requirements: the gmerchant google list (13 generated tools, no gateway) needs content, which has no read-only form', async () => {
+  const { cfg } = tempTokens();
+  const google = await requirementsFor(['gmerchant'], cfg, { ...quiet, toolset: 'google' });
+  assert.equal(google.length, 13);
+  assert.equal(google.filter((r) => r.gateway).length, 0);
+  assert.deepEqual(resolveScopes(google, 'readonly').scopes, []);
+  assert.deepEqual(resolveScopes(google, 'readwrite').scopes, [G('content')]);
+  // The service-account key's scopes are fixed (androidpublisher and content), so these figures size nothing at sign-in.
+});
+
 test('--toolset: parsed for login, scopes and setup-admin; an unknown value is a usage error', () => {
   assert.equal(parseToolset(undefined), undefined);
   assert.equal(parseToolset('Google'), 'google');
