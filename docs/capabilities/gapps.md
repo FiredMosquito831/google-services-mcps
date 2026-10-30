@@ -8,7 +8,22 @@ Apps Script projects and execution, plus the Workspace Marketplace SDK.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 28, google 28 (all), curated 28 (all) tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 28, google 17, curated 28 (all) tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+
+## Toolset google (8)
+
+Google has no official MCP server for this product. The google toolset is a lean set chosen here: No official Google MCP server for Apps Script was found (Google's Cloud and Workspace MCP lists, 2026-10-29; a negative, not confirmed by Google); a lean set chosen here..
+
+| Tool | Google's tool | Note |
+|---|---|---|
+| `appsscript_projects_get` | (none) | A script project's title, parent file and times, by script id. |
+| `appsscript_projects_get_content` | (none) | The files of a script project: name, type and source. |
+| `appsscript_projects_update_content` | (none) | Replaces every file of a script project with the files given. A write, so it asks first; send the files you keep too. |
+| `appsscript_projects_versions_create` | (none) | Saves the current code as a numbered version, for a deployment. A write, so it asks first. |
+| `appsscript_projects_deployments_list` | (none) | The deployments of a script project and their entry points. |
+| `appsscript_projects_deployments_create` | (none) | Deploys a version (as an API executable, web app or add-on, by its manifest). A write, so it asks first. |
+| `appsscript_processes_list` | (none) | Your recent script runs: function, status, start time and duration. |
+| `appsscript_scripts_run` | (none) | Runs a function of a script deployed as an API executable. Destructive, so it asks twice: the script can do anything its own scopes allow, and the sign-in needs those scopes (the login asks for one of them here, userinfo.email). |
 
 ## Curated tools (9)
 

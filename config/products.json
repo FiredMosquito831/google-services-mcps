@@ -1914,7 +1914,7 @@
       "group": "workspace-user",
       "server": {
         "name": "gchat",
-        "curated": null
+        "curated": "chat"
       },
       "generated": [
         {
@@ -1927,6 +1927,59 @@
         }
       ],
       "gateway": [],
+      "toolsets": {
+        "google": {
+          "source": "https://developers.google.com/workspace/chat/api/reference/mcp/tools_list",
+          "tools": [
+            "chat_search_conversations",
+            "chat_list_messages",
+            "chat_search_messages",
+            "chat_list_members",
+            "chat_send_message",
+            "chat_mark_read",
+            "chat_mark_unread",
+            "chat_users_spaces_space_notificatio_get",
+            "chat_users_spaces_space_notificat_patch"
+          ],
+          "matches": {
+            "chat_search_conversations": [
+              "search_conversations"
+            ],
+            "chat_list_messages": [
+              "list_messages"
+            ],
+            "chat_search_messages": [
+              "search_messages"
+            ],
+            "chat_list_members": [
+              "list_memberships"
+            ],
+            "chat_send_message": [
+              "send_message"
+            ],
+            "chat_mark_read": [
+              "mark_as_read"
+            ],
+            "chat_mark_unread": [
+              "mark_as_unread"
+            ],
+            "chat_users_spaces_space_notificatio_get": [
+              "get_notification_settings"
+            ],
+            "chat_users_spaces_space_notificat_patch": [
+              "update_notification_settings"
+            ]
+          },
+          "notes": {
+            "chat_list_members": "Curated in place of the generated chat_spaces_members_list, whose scope list also names the Chat app scopes chat.bot and chat.import; the greedy readwrite cover would ask a person to grant chat.bot. chat_list_members lists only chat.memberships and chat.memberships.readonly.",
+            "chat_send_message": "Text in Markdown (or Chat's own syntax), as a new thread or a reply. Google's cards and citations are left out: only Chat apps can post them.",
+            "chat_mark_read": "Conversations only, up to 10 a call, each its own request with its own failure. Google's thread_ids have no public REST method (the Chat API has getThreadReadState only).",
+            "chat_mark_unread": "Conversations only; a thread's read state has no public REST method.",
+            "chat_users_spaces_space_notificatio_get": "Generated from spaceNotificationSetting.get: name is users/me/spaces/{space}/spaceNotificationSetting.",
+            "chat_users_spaces_space_notificat_patch": "Generated from spaceNotificationSetting.patch: name is users/me/spaces/{space}/spaceNotificationSetting, updateMask notification_setting and/or mute_setting. A write, so it asks first."
+          }
+        }
+      },
       "generatedToolCount": 60
     },
     "gmeet": {
@@ -1944,6 +1997,47 @@
         }
       ],
       "gateway": [],
+      "toolsets": {
+        "google": {
+          "source": "No official Google MCP server for Google Meet was found (Google's Cloud and Workspace MCP lists, 2026-10-29; a negative, not confirmed by Google); a lean set chosen here.",
+          "tools": [
+            "meet_spaces_create",
+            "meet_spaces_get",
+            "meet_conference_records_list",
+            "meet_conference_records_get",
+            "meet_conference_recor_participants_list",
+            "meet_conference_record_transcripts_list",
+            "meet_conference_transcript_entries_list",
+            "meet_conference_records_recordings_list",
+            "meet_conference_record_smart_notes_list",
+            "meet_conference_records_smart_notes_get"
+          ],
+          "matches": {
+            "meet_spaces_create": [],
+            "meet_spaces_get": [],
+            "meet_conference_records_list": [],
+            "meet_conference_records_get": [],
+            "meet_conference_recor_participants_list": [],
+            "meet_conference_record_transcripts_list": [],
+            "meet_conference_transcript_entries_list": [],
+            "meet_conference_records_recordings_list": [],
+            "meet_conference_record_smart_notes_list": [],
+            "meet_conference_records_smart_notes_get": []
+          },
+          "notes": {
+            "meet_spaces_create": "Makes a new meeting space and returns its meeting link and code. A write, so it asks first.",
+            "meet_spaces_get": "A meeting space by its name (spaces/{space}) or meeting code: its link, code and settings.",
+            "meet_conference_records_list": "Past and current conferences (one per meeting held in a space), newest first; filter by space or time. Start here for a meeting that took place.",
+            "meet_conference_records_get": "One conference: its space, start and end time.",
+            "meet_conference_recor_participants_list": "Who joined a conference, with join and leave times.",
+            "meet_conference_record_transcripts_list": "The transcripts of a conference and their Google Docs.",
+            "meet_conference_transcript_entries_list": "The spoken text of a transcript, entry by entry with the speaker and time.",
+            "meet_conference_records_recordings_list": "The recordings of a conference and their Drive files.",
+            "meet_conference_record_smart_notes_list": "The notes Gemini took in a conference (smart notes) and their Google Docs.",
+            "meet_conference_records_smart_notes_get": "One smart notes entry and the Google Doc that holds it."
+          }
+        }
+      },
       "generatedToolCount": 24
     },
     "gcontacts": {
@@ -1952,7 +2046,7 @@
       "group": "workspace-user",
       "server": {
         "name": "gcontacts",
-        "curated": null
+        "curated": "contacts"
       },
       "generated": [
         {
@@ -1982,6 +2076,32 @@
           "version": "v4beta"
         }
       ],
+      "toolsets": {
+        "google": {
+          "source": "https://developers.google.com/people/api/mcp/tools_list",
+          "tools": [
+            "contacts_search_directory",
+            "contacts_search",
+            "profile_me"
+          ],
+          "matches": {
+            "contacts_search_directory": [
+              "search_directory_people"
+            ],
+            "contacts_search": [
+              "search_contacts"
+            ],
+            "profile_me": [
+              "get_user_profile"
+            ]
+          },
+          "notes": {
+            "contacts_search_directory": "Sets the readMask (names, email addresses, phone numbers, organizations) and the source (domain profiles) that the generated people_people_search_directory needs from the caller. Carries Google's caution: confirm the person before a result goes into another tool.",
+            "contacts_search": "Sends the empty warm-up search Google asks for before each search, then the search, with a default readMask. Carries Google's caution.",
+            "profile_me": "From the OAuth2 userinfo endpoint. Every sign-in holds userinfo.email, so the email is always there; the name needs userinfo.profile, which a readonly login does not ask for (it is not a read-only scope by name)."
+          }
+        }
+      },
       "generatedToolCount": 60
     },
     "gtasks": {
@@ -2003,6 +2123,41 @@
         }
       ],
       "gateway": [],
+      "toolsets": {
+        "google": {
+          "source": "No official Google MCP server for Google Tasks or Google Keep was found (Google's Cloud and Workspace MCP lists, 2026-10-29; a negative, not confirmed by Google); a lean set chosen here.",
+          "tools": [
+            "tasks_tasklists_list",
+            "tasks_tasks_list",
+            "tasks_tasks_get",
+            "tasks_tasks_insert",
+            "tasks_tasks_patch",
+            "tasks_tasks_delete",
+            "keep_notes_list",
+            "keep_notes_get"
+          ],
+          "matches": {
+            "tasks_tasklists_list": [],
+            "tasks_tasks_list": [],
+            "tasks_tasks_get": [],
+            "tasks_tasks_insert": [],
+            "tasks_tasks_patch": [],
+            "tasks_tasks_delete": [],
+            "keep_notes_list": [],
+            "keep_notes_get": []
+          },
+          "notes": {
+            "tasks_tasklists_list": "Your task lists and their ids. Start here; @default is your first list.",
+            "tasks_tasks_list": "The tasks of one list, with due dates and status; showCompleted and dueMin/dueMax narrow it.",
+            "tasks_tasks_get": "One task with its notes, due date, status and links.",
+            "tasks_tasks_insert": "Adds a task to a list (as a subtask with parent). A write, so it asks first.",
+            "tasks_tasks_patch": "Changes only the fields given: title, notes, due date, or status completed. A write, so it asks first.",
+            "tasks_tasks_delete": "Deletes a task. Destructive, so it asks twice.",
+            "keep_notes_list": "Google Keep notes, read only here (filter by trashed or create and update time). Google documents the Keep API for Google Workspace; whether a personal account can use it is not verified.",
+            "keep_notes_get": "One Keep note with its text or list items."
+          }
+        }
+      },
       "generatedToolCount": 21
     },
     "gclassroom": {
@@ -2011,7 +2166,7 @@
       "group": "workspace-user",
       "server": {
         "name": "gclassroom",
-        "curated": null
+        "curated": "classroom"
       },
       "generated": [
         {
@@ -2020,6 +2175,104 @@
         }
       ],
       "gateway": [],
+      "toolsets": {
+        "google": {
+          "source": "https://developers.google.com/workspace/classroom/reference/mcp/tools_list",
+          "tools": [
+            "classroom_list_courses",
+            "classroom_get_course",
+            "classroom_list_topics",
+            "classroom_create_topic",
+            "classroom_list_coursework",
+            "classroom_get_coursework",
+            "classroom_cour_cour_list_1590",
+            "classroom_cour_cour_crea_e311",
+            "classroom_cour_cour_crea_3302",
+            "classroom_cour_cour_patc_dea2",
+            "classroom_cours_course_modify",
+            "classroom_cour_cour_patc_480d",
+            "classroom_list_submissions",
+            "classroom_get_rubric",
+            "classroom_create_rubric",
+            "classroom_get_roster",
+            "classroom_list_announcements",
+            "classroom_get_announcements",
+            "classroom_create_announcement",
+            "classroom_get_guardians"
+          ],
+          "matches": {
+            "classroom_list_courses": [
+              "list_courses"
+            ],
+            "classroom_get_course": [],
+            "classroom_list_topics": [
+              "list_topics"
+            ],
+            "classroom_create_topic": [
+              "create_topic"
+            ],
+            "classroom_list_coursework": [
+              "list_course_work_summaries"
+            ],
+            "classroom_get_coursework": [
+              "get_course_work"
+            ],
+            "classroom_cour_cour_list_1590": [
+              "list_course_work_summaries"
+            ],
+            "classroom_cour_cour_crea_e311": [
+              "create_course_work"
+            ],
+            "classroom_cour_cour_crea_3302": [
+              "create_course_work"
+            ],
+            "classroom_cour_cour_patc_dea2": [
+              "update_course_work"
+            ],
+            "classroom_cours_course_modify": [
+              "update_course_work"
+            ],
+            "classroom_cour_cour_patc_480d": [
+              "update_course_work"
+            ],
+            "classroom_list_submissions": [
+              "list_course_work_submissions"
+            ],
+            "classroom_get_rubric": [
+              "get_course_work_rubric"
+            ],
+            "classroom_create_rubric": [
+              "create_course_work_rubric"
+            ],
+            "classroom_get_roster": [
+              "get_course_roster"
+            ],
+            "classroom_list_announcements": [
+              "list_announcement_summaries"
+            ],
+            "classroom_get_announcements": [
+              "get_announcements"
+            ],
+            "classroom_create_announcement": [
+              "create_announcement"
+            ],
+            "classroom_get_guardians": [
+              "get_guardian_info"
+            ]
+          },
+          "notes": {
+            "classroom_get_course": "One course by id, with its description and links. Google's list_courses returns these fields per course and has no get; kept so a known course id needs no list.",
+            "classroom_list_coursework": "Assignments, questions and materials of a course in one list (courseWork.list and courseWorkMaterials.list), published only unless include_drafts; include_submission_overview adds one studentSubmissions.list per item. Materials need a classroom.courseworkmaterials scope; without one the answer lists the coursework and says so.",
+            "classroom_cour_cour_list_1590": "Generated from courseWorkMaterials.list. Kept so a readonly login of this toolset asks for classroom.courseworkmaterials.readonly, which classroom_list_coursework needs for the materials (one tool can declare only one any-of scope list).",
+            "classroom_cour_cour_crea_e311": "Generated from courseWork.create (assignments and questions): a raw CourseWork body. Classroom makes it a DRAFT unless state is set. Not curated in this release.",
+            "classroom_cour_cour_crea_3302": "Generated from courseWorkMaterials.create (materials): a raw CourseWorkMaterial body. Classroom makes it a DRAFT unless state is set.",
+            "classroom_cour_cour_patc_dea2": "Generated from courseWork.patch: updateMask names the fields to change.",
+            "classroom_cours_course_modify": "Generated from courseWork.modifyAssignees: adds or removes the students of a coursework item.",
+            "classroom_cour_cour_patc_480d": "Generated from courseWorkMaterials.patch: updateMask names the fields to change.",
+            "classroom_create_rubric": "Google's learningGoalId comes from search_course_standards, which has no public REST method (no learning-standards method in Classroom v1 Discovery), so no tool here matches search_course_standards. Google takes rubrics only for coursework of the same Cloud project."
+          }
+        }
+      },
       "generatedToolCount": 104
     },
     "gapps": {
@@ -2041,6 +2294,41 @@
         }
       ],
       "gateway": [],
+      "toolsets": {
+        "google": {
+          "source": "No official Google MCP server for Apps Script was found (Google's Cloud and Workspace MCP lists, 2026-10-29; a negative, not confirmed by Google); a lean set chosen here.",
+          "tools": [
+            "appsscript_projects_get",
+            "appsscript_projects_get_content",
+            "appsscript_projects_update_content",
+            "appsscript_projects_versions_create",
+            "appsscript_projects_deployments_list",
+            "appsscript_projects_deployments_create",
+            "appsscript_processes_list",
+            "appsscript_scripts_run"
+          ],
+          "matches": {
+            "appsscript_projects_get": [],
+            "appsscript_projects_get_content": [],
+            "appsscript_projects_update_content": [],
+            "appsscript_projects_versions_create": [],
+            "appsscript_projects_deployments_list": [],
+            "appsscript_projects_deployments_create": [],
+            "appsscript_processes_list": [],
+            "appsscript_scripts_run": []
+          },
+          "notes": {
+            "appsscript_projects_get": "A script project's title, parent file and times, by script id.",
+            "appsscript_projects_get_content": "The files of a script project: name, type and source.",
+            "appsscript_projects_update_content": "Replaces every file of a script project with the files given. A write, so it asks first; send the files you keep too.",
+            "appsscript_projects_versions_create": "Saves the current code as a numbered version, for a deployment. A write, so it asks first.",
+            "appsscript_projects_deployments_list": "The deployments of a script project and their entry points.",
+            "appsscript_projects_deployments_create": "Deploys a version (as an API executable, web app or add-on, by its manifest). A write, so it asks first.",
+            "appsscript_processes_list": "Your recent script runs: function, status, start time and duration.",
+            "appsscript_scripts_run": "Runs a function of a script deployed as an API executable. Destructive, so it asks twice: the script can do anything its own scopes allow, and the sign-in needs those scopes (the login asks for one of them here, userinfo.email)."
+          }
+        }
+      },
       "generatedToolCount": 18
     },
     "gadmin": {

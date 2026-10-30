@@ -92,6 +92,40 @@
     "title": "chat.customEmojis.list"
   },
   {
+    "name": "mcp__plugin_gchat_gchat__chat_list_members",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.memberships",
+      "https://www.googleapis.com/auth/chat.memberships.readonly"
+    ],
+    "title": "List Chat members"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_list_messages",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.messages",
+      "https://www.googleapis.com/auth/chat.messages.readonly"
+    ],
+    "title": "List Chat messages"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_mark_read",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.users.readstate"
+    ],
+    "title": "Mark Chat conversations read"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_mark_unread",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.users.readstate"
+    ],
+    "title": "Mark a Chat conversation unread"
+  },
+  {
     "name": "mcp__plugin_gchat_gchat__chat_media_download",
     "kind": "read",
     "scopes": [
@@ -101,6 +135,33 @@
     ],
     "methodId": "chat.media.download",
     "title": "chat.media.download"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_search_conversations",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.spaces",
+      "https://www.googleapis.com/auth/chat.spaces.readonly"
+    ],
+    "title": "Find Chat conversations"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_search_messages",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.messages",
+      "https://www.googleapis.com/auth/chat.messages.readonly"
+    ],
+    "title": "Search Chat messages"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_send_message",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.messages",
+      "https://www.googleapis.com/auth/chat.messages.create"
+    ],
+    "title": "Send a Chat message"
   },
   {
     "name": "mcp__plugin_gchat_gchat__chat_spaces_complete_import",

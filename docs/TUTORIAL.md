@@ -184,7 +184,7 @@ npx google-services-mcps doctor --plugin gmail
 |---|---|---|
 | **Allow write tools** (`allow_writes`) | Off | Lists the tools that change or delete data. Off means only reads are listed. |
 | **Confirm before changes** (`confirmation`) | `every-change` | When to ask: `every-change`, `destructive-only` or `off`. Section 9. |
-| **Toolset** (`toolset`) | `all` | Which tools the server lists: `all` (every tool), `google` (the tools that match Google's official MCP server; defined for Gmail so far, all tools elsewhere) or `curated` (the hand-written tools and the gateway tools). |
+| **Toolset** (`toolset`) | `all` | Which tools the server lists: `all` (every tool), `google` (the tools that match Google's official MCP server, or a small set chosen here where Google has none; a product without such a list shows all tools) or `curated` (the hand-written tools and the gateway tools). |
 | **Token directory** (`token_dir`) | Empty | Where logins are kept. Empty means `~/.google-services-mcps`. |
 
 `gadmin` also has **Workspace super admin email** (`admin_subject`) and **Service account key file** (`service_account_key_file`). `gads` has an optional **Google Ads developer token** (`ads_developer_token`) and **Manager (login) customer ID** (`ads_login_customer_id`). See [SETUP.md](SETUP.md).
@@ -565,6 +565,10 @@ Each example names the tool an agent would call. The tool names are checked. The
 - **Drive, recent work:** "What did I work on this week? Summarise the budget workbook." The agent calls `drive_list_recent`, then `drive_read_text` (it reads Google Sheets and Excel files alike). Reads never ask.
 - **Sheets, a change:** "Add a total row under the expenses." The agent calls `sheets_get_values`, then `sheets_insert_rows` and `sheets_write_values` with `value_input: formulas`. Each write asks first, and needs a `readwrite` login and **Allow write tools**.
 - **Search Console (searchconsole):** "Which sites are in my Search Console?" The agent calls `sc_sites_list`.
+- **Google Chat, catching up:** "What did the Launch team say about the release today?" The agent finds the space with `chat_search_conversations`, then reads it with `chat_list_messages` (newest first, with `start_time`), or calls `chat_search_messages` with `query: "release"`. Reads never ask.
+- **Google Chat, a post:** "Tell the Launch team the build is green." The agent calls `chat_send_message`. It asks first; the approval shows the space's name and the text. This needs a `readwrite` login and **Allow write tools**.
+- **Contacts:** "What is Priya's phone number?" The agent calls `contacts_search`, shows the match and asks you to confirm before using it elsewhere. In a Workspace domain, `contacts_search_directory` searches the company directory. Reads never ask.
+- **Classroom:** "Who has not turned in the Chapter 4 quiz in Biology?" The agent calls `classroom_list_courses`, `classroom_list_coursework`, then `classroom_list_submissions`. Reads never ask. "Post a reminder about Friday's lab" makes a draft with `classroom_create_announcement` (it asks first); say "publish it" to post it at once.
 - **Google Cloud (cloud):** "List the BigQuery projects I can see." The agent calls `bigquery_projects_list`.
 - **Google Cloud, logs:** "Why did the checkout service fail this morning?" The agent calls `logging_entries_list` with the service's resource type, `severity: ERROR` and a time window, then `monitoring_query_promql` for the request rate. Reads never ask.
 - **Cloud Storage, a file:** "Read gs://shop-exports/orders.csv and save a summary next to it." The agent calls `gcs_read_text`, then `gcs_write_text`. The write asks first, does not replace an existing object unless asked, and needs a `readwrite` login and **Allow write tools**.

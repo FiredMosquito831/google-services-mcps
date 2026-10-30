@@ -1546,8 +1546,8 @@
       "name": "gchat",
       "plugin": "gchat",
       "group": "workspace-user",
-      "kind": "discovery",
-      "curated": null,
+      "kind": "curated+discovery",
+      "curated": "src/servers/gchat.ts",
       "apis": [
         {
           "api": "chat",
@@ -1558,6 +1558,19 @@
           "version": "v1"
         }
       ],
+      "toolsets": {
+        "google": [
+          "chat_search_conversations",
+          "chat_list_messages",
+          "chat_search_messages",
+          "chat_list_members",
+          "chat_send_message",
+          "chat_mark_read",
+          "chat_mark_unread",
+          "chat_users_spaces_space_notificatio_get",
+          "chat_users_spaces_space_notificat_patch"
+        ]
+      },
       "label": "Google Chat: Google Chat spaces, messages and members, plus Workspace Events subscriptions."
     },
     {
@@ -1572,14 +1585,28 @@
           "version": "v2"
         }
       ],
+      "toolsets": {
+        "google": [
+          "meet_spaces_create",
+          "meet_spaces_get",
+          "meet_conference_records_list",
+          "meet_conference_records_get",
+          "meet_conference_recor_participants_list",
+          "meet_conference_record_transcripts_list",
+          "meet_conference_transcript_entries_list",
+          "meet_conference_records_recordings_list",
+          "meet_conference_record_smart_notes_list",
+          "meet_conference_records_smart_notes_get"
+        ]
+      },
       "label": "Google Meet: Google Meet spaces, conference records, participants and recordings."
     },
     {
       "name": "gcontacts",
       "plugin": "gcontacts",
       "group": "workspace-user",
-      "kind": "discovery",
-      "curated": null,
+      "kind": "curated+discovery",
+      "curated": "src/servers/gcontacts.ts",
       "apis": [
         {
           "api": "people",
@@ -1608,6 +1635,13 @@
           "version": "v4beta"
         }
       ],
+      "toolsets": {
+        "google": [
+          "contacts_search_directory",
+          "contacts_search",
+          "profile_me"
+        ]
+      },
       "label": "Contacts and Profile: Google Contacts and People, personal health metrics, Data Portability, and the OAuth2 userinfo endpoints."
     },
     {
@@ -1626,20 +1660,56 @@
           "version": "v1"
         }
       ],
+      "toolsets": {
+        "google": [
+          "tasks_tasklists_list",
+          "tasks_tasks_list",
+          "tasks_tasks_get",
+          "tasks_tasks_insert",
+          "tasks_tasks_patch",
+          "tasks_tasks_delete",
+          "keep_notes_list",
+          "keep_notes_get"
+        ]
+      },
       "label": "Tasks and Keep: Google Tasks task lists and tasks, plus Google Keep notes."
     },
     {
       "name": "gclassroom",
       "plugin": "gclassroom",
       "group": "workspace-user",
-      "kind": "discovery",
-      "curated": null,
+      "kind": "curated+discovery",
+      "curated": "src/servers/gclassroom.ts",
       "apis": [
         {
           "api": "classroom",
           "version": "v1"
         }
       ],
+      "toolsets": {
+        "google": [
+          "classroom_list_courses",
+          "classroom_get_course",
+          "classroom_list_topics",
+          "classroom_create_topic",
+          "classroom_list_coursework",
+          "classroom_get_coursework",
+          "classroom_cour_cour_list_1590",
+          "classroom_cour_cour_crea_e311",
+          "classroom_cour_cour_crea_3302",
+          "classroom_cour_cour_patc_dea2",
+          "classroom_cours_course_modify",
+          "classroom_cour_cour_patc_480d",
+          "classroom_list_submissions",
+          "classroom_get_rubric",
+          "classroom_create_rubric",
+          "classroom_get_roster",
+          "classroom_list_announcements",
+          "classroom_get_announcements",
+          "classroom_create_announcement",
+          "classroom_get_guardians"
+        ]
+      },
       "label": "Google Classroom: Google Classroom courses, coursework, submissions, students and teachers."
     },
     {
@@ -1658,6 +1728,18 @@
           "version": "v2"
         }
       ],
+      "toolsets": {
+        "google": [
+          "appsscript_projects_get",
+          "appsscript_projects_get_content",
+          "appsscript_projects_update_content",
+          "appsscript_projects_versions_create",
+          "appsscript_projects_deployments_list",
+          "appsscript_projects_deployments_create",
+          "appsscript_processes_list",
+          "appsscript_scripts_run"
+        ]
+      },
       "label": "Apps Script: Apps Script projects and execution, plus the Workspace Marketplace SDK."
     },
     {

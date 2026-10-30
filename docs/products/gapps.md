@@ -44,6 +44,8 @@ Start with `--profile readonly`. Writes need a `readwrite` login and the plugin 
 
 The full list is in `docs/capabilities/gapps.md`.
 
+Google has no official MCP server for Apps Script (none was found on 2026-10-29). With the plugin option `toolset: google`, the server lists a small set chosen here instead: `appsscript_projects_get`, `appsscript_projects_get_content`, `appsscript_projects_update_content`, `appsscript_projects_versions_create`, `appsscript_projects_deployments_list`, `appsscript_projects_deployments_create`, `appsscript_processes_list` and `appsscript_scripts_run` (destructive: it asks twice) (8 tools), plus `health` and the sign-in tools. A `readonly` login with that toolset asks for `script.projects.readonly` and `script.deployments.readonly`; a `readwrite` login for `script.projects`, `script.deployments`, `script.processes` and `userinfo.email`. A function run with `appsscript_scripts_run` needs the scopes the script itself uses; sign in with those as an explicit scope list.
+
 ## Example requests
 
 - "Show me the code of my Sheets expense script." Claude runs the project content read tool. No prompt.

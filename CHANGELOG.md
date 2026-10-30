@@ -2,6 +2,62 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.15.0 - 2026-10-30
+
+### New: lean google toolsets for Meet, Tasks and Keep, and Apps Script
+- Google has no official MCP server for these products (none was found on 2026-10-29), so their `google` toolset is a small set of existing tools chosen here, as for Search Console. Each tool has a note in `config/products.json`. No tool is added or changed.
+- gmeet (10): `meet_spaces_create` (write), `meet_spaces_get`, the conference record list and get, participants, transcripts and transcript entries, recordings, smart notes list and get. `readonly`: `meetings.space.readonly`; `readwrite`: `meetings.space.created`.
+- gtasks (8): `tasks_tasklists_list`, `tasks_tasks_list`, `tasks_tasks_get`, `tasks_tasks_insert` and `tasks_tasks_patch` (writes), `tasks_tasks_delete` (destructive), `keep_notes_list`, `keep_notes_get`. `readonly`: `tasks.readonly`, `keep.readonly`; `readwrite`: `tasks`, `keep`.
+- gapps (8): `appsscript_projects_get`, `appsscript_projects_get_content`, `appsscript_projects_update_content`, `appsscript_projects_versions_create` and `appsscript_projects_deployments_create` (writes), `appsscript_projects_deployments_list`, `appsscript_processes_list`, `appsscript_scripts_run` (destructive). `readonly`: `script.projects.readonly`, `script.deployments.readonly`; `readwrite`: `script.projects`, `script.deployments`, `script.processes`, `userinfo.email`.
+
+### Not changed
+- The tools these plugins list with `all`, their schemas, scopes of the `all` toolset (every server's requirements are byte-identical), the write gate and the hook.
+- Tests that need a product without a google list use gyoutube now.
+
+## 1.14.0 - 2026-10-30
+
+### New: readable Classroom tools that match Google's Classroom MCP server
+The generated Classroom tools have hashed names (the 64-character budget). These have readable ones, each naming the Google tool it matches, and their answers carry the Classroom web links (stream `https://classroom.google.com/c/{course_id}`, Classwork, People, and each item's link). Dates are UTC unless `time_zone` (an IANA name) is given.
+- Reads: `classroom_list_courses` (`list_courses`; active by default, `role` for courses you teach or take), `classroom_get_course`, `classroom_list_topics` (`list_topics`), `classroom_list_coursework` (`list_course_work_summaries`: assignments, questions and materials in one list, newest change first, published unless `include_drafts`, filters by type, topic and title; `include_submission_overview` adds counts by state, late and graded, or a student's own submission; one page token covers both lists; materials without their scope give a note instead of an error), `classroom_get_coursework` (`get_course_work`; up to 50 ids, each tried as coursework then as a material), `classroom_get_roster` (`get_course_roster`; teachers and students), `classroom_list_announcements` (`list_announcement_summaries`; text cut at 300 characters), `classroom_get_announcements` (`get_announcements`; up to 50 ids), `classroom_list_submissions` (`list_course_work_submissions`; student names from the roster, grade and percentage, the student's attachments, answer and rubric grades on request), `classroom_get_rubric` (`get_course_work_rubric`) and `classroom_get_guardians` (`get_guardian_info`; up to 50 students).
+- Writes, each asking first: `classroom_create_topic` (`create_topic`), `classroom_create_announcement` (`create_announcement`; a draft unless `publish: true` or `scheduled_time`; links and Drive files, at most 20 materials; some students only), `classroom_create_rubric` (`create_course_work_rubric`; Classroom's rubric rules checked before the request).
+- Google's `search_course_standards` has no public REST method; no tool matches it.
+- The `google` toolset of gclassroom: these 14 and the generated coursework create, patch, assignee and materials-list tools (20). A `readonly` login with it asks for the read-only scopes of announcements, courses, coursework (`coursework.me.readonly`), coursework materials, guardian links of students, rosters and topics; a `readwrite` login for the read-write scopes of the same areas.
+
+### Not changed
+- Scopes of the `all` toolset (gclassroom's resolve the same; its login requirements grow by the 14 tools), the generated tool names, the write gate and the hook. Every other plugin lists the same tools with the same schemas.
+- Not tested against the live Classroom API (Google's HTTP layer stubbed; the request shapes are checked against Google's Discovery document).
+
+## 1.13.0 - 2026-10-30
+
+### New: Contacts and profile tools that match Google's People MCP server
+Each description names the Google tool it matches. All three are reads.
+- `contacts_search_directory` (`search_directory_people`): your organization's Workspace directory by name or email prefix; domain profiles by default, `sources` adds the domain shared contacts; 10 a page (at most 500).
+- `contacts_search` (`search_contacts`): your contacts by the start of a name, email, phone or organization, at most 30. It sends the empty warm-up search Google asks for before each search, so new contacts are found.
+- Both set the person fields (names, email addresses, phone numbers, organizations; `fields` picks others) that the generated tools need from the caller, return short entries (primary name and email first), and carry Google's caution: show the people found and let the person confirm before a result goes into another tool.
+- `profile_me` (`get_user_profile`): your email, and your name and picture when the sign-in holds `userinfo.profile`; the answer says when it does not.
+- The `google` toolset of gcontacts: these three. A `readonly` login with it asks for `contacts.readonly` and `directory.readonly`; a `readwrite` login for `contacts`, `directory.readonly` and `userinfo.email`. No profile asks for `userinfo.profile`, so the name needs an explicit scope list.
+
+### Not changed
+- Scopes of the `all` toolset (gcontacts' resolve the same; its login requirements grow by the three tools), the gateway, the write gate and the hook. Every other plugin lists the same tools with the same schemas.
+- Not tested against the live People API (Google's HTTP layer stubbed; the request shapes are checked against Google's Discovery documents).
+
+## 1.12.0 - 2026-10-30
+
+### New: Google Chat tools that match Google's Chat MCP server
+Each description names the Google tool it matches. Reads never ask; the three writes ask first.
+- `chat_search_conversations` (read; `search_conversations`): find a conversation id by a word of its name (case-insensitive), by one person (your direct message with them, `spaces.findDirectMessage`) or by several people (your group chats with exactly them, `spaces.findGroupChats`, at most 30 a page), or list every conversation you are in. Group chats by people need a `chat.memberships` scope.
+- `chat_list_messages` (read; `list_messages`): one conversation, newest first (or `order: oldest`), in Markdown (`format: chat` for Chat's own syntax), narrowed by `thread_id` and `start_time` / `end_time`. Messages only one person can see are left out, as in Google's tool.
+- `chat_search_messages` (read; `search_messages`): words and filters (conversations, senders, mentions of you, unread, links, attachments, time, kind of conversation, or extra conditions in the API's syntax) across your conversations; refused before any request when there is nothing to search for or the query is over Google's 1,000 characters.
+- `chat_list_members` (read; `list_memberships`): who is in a conversation, with role and state; invited people, Google Groups and managers only on request. It stands in for the generated `chat_spaces_members_list` in the `google` toolset, whose scope list names the Chat app scopes `chat.bot` and `chat.import`.
+- `chat_send_message` (write; `send_message`): post as you, in Markdown, as a new thread or a reply in `thread_id` (a reply fails rather than starting a new thread). Its prepare step reads the conversation's name, so the approval shows where the message goes and its first 500 characters. Over Google's 32,000 bytes, empty text, or a thread of another conversation are refused before any request. Cards and citations, which only Chat apps can post, are not offered.
+- `chat_mark_read` (write; `mark_as_read`): up to 10 conversations a call, each its own request; one that fails is listed with Google's reason and does not stop the others. `chat_mark_unread` (write; `mark_as_unread`): one conversation from a given time on. Threads cannot be marked: the Chat API has no public method for a thread's read state.
+- Each message's text is cut at `max_chars` (default 2,000, at most 20,000) and marked `text_truncated`.
+- The `google` toolset of gchat: these seven and the generated notification-setting tools, for the nine tools of Google's Chat MCP server. A `readonly` login with it asks for `chat.spaces.readonly`, `chat.messages.readonly` and `chat.memberships.readonly`; a `readwrite` login for `chat.spaces`, `chat.messages`, `chat.memberships`, `chat.users.readstate` and `chat.users.spacesettings`.
+
+### Not changed
+- Scopes of the `all` toolset (gchat's resolve the same, including `chat.bot` and `chat.import` from its generated tools; its login requirements grow by the seven tools), the write gate and the hook. Every other plugin lists the same tools with the same schemas.
+- Not tested against the live Chat API (Google's HTTP layer stubbed; the request shapes are checked against Google's Discovery document).
+
 ## 1.11.0 - 2026-10-30
 
 ### New: a lean google toolset for Search Console

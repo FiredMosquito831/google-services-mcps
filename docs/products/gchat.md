@@ -33,6 +33,8 @@ Start with `--profile readonly`. Posting and changes need a `readwrite` login an
 
 | Area | Tools | Safety | What it does |
 |---|---|---|---|
+| Conversations and messages (short answers) | `chat_search_conversations`, `chat_list_messages`, `chat_search_messages`, `chat_list_members` | read | Find a conversation by name or people, read or search messages in Markdown, list members |
+| | `chat_send_message`, `chat_mark_read`, `chat_mark_unread` | write | Post as you (the approval shows the space and the text), change your read state |
 | Messages | `chat_spaces_messages_create`, `chat_spaces_messages_update`, list and get | write, read | Post, edit and read messages |
 | | `chat_spaces_messages_delete` | destructive | Delete a message |
 | Spaces | list, get, search, create, update | read, write | Find spaces, read them, create or change them |
@@ -48,10 +50,13 @@ Start with `--profile readonly`. Posting and changes need a `readwrite` login an
 
 The full list is in `docs/capabilities/gchat.md`.
 
+The first seven tools match the tools of Google's Chat MCP server (https://developers.google.com/workspace/chat/api/reference/mcp/tools_list). With the plugin option `toolset: google`, the server lists them and the two notification-setting tools (`chat_users_spaces_space_notificatio_get` and `chat_users_spaces_space_notificat_patch`), plus `health` and the sign-in tools. A `readonly` login with that toolset asks for `chat.spaces.readonly`, `chat.messages.readonly` and `chat.memberships.readonly`; a `readwrite` login for `chat.spaces`, `chat.messages`, `chat.memberships`, `chat.users.readstate` and `chat.users.spacesettings`. Google's thread read states, cards and citations have no public method a user can call, so they are not offered.
+
 ## Example requests
 
-- "Summarize the last 50 messages in the Launch space." Claude finds the space and lists its messages. No prompt.
-- "Post 'Release is live' in the Launch space." Claude runs `chat_spaces_messages_create`. It asks first.
+- "Summarize the last 50 messages in the Launch space." Claude finds the space with `chat_search_conversations` and reads it with `chat_list_messages`. No prompt.
+- "Find where Ana mentioned the budget last week." Claude runs `chat_search_messages`. No prompt.
+- "Post 'Release is live' in the Launch space." Claude runs `chat_send_message`. It asks first.
 - "Edit my last message in Launch to fix the date." Claude lists the messages, then runs `chat_spaces_messages_update`. It asks first.
 - "Delete that message." Claude runs `chat_spaces_messages_delete`. It asks twice.
 - "Tell me when new messages arrive in the Support space." Claude creates a Workspace Events subscription. It asks first.

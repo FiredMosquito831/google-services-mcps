@@ -1,13 +1,13 @@
 ---
 name: gclassroom
-description: Google Classroom courses, coursework, submissions, students and teachers. Served by the gclassroom MCP server with 114 tools. Use for requests about these Google APIs.
+description: Google Classroom courses, coursework, submissions, students and teachers. Served by the gclassroom MCP server with 128 tools. Use for requests about these Google APIs.
 ---
 
 # Google Classroom
 
 Google Classroom courses, coursework, submissions, students and teachers.
 
-The `gclassroom` MCP server exposes 114 tools. Per-method tools cover the Discovery APIs listed below.
+The `gclassroom` MCP server exposes 128 tools. Per-method tools cover the Discovery APIs listed below.
 
 ## Log in
 

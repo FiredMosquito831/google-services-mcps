@@ -135,9 +135,11 @@ test('tool counts per toolset from the tool map: gmail all, google and curated',
   assert.deepEqual(toolsetCount(map, 'gmail', 'gmail', 'google', gmail.toolsets), { count: 14 + runtime, effective: 'google' });
   // curated: the 15 hand-written Gmail tools and the 3 gateway tools.
   assert.deepEqual(toolsetCount(map, 'gmail', 'gmail', 'curated', gmail.toolsets), { count: 18 + runtime, effective: 'curated' });
-  // gtasks has no google list, so google counts every tool. (gsc has a lean list since 1.11.0.)
+  // gyoutube has no google list, so google counts every tool. (gsc has a lean list since 1.11.0, gtasks since 1.15.0.)
+  const gyoutube = env.registry.servers.find((s) => s.plugin === 'gyoutube');
+  assert.equal(toolsetCount(join(REPO, 'plugins', 'gyoutube', 'tool-map.json'), 'gyoutube', 'gyoutube', 'google', gyoutube.toolsets).effective, 'all');
   const gtasks = env.registry.servers.find((s) => s.plugin === 'gtasks');
-  assert.equal(toolsetCount(join(REPO, 'plugins', 'gtasks', 'tool-map.json'), 'gtasks', 'gtasks', 'google', gtasks.toolsets).effective, 'all');
+  assert.equal(toolsetCount(join(REPO, 'plugins', 'gtasks', 'tool-map.json'), 'gtasks', 'gtasks', 'google', gtasks.toolsets).effective, 'google');
   const gsc = env.registry.servers.find((s) => s.plugin === 'gsc');
   assert.equal(toolsetCount(join(REPO, 'plugins', 'gsc', 'tool-map.json'), 'gsc', 'gsc', 'google', gsc.toolsets).effective, 'google');
 });

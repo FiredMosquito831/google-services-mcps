@@ -1,6 +1,7 @@
 /**
  * REST calls of the curated gcloud tools whose APIs have no client library in this package (Logging, Monitoring v1,
- * IAM v1, Cloud Billing, Cloud Storage). Each call goes through the account's auth client, so the retry rules and the
+ * IAM v1, Cloud Billing, Cloud Storage), and of the curated Workspace tools in the same position (gchat.ts: the Chat
+ * API). Each call goes through the account's auth client, so the retry rules and the
  * account choice of core/auth.ts apply. A Google error body is rethrown with its HTTP status, reason and message, as
  * describeError (core/tools.ts) reads them, the same way bqCall in cloud.ts does for BigQuery.
  */
@@ -10,7 +11,7 @@ type Auth = OAuth2Client | JWT;
 
 export interface CloudRequest {
   url: string;
-  method?: 'GET' | 'POST';
+  method?: 'GET' | 'POST' | 'PATCH';
   /** Query parameters; undefined values are left out. */
   query?: Record<string, string | number | boolean | undefined>;
   /** A JSON body (an object), or raw bytes for a media upload (a string, a Buffer or a stream). */

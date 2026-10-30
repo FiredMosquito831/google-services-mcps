@@ -4,13 +4,23 @@ Google Contacts and People, personal health metrics, Data Portability, and the O
 
 - Plugin: `gcontacts`, MCP server: `gcontacts`, login: Desktop OAuth client, then `login workspace-user`
 - Install: `claude plugin install gcontacts@google-services-mcps`
-- Tools: 72 total. Curated 9, per-method 59, gateway 3. Read 35, write 27, destructive 9, dynamic 1.
+- Tools: 75 total. Curated 12, per-method 59, gateway 3. Read 38, write 27, destructive 9, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 72, google 72 (all), curated 12 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 75, google 12, curated 15 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
 
-## Curated tools (9)
+## Toolset google (3)
+
+The tools that match Google's official MCP server for this product (https://developers.google.com/people/api/mcp/tools_list).
+
+| Tool | Google's tool | Note |
+|---|---|---|
+| `contacts_search_directory` | `search_directory_people` | Sets the readMask (names, email addresses, phone numbers, organizations) and the source (domain profiles) that the generated people_people_search_directory needs from the caller. Carries Google's caution: confirm the person before a result goes into another tool. |
+| `contacts_search` | `search_contacts` | Sends the empty warm-up search Google asks for before each search, then the search, with a default readMask. Carries Google's caution. |
+| `profile_me` | `get_user_profile` | From the OAuth2 userinfo endpoint. Every sign-in holds userinfo.email, so the email is always there; the name needs userinfo.profile, which a readonly login does not ask for (it is not a read-only scope by name). |
+
+## Curated tools (12)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
@@ -22,7 +32,10 @@ Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 72, google 72 (all), 
 | `auth_setup_client` | write | Save the Google OAuth client | (none) |
 | `auth_setup_service_account` | write | Set up the service account key | (none) |
 | `auth_status` | read | Sign-in status | (none) |
+| `contacts_search` | read | Search your contacts | contacts, contacts.readonly |
+| `contacts_search_directory` | read | Search the Workspace directory | directory.readonly |
 | `health` | read | Server health | (none) |
+| `profile_me` | read | Your Google profile | openid, userinfo.email |
 
 ## Per-method tools (59)
 

@@ -4,13 +4,29 @@ Google Chat spaces, messages and members, plus Workspace Events subscriptions.
 
 - Plugin: `gchat`, MCP server: `gchat`, login: Desktop OAuth client, then `login workspace-user`
 - Install: `claude plugin install gchat@google-services-mcps`
-- Tools: 70 total. Curated 9, per-method 60, gateway 0. Read 31, write 31, destructive 8, dynamic 0.
+- Tools: 77 total. Curated 16, per-method 60, gateway 0. Read 35, write 34, destructive 8, dynamic 0.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 70, google 70 (all), curated 70 (all) tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 77, google 18, curated 16 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
 
-## Curated tools (9)
+## Toolset google (9)
+
+The tools that match Google's official MCP server for this product (https://developers.google.com/workspace/chat/api/reference/mcp/tools_list).
+
+| Tool | Google's tool | Note |
+|---|---|---|
+| `chat_search_conversations` | `search_conversations` |  |
+| `chat_list_messages` | `list_messages` |  |
+| `chat_search_messages` | `search_messages` |  |
+| `chat_list_members` | `list_memberships` | Curated in place of the generated chat_spaces_members_list, whose scope list also names the Chat app scopes chat.bot and chat.import; the greedy readwrite cover would ask a person to grant chat.bot. chat_list_members lists only chat.memberships and chat.memberships.readonly. |
+| `chat_send_message` | `send_message` | Text in Markdown (or Chat's own syntax), as a new thread or a reply. Google's cards and citations are left out: only Chat apps can post them. |
+| `chat_mark_read` | `mark_as_read` | Conversations only, up to 10 a call, each its own request with its own failure. Google's thread_ids have no public REST method (the Chat API has getThreadReadState only). |
+| `chat_mark_unread` | `mark_as_unread` | Conversations only; a thread's read state has no public REST method. |
+| `chat_users_spaces_space_notificatio_get` | `get_notification_settings` | Generated from spaceNotificationSetting.get: name is users/me/spaces/{space}/spaceNotificationSetting. |
+| `chat_users_spaces_space_notificat_patch` | `update_notification_settings` | Generated from spaceNotificationSetting.patch: name is users/me/spaces/{space}/spaceNotificationSetting, updateMask notification_setting and/or mute_setting. A write, so it asks first. |
+
+## Curated tools (16)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
@@ -22,6 +38,13 @@ Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 70, google 70 (all), 
 | `auth_setup_client` | write | Save the Google OAuth client | (none) |
 | `auth_setup_service_account` | write | Set up the service account key | (none) |
 | `auth_status` | read | Sign-in status | (none) |
+| `chat_list_members` | read | List Chat members | chat.memberships, chat.memberships.readonly |
+| `chat_list_messages` | read | List Chat messages | chat.messages, chat.messages.readonly |
+| `chat_mark_read` | write | Mark Chat conversations read | chat.users.readstate |
+| `chat_mark_unread` | write | Mark a Chat conversation unread | chat.users.readstate |
+| `chat_search_conversations` | read | Find Chat conversations | chat.spaces, chat.spaces.readonly |
+| `chat_search_messages` | read | Search Chat messages | chat.messages, chat.messages.readonly |
+| `chat_send_message` | write | Send a Chat message | chat.messages, chat.messages.create |
 | `health` | read | Server health | (none) |
 
 ## Per-method tools (60)

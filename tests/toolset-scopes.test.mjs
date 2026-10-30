@@ -158,9 +158,9 @@ test('requirements: curated keeps the curated tools and, with api_call, the gate
 test('requirements: a toolset a product does not have counts every tool, and says so', async () => {
   const { cfg } = tempTokens();
   const lines = [];
-  const google = await requirementsFor(['gtasks'], cfg, { warn: (l) => lines.push(l), toolset: 'google' });
-  assert.deepEqual(google, await requirementsFor(['gtasks'], cfg, quiet));
-  assert.deepEqual(lines, ['[gtasks] toolset google is not defined for this product yet; every tool counts toward the scopes.']);
+  const google = await requirementsFor(['gyoutube'], cfg, { warn: (l) => lines.push(l), toolset: 'google' });
+  assert.deepEqual(google, await requirementsFor(['gyoutube'], cfg, quiet));
+  assert.deepEqual(lines, ['[gyoutube] toolset google is not defined for this product yet; every tool counts toward the scopes.']);
 });
 
 test('requirements: the lean gsc google list resolves to webmasters.readonly (readonly) and webmasters with indexing (readwrite)', async () => {
@@ -174,6 +174,88 @@ test('requirements: the lean gsc google list resolves to webmasters.readonly (re
   assert.deepEqual(resolveScopes(google, 'readwrite').scopes, [G('indexing'), G('webmasters')]);
   // The all toolset also asks for siteverification (the Site Verification tools), which the lean list does not hold.
   assert.deepEqual(resolveScopes(await requirementsFor(['gsc'], cfg, quiet), 'readwrite').scopes, [G('indexing'), G('siteverification'), G('webmasters')]);
+});
+
+test('requirements: the gchat google list resolves to Chat user scopes only, never the Chat app scopes', async () => {
+  const { cfg } = tempTokens();
+  const google = await requirementsFor(['gchat'], cfg, { ...quiet, toolset: 'google' });
+  assert.equal(google.length, 9);
+  const readonly = resolveScopes(google, 'readonly');
+  assert.deepEqual(readonly.scopes, [G('chat.memberships.readonly'), G('chat.messages.readonly'), G('chat.spaces.readonly')]);
+  // The notification settings have no read-only scope, so their read stays outside a readonly login.
+  assert.ok(readonly.uncovered.includes('gchat/chat_users_spaces_space_notificatio_get'));
+  const readwrite = resolveScopes(google, 'readwrite').scopes;
+  assert.deepEqual(readwrite, [G('chat.memberships'), G('chat.messages'), G('chat.spaces'), G('chat.users.readstate'), G('chat.users.spacesettings')]);
+  for (const app of ['chat.bot', 'chat.import']) assert.equal(readwrite.includes(G(app)), false, app);
+  // The all toolset resolves as before 1.12.0: its generated tools still list chat.bot and chat.import.
+  const all = resolveScopes(await requirementsFor(['gchat'], cfg, quiet), 'readwrite').scopes;
+  assert.ok(all.includes(G('chat.bot')) && all.includes(G('chat.import')));
+});
+
+test('requirements: the gcontacts google list resolves to contacts and directory scopes, no gateway method', async () => {
+  const { cfg } = tempTokens();
+  const google = await requirementsFor(['gcontacts'], cfg, { ...quiet, toolset: 'google' });
+  assert.deepEqual(toolsOf(google), ['contacts_search', 'contacts_search_directory', 'profile_me']);
+  assert.equal(google.filter((r) => r.gateway).length, 0, 'the gateway methods (dataportability, health) do not count');
+  const readonly = resolveScopes(google, 'readonly');
+  assert.deepEqual(readonly.scopes, [G('contacts.readonly'), G('directory.readonly')]);
+  // userinfo.* are not read-only scopes by name; every sign-in adds userinfo.email, which registers profile_me anyway.
+  assert.deepEqual(readonly.uncovered, ['gcontacts/profile_me']);
+  assert.deepEqual(resolveScopes(google, 'readwrite').scopes, [G('contacts'), G('directory.readonly'), EMAIL]);
+});
+
+test('requirements: the gclassroom google list resolves to the Classroom read-only scopes, materials included', async () => {
+  const { cfg } = tempTokens();
+  const google = await requirementsFor(['gclassroom'], cfg, { ...quiet, toolset: 'google' });
+  assert.equal(google.length, 20);
+  const C = (s) => G(`classroom.${s}`);
+  assert.deepEqual(resolveScopes(google, 'readonly').scopes, [
+    C('announcements.readonly'),
+    C('courses.readonly'),
+    C('coursework.me.readonly'),
+    C('courseworkmaterials.readonly'),
+    C('guardianlinks.students.readonly'),
+    C('rosters.readonly'),
+    C('topics.readonly'),
+  ]);
+  assert.deepEqual(resolveScopes(google, 'readwrite').scopes, [
+    C('announcements'),
+    C('courses'),
+    C('coursework.students'),
+    C('courseworkmaterials'),
+    C('guardianlinks.students'),
+    C('rosters'),
+    C('topics'),
+  ]);
+  // Without the generated materials list, no tool of the list would bring the materials scope to a readonly login.
+  const withoutMaterialsList = google.filter((r) => r.tool !== 'gclassroom/classroom_cour_cour_list_1590');
+  assert.equal(resolveScopes(withoutMaterialsList, 'readonly').scopes.includes(C('courseworkmaterials.readonly')), false);
+});
+
+test('requirements: the lean gmeet, gtasks and gapps lists resolve to the narrow scopes of their tools', async () => {
+  const { cfg } = tempTokens();
+  const resolved = async (id) => {
+    const reqs = await requirementsFor([id], cfg, { ...quiet, toolset: 'google' });
+    return { n: reqs.length, readonly: resolveScopes(reqs, 'readonly'), readwrite: resolveScopes(reqs, 'readwrite').scopes, full: resolveScopes(reqs, 'full').scopes };
+  };
+  const meet = await resolved('gmeet');
+  assert.equal(meet.n, 10);
+  assert.deepEqual(meet.readonly.scopes, [G('meetings.space.readonly')]);
+  assert.deepEqual(meet.readwrite, [G('meetings.space.created')]);
+  const tasks = await resolved('gtasks');
+  assert.equal(tasks.n, 8);
+  assert.deepEqual(tasks.readonly.scopes, [G('keep.readonly'), G('tasks.readonly')]);
+  // The Keep reads list keep and keep.readonly; readwrite prefers the write scope on a tie, as in the all toolset.
+  assert.deepEqual(tasks.readwrite, [G('keep'), G('tasks')]);
+  const apps = await resolved('gapps');
+  assert.equal(apps.n, 8);
+  assert.deepEqual(apps.readonly.scopes, [G('script.deployments.readonly'), G('script.projects.readonly')]);
+  // script.processes has no read-only scope, so the processes list stays outside a readonly login.
+  assert.ok(apps.readonly.uncovered.includes('gapps/appsscript_processes_list'));
+  assert.deepEqual(apps.readwrite, [G('script.deployments'), G('script.processes'), G('script.projects'), EMAIL]);
+  // full takes the broadest scope scripts.run lists, the full Gmail scope; readwrite does not.
+  assert.ok(apps.full.includes('https://mail.google.com/'));
+  assert.equal(apps.readwrite.includes('https://mail.google.com/'), false);
 });
 
 test('--toolset: parsed for login, scopes and setup-admin; an unknown value is a usage error', () => {

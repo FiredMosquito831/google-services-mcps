@@ -9,10 +9,10 @@ const here = dirname(fileURLToPath(import.meta.url));
 const dist = (p) => new URL(`../dist/${p}`, import.meta.url).href;
 
 // Every hand-written (curated) module. Each one exports buildTools and nothing that starts a server.
-const MODULES = ['cloud', 'gmail', 'gdrive', 'gcalendar', 'workspace-admin', 'searchconsole'];
+const MODULES = ['cloud', 'gmail', 'gdrive', 'gcalendar', 'workspace-admin', 'searchconsole', 'gchat', 'gcontacts', 'gclassroom'];
 // The product modules that must hold only their own area's tools.
-const AREA_PREFIX = { gmail: ['gmail'], gdrive: ['drive', 'sheets'], gcalendar: ['calendar'] };
-const EXPECTED_COUNT = { gmail: 15, gdrive: 12, gcalendar: 9 };
+const AREA_PREFIX = { gmail: ['gmail'], gdrive: ['drive', 'sheets'], gcalendar: ['calendar'], gchat: ['chat'], gcontacts: ['contacts', 'profile'], gclassroom: ['classroom'] };
+const EXPECTED_COUNT = { gmail: 15, gdrive: 12, gcalendar: 9, gchat: 7, gcontacts: 3, gclassroom: 14 };
 const KINDS = new Set(['read', 'write', 'destructive']);
 
 const dir = mkdtempSync(join(tmpdir(), 'gsm-curated-'));
@@ -49,7 +49,8 @@ for (const name of MODULES) {
       assert.ok(KINDS.has(t.kind), `${t.name} has a kind (${t.kind})`);
       assert.ok(t.title && t.description, `${t.name} has a title and description`);
       assert.ok(Array.isArray(t.scopes) && t.scopes.length > 0, `${t.name} declares scopes`);
-      assert.ok(t.scopes.every((s) => typeof s === 'string' && s.startsWith('https://')), `${t.name} scopes are full URLs`);
+      // openid is the one bare scope name: OpenID Connect names it so, and Discovery lists it so (oauth2.userinfo.get).
+      assert.ok(t.scopes.every((s) => typeof s === 'string' && (s.startsWith('https://') || s === 'openid')), `${t.name} scopes are full URLs`);
     }
   });
 }
