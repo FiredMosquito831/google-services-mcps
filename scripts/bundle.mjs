@@ -34,7 +34,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const AUTHOR = { name: 'FiredMosquito831' };
-const MANIFEST_VERSION = '1.19.0';
+const MANIFEST_VERSION = '1.20.0';
 const TOOL_NAME_MAX = 64;
 /** When two API versions give one method two kinds, the riskier one is kept. A dynamic method is kept as dynamic (decided per call). */
 const RANK = { read: 0, write: 1, dynamic: 2, destructive: 3 };

@@ -48,6 +48,7 @@ const CURATED_FILES = {
   contacts: 'src/servers/gcontacts.ts',
   classroom: 'src/servers/gclassroom.ts',
   analytics: 'src/servers/ganalytics.ts',
+  firebase: 'src/servers/gfirebase.ts',
 };
 
 const ID_PATTERN = /^[a-z]+$/;

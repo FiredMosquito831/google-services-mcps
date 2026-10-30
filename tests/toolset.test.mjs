@@ -194,6 +194,50 @@ const BUSINESS_LEAN = {
     'mbinfo_locations_patch',
   ],
 };
+/**
+ * The gfirebase list (1.20.0): Google's Firebase MCP tools that call an API, through generated tools and five curated
+ * ones (Firestore, Remote Config, Authentication users).
+ */
+const FIREBASE_GOOGLE = [
+  'firebase_projects_list',
+  'firebase_projects_get',
+  'firebase_projects_search_apps',
+  'firebase_projec_web_app_get_con',
+  'firebase_projec_android_get_con',
+  'firebase_projec_ios_app_get_con',
+  'firebase_projects_add_firebase',
+  'firebase_project_web_app_create',
+  'firebase_project_android_create',
+  'firebase_project_ios_app_create',
+  'firebase_proje_andro_sha_create',
+  'firebaseru_project_release_list',
+  'firebaseru_project_rulesets_get',
+  'firebaseru_projects_test',
+  'firebaseap_proj_loca_backe_list',
+  'firebaseap_proj_locat_backe_get',
+  'firebasecr_proje_apps_issue_get',
+  'firebasecr_proj_apps_issu_patch',
+  'firebasecr_proj_apps_event_list',
+  'firebasecr_proj_apps_even_batch',
+  'firebasecr_proje_apps_repor_get',
+  'firebasecr_pro_app_iss_not_list',
+  'firebasecr_pro_app_iss_not_crea',
+  'firebasecr_pro_app_iss_not_dele',
+  'firebaseda_project_locatio_list',
+  'firebaseda_proj_loca_servi_list',
+  'firebaseda_pro_loc_ser_sch_list',
+  'firebaseda_pro_loc_ser_con_list',
+  'firebaseda_pro_loc_ser_exe_1fce',
+  'firebaseda_pro_loc_ser_exe_3072',
+  'firebaseda_pro_loc_ser_gen_8f53',
+  'firebaseda_pro_loc_ser_gen_cf40',
+  'fcm_projects_messages_send',
+  'firestore_get_document',
+  'firestore_list_documents',
+  'firestore_query_collection',
+  'remoteconfig_get_template',
+  'auth_get_users',
+];
 /** The tools runServer adds for a server of an OAuth group. No toolset removes them. */
 const RUNTIME_OAUTH = ['account_remove', 'account_set_default', 'accounts_list', 'auth_login', 'auth_setup_client', 'auth_status', 'health'];
 
@@ -483,7 +527,12 @@ test('both registry loaders carry the toolsets: the CLI conversion of config/pro
   assert.deepEqual(reg.servers.find((s) => s.name === 'ganalytics').toolsets, { google: ANALYTICS_GOOGLE });
   assert.deepEqual(reg.servers.find((s) => s.name === 'gmerchant').toolsets, { google: MERCHANT_GOOGLE });
   for (const [id, tools] of Object.entries(BUSINESS_LEAN)) assert.deepEqual(reg.servers.find((s) => s.name === id).toolsets, { google: tools }, id);
-  assert.equal(reg.servers.find((s) => s.name === 'gfirebase').toolsets, undefined);
+  assert.deepEqual(reg.servers.find((s) => s.name === 'gfirebase').toolsets, { google: FIREBASE_GOOGLE });
+  // A product without toolsets gets no key (the same products.json, gfirebase's toolsets left out).
+  const products = readJson('config', 'products.json');
+  const { toolsets: _dropped, ...bare } = products.products.gfirebase;
+  const without = registryFromProducts({ ...products, products: { ...products.products, gfirebase: bare } }, ROOT);
+  assert.equal(without.servers.find((s) => s.name === 'gfirebase').toolsets, undefined);
   const plugin = loadRegistryFile(join(ROOT, 'plugins', 'gmail', 'servers.json'));
   assert.deepEqual(plugin.servers[0].toolsets, { google: GMAIL_GOOGLE });
 });
@@ -584,22 +633,18 @@ function gmailEntry(dir) {
 }
 
 /**
- * The Firebase server's generated tools, no toolset listed (developer group). gtasks has a lean list since 1.15.0 and
- * gyoutube since 1.19.0.
+ * A copy of the built gfirebase plugin whose servers.json lists no toolset, as a plugin of a product without a google
+ * list is built (developer group). The bundled server reads the servers.json of its own plugin folder. Since 1.20.0
+ * gfirebase has a list, so the test that needs a product without one strips it from a copy.
  */
-function gfirebaseEntry(dir) {
-  const entry = join(dir, 'gfirebase-entry.mjs');
-  writeFileSync(
-    entry,
-    [
-      `import { withOrigin } from '${dist('core/toolset.js')}';`,
-      `import { discoveryToolsFor } from '${dist('core/discovery/tools.js')}';`,
-      `import { runServer } from '${dist('core/tools.js')}';`,
-      `await runServer({ name: 'gfirebase', version: '0.0.0', buildTools: async (cfg) => withOrigin('generated', await discoveryToolsFor('gfirebase', cfg, [])) });`,
-      '',
-    ].join('\n'),
-  );
-  return entry;
+function pluginWithoutList(dir, id) {
+  const copy = join(dir, id);
+  cpSync(join(ROOT, 'plugins', id), copy, { recursive: true });
+  const file = join(copy, 'servers.json');
+  const map = JSON.parse(readFileSync(file, 'utf8'));
+  for (const server of map.servers) delete server.toolsets;
+  writeFileSync(file, JSON.stringify(map, null, 2));
+  return join(copy, 'servers', `${id}.mjs`);
 }
 
 /** The search console server (curated and generated; its google toolset is the lean list). */
@@ -709,9 +754,10 @@ test('runServer: unset and all list the same tools; google lists the gmail list 
 
 test('runServer: google on a product without a list shows every tool, and health and auth_status say why', async () => {
   const dir = tempDir('gsm-toolset-fallback-');
-  const entry = gfirebaseEntry(dir);
+  const entry = pluginWithoutList(dir, 'gfirebase');
   const tokenDir = fakeLogin(dir, 'gfirebase', 'developer');
   const unset = await withClient(entry, childEnv(dir, tokenDir), listTools);
+  assert.ok(unset.length > FIREBASE_GOOGLE.length + RUNTIME_OAUTH.length, `${unset.length} tools`);
   await withClient(entry, childEnv(dir, tokenDir, { GSM_TOOLSET: 'google' }), async (c) => {
     assert.deepEqual(await listTools(c), unset);
     const report = await health(c);
@@ -788,6 +834,20 @@ test('runServer: google on ganalytics lists its 9 tools and the runtime tools, w
   assert.deepEqual(google.tools.map((t) => t.name), [...ANALYTICS_GOOGLE, ...RUNTIME_OAUTH].sort());
   for (const t of google.tools) assert.deepEqual(t, unset.find((u) => u.name === t.name), t.name);
   assert.equal(google.tools.find((t) => t.name === 'ga_annotation_create').annotations.readOnlyHint, false);
+  assert.deepEqual(google.health.toolset, { requested: 'google', effective: 'google', outsideToolset: unset.length - google.tools.length });
+});
+
+test('runServer: google on gfirebase lists its 38 tools and the runtime tools, with the same schemas as all', async () => {
+  const dir = tempDir('gsm-toolset-gfirebase-');
+  const entry = curatedEntry(dir, 'gfirebase', 'gfirebase');
+  const tokenDir = fakeLogin(dir, 'gfirebase', 'developer');
+  const unset = await withClient(entry, childEnv(dir, tokenDir), listTools);
+  const google = await withClient(entry, childEnv(dir, tokenDir, { GSM_TOOLSET: 'google' }), async (c) => ({ tools: await listTools(c), health: await health(c) }));
+  assert.deepEqual(google.tools.map((t) => t.name), [...FIREBASE_GOOGLE, ...RUNTIME_OAUTH].sort());
+  for (const t of google.tools) assert.deepEqual(t, unset.find((u) => u.name === t.name), t.name);
+  for (const name of ['firestore_get_document', 'firestore_list_documents', 'firestore_query_collection', 'remoteconfig_get_template', 'auth_get_users']) {
+    assert.equal(google.tools.find((t) => t.name === name).annotations.readOnlyHint, true, name);
+  }
   assert.deepEqual(google.health.toolset, { requested: 'google', effective: 'google', outsideToolset: unset.length - google.tools.length });
 });
 

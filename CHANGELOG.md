@@ -2,6 +2,21 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.20.0 - 2026-10-30
+
+### New: Firebase tools that match Google's Firebase MCP server
+Each description names the Google tool it matches. All five are reads.
+- `firestore_get_document` (`firestore_get_document`), `firestore_list_documents` (`firestore_list_documents`) and `firestore_query_collection` (`firestore_query_collection`): read a document by its path, list a collection a page at a time, or find documents by field conditions joined with AND, with an order and a limit. Fields come back as plain JSON (integers as numbers, or as strings when too large to be exact); `raw_values: true` gives Firestore's typed values. Firestore is a gcloud API in this suite, so gfirebase calls it directly.
+- `remoteconfig_get_template` (`remoteconfig_get_template`): the active Remote Config template or a given version. Remote Config is in no API list here.
+- `auth_get_users` (`auth_get_users`): Firebase Authentication users by uid, email or phone number (Identity Toolkit accounts.lookup), or a page of users (accounts.query). Password hashes and salts are left out of the answer.
+- The `google` toolset of gfirebase: these five and the generated tools that match Google's other Firebase tools that call an API (projects, apps, SDK configs, project and app creation, Android SHA certificates, security rules, App Hosting backends, Crashlytics, Data Connect, Cloud Messaging), 38 tools. Google's tools that drive the local Firebase CLI (init, deploy, the emulators) are not copied. A `readonly` login with it asks for `firebase.readonly`; a `readwrite` login for `cloud-platform`.
+- The rules test and the Data Connect GraphQL read, query generation and schema generation stay writes (they ask first), though Google marks them read-only; reviewing those kinds is a separate change.
+
+### Not changed
+- Scopes of the `all` toolset (gfirebase's resolve the same; its login requirements grow by the five tools), the gateway, the write gate and the hook. Every other plugin lists the same tools with the same schemas.
+- Tests that need a product without a google list strip gfirebase's list from a copy (a copy of the built plugin, or its server entry) instead of using a real product.
+- Not tested against the live Firebase APIs (Google's HTTP layer stubbed; the request shapes are checked against Google's Discovery documents).
+
 ## 1.19.0 - 2026-10-30
 
 ### New: lean google toolsets for Tag Manager, YouTube and Business Profile

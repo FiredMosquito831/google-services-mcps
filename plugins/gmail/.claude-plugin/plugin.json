@@ -1,7 +1,7 @@
 {
   "name": "gmail",
   "displayName": "Gmail",
-  "version": "1.19.0",
+  "version": "1.20.0",
   "description": "Gmail mailboxes, messages, labels and settings, plus Gmail Postmaster Tools.",
   "author": {
     "name": "FiredMosquito831"

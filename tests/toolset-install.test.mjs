@@ -135,10 +135,13 @@ test('tool counts per toolset from the tool map: gmail all, google and curated',
   assert.deepEqual(toolsetCount(map, 'gmail', 'gmail', 'google', gmail.toolsets), { count: 14 + runtime, effective: 'google' });
   // curated: the 15 hand-written Gmail tools and the 3 gateway tools.
   assert.deepEqual(toolsetCount(map, 'gmail', 'gmail', 'curated', gmail.toolsets), { count: 18 + runtime, effective: 'curated' });
-  // gfirebase has no google list, so google counts every tool. (gsc has a lean list since 1.11.0, gtasks since 1.15.0,
-  // gyoutube since 1.19.0.)
+  // A product without a google list counts every tool for google (gfirebase's map, its list left out; it has one since
+  // 1.20.0, gsc since 1.11.0, gtasks since 1.15.0, gyoutube since 1.19.0).
+  const firebaseMap = join(REPO, 'plugins', 'gfirebase', 'tool-map.json');
+  const firebaseEntries = JSON.parse(readFileSync(firebaseMap, 'utf8')).length;
+  assert.deepEqual(toolsetCount(firebaseMap, 'gfirebase', 'gfirebase', 'google', undefined), { count: firebaseEntries, effective: 'all' });
   const gfirebase = env.registry.servers.find((s) => s.plugin === 'gfirebase');
-  assert.equal(toolsetCount(join(REPO, 'plugins', 'gfirebase', 'tool-map.json'), 'gfirebase', 'gfirebase', 'google', gfirebase.toolsets).effective, 'all');
+  assert.deepEqual(toolsetCount(firebaseMap, 'gfirebase', 'gfirebase', 'google', gfirebase.toolsets), { count: 38 + runtime, effective: 'google' });
   const gyoutube = env.registry.servers.find((s) => s.plugin === 'gyoutube');
   assert.deepEqual(toolsetCount(join(REPO, 'plugins', 'gyoutube', 'tool-map.json'), 'gyoutube', 'gyoutube', 'google', gyoutube.toolsets), { count: 10 + runtime, effective: 'google' });
   const gtasks = env.registry.servers.find((s) => s.plugin === 'gtasks');

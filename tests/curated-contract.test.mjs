@@ -29,7 +29,7 @@ const tokenDir = mkdtempSync(join(tmpdir(), 'gsm-contract-'));
 after(() => rmSync(tokenDir, { recursive: true, force: true }));
 writeFileSync(join(tokenDir, 'client_secret.json'), JSON.stringify({ installed: { client_id: 'test-client', client_secret: 'test-secret' } }));
 const token = { access_token: 'test-token', refresh_token: 'test-refresh', expiry_date: Date.now() + 3600_000, token_type: 'Bearer' };
-for (const group of ['cloud', 'workspace-user', 'searchconsole', 'business']) {
+for (const group of ['cloud', 'workspace-user', 'searchconsole', 'business', 'developer']) {
   writeFileSync(join(tokenDir, `${group}.token.json`), JSON.stringify(token));
 }
 const { privateKey } = generateKeyPairSync('rsa', { modulusLength: 2048, privateKeyEncoding: { type: 'pkcs8', format: 'pem' }, publicKeyEncoding: { type: 'spki', format: 'pem' } });
@@ -136,10 +136,21 @@ const DOCS = [
 ];
 
 /**
- * APIs the curated gcloud and ganalytics tools call that have no per-method tools, so data/discovery has no snapshot of
- * them: trimmed copies of Google's documents in tests/fixtures/discovery (the methods called and their request schemas).
+ * APIs the curated gcloud, ganalytics and gfirebase tools call that have no per-method tools, so data/discovery has no
+ * snapshot of them: trimmed copies of Google's documents in tests/fixtures/discovery (the methods called and their
+ * request schemas).
  */
-const FIXTURE_DOCS = ['logging.v2', 'monitoring.v1', 'iam.v1', 'cloudbilling.v1beta', 'analyticsdata.v1alpha', 'analyticsadmin.v1alpha'];
+const FIXTURE_DOCS = [
+  'logging.v2',
+  'monitoring.v1',
+  'iam.v1',
+  'cloudbilling.v1beta',
+  'analyticsdata.v1alpha',
+  'analyticsadmin.v1alpha',
+  'firestore.v1',
+  'firebaseremoteconfig.v1',
+  'identitytoolkit.v1',
+];
 
 /**
  * Other hosts a document's methods are called on. sc_* tools use @googleapis/webmasters, which calls the Search Console
@@ -268,7 +279,7 @@ function problemsOf(call) {
 // ---------------------------------------------------------------------------
 // The servers and their tools.
 
-const SERVERS = ['gmail', 'gcalendar', 'gdrive', 'searchconsole', 'cloud', 'gads', 'workspace-admin', 'gchat', 'gcontacts', 'gclassroom', 'ganalytics'];
+const SERVERS = ['gmail', 'gcalendar', 'gdrive', 'searchconsole', 'cloud', 'gads', 'workspace-admin', 'gchat', 'gcontacts', 'gclassroom', 'ganalytics', 'gfirebase'];
 const tools = new Map();
 for (const mod of SERVERS) {
   const { buildTools } = await import(DIST(`servers/${mod}.js`));
@@ -817,6 +828,49 @@ const CASES = {
     { args: { property_id: '123', title: 'Launch', start_date: '2026-10-01', description: 'New site', color: 'BLUE' }, expect: ['analyticsadmin.properties.reportingDataAnnotations.create'] },
     { args: { property_id: '123', title: 'Sale', start_date: '2026-10-05', end_date: '2026-10-09' }, expect: ['analyticsadmin.properties.reportingDataAnnotations.create'] },
   ],
+
+  // gfirebase (1.20.0)
+  firestore_get_document: [
+    { args: { project_id: 'my-app-1234', document_path: 'users/alice', field_paths: ['name', 'address.city'], read_time: '2026-10-30T00:00:00Z' }, expect: ['firestore.projects.databases.documents.get'] },
+    // A deeper path (users/alice/orders/o1) is a get as well, but its URL also fits documents.list's template
+    // (v1/{+parent}/{collectionId}), which has more fixed text, so the checker would name list; a two-part path is used.
+    { args: { project_id: 'my-app-1234', database: 'orders-db', document_path: 'users/bob' }, expect: ['firestore.projects.databases.documents.get'] },
+  ],
+  firestore_list_documents: [
+    {
+      args: { project_id: 'my-app-1234', collection_path: 'users', page_size: 10, page_token: 'p1', order_by: 'name desc', field_paths: ['name'], show_missing: true },
+      expect: ['firestore.projects.databases.documents.list'],
+    },
+    { args: { project_id: 'my-app-1234', collection_path: 'users/alice/orders' }, expect: ['firestore.projects.databases.documents.list'] },
+  ],
+  firestore_query_collection: [
+    {
+      args: {
+        project_id: 'my-app-1234',
+        collection_path: 'users',
+        filters: [
+          { field: 'status', op: 'EQUAL', value: 'active' },
+          { field: 'age', op: 'GREATER_THAN_OR_EQUAL', value: 18 },
+          { field: 'tags', op: 'ARRAY_CONTAINS_ANY', value: ['a', 'b'] },
+          { field: 'deletedAt', op: 'IS_NULL' },
+          { field: 'createdAt', op: 'LESS_THAN', value: { timestampValue: '2026-10-30T00:00:00Z' } },
+        ],
+        order_by: [{ field: 'age', direction: 'DESCENDING' }],
+        limit: 5,
+      },
+      expect: ['firestore.projects.databases.documents.runQuery'],
+      respond: () => [{ document: { name: 'projects/my-app-1234/databases/(default)/documents/users/alice', fields: {} } }],
+    },
+    { args: { project_id: 'my-app-1234', collection_path: 'users/alice/orders', all_descendants: true }, expect: ['firestore.projects.databases.documents.runQuery'], respond: () => [] },
+  ],
+  remoteconfig_get_template: [
+    { args: { project_id: 'my-app-1234' }, expect: ['firebaseremoteconfig.projects.getRemoteConfig'] },
+    { args: { project_id: 'my-app-1234', version_number: 7 }, expect: ['firebaseremoteconfig.projects.getRemoteConfig'] },
+  ],
+  auth_get_users: [
+    { args: { project_id: 'my-app-1234', uids: ['u1'], emails: ['a@example.com'], phone_numbers: ['+15555550100'] }, expect: ['identitytoolkit.projects.accounts.lookup'] },
+    { args: { project_id: 'my-app-1234', limit: 20 }, expect: ['identitytoolkit.projects.accounts.query'] },
+  ],
 };
 
 /** Tools that cannot run here, with the reason. Counted. */
@@ -829,7 +883,7 @@ test('every curated tool has a contract row, a skip reason or a known defect, an
   const listed = new Set([...Object.keys(CASES), ...Object.keys(SKIPPED), ...Object.keys(KNOWN_DEFECTS)]);
   assert.deepEqual([...tools.keys()].filter((name) => !listed.has(name)), [], 'curated tools without a row');
   assert.deepEqual([...listed].filter((name) => !tools.has(name)), [], 'rows for tools that do not exist');
-  assert.equal(tools.size, 130, 'the curated tool count; update the table when it changes');
+  assert.equal(tools.size, 135, 'the curated tool count; update the table when it changes');
 });
 
 for (const [name, cases] of Object.entries(CASES)) {

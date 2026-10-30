@@ -2415,8 +2415,8 @@
       "name": "gfirebase",
       "plugin": "gfirebase",
       "group": "developer",
-      "kind": "discovery",
-      "curated": null,
+      "kind": "curated+discovery",
+      "curated": "src/servers/gfirebase.ts",
       "apis": [
         {
           "api": "firebase",
@@ -2525,6 +2525,48 @@
           "version": "v2"
         }
       ],
+      "toolsets": {
+        "google": [
+          "firebase_projects_list",
+          "firebase_projects_get",
+          "firebase_projects_search_apps",
+          "firebase_projec_web_app_get_con",
+          "firebase_projec_android_get_con",
+          "firebase_projec_ios_app_get_con",
+          "firebase_projects_add_firebase",
+          "firebase_project_web_app_create",
+          "firebase_project_android_create",
+          "firebase_project_ios_app_create",
+          "firebase_proje_andro_sha_create",
+          "firebaseru_project_release_list",
+          "firebaseru_project_rulesets_get",
+          "firebaseru_projects_test",
+          "firebaseap_proj_loca_backe_list",
+          "firebaseap_proj_locat_backe_get",
+          "firebasecr_proje_apps_issue_get",
+          "firebasecr_proj_apps_issu_patch",
+          "firebasecr_proj_apps_event_list",
+          "firebasecr_proj_apps_even_batch",
+          "firebasecr_proje_apps_repor_get",
+          "firebasecr_pro_app_iss_not_list",
+          "firebasecr_pro_app_iss_not_crea",
+          "firebasecr_pro_app_iss_not_dele",
+          "firebaseda_project_locatio_list",
+          "firebaseda_proj_loca_servi_list",
+          "firebaseda_pro_loc_ser_sch_list",
+          "firebaseda_pro_loc_ser_con_list",
+          "firebaseda_pro_loc_ser_exe_1fce",
+          "firebaseda_pro_loc_ser_exe_3072",
+          "firebaseda_pro_loc_ser_gen_8f53",
+          "firebaseda_pro_loc_ser_gen_cf40",
+          "fcm_projects_messages_send",
+          "firestore_get_document",
+          "firestore_list_documents",
+          "firestore_query_collection",
+          "remoteconfig_get_template",
+          "auth_get_users"
+        ]
+      },
       "label": "Firebase: Firebase management, App Check, App Distribution, Crashlytics, Hosting, Data Connect, Rules, Test Lab, FCM and Identity Toolkit."
     },
     {

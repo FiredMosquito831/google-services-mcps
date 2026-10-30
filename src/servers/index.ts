@@ -16,6 +16,7 @@ import { buildTools as buildGchat } from './gchat.js';
 import { buildTools as buildGclassroom } from './gclassroom.js';
 import { buildTools as buildGcontacts } from './gcontacts.js';
 import { buildTools as buildGdrive } from './gdrive.js';
+import { buildTools as buildGfirebase } from './gfirebase.js';
 import { buildTools as buildGmail } from './gmail.js';
 import { buildTools as buildSearchConsole } from './searchconsole.js';
 import { buildTools as buildWorkspaceAdmin } from './workspace-admin.js';
@@ -34,6 +35,7 @@ const CURATED: Record<string, Builder> = {
   'src/servers/gcontacts.ts': buildGcontacts,
   'src/servers/gclassroom.ts': buildGclassroom,
   'src/servers/ganalytics.ts': buildGanalytics,
+  'src/servers/gfirebase.ts': buildGfirebase,
 };
 
 /**

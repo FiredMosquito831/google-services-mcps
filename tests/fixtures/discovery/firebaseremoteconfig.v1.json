@@ -1,0 +1,52 @@
+{
+ "_source": "Trimmed from Google's Discovery document firebaseremoteconfig v1, revision 20261028: only the methods the curated tools call (firebaseremoteconfig.projects.getRemoteConfig) and the schemas their request bodies reach. For tests/curated-contract.test.mjs; Remote Config is in no API list of the suite, so data/discovery has no snapshot of it. Fetched from https://firebaseremoteconfig.googleapis.com/$discovery/rest?version=v1 on 2026-10-30.",
+ "name": "firebaseremoteconfig",
+ "version": "v1",
+ "title": "Firebase Remote Config API",
+ "rootUrl": "https://firebaseremoteconfig.googleapis.com/",
+ "servicePath": "",
+ "baseUrl": "https://firebaseremoteconfig.googleapis.com/",
+ "schemas": {},
+ "resources": {
+  "projects": {
+   "methods": {
+    "getRemoteConfig": {
+     "id": "firebaseremoteconfig.projects.getRemoteConfig",
+     "path": "v1/{+project}/remoteConfig",
+     "flatPath": "v1/projects/{projectsId}/remoteConfig",
+     "httpMethod": "GET",
+     "description": "Get a project's Remote Config template and associated ETag header. Returns the requested RemoteConfig as the payload and an ETag as a response header. The REST resource name for a Remote Config template is in the format: `projects/{project_id}/namespaces/{namespace_id}/remoteConfig`. To retrieve ...",
+     "parameters": [
+      {
+       "name": "name",
+       "location": "query",
+       "type": "string",
+       "description": "Optional. The name of the RemoteConfig to get. Format: projects/{project}/namespaces/{namespace}/remoteConfig Project is a Firebase project ID or project number. Namespace is the namespace ID (e.g...."
+      },
+      {
+       "name": "project",
+       "location": "path",
+       "type": "string",
+       "required": true,
+       "description": "Required. The Firebase project's Project ID or Project Number, prefixed with \"projects/\"."
+      },
+      {
+       "name": "versionNumber",
+       "location": "query",
+       "type": "string",
+       "format": "int64",
+       "description": "Optional. Version number of the RemoteConfig to look up. If not specified, the latest RemoteConfig will be returned."
+      }
+     ],
+     "parameterOrder": [
+      "project"
+     ],
+     "response": "RemoteConfig",
+     "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+     ]
+    }
+   }
+  }
+ }
+}

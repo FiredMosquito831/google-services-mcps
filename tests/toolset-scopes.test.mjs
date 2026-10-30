@@ -18,7 +18,7 @@ const { runScopes } = await import(DIST('cli/scopes.js'));
 const { parseCliArgs, parseToolset, parseSetupAdminArgs } = await import(DIST('cli/args.js'));
 const { loadConfig } = await import(DIST('core/config.js'));
 const { loadRegistry } = await import(DIST('core/registry.js'));
-const { resolveScopes, requirementsFor } = await import(DIST('core/scopes.js'));
+const { resolveScopes, requirementsFor, requirementsForSpecs } = await import(DIST('core/scopes.js'));
 const { GATEWAY_TOOL_NAMES } = await import(DIST('core/toolset.js'));
 const { gatewayTools } = await import(DIST('core/gateway.js'));
 const { createSignIn } = await import(DIST('core/inchat-login.js'));
@@ -158,10 +158,28 @@ test('requirements: curated keeps the curated tools and, with api_call, the gate
 test('requirements: a toolset a product does not have counts every tool, and says so', async () => {
   const { cfg } = tempTokens();
   const lines = [];
-  // gfirebase has no google list (gyoutube has a lean one since 1.19.0).
-  const google = await requirementsFor(['gfirebase'], cfg, { warn: (l) => lines.push(l), toolset: 'google' });
+  // gfirebase's server entry without its google list (it has one since 1.20.0), as a product without a list is.
+  const { toolsets: _dropped, ...spec } = registry().servers.find((s) => s.name === 'gfirebase');
+  const google = await requirementsForSpecs([spec], cfg, { warn: (l) => lines.push(l), toolset: 'google' });
   assert.deepEqual(google, await requirementsFor(['gfirebase'], cfg, quiet));
   assert.deepEqual(lines, ['[gfirebase] toolset google is not defined for this product yet; every tool counts toward the scopes.']);
+});
+
+test('requirements: the gfirebase google list (38 tools, no gateway) resolves to firebase.readonly and to cloud-platform', async () => {
+  const { cfg } = tempTokens();
+  const google = await requirementsFor(['gfirebase'], cfg, { ...quiet, toolset: 'google' });
+  assert.equal(google.length, 38);
+  assert.equal(google.filter((r) => r.gateway).length, 0, 'no api_call in the list, so no gateway method counts');
+  const readonly = resolveScopes(google, 'readonly');
+  assert.deepEqual(readonly.scopes, [G('firebase.readonly')]);
+  // Firestore, Remote Config, Authentication users, Crashlytics and Data Connect publish no read-only scope, so a
+  // readonly login covers none of them, in the all toolset as well.
+  for (const tool of ['firestore_get_document', 'firestore_query_collection', 'remoteconfig_get_template', 'auth_get_users']) assert.ok(readonly.uncovered.includes(`gfirebase/${tool}`), tool);
+  assert.deepEqual(resolveScopes(google, 'readwrite').scopes, [G('cloud-platform')]);
+  // The all toolset resolves as before 1.20.0: the five curated tools need no scope it does not already ask for.
+  const all = await requirementsFor(['gfirebase'], cfg, quiet);
+  assert.deepEqual(resolveScopes(all, 'readonly').scopes, [G('cloud-platform.read-only'), G('firebase.readonly')]);
+  assert.deepEqual(resolveScopes(all, 'readwrite').scopes, [G('cloud-platform')]);
 });
 
 test('requirements: the lean gtm, gyoutube and gbusiness lists resolve to the narrow scopes of their tools', async () => {
