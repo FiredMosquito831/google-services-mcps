@@ -413,6 +413,7 @@
     "name": "mcp__plugin_gchat_gchat__chat_spaces_messages_reactions_create",
     "kind": "write",
     "scopes": [
+      "https://www.googleapis.com/auth/chat.bot",
       "https://www.googleapis.com/auth/chat.import",
       "https://www.googleapis.com/auth/chat.messages",
       "https://www.googleapis.com/auth/chat.messages.reactions",
@@ -425,6 +426,7 @@
     "name": "mcp__plugin_gchat_gchat__chat_spaces_messages_reactions_delete",
     "kind": "destructive",
     "scopes": [
+      "https://www.googleapis.com/auth/chat.bot",
       "https://www.googleapis.com/auth/chat.import",
       "https://www.googleapis.com/auth/chat.messages",
       "https://www.googleapis.com/auth/chat.messages.reactions"
@@ -443,6 +445,15 @@
     ],
     "methodId": "chat.spaces.messages.reactions.list",
     "title": "chat.spaces.messages.reactions.list"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_spaces_messages_replace_cards",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.bot"
+    ],
+    "methodId": "chat.spaces.messages.replaceCards",
+    "title": "chat.spaces.messages.replaceCards"
   },
   {
     "name": "mcp__plugin_gchat_gchat__chat_spaces_messages_search",

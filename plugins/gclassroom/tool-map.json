@@ -164,6 +164,22 @@
     "title": "classroom.courses.courseWork.addOnAttachments.studentSubmissions.get"
   },
   {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_cou_cou_add_stu_lis",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.addons.student",
+      "https://www.googleapis.com/auth/classroom.addons.teacher",
+      "https://www.googleapis.com/auth/classroom.coursework.me",
+      "https://www.googleapis.com/auth/classroom.coursework.me.readonly",
+      "https://www.googleapis.com/auth/classroom.coursework.students",
+      "https://www.googleapis.com/auth/classroom.coursework.students.readonly",
+      "https://www.googleapis.com/auth/classroom.student-submissions.me.readonly",
+      "https://www.googleapis.com/auth/classroom.student-submissions.students.readonly"
+    ],
+    "methodId": "classroom.courses.courseWork.addOnAttachments.studentSubmissions.list",
+    "title": "classroom.courses.courseWork.addOnAttachments.studentSubmissions.list"
+  },
+  {
     "name": "mcp__plugin_gclassroom_gclassroom__classroom_cou_cou_add_stu_pat",
     "kind": "write",
     "scopes": [

@@ -496,7 +496,7 @@ The tools that match Google's official MCP server for this product (https://docs
 Each API links to Google's documentation for it, as Google's Discovery directory names it (`documentationLink`, kept in `data/catalog.json`). The link is the API's documentation home, not a page per method: the directory gives no link per method, and Google's REST reference pages are laid out differently from product to product.
 
 - Service Usage API (`serviceusage/v1`), 10 methods in the catalog. Documentation: <https://cloud.google.com/service-usage/>
-- Cloud Resource Manager API (`cloudresourcemanager/v3`), 78 methods in the catalog. Documentation: <https://cloud.google.com/resource-manager>
+- Cloud Resource Manager API (`cloudresourcemanager/v3`), 92 methods in the catalog. Documentation: <https://cloud.google.com/resource-manager>
 - API Keys API (`apikeys/v2`), 9 methods in the catalog. Documentation: <https://cloud.google.com/api-keys/docs>
 - Cloud Billing API (`cloudbilling/v1`), 28 methods in the catalog. Documentation: <https://cloud.google.com/billing/docs/apis>
 - Cloud Monitoring API (`monitoring/v3`), 56 methods in the catalog. Documentation: <https://cloud.google.com/monitoring/api/>
@@ -614,7 +614,7 @@ Each API links to Google's documentation for it, as Google's Discovery directory
 - Container Analysis API (`containeranalysis/v1`), 44 methods. Documentation: <https://cloud.google.com/container-analysis/api/reference/rest/>
 - Observability API (`observability/v1`), 44 methods. Documentation: <https://cloud.google.com/stackdriver/docs/>
 - Certificate Authority API (`privateca/v1`), 44 methods. Documentation: <https://cloud.google.com/>
-- Developer Connect API (`developerconnect/v1`), 45 methods. Documentation: <http://cloud.google.com/developer-connect/docs/overview>
+- Developer Connect API (`developerconnect/v1`), 55 methods. Documentation: <http://cloud.google.com/developer-connect/docs/overview>
 - Managed Service for Microsoft Active Directory API (`managedidentities/v1`), 45 methods. Documentation: <https://cloud.google.com/managed-microsoft-ad/>
 - Infrastructure Manager API (`config/v1`), 47 methods. Documentation: <https://cloud.google.com/infrastructure-manager/docs>
 - Google Cloud Memorystore for Redis API (`redis/v1`), 47 methods. Documentation: <https://cloud.google.com/memorystore/docs/redis/>
@@ -623,10 +623,10 @@ Each API links to Google's documentation for it, as Google's Discovery directory
 - Recommender API (`recommender/v1`), 48 methods. Documentation: <https://cloud.google.com/recommender/docs/>
 - Audit Manager API (`auditmanager/v1`), 51 methods. Documentation: <https://cloud.google.com/assured-workloads/docs/audit-manager>
 - Bare Metal Solution API (`baremetalsolution/v2`), 52 methods. Documentation: <https://cloud.google.com/bare-metal>
-- BeyondCorp API (`beyondcorp/v1`), 52 methods. Documentation: <https://cloud.google.com/>
+- BeyondCorp API (`beyondcorp/v1`), 46 methods. Documentation: <https://cloud.google.com/>
 - Dataflow API (`dataflow/v1b3`), 57 methods. Documentation: <https://cloud.google.com/dataflow>
 - App Engine Admin API (`appengine/v1`), 59 methods. Documentation: <https://cloud.google.com/appengine/docs/admin-api/>
-- Backup and DR Service API (`backupdr/v1`), 61 methods. Documentation: <https://cloud.google.com/backup-disaster-recovery>
+- Backup and DR Service API (`backupdr/v1`), 73 methods. Documentation: <https://cloud.google.com/backup-disaster-recovery>
 - Cloud Deploy API (`clouddeploy/v1`), 61 methods. Documentation: <https://cloud.google.com/deploy/>
 - Secure Source Manager API (`securesourcemanager/v1`), 62 methods. Documentation: <https://cloud.google.com/secure-source-manager>
 - Cloud Channel API (`cloudchannel/v1`), 65 methods. Documentation: <https://cloud.google.com/channel>
@@ -640,11 +640,11 @@ Each API links to Google's documentation for it, as Google's Discovery directory
 - Cloud Bigtable Admin API (`bigtableadmin/v2`), 82 methods. Documentation: <https://cloud.google.com/bigtable/>
 - NetApp API (`netapp/v1`), 82 methods. Documentation: <https://cloud.google.com/netapp/>
 - SAS Portal API (`sasportal/v1alpha1`), 82 methods. Documentation: <https://developers.google.com/spectrum-access-system/>
-- Dataform API (`dataform/v1`), 88 methods. Documentation: <https://cloud.google.com/dataform/docs>
+- Dataform API (`dataform/v1`), 89 methods. Documentation: <https://cloud.google.com/dataform/docs>
 - Managed Service for Apache Kafka API (`managedkafka/v1`), 89 methods. Documentation: <https://cloud.google.com/managed-service-for-apache-kafka/docs>
-- Oracle Database@Google Cloud API (`oracledatabase/v1`), 95 methods. Documentation: <https://cloud.google.com/oracle/database/docs>
+- Oracle Database@Google Cloud API (`oracledatabase/v1`), 107 methods. Documentation: <https://cloud.google.com/oracle/database/docs>
 - API hub API (`apihub/v1`), 97 methods. Documentation: <https://cloud.google.com/apigee/docs/api-hub/what-is-api-hub>
-- VMware Engine API (`vmwareengine/v1`), 102 methods. Documentation: <https://cloud.google.com/solutions/vmware-as-a-service>
+- VMware Engine API (`vmwareengine/v1`), 103 methods. Documentation: <https://cloud.google.com/solutions/vmware-as-a-service>
 - Network Connectivity API (`networkconnectivity/v1`), 108 methods. Documentation: <https://cloud.google.com/network-connectivity/docs/reference/networkconnectivity/rest>
 - Network Services API (`networkservices/v1`), 122 methods. Documentation: <https://cloud.google.com/networking>
 - Cloud Dataproc API (`dataproc/v1`), 136 methods. Documentation: <https://cloud.google.com/dataproc/>
@@ -663,7 +663,7 @@ Each API links to Google's documentation for it, as Google's Discovery directory
 - Artifact Registry API (`artifactregistry/v1beta2`), 32 methods. Documentation: <https://cloud.google.com/artifacts/docs/>
 - Assured Workloads API (`assuredworkloads/v1beta1`), 31 methods. Documentation: <https://cloud.google.com/learnmoreurl>
 - Backup and DR Service API (`backupdr/v1beta`), 73 methods. Documentation: <https://cloud.google.com/backup-disaster-recovery>
-- BeyondCorp API (`beyondcorp/v1alpha`), 87 methods. Documentation: <https://cloud.google.com/>
+- BeyondCorp API (`beyondcorp/v1alpha`), 76 methods. Documentation: <https://cloud.google.com/>
 - BigQuery Connection API (`bigqueryconnection/v1beta1`), 9 methods. Documentation: <https://cloud.google.com/bigquery/docs/connections-api-intro>
 - BigQuery Data Policy API (`bigquerydatapolicy/v1`), 9 methods. Documentation: <https://cloud.google.com/bigquery/docs/column-data-masking>
 - Cloud Billing Budget API (`billingbudgets/v1beta1`), 5 methods. Documentation: <https://cloud.google.com/billing/docs/how-to/budget-api-overview>
@@ -693,17 +693,17 @@ Each API links to Google's documentation for it, as Google's Discovery directory
 - Cloud Trace API (`cloudtrace/v2beta1`), 5 methods. Documentation: <https://cloud.google.com/trace/>
 - Cloud Composer API (`composer/v1beta1`), 31 methods. Documentation: <https://cloud.google.com/composer/>
 - Compute Engine API (`compute/2026-09-01`), 1019 methods. Documentation: <https://cloud.google.com/compute/>
-- Compute Engine API (`compute/2026-10-01-preview`), 1037 methods. Documentation: <https://cloud.google.com/compute/>
+- Compute Engine API (`compute/2026-10-01-preview`), 1079 methods. Documentation: <https://cloud.google.com/compute/>
 - Compute Engine API (`compute/alpha`), 1212 methods. Documentation: <https://developers.google.com/compute/docs/reference/latest/>
 - Compute Engine API (`compute/beta`), 1130 methods. Documentation: <https://developers.google.com/compute/docs/reference/latest/>
-- Compute Engine API (`compute/preview`), 1037 methods. Documentation: <https://cloud.google.com/compute/>
+- Compute Engine API (`compute/preview`), 1079 methods. Documentation: <https://cloud.google.com/compute/>
 - Compute Engine API (`compute/stable`), 1019 methods. Documentation: <https://cloud.google.com/compute/>
 - Connectors API (`connectors/v1`), 80 methods. Documentation: <https://cloud.google.com/apigee/docs/api-platform/connectors/about-connectors>
 - Kubernetes Engine API (`container/v1beta1`), 72 methods. Documentation: <https://cloud.google.com/kubernetes-engine/docs/>
 - Container Analysis API (`containeranalysis/v1alpha1`), 33 methods. Documentation: <https://cloud.google.com/container-analysis/api/reference/rest/>
 - Container Analysis API (`containeranalysis/v1beta1`), 46 methods. Documentation: <https://cloud.google.com/container-analysis/api/reference/rest/>
 - Google Cloud Data Catalog API (`datacatalog/v1beta1`), 55 methods. Documentation: <https://cloud.google.com/data-catalog/docs/>
-- Dataform API (`dataform/v1beta1`), 95 methods. Documentation: <https://cloud.google.com/dataform/docs>
+- Dataform API (`dataform/v1beta1`), 96 methods. Documentation: <https://cloud.google.com/dataform/docs>
 - Cloud Data Fusion API (`datafusion/v1beta1`), 25 methods. Documentation: <https://cloud.google.com/data-fusion/docs>
 - Database Migration API (`datamigration/v1beta1`), 29 methods. Documentation: <https://cloud.google.com/database-migration/>
 - Cloud Datastore API (`datastore/v1beta1`), 2 methods. Documentation: <https://cloud.google.com/datastore/>
@@ -740,7 +740,7 @@ Each API links to Google's documentation for it, as Google's Discovery directory
 - Network Connectivity API (`networkconnectivity/v1alpha1`), 30 methods. Documentation: <https://cloud.google.com/network-connectivity/docs/reference/networkconnectivity/rest>
 - Network Management API (`networkmanagement/v1beta1`), 33 methods. Documentation: <https://cloud.google.com/>
 - Network Security API (`networksecurity/v1beta1`), 190 methods. Documentation: <https://cloud.google.com/networking>
-- Network Services API (`networkservices/v1beta1`), 113 methods. Documentation: <https://cloud.google.com/networking>
+- Network Services API (`networkservices/v1beta1`), 118 methods. Documentation: <https://cloud.google.com/networking>
 - On-Demand Scanning API (`ondemandscanning/v1beta1`), 7 methods. Documentation: <https://cloud.google.com/container-analysis/docs/on-demand-scanning/>
 - OS Config API (`osconfig/v1`), 28 methods. Documentation: <https://cloud.google.com/compute/docs/osconfig/rest>
 - OS Config API (`osconfig/v1alpha`), 16 methods. Documentation: <https://cloud.google.com/compute/docs/osconfig/rest>
@@ -764,7 +764,7 @@ Each API links to Google's documentation for it, as Google's Discovery directory
 - Google Cloud Memorystore for Redis API (`redis/v1beta1`), 47 methods. Documentation: <https://cloud.google.com/memorystore/docs/redis/>
 - Cloud Run Admin API (`run/v1`), 76 methods. Documentation: <https://cloud.google.com/run/>
 - Cloud Runtime Configuration API (`runtimeconfig/v1beta1`), 22 methods. Documentation: <https://cloud.google.com/deployment-manager/runtime-configurator/>
-- App Lifecycle Manager API (`saasservicemgmt/v1beta1`), 77 methods. Documentation: <https://docs.cloud.google.com/app-lifecycle-manager>
+- App Lifecycle Manager API (`saasservicemgmt/v1beta1`), 66 methods. Documentation: <https://docs.cloud.google.com/app-lifecycle-manager>
 - Secret Manager API (`secretmanager/v1beta1`), 17 methods. Documentation: <https://cloud.google.com/secret-manager/>
 - Secret Manager API (`secretmanager/v1beta2`), 32 methods. Documentation: <https://cloud.google.com/secret-manager/>
 - Security Command Center API (`securitycenter/v1beta1`), 23 methods. Documentation: <https://cloud.google.com/security-command-center>
@@ -787,4 +787,7 @@ Each API links to Google's documentation for it, as Google's Discovery directory
 - Workflow Executions API (`workflowexecutions/v1beta`), 4 methods. Documentation: <https://cloud.google.com/workflows>
 - Workflows API (`workflows/v1beta`), 10 methods. Documentation: <https://cloud.google.com/workflows>
 - Cloud Workstations API (`workstations/v1beta`), 32 methods. Documentation: <https://cloud.google.com/workstations>
+- Cloud Resource Manager API (`cloudresourcemanager/v3`), 92 methods. Documentation: <https://cloud.google.com/resource-manager>
+- Compute Engine API (`compute/2026-11-01`), 1025 methods. Documentation: <https://cloud.google.com/compute/>
+- Compute Engine API (`compute/2026-12-01-preview`), 1032 methods. Documentation: <https://cloud.google.com/compute/>
 

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-15T15:08:21.313Z",
+  "generatedAt": "2026-10-30T15:12:58.580Z",
   "apiCount": 2,
   "methodCount": 101,
   "apis": [
@@ -16,443 +16,67 @@
       "servicePath": "drive/v2/",
       "methods": [
         [
-          "drive.permissions.update",
+          "drive.drives.insert",
+          "POST",
+          "drives",
+          [
+            "https://www.googleapis.com/auth/drive"
+          ],
+          ""
+        ],
+        [
+          "drive.drives.unhide",
+          "POST",
+          "drives/{driveId}/unhide",
+          [
+            "https://www.googleapis.com/auth/drive"
+          ],
+          ""
+        ],
+        [
+          "drive.drives.hide",
+          "POST",
+          "drives/{driveId}/hide",
+          [
+            "https://www.googleapis.com/auth/drive"
+          ],
+          ""
+        ],
+        [
+          "drive.drives.list",
+          "GET",
+          "drives",
+          [
+            "https://www.googleapis.com/auth/drive",
+            "https://www.googleapis.com/auth/drive.readonly"
+          ],
+          ""
+        ],
+        [
+          "drive.drives.get",
+          "GET",
+          "drives/{driveId}",
+          [
+            "https://www.googleapis.com/auth/drive",
+            "https://www.googleapis.com/auth/drive.readonly"
+          ],
+          ""
+        ],
+        [
+          "drive.drives.update",
           "PUT",
-          "files/{fileId}/permissions/{permissionId}",
-          [
-            "https://www.googleapis.com/auth/drive",
-            "https://www.googleapis.com/auth/drive.file"
-          ],
-          ""
-        ],
-        [
-          "drive.permissions.getIdForEmail",
-          "GET",
-          "permissionIds/{email}",
-          [
-            "https://www.googleapis.com/auth/drive",
-            "https://www.googleapis.com/auth/drive.appdata",
-            "https://www.googleapis.com/auth/drive.apps.readonly",
-            "https://www.googleapis.com/auth/drive.file",
-            "https://www.googleapis.com/auth/drive.metadata",
-            "https://www.googleapis.com/auth/drive.metadata.readonly",
-            "https://www.googleapis.com/auth/drive.photos.readonly",
-            "https://www.googleapis.com/auth/drive.readonly"
-          ],
-          ""
-        ],
-        [
-          "drive.permissions.list",
-          "GET",
-          "files/{fileId}/permissions",
-          [
-            "https://www.googleapis.com/auth/drive",
-            "https://www.googleapis.com/auth/drive.file",
-            "https://www.googleapis.com/auth/drive.meet.readonly",
-            "https://www.googleapis.com/auth/drive.metadata",
-            "https://www.googleapis.com/auth/drive.metadata.readonly",
-            "https://www.googleapis.com/auth/drive.photos.readonly",
-            "https://www.googleapis.com/auth/drive.readonly"
-          ],
-          ""
-        ],
-        [
-          "drive.permissions.insert",
-          "POST",
-          "files/{fileId}/permissions",
-          [
-            "https://www.googleapis.com/auth/drive",
-            "https://www.googleapis.com/auth/drive.file"
-          ],
-          ""
-        ],
-        [
-          "drive.permissions.delete",
-          "DELETE",
-          "files/{fileId}/permissions/{permissionId}",
-          [
-            "https://www.googleapis.com/auth/drive",
-            "https://www.googleapis.com/auth/drive.file"
-          ],
-          ""
-        ],
-        [
-          "drive.permissions.patch",
-          "PATCH",
-          "files/{fileId}/permissions/{permissionId}",
-          [
-            "https://www.googleapis.com/auth/drive",
-            "https://www.googleapis.com/auth/drive.file"
-          ],
-          ""
-        ],
-        [
-          "drive.permissions.get",
-          "GET",
-          "files/{fileId}/permissions/{permissionId}",
-          [
-            "https://www.googleapis.com/auth/drive",
-            "https://www.googleapis.com/auth/drive.file",
-            "https://www.googleapis.com/auth/drive.meet.readonly",
-            "https://www.googleapis.com/auth/drive.metadata",
-            "https://www.googleapis.com/auth/drive.metadata.readonly",
-            "https://www.googleapis.com/auth/drive.photos.readonly",
-            "https://www.googleapis.com/auth/drive.readonly"
-          ],
-          ""
-        ],
-        [
-          "drive.channels.stop",
-          "POST",
-          "channels/stop",
-          [
-            "https://www.googleapis.com/auth/drive",
-            "https://www.googleapis.com/auth/drive.appdata",
-            "https://www.googleapis.com/auth/drive.apps.readonly",
-            "https://www.googleapis.com/auth/drive.file",
-            "https://www.googleapis.com/auth/drive.meet.readonly",
-            "https://www.googleapis.com/auth/drive.metadata",
-            "https://www.googleapis.com/auth/drive.metadata.readonly",
-            "https://www.googleapis.com/auth/drive.photos.readonly",
-            "https://www.googleapis.com/auth/drive.readonly"
-          ],
-          ""
-        ],
-        [
-          "drive.files.insert",
-          "POST",
-          "files",
-          [
-            "https://www.googleapis.com/auth/drive",
-            "https://www.googleapis.com/auth/drive.appdata",
-            "https://www.googleapis.com/auth/drive.apps.readonly",
-            "https://www.googleapis.com/auth/drive.file"
-          ],
-          "u"
-        ],
-        [
-          "drive.files.trash",
-          "POST",
-          "files/{fileId}/trash",
-          [
-            "https://www.googleapis.com/auth/drive",
-            "https://www.googleapis.com/auth/drive.appdata",
-            "https://www.googleapis.com/auth/drive.apps.readonly",
-            "https://www.googleapis.com/auth/drive.file"
-          ],
-          ""
-        ],
-        [
-          "drive.files.watch",
-          "POST",
-          "files/{fileId}/watch",
-          [
-            "https://www.googleapis.com/auth/drive",
-            "https://www.googleapis.com/auth/drive.appdata",
-            "https://www.googleapis.com/auth/drive.file",
-            "https://www.googleapis.com/auth/drive.meet.readonly",
-            "https://www.googleapis.com/auth/drive.metadata",
-            "https://www.googleapis.com/auth/drive.metadata.readonly",
-            "https://www.googleapis.com/auth/drive.photos.readonly",
-            "https://www.googleapis.com/auth/drive.readonly"
-          ],
-          ""
-        ],
-        [
-          "drive.files.export",
-          "GET",
-          "files/{fileId}/export",
-          [
-            "https://www.googleapis.com/auth/drive",
-            "https://www.googleapis.com/auth/drive.file",
-            "https://www.googleapis.com/auth/drive.meet.readonly",
-            "https://www.googleapis.com/auth/drive.readonly"
-          ],
-          "d"
-        ],
-        [
-          "drive.files.get",
-          "GET",
-          "files/{fileId}",
-          [
-            "https://www.googleapis.com/auth/drive",
-            "https://www.googleapis.com/auth/drive.appdata",
-            "https://www.googleapis.com/auth/drive.file",
-            "https://www.googleapis.com/auth/drive.meet.readonly",
-            "https://www.googleapis.com/auth/drive.metadata",
-            "https://www.googleapis.com/auth/drive.metadata.readonly",
-            "https://www.googleapis.com/auth/drive.photos.readonly",
-            "https://www.googleapis.com/auth/drive.readonly"
-          ],
-          "d"
-        ],
-        [
-          "drive.files.emptyTrash",
-          "DELETE",
-          "files/trash",
+          "drives/{driveId}",
           [
             "https://www.googleapis.com/auth/drive"
           ],
           ""
         ],
         [
-          "drive.files.delete",
+          "drive.drives.delete",
           "DELETE",
-          "files/{fileId}",
-          [
-            "https://www.googleapis.com/auth/drive",
-            "https://www.googleapis.com/auth/drive.appdata",
-            "https://www.googleapis.com/auth/drive.file"
-          ],
-          ""
-        ],
-        [
-          "drive.files.patch",
-          "PATCH",
-          "files/{fileId}",
-          [
-            "https://www.googleapis.com/auth/drive",
-            "https://www.googleapis.com/auth/drive.appdata",
-            "https://www.googleapis.com/auth/drive.apps.readonly",
-            "https://www.googleapis.com/auth/drive.file",
-            "https://www.googleapis.com/auth/drive.metadata",
-            "https://www.googleapis.com/auth/drive.scripts"
-          ],
-          ""
-        ],
-        [
-          "drive.files.copy",
-          "POST",
-          "files/{fileId}/copy",
-          [
-            "https://www.googleapis.com/auth/drive",
-            "https://www.googleapis.com/auth/drive.appdata",
-            "https://www.googleapis.com/auth/drive.apps.readonly",
-            "https://www.googleapis.com/auth/drive.file",
-            "https://www.googleapis.com/auth/drive.photos.readonly"
-          ],
-          ""
-        ],
-        [
-          "drive.files.list",
-          "GET",
-          "files",
-          [
-            "https://www.googleapis.com/auth/drive",
-            "https://www.googleapis.com/auth/drive.appdata",
-            "https://www.googleapis.com/auth/drive.apps.readonly",
-            "https://www.googleapis.com/auth/drive.file",
-            "https://www.googleapis.com/auth/drive.meet.readonly",
-            "https://www.googleapis.com/auth/drive.metadata",
-            "https://www.googleapis.com/auth/drive.metadata.readonly",
-            "https://www.googleapis.com/auth/drive.photos.readonly",
-            "https://www.googleapis.com/auth/drive.readonly"
-          ],
-          ""
-        ],
-        [
-          "drive.files.modifyLabels",
-          "POST",
-          "files/{fileId}/modifyLabels",
-          [
-            "https://www.googleapis.com/auth/drive",
-            "https://www.googleapis.com/auth/drive.file",
-            "https://www.googleapis.com/auth/drive.metadata"
-          ],
-          ""
-        ],
-        [
-          "drive.files.listLabels",
-          "GET",
-          "files/{fileId}/listLabels",
-          [
-            "https://www.googleapis.com/auth/drive",
-            "https://www.googleapis.com/auth/drive.file",
-            "https://www.googleapis.com/auth/drive.meet.readonly",
-            "https://www.googleapis.com/auth/drive.metadata",
-            "https://www.googleapis.com/auth/drive.metadata.readonly",
-            "https://www.googleapis.com/auth/drive.readonly"
-          ],
-          ""
-        ],
-        [
-          "drive.files.touch",
-          "POST",
-          "files/{fileId}/touch",
-          [
-            "https://www.googleapis.com/auth/drive",
-            "https://www.googleapis.com/auth/drive.appdata",
-            "https://www.googleapis.com/auth/drive.apps.readonly",
-            "https://www.googleapis.com/auth/drive.file",
-            "https://www.googleapis.com/auth/drive.metadata"
-          ],
-          ""
-        ],
-        [
-          "drive.files.update",
-          "PUT",
-          "files/{fileId}",
-          [
-            "https://www.googleapis.com/auth/drive",
-            "https://www.googleapis.com/auth/drive.appdata",
-            "https://www.googleapis.com/auth/drive.apps.readonly",
-            "https://www.googleapis.com/auth/drive.file",
-            "https://www.googleapis.com/auth/drive.metadata",
-            "https://www.googleapis.com/auth/drive.scripts"
-          ],
-          "u"
-        ],
-        [
-          "drive.files.generateCseToken",
-          "GET",
-          "files/generateCseToken",
+          "drives/{driveId}",
           [
             "https://www.googleapis.com/auth/drive"
-          ],
-          ""
-        ],
-        [
-          "drive.files.generateIds",
-          "GET",
-          "files/generateIds",
-          [
-            "https://www.googleapis.com/auth/drive",
-            "https://www.googleapis.com/auth/drive.appdata",
-            "https://www.googleapis.com/auth/drive.file"
-          ],
-          ""
-        ],
-        [
-          "drive.files.untrash",
-          "POST",
-          "files/{fileId}/untrash",
-          [
-            "https://www.googleapis.com/auth/drive",
-            "https://www.googleapis.com/auth/drive.appdata",
-            "https://www.googleapis.com/auth/drive.apps.readonly",
-            "https://www.googleapis.com/auth/drive.file"
-          ],
-          ""
-        ],
-        [
-          "drive.teamdrives.delete",
-          "DELETE",
-          "teamdrives/{teamDriveId}",
-          [
-            "https://www.googleapis.com/auth/drive"
-          ],
-          ""
-        ],
-        [
-          "drive.teamdrives.list",
-          "GET",
-          "teamdrives",
-          [
-            "https://www.googleapis.com/auth/drive",
-            "https://www.googleapis.com/auth/drive.readonly"
-          ],
-          ""
-        ],
-        [
-          "drive.teamdrives.update",
-          "PUT",
-          "teamdrives/{teamDriveId}",
-          [
-            "https://www.googleapis.com/auth/drive"
-          ],
-          ""
-        ],
-        [
-          "drive.teamdrives.insert",
-          "POST",
-          "teamdrives",
-          [
-            "https://www.googleapis.com/auth/drive"
-          ],
-          ""
-        ],
-        [
-          "drive.teamdrives.get",
-          "GET",
-          "teamdrives/{teamDriveId}",
-          [
-            "https://www.googleapis.com/auth/drive",
-            "https://www.googleapis.com/auth/drive.readonly"
-          ],
-          ""
-        ],
-        [
-          "drive.comments.update",
-          "PUT",
-          "files/{fileId}/comments/{commentId}",
-          [
-            "https://www.googleapis.com/auth/drive",
-            "https://www.googleapis.com/auth/drive.file"
-          ],
-          ""
-        ],
-        [
-          "drive.comments.list",
-          "GET",
-          "files/{fileId}/comments",
-          [
-            "https://www.googleapis.com/auth/drive",
-            "https://www.googleapis.com/auth/drive.file",
-            "https://www.googleapis.com/auth/drive.meet.readonly",
-            "https://www.googleapis.com/auth/drive.readonly"
-          ],
-          ""
-        ],
-        [
-          "drive.comments.insert",
-          "POST",
-          "files/{fileId}/comments",
-          [
-            "https://www.googleapis.com/auth/drive",
-            "https://www.googleapis.com/auth/drive.file"
-          ],
-          ""
-        ],
-        [
-          "drive.comments.delete",
-          "DELETE",
-          "files/{fileId}/comments/{commentId}",
-          [
-            "https://www.googleapis.com/auth/drive",
-            "https://www.googleapis.com/auth/drive.file"
-          ],
-          ""
-        ],
-        [
-          "drive.comments.patch",
-          "PATCH",
-          "files/{fileId}/comments/{commentId}",
-          [
-            "https://www.googleapis.com/auth/drive",
-            "https://www.googleapis.com/auth/drive.file"
-          ],
-          ""
-        ],
-        [
-          "drive.comments.get",
-          "GET",
-          "files/{fileId}/comments/{commentId}",
-          [
-            "https://www.googleapis.com/auth/drive",
-            "https://www.googleapis.com/auth/drive.file",
-            "https://www.googleapis.com/auth/drive.meet.readonly",
-            "https://www.googleapis.com/auth/drive.readonly"
-          ],
-          ""
-        ],
-        [
-          "drive.children.insert",
-          "POST",
-          "files/{folderId}/children",
-          [
-            "https://www.googleapis.com/auth/drive",
-            "https://www.googleapis.com/auth/drive.appdata",
-            "https://www.googleapis.com/auth/drive.file"
           ],
           ""
         ],
@@ -483,6 +107,17 @@
           ""
         ],
         [
+          "drive.children.insert",
+          "POST",
+          "files/{folderId}/children",
+          [
+            "https://www.googleapis.com/auth/drive",
+            "https://www.googleapis.com/auth/drive.appdata",
+            "https://www.googleapis.com/auth/drive.file"
+          ],
+          ""
+        ],
+        [
           "drive.children.get",
           "GET",
           "files/{folderId}/children/{childId}",
@@ -499,9 +134,291 @@
           ""
         ],
         [
-          "drive.changes.watch",
+          "drive.comments.update",
+          "PUT",
+          "files/{fileId}/comments/{commentId}",
+          [
+            "https://www.googleapis.com/auth/drive",
+            "https://www.googleapis.com/auth/drive.file"
+          ],
+          ""
+        ],
+        [
+          "drive.comments.delete",
+          "DELETE",
+          "files/{fileId}/comments/{commentId}",
+          [
+            "https://www.googleapis.com/auth/drive",
+            "https://www.googleapis.com/auth/drive.file"
+          ],
+          ""
+        ],
+        [
+          "drive.comments.list",
+          "GET",
+          "files/{fileId}/comments",
+          [
+            "https://www.googleapis.com/auth/drive",
+            "https://www.googleapis.com/auth/drive.file",
+            "https://www.googleapis.com/auth/drive.meet.readonly",
+            "https://www.googleapis.com/auth/drive.readonly"
+          ],
+          ""
+        ],
+        [
+          "drive.comments.get",
+          "GET",
+          "files/{fileId}/comments/{commentId}",
+          [
+            "https://www.googleapis.com/auth/drive",
+            "https://www.googleapis.com/auth/drive.file",
+            "https://www.googleapis.com/auth/drive.meet.readonly",
+            "https://www.googleapis.com/auth/drive.readonly"
+          ],
+          ""
+        ],
+        [
+          "drive.comments.insert",
           "POST",
-          "changes/watch",
+          "files/{fileId}/comments",
+          [
+            "https://www.googleapis.com/auth/drive",
+            "https://www.googleapis.com/auth/drive.file"
+          ],
+          ""
+        ],
+        [
+          "drive.comments.patch",
+          "PATCH",
+          "files/{fileId}/comments/{commentId}",
+          [
+            "https://www.googleapis.com/auth/drive",
+            "https://www.googleapis.com/auth/drive.file"
+          ],
+          ""
+        ],
+        [
+          "drive.permissions.update",
+          "PUT",
+          "files/{fileId}/permissions/{permissionId}",
+          [
+            "https://www.googleapis.com/auth/drive",
+            "https://www.googleapis.com/auth/drive.file"
+          ],
+          ""
+        ],
+        [
+          "drive.permissions.list",
+          "GET",
+          "files/{fileId}/permissions",
+          [
+            "https://www.googleapis.com/auth/drive",
+            "https://www.googleapis.com/auth/drive.file",
+            "https://www.googleapis.com/auth/drive.meet.readonly",
+            "https://www.googleapis.com/auth/drive.metadata",
+            "https://www.googleapis.com/auth/drive.metadata.readonly",
+            "https://www.googleapis.com/auth/drive.photos.readonly",
+            "https://www.googleapis.com/auth/drive.readonly"
+          ],
+          ""
+        ],
+        [
+          "drive.permissions.delete",
+          "DELETE",
+          "files/{fileId}/permissions/{permissionId}",
+          [
+            "https://www.googleapis.com/auth/drive",
+            "https://www.googleapis.com/auth/drive.file"
+          ],
+          ""
+        ],
+        [
+          "drive.permissions.get",
+          "GET",
+          "files/{fileId}/permissions/{permissionId}",
+          [
+            "https://www.googleapis.com/auth/drive",
+            "https://www.googleapis.com/auth/drive.file",
+            "https://www.googleapis.com/auth/drive.meet.readonly",
+            "https://www.googleapis.com/auth/drive.metadata",
+            "https://www.googleapis.com/auth/drive.metadata.readonly",
+            "https://www.googleapis.com/auth/drive.photos.readonly",
+            "https://www.googleapis.com/auth/drive.readonly"
+          ],
+          ""
+        ],
+        [
+          "drive.permissions.getIdForEmail",
+          "GET",
+          "permissionIds/{email}",
+          [
+            "https://www.googleapis.com/auth/drive",
+            "https://www.googleapis.com/auth/drive.appdata",
+            "https://www.googleapis.com/auth/drive.apps.readonly",
+            "https://www.googleapis.com/auth/drive.file",
+            "https://www.googleapis.com/auth/drive.metadata",
+            "https://www.googleapis.com/auth/drive.metadata.readonly",
+            "https://www.googleapis.com/auth/drive.photos.readonly",
+            "https://www.googleapis.com/auth/drive.readonly"
+          ],
+          ""
+        ],
+        [
+          "drive.permissions.patch",
+          "PATCH",
+          "files/{fileId}/permissions/{permissionId}",
+          [
+            "https://www.googleapis.com/auth/drive",
+            "https://www.googleapis.com/auth/drive.file"
+          ],
+          ""
+        ],
+        [
+          "drive.permissions.insert",
+          "POST",
+          "files/{fileId}/permissions",
+          [
+            "https://www.googleapis.com/auth/drive",
+            "https://www.googleapis.com/auth/drive.file"
+          ],
+          ""
+        ],
+        [
+          "drive.about.get",
+          "GET",
+          "about",
+          [
+            "https://www.googleapis.com/auth/drive",
+            "https://www.googleapis.com/auth/drive.appdata",
+            "https://www.googleapis.com/auth/drive.file",
+            "https://www.googleapis.com/auth/drive.metadata",
+            "https://www.googleapis.com/auth/drive.metadata.readonly",
+            "https://www.googleapis.com/auth/drive.photos.readonly",
+            "https://www.googleapis.com/auth/drive.readonly"
+          ],
+          ""
+        ],
+        [
+          "drive.parents.list",
+          "GET",
+          "files/{fileId}/parents",
+          [
+            "https://www.googleapis.com/auth/drive",
+            "https://www.googleapis.com/auth/drive.appdata",
+            "https://www.googleapis.com/auth/drive.file",
+            "https://www.googleapis.com/auth/drive.meet.readonly",
+            "https://www.googleapis.com/auth/drive.metadata",
+            "https://www.googleapis.com/auth/drive.metadata.readonly",
+            "https://www.googleapis.com/auth/drive.photos.readonly",
+            "https://www.googleapis.com/auth/drive.readonly"
+          ],
+          ""
+        ],
+        [
+          "drive.parents.insert",
+          "POST",
+          "files/{fileId}/parents",
+          [
+            "https://www.googleapis.com/auth/drive",
+            "https://www.googleapis.com/auth/drive.appdata",
+            "https://www.googleapis.com/auth/drive.file"
+          ],
+          ""
+        ],
+        [
+          "drive.parents.get",
+          "GET",
+          "files/{fileId}/parents/{parentId}",
+          [
+            "https://www.googleapis.com/auth/drive",
+            "https://www.googleapis.com/auth/drive.appdata",
+            "https://www.googleapis.com/auth/drive.file",
+            "https://www.googleapis.com/auth/drive.meet.readonly",
+            "https://www.googleapis.com/auth/drive.metadata",
+            "https://www.googleapis.com/auth/drive.metadata.readonly",
+            "https://www.googleapis.com/auth/drive.photos.readonly",
+            "https://www.googleapis.com/auth/drive.readonly"
+          ],
+          ""
+        ],
+        [
+          "drive.parents.delete",
+          "DELETE",
+          "files/{fileId}/parents/{parentId}",
+          [
+            "https://www.googleapis.com/auth/drive",
+            "https://www.googleapis.com/auth/drive.file"
+          ],
+          ""
+        ],
+        [
+          "drive.replies.delete",
+          "DELETE",
+          "files/{fileId}/comments/{commentId}/replies/{replyId}",
+          [
+            "https://www.googleapis.com/auth/drive",
+            "https://www.googleapis.com/auth/drive.file"
+          ],
+          ""
+        ],
+        [
+          "drive.replies.update",
+          "PUT",
+          "files/{fileId}/comments/{commentId}/replies/{replyId}",
+          [
+            "https://www.googleapis.com/auth/drive",
+            "https://www.googleapis.com/auth/drive.file"
+          ],
+          ""
+        ],
+        [
+          "drive.replies.list",
+          "GET",
+          "files/{fileId}/comments/{commentId}/replies",
+          [
+            "https://www.googleapis.com/auth/drive",
+            "https://www.googleapis.com/auth/drive.file",
+            "https://www.googleapis.com/auth/drive.meet.readonly",
+            "https://www.googleapis.com/auth/drive.readonly"
+          ],
+          ""
+        ],
+        [
+          "drive.replies.get",
+          "GET",
+          "files/{fileId}/comments/{commentId}/replies/{replyId}",
+          [
+            "https://www.googleapis.com/auth/drive",
+            "https://www.googleapis.com/auth/drive.file",
+            "https://www.googleapis.com/auth/drive.meet.readonly",
+            "https://www.googleapis.com/auth/drive.readonly"
+          ],
+          ""
+        ],
+        [
+          "drive.replies.patch",
+          "PATCH",
+          "files/{fileId}/comments/{commentId}/replies/{replyId}",
+          [
+            "https://www.googleapis.com/auth/drive",
+            "https://www.googleapis.com/auth/drive.file"
+          ],
+          ""
+        ],
+        [
+          "drive.replies.insert",
+          "POST",
+          "files/{fileId}/comments/{commentId}/replies",
+          [
+            "https://www.googleapis.com/auth/drive",
+            "https://www.googleapis.com/auth/drive.file"
+          ],
+          ""
+        ],
+        [
+          "drive.changes.list",
+          "GET",
+          "changes",
           [
             "https://www.googleapis.com/auth/drive",
             "https://www.googleapis.com/auth/drive.appdata",
@@ -533,6 +450,23 @@
           ""
         ],
         [
+          "drive.changes.watch",
+          "POST",
+          "changes/watch",
+          [
+            "https://www.googleapis.com/auth/drive",
+            "https://www.googleapis.com/auth/drive.appdata",
+            "https://www.googleapis.com/auth/drive.apps.readonly",
+            "https://www.googleapis.com/auth/drive.file",
+            "https://www.googleapis.com/auth/drive.meet.readonly",
+            "https://www.googleapis.com/auth/drive.metadata",
+            "https://www.googleapis.com/auth/drive.metadata.readonly",
+            "https://www.googleapis.com/auth/drive.photos.readonly",
+            "https://www.googleapis.com/auth/drive.readonly"
+          ],
+          ""
+        ],
+        [
           "drive.changes.get",
           "GET",
           "changes/{changeId}",
@@ -550,88 +484,150 @@
           ""
         ],
         [
-          "drive.changes.list",
+          "drive.revisions.patch",
+          "PATCH",
+          "files/{fileId}/revisions/{revisionId}",
+          [
+            "https://www.googleapis.com/auth/drive",
+            "https://www.googleapis.com/auth/drive.appdata",
+            "https://www.googleapis.com/auth/drive.file"
+          ],
+          ""
+        ],
+        [
+          "drive.revisions.list",
           "GET",
-          "changes",
+          "files/{fileId}/revisions",
+          [
+            "https://www.googleapis.com/auth/drive",
+            "https://www.googleapis.com/auth/drive.appdata",
+            "https://www.googleapis.com/auth/drive.file",
+            "https://www.googleapis.com/auth/drive.meet.readonly",
+            "https://www.googleapis.com/auth/drive.metadata",
+            "https://www.googleapis.com/auth/drive.metadata.readonly",
+            "https://www.googleapis.com/auth/drive.photos.readonly",
+            "https://www.googleapis.com/auth/drive.readonly"
+          ],
+          ""
+        ],
+        [
+          "drive.revisions.delete",
+          "DELETE",
+          "files/{fileId}/revisions/{revisionId}",
+          [
+            "https://www.googleapis.com/auth/drive",
+            "https://www.googleapis.com/auth/drive.appdata",
+            "https://www.googleapis.com/auth/drive.file"
+          ],
+          ""
+        ],
+        [
+          "drive.revisions.update",
+          "PUT",
+          "files/{fileId}/revisions/{revisionId}",
+          [
+            "https://www.googleapis.com/auth/drive",
+            "https://www.googleapis.com/auth/drive.appdata",
+            "https://www.googleapis.com/auth/drive.file"
+          ],
+          ""
+        ],
+        [
+          "drive.revisions.get",
+          "GET",
+          "files/{fileId}/revisions/{revisionId}",
+          [
+            "https://www.googleapis.com/auth/drive",
+            "https://www.googleapis.com/auth/drive.appdata",
+            "https://www.googleapis.com/auth/drive.file",
+            "https://www.googleapis.com/auth/drive.meet.readonly",
+            "https://www.googleapis.com/auth/drive.metadata",
+            "https://www.googleapis.com/auth/drive.metadata.readonly",
+            "https://www.googleapis.com/auth/drive.photos.readonly",
+            "https://www.googleapis.com/auth/drive.readonly"
+          ],
+          ""
+        ],
+        [
+          "drive.teamdrives.get",
+          "GET",
+          "teamdrives/{teamDriveId}",
+          [
+            "https://www.googleapis.com/auth/drive",
+            "https://www.googleapis.com/auth/drive.readonly"
+          ],
+          ""
+        ],
+        [
+          "drive.teamdrives.update",
+          "PUT",
+          "teamdrives/{teamDriveId}",
+          [
+            "https://www.googleapis.com/auth/drive"
+          ],
+          ""
+        ],
+        [
+          "drive.teamdrives.delete",
+          "DELETE",
+          "teamdrives/{teamDriveId}",
+          [
+            "https://www.googleapis.com/auth/drive"
+          ],
+          ""
+        ],
+        [
+          "drive.teamdrives.insert",
+          "POST",
+          "teamdrives",
+          [
+            "https://www.googleapis.com/auth/drive"
+          ],
+          ""
+        ],
+        [
+          "drive.teamdrives.list",
+          "GET",
+          "teamdrives",
+          [
+            "https://www.googleapis.com/auth/drive",
+            "https://www.googleapis.com/auth/drive.readonly"
+          ],
+          ""
+        ],
+        [
+          "drive.apps.get",
+          "GET",
+          "apps/{appId}",
           [
             "https://www.googleapis.com/auth/drive",
             "https://www.googleapis.com/auth/drive.appdata",
             "https://www.googleapis.com/auth/drive.apps.readonly",
             "https://www.googleapis.com/auth/drive.file",
-            "https://www.googleapis.com/auth/drive.meet.readonly",
             "https://www.googleapis.com/auth/drive.metadata",
             "https://www.googleapis.com/auth/drive.metadata.readonly",
-            "https://www.googleapis.com/auth/drive.photos.readonly",
             "https://www.googleapis.com/auth/drive.readonly"
           ],
           ""
         ],
         [
-          "drive.parents.insert",
-          "POST",
-          "files/{fileId}/parents",
+          "drive.apps.list",
+          "GET",
+          "apps",
           [
-            "https://www.googleapis.com/auth/drive",
-            "https://www.googleapis.com/auth/drive.appdata",
-            "https://www.googleapis.com/auth/drive.file"
+            "https://www.googleapis.com/auth/drive.apps.readonly"
           ],
           ""
         ],
         [
-          "drive.parents.list",
-          "GET",
-          "files/{fileId}/parents",
+          "drive.properties.update",
+          "PUT",
+          "files/{fileId}/properties/{propertyKey}",
           [
             "https://www.googleapis.com/auth/drive",
             "https://www.googleapis.com/auth/drive.appdata",
             "https://www.googleapis.com/auth/drive.file",
-            "https://www.googleapis.com/auth/drive.meet.readonly",
-            "https://www.googleapis.com/auth/drive.metadata",
-            "https://www.googleapis.com/auth/drive.metadata.readonly",
-            "https://www.googleapis.com/auth/drive.photos.readonly",
-            "https://www.googleapis.com/auth/drive.readonly"
-          ],
-          ""
-        ],
-        [
-          "drive.parents.get",
-          "GET",
-          "files/{fileId}/parents/{parentId}",
-          [
-            "https://www.googleapis.com/auth/drive",
-            "https://www.googleapis.com/auth/drive.appdata",
-            "https://www.googleapis.com/auth/drive.file",
-            "https://www.googleapis.com/auth/drive.meet.readonly",
-            "https://www.googleapis.com/auth/drive.metadata",
-            "https://www.googleapis.com/auth/drive.metadata.readonly",
-            "https://www.googleapis.com/auth/drive.photos.readonly",
-            "https://www.googleapis.com/auth/drive.readonly"
-          ],
-          ""
-        ],
-        [
-          "drive.parents.delete",
-          "DELETE",
-          "files/{fileId}/parents/{parentId}",
-          [
-            "https://www.googleapis.com/auth/drive",
-            "https://www.googleapis.com/auth/drive.file"
-          ],
-          ""
-        ],
-        [
-          "drive.properties.list",
-          "GET",
-          "files/{fileId}/properties",
-          [
-            "https://www.googleapis.com/auth/drive",
-            "https://www.googleapis.com/auth/drive.appdata",
-            "https://www.googleapis.com/auth/drive.file",
-            "https://www.googleapis.com/auth/drive.meet.readonly",
-            "https://www.googleapis.com/auth/drive.metadata",
-            "https://www.googleapis.com/auth/drive.metadata.readonly",
-            "https://www.googleapis.com/auth/drive.photos.readonly",
-            "https://www.googleapis.com/auth/drive.readonly"
+            "https://www.googleapis.com/auth/drive.metadata"
           ],
           ""
         ],
@@ -648,26 +644,18 @@
           ""
         ],
         [
-          "drive.properties.patch",
-          "PATCH",
-          "files/{fileId}/properties/{propertyKey}",
+          "drive.properties.list",
+          "GET",
+          "files/{fileId}/properties",
           [
             "https://www.googleapis.com/auth/drive",
             "https://www.googleapis.com/auth/drive.appdata",
             "https://www.googleapis.com/auth/drive.file",
-            "https://www.googleapis.com/auth/drive.metadata"
-          ],
-          ""
-        ],
-        [
-          "drive.properties.update",
-          "PUT",
-          "files/{fileId}/properties/{propertyKey}",
-          [
-            "https://www.googleapis.com/auth/drive",
-            "https://www.googleapis.com/auth/drive.appdata",
-            "https://www.googleapis.com/auth/drive.file",
-            "https://www.googleapis.com/auth/drive.metadata"
+            "https://www.googleapis.com/auth/drive.meet.readonly",
+            "https://www.googleapis.com/auth/drive.metadata",
+            "https://www.googleapis.com/auth/drive.metadata.readonly",
+            "https://www.googleapis.com/auth/drive.photos.readonly",
+            "https://www.googleapis.com/auth/drive.readonly"
           ],
           ""
         ],
@@ -700,177 +688,101 @@
           ""
         ],
         [
-          "drive.about.get",
-          "GET",
-          "about",
+          "drive.properties.patch",
+          "PATCH",
+          "files/{fileId}/properties/{propertyKey}",
           [
             "https://www.googleapis.com/auth/drive",
             "https://www.googleapis.com/auth/drive.appdata",
             "https://www.googleapis.com/auth/drive.file",
+            "https://www.googleapis.com/auth/drive.metadata"
+          ],
+          ""
+        ],
+        [
+          "drive.files.listLabels",
+          "GET",
+          "files/{fileId}/listLabels",
+          [
+            "https://www.googleapis.com/auth/drive",
+            "https://www.googleapis.com/auth/drive.file",
+            "https://www.googleapis.com/auth/drive.meet.readonly",
             "https://www.googleapis.com/auth/drive.metadata",
             "https://www.googleapis.com/auth/drive.metadata.readonly",
-            "https://www.googleapis.com/auth/drive.photos.readonly",
             "https://www.googleapis.com/auth/drive.readonly"
           ],
           ""
         ],
         [
-          "drive.replies.patch",
-          "PATCH",
-          "files/{fileId}/comments/{commentId}/replies/{replyId}",
-          [
-            "https://www.googleapis.com/auth/drive",
-            "https://www.googleapis.com/auth/drive.file"
-          ],
-          ""
-        ],
-        [
-          "drive.replies.get",
-          "GET",
-          "files/{fileId}/comments/{commentId}/replies/{replyId}",
-          [
-            "https://www.googleapis.com/auth/drive",
-            "https://www.googleapis.com/auth/drive.file",
-            "https://www.googleapis.com/auth/drive.meet.readonly",
-            "https://www.googleapis.com/auth/drive.readonly"
-          ],
-          ""
-        ],
-        [
-          "drive.replies.insert",
-          "POST",
-          "files/{fileId}/comments/{commentId}/replies",
-          [
-            "https://www.googleapis.com/auth/drive",
-            "https://www.googleapis.com/auth/drive.file"
-          ],
-          ""
-        ],
-        [
-          "drive.replies.list",
-          "GET",
-          "files/{fileId}/comments/{commentId}/replies",
-          [
-            "https://www.googleapis.com/auth/drive",
-            "https://www.googleapis.com/auth/drive.file",
-            "https://www.googleapis.com/auth/drive.meet.readonly",
-            "https://www.googleapis.com/auth/drive.readonly"
-          ],
-          ""
-        ],
-        [
-          "drive.replies.update",
+          "drive.files.update",
           "PUT",
-          "files/{fileId}/comments/{commentId}/replies/{replyId}",
-          [
-            "https://www.googleapis.com/auth/drive",
-            "https://www.googleapis.com/auth/drive.file"
-          ],
-          ""
-        ],
-        [
-          "drive.replies.delete",
-          "DELETE",
-          "files/{fileId}/comments/{commentId}/replies/{replyId}",
-          [
-            "https://www.googleapis.com/auth/drive",
-            "https://www.googleapis.com/auth/drive.file"
-          ],
-          ""
-        ],
-        [
-          "drive.apps.list",
-          "GET",
-          "apps",
-          [
-            "https://www.googleapis.com/auth/drive.apps.readonly"
-          ],
-          ""
-        ],
-        [
-          "drive.apps.get",
-          "GET",
-          "apps/{appId}",
+          "files/{fileId}",
           [
             "https://www.googleapis.com/auth/drive",
             "https://www.googleapis.com/auth/drive.appdata",
             "https://www.googleapis.com/auth/drive.apps.readonly",
             "https://www.googleapis.com/auth/drive.file",
             "https://www.googleapis.com/auth/drive.metadata",
+            "https://www.googleapis.com/auth/drive.scripts"
+          ],
+          "u"
+        ],
+        [
+          "drive.files.get",
+          "GET",
+          "files/{fileId}",
+          [
+            "https://www.googleapis.com/auth/drive",
+            "https://www.googleapis.com/auth/drive.appdata",
+            "https://www.googleapis.com/auth/drive.file",
+            "https://www.googleapis.com/auth/drive.meet.readonly",
+            "https://www.googleapis.com/auth/drive.metadata",
             "https://www.googleapis.com/auth/drive.metadata.readonly",
+            "https://www.googleapis.com/auth/drive.photos.readonly",
             "https://www.googleapis.com/auth/drive.readonly"
           ],
-          ""
+          "d"
         ],
         [
-          "drive.drives.delete",
-          "DELETE",
-          "drives/{driveId}",
-          [
-            "https://www.googleapis.com/auth/drive"
-          ],
-          ""
-        ],
-        [
-          "drive.drives.unhide",
+          "drive.files.insert",
           "POST",
-          "drives/{driveId}/unhide",
-          [
-            "https://www.googleapis.com/auth/drive"
-          ],
-          ""
-        ],
-        [
-          "drive.drives.hide",
-          "POST",
-          "drives/{driveId}/hide",
-          [
-            "https://www.googleapis.com/auth/drive"
-          ],
-          ""
-        ],
-        [
-          "drive.drives.update",
-          "PUT",
-          "drives/{driveId}",
-          [
-            "https://www.googleapis.com/auth/drive"
-          ],
-          ""
-        ],
-        [
-          "drive.drives.get",
-          "GET",
-          "drives/{driveId}",
+          "files",
           [
             "https://www.googleapis.com/auth/drive",
-            "https://www.googleapis.com/auth/drive.readonly"
+            "https://www.googleapis.com/auth/drive.appdata",
+            "https://www.googleapis.com/auth/drive.apps.readonly",
+            "https://www.googleapis.com/auth/drive.file"
           ],
-          ""
+          "u"
         ],
         [
-          "drive.drives.insert",
-          "POST",
-          "drives",
-          [
-            "https://www.googleapis.com/auth/drive"
-          ],
-          ""
-        ],
-        [
-          "drive.drives.list",
+          "drive.files.generateIds",
           "GET",
-          "drives",
+          "files/generateIds",
           [
             "https://www.googleapis.com/auth/drive",
-            "https://www.googleapis.com/auth/drive.readonly"
+            "https://www.googleapis.com/auth/drive.appdata",
+            "https://www.googleapis.com/auth/drive.file"
           ],
           ""
         ],
         [
-          "drive.revisions.list",
-          "GET",
-          "files/{fileId}/revisions",
+          "drive.files.touch",
+          "POST",
+          "files/{fileId}/touch",
+          [
+            "https://www.googleapis.com/auth/drive",
+            "https://www.googleapis.com/auth/drive.appdata",
+            "https://www.googleapis.com/auth/drive.apps.readonly",
+            "https://www.googleapis.com/auth/drive.file",
+            "https://www.googleapis.com/auth/drive.metadata"
+          ],
+          ""
+        ],
+        [
+          "drive.files.watch",
+          "POST",
+          "files/{fileId}/watch",
           [
             "https://www.googleapis.com/auth/drive",
             "https://www.googleapis.com/auth/drive.appdata",
@@ -884,23 +796,38 @@
           ""
         ],
         [
-          "drive.revisions.patch",
+          "drive.files.patch",
           "PATCH",
-          "files/{fileId}/revisions/{revisionId}",
+          "files/{fileId}",
           [
             "https://www.googleapis.com/auth/drive",
             "https://www.googleapis.com/auth/drive.appdata",
-            "https://www.googleapis.com/auth/drive.file"
+            "https://www.googleapis.com/auth/drive.apps.readonly",
+            "https://www.googleapis.com/auth/drive.file",
+            "https://www.googleapis.com/auth/drive.metadata",
+            "https://www.googleapis.com/auth/drive.scripts"
           ],
           ""
         ],
         [
-          "drive.revisions.get",
+          "drive.files.modifyLabels",
+          "POST",
+          "files/{fileId}/modifyLabels",
+          [
+            "https://www.googleapis.com/auth/drive",
+            "https://www.googleapis.com/auth/drive.file",
+            "https://www.googleapis.com/auth/drive.metadata"
+          ],
+          ""
+        ],
+        [
+          "drive.files.list",
           "GET",
-          "files/{fileId}/revisions/{revisionId}",
+          "files",
           [
             "https://www.googleapis.com/auth/drive",
             "https://www.googleapis.com/auth/drive.appdata",
+            "https://www.googleapis.com/auth/drive.apps.readonly",
             "https://www.googleapis.com/auth/drive.file",
             "https://www.googleapis.com/auth/drive.meet.readonly",
             "https://www.googleapis.com/auth/drive.metadata",
@@ -911,9 +838,22 @@
           ""
         ],
         [
-          "drive.revisions.update",
-          "PUT",
-          "files/{fileId}/revisions/{revisionId}",
+          "drive.files.copy",
+          "POST",
+          "files/{fileId}/copy",
+          [
+            "https://www.googleapis.com/auth/drive",
+            "https://www.googleapis.com/auth/drive.appdata",
+            "https://www.googleapis.com/auth/drive.apps.readonly",
+            "https://www.googleapis.com/auth/drive.file",
+            "https://www.googleapis.com/auth/drive.photos.readonly"
+          ],
+          ""
+        ],
+        [
+          "drive.files.delete",
+          "DELETE",
+          "files/{fileId}",
           [
             "https://www.googleapis.com/auth/drive",
             "https://www.googleapis.com/auth/drive.appdata",
@@ -922,13 +862,73 @@
           ""
         ],
         [
-          "drive.revisions.delete",
-          "DELETE",
-          "files/{fileId}/revisions/{revisionId}",
+          "drive.files.trash",
+          "POST",
+          "files/{fileId}/trash",
           [
             "https://www.googleapis.com/auth/drive",
             "https://www.googleapis.com/auth/drive.appdata",
+            "https://www.googleapis.com/auth/drive.apps.readonly",
             "https://www.googleapis.com/auth/drive.file"
+          ],
+          ""
+        ],
+        [
+          "drive.files.export",
+          "GET",
+          "files/{fileId}/export",
+          [
+            "https://www.googleapis.com/auth/drive",
+            "https://www.googleapis.com/auth/drive.file",
+            "https://www.googleapis.com/auth/drive.meet.readonly",
+            "https://www.googleapis.com/auth/drive.readonly"
+          ],
+          "d"
+        ],
+        [
+          "drive.files.emptyTrash",
+          "DELETE",
+          "files/trash",
+          [
+            "https://www.googleapis.com/auth/drive"
+          ],
+          ""
+        ],
+        [
+          "drive.files.untrash",
+          "POST",
+          "files/{fileId}/untrash",
+          [
+            "https://www.googleapis.com/auth/drive",
+            "https://www.googleapis.com/auth/drive.appdata",
+            "https://www.googleapis.com/auth/drive.apps.readonly",
+            "https://www.googleapis.com/auth/drive.file"
+          ],
+          ""
+        ],
+        [
+          "drive.files.generateCseToken",
+          "GET",
+          "files/generateCseToken",
+          [
+            "https://www.googleapis.com/auth/drive"
+          ],
+          ""
+        ],
+        [
+          "drive.channels.stop",
+          "POST",
+          "channels/stop",
+          [
+            "https://www.googleapis.com/auth/drive",
+            "https://www.googleapis.com/auth/drive.appdata",
+            "https://www.googleapis.com/auth/drive.apps.readonly",
+            "https://www.googleapis.com/auth/drive.file",
+            "https://www.googleapis.com/auth/drive.meet.readonly",
+            "https://www.googleapis.com/auth/drive.metadata",
+            "https://www.googleapis.com/auth/drive.metadata.readonly",
+            "https://www.googleapis.com/auth/drive.photos.readonly",
+            "https://www.googleapis.com/auth/drive.readonly"
           ],
           ""
         ]
@@ -947,7 +947,7 @@
       "servicePath": "",
       "methods": [
         [
-          "drivelabels.labels.get",
+          "drivelabels.users.getCapabilities",
           "GET",
           "v2beta/{+name}",
           [
@@ -955,6 +955,56 @@
             "https://www.googleapis.com/auth/drive.admin.labels.readonly",
             "https://www.googleapis.com/auth/drive.labels",
             "https://www.googleapis.com/auth/drive.labels.readonly"
+          ],
+          ""
+        ],
+        [
+          "drivelabels.labels.disable",
+          "POST",
+          "v2beta/{+name}:disable",
+          [
+            "https://www.googleapis.com/auth/drive.admin.labels",
+            "https://www.googleapis.com/auth/drive.labels"
+          ],
+          ""
+        ],
+        [
+          "drivelabels.labels.publish",
+          "POST",
+          "v2beta/{+name}:publish",
+          [
+            "https://www.googleapis.com/auth/drive.admin.labels",
+            "https://www.googleapis.com/auth/drive.labels"
+          ],
+          ""
+        ],
+        [
+          "drivelabels.labels.create",
+          "POST",
+          "v2beta/labels",
+          [
+            "https://www.googleapis.com/auth/drive.admin.labels",
+            "https://www.googleapis.com/auth/drive.labels"
+          ],
+          ""
+        ],
+        [
+          "drivelabels.labels.enable",
+          "POST",
+          "v2beta/{+name}:enable",
+          [
+            "https://www.googleapis.com/auth/drive.admin.labels",
+            "https://www.googleapis.com/auth/drive.labels"
+          ],
+          ""
+        ],
+        [
+          "drivelabels.labels.updatePermissions",
+          "PATCH",
+          "v2beta/{+parent}/permissions",
+          [
+            "https://www.googleapis.com/auth/drive.admin.labels",
+            "https://www.googleapis.com/auth/drive.labels"
           ],
           ""
         ],
@@ -986,36 +1036,6 @@
           ""
         ],
         [
-          "drivelabels.labels.disable",
-          "POST",
-          "v2beta/{+name}:disable",
-          [
-            "https://www.googleapis.com/auth/drive.admin.labels",
-            "https://www.googleapis.com/auth/drive.labels"
-          ],
-          ""
-        ],
-        [
-          "drivelabels.labels.create",
-          "POST",
-          "v2beta/labels",
-          [
-            "https://www.googleapis.com/auth/drive.admin.labels",
-            "https://www.googleapis.com/auth/drive.labels"
-          ],
-          ""
-        ],
-        [
-          "drivelabels.labels.updatePermissions",
-          "PATCH",
-          "v2beta/{+parent}/permissions",
-          [
-            "https://www.googleapis.com/auth/drive.admin.labels",
-            "https://www.googleapis.com/auth/drive.labels"
-          ],
-          ""
-        ],
-        [
           "drivelabels.labels.updateLabelCopyMode",
           "POST",
           "v2beta/{+name}:updateLabelCopyMode",
@@ -1038,118 +1058,14 @@
           ""
         ],
         [
-          "drivelabels.labels.enable",
-          "POST",
-          "v2beta/{+name}:enable",
-          [
-            "https://www.googleapis.com/auth/drive.admin.labels",
-            "https://www.googleapis.com/auth/drive.labels"
-          ],
-          ""
-        ],
-        [
-          "drivelabels.labels.publish",
-          "POST",
-          "v2beta/{+name}:publish",
-          [
-            "https://www.googleapis.com/auth/drive.admin.labels",
-            "https://www.googleapis.com/auth/drive.labels"
-          ],
-          ""
-        ],
-        [
-          "drivelabels.labels.locks.list",
+          "drivelabels.labels.get",
           "GET",
-          "v2beta/{+parent}/locks",
-          [
-            "https://www.googleapis.com/auth/drive.admin.labels",
-            "https://www.googleapis.com/auth/drive.admin.labels.readonly",
-            "https://www.googleapis.com/auth/drive.labels",
-            "https://www.googleapis.com/auth/drive.labels.readonly"
-          ],
-          ""
-        ],
-        [
-          "drivelabels.labels.revisions.updatePermissions",
-          "PATCH",
-          "v2beta/{+parent}/permissions",
-          [
-            "https://www.googleapis.com/auth/drive.admin.labels",
-            "https://www.googleapis.com/auth/drive.labels"
-          ],
-          ""
-        ],
-        [
-          "drivelabels.labels.revisions.permissions.batchDelete",
-          "POST",
-          "v2beta/{+parent}/permissions:batchDelete",
-          [
-            "https://www.googleapis.com/auth/drive.admin.labels",
-            "https://www.googleapis.com/auth/drive.labels"
-          ],
-          ""
-        ],
-        [
-          "drivelabels.labels.revisions.permissions.delete",
-          "DELETE",
           "v2beta/{+name}",
           [
             "https://www.googleapis.com/auth/drive.admin.labels",
-            "https://www.googleapis.com/auth/drive.labels"
-          ],
-          ""
-        ],
-        [
-          "drivelabels.labels.revisions.permissions.create",
-          "POST",
-          "v2beta/{+parent}/permissions",
-          [
-            "https://www.googleapis.com/auth/drive.admin.labels",
-            "https://www.googleapis.com/auth/drive.labels"
-          ],
-          ""
-        ],
-        [
-          "drivelabels.labels.revisions.permissions.list",
-          "GET",
-          "v2beta/{+parent}/permissions",
-          [
-            "https://www.googleapis.com/auth/drive.admin.labels",
             "https://www.googleapis.com/auth/drive.admin.labels.readonly",
             "https://www.googleapis.com/auth/drive.labels",
             "https://www.googleapis.com/auth/drive.labels.readonly"
-          ],
-          ""
-        ],
-        [
-          "drivelabels.labels.revisions.permissions.batchUpdate",
-          "POST",
-          "v2beta/{+parent}/permissions:batchUpdate",
-          [
-            "https://www.googleapis.com/auth/drive.admin.labels",
-            "https://www.googleapis.com/auth/drive.labels"
-          ],
-          ""
-        ],
-        [
-          "drivelabels.labels.revisions.locks.list",
-          "GET",
-          "v2beta/{+parent}/locks",
-          [
-            "https://www.googleapis.com/auth/drive.admin.labels",
-            "https://www.googleapis.com/auth/drive.admin.labels.readonly",
-            "https://www.googleapis.com/auth/drive.labels",
-            "https://www.googleapis.com/auth/drive.labels.readonly"
-          ],
-          ""
-        ],
-        [
-          "drivelabels.labels.permissions.batchDelete",
-          "POST",
-          "v2beta/{+parent}/permissions:batchDelete",
-          [
-            "https://www.googleapis.com/auth/drive.admin.labels",
-            "https://www.googleapis.com/auth/drive.labels"
           ],
           ""
         ],
@@ -1196,9 +1112,93 @@
           ""
         ],
         [
-          "drivelabels.users.getCapabilities",
-          "GET",
+          "drivelabels.labels.permissions.batchDelete",
+          "POST",
+          "v2beta/{+parent}/permissions:batchDelete",
+          [
+            "https://www.googleapis.com/auth/drive.admin.labels",
+            "https://www.googleapis.com/auth/drive.labels"
+          ],
+          ""
+        ],
+        [
+          "drivelabels.labels.revisions.updatePermissions",
+          "PATCH",
+          "v2beta/{+parent}/permissions",
+          [
+            "https://www.googleapis.com/auth/drive.admin.labels",
+            "https://www.googleapis.com/auth/drive.labels"
+          ],
+          ""
+        ],
+        [
+          "drivelabels.labels.revisions.permissions.delete",
+          "DELETE",
           "v2beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/drive.admin.labels",
+            "https://www.googleapis.com/auth/drive.labels"
+          ],
+          ""
+        ],
+        [
+          "drivelabels.labels.revisions.permissions.batchDelete",
+          "POST",
+          "v2beta/{+parent}/permissions:batchDelete",
+          [
+            "https://www.googleapis.com/auth/drive.admin.labels",
+            "https://www.googleapis.com/auth/drive.labels"
+          ],
+          ""
+        ],
+        [
+          "drivelabels.labels.revisions.permissions.list",
+          "GET",
+          "v2beta/{+parent}/permissions",
+          [
+            "https://www.googleapis.com/auth/drive.admin.labels",
+            "https://www.googleapis.com/auth/drive.admin.labels.readonly",
+            "https://www.googleapis.com/auth/drive.labels",
+            "https://www.googleapis.com/auth/drive.labels.readonly"
+          ],
+          ""
+        ],
+        [
+          "drivelabels.labels.revisions.permissions.batchUpdate",
+          "POST",
+          "v2beta/{+parent}/permissions:batchUpdate",
+          [
+            "https://www.googleapis.com/auth/drive.admin.labels",
+            "https://www.googleapis.com/auth/drive.labels"
+          ],
+          ""
+        ],
+        [
+          "drivelabels.labels.revisions.permissions.create",
+          "POST",
+          "v2beta/{+parent}/permissions",
+          [
+            "https://www.googleapis.com/auth/drive.admin.labels",
+            "https://www.googleapis.com/auth/drive.labels"
+          ],
+          ""
+        ],
+        [
+          "drivelabels.labels.revisions.locks.list",
+          "GET",
+          "v2beta/{+parent}/locks",
+          [
+            "https://www.googleapis.com/auth/drive.admin.labels",
+            "https://www.googleapis.com/auth/drive.admin.labels.readonly",
+            "https://www.googleapis.com/auth/drive.labels",
+            "https://www.googleapis.com/auth/drive.labels.readonly"
+          ],
+          ""
+        ],
+        [
+          "drivelabels.labels.locks.list",
+          "GET",
+          "v2beta/{+parent}/locks",
           [
             "https://www.googleapis.com/auth/drive.admin.labels",
             "https://www.googleapis.com/auth/drive.admin.labels.readonly",

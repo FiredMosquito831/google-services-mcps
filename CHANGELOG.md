@@ -2,6 +2,20 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.26.0 - 2026-10-30
+
+### Changed: Discovery snapshots and the API catalog refreshed from Google (2026-10-30)
+- All 143 snapshots in `data/discovery/` were fetched again (`data/discovery/_revisions.json` now records each document's revision and fetch time), and `data/catalog.json` was rebuilt: 541 API versions (was 536) and 31,633 methods (was 29,205).
+- New per-method tools, from methods Google added: `chat_spaces_messages_replace_cards` (gchat, a write), `classroom_cou_cou_add_stu_lis` (gclassroom, add-on attachment student submissions, a read) and `firebasecr_project_apps_generat` (gfirebase, Crashlytics `generateAlertPolicy`, a write by the POST rule). Three Chat methods now also list `chat.bot`.
+- gcloud keeps its 350 per-method tools: Cloud Resource Manager v3 gained 14 methods (boundaries and boundary configs of organizations and folders), which would pass the 350 cap, so its generated entry now lists its previous methods (`include`), and the whole API is also a gateway API of gcloud, so the 14 new methods are reachable with `api_search`, `api_describe` and `api_call`.
+- New catalog versions are reached through the gateway, beside the versions already used: Compute Engine `2026-11-01` and `2026-12-01-preview` (gcloud), Display & Video 360 `v5` (gads), Device Run `v1` (gfirebase). The per-method tools keep their versions (Display & Video 360 `v4`, Device Run `v1alpha`).
+- The gateway lost 35 methods that Google removed (Vertex AI v1beta1 evaluation-task operations, Contact Center AI Insights assistant sessions, BeyondCorp connector and gateway create, patch and status methods, SaaS Runtime v1beta1 releases and unit groups, Compute Engine preview `instances.troubleshoot`); calling them would fail at Google. No per-method tool was removed or renamed, no tool's kind changed, and no method lost a scope.
+- `rapidmigrationassessment v1`, a gcloud gateway API, answers HTTP 502 at Google's Discovery URLs today; its catalog entry is kept as it was (built from the copy of 2026-10-15).
+
+### Not changed
+- The scopes of every login: each plugin's `gsm scopes`, every toolset and profile, gives the same lists as 1.25.0.
+- Deep Review API (`deepreview v1`, new in Google's directory) is listed as unassigned, with a reason: which product it belongs to is the owner's decision.
+
 ## 1.25.0 - 2026-10-30
 
 ### Added: narrower scopes for the google toolset, with the same reach

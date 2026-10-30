@@ -1,8 +1,112 @@
 {
-  "generatedAt": "2026-10-15T15:08:21.313Z",
-  "apiCount": 9,
-  "methodCount": 311,
+  "generatedAt": "2026-10-30T15:12:58.580Z",
+  "apiCount": 10,
+  "methodCount": 321,
   "apis": [
+    {
+      "name": "devicerun",
+      "version": "v1",
+      "preferred": true,
+      "title": "Device Run API",
+      "description": "The Device Run API allows management, scheduling, and execution of automated sessions and workloads across device catalogs.",
+      "documentationLink": "https://docs.cloud.google.com/developer-device-platform/device-run",
+      "labels": [],
+      "deprecated": false,
+      "rootUrl": "https://devicerun.googleapis.com/",
+      "servicePath": "",
+      "methods": [
+        [
+          "devicerun.projects.locations.get",
+          "GET",
+          "v1/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "devicerun.projects.locations.list",
+          "GET",
+          "v1/{+name}/locations",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "devicerun.projects.locations.devices.list",
+          "GET",
+          "v1/{+parent}/devices",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "devicerun.projects.locations.devices.get",
+          "GET",
+          "v1/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "devicerun.projects.locations.softwareVersions.get",
+          "GET",
+          "v1/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "devicerun.projects.locations.softwareVersions.list",
+          "GET",
+          "v1/{+parent}/softwareVersions",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "devicerun.projects.locations.operations.delete",
+          "DELETE",
+          "v1/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "devicerun.projects.locations.operations.cancel",
+          "POST",
+          "v1/{+name}:cancel",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "devicerun.projects.locations.operations.list",
+          "GET",
+          "v1/{+name}/operations",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "devicerun.projects.locations.operations.get",
+          "GET",
+          "v1/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ]
+      ]
+    },
     {
       "name": "firebaseappcheck",
       "version": "v1beta",
@@ -46,6 +150,16 @@
           ""
         ],
         [
+          "firebaseappcheck.projects.services.patch",
+          "PATCH",
+          "v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
           "firebaseappcheck.projects.services.get",
           "GET",
           "v1beta/{+name}",
@@ -66,7 +180,87 @@
           ""
         ],
         [
-          "firebaseappcheck.projects.services.patch",
+          "firebaseappcheck.projects.services.resourcePolicies.list",
+          "GET",
+          "v1beta/{+parent}/resourcePolicies",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "firebaseappcheck.projects.services.resourcePolicies.get",
+          "GET",
+          "v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "firebaseappcheck.projects.services.resourcePolicies.create",
+          "POST",
+          "v1beta/{+parent}/resourcePolicies",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "firebaseappcheck.projects.services.resourcePolicies.delete",
+          "DELETE",
+          "v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "firebaseappcheck.projects.services.resourcePolicies.batchUpdate",
+          "POST",
+          "v1beta/{+parent}/resourcePolicies:batchUpdate",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "firebaseappcheck.projects.services.resourcePolicies.patch",
+          "PATCH",
+          "v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "firebaseappcheck.projects.services.resourcePolicies.automations.list",
+          "GET",
+          "v1beta/{+parent}/automations",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "firebaseappcheck.projects.services.resourcePolicies.automations.get",
+          "GET",
+          "v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "firebaseappcheck.projects.services.resourcePolicies.automations.patch",
           "PATCH",
           "v1beta/{+name}",
           [
@@ -86,16 +280,6 @@
           ""
         ],
         [
-          "firebaseappcheck.projects.services.automations.list",
-          "GET",
-          "v1beta/{+parent}/automations",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
           "firebaseappcheck.projects.services.automations.patch",
           "PATCH",
           "v1beta/{+name}",
@@ -106,149 +290,9 @@
           ""
         ],
         [
-          "firebaseappcheck.projects.services.resourcePolicies.patch",
-          "PATCH",
-          "v1beta/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "firebaseappcheck.projects.services.resourcePolicies.delete",
-          "DELETE",
-          "v1beta/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "firebaseappcheck.projects.services.resourcePolicies.list",
-          "GET",
-          "v1beta/{+parent}/resourcePolicies",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "firebaseappcheck.projects.services.resourcePolicies.create",
-          "POST",
-          "v1beta/{+parent}/resourcePolicies",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "firebaseappcheck.projects.services.resourcePolicies.batchUpdate",
-          "POST",
-          "v1beta/{+parent}/resourcePolicies:batchUpdate",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "firebaseappcheck.projects.services.resourcePolicies.get",
-          "GET",
-          "v1beta/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "firebaseappcheck.projects.services.resourcePolicies.automations.get",
-          "GET",
-          "v1beta/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "firebaseappcheck.projects.services.resourcePolicies.automations.list",
+          "firebaseappcheck.projects.services.automations.list",
           "GET",
           "v1beta/{+parent}/automations",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "firebaseappcheck.projects.services.resourcePolicies.automations.patch",
-          "PATCH",
-          "v1beta/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "firebaseappcheck.projects.apps.exchangeDebugToken",
-          "POST",
-          "v1beta/{+app}:exchangeDebugToken",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "firebaseappcheck.projects.apps.exchangeRecaptchaEnterpriseToken",
-          "POST",
-          "v1beta/{+app}:exchangeRecaptchaEnterpriseToken",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "firebaseappcheck.projects.apps.generateAppAttestChallenge",
-          "POST",
-          "v1beta/{+app}:generateAppAttestChallenge",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "firebaseappcheck.projects.apps.exchangeAppAttestAssertion",
-          "POST",
-          "v1beta/{+app}:exchangeAppAttestAssertion",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "firebaseappcheck.projects.apps.exchangeDeviceCheckToken",
-          "POST",
-          "v1beta/{+app}:exchangeDeviceCheckToken",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "firebaseappcheck.projects.apps.exchangeRecaptchaV3Token",
-          "POST",
-          "v1beta/{+app}:exchangeRecaptchaV3Token",
           [
             "https://www.googleapis.com/auth/cloud-platform",
             "https://www.googleapis.com/auth/firebase"
@@ -266,29 +310,9 @@
           ""
         ],
         [
-          "firebaseappcheck.projects.apps.exchangeRecaptchaToken",
+          "firebaseappcheck.projects.apps.exchangeDeviceCheckToken",
           "POST",
-          "v1beta/{+app}:exchangeRecaptchaToken",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "firebaseappcheck.projects.apps.mintAppCheckToken",
-          "POST",
-          "v1beta/{+app}:mintAppCheckToken",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "firebaseappcheck.projects.apps.generatePlayIntegrityChallenge",
-          "POST",
-          "v1beta/{+app}:generatePlayIntegrityChallenge",
+          "v1beta/{+app}:exchangeDeviceCheckToken",
           [
             "https://www.googleapis.com/auth/cloud-platform",
             "https://www.googleapis.com/auth/firebase"
@@ -316,9 +340,9 @@
           ""
         ],
         [
-          "firebaseappcheck.projects.apps.recaptchaV3Config.batchGet",
-          "GET",
-          "v1beta/{+parent}/apps/-/recaptchaV3Config:batchGet",
+          "firebaseappcheck.projects.apps.exchangeAppAttestAssertion",
+          "POST",
+          "v1beta/{+app}:exchangeAppAttestAssertion",
           [
             "https://www.googleapis.com/auth/cloud-platform",
             "https://www.googleapis.com/auth/firebase"
@@ -326,8 +350,98 @@
           ""
         ],
         [
-          "firebaseappcheck.projects.apps.recaptchaV3Config.patch",
-          "PATCH",
+          "firebaseappcheck.projects.apps.exchangeRecaptchaEnterpriseToken",
+          "POST",
+          "v1beta/{+app}:exchangeRecaptchaEnterpriseToken",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "firebaseappcheck.projects.apps.generateAppAttestChallenge",
+          "POST",
+          "v1beta/{+app}:generateAppAttestChallenge",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "firebaseappcheck.projects.apps.exchangeDebugToken",
+          "POST",
+          "v1beta/{+app}:exchangeDebugToken",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "firebaseappcheck.projects.apps.mintAppCheckToken",
+          "POST",
+          "v1beta/{+app}:mintAppCheckToken",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "firebaseappcheck.projects.apps.exchangeRecaptchaV3Token",
+          "POST",
+          "v1beta/{+app}:exchangeRecaptchaV3Token",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "firebaseappcheck.projects.apps.generatePlayIntegrityChallenge",
+          "POST",
+          "v1beta/{+app}:generatePlayIntegrityChallenge",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "firebaseappcheck.projects.apps.exchangeRecaptchaToken",
+          "POST",
+          "v1beta/{+app}:exchangeRecaptchaToken",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "firebaseappcheck.projects.apps.debugTokens.list",
+          "GET",
+          "v1beta/{+parent}/debugTokens",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "firebaseappcheck.projects.apps.debugTokens.create",
+          "POST",
+          "v1beta/{+parent}/debugTokens",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "firebaseappcheck.projects.apps.debugTokens.delete",
+          "DELETE",
           "v1beta/{+name}",
           [
             "https://www.googleapis.com/auth/cloud-platform",
@@ -336,7 +450,7 @@
           ""
         ],
         [
-          "firebaseappcheck.projects.apps.recaptchaV3Config.get",
+          "firebaseappcheck.projects.apps.debugTokens.get",
           "GET",
           "v1beta/{+name}",
           [
@@ -346,37 +460,7 @@
           ""
         ],
         [
-          "firebaseappcheck.projects.apps.appAttestConfig.batchGet",
-          "GET",
-          "v1beta/{+parent}/apps/-/appAttestConfig:batchGet",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "firebaseappcheck.projects.apps.appAttestConfig.get",
-          "GET",
-          "v1beta/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "firebaseappcheck.projects.apps.appAttestConfig.patch",
-          "PATCH",
-          "v1beta/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "firebaseappcheck.projects.apps.recaptchaConfig.patch",
+          "firebaseappcheck.projects.apps.debugTokens.patch",
           "PATCH",
           "v1beta/{+name}",
           [
@@ -406,48 +490,8 @@
           ""
         ],
         [
-          "firebaseappcheck.projects.apps.debugTokens.delete",
-          "DELETE",
-          "v1beta/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "firebaseappcheck.projects.apps.debugTokens.patch",
+          "firebaseappcheck.projects.apps.recaptchaConfig.patch",
           "PATCH",
-          "v1beta/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "firebaseappcheck.projects.apps.debugTokens.list",
-          "GET",
-          "v1beta/{+parent}/debugTokens",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "firebaseappcheck.projects.apps.debugTokens.create",
-          "POST",
-          "v1beta/{+parent}/debugTokens",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "firebaseappcheck.projects.apps.debugTokens.get",
-          "GET",
           "v1beta/{+name}",
           [
             "https://www.googleapis.com/auth/cloud-platform",
@@ -486,28 +530,8 @@
           ""
         ],
         [
-          "firebaseappcheck.projects.apps.recaptchaEnterpriseConfig.batchGet",
-          "GET",
-          "v1beta/{+parent}/apps/-/recaptchaEnterpriseConfig:batchGet",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "firebaseappcheck.projects.apps.recaptchaEnterpriseConfig.patch",
+          "firebaseappcheck.projects.apps.deviceCheckConfig.patch",
           "PATCH",
-          "v1beta/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "firebaseappcheck.projects.apps.recaptchaEnterpriseConfig.get",
-          "GET",
           "v1beta/{+name}",
           [
             "https://www.googleapis.com/auth/cloud-platform",
@@ -526,16 +550,6 @@
           ""
         ],
         [
-          "firebaseappcheck.projects.apps.deviceCheckConfig.patch",
-          "PATCH",
-          "v1beta/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
           "firebaseappcheck.projects.apps.deviceCheckConfig.batchGet",
           "GET",
           "v1beta/{+parent}/apps/-/deviceCheckConfig:batchGet",
@@ -546,9 +560,9 @@
           ""
         ],
         [
-          "firebaseappcheck.oauthClients.exchangeDebugToken",
-          "POST",
-          "v1beta/{+app}:exchangeDebugToken",
+          "firebaseappcheck.projects.apps.recaptchaEnterpriseConfig.patch",
+          "PATCH",
+          "v1beta/{+name}",
           [
             "https://www.googleapis.com/auth/cloud-platform",
             "https://www.googleapis.com/auth/firebase"
@@ -556,9 +570,89 @@
           ""
         ],
         [
-          "firebaseappcheck.oauthClients.generateAppAttestChallenge",
+          "firebaseappcheck.projects.apps.recaptchaEnterpriseConfig.batchGet",
+          "GET",
+          "v1beta/{+parent}/apps/-/recaptchaEnterpriseConfig:batchGet",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "firebaseappcheck.projects.apps.recaptchaEnterpriseConfig.get",
+          "GET",
+          "v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "firebaseappcheck.projects.apps.appAttestConfig.batchGet",
+          "GET",
+          "v1beta/{+parent}/apps/-/appAttestConfig:batchGet",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "firebaseappcheck.projects.apps.appAttestConfig.patch",
+          "PATCH",
+          "v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "firebaseappcheck.projects.apps.appAttestConfig.get",
+          "GET",
+          "v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "firebaseappcheck.projects.apps.recaptchaV3Config.patch",
+          "PATCH",
+          "v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "firebaseappcheck.projects.apps.recaptchaV3Config.get",
+          "GET",
+          "v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "firebaseappcheck.projects.apps.recaptchaV3Config.batchGet",
+          "GET",
+          "v1beta/{+parent}/apps/-/recaptchaV3Config:batchGet",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "firebaseappcheck.oauthClients.exchangeDebugToken",
           "POST",
-          "v1beta/{+app}:generateAppAttestChallenge",
+          "v1beta/{+app}:exchangeDebugToken",
           [
             "https://www.googleapis.com/auth/cloud-platform",
             "https://www.googleapis.com/auth/firebase"
@@ -584,6 +678,16 @@
             "https://www.googleapis.com/auth/firebase"
           ],
           ""
+        ],
+        [
+          "firebaseappcheck.oauthClients.generateAppAttestChallenge",
+          "POST",
+          "v1beta/{+app}:generateAppAttestChallenge",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
         ]
       ]
     },
@@ -600,6 +704,15 @@
       "servicePath": "",
       "methods": [
         [
+          "firebaseappdistribution.apps.get",
+          "GET",
+          "v1alpha/apps/{mobilesdkAppId}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
           "firebaseappdistribution.apps.getJwt",
           "GET",
           "v1alpha/apps/{mobilesdkAppId}/jwt",
@@ -609,9 +722,27 @@
           ""
         ],
         [
-          "firebaseappdistribution.apps.get",
+          "firebaseappdistribution.apps.upload_status.get",
           "GET",
-          "v1alpha/apps/{mobilesdkAppId}",
+          "v1alpha/apps/{mobilesdkAppId}/upload_status/{uploadToken}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "firebaseappdistribution.apps.testers.getTesterUdids",
+          "GET",
+          "v1alpha/apps/{mobilesdkAppId}/testers:getTesterUdids",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "firebaseappdistribution.apps.release_by_hash.get",
+          "GET",
+          "v1alpha/apps/{mobilesdkAppId}/release_by_hash/{uploadHash}",
           [
             "https://www.googleapis.com/auth/cloud-platform"
           ],
@@ -630,33 +761,6 @@
           "firebaseappdistribution.apps.releases.notes.create",
           "POST",
           "v1alpha/apps/{mobilesdkAppId}/releases/{releaseId}/notes",
-          [
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
-          "firebaseappdistribution.apps.testers.getTesterUdids",
-          "GET",
-          "v1alpha/apps/{mobilesdkAppId}/testers:getTesterUdids",
-          [
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
-          "firebaseappdistribution.apps.upload_status.get",
-          "GET",
-          "v1alpha/apps/{mobilesdkAppId}/upload_status/{uploadToken}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
-          "firebaseappdistribution.apps.release_by_hash.get",
-          "GET",
-          "v1alpha/apps/{mobilesdkAppId}/release_by_hash/{uploadHash}",
           [
             "https://www.googleapis.com/auth/cloud-platform"
           ],
@@ -699,18 +803,18 @@
           ""
         ],
         [
-          "firebaseappdistribution.projects.apps.releases.tests.get",
-          "GET",
-          "v1alpha/{+name}",
+          "firebaseappdistribution.projects.apps.releases.tests.create",
+          "POST",
+          "v1alpha/{+parent}/tests",
           [
             "https://www.googleapis.com/auth/cloud-platform"
           ],
           ""
         ],
         [
-          "firebaseappdistribution.projects.apps.releases.tests.create",
-          "POST",
-          "v1alpha/{+parent}/tests",
+          "firebaseappdistribution.projects.apps.releases.tests.get",
+          "GET",
+          "v1alpha/{+name}",
           [
             "https://www.googleapis.com/auth/cloud-platform"
           ],
@@ -735,18 +839,9 @@
           ""
         ],
         [
-          "firebaseappdistribution.projects.apps.testCases.create",
+          "firebaseappdistribution.projects.apps.testCases.clearTestCaseCache",
           "POST",
-          "v1alpha/{+parent}/testCases",
-          [
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
-          "firebaseappdistribution.projects.apps.testCases.list",
-          "GET",
-          "v1alpha/{+parent}/testCases",
+          "v1alpha/{+testCase}:clearTestCaseCache",
           [
             "https://www.googleapis.com/auth/cloud-platform"
           ],
@@ -762,27 +857,18 @@
           ""
         ],
         [
+          "firebaseappdistribution.projects.apps.testCases.create",
+          "POST",
+          "v1alpha/{+parent}/testCases",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
           "firebaseappdistribution.projects.apps.testCases.batchUpdate",
           "POST",
           "v1alpha/{+parent}/testCases:batchUpdate",
-          [
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
-          "firebaseappdistribution.projects.apps.testCases.batchDelete",
-          "POST",
-          "v1alpha/{+parent}/testCases:batchDelete",
-          [
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
-          "firebaseappdistribution.projects.apps.testCases.clearTestCaseCache",
-          "POST",
-          "v1alpha/{+testCase}:clearTestCaseCache",
           [
             "https://www.googleapis.com/auth/cloud-platform"
           ],
@@ -805,6 +891,24 @@
             "https://www.googleapis.com/auth/cloud-platform"
           ],
           ""
+        ],
+        [
+          "firebaseappdistribution.projects.apps.testCases.list",
+          "GET",
+          "v1alpha/{+parent}/testCases",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "firebaseappdistribution.projects.apps.testCases.batchDelete",
+          "POST",
+          "v1alpha/{+parent}/testCases:batchDelete",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
         ]
       ]
     },
@@ -821,15 +925,6 @@
       "servicePath": "",
       "methods": [
         [
-          "firebaseapphosting.projects.locations.list",
-          "GET",
-          "v1beta/{+name}/locations",
-          [
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
           "firebaseapphosting.projects.locations.get",
           "GET",
           "v1beta/{+name}",
@@ -839,9 +934,9 @@
           ""
         ],
         [
-          "firebaseapphosting.projects.locations.operations.get",
+          "firebaseapphosting.projects.locations.list",
           "GET",
-          "v1beta/{+name}",
+          "v1beta/{+name}/locations",
           [
             "https://www.googleapis.com/auth/cloud-platform"
           ],
@@ -875,8 +970,35 @@
           ""
         ],
         [
+          "firebaseapphosting.projects.locations.operations.get",
+          "GET",
+          "v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "firebaseapphosting.projects.locations.backends.list",
+          "GET",
+          "v1beta/{+parent}/backends",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
           "firebaseapphosting.projects.locations.backends.get",
           "GET",
+          "v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "firebaseapphosting.projects.locations.backends.delete",
+          "DELETE",
           "v1beta/{+name}",
           [
             "https://www.googleapis.com/auth/cloud-platform"
@@ -902,18 +1024,9 @@
           ""
         ],
         [
-          "firebaseapphosting.projects.locations.backends.delete",
-          "DELETE",
-          "v1beta/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
-          "firebaseapphosting.projects.locations.backends.list",
+          "firebaseapphosting.projects.locations.backends.rollouts.list",
           "GET",
-          "v1beta/{+parent}/backends",
+          "v1beta/{+parent}/rollouts",
           [
             "https://www.googleapis.com/auth/cloud-platform"
           ],
@@ -938,16 +1051,7 @@
           ""
         ],
         [
-          "firebaseapphosting.projects.locations.backends.rollouts.list",
-          "GET",
-          "v1beta/{+parent}/rollouts",
-          [
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
-          "firebaseapphosting.projects.locations.backends.builds.get",
+          "firebaseapphosting.projects.locations.backends.traffic.get",
           "GET",
           "v1beta/{+name}",
           [
@@ -956,9 +1060,9 @@
           ""
         ],
         [
-          "firebaseapphosting.projects.locations.backends.builds.create",
-          "POST",
-          "v1beta/{+parent}/builds",
+          "firebaseapphosting.projects.locations.backends.traffic.patch",
+          "PATCH",
+          "v1beta/{+name}",
           [
             "https://www.googleapis.com/auth/cloud-platform"
           ],
@@ -983,17 +1087,17 @@
           ""
         ],
         [
-          "firebaseapphosting.projects.locations.backends.domains.list",
-          "GET",
-          "v1beta/{+parent}/domains",
+          "firebaseapphosting.projects.locations.backends.builds.create",
+          "POST",
+          "v1beta/{+parent}/builds",
           [
             "https://www.googleapis.com/auth/cloud-platform"
           ],
           ""
         ],
         [
-          "firebaseapphosting.projects.locations.backends.domains.patch",
-          "PATCH",
+          "firebaseapphosting.projects.locations.backends.builds.get",
+          "GET",
           "v1beta/{+name}",
           [
             "https://www.googleapis.com/auth/cloud-platform"
@@ -1001,8 +1105,8 @@
           ""
         ],
         [
-          "firebaseapphosting.projects.locations.backends.domains.get",
-          "GET",
+          "firebaseapphosting.projects.locations.backends.domains.delete",
+          "DELETE",
           "v1beta/{+name}",
           [
             "https://www.googleapis.com/auth/cloud-platform"
@@ -1019,26 +1123,26 @@
           ""
         ],
         [
-          "firebaseapphosting.projects.locations.backends.domains.delete",
-          "DELETE",
-          "v1beta/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
-          "firebaseapphosting.projects.locations.backends.traffic.patch",
-          "PATCH",
-          "v1beta/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
-          "firebaseapphosting.projects.locations.backends.traffic.get",
+          "firebaseapphosting.projects.locations.backends.domains.get",
           "GET",
+          "v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "firebaseapphosting.projects.locations.backends.domains.list",
+          "GET",
+          "v1beta/{+parent}/domains",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "firebaseapphosting.projects.locations.backends.domains.patch",
+          "PATCH",
           "v1beta/{+name}",
           [
             "https://www.googleapis.com/auth/cloud-platform"
@@ -1087,54 +1191,9 @@
           ""
         ],
         [
-          "firebasedataconnect.projects.locations.operations.cancel",
+          "firebasedataconnect.projects.locations.services.executeGraphqlRead",
           "POST",
-          "v1beta/{+name}:cancel",
-          [
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
-          "firebasedataconnect.projects.locations.operations.get",
-          "GET",
-          "v1beta/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
-          "firebasedataconnect.projects.locations.operations.delete",
-          "DELETE",
-          "v1beta/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
-          "firebasedataconnect.projects.locations.operations.list",
-          "GET",
-          "v1beta/{+name}/operations",
-          [
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
-          "firebasedataconnect.projects.locations.services.get",
-          "GET",
-          "v1beta/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
-          "firebasedataconnect.projects.locations.services.introspectGraphql",
-          "POST",
-          "v1beta/{+name}:introspectGraphql",
+          "v1beta/{+name}:executeGraphqlRead",
           [
             "https://www.googleapis.com/auth/cloud-platform"
           ],
@@ -1150,8 +1209,26 @@
           ""
         ],
         [
-          "firebasedataconnect.projects.locations.services.list",
+          "firebasedataconnect.projects.locations.services.delete",
+          "DELETE",
+          "v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "firebasedataconnect.projects.locations.services.get",
           "GET",
+          "v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "firebasedataconnect.projects.locations.services.create",
+          "POST",
           "v1beta/{+parent}/services",
           [
             "https://www.googleapis.com/auth/cloud-platform"
@@ -1168,27 +1245,9 @@
           ""
         ],
         [
-          "firebasedataconnect.projects.locations.services.executeGraphql",
+          "firebasedataconnect.projects.locations.services.introspectGraphql",
           "POST",
-          "v1beta/{+name}:executeGraphql",
-          [
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
-          "firebasedataconnect.projects.locations.services.delete",
-          "DELETE",
-          "v1beta/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
-          "firebasedataconnect.projects.locations.services.executeGraphqlRead",
-          "POST",
-          "v1beta/{+name}:executeGraphqlRead",
+          "v1beta/{+name}:introspectGraphql",
           [
             "https://www.googleapis.com/auth/cloud-platform"
           ],
@@ -1204,8 +1263,8 @@
           ""
         ],
         [
-          "firebasedataconnect.projects.locations.services.create",
-          "POST",
+          "firebasedataconnect.projects.locations.services.list",
+          "GET",
           "v1beta/{+parent}/services",
           [
             "https://www.googleapis.com/auth/cloud-platform"
@@ -1213,36 +1272,72 @@
           ""
         ],
         [
-          "firebasedataconnect.projects.locations.services.schemas.patch",
-          "PATCH",
-          "v1beta/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
-          "firebasedataconnect.projects.locations.services.schemas.delete",
-          "DELETE",
-          "v1beta/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
-          "firebasedataconnect.projects.locations.services.schemas.migrate",
+          "firebasedataconnect.projects.locations.services.executeGraphql",
           "POST",
-          "v1beta/{+name}:migrate",
+          "v1beta/{+name}:executeGraphql",
           [
             "https://www.googleapis.com/auth/cloud-platform"
           ],
           ""
         ],
         [
-          "firebasedataconnect.projects.locations.services.schemas.list",
+          "firebasedataconnect.projects.locations.services.postgrest.postgrestUpsert",
+          "PUT",
+          "v1beta/{+firebasedataconnectService}/postgrest/{+firebasedataconnectTable}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "firebasedataconnect.projects.locations.services.postgrest.postgrestDelete",
+          "DELETE",
+          "v1beta/{+firebasedataconnectService}/postgrest/{+firebasedataconnectTable}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "firebasedataconnect.projects.locations.services.postgrest.postgrestUpdate",
+          "PATCH",
+          "v1beta/{+firebasedataconnectService}/postgrest/{+firebasedataconnectTable}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "firebasedataconnect.projects.locations.services.postgrest.postgrestSelect",
           "GET",
-          "v1beta/{+parent}/schemas",
+          "v1beta/{+firebasedataconnectService}/postgrest/{+firebasedataconnectTable}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "firebasedataconnect.projects.locations.services.postgrest.postgrestInsert",
+          "POST",
+          "v1beta/{+firebasedataconnectService}/postgrest/{+firebasedataconnectTable}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "firebasedataconnect.projects.locations.services.postgrest.rpc.postgrestQueryFunction",
+          "GET",
+          "v1beta/{+firebasedataconnectService}/postgrest/rpc/{+firebasedataconnectFunction}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "firebasedataconnect.projects.locations.services.postgrest.rpc.postgrestCallFunction",
+          "POST",
+          "v1beta/{+firebasedataconnectService}/postgrest/rpc/{+firebasedataconnectFunction}",
           [
             "https://www.googleapis.com/auth/cloud-platform"
           ],
@@ -1251,6 +1346,15 @@
         [
           "firebasedataconnect.projects.locations.services.schemas.create",
           "POST",
+          "v1beta/{+parent}/schemas",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "firebasedataconnect.projects.locations.services.schemas.list",
+          "GET",
           "v1beta/{+parent}/schemas",
           [
             "https://www.googleapis.com/auth/cloud-platform"
@@ -1267,9 +1371,45 @@
           ""
         ],
         [
-          "firebasedataconnect.projects.locations.services.connectors.delete",
+          "firebasedataconnect.projects.locations.services.schemas.delete",
           "DELETE",
           "v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "firebasedataconnect.projects.locations.services.schemas.patch",
+          "PATCH",
+          "v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "firebasedataconnect.projects.locations.services.schemas.migrate",
+          "POST",
+          "v1beta/{+name}:migrate",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "firebasedataconnect.projects.locations.services.connectors.get",
+          "GET",
+          "v1beta/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "firebasedataconnect.projects.locations.services.connectors.list",
+          "GET",
+          "v1beta/{+parent}/connectors",
           [
             "https://www.googleapis.com/auth/cloud-platform"
           ],
@@ -1294,18 +1434,18 @@
           ""
         ],
         [
-          "firebasedataconnect.projects.locations.services.connectors.list",
-          "GET",
-          "v1beta/{+parent}/connectors",
+          "firebasedataconnect.projects.locations.services.connectors.impersonateQuery",
+          "POST",
+          "v1beta/{+name}:impersonateQuery",
           [
             "https://www.googleapis.com/auth/cloud-platform"
           ],
           ""
         ],
         [
-          "firebasedataconnect.projects.locations.services.connectors.impersonateQuery",
-          "POST",
-          "v1beta/{+name}:impersonateQuery",
+          "firebasedataconnect.projects.locations.services.connectors.delete",
+          "DELETE",
+          "v1beta/{+name}",
           [
             "https://www.googleapis.com/auth/cloud-platform"
           ],
@@ -1330,15 +1470,6 @@
           ""
         ],
         [
-          "firebasedataconnect.projects.locations.services.connectors.get",
-          "GET",
-          "v1beta/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
           "firebasedataconnect.projects.locations.services.connectors.executeQuery",
           "POST",
           "v1beta/{+name}:executeQuery",
@@ -1348,63 +1479,36 @@
           ""
         ],
         [
-          "firebasedataconnect.projects.locations.services.postgrest.postgrestUpsert",
-          "PUT",
-          "v1beta/{+firebasedataconnectService}/postgrest/{+firebasedataconnectTable}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
-          "firebasedataconnect.projects.locations.services.postgrest.postgrestInsert",
-          "POST",
-          "v1beta/{+firebasedataconnectService}/postgrest/{+firebasedataconnectTable}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
-          "firebasedataconnect.projects.locations.services.postgrest.postgrestSelect",
+          "firebasedataconnect.projects.locations.operations.get",
           "GET",
-          "v1beta/{+firebasedataconnectService}/postgrest/{+firebasedataconnectTable}",
+          "v1beta/{+name}",
           [
             "https://www.googleapis.com/auth/cloud-platform"
           ],
           ""
         ],
         [
-          "firebasedataconnect.projects.locations.services.postgrest.postgrestUpdate",
-          "PATCH",
-          "v1beta/{+firebasedataconnectService}/postgrest/{+firebasedataconnectTable}",
+          "firebasedataconnect.projects.locations.operations.cancel",
+          "POST",
+          "v1beta/{+name}:cancel",
           [
             "https://www.googleapis.com/auth/cloud-platform"
           ],
           ""
         ],
         [
-          "firebasedataconnect.projects.locations.services.postgrest.postgrestDelete",
+          "firebasedataconnect.projects.locations.operations.delete",
           "DELETE",
-          "v1beta/{+firebasedataconnectService}/postgrest/{+firebasedataconnectTable}",
+          "v1beta/{+name}",
           [
             "https://www.googleapis.com/auth/cloud-platform"
           ],
           ""
         ],
         [
-          "firebasedataconnect.projects.locations.services.postgrest.rpc.postgrestCallFunction",
-          "POST",
-          "v1beta/{+firebasedataconnectService}/postgrest/rpc/{+firebasedataconnectFunction}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
-          "firebasedataconnect.projects.locations.services.postgrest.rpc.postgrestQueryFunction",
+          "firebasedataconnect.projects.locations.operations.list",
           "GET",
-          "v1beta/{+firebasedataconnectService}/postgrest/rpc/{+firebasedataconnectFunction}",
+          "v1beta/{+name}/operations",
           [
             "https://www.googleapis.com/auth/cloud-platform"
           ],
@@ -1447,22 +1551,14 @@
           ""
         ],
         [
-          "firebasehosting.sites.domains.update",
-          "PUT",
-          "v1beta1/{+name}",
+          "firebasehosting.sites.domains.list",
+          "GET",
+          "v1beta1/{+parent}/domains",
           [
             "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "firebasehosting.sites.domains.delete",
-          "DELETE",
-          "v1beta1/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
+            "https://www.googleapis.com/auth/cloud-platform.read-only",
+            "https://www.googleapis.com/auth/firebase",
+            "https://www.googleapis.com/auth/firebase.readonly"
           ],
           ""
         ],
@@ -1479,6 +1575,26 @@
           ""
         ],
         [
+          "firebasehosting.sites.domains.delete",
+          "DELETE",
+          "v1beta1/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "firebasehosting.sites.domains.update",
+          "PUT",
+          "v1beta1/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
           "firebasehosting.sites.domains.create",
           "POST",
           "v1beta1/{+parent}/domains",
@@ -1489,9 +1605,29 @@
           ""
         ],
         [
-          "firebasehosting.sites.domains.list",
+          "firebasehosting.sites.channels.create",
+          "POST",
+          "v1beta1/{+parent}/channels",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "firebasehosting.sites.channels.patch",
+          "PATCH",
+          "v1beta1/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "firebasehosting.sites.channels.get",
           "GET",
-          "v1beta1/{+parent}/domains",
+          "v1beta1/{+name}",
           [
             "https://www.googleapis.com/auth/cloud-platform",
             "https://www.googleapis.com/auth/cloud-platform.read-only",
@@ -1501,9 +1637,19 @@
           ""
         ],
         [
-          "firebasehosting.sites.releases.list",
+          "firebasehosting.sites.channels.delete",
+          "DELETE",
+          "v1beta1/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "firebasehosting.sites.channels.list",
           "GET",
-          "v1beta1/{+parent}/releases",
+          "v1beta1/{+parent}/channels",
           [
             "https://www.googleapis.com/auth/cloud-platform",
             "https://www.googleapis.com/auth/cloud-platform.read-only",
@@ -1513,7 +1659,7 @@
           ""
         ],
         [
-          "firebasehosting.sites.releases.create",
+          "firebasehosting.sites.channels.releases.create",
           "POST",
           "v1beta1/{+parent}/releases",
           [
@@ -1523,7 +1669,7 @@
           ""
         ],
         [
-          "firebasehosting.sites.releases.get",
+          "firebasehosting.sites.channels.releases.get",
           "GET",
           "v1beta1/{+name}",
           [
@@ -1535,9 +1681,9 @@
           ""
         ],
         [
-          "firebasehosting.sites.versions.get",
+          "firebasehosting.sites.channels.releases.list",
           "GET",
-          "v1beta1/{+name}",
+          "v1beta1/{+parent}/releases",
           [
             "https://www.googleapis.com/auth/cloud-platform",
             "https://www.googleapis.com/auth/cloud-platform.read-only",
@@ -1599,6 +1745,18 @@
           ""
         ],
         [
+          "firebasehosting.sites.versions.get",
+          "GET",
+          "v1beta1/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/cloud-platform.read-only",
+            "https://www.googleapis.com/auth/firebase",
+            "https://www.googleapis.com/auth/firebase.readonly"
+          ],
+          ""
+        ],
+        [
           "firebasehosting.sites.versions.create",
           "POST",
           "v1beta1/{+parent}/versions",
@@ -1621,19 +1779,7 @@
           ""
         ],
         [
-          "firebasehosting.sites.channels.list",
-          "GET",
-          "v1beta1/{+parent}/channels",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/cloud-platform.read-only",
-            "https://www.googleapis.com/auth/firebase",
-            "https://www.googleapis.com/auth/firebase.readonly"
-          ],
-          ""
-        ],
-        [
-          "firebasehosting.sites.channels.get",
+          "firebasehosting.sites.releases.get",
           "GET",
           "v1beta1/{+name}",
           [
@@ -1645,37 +1791,7 @@
           ""
         ],
         [
-          "firebasehosting.sites.channels.patch",
-          "PATCH",
-          "v1beta1/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "firebasehosting.sites.channels.create",
-          "POST",
-          "v1beta1/{+parent}/channels",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "firebasehosting.sites.channels.delete",
-          "DELETE",
-          "v1beta1/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "firebasehosting.sites.channels.releases.list",
+          "firebasehosting.sites.releases.list",
           "GET",
           "v1beta1/{+parent}/releases",
           [
@@ -1687,7 +1803,17 @@
           ""
         ],
         [
-          "firebasehosting.sites.channels.releases.get",
+          "firebasehosting.sites.releases.create",
+          "POST",
+          "v1beta1/{+parent}/releases",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "firebasehosting.projects.operations.get",
           "GET",
           "v1beta1/{+name}",
           [
@@ -1695,16 +1821,6 @@
             "https://www.googleapis.com/auth/cloud-platform.read-only",
             "https://www.googleapis.com/auth/firebase",
             "https://www.googleapis.com/auth/firebase.readonly"
-          ],
-          ""
-        ],
-        [
-          "firebasehosting.sites.channels.releases.create",
-          "POST",
-          "v1beta1/{+parent}/releases",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
           ],
           ""
         ],
@@ -1715,6 +1831,30 @@
           [
             "https://www.googleapis.com/auth/cloud-platform",
             "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "firebasehosting.projects.sites.list",
+          "GET",
+          "v1beta1/{+parent}/sites",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/cloud-platform.read-only",
+            "https://www.googleapis.com/auth/firebase",
+            "https://www.googleapis.com/auth/firebase.readonly"
+          ],
+          ""
+        ],
+        [
+          "firebasehosting.projects.sites.get",
+          "GET",
+          "v1beta1/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/cloud-platform.read-only",
+            "https://www.googleapis.com/auth/firebase",
+            "https://www.googleapis.com/auth/firebase.readonly"
           ],
           ""
         ],
@@ -1739,33 +1879,9 @@
           ""
         ],
         [
-          "firebasehosting.projects.sites.get",
-          "GET",
-          "v1beta1/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/cloud-platform.read-only",
-            "https://www.googleapis.com/auth/firebase",
-            "https://www.googleapis.com/auth/firebase.readonly"
-          ],
-          ""
-        ],
-        [
           "firebasehosting.projects.sites.getConfig",
           "GET",
           "v1beta1/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/cloud-platform.read-only",
-            "https://www.googleapis.com/auth/firebase",
-            "https://www.googleapis.com/auth/firebase.readonly"
-          ],
-          ""
-        ],
-        [
-          "firebasehosting.projects.sites.list",
-          "GET",
-          "v1beta1/{+parent}/sites",
           [
             "https://www.googleapis.com/auth/cloud-platform",
             "https://www.googleapis.com/auth/cloud-platform.read-only",
@@ -1785,195 +1901,9 @@
           ""
         ],
         [
-          "firebasehosting.projects.sites.domains.create",
-          "POST",
-          "v1beta1/{+parent}/domains",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "firebasehosting.projects.sites.domains.delete",
+          "firebasehosting.projects.sites.channels.delete",
           "DELETE",
           "v1beta1/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "firebasehosting.projects.sites.domains.update",
-          "PUT",
-          "v1beta1/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "firebasehosting.projects.sites.domains.get",
-          "GET",
-          "v1beta1/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/cloud-platform.read-only",
-            "https://www.googleapis.com/auth/firebase",
-            "https://www.googleapis.com/auth/firebase.readonly"
-          ],
-          ""
-        ],
-        [
-          "firebasehosting.projects.sites.domains.list",
-          "GET",
-          "v1beta1/{+parent}/domains",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/cloud-platform.read-only",
-            "https://www.googleapis.com/auth/firebase",
-            "https://www.googleapis.com/auth/firebase.readonly"
-          ],
-          ""
-        ],
-        [
-          "firebasehosting.projects.sites.releases.list",
-          "GET",
-          "v1beta1/{+parent}/releases",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/cloud-platform.read-only",
-            "https://www.googleapis.com/auth/firebase",
-            "https://www.googleapis.com/auth/firebase.readonly"
-          ],
-          ""
-        ],
-        [
-          "firebasehosting.projects.sites.releases.get",
-          "GET",
-          "v1beta1/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/cloud-platform.read-only",
-            "https://www.googleapis.com/auth/firebase",
-            "https://www.googleapis.com/auth/firebase.readonly"
-          ],
-          ""
-        ],
-        [
-          "firebasehosting.projects.sites.releases.create",
-          "POST",
-          "v1beta1/{+parent}/releases",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "firebasehosting.projects.sites.versions.patch",
-          "PATCH",
-          "v1beta1/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "firebasehosting.projects.sites.versions.create",
-          "POST",
-          "v1beta1/{+parent}/versions",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "firebasehosting.projects.sites.versions.clone",
-          "POST",
-          "v1beta1/{+parent}/versions:clone",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "firebasehosting.projects.sites.versions.delete",
-          "DELETE",
-          "v1beta1/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "firebasehosting.projects.sites.versions.list",
-          "GET",
-          "v1beta1/{+parent}/versions",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/cloud-platform.read-only",
-            "https://www.googleapis.com/auth/firebase",
-            "https://www.googleapis.com/auth/firebase.readonly"
-          ],
-          ""
-        ],
-        [
-          "firebasehosting.projects.sites.versions.get",
-          "GET",
-          "v1beta1/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/cloud-platform.read-only",
-            "https://www.googleapis.com/auth/firebase",
-            "https://www.googleapis.com/auth/firebase.readonly"
-          ],
-          ""
-        ],
-        [
-          "firebasehosting.projects.sites.versions.populateFiles",
-          "POST",
-          "v1beta1/{+parent}:populateFiles",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "firebasehosting.projects.sites.versions.files.list",
-          "GET",
-          "v1beta1/{+parent}/files",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/cloud-platform.read-only",
-            "https://www.googleapis.com/auth/firebase",
-            "https://www.googleapis.com/auth/firebase.readonly"
-          ],
-          ""
-        ],
-        [
-          "firebasehosting.projects.sites.channels.list",
-          "GET",
-          "v1beta1/{+parent}/channels",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/cloud-platform.read-only",
-            "https://www.googleapis.com/auth/firebase",
-            "https://www.googleapis.com/auth/firebase.readonly"
-          ],
-          ""
-        ],
-        [
-          "firebasehosting.projects.sites.channels.create",
-          "POST",
-          "v1beta1/{+parent}/channels",
           [
             "https://www.googleapis.com/auth/cloud-platform",
             "https://www.googleapis.com/auth/firebase"
@@ -1993,9 +1923,9 @@
           ""
         ],
         [
-          "firebasehosting.projects.sites.channels.delete",
-          "DELETE",
-          "v1beta1/{+name}",
+          "firebasehosting.projects.sites.channels.create",
+          "POST",
+          "v1beta1/{+parent}/channels",
           [
             "https://www.googleapis.com/auth/cloud-platform",
             "https://www.googleapis.com/auth/firebase"
@@ -2006,6 +1936,28 @@
           "firebasehosting.projects.sites.channels.patch",
           "PATCH",
           "v1beta1/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "firebasehosting.projects.sites.channels.list",
+          "GET",
+          "v1beta1/{+parent}/channels",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/cloud-platform.read-only",
+            "https://www.googleapis.com/auth/firebase",
+            "https://www.googleapis.com/auth/firebase.readonly"
+          ],
+          ""
+        ],
+        [
+          "firebasehosting.projects.sites.channels.releases.create",
+          "POST",
+          "v1beta1/{+parent}/releases",
           [
             "https://www.googleapis.com/auth/cloud-platform",
             "https://www.googleapis.com/auth/firebase"
@@ -2037,12 +1989,154 @@
           ""
         ],
         [
-          "firebasehosting.projects.sites.channels.releases.create",
+          "firebasehosting.projects.sites.versions.populateFiles",
           "POST",
-          "v1beta1/{+parent}/releases",
+          "v1beta1/{+parent}:populateFiles",
           [
             "https://www.googleapis.com/auth/cloud-platform",
             "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "firebasehosting.projects.sites.versions.patch",
+          "PATCH",
+          "v1beta1/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "firebasehosting.projects.sites.versions.list",
+          "GET",
+          "v1beta1/{+parent}/versions",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/cloud-platform.read-only",
+            "https://www.googleapis.com/auth/firebase",
+            "https://www.googleapis.com/auth/firebase.readonly"
+          ],
+          ""
+        ],
+        [
+          "firebasehosting.projects.sites.versions.clone",
+          "POST",
+          "v1beta1/{+parent}/versions:clone",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "firebasehosting.projects.sites.versions.create",
+          "POST",
+          "v1beta1/{+parent}/versions",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "firebasehosting.projects.sites.versions.get",
+          "GET",
+          "v1beta1/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/cloud-platform.read-only",
+            "https://www.googleapis.com/auth/firebase",
+            "https://www.googleapis.com/auth/firebase.readonly"
+          ],
+          ""
+        ],
+        [
+          "firebasehosting.projects.sites.versions.delete",
+          "DELETE",
+          "v1beta1/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "firebasehosting.projects.sites.versions.files.list",
+          "GET",
+          "v1beta1/{+parent}/files",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/cloud-platform.read-only",
+            "https://www.googleapis.com/auth/firebase",
+            "https://www.googleapis.com/auth/firebase.readonly"
+          ],
+          ""
+        ],
+        [
+          "firebasehosting.projects.sites.domains.create",
+          "POST",
+          "v1beta1/{+parent}/domains",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "firebasehosting.projects.sites.domains.get",
+          "GET",
+          "v1beta1/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/cloud-platform.read-only",
+            "https://www.googleapis.com/auth/firebase",
+            "https://www.googleapis.com/auth/firebase.readonly"
+          ],
+          ""
+        ],
+        [
+          "firebasehosting.projects.sites.domains.list",
+          "GET",
+          "v1beta1/{+parent}/domains",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/cloud-platform.read-only",
+            "https://www.googleapis.com/auth/firebase",
+            "https://www.googleapis.com/auth/firebase.readonly"
+          ],
+          ""
+        ],
+        [
+          "firebasehosting.projects.sites.domains.update",
+          "PUT",
+          "v1beta1/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "firebasehosting.projects.sites.domains.delete",
+          "DELETE",
+          "v1beta1/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "firebasehosting.projects.sites.customDomains.list",
+          "GET",
+          "v1beta1/{+parent}/customDomains",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/cloud-platform.read-only",
+            "https://www.googleapis.com/auth/firebase",
+            "https://www.googleapis.com/auth/firebase.readonly"
           ],
           ""
         ],
@@ -2055,6 +2149,26 @@
             "https://www.googleapis.com/auth/cloud-platform.read-only",
             "https://www.googleapis.com/auth/firebase",
             "https://www.googleapis.com/auth/firebase.readonly"
+          ],
+          ""
+        ],
+        [
+          "firebasehosting.projects.sites.customDomains.patch",
+          "PATCH",
+          "v1beta1/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "firebasehosting.projects.sites.customDomains.create",
+          "POST",
+          "v1beta1/{+parent}/customDomains",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
           ],
           ""
         ],
@@ -2079,34 +2193,14 @@
           ""
         ],
         [
-          "firebasehosting.projects.sites.customDomains.create",
-          "POST",
-          "v1beta1/{+parent}/customDomains",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "firebasehosting.projects.sites.customDomains.list",
+          "firebasehosting.projects.sites.customDomains.operations.get",
           "GET",
-          "v1beta1/{+parent}/customDomains",
+          "v1beta1/{+name}",
           [
             "https://www.googleapis.com/auth/cloud-platform",
             "https://www.googleapis.com/auth/cloud-platform.read-only",
             "https://www.googleapis.com/auth/firebase",
             "https://www.googleapis.com/auth/firebase.readonly"
-          ],
-          ""
-        ],
-        [
-          "firebasehosting.projects.sites.customDomains.patch",
-          "PATCH",
-          "v1beta1/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
           ],
           ""
         ],
@@ -2123,9 +2217,9 @@
           ""
         ],
         [
-          "firebasehosting.projects.sites.customDomains.operations.get",
+          "firebasehosting.projects.sites.releases.list",
           "GET",
-          "v1beta1/{+name}",
+          "v1beta1/{+parent}/releases",
           [
             "https://www.googleapis.com/auth/cloud-platform",
             "https://www.googleapis.com/auth/cloud-platform.read-only",
@@ -2135,7 +2229,17 @@
           ""
         ],
         [
-          "firebasehosting.projects.operations.get",
+          "firebasehosting.projects.sites.releases.create",
+          "POST",
+          "v1beta1/{+parent}/releases",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "firebasehosting.projects.sites.releases.get",
           "GET",
           "v1beta1/{+name}",
           [
@@ -2245,18 +2349,18 @@
           ""
         ],
         [
-          "firebaseml.projects.locations.publishers.models.generateContent",
+          "firebaseml.projects.locations.publishers.models.streamGenerateContent",
           "POST",
-          "v2beta/{+model}:generateContent",
+          "v2beta/{+model}:streamGenerateContent",
           [
             "https://www.googleapis.com/auth/cloud-platform"
           ],
           ""
         ],
         [
-          "firebaseml.projects.locations.publishers.models.streamGenerateContent",
+          "firebaseml.projects.locations.publishers.models.generateContent",
           "POST",
-          "v2beta/{+model}:streamGenerateContent",
+          "v2beta/{+model}:generateContent",
           [
             "https://www.googleapis.com/auth/cloud-platform"
           ],
@@ -2277,198 +2381,34 @@
       "servicePath": "",
       "methods": [
         [
-          "identitytoolkit.projects.queryAccounts",
-          "POST",
-          "v1/projects/{+targetProjectId}:queryAccounts",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "identitytoolkit.projects.accounts",
-          "POST",
-          "v1/projects/{+targetProjectId}/accounts",
-          [
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
-          "identitytoolkit.projects.createSessionCookie",
-          "POST",
-          "v1/projects/{+targetProjectId}:createSessionCookie",
-          [
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
-          "identitytoolkit.projects.accounts.batchCreate",
-          "POST",
-          "v1/projects/{+targetProjectId}/accounts:batchCreate",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "identitytoolkit.projects.accounts.sendOobCode",
-          "POST",
-          "v1/projects/{+targetProjectId}/accounts:sendOobCode",
-          [
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
-          "identitytoolkit.projects.accounts.batchGet",
+          "identitytoolkit.getPublicKeys",
           "GET",
-          "v1/projects/{+targetProjectId}/accounts:batchGet",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "identitytoolkit.projects.accounts.update",
-          "POST",
-          "v1/projects/{+targetProjectId}/accounts:update",
+          "v1/publicKeys",
           [
             "https://www.googleapis.com/auth/cloud-platform"
           ],
           ""
         ],
         [
-          "identitytoolkit.projects.accounts.batchDelete",
-          "POST",
-          "v1/projects/{+targetProjectId}/accounts:batchDelete",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "identitytoolkit.projects.accounts.delete",
-          "POST",
-          "v1/projects/{+targetProjectId}/accounts:delete",
-          [
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
-          "identitytoolkit.projects.accounts.query",
-          "POST",
-          "v1/projects/{+targetProjectId}/accounts:query",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "identitytoolkit.projects.accounts.lookup",
-          "POST",
-          "v1/projects/{+targetProjectId}/accounts:lookup",
-          [
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
-          "identitytoolkit.projects.tenants.createSessionCookie",
-          "POST",
-          "v1/projects/{+targetProjectId}/tenants/{+tenantId}:createSessionCookie",
-          [
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
-          "identitytoolkit.projects.tenants.accounts",
-          "POST",
-          "v1/projects/{+targetProjectId}/tenants/{+tenantId}/accounts",
-          [
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
-          "identitytoolkit.projects.tenants.accounts.batchDelete",
-          "POST",
-          "v1/projects/{+targetProjectId}/tenants/{+tenantId}/accounts:batchDelete",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "identitytoolkit.projects.tenants.accounts.lookup",
-          "POST",
-          "v1/projects/{+targetProjectId}/tenants/{+tenantId}/accounts:lookup",
-          [
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
-          "identitytoolkit.projects.tenants.accounts.sendOobCode",
-          "POST",
-          "v1/projects/{+targetProjectId}/tenants/{+tenantId}/accounts:sendOobCode",
-          [
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
-          "identitytoolkit.projects.tenants.accounts.batchCreate",
-          "POST",
-          "v1/projects/{+targetProjectId}/tenants/{+tenantId}/accounts:batchCreate",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "identitytoolkit.projects.tenants.accounts.query",
-          "POST",
-          "v1/projects/{+targetProjectId}/tenants/{+tenantId}/accounts:query",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "identitytoolkit.projects.tenants.accounts.batchGet",
+          "identitytoolkit.getSessionCookiePublicKeys",
           "GET",
-          "v1/projects/{+targetProjectId}/tenants/{+tenantId}/accounts:batchGet",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
+          "v1/sessionCookiePublicKeys",
+          [],
           ""
         ],
         [
-          "identitytoolkit.projects.tenants.accounts.update",
-          "POST",
-          "v1/projects/{+targetProjectId}/tenants/{+tenantId}/accounts:update",
+          "identitytoolkit.getProjects",
+          "GET",
+          "v1/projects",
           [
             "https://www.googleapis.com/auth/cloud-platform"
           ],
           ""
         ],
         [
-          "identitytoolkit.projects.tenants.accounts.delete",
-          "POST",
-          "v1/projects/{+targetProjectId}/tenants/{+tenantId}/accounts:delete",
+          "identitytoolkit.getRecaptchaParams",
+          "GET",
+          "v1/recaptchaParams",
           [
             "https://www.googleapis.com/auth/cloud-platform"
           ],
@@ -2484,18 +2424,36 @@
           ""
         ],
         [
-          "identitytoolkit.accounts.issueSamlResponse",
+          "identitytoolkit.accounts.signInWithCustomToken",
           "POST",
-          "v1/accounts:issueSamlResponse",
+          "v1/accounts:signInWithCustomToken",
           [
             "https://www.googleapis.com/auth/cloud-platform"
           ],
           ""
         ],
         [
-          "identitytoolkit.accounts.signInWithPhoneNumber",
+          "identitytoolkit.accounts.signInWithEmailLink",
           "POST",
-          "v1/accounts:signInWithPhoneNumber",
+          "v1/accounts:signInWithEmailLink",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "identitytoolkit.accounts.createAuthUri",
+          "POST",
+          "v1/accounts:createAuthUri",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "identitytoolkit.accounts.issueSamlResponse",
+          "POST",
+          "v1/accounts:issueSamlResponse",
           [
             "https://www.googleapis.com/auth/cloud-platform"
           ],
@@ -2511,18 +2469,36 @@
           ""
         ],
         [
-          "identitytoolkit.accounts.signInWithCustomToken",
+          "identitytoolkit.accounts.delete",
           "POST",
-          "v1/accounts:signInWithCustomToken",
+          "v1/accounts:delete",
           [
             "https://www.googleapis.com/auth/cloud-platform"
           ],
           ""
         ],
         [
-          "identitytoolkit.accounts.sendOobCode",
+          "identitytoolkit.accounts.update",
           "POST",
-          "v1/accounts:sendOobCode",
+          "v1/accounts:update",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "identitytoolkit.accounts.signInWithIdp",
+          "POST",
+          "v1/accounts:signInWithIdp",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "identitytoolkit.accounts.signInWithPassword",
+          "POST",
+          "v1/accounts:signInWithPassword",
           [
             "https://www.googleapis.com/auth/cloud-platform"
           ],
@@ -2547,45 +2523,18 @@
           ""
         ],
         [
-          "identitytoolkit.accounts.signInWithEmailLink",
+          "identitytoolkit.accounts.sendOobCode",
           "POST",
-          "v1/accounts:signInWithEmailLink",
+          "v1/accounts:sendOobCode",
           [
             "https://www.googleapis.com/auth/cloud-platform"
           ],
           ""
         ],
         [
-          "identitytoolkit.accounts.update",
+          "identitytoolkit.accounts.signInWithPhoneNumber",
           "POST",
-          "v1/accounts:update",
-          [
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
-          "identitytoolkit.accounts.resetPassword",
-          "POST",
-          "v1/accounts:resetPassword",
-          [
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
-          "identitytoolkit.accounts.signInWithPassword",
-          "POST",
-          "v1/accounts:signInWithPassword",
-          [
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
-          "identitytoolkit.accounts.signInWithIdp",
-          "POST",
-          "v1/accounts:signInWithIdp",
+          "v1/accounts:signInWithPhoneNumber",
           [
             "https://www.googleapis.com/auth/cloud-platform"
           ],
@@ -2601,55 +2550,210 @@
           ""
         ],
         [
-          "identitytoolkit.accounts.delete",
+          "identitytoolkit.accounts.resetPassword",
           "POST",
-          "v1/accounts:delete",
+          "v1/accounts:resetPassword",
           [
             "https://www.googleapis.com/auth/cloud-platform"
           ],
           ""
         ],
         [
-          "identitytoolkit.accounts.createAuthUri",
+          "identitytoolkit.projects.accounts",
           "POST",
-          "v1/accounts:createAuthUri",
+          "v1/projects/{+targetProjectId}/accounts",
           [
             "https://www.googleapis.com/auth/cloud-platform"
           ],
           ""
         ],
         [
-          "identitytoolkit.getRecaptchaParams",
-          "GET",
-          "v1/recaptchaParams",
+          "identitytoolkit.projects.queryAccounts",
+          "POST",
+          "v1/projects/{+targetProjectId}:queryAccounts",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "identitytoolkit.projects.createSessionCookie",
+          "POST",
+          "v1/projects/{+targetProjectId}:createSessionCookie",
           [
             "https://www.googleapis.com/auth/cloud-platform"
           ],
           ""
         ],
         [
-          "identitytoolkit.getProjects",
-          "GET",
-          "v1/projects",
+          "identitytoolkit.projects.tenants.createSessionCookie",
+          "POST",
+          "v1/projects/{+targetProjectId}/tenants/{+tenantId}:createSessionCookie",
           [
             "https://www.googleapis.com/auth/cloud-platform"
           ],
           ""
         ],
         [
-          "identitytoolkit.getPublicKeys",
-          "GET",
-          "v1/publicKeys",
+          "identitytoolkit.projects.tenants.accounts",
+          "POST",
+          "v1/projects/{+targetProjectId}/tenants/{+tenantId}/accounts",
           [
             "https://www.googleapis.com/auth/cloud-platform"
           ],
           ""
         ],
         [
-          "identitytoolkit.getSessionCookiePublicKeys",
+          "identitytoolkit.projects.tenants.accounts.query",
+          "POST",
+          "v1/projects/{+targetProjectId}/tenants/{+tenantId}/accounts:query",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "identitytoolkit.projects.tenants.accounts.update",
+          "POST",
+          "v1/projects/{+targetProjectId}/tenants/{+tenantId}/accounts:update",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "identitytoolkit.projects.tenants.accounts.batchDelete",
+          "POST",
+          "v1/projects/{+targetProjectId}/tenants/{+tenantId}/accounts:batchDelete",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "identitytoolkit.projects.tenants.accounts.batchGet",
           "GET",
-          "v1/sessionCookiePublicKeys",
-          [],
+          "v1/projects/{+targetProjectId}/tenants/{+tenantId}/accounts:batchGet",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "identitytoolkit.projects.tenants.accounts.batchCreate",
+          "POST",
+          "v1/projects/{+targetProjectId}/tenants/{+tenantId}/accounts:batchCreate",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "identitytoolkit.projects.tenants.accounts.delete",
+          "POST",
+          "v1/projects/{+targetProjectId}/tenants/{+tenantId}/accounts:delete",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "identitytoolkit.projects.tenants.accounts.lookup",
+          "POST",
+          "v1/projects/{+targetProjectId}/tenants/{+tenantId}/accounts:lookup",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "identitytoolkit.projects.tenants.accounts.sendOobCode",
+          "POST",
+          "v1/projects/{+targetProjectId}/tenants/{+tenantId}/accounts:sendOobCode",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "identitytoolkit.projects.accounts.batchDelete",
+          "POST",
+          "v1/projects/{+targetProjectId}/accounts:batchDelete",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "identitytoolkit.projects.accounts.update",
+          "POST",
+          "v1/projects/{+targetProjectId}/accounts:update",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "identitytoolkit.projects.accounts.batchCreate",
+          "POST",
+          "v1/projects/{+targetProjectId}/accounts:batchCreate",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "identitytoolkit.projects.accounts.batchGet",
+          "GET",
+          "v1/projects/{+targetProjectId}/accounts:batchGet",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "identitytoolkit.projects.accounts.delete",
+          "POST",
+          "v1/projects/{+targetProjectId}/accounts:delete",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "identitytoolkit.projects.accounts.lookup",
+          "POST",
+          "v1/projects/{+targetProjectId}/accounts:lookup",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "identitytoolkit.projects.accounts.sendOobCode",
+          "POST",
+          "v1/projects/{+targetProjectId}/accounts:sendOobCode",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "identitytoolkit.projects.accounts.query",
+          "POST",
+          "v1/projects/{+targetProjectId}/accounts:query",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
           ""
         ]
       ]
@@ -2677,21 +2781,21 @@
           ""
         ],
         [
-          "identitytoolkit.projects.getConfig",
-          "GET",
-          "v2/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
           "identitytoolkit.projects.updateConfig",
           "PATCH",
           "v2/{+name}",
           [
             "https://www.googleapis.com/auth/cloud-platform",
             "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "identitytoolkit.projects.getConfig",
+          "GET",
+          "v2/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
           ],
           ""
         ],
@@ -2705,329 +2809,9 @@
           ""
         ],
         [
-          "identitytoolkit.projects.defaultSupportedIdpConfigs.patch",
-          "PATCH",
-          "v2/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "identitytoolkit.projects.defaultSupportedIdpConfigs.list",
-          "GET",
-          "v2/{+parent}/defaultSupportedIdpConfigs",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "identitytoolkit.projects.defaultSupportedIdpConfigs.delete",
-          "DELETE",
-          "v2/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "identitytoolkit.projects.defaultSupportedIdpConfigs.create",
-          "POST",
-          "v2/{+parent}/defaultSupportedIdpConfigs",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "identitytoolkit.projects.defaultSupportedIdpConfigs.get",
-          "GET",
-          "v2/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "identitytoolkit.projects.oauthIdpConfigs.patch",
-          "PATCH",
-          "v2/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "identitytoolkit.projects.oauthIdpConfigs.get",
-          "GET",
-          "v2/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "identitytoolkit.projects.oauthIdpConfigs.create",
-          "POST",
-          "v2/{+parent}/oauthIdpConfigs",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "identitytoolkit.projects.oauthIdpConfigs.list",
-          "GET",
-          "v2/{+parent}/oauthIdpConfigs",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "identitytoolkit.projects.oauthIdpConfigs.delete",
-          "DELETE",
-          "v2/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "identitytoolkit.projects.tenants.testIamPermissions",
-          "POST",
-          "v2/{+resource}:testIamPermissions",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "identitytoolkit.projects.tenants.patch",
-          "PATCH",
-          "v2/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "identitytoolkit.projects.tenants.getIamPolicy",
-          "POST",
-          "v2/{+resource}:getIamPolicy",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "identitytoolkit.projects.tenants.list",
-          "GET",
-          "v2/{+parent}/tenants",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "identitytoolkit.projects.tenants.setIamPolicy",
-          "POST",
-          "v2/{+resource}:setIamPolicy",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "identitytoolkit.projects.tenants.delete",
-          "DELETE",
-          "v2/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "identitytoolkit.projects.tenants.create",
-          "POST",
-          "v2/{+parent}/tenants",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "identitytoolkit.projects.tenants.get",
-          "GET",
-          "v2/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "identitytoolkit.projects.tenants.inboundSamlConfigs.get",
-          "GET",
-          "v2/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "identitytoolkit.projects.tenants.inboundSamlConfigs.create",
+          "identitytoolkit.projects.inboundSamlConfigs.create",
           "POST",
           "v2/{+parent}/inboundSamlConfigs",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "identitytoolkit.projects.tenants.inboundSamlConfigs.delete",
-          "DELETE",
-          "v2/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "identitytoolkit.projects.tenants.inboundSamlConfigs.list",
-          "GET",
-          "v2/{+parent}/inboundSamlConfigs",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "identitytoolkit.projects.tenants.inboundSamlConfigs.patch",
-          "PATCH",
-          "v2/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "identitytoolkit.projects.tenants.oauthIdpConfigs.delete",
-          "DELETE",
-          "v2/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "identitytoolkit.projects.tenants.oauthIdpConfigs.create",
-          "POST",
-          "v2/{+parent}/oauthIdpConfigs",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "identitytoolkit.projects.tenants.oauthIdpConfigs.list",
-          "GET",
-          "v2/{+parent}/oauthIdpConfigs",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "identitytoolkit.projects.tenants.oauthIdpConfigs.get",
-          "GET",
-          "v2/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "identitytoolkit.projects.tenants.oauthIdpConfigs.patch",
-          "PATCH",
-          "v2/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "identitytoolkit.projects.tenants.defaultSupportedIdpConfigs.create",
-          "POST",
-          "v2/{+parent}/defaultSupportedIdpConfigs",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "identitytoolkit.projects.tenants.defaultSupportedIdpConfigs.get",
-          "GET",
-          "v2/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "identitytoolkit.projects.tenants.defaultSupportedIdpConfigs.list",
-          "GET",
-          "v2/{+parent}/defaultSupportedIdpConfigs",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "identitytoolkit.projects.tenants.defaultSupportedIdpConfigs.delete",
-          "DELETE",
-          "v2/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/firebase"
-          ],
-          ""
-        ],
-        [
-          "identitytoolkit.projects.tenants.defaultSupportedIdpConfigs.patch",
-          "PATCH",
-          "v2/{+name}",
           [
             "https://www.googleapis.com/auth/cloud-platform",
             "https://www.googleapis.com/auth/firebase"
@@ -3075,9 +2859,329 @@
           ""
         ],
         [
-          "identitytoolkit.projects.inboundSamlConfigs.create",
+          "identitytoolkit.projects.oauthIdpConfigs.patch",
+          "PATCH",
+          "v2/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "identitytoolkit.projects.oauthIdpConfigs.delete",
+          "DELETE",
+          "v2/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "identitytoolkit.projects.oauthIdpConfigs.get",
+          "GET",
+          "v2/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "identitytoolkit.projects.oauthIdpConfigs.create",
+          "POST",
+          "v2/{+parent}/oauthIdpConfigs",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "identitytoolkit.projects.oauthIdpConfigs.list",
+          "GET",
+          "v2/{+parent}/oauthIdpConfigs",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "identitytoolkit.projects.tenants.setIamPolicy",
+          "POST",
+          "v2/{+resource}:setIamPolicy",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "identitytoolkit.projects.tenants.delete",
+          "DELETE",
+          "v2/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "identitytoolkit.projects.tenants.list",
+          "GET",
+          "v2/{+parent}/tenants",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "identitytoolkit.projects.tenants.get",
+          "GET",
+          "v2/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "identitytoolkit.projects.tenants.patch",
+          "PATCH",
+          "v2/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "identitytoolkit.projects.tenants.getIamPolicy",
+          "POST",
+          "v2/{+resource}:getIamPolicy",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "identitytoolkit.projects.tenants.testIamPermissions",
+          "POST",
+          "v2/{+resource}:testIamPermissions",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "identitytoolkit.projects.tenants.create",
+          "POST",
+          "v2/{+parent}/tenants",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "identitytoolkit.projects.tenants.oauthIdpConfigs.patch",
+          "PATCH",
+          "v2/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "identitytoolkit.projects.tenants.oauthIdpConfigs.get",
+          "GET",
+          "v2/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "identitytoolkit.projects.tenants.oauthIdpConfigs.delete",
+          "DELETE",
+          "v2/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "identitytoolkit.projects.tenants.oauthIdpConfigs.list",
+          "GET",
+          "v2/{+parent}/oauthIdpConfigs",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "identitytoolkit.projects.tenants.oauthIdpConfigs.create",
+          "POST",
+          "v2/{+parent}/oauthIdpConfigs",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "identitytoolkit.projects.tenants.inboundSamlConfigs.get",
+          "GET",
+          "v2/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "identitytoolkit.projects.tenants.inboundSamlConfigs.delete",
+          "DELETE",
+          "v2/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "identitytoolkit.projects.tenants.inboundSamlConfigs.list",
+          "GET",
+          "v2/{+parent}/inboundSamlConfigs",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "identitytoolkit.projects.tenants.inboundSamlConfigs.patch",
+          "PATCH",
+          "v2/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "identitytoolkit.projects.tenants.inboundSamlConfigs.create",
           "POST",
           "v2/{+parent}/inboundSamlConfigs",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "identitytoolkit.projects.tenants.defaultSupportedIdpConfigs.list",
+          "GET",
+          "v2/{+parent}/defaultSupportedIdpConfigs",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "identitytoolkit.projects.tenants.defaultSupportedIdpConfigs.patch",
+          "PATCH",
+          "v2/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "identitytoolkit.projects.tenants.defaultSupportedIdpConfigs.delete",
+          "DELETE",
+          "v2/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "identitytoolkit.projects.tenants.defaultSupportedIdpConfigs.create",
+          "POST",
+          "v2/{+parent}/defaultSupportedIdpConfigs",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "identitytoolkit.projects.tenants.defaultSupportedIdpConfigs.get",
+          "GET",
+          "v2/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "identitytoolkit.projects.defaultSupportedIdpConfigs.patch",
+          "PATCH",
+          "v2/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "identitytoolkit.projects.defaultSupportedIdpConfigs.create",
+          "POST",
+          "v2/{+parent}/defaultSupportedIdpConfigs",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "identitytoolkit.projects.defaultSupportedIdpConfigs.get",
+          "GET",
+          "v2/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "identitytoolkit.projects.defaultSupportedIdpConfigs.list",
+          "GET",
+          "v2/{+parent}/defaultSupportedIdpConfigs",
+          [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+          ],
+          ""
+        ],
+        [
+          "identitytoolkit.projects.defaultSupportedIdpConfigs.delete",
+          "DELETE",
+          "v2/{+name}",
           [
             "https://www.googleapis.com/auth/cloud-platform",
             "https://www.googleapis.com/auth/firebase"
@@ -3094,27 +3198,9 @@
           ""
         ],
         [
-          "identitytoolkit.accounts.mfaSignIn.start",
+          "identitytoolkit.accounts.mfaEnrollment.withdraw",
           "POST",
-          "v2/accounts/mfaSignIn:start",
-          [
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
-          "identitytoolkit.accounts.mfaSignIn.finalize",
-          "POST",
-          "v2/accounts/mfaSignIn:finalize",
-          [
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
-          "identitytoolkit.accounts.mfaEnrollment.start",
-          "POST",
-          "v2/accounts/mfaEnrollment:start",
+          "v2/accounts/mfaEnrollment:withdraw",
           [
             "https://www.googleapis.com/auth/cloud-platform"
           ],
@@ -3130,9 +3216,27 @@
           ""
         ],
         [
-          "identitytoolkit.accounts.mfaEnrollment.withdraw",
+          "identitytoolkit.accounts.mfaEnrollment.start",
           "POST",
-          "v2/accounts/mfaEnrollment:withdraw",
+          "v2/accounts/mfaEnrollment:start",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "identitytoolkit.accounts.mfaSignIn.finalize",
+          "POST",
+          "v2/accounts/mfaSignIn:finalize",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "identitytoolkit.accounts.mfaSignIn.start",
+          "POST",
+          "v2/accounts/mfaSignIn:start",
           [
             "https://www.googleapis.com/auth/cloud-platform"
           ],

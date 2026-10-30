@@ -4,11 +4,11 @@ Google Classroom courses, coursework, submissions, students and teachers.
 
 - Plugin: `gclassroom`, MCP server: `gclassroom`, login: Desktop OAuth client, then `login workspace-user`
 - Install: `claude plugin install gclassroom@google-services-mcps`
-- Tools: 128 total. Curated 23, per-method 104, gateway 0. Read 58, write 52, destructive 18, dynamic 0.
+- Tools: 129 total. Curated 23, per-method 105, gateway 0. Read 59, write 52, destructive 18, dynamic 0.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 128, google 29, curated 23 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 129, google 29, curated 23 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
 
 ## Toolset google (20)
 
@@ -65,7 +65,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `classroom_list_topics` | read | List Classroom topics | classroom.topics, classroom.topics.readonly |
 | `health` | read | Server health | (none) |
 
-## Per-method tools (104)
+## Per-method tools (105)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
@@ -80,6 +80,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `classroom_cou_cou_add_pa_3930` | write | classroom.courses.courseWorkMaterials.addOnAttachments.patch | classroom.addons.teacher |
 | `classroom_cou_cou_add_pa_e09c` | write | classroom.courses.courseWork.addOnAttachments.patch | classroom.addons.teacher |
 | `classroom_cou_cou_add_stu_get` | read | classroom.courses.courseWork.addOnAttachments.studentSubmissions.get | classroom.addons.student, classroom.addons.teacher |
+| `classroom_cou_cou_add_stu_lis` | read | classroom.courses.courseWork.addOnAttachments.studentSubmissions.list | classroom.addons.student, classroom.addons.teacher |
 | `classroom_cou_cou_add_stu_pat` | write | classroom.courses.courseWork.addOnAttachments.studentSubmissions.patch | classroom.addons.teacher |
 | `classroom_cou_pos_add_stu_get` | read | classroom.courses.posts.addOnAttachments.studentSubmissions.get | classroom.addons.student, classroom.addons.teacher |
 | `classroom_cou_pos_add_stu_pat` | write | classroom.courses.posts.addOnAttachments.studentSubmissions.patch | classroom.addons.teacher |
@@ -184,7 +185,7 @@ The tools that match Google's official MCP server for this product (https://deve
 
 Each API links to Google's documentation for it, as Google's Discovery directory names it (`documentationLink`, kept in `data/catalog.json`). The link is the API's documentation home, not a page per method: the directory gives no link per method, and Google's REST reference pages are laid out differently from product to product.
 
-- Google Classroom API (`classroom/v1`), 104 methods in the catalog. Documentation: <https://developers.google.com/workspace/classroom>
+- Google Classroom API (`classroom/v1`), 105 methods in the catalog. Documentation: <https://developers.google.com/workspace/classroom>
 
 ## Gateway APIs (reached through api_search, api_describe, api_call)
 

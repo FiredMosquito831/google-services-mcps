@@ -16,7 +16,41 @@
         },
         {
           "api": "cloudresourcemanager",
-          "version": "v3"
+          "version": "v3",
+          "include": [
+            "v3",
+            "fetchResourceSemantics",
+            "folders.create",
+            "folders.delete",
+            "folders.get",
+            "folders.getIamPolicy",
+            "folders.list",
+            "folders.move",
+            "folders.patch",
+            "folders.search",
+            "folders.setIamPolicy",
+            "folders.testIamPermissions",
+            "folders.undelete",
+            "folders.capabilityConfigs",
+            "folders.capabilities",
+            "projects",
+            "projects.capabilityConfigs",
+            "organizations.get",
+            "organizations.getIamPolicy",
+            "organizations.search",
+            "organizations.setIamPolicy",
+            "organizations.testIamPermissions",
+            "organizations.capabilityConfigs",
+            "tagValues",
+            "tagValues.tagHolds",
+            "operations",
+            "liens",
+            "tagBindings",
+            "locations.effectiveTagBindingCollections",
+            "locations.tagBindingCollections",
+            "effectiveTags",
+            "tagKeys"
+          ]
         },
         {
           "api": "apikeys",
@@ -1167,6 +1201,18 @@
         {
           "api": "workstations",
           "version": "v1beta"
+        },
+        {
+          "api": "cloudresourcemanager",
+          "version": "v3"
+        },
+        {
+          "api": "compute",
+          "version": "2026-11-01"
+        },
+        {
+          "api": "compute",
+          "version": "2026-12-01-preview"
         }
       ],
       "toolsets": {
@@ -2036,7 +2082,7 @@
           }
         }
       },
-      "generatedToolCount": 60
+      "generatedToolCount": 61
     },
     "gmeet": {
       "title": "Google Meet",
@@ -2346,7 +2392,7 @@
           }
         }
       },
-      "generatedToolCount": 104
+      "generatedToolCount": 105
     },
     "gapps": {
       "title": "Apps Script",
@@ -3051,6 +3097,10 @@
         {
           "api": "googleads",
           "version": "v26"
+        },
+        {
+          "api": "displayvideo",
+          "version": "v5"
         }
       ],
       "toolsets": {
@@ -3563,6 +3613,10 @@
         {
           "api": "identitytoolkit",
           "version": "v2"
+        },
+        {
+          "api": "devicerun",
+          "version": "v1"
         }
       ],
       "toolsets": {
@@ -3744,7 +3798,7 @@
           }
         }
       },
-      "generatedToolCount": 297
+      "generatedToolCount": 298
     },
     "gmaps": {
       "title": "Maps and Location",
@@ -4141,6 +4195,11 @@
       "api": "prod_tt_sasportal",
       "version": "v1alpha1",
       "reason": "Test-environment mirror of sasportal (SAS Portal API (Testing)). Not a product API."
+    },
+    {
+      "api": "deepreview",
+      "version": "v1",
+      "reason": "New in Google's Discovery directory (Deep Review API, 11 methods), first seen on 2026-10-30. Not assigned to a product yet: which product it belongs to is the owner's decision."
     }
   ],
   "notes": {

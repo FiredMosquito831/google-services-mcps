@@ -426,23 +426,23 @@ Each API links to Google's documentation for it, as Google's Discovery directory
 - Cloud Document AI API (`documentai/v1`), 42 methods. Documentation: <https://cloud.google.com/document-ai/docs/>
 - Dialogflow API (`dialogflow/v3`), 158 methods. Documentation: <https://cloud.google.com/dialogflow/>
 - Gemini Enterprise for Customer Experience API (`ces/v1`), 73 methods. Documentation: <https://docs.cloud.google.com/customer-engagement-ai/conversational-agents/ps>
-- Agent Registry API (`agentregistry/v1`), 36 methods. Documentation: <https://docs.cloud.google.com/agent-registry/overview>
-- Agent Identity API (`agentidentity/v1`), 24 methods. Documentation: <https://cloud.google.com/iam/docs/>
+- Agent Registry API (`agentregistry/v1`), 53 methods. Documentation: <https://docs.cloud.google.com/agent-registry/overview>
+- Agent Identity API (`agentidentity/v1`), 25 methods. Documentation: <https://cloud.google.com/iam/docs/>
 - Agent Identity Credentials API (`agentidentitycredentials/v1`), 2 methods. Documentation: <https://cloud.google.com/iam/docs/>
 - AI Platform Training & Prediction API (`ml/v1`), 46 methods. Documentation: <https://cloud.google.com/ml/>
 - Notebooks API (`notebooks/v2`), 28 methods. Documentation: <https://cloud.google.com/notebooks/docs/>
 - AI Commerce Search API (`retail/v2`), 71 methods. Documentation: <https://cloud.google.com/recommendations>
-- Contact Center AI Insights API (`contactcenterinsights/v1`), 192 methods. Documentation: <https://cloud.google.com/contact-center/insights/docs>
+- Contact Center AI Insights API (`contactcenterinsights/v1`), 188 methods. Documentation: <https://cloud.google.com/contact-center/insights/docs>
 - Contact Center AI Platform API (`contactcenteraiplatform/v1alpha1`), 13 methods. Documentation: <https://cloud.google.com/solutions/contact-center-ai-platform>
 - Cloud Talent Solution API (`jobs/v4`), 23 methods. Documentation: <https://cloud.google.com/talent-solution/job-search/docs/>
 - Recommendations AI (Beta) (`recommendationengine/v1beta1`), 22 methods. Documentation: <https://cloud.google.com/recommendations-ai/docs>
-- Agent Platform API (`aiplatform/v1`), 1128 methods. Documentation: <https://cloud.google.com/vertex-ai/>
+- Agent Platform API (`aiplatform/v1`), 1143 methods. Documentation: <https://cloud.google.com/vertex-ai/>
 - Agent Identity API (`agentidentity/v1alpha`), 25 methods. Documentation: <https://cloud.google.com/iam/docs/>
 - Agent Identity API (`agentidentity/v1beta`), 25 methods. Documentation: <https://cloud.google.com/iam/docs/>
 - Agent Identity Credentials API (`agentidentitycredentials/v1alpha`), 3 methods. Documentation: <https://cloud.google.com/iam/docs/>
 - Agent Identity Credentials API (`agentidentitycredentials/v1beta`), 2 methods. Documentation: <https://cloud.google.com/iam/docs/>
-- Agent Registry API (`agentregistry/v1alpha`), 51 methods. Documentation: <https://docs.cloud.google.com/agent-registry/overview>
-- Agent Platform API (`aiplatform/v1beta1`), 1538 methods. Documentation: <https://cloud.google.com/vertex-ai/>
+- Agent Registry API (`agentregistry/v1alpha`), 53 methods. Documentation: <https://docs.cloud.google.com/agent-registry/overview>
+- Agent Platform API (`aiplatform/v1beta1`), 1559 methods. Documentation: <https://cloud.google.com/vertex-ai/>
 - Gemini Enterprise for Customer Experience API (`ces/v1beta`), 117 methods. Documentation: <https://docs.cloud.google.com/customer-engagement-ai/conversational-agents/ps>
 - Dialogflow API (`dialogflow/v2`), 284 methods. Documentation: <https://cloud.google.com/dialogflow/>
 - Dialogflow API (`dialogflow/v2beta1`), 271 methods. Documentation: <https://cloud.google.com/dialogflow/>

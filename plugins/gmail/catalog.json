@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-15T15:08:21.313Z",
+  "generatedAt": "2026-10-30T15:12:58.580Z",
   "apiCount": 2,
   "methodCount": 8,
   "apis": [
@@ -16,18 +16,18 @@
       "servicePath": "",
       "methods": [
         [
-          "gmailpostmastertools.domains.list",
+          "gmailpostmastertools.domains.get",
           "GET",
-          "v1/domains",
+          "v1/{+name}",
           [
             "https://www.googleapis.com/auth/postmaster.readonly"
           ],
           ""
         ],
         [
-          "gmailpostmastertools.domains.get",
+          "gmailpostmastertools.domains.list",
           "GET",
-          "v1/{+name}",
+          "v1/domains",
           [
             "https://www.googleapis.com/auth/postmaster.readonly"
           ],
@@ -84,18 +84,18 @@
           ""
         ],
         [
-          "gmailpostmastertools.domains.trafficStats.get",
+          "gmailpostmastertools.domains.trafficStats.list",
           "GET",
-          "v1beta1/{+name}",
+          "v1beta1/{+parent}/trafficStats",
           [
             "https://www.googleapis.com/auth/postmaster.readonly"
           ],
           ""
         ],
         [
-          "gmailpostmastertools.domains.trafficStats.list",
+          "gmailpostmastertools.domains.trafficStats.get",
           "GET",
-          "v1beta1/{+parent}/trafficStats",
+          "v1beta1/{+name}",
           [
             "https://www.googleapis.com/auth/postmaster.readonly"
           ],

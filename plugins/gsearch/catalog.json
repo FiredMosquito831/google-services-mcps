@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-15T15:08:21.313Z",
+  "generatedAt": "2026-10-30T15:12:58.580Z",
   "apiCount": 2,
   "methodCount": 11,
   "apis": [
@@ -16,6 +16,15 @@
       "servicePath": "",
       "methods": [
         [
+          "developerknowledge.documents.searchDocumentChunks",
+          "GET",
+          "v1alpha/documents:searchDocumentChunks",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
           "developerknowledge.documents.batchGet",
           "GET",
           "v1alpha/documents:batchGet",
@@ -28,15 +37,6 @@
           "developerknowledge.documents.get",
           "GET",
           "v1alpha/{+name}",
-          [
-            "https://www.googleapis.com/auth/cloud-platform"
-          ],
-          ""
-        ],
-        [
-          "developerknowledge.documents.searchDocumentChunks",
-          "GET",
-          "v1alpha/documents:searchDocumentChunks",
           [
             "https://www.googleapis.com/auth/cloud-platform"
           ],
@@ -66,9 +66,23 @@
       "servicePath": "",
       "methods": [
         [
-          "safebrowsing.threatListUpdates.fetch",
+          "safebrowsing.threatMatches.find",
           "POST",
-          "v4/threatListUpdates:fetch",
+          "v4/threatMatches:find",
+          [],
+          ""
+        ],
+        [
+          "safebrowsing.encodedUpdates.get",
+          "GET",
+          "v4/encodedUpdates/{encodedRequest}",
+          [],
+          ""
+        ],
+        [
+          "safebrowsing.encodedFullHashes.get",
+          "GET",
+          "v4/encodedFullHashes/{encodedRequest}",
           [],
           ""
         ],
@@ -87,13 +101,6 @@
           ""
         ],
         [
-          "safebrowsing.threatMatches.find",
-          "POST",
-          "v4/threatMatches:find",
-          [],
-          ""
-        ],
-        [
           "safebrowsing.threatLists.list",
           "GET",
           "v4/threatLists",
@@ -101,16 +108,9 @@
           ""
         ],
         [
-          "safebrowsing.encodedFullHashes.get",
-          "GET",
-          "v4/encodedFullHashes/{encodedRequest}",
-          [],
-          ""
-        ],
-        [
-          "safebrowsing.encodedUpdates.get",
-          "GET",
-          "v4/encodedUpdates/{encodedRequest}",
+          "safebrowsing.threatListUpdates.fetch",
+          "POST",
+          "v4/threatListUpdates:fetch",
           [],
           ""
         ]
