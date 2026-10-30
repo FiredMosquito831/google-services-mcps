@@ -132,13 +132,14 @@ const DOCS = [
   'people.v1',
   'oauth2.v2',
   'classroom.v1',
+  'analyticsdata.v1beta',
 ];
 
 /**
- * APIs the curated gcloud tools call that have no per-method tools, so data/discovery has no snapshot of them:
- * trimmed copies of Google's documents in tests/fixtures/discovery (the methods called and their request schemas).
+ * APIs the curated gcloud and ganalytics tools call that have no per-method tools, so data/discovery has no snapshot of
+ * them: trimmed copies of Google's documents in tests/fixtures/discovery (the methods called and their request schemas).
  */
-const FIXTURE_DOCS = ['logging.v2', 'monitoring.v1', 'iam.v1', 'cloudbilling.v1beta'];
+const FIXTURE_DOCS = ['logging.v2', 'monitoring.v1', 'iam.v1', 'cloudbilling.v1beta', 'analyticsdata.v1alpha', 'analyticsadmin.v1alpha'];
 
 /**
  * Other hosts a document's methods are called on. sc_* tools use @googleapis/webmasters, which calls the Search Console
@@ -267,7 +268,7 @@ function problemsOf(call) {
 // ---------------------------------------------------------------------------
 // The servers and their tools.
 
-const SERVERS = ['gmail', 'gcalendar', 'gdrive', 'searchconsole', 'cloud', 'gads', 'workspace-admin', 'gchat', 'gcontacts', 'gclassroom'];
+const SERVERS = ['gmail', 'gcalendar', 'gdrive', 'searchconsole', 'cloud', 'gads', 'workspace-admin', 'gchat', 'gcontacts', 'gclassroom', 'ganalytics'];
 const tools = new Map();
 for (const mod of SERVERS) {
   const { buildTools } = await import(DIST(`servers/${mod}.js`));
@@ -764,6 +765,58 @@ const CASES = {
   classroom_create_rubric: [
     { args: { course_id: '123', coursework_id: 'w1', criteria: [{ title: 'Clarity', description: 'Clear', levels: [{ title: 'Poor', points: 0 }, { title: 'Good', description: 'd', points: 2 }] }] }, expect: ['classroom.courses.courseWork.rubrics.create'] },
   ],
+
+  // ganalytics (1.17.0)
+  ga_run_report: [
+    {
+      args: {
+        property_id: '123',
+        date_ranges: [{ start_date: '30daysAgo', end_date: 'yesterday', name: 'last30' }],
+        dimensions: ['country'],
+        metrics: ['activeUsers'],
+        dimension_filter: { filter: { fieldName: 'country', stringFilter: { value: 'France', matchType: 'EXACT' } } },
+        metric_filter: { filter: { fieldName: 'activeUsers', numericFilter: { operation: 'GREATER_THAN', value: { int64Value: '10' } } } },
+        order_bys: [{ metric: { metricName: 'activeUsers' }, desc: true }],
+        limit: 10,
+        offset: 10,
+        currency_code: 'EUR',
+        return_property_quota: true,
+      },
+      expect: ['analyticsdata.properties.runReport'],
+    },
+    // The conversions report: Data API v1alpha.
+    {
+      args: { property_id: '123', date_ranges: [{ start_date: 'today', end_date: 'today' }], metrics: ['conversions'], conversion_spec: { conversion_actions: ['conversionActions/1'], attribution_model: 'DATA_DRIVEN' } },
+      expect: ['analyticsdata.properties.runReport'],
+    },
+  ],
+  ga_run_realtime_report: [{ args: { property_id: '123', dimensions: ['country'], metrics: ['activeUsers'], order_bys: [{ dimension: { dimensionName: 'country' } }], limit: 5, return_property_quota: true }, expect: ['analyticsdata.properties.runRealtimeReport'] }],
+  ga_run_funnel_report: [
+    {
+      args: {
+        property_id: '123',
+        steps: [
+          { name: 'View', event_name: 'page_view' },
+          { name: 'Buy', filter_expression: { funnelEventFilter: { eventName: 'purchase' } }, is_directly_followed_by: false, within_duration_from_prior_step: '600s' },
+        ],
+        date_ranges: [{ start_date: '28daysAgo', end_date: 'yesterday' }],
+        open_funnel: true,
+        breakdown_dimension: 'deviceCategory',
+        breakdown_limit: 3,
+        next_action_dimension: 'eventName',
+        next_action_limit: 2,
+        trended: false,
+        limit: 100,
+        return_property_quota: true,
+      },
+      expect: ['analyticsdata.properties.runFunnelReport'],
+    },
+  ],
+  ga_annotations_list: [{ args: { property_id: '123', filter: 'title:Sale', page_size: 20, page_token: 'p1' }, expect: ['analyticsadmin.properties.reportingDataAnnotations.list'] }],
+  ga_annotation_create: [
+    { args: { property_id: '123', title: 'Launch', start_date: '2026-10-01', description: 'New site', color: 'BLUE' }, expect: ['analyticsadmin.properties.reportingDataAnnotations.create'] },
+    { args: { property_id: '123', title: 'Sale', start_date: '2026-10-05', end_date: '2026-10-09' }, expect: ['analyticsadmin.properties.reportingDataAnnotations.create'] },
+  ],
 };
 
 /** Tools that cannot run here, with the reason. Counted. */
@@ -776,7 +829,7 @@ test('every curated tool has a contract row, a skip reason or a known defect, an
   const listed = new Set([...Object.keys(CASES), ...Object.keys(SKIPPED), ...Object.keys(KNOWN_DEFECTS)]);
   assert.deepEqual([...tools.keys()].filter((name) => !listed.has(name)), [], 'curated tools without a row');
   assert.deepEqual([...listed].filter((name) => !tools.has(name)), [], 'rows for tools that do not exist');
-  assert.equal(tools.size, 125, 'the curated tool count; update the table when it changes');
+  assert.equal(tools.size, 130, 'the curated tool count; update the table when it changes');
 });
 
 for (const [name, cases] of Object.entries(CASES)) {

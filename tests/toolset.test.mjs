@@ -126,6 +126,18 @@ const LEAN_GOOGLE = {
 };
 /** The gads list (1.16.0): Google's 3 Google Ads MCP tools, all reads. */
 const ADS_GOOGLE = ['ads_list_customers', 'ads_search', 'ads_resource_metadata'];
+/** The ganalytics list (1.17.0): Google's 10 Google Analytics MCP tools, through four generated and five curated tools. */
+const ANALYTICS_GOOGLE = [
+  'gaadmin_account_summarie_list',
+  'gaadmin_properties_get',
+  'gaadmin_propert_google_a_list',
+  'gadata_properties_get_metadat',
+  'ga_run_report',
+  'ga_run_realtime_report',
+  'ga_run_funnel_report',
+  'ga_annotations_list',
+  'ga_annotation_create',
+];
 /** The tools runServer adds for a server of an OAuth group. No toolset removes them. */
 const RUNTIME_OAUTH = ['account_remove', 'account_set_default', 'accounts_list', 'auth_login', 'auth_setup_client', 'auth_status', 'health'];
 
@@ -412,6 +424,7 @@ test('both registry loaders carry the toolsets: the CLI conversion of config/pro
   assert.deepEqual(reg.servers.find((s) => s.name === 'gclassroom').toolsets, { google: CLASSROOM_GOOGLE });
   for (const [id, tools] of Object.entries(LEAN_GOOGLE)) assert.deepEqual(reg.servers.find((s) => s.name === id).toolsets, { google: tools }, id);
   assert.deepEqual(reg.servers.find((s) => s.name === 'gads').toolsets, { google: ADS_GOOGLE });
+  assert.deepEqual(reg.servers.find((s) => s.name === 'ganalytics').toolsets, { google: ANALYTICS_GOOGLE });
   assert.equal(reg.servers.find((s) => s.name === 'gyoutube').toolsets, undefined);
   const plugin = loadRegistryFile(join(ROOT, 'plugins', 'gmail', 'servers.json'));
   assert.deepEqual(plugin.servers[0].toolsets, { google: GMAIL_GOOGLE });
@@ -702,6 +715,18 @@ test('runServer: google on gads lists its 3 reads and the runtime tools, with th
   assert.deepEqual(google.tools.map((t) => t.name), [...ADS_GOOGLE, ...RUNTIME_OAUTH].sort());
   for (const t of google.tools) assert.deepEqual(t, unset.find((u) => u.name === t.name), t.name);
   for (const name of ADS_GOOGLE) assert.equal(google.tools.find((t) => t.name === name).annotations.readOnlyHint, true, name);
+  assert.deepEqual(google.health.toolset, { requested: 'google', effective: 'google', outsideToolset: unset.length - google.tools.length });
+});
+
+test('runServer: google on ganalytics lists its 9 tools and the runtime tools, with the same schemas as all', async () => {
+  const dir = tempDir('gsm-toolset-ganalytics-');
+  const entry = curatedEntry(dir, 'ganalytics', 'ganalytics');
+  const tokenDir = fakeLogin(dir, 'ganalytics', 'business');
+  const unset = await withClient(entry, childEnv(dir, tokenDir), listTools);
+  const google = await withClient(entry, childEnv(dir, tokenDir, { GSM_TOOLSET: 'google' }), async (c) => ({ tools: await listTools(c), health: await health(c) }));
+  assert.deepEqual(google.tools.map((t) => t.name), [...ANALYTICS_GOOGLE, ...RUNTIME_OAUTH].sort());
+  for (const t of google.tools) assert.deepEqual(t, unset.find((u) => u.name === t.name), t.name);
+  assert.equal(google.tools.find((t) => t.name === 'ga_annotation_create').annotations.readOnlyHint, false);
   assert.deepEqual(google.health.toolset, { requested: 'google', effective: 'google', outsideToolset: unset.length - google.tools.length });
 });
 

@@ -2415,7 +2415,7 @@
       "group": "business",
       "server": {
         "name": "ganalytics",
-        "curated": null
+        "curated": "analytics"
       },
       "generated": [
         {
@@ -2433,6 +2433,63 @@
           "version": "v1alpha"
         }
       ],
+      "toolsets": {
+        "google": {
+          "source": "https://github.com/googleanalytics/google-analytics-mcp",
+          "tools": [
+            "gaadmin_account_summarie_list",
+            "gaadmin_properties_get",
+            "gaadmin_propert_google_a_list",
+            "gadata_properties_get_metadat",
+            "ga_run_report",
+            "ga_run_realtime_report",
+            "ga_run_funnel_report",
+            "ga_annotations_list",
+            "ga_annotation_create"
+          ],
+          "matches": {
+            "gaadmin_account_summarie_list": [
+              "get_account_summaries"
+            ],
+            "gaadmin_properties_get": [
+              "get_property_details"
+            ],
+            "gaadmin_propert_google_a_list": [
+              "list_google_ads_links"
+            ],
+            "gadata_properties_get_metadat": [
+              "get_custom_dimensions_and_metrics"
+            ],
+            "ga_run_report": [
+              "run_report",
+              "run_conversions_report"
+            ],
+            "ga_run_realtime_report": [
+              "run_realtime_report"
+            ],
+            "ga_run_funnel_report": [
+              "run_funnel_report"
+            ],
+            "ga_annotations_list": [
+              "list_property_annotations"
+            ],
+            "ga_annotation_create": [
+              "create_property_annotation"
+            ]
+          },
+          "notes": {
+            "gaadmin_account_summarie_list": "The accounts and properties the signed-in user can see (Admin API v1beta accountSummaries.list). Start here for a property id.",
+            "gaadmin_properties_get": "One property's details: name, time zone, currency, industry, service level (Admin API v1beta).",
+            "gaadmin_propert_google_a_list": "The Google Ads accounts linked to a property (Admin API v1beta).",
+            "gadata_properties_get_metadat": "Every dimension and metric the property can report on, custom ones flagged with customDefinition; Google's tool returns only the custom ones. Pass name properties/<id>/metadata.",
+            "ga_run_report": "A report with rows keyed by dimension and metric name, row_count, next_offset and, on request, the property's quota. With conversion_spec it runs Google's conversions report on Data API v1alpha, as run_conversions_report does.",
+            "ga_run_realtime_report": "The last 30 minutes. The Data API has no offset for realtime reports, so there is none here (Google's tool lists one).",
+            "ga_run_funnel_report": "Data API v1alpha runFunnelReport, which no generated tool or gateway method of this server reaches; steps as event names or filter expressions.",
+            "ga_annotations_list": "Admin API v1alpha, which the generated tools do not cover (it is a gateway API here).",
+            "ga_annotation_create": "A write: it asks first, and the approval shows the exact annotation. Needs analytics.edit, which Google's server asks for only with --allow-write."
+          }
+        }
+      },
       "generatedToolCount": 66
     },
     "gtm": {

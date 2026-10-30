@@ -47,6 +47,7 @@ const CURATED_FILES = {
   chat: 'src/servers/gchat.ts',
   contacts: 'src/servers/gcontacts.ts',
   classroom: 'src/servers/gclassroom.ts',
+  analytics: 'src/servers/ganalytics.ts',
 };
 
 const ID_PATTERN = /^[a-z]+$/;

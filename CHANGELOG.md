@@ -2,6 +2,21 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.17.0 - 2026-10-30
+
+### New: Google Analytics tools that match Google's Google Analytics MCP server
+Each description names the Google tool it matches.
+- `ga_run_report` (`run_report`, and `run_conversions_report` with `conversion_spec`): metrics by dimensions over date ranges, with the Data API's filters and orders, `limit`, `offset`, a currency and the property's quota on request. Rows come back as objects keyed by the dimension and metric names, with `row_count` and `next_offset`. The conversions report runs on the Data API v1alpha.
+- `ga_run_realtime_report` (`run_realtime_report`): the last 30 minutes, rows keyed by name. No offset: the Data API has none for realtime reports.
+- `ga_run_funnel_report` (`run_funnel_report`): Data API v1alpha, which nothing in the plugin reached before. Steps as event names or filter expressions; open or closed, breakdown, next action, trended; the funnel table and visualization.
+- `ga_annotations_list` (`list_property_annotations`) and `ga_annotation_create` (`create_property_annotation`): Admin API v1alpha. The create is a write: it checks the dates first, asks, and the approval shows the exact annotation.
+- The reports are declared reads, as Google's server marks them. The kinds of the generated and gateway methods are not changed (`batchRunPivotReports` and `audienceExports.query` stay writes until their own change).
+- The `google` toolset of ganalytics: these five and the generated account summaries, property details, Google Ads links and metadata tools (9 tools for Google's 10). A `readonly` login with it asks for `analytics.readonly`; a `readwrite` login for `analytics.readonly` and `analytics.edit`.
+
+### Not changed
+- Scopes of the `all` toolset (ganalytics' resolve the same; its login requirements grow by the five tools), the gateway, the write gate and the hook. Every other plugin lists the same tools with the same schemas.
+- Not tested against the live Google Analytics APIs (Google's HTTP layer stubbed; the request shapes are checked against Google's Discovery documents).
+
 ## 1.16.0 - 2026-10-30
 
 ### New: Google Ads tools that match Google's Google Ads MCP server

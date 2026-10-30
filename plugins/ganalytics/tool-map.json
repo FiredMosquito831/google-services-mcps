@@ -72,6 +72,50 @@
     "title": "Sign-in status"
   },
   {
+    "name": "mcp__plugin_ganalytics_ganalytics__ga_annotation_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit"
+    ],
+    "title": "Create a Google Analytics annotation"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__ga_annotations_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.edit",
+      "https://www.googleapis.com/auth/analytics.readonly"
+    ],
+    "title": "List Google Analytics annotations"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__ga_run_funnel_report",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics",
+      "https://www.googleapis.com/auth/analytics.readonly"
+    ],
+    "title": "Run a Google Analytics funnel report"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__ga_run_realtime_report",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics",
+      "https://www.googleapis.com/auth/analytics.readonly"
+    ],
+    "title": "Run a Google Analytics realtime report"
+  },
+  {
+    "name": "mcp__plugin_ganalytics_ganalytics__ga_run_report",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics",
+      "https://www.googleapis.com/auth/analytics.readonly"
+    ],
+    "title": "Run a Google Analytics report"
+  },
+  {
     "name": "mcp__plugin_ganalytics_ganalytics__gaadmin_account_summarie_list",
     "kind": "read",
     "scopes": [
