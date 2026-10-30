@@ -11,6 +11,7 @@ import { withOrigin } from '../core/toolset.js';
 import { buildTools as buildCloud } from './cloud.js';
 import { buildTools as buildGads } from './gads.js';
 import { buildTools as buildGcalendar } from './gcalendar.js';
+import { buildTools as buildGchat } from './gchat.js';
 import { buildTools as buildGdrive } from './gdrive.js';
 import { buildTools as buildGmail } from './gmail.js';
 import { buildTools as buildSearchConsole } from './searchconsole.js';
@@ -26,6 +27,7 @@ const CURATED: Record<string, Builder> = {
   'src/servers/workspace-admin.ts': buildWorkspaceAdmin,
   'src/servers/searchconsole.ts': buildSearchConsole,
   'src/servers/gads.ts': buildGads,
+  'src/servers/gchat.ts': buildGchat,
 };
 
 /**

@@ -1546,8 +1546,8 @@
       "name": "gchat",
       "plugin": "gchat",
       "group": "workspace-user",
-      "kind": "discovery",
-      "curated": null,
+      "kind": "curated+discovery",
+      "curated": "src/servers/gchat.ts",
       "apis": [
         {
           "api": "chat",
@@ -1558,6 +1558,19 @@
           "version": "v1"
         }
       ],
+      "toolsets": {
+        "google": [
+          "chat_search_conversations",
+          "chat_list_messages",
+          "chat_search_messages",
+          "chat_list_members",
+          "chat_send_message",
+          "chat_mark_read",
+          "chat_mark_unread",
+          "chat_users_spaces_space_notificatio_get",
+          "chat_users_spaces_space_notificat_patch"
+        ]
+      },
       "label": "Google Chat: Google Chat spaces, messages and members, plus Workspace Events subscriptions."
     },
     {

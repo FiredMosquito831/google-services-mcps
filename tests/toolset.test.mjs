@@ -61,6 +61,18 @@ const GSC_GOOGLE = [
   'indexing_url_notifications_get_metadata',
   'indexing_url_notifications_publish',
 ];
+/** The gchat list (1.12.0): Google's 9 Chat MCP tools, two of them through the generated notification-setting tools. */
+const CHAT_GOOGLE = [
+  'chat_search_conversations',
+  'chat_list_messages',
+  'chat_search_messages',
+  'chat_list_members',
+  'chat_send_message',
+  'chat_mark_read',
+  'chat_mark_unread',
+  'chat_users_spaces_space_notificatio_get',
+  'chat_users_spaces_space_notificat_patch',
+];
 /** The tools runServer adds for a server of an OAuth group. No toolset removes them. */
 const RUNTIME_OAUTH = ['account_remove', 'account_set_default', 'accounts_list', 'auth_login', 'auth_setup_client', 'auth_status', 'health'];
 
@@ -271,10 +283,27 @@ test('the gsc google list is a lean set: no official server, so every tool says 
   assert.match(google.notes.indexing_url_notifications_publish, /JobPosting or BroadcastEvent/);
 });
 
+test("the gchat google list covers the 9 tools of Google's Chat MCP server, with chat_list_members for list_memberships", () => {
+  const google = readJson('config', 'products.json').products.gchat.toolsets.google;
+  assert.deepEqual(google.tools, CHAT_GOOGLE);
+  assert.equal(google.source, 'https://developers.google.com/workspace/chat/api/reference/mcp/tools_list');
+  const official = new Set(Object.values(google.matches).flat());
+  // developers.google.com/workspace/chat/api/reference/mcp/tools_list
+  for (const name of ['search_conversations', 'list_messages', 'search_messages', 'send_message', 'list_memberships', 'mark_as_read', 'mark_as_unread', 'get_notification_settings', 'update_notification_settings']) {
+    assert.ok(official.has(name), `no tool of ours matches ${name}`);
+  }
+  assert.equal(official.size, 9);
+  // The generated members list names the Chat app scopes (chat.bot, chat.import); the curated one stands in for it.
+  assert.equal(google.tools.includes('chat_spaces_members_list'), false);
+  assert.match(google.notes.chat_list_members, /chat\.bot/);
+  assert.match(google.notes.chat_mark_read, /no public REST method/);
+});
+
 test('both registry loaders carry the toolsets: the CLI conversion of config/products.json and a plugin servers.json', () => {
   const reg = registryFromProducts(readJson('config', 'products.json'), ROOT);
   assert.deepEqual(reg.servers.find((s) => s.name === 'gmail').toolsets, { google: GMAIL_GOOGLE });
   assert.deepEqual(reg.servers.find((s) => s.name === 'gsc').toolsets, { google: GSC_GOOGLE });
+  assert.deepEqual(reg.servers.find((s) => s.name === 'gchat').toolsets, { google: CHAT_GOOGLE });
   assert.equal(reg.servers.find((s) => s.name === 'gtasks').toolsets, undefined);
   const plugin = loadRegistryFile(join(ROOT, 'plugins', 'gmail', 'servers.json'));
   assert.deepEqual(plugin.servers[0].toolsets, { google: GMAIL_GOOGLE });
@@ -411,6 +440,26 @@ function gscEntry(dir) {
   return entry;
 }
 
+/** A server of curated and generated tools, as scripts/bundle.mjs writes its entry (no gateway). */
+function curatedEntry(dir, name, module) {
+  const entry = join(dir, `${name}-entry.mjs`);
+  writeFileSync(
+    entry,
+    [
+      `import { withOrigin } from '${dist('core/toolset.js')}';`,
+      `import { buildTools as curatedTools } from '${dist(`servers/${module}.js`)}';`,
+      `import { discoveryToolsFor, toolNamesOf } from '${dist('core/discovery/tools.js')}';`,
+      `import { runServer } from '${dist('core/tools.js')}';`,
+      `await runServer({ name: '${name}', version: '0.0.0', buildTools: async (cfg) => {`,
+      `  const curated = await curatedTools(cfg);`,
+      `  return [...withOrigin('curated', curated), ...withOrigin('generated', await discoveryToolsFor('${name}', cfg, toolNamesOf(curated)))];`,
+      `} });`,
+      '',
+    ].join('\n'),
+  );
+  return entry;
+}
+
 /** A temp token folder with a fake token for the group that holds every scope the plugin's tools list. Fake values only. */
 function fakeLogin(dir, plugin, group) {
   const tokenDir = join(dir, 'tokens');
@@ -499,6 +548,17 @@ test('runServer: google on gsc lists the lean list and the runtime tools, with t
   const unset = await withClient(entry, childEnv(dir, tokenDir), listTools);
   const google = await withClient(entry, childEnv(dir, tokenDir, { GSM_TOOLSET: 'google' }), async (c) => ({ tools: await listTools(c), health: await health(c) }));
   assert.deepEqual(google.tools.map((t) => t.name), [...GSC_GOOGLE, ...RUNTIME_OAUTH].sort());
+  for (const t of google.tools) assert.deepEqual(t, unset.find((u) => u.name === t.name), t.name);
+  assert.deepEqual(google.health.toolset, { requested: 'google', effective: 'google', outsideToolset: unset.length - google.tools.length });
+});
+
+test('runServer: google on gchat lists its 9 tools and the runtime tools, with the same schemas as all', async () => {
+  const dir = tempDir('gsm-toolset-gchat-');
+  const entry = curatedEntry(dir, 'gchat', 'gchat');
+  const tokenDir = fakeLogin(dir, 'gchat', 'workspace-user');
+  const unset = await withClient(entry, childEnv(dir, tokenDir), listTools);
+  const google = await withClient(entry, childEnv(dir, tokenDir, { GSM_TOOLSET: 'google' }), async (c) => ({ tools: await listTools(c), health: await health(c) }));
+  assert.deepEqual(google.tools.map((t) => t.name), [...CHAT_GOOGLE, ...RUNTIME_OAUTH].sort());
   for (const t of google.tools) assert.deepEqual(t, unset.find((u) => u.name === t.name), t.name);
   assert.deepEqual(google.health.toolset, { requested: 'google', effective: 'google', outsideToolset: unset.length - google.tools.length });
 });

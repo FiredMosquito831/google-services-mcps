@@ -176,6 +176,22 @@ test('requirements: the lean gsc google list resolves to webmasters.readonly (re
   assert.deepEqual(resolveScopes(await requirementsFor(['gsc'], cfg, quiet), 'readwrite').scopes, [G('indexing'), G('siteverification'), G('webmasters')]);
 });
 
+test('requirements: the gchat google list resolves to Chat user scopes only, never the Chat app scopes', async () => {
+  const { cfg } = tempTokens();
+  const google = await requirementsFor(['gchat'], cfg, { ...quiet, toolset: 'google' });
+  assert.equal(google.length, 9);
+  const readonly = resolveScopes(google, 'readonly');
+  assert.deepEqual(readonly.scopes, [G('chat.memberships.readonly'), G('chat.messages.readonly'), G('chat.spaces.readonly')]);
+  // The notification settings have no read-only scope, so their read stays outside a readonly login.
+  assert.ok(readonly.uncovered.includes('gchat/chat_users_spaces_space_notificatio_get'));
+  const readwrite = resolveScopes(google, 'readwrite').scopes;
+  assert.deepEqual(readwrite, [G('chat.memberships'), G('chat.messages'), G('chat.spaces'), G('chat.users.readstate'), G('chat.users.spacesettings')]);
+  for (const app of ['chat.bot', 'chat.import']) assert.equal(readwrite.includes(G(app)), false, app);
+  // The all toolset resolves as before 1.12.0: its generated tools still list chat.bot and chat.import.
+  const all = resolveScopes(await requirementsFor(['gchat'], cfg, quiet), 'readwrite').scopes;
+  assert.ok(all.includes(G('chat.bot')) && all.includes(G('chat.import')));
+});
+
 test('--toolset: parsed for login, scopes and setup-admin; an unknown value is a usage error', () => {
   assert.equal(parseToolset(undefined), undefined);
   assert.equal(parseToolset('Google'), 'google');

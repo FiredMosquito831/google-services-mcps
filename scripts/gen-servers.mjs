@@ -44,6 +44,7 @@ const CURATED_FILES = {
   admin: 'src/servers/workspace-admin.ts',
   'search-console': 'src/servers/searchconsole.ts',
   ads: 'src/servers/gads.ts',
+  chat: 'src/servers/gchat.ts',
 };
 
 const ID_PATTERN = /^[a-z]+$/;

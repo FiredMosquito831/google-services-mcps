@@ -128,6 +128,7 @@ const DOCS = [
   'admin.directory_v1',
   'cloudbilling.v1',
   'storage.v1',
+  'chat.v1',
 ];
 
 /**
@@ -263,7 +264,7 @@ function problemsOf(call) {
 // ---------------------------------------------------------------------------
 // The servers and their tools.
 
-const SERVERS = ['gmail', 'gcalendar', 'gdrive', 'searchconsole', 'cloud', 'gads', 'workspace-admin'];
+const SERVERS = ['gmail', 'gcalendar', 'gdrive', 'searchconsole', 'cloud', 'gads', 'workspace-admin', 'gchat'];
 const tools = new Map();
 for (const mod of SERVERS) {
   const { buildTools } = await import(DIST(`servers/${mod}.js`));
@@ -673,6 +674,33 @@ const CASES = {
   admin_orgunit_delete: [{ args: { org_unit_path: '/Sales' }, preview: true, expect: ['directory.orgunits.list', 'directory.users.list', 'directory.orgunits.delete'] }],
   admin_group_delete: [{ args: { group_key: 'team@example.com' }, preview: true, expect: ['directory.groups.get', 'directory.groups.delete'] }],
   admin_member_remove: [{ args: { group_key: 'team@example.com', member_key: 'a@example.com' }, preview: true, expect: ['directory.members.get', 'directory.members.delete'] }],
+
+  // gchat (1.12.0)
+  chat_search_conversations: [
+    { args: { query: 'apollo', page_size: 50, page_token: 'p1' }, expect: ['chat.spaces.list'] },
+    { args: { participants: ['bo@example.com'] }, expect: ['chat.spaces.findDirectMessage'] },
+    { args: { participants: ['a@example.com', 'b@example.com'], page_size: 10, page_token: 'p1' }, expect: ['chat.spaces.findGroupChats'] },
+  ],
+  chat_list_messages: [
+    {
+      args: { conversation_id: 'spaces/AAA', thread_id: 'spaces/AAA/threads/t1', start_time: '2026-10-29T00:00:00Z', end_time: '2026-10-30T00:00:00Z', page_size: 10, page_token: 'p1' },
+      expect: ['chat.spaces.messages.list'],
+    },
+    { args: { conversation_id: 'spaces/AAA', order: 'oldest', format: 'chat' }, expect: ['chat.spaces.messages.list'] },
+  ],
+  chat_search_messages: [
+    {
+      args: { query: 'budget', conversation_ids: ['spaces/AAA'], senders: ['a@example.com'], unread_only: true, start_time: '2026-10-01T00:00:00Z', page_size: 10, page_token: 'p1' },
+      expect: ['chat.spaces.messages.search'],
+    },
+  ],
+  chat_list_members: [{ args: { conversation_id: 'spaces/AAA', include_invited: true, include_groups: true, managers_only: true, page_size: 10, page_token: 'p1' }, expect: ['chat.spaces.members.list'] }],
+  chat_send_message: [
+    { args: { conversation_id: 'spaces/AAA', text: '**Hi**' }, expect: ['chat.spaces.get', 'chat.spaces.messages.create'] },
+    { args: { conversation_id: 'spaces/AAA', text: '*Hi*', thread_id: 'spaces/AAA/threads/t1', format: 'chat' }, expect: ['chat.spaces.get', 'chat.spaces.messages.create'] },
+  ],
+  chat_mark_read: [{ args: { conversation_ids: ['spaces/AAA', 'spaces/BBB'] }, expect: ['chat.users.spaces.updateSpaceReadState'] }],
+  chat_mark_unread: [{ args: { conversation_id: 'spaces/AAA', last_read_time: '2026-10-29T08:00:00Z' }, expect: ['chat.users.spaces.updateSpaceReadState'] }],
 };
 
 /** Tools that cannot run here, with the reason. Counted. */
@@ -685,7 +713,7 @@ test('every curated tool has a contract row, a skip reason or a known defect, an
   const listed = new Set([...Object.keys(CASES), ...Object.keys(SKIPPED), ...Object.keys(KNOWN_DEFECTS)]);
   assert.deepEqual([...tools.keys()].filter((name) => !listed.has(name)), [], 'curated tools without a row');
   assert.deepEqual([...listed].filter((name) => !tools.has(name)), [], 'rows for tools that do not exist');
-  assert.equal(tools.size, 100, 'the curated tool count; update the table when it changes');
+  assert.equal(tools.size, 107, 'the curated tool count; update the table when it changes');
 });
 
 for (const [name, cases] of Object.entries(CASES)) {

@@ -1914,7 +1914,7 @@
       "group": "workspace-user",
       "server": {
         "name": "gchat",
-        "curated": null
+        "curated": "chat"
       },
       "generated": [
         {
@@ -1927,6 +1927,59 @@
         }
       ],
       "gateway": [],
+      "toolsets": {
+        "google": {
+          "source": "https://developers.google.com/workspace/chat/api/reference/mcp/tools_list",
+          "tools": [
+            "chat_search_conversations",
+            "chat_list_messages",
+            "chat_search_messages",
+            "chat_list_members",
+            "chat_send_message",
+            "chat_mark_read",
+            "chat_mark_unread",
+            "chat_users_spaces_space_notificatio_get",
+            "chat_users_spaces_space_notificat_patch"
+          ],
+          "matches": {
+            "chat_search_conversations": [
+              "search_conversations"
+            ],
+            "chat_list_messages": [
+              "list_messages"
+            ],
+            "chat_search_messages": [
+              "search_messages"
+            ],
+            "chat_list_members": [
+              "list_memberships"
+            ],
+            "chat_send_message": [
+              "send_message"
+            ],
+            "chat_mark_read": [
+              "mark_as_read"
+            ],
+            "chat_mark_unread": [
+              "mark_as_unread"
+            ],
+            "chat_users_spaces_space_notificatio_get": [
+              "get_notification_settings"
+            ],
+            "chat_users_spaces_space_notificat_patch": [
+              "update_notification_settings"
+            ]
+          },
+          "notes": {
+            "chat_list_members": "Curated in place of the generated chat_spaces_members_list, whose scope list also names the Chat app scopes chat.bot and chat.import; the greedy readwrite cover would ask a person to grant chat.bot. chat_list_members lists only chat.memberships and chat.memberships.readonly.",
+            "chat_send_message": "Text in Markdown (or Chat's own syntax), as a new thread or a reply. Google's cards and citations are left out: only Chat apps can post them.",
+            "chat_mark_read": "Conversations only, up to 10 a call, each its own request with its own failure. Google's thread_ids have no public REST method (the Chat API has getThreadReadState only).",
+            "chat_mark_unread": "Conversations only; a thread's read state has no public REST method.",
+            "chat_users_spaces_space_notificatio_get": "Generated from spaceNotificationSetting.get: name is users/me/spaces/{space}/spaceNotificationSetting.",
+            "chat_users_spaces_space_notificat_patch": "Generated from spaceNotificationSetting.patch: name is users/me/spaces/{space}/spaceNotificationSetting, updateMask notification_setting and/or mute_setting. A write, so it asks first."
+          }
+        }
+      },
       "generatedToolCount": 60
     },
     "gmeet": {

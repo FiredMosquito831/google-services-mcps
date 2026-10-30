@@ -2,6 +2,23 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.12.0 - 2026-10-30
+
+### New: Google Chat tools that match Google's Chat MCP server
+Each description names the Google tool it matches. Reads never ask; the three writes ask first.
+- `chat_search_conversations` (read; `search_conversations`): find a conversation id by a word of its name (case-insensitive), by one person (your direct message with them, `spaces.findDirectMessage`) or by several people (your group chats with exactly them, `spaces.findGroupChats`, at most 30 a page), or list every conversation you are in. Group chats by people need a `chat.memberships` scope.
+- `chat_list_messages` (read; `list_messages`): one conversation, newest first (or `order: oldest`), in Markdown (`format: chat` for Chat's own syntax), narrowed by `thread_id` and `start_time` / `end_time`. Messages only one person can see are left out, as in Google's tool.
+- `chat_search_messages` (read; `search_messages`): words and filters (conversations, senders, mentions of you, unread, links, attachments, time, kind of conversation, or extra conditions in the API's syntax) across your conversations; refused before any request when there is nothing to search for or the query is over Google's 1,000 characters.
+- `chat_list_members` (read; `list_memberships`): who is in a conversation, with role and state; invited people, Google Groups and managers only on request. It stands in for the generated `chat_spaces_members_list` in the `google` toolset, whose scope list names the Chat app scopes `chat.bot` and `chat.import`.
+- `chat_send_message` (write; `send_message`): post as you, in Markdown, as a new thread or a reply in `thread_id` (a reply fails rather than starting a new thread). Its prepare step reads the conversation's name, so the approval shows where the message goes and its first 500 characters. Over Google's 32,000 bytes, empty text, or a thread of another conversation are refused before any request. Cards and citations, which only Chat apps can post, are not offered.
+- `chat_mark_read` (write; `mark_as_read`): up to 10 conversations a call, each its own request; one that fails is listed with Google's reason and does not stop the others. `chat_mark_unread` (write; `mark_as_unread`): one conversation from a given time on. Threads cannot be marked: the Chat API has no public method for a thread's read state.
+- Each message's text is cut at `max_chars` (default 2,000, at most 20,000) and marked `text_truncated`.
+- The `google` toolset of gchat: these seven and the generated notification-setting tools, for the nine tools of Google's Chat MCP server. A `readonly` login with it asks for `chat.spaces.readonly`, `chat.messages.readonly` and `chat.memberships.readonly`; a `readwrite` login for `chat.spaces`, `chat.messages`, `chat.memberships`, `chat.users.readstate` and `chat.users.spacesettings`.
+
+### Not changed
+- Scopes of the `all` toolset (gchat's resolve the same, including `chat.bot` and `chat.import` from its generated tools; its login requirements grow by the seven tools), the write gate and the hook. Every other plugin lists the same tools with the same schemas.
+- Not tested against the live Chat API (Google's HTTP layer stubbed; the request shapes are checked against Google's Discovery document).
+
 ## 1.11.0 - 2026-10-30
 
 ### New: a lean google toolset for Search Console
