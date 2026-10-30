@@ -10,7 +10,7 @@ import { invocation } from './invocation.js';
 import { isIdempotentMethod, requestWithRetry, type HttpResult } from './http.js';
 import { adcFilePath, adcGrantFor, GCLOUD_DEFAULT_SCOPES, readAdcState, type AdcGrant } from './adc.js';
 import { forgetCachedSecrets, readSecretText, secretFileExists, writeSecretText } from './secret-files.js';
-import { SERVICE_ACCOUNT_KEY_SCOPES } from './service-account-scopes.js';
+import { SERVICE_ACCOUNT_KEY_SCOPES, SERVICE_ACCOUNT_SCOPES_BY_SERVER } from './service-account-scopes.js';
 
 /**
  * One auth group per token file. Each group maps to one or more MCP servers
@@ -29,8 +29,25 @@ export type AuthKind = 'cloud' | 'workspace-user' | 'workspace-admin' | 'searchc
  * person adds the account's email to Play Console, Merchant Center or the product in question. The list is generated
  * (src/core/service-account-scopes.ts, from config/products.json serviceAccountScopes): every scope the methods of the
  * APIs gplay carries declare, and content for Merchant Center. It held only androidpublisher and content before 1.23.1.
+ * Since 1.24.4 a server's token asks only for its own product's part of it (serviceAccountScopesFor below).
  */
 export const SERVICE_ACCOUNT_SCOPES: string[] = [...SERVICE_ACCOUNT_KEY_SCOPES];
+
+/**
+ * The scopes the key asks for on behalf of one server of the group: that server's own product's list (generated, as
+ * SERVICE_ACCOUNT_SCOPES is). Merchant Center asks for content only and Google Play for its own list, so a scope Google
+ * refuses for one product does not stop the other. Without a server (a command for the whole group), or for a server
+ * the generated table does not list, it is the union, as before 1.24.4.
+ */
+export function serviceAccountScopesFor(server: string | undefined): string[] {
+  const own = server === undefined ? undefined : SERVICE_ACCOUNT_SCOPES_BY_SERVER[server];
+  return [...(own ?? SERVICE_ACCOUNT_SCOPES)];
+}
+
+/** The servers of the service-account group that have their own scope list, sorted. */
+export function serviceAccountServers(): string[] {
+  return Object.keys(SERVICE_ACCOUNT_SCOPES_BY_SERVER).sort();
+}
 
 /** Domain-wide delegation scopes for the Admin SDK Directory API. The admin login uses a service account and needs no login. */
 export const ADMIN_SCOPES = [
@@ -469,12 +486,13 @@ export function forgetUserClients(): void {
   forgetCachedSecrets();
 }
 
-/** The service-account clients, by key file. */
+/** The service-account clients, by key file and scope set (one per server of the group that uses the key). */
 const serviceClients = new Map<string, JWT>();
 
 /**
  * The client of the service-account group: the key file from `gsm setup-service-account`, else the service-account key
- * in GOOGLE_APPLICATION_CREDENTIALS. A key is used as it is, with the scopes of the two APIs (no user consent).
+ * in GOOGLE_APPLICATION_CREDENTIALS. A key is used as it is (no user consent), with the scopes of the server it runs in
+ * (serviceAccountScopesFor; the union when cfg names no server).
  */
 async function serviceAccountClient(cfg: RuntimeConfig): Promise<JWT> {
   const source = serviceAccountSource(cfg);
@@ -486,11 +504,13 @@ async function serviceAccountClient(cfg: RuntimeConfig): Promise<JWT> {
   if (!existsSync(source.keyFile)) {
     throw new Error(`Service account key file not found: ${source.keyFile}. Run: ${invocation()} setup-service-account --key-file <file>.`);
   }
-  const cached = serviceClients.get(source.keyFile);
+  const scopes = serviceAccountScopesFor(cfg.server);
+  const cacheKey = `${source.keyFile}\n${scopes.join(' ')}`;
+  const cached = serviceClients.get(cacheKey);
   if (cached) return cached;
-  const client = new JWT({ keyFile: source.keyFile, scopes: SERVICE_ACCOUNT_SCOPES });
+  const client = new JWT({ keyFile: source.keyFile, scopes });
   const wrapped = withRetry(client, 'service-account');
-  serviceClients.set(source.keyFile, wrapped);
+  serviceClients.set(cacheKey, wrapped);
   return wrapped;
 }
 
@@ -538,7 +558,7 @@ export function forgetAdcClients(): void {
  */
 export function grantedScopes(kind: AuthKind | 'apikey', cfg: RuntimeConfig): string[] | null {
   if (kind === 'apikey') return null;
-  if (kind === 'service-account') return serviceAccountSource(cfg) ? [...SERVICE_ACCOUNT_SCOPES] : null;
+  if (kind === 'service-account') return serviceAccountSource(cfg) ? serviceAccountScopesFor(cfg.server) : null;
   if (kind === 'workspace-admin') return readAdminScopeFile(cfg)?.scopes ?? [...ADMIN_SCOPES];
   let tokens: Credentials | null;
   try {
@@ -569,7 +589,7 @@ export function tokenStatus(kind: AuthKind, cfg: RuntimeConfig): TokenStatus {
       loggedIn: source !== null,
       source: source ? 'service-account' : undefined,
       tokenFile: serviceAccountFileFor(cfg),
-      scopes: source ? [...SERVICE_ACCOUNT_SCOPES] : undefined,
+      scopes: source ? serviceAccountScopesFor(cfg.server) : undefined,
     };
   }
   if (kind === 'workspace-admin') {

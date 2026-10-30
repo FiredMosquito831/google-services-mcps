@@ -321,7 +321,8 @@ export async function runServer(opts: {
 }): Promise<void> {
   // The messages of this server name the command that signs in: the plugin's own bin/gsm.mjs, by its full path.
   setInvocation(invocationFor(import.meta.url, process.cwd()));
-  const cfg = loadConfig();
+  // The server's name goes with the config, so a service-account key asks for this server's scopes only (auth.ts).
+  const cfg: RuntimeConfig = { ...loadConfig(), server: opts.name };
   if (process.argv.includes('--dump-tools')) {
     await dumpTools(opts.buildTools, cfg);
     return;

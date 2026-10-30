@@ -2,6 +2,18 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.24.4 - 2026-10-30
+
+### Fixed: each service-account plugin asks for its own scopes only
+- Since 1.23.1 every token of the service-account key asked for 13 scopes, the same for gplay and gmerchant. If Google refused one of gplay's scopes for the key, every token request failed, Merchant Center's included.
+- Now each server asks only for its own product's scopes: gmerchant for `content`, gplay for its 12 (the scopes its methods declare). The lists are generated, as before: `scripts/gen-service-account-scopes.mjs` also writes `SERVICE_ACCOUNT_SCOPES_BY_SERVER` into `src/core/service-account-scopes.ts`, and `serviceAccountScopesFor` (src/core/auth.ts) picks the server's list. The server's name goes with its configuration (runServer sets it). A command for the whole group with no server keeps the union.
+- One client per key file and scope set, so gplay and gmerchant in one process each keep their own token.
+- `gsm status --check` checks the key once per server, each with its own scopes (`service-account (gmerchant): ...`, `service-account (gplay): ...`), and `gsm status` prints each server's list. `gsm health --check` and the `health` tool with `live: true` check the key with the scopes of the server they report.
+
+### Not changed
+- The tools gplay and gmerchant list with a key set up (each server's own list covers exactly the tools it registered before), the tool maps, every other group's login and scopes, the write gate and the hook.
+- Not tested against Google with a real key: the token requests were answered by a stub, which also played Google refusing a gplay scope.
+
 ## 1.24.3 - 2026-10-30
 
 ### Fixed: every tool lists all four MCP annotation hints

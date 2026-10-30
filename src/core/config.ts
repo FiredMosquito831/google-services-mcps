@@ -38,6 +38,11 @@ export interface RuntimeConfig {
    * value gives all, with one line on stderr.
    */
   toolset: Toolset;
+  /**
+   * The MCP server this process runs, set by runServer (src/core/tools.ts) and unset in the CLI. The service-account key
+   * asks Google for this server's own scopes only (serviceAccountScopesFor in src/core/auth.ts).
+   */
+  server?: string;
 }
 
 function readConfirmation(value: string | undefined): { mode: ConfirmationMode; fromEnv: boolean } {

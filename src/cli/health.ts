@@ -1,6 +1,7 @@
 /**
  * `gsm health`: one row per server. Offline by default: each server's login as its token file says, the account it
- * belongs to, and its tool count. `--check` also asks Google about each OAuth group, once per group. Exits 1 when a
+ * belongs to, and its tool count. `--check` also asks Google about each OAuth group, once per group (once per server for the
+ * service-account group, whose servers ask for their own scopes). Exits 1 when a
  * plugin folder is missing or a login check fails. A login that was never made is information, not a failure.
  */
 import { loadConfig } from '../core/config.js';
@@ -44,8 +45,11 @@ export async function runHealth(req: HealthRequest, out: Output): Promise<number
   for (const row of rows) {
     let live: LiveHealth | undefined;
     if (req.check) {
-      if (!liveByGroup.has(row.group)) liveByGroup.set(row.group, await liveHealth(row.group, cfg));
-      live = liveByGroup.get(row.group);
+      // A service-account server's token asks for its own scopes only, so each of those servers is checked on its own.
+      const perServer = row.group === 'service-account';
+      const key = perServer ? `${row.group}:${row.id}` : row.group;
+      if (!liveByGroup.has(key)) liveByGroup.set(key, await liveHealth(row.group, perServer ? { ...cfg, server: row.id } : cfg));
+      live = liveByGroup.get(key);
     }
     report.push({
       server: row.id,

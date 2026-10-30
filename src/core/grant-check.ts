@@ -11,7 +11,8 @@ import {
   loadUserTokens,
   readClientSecret,
   readServiceAccountFile,
-  SERVICE_ACCOUNT_SCOPES,
+  serviceAccountScopesFor,
+  serviceAccountServers,
   serviceAccountSource,
   type AuthKind,
 } from './auth.js';
@@ -229,7 +230,10 @@ async function checkAdcGrant(group: AuthKind, stored: string[], deps: GrantDeps)
   };
 }
 
-/** The service-account group's live check: the key has to be accepted by Google's token endpoint. */
+/**
+ * The service-account group's live check: the key has to be accepted by Google's token endpoint, for the scopes of the
+ * server named in cfg.server (its own product's list), or for the whole group's list when cfg names no server.
+ */
 export async function checkServiceAccountGrant(cfg: RuntimeConfig, deps: GrantDeps = {}): Promise<GrantCheck> {
   const group = 'service-account' as const;
   const none = (state: GrantState, detail: string): GrantCheck => ({ group, state, detail, scopes: [], missingScopes: [] });
@@ -237,9 +241,10 @@ export async function checkServiceAccountGrant(cfg: RuntimeConfig, deps: GrantDe
   if (!source) return none('not-logged-in', `not set up: run ${invocation()} setup-service-account --key-file <file>`);
   if (!existsSync(source.keyFile)) return none('not-logged-in', `the key file is missing: ${source.keyFile}. Set it up again with ${invocation()} setup-service-account --key-file <file>.`);
 
+  const scopes = serviceAccountScopesFor(cfg.server);
   let token: string | null | undefined;
   try {
-    const client = await (deps.makeServiceClient ?? defaultServiceClient)(source.keyFile, [...SERVICE_ACCOUNT_SCOPES]);
+    const client = await (deps.makeServiceClient ?? defaultServiceClient)(source.keyFile, [...scopes]);
     token = (await client.getAccessToken()).token;
   } catch (err) {
     const text = redact(messageOf(err), [source.keyFile]);
@@ -254,10 +259,20 @@ export async function checkServiceAccountGrant(cfg: RuntimeConfig, deps: GrantDe
     group,
     state: 'valid',
     detail: `the key works (${source.via === 'setup' ? 'set up with setup-service-account' : 'from GOOGLE_APPLICATION_CREDENTIALS'}). Play Console or Merchant Center must also list the account for calls to succeed.`,
-    scopes: [...SERVICE_ACCOUNT_SCOPES],
+    scopes: [...scopes],
     missingScopes: [],
     account: stored?.clientEmail,
   };
+}
+
+/**
+ * The service-account key's live check once per server of the group (gmerchant, gplay), each with its own scopes, so a
+ * scope Google refuses for one product is reported for that product only. `gsm status --check` prints one line each.
+ */
+export async function checkServiceAccountServers(cfg: RuntimeConfig, deps: GrantDeps = {}): Promise<Array<{ server: string; check: GrantCheck }>> {
+  const results: Array<{ server: string; check: GrantCheck }> = [];
+  for (const server of serviceAccountServers()) results.push({ server, check: await checkServiceAccountGrant({ ...cfg, server }, deps) });
+  return results;
 }
 
 /** The email scope. With it, Google's token info names the account the login belongs to. */
