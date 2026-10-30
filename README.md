@@ -578,7 +578,10 @@ node scripts/gen-capabilities.mjs    # regenerate docs/CAPABILITIES.md and docs/
 node scripts/gen-readme.mjs          # regenerate the product table in this README
 node scripts/gen-servers.mjs         # regenerate config/servers.json from config/products.json
 node scripts/snapshot-discovery.mjs  # refresh the Discovery documents (needs network)
+node scripts/check-discovery-freshness.mjs  # compare them with Google's documents now (report only)
 ```
+
+The freshness check fetches Google's public Discovery documents (no key, no sign-in) and compares them with `data/discovery/` and `data/catalog.json`: revisions, methods added, removed or changed, preferred versions that changed, and APIs in Google's directory that the catalog does not have. It writes nothing. `--json` prints the full report. Exit code 0 means no differences, 1 differences, 2 that some documents could not be fetched. `data/discovery/_revisions.json` records the revision and fetch time of each snapshot. The snapshots in the repository now were made on 2026-10-15, before this record existed, so they say `unknown (snapshot 2026-10-15)`.
 
 There is no npm script named `capabilities`. Run `node scripts/gen-capabilities.mjs` instead. To add a product, change `config/products.json`, then run the steps above. Validate a plugin with `claude plugin validate ./plugins/<id>`.
 

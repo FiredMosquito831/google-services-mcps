@@ -6,20 +6,38 @@
  * applied when the tools are built.
  * Also writes data/scopes.json: per server, the union of the method scopes of
  * its discovery APIs.
+ * And data/discovery/_revisions.json: per snapshot, the `revision` of the document Google served and the time it was
+ * fetched (ISO, UTC). The snapshot files themselves keep their trimmed shape. A failed API keeps its recorded revision.
+ * scripts/check-discovery-freshness.mjs compares these records with Google's current documents.
  *
  * Usage: node scripts/snapshot-discovery.mjs
  * Exit code is 1 only when every fetch failed. Failures are listed in
  * data/discovery/_errors.json. A failed API keeps its previous snapshot, if any.
+ * For tests: --root <dir> reads config/ and writes data/ under <dir>; --origin <loopback URL> sends every request to a
+ * local server (scripts/discovery-urls.mjs).
  */
 import { mkdir, readFile, readdir, rm, stat, writeFile } from 'node:fs/promises';
-import { dirname, join } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { candidateUrls, flagValue, parseTestOrigin, routeUrl } from './discovery-urls.mjs';
 
-const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
+let ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
+let ORIGIN;
+try {
+  const rootArg = flagValue(process.argv, '--root');
+  if (rootArg) ROOT = resolve(rootArg);
+  ORIGIN = parseTestOrigin(flagValue(process.argv, '--origin'));
+} catch (err) {
+  console.error(err.message);
+  process.exit(2);
+}
 const PRODUCTS_FILE = join(ROOT, 'config', 'products.json');
 const OUT_DIR = join(ROOT, 'data', 'discovery');
 const SCOPES_FILE = join(ROOT, 'data', 'scopes.json');
 const ERRORS_FILE = join(OUT_DIR, '_errors.json');
+const REVISIONS_FILE = join(OUT_DIR, '_revisions.json');
+const REVISIONS_COMMENT =
+  'Written by scripts/snapshot-discovery.mjs. For each snapshot in this folder: the revision field of the Discovery document Google served and the time it was fetched (ISO, UTC). "unknown (snapshot 2026-10-15)" marks a snapshot written before revisions were recorded; the date is that of the commit that last changed the file. scripts/check-discovery-freshness.mjs compares these records with Google\'s current documents.';
 
 const METHOD_DESC_MAX = 300;
 const PARAM_DESC_MAX = 200;
@@ -112,26 +130,6 @@ function collectScopes(resources, into) {
   }
 }
 
-/**
- * servers.json names some APIs the way the user thinks of them. Discovery
- * publishes these under another name, so they are looked up under the alias.
- */
-const DISCOVERY_ALIASES = {
-  'reports.v1': 'admin/reports_v1',
-  'datatransfer.v1': 'admin/datatransfer_v1',
-};
-
-/**
- * Candidate URLs in order: the documented path, the alias path (if any), then the
- * API's own host. The host form serves some APIs that the path form answers with 404.
- */
-function candidateUrls(key, api, version) {
-  const urls = [`https://www.googleapis.com/discovery/v1/apis/${api}/${version}/rest`];
-  if (DISCOVERY_ALIASES[key]) urls.push(`https://www.googleapis.com/discovery/v1/apis/${DISCOVERY_ALIASES[key]}/rest`);
-  urls.push(`https://${api.toLowerCase()}.googleapis.com/$discovery/rest?version=${version}`);
-  return urls;
-}
-
 /** Returns the parsed document, or throws. A 404 moves on to the next candidate. */
 async function fetchDiscovery(key, api, version) {
   const errors = [];
@@ -139,7 +137,7 @@ async function fetchDiscovery(key, api, version) {
     let lastError;
     for (let attempt = 1; attempt <= FETCH_ATTEMPTS; attempt++) {
       try {
-        const res = await fetch(url, {
+        const res = await fetch(routeUrl(url, ORIGIN), {
           headers: { Accept: 'application/json' },
           signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
         });
@@ -155,6 +153,34 @@ async function fetchDiscovery(key, api, version) {
     errors.push(lastError?.message ?? String(lastError));
   }
   throw new Error(errors.join(' | '));
+}
+
+/**
+ * Writes data/discovery/_revisions.json: one entry per wanted API, sorted by key. A fetched API gets its new revision
+ * and fetch time; an API whose fetch failed keeps its recorded entry, or, when it has an older snapshot but no record,
+ * "unknown (not recorded)". APIs no longer wanted are dropped, as their snapshot files are.
+ */
+async function writeRevisions(wanted, fetchedRevisions) {
+  let previous = {};
+  try {
+    previous = JSON.parse(await readFile(REVISIONS_FILE, 'utf8')).snapshots ?? {};
+  } catch {
+    previous = {};
+  }
+  const snapshots = {};
+  for (const key of [...wanted.keys()].sort()) {
+    const entry = fetchedRevisions.get(key) ?? previous[key];
+    if (entry) {
+      snapshots[key] = entry;
+      continue;
+    }
+    const hasOldSnapshot = await stat(join(OUT_DIR, `${key}.json`)).then(
+      () => true,
+      () => false,
+    );
+    if (hasOldSnapshot) snapshots[key] = { revision: 'unknown (not recorded)', fetchedAt: null };
+  }
+  await writeFile(REVISIONS_FILE, `${JSON.stringify({ $comment: REVISIONS_COMMENT, snapshots }, null, 2)}\n`, 'utf8');
 }
 
 async function readExistingDoc(key) {
@@ -178,12 +204,19 @@ async function main() {
   await mkdir(OUT_DIR, { recursive: true });
 
   const compacted = new Map();
+  const fetchedRevisions = new Map();
   const failures = [];
   for (const [key, { api, version }] of wanted) {
     try {
-      const doc = compactDoc(await fetchDiscovery(key, api, version));
+      const raw = await fetchDiscovery(key, api, version);
+      const fetchedAt = new Date().toISOString();
+      const doc = compactDoc(raw);
       await writeFile(join(OUT_DIR, `${key}.json`), JSON.stringify(doc), 'utf8');
       compacted.set(key, doc);
+      fetchedRevisions.set(key, {
+        revision: typeof raw.revision === 'string' && raw.revision ? raw.revision : 'none in the document',
+        fetchedAt,
+      });
       console.log(`ok      ${key} (${countMethods(doc.resources).total} methods)`);
     } catch (err) {
       failures.push({ api, version, error: err.message ?? String(err) });
@@ -192,11 +225,13 @@ async function main() {
   }
 
   await writeFile(ERRORS_FILE, `${JSON.stringify(failures, null, 2)}\n`, 'utf8');
+  await writeRevisions(wanted, fetchedRevisions);
 
-  // Remove snapshot files for APIs that are no longer listed in servers.json.
+  // Remove snapshot files for APIs that are no longer listed in servers.json. Files that start with "_" are this
+  // script's own records (_errors.json, _revisions.json), not snapshots.
   const expected = new Set([...wanted.keys()].map((key) => `${key}.json`));
   for (const file of await readdir(OUT_DIR)) {
-    if (file.endsWith('.json') && file !== '_errors.json' && !expected.has(file)) {
+    if (file.endsWith('.json') && !file.startsWith('_') && !expected.has(file)) {
       await rm(join(OUT_DIR, file));
       console.log(`removed stale ${file}`);
     }
