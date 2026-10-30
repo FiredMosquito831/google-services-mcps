@@ -124,6 +124,8 @@ const LEAN_GOOGLE = {
     'appsscript_scripts_run',
   ],
 };
+/** The gads list (1.16.0): Google's 3 Google Ads MCP tools, all reads. */
+const ADS_GOOGLE = ['ads_list_customers', 'ads_search', 'ads_resource_metadata'];
 /** The tools runServer adds for a server of an OAuth group. No toolset removes them. */
 const RUNTIME_OAUTH = ['account_remove', 'account_set_default', 'accounts_list', 'auth_login', 'auth_setup_client', 'auth_status', 'health'];
 
@@ -409,6 +411,7 @@ test('both registry loaders carry the toolsets: the CLI conversion of config/pro
   assert.deepEqual(reg.servers.find((s) => s.name === 'gcontacts').toolsets, { google: CONTACTS_GOOGLE });
   assert.deepEqual(reg.servers.find((s) => s.name === 'gclassroom').toolsets, { google: CLASSROOM_GOOGLE });
   for (const [id, tools] of Object.entries(LEAN_GOOGLE)) assert.deepEqual(reg.servers.find((s) => s.name === id).toolsets, { google: tools }, id);
+  assert.deepEqual(reg.servers.find((s) => s.name === 'gads').toolsets, { google: ADS_GOOGLE });
   assert.equal(reg.servers.find((s) => s.name === 'gyoutube').toolsets, undefined);
   const plugin = loadRegistryFile(join(ROOT, 'plugins', 'gmail', 'servers.json'));
   assert.deepEqual(plugin.servers[0].toolsets, { google: GMAIL_GOOGLE });
@@ -687,6 +690,19 @@ test('runServer: google on gclassroom lists its 20 tools and the runtime tools, 
   const google = await withClient(entry, childEnv(dir, tokenDir, { GSM_TOOLSET: 'google' }), listTools);
   assert.deepEqual(google.map((t) => t.name), [...CLASSROOM_GOOGLE, ...RUNTIME_OAUTH].sort());
   for (const t of google) assert.deepEqual(t, unset.find((u) => u.name === t.name), t.name);
+});
+
+test('runServer: google on gads lists its 3 reads and the runtime tools, with the same schemas as all; ads_mutate is hidden', async () => {
+  const dir = tempDir('gsm-toolset-gads-');
+  const entry = curatedEntry(dir, 'gads', 'gads');
+  const tokenDir = fakeLogin(dir, 'gads', 'business');
+  const unset = await withClient(entry, childEnv(dir, tokenDir), listTools);
+  assert.ok(unset.some((t) => t.name === 'ads_mutate'));
+  const google = await withClient(entry, childEnv(dir, tokenDir, { GSM_TOOLSET: 'google' }), async (c) => ({ tools: await listTools(c), health: await health(c) }));
+  assert.deepEqual(google.tools.map((t) => t.name), [...ADS_GOOGLE, ...RUNTIME_OAUTH].sort());
+  for (const t of google.tools) assert.deepEqual(t, unset.find((u) => u.name === t.name), t.name);
+  for (const name of ADS_GOOGLE) assert.equal(google.tools.find((t) => t.name === name).annotations.readOnlyHint, true, name);
+  assert.deepEqual(google.health.toolset, { requested: 'google', effective: 'google', outsideToolset: unset.length - google.tools.length });
 });
 
 /** A server of generated tools only, as scripts/bundle.mjs writes its entry. */

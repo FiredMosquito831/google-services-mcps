@@ -6,9 +6,14 @@
  * The same API is also generated as per-method tools and gateway methods (config/products.json).
  *
  * Tools:
- *   ads_list_customers  read     customers:listAccessibleCustomers
- *   ads_search          read     googleAds:search, one page of GAQL. Must be a SELECT. At most 500 rows returned.
- *   ads_mutate          dynamic  googleAds:mutate. The kind comes from the body (core/dynamic.ts): validate_only
+ *   ads_list_customers     read     customers:listAccessibleCustomers
+ *   ads_search             read     googleAds:search, one page of GAQL. Must be a SELECT. At most 500 rows returned. The
+ *                                   query is given as text, or as fields, resource, conditions, orderings and limit, from
+ *                                   which buildGaql writes the SELECT (checked parts only; matches search in Google's
+ *                                   Google Ads MCP server).
+ *   ads_resource_metadata  read     googleAdsFields:search: the selectable, filterable and sortable fields of a resource
+ *                                   (matches get_resource_metadata in Google's Google Ads MCP server).
+ *   ads_mutate             dynamic  googleAds:mutate. The kind comes from the body (core/dynamic.ts): validate_only
  *                                (default true) is a read with no gate. Otherwise the gate runs first: write, or
  *                                destructive when an operation removes a resource.
  *
@@ -53,6 +58,17 @@ interface AdsSearchResponse {
 interface AdsMutateResponse {
   mutateOperationResponses?: unknown[];
   requestId?: string;
+}
+interface AdsField {
+  name?: string;
+  category?: string;
+  selectable?: boolean;
+  filterable?: boolean;
+  sortable?: boolean;
+}
+interface AdsFieldsResponse {
+  results?: AdsField[];
+  nextPageToken?: string;
 }
 
 /** The OAuth client of the business group, for the account the call names (see account-context.ts). */
@@ -134,6 +150,130 @@ export function assertSelectQuery(query: string): void {
   }
 }
 
+/** A GAQL resource name, as in the FROM clause: campaign, ad_group, ad_group_criterion. */
+const RESOURCE_NAME = /^[a-z][a-z0-9_]*$/;
+/** A GAQL field name: a resource, metrics or segments, then one or more parts, such as campaign.id or ad_group_criterion.keyword.text. */
+const FIELD_NAME = /^[a-z][a-z0-9_]*(?:\.[a-z][a-z0-9_]*)+$/;
+/** One ORDER BY item: a field name, optionally ASC or DESC. */
+const ORDERING = /^([a-z][a-z0-9_]*(?:\.[a-z][a-z0-9_]*)+)(?:\s+(asc|desc))?$/i;
+/**
+ * Clause words a condition may not hold outside a quoted value, so each condition stays one condition of the WHERE
+ * clause. A part of a dotted field name (campaign.limit_x, x.order) is not a clause word.
+ */
+const CLAUSE_WORDS = /(?:^|[^.\w])(select|from|where|order|limit|parameters)(?![\w.])/i;
+
+/** Checks a resource name for the FROM clause or a field lookup. Throws before any request is sent. */
+export function assertResourceName(resource: string): void {
+  if (!RESOURCE_NAME.test(resource)) {
+    throw new Error(`"${resource}" is not a Google Ads resource name: use lowercase letters, digits and underscores, such as campaign or ad_group.`);
+  }
+}
+
+/**
+ * The text of a condition outside its quoted values. Values in single or double quotes may hold any character (a
+ * backslash escapes the next one). An unclosed quote is refused: the rest of the query would become part of a value.
+ */
+function unquoted(condition: string): string {
+  let out = '';
+  let quote: string | undefined;
+  for (let i = 0; i < condition.length; i++) {
+    const ch = condition[i] as string;
+    if (quote) {
+      if (ch === '\\') i++;
+      else if (ch === quote) {
+        quote = undefined;
+        out += ' ';
+      }
+      continue;
+    }
+    if (ch === "'" || ch === '"') quote = ch;
+    else out += ch;
+  }
+  if (quote) throw new Error(`The condition ${JSON.stringify(condition)} has a quote that is not closed.`);
+  return out;
+}
+
+/** Checks one WHERE condition: no clause words or semicolons outside quoted values, and closed quotes. */
+export function assertCondition(condition: string): void {
+  const rest = unquoted(condition);
+  if (rest.trim() === '') throw new Error('A condition is empty.');
+  if (rest.includes(';')) throw new Error(`The condition ${JSON.stringify(condition)} holds a semicolon outside a quoted value.`);
+  const word = CLAUSE_WORDS.exec(rest);
+  if (word) {
+    throw new Error(
+      `The condition ${JSON.stringify(condition)} holds ${word[1]?.toUpperCase()} outside a quoted value. Give each condition alone; use orderings and limit for ORDER BY and LIMIT.`,
+    );
+  }
+}
+
+/** The structured form of a GAQL query (matches the arguments of search in Google's Google Ads MCP server). */
+export interface GaqlParts {
+  fields: string[];
+  resource: string;
+  conditions?: string[];
+  orderings?: string[];
+  limit?: number;
+}
+
+/**
+ * Writes a GAQL SELECT from checked parts: SELECT <fields> FROM <resource> [WHERE c1 AND c2] [ORDER BY o1, o2]
+ * [LIMIT n] PARAMETERS omit_unselected_resource_names=true, the form Google's Google Ads MCP server builds. Field and
+ * resource names must be plain names; conditions are checked by assertCondition. Throws before any request is sent.
+ */
+export function buildGaql(parts: GaqlParts): string {
+  assertResourceName(parts.resource);
+  const fields = [...new Set(parts.fields.map((f) => f.trim()))];
+  if (fields.length === 0) throw new Error('fields needs at least one field, such as campaign.id.');
+  for (const field of fields) {
+    if (!FIELD_NAME.test(field)) throw new Error(`"${field}" is not a GAQL field name, such as campaign.id, metrics.clicks or segments.date.`);
+  }
+  const conditions = (parts.conditions ?? []).map((c) => c.trim());
+  for (const condition of conditions) assertCondition(condition);
+  const orderings = (parts.orderings ?? []).map((o) => {
+    const match = ORDERING.exec(o.trim());
+    if (!match) throw new Error(`"${o}" is not an ordering: use a field name, optionally followed by ASC or DESC, such as metrics.clicks DESC.`);
+    return match[2] ? `${match[1]} ${match[2].toUpperCase()}` : (match[1] as string);
+  });
+  if (parts.limit !== undefined && (!Number.isInteger(parts.limit) || parts.limit < 1)) throw new Error('limit must be a whole number of 1 or more.');
+  return [
+    `SELECT ${fields.join(', ')} FROM ${parts.resource}`,
+    conditions.length ? ` WHERE ${conditions.join(' AND ')}` : '',
+    orderings.length ? ` ORDER BY ${orderings.join(', ')}` : '',
+    parts.limit !== undefined ? ` LIMIT ${parts.limit}` : '',
+    ' PARAMETERS omit_unselected_resource_names=true',
+  ].join('');
+}
+
+/** The GAQL of one ads_search call: the query as given, or one built from the parts. Exactly one form. */
+export function searchQueryOf(input: { query?: string; fields?: string[]; resource?: string; conditions?: string[]; orderings?: string[]; limit?: number }): string {
+  const structured = input.fields !== undefined || input.resource !== undefined;
+  const partsOnly = input.conditions !== undefined || input.orderings !== undefined || input.limit !== undefined;
+  if (input.query !== undefined) {
+    if (structured || partsOnly) throw new Error('Give either query, or fields and resource (with conditions, orderings and limit), not both.');
+    return input.query;
+  }
+  if (!input.fields || !input.resource) {
+    throw new Error('Give query (a GAQL SELECT), or fields and resource. ads_resource_metadata lists the fields of a resource.');
+  }
+  return buildGaql({ fields: input.fields, resource: input.resource, conditions: input.conditions, orderings: input.orderings, limit: input.limit });
+}
+
+/**
+ * The GoogleAdsField query language of googleAdsFields:search takes no FROM clause. The two queries Google's
+ * get_resource_metadata runs: the resource's own attributes, and every field that is selectable with the resource
+ * (its metrics, its segments and the attributes of the resources it is attributed to).
+ */
+export function resourceMetadataQueries(resource: string): [string, string] {
+  assertResourceName(resource);
+  return [
+    `SELECT name, category, selectable, filterable, sortable WHERE name LIKE '${resource}.%' AND category = 'ATTRIBUTE'`,
+    `SELECT name, category, selectable, filterable, sortable WHERE selectable_with CONTAINS ANY('${resource}')`,
+  ];
+}
+
+/** Pages of googleAdsFields:search followed at most, per query: a guard against an endless page loop. The answer says when it stopped there. */
+const FIELD_PAGES_MAX = 50;
+
 /** The resource key and body of one mutate operation: exactly one key, ending in Operation, with an object value. */
 export function resourceOperation(op: Operation): { key: string; body: Record<string, unknown> } {
   const keys = Object.keys(op);
@@ -165,7 +305,28 @@ const searchShape = {
   query: z
     .string()
     .max(SEARCH_MAX_QUERY)
-    .describe('A GAQL query that starts with SELECT, for example "SELECT campaign.id, campaign.name FROM campaign". At most 10000 characters.'),
+    .optional()
+    .describe(
+      'A GAQL query that starts with SELECT, for example "SELECT campaign.id, campaign.name FROM campaign". At most 10000 characters. Give this, or fields and resource.',
+    ),
+  fields: z
+    .array(z.string())
+    .min(1)
+    .optional()
+    .describe('Structured form: the fields to select, such as ["campaign.id", "campaign.name", "metrics.clicks"]. Needs resource.'),
+  resource: z.string().optional().describe('Structured form: the resource of the FROM clause, such as campaign or ad_group.'),
+  conditions: z
+    .array(z.string())
+    .optional()
+    .describe(
+      `Structured form: WHERE conditions, joined with AND, such as ["campaign.status = 'ENABLED'", "segments.date DURING LAST_30_DAYS"]. One condition each; quoted values may hold any text.`,
+    ),
+  orderings: z.array(z.string()).optional().describe('Structured form: ORDER BY items, such as ["metrics.clicks DESC"].'),
+  limit: z.number().int().min(1).optional().describe('Structured form: LIMIT, the most rows Google returns. This tool shows at most 500 rows of a page.'),
+};
+
+const metadataShape = {
+  resource: z.string().describe('A Google Ads resource name, as in a FROM clause: campaign, ad_group, ad_group_criterion, keyword_view and so on.'),
 };
 
 const mutateShape = {
@@ -203,29 +364,76 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       name: 'ads_search',
       title: 'Search Google Ads (GAQL)',
       description:
-        'Run one page of a GAQL SELECT query against a Google Ads account and return the rows, at most 500. Read only: any statement other than SELECT is refused before a request is sent.',
+        "Run one page of a GAQL SELECT query against a Google Ads account and return the rows, at most 500 (matches search in Google's Google Ads MCP server). Give the query as text, or as fields, resource, conditions, orderings and limit, from which the SELECT is written (with PARAMETERS omit_unselected_resource_names=true, as Google's server does). ads_resource_metadata lists the fields a resource can select, filter and sort by. Read only: any statement other than SELECT is refused before a request is sent.",
       kind: 'read',
       scopes: ADS_SCOPES,
       inputSchema: searchShape,
       async handler(args) {
         const input = z.object(searchShape).parse(args);
-        assertSelectQuery(input.query);
+        const query = searchQueryOf(input);
+        assertSelectQuery(query);
+        if (query.length > SEARCH_MAX_QUERY) throw new Error(`The query is ${query.length} characters; at most ${SEARCH_MAX_QUERY} are sent.`);
         const session = await adsSession(cfg);
         const res = await session.request<AdsSearchResponse>({
           method: 'POST',
           path: `customers/${input.customer_id}/googleAds:search`,
           // No pageSize: Google Ads (v26 Discovery) answers PAGE_SIZE_NOT_SUPPORTED when it is set. Google sets the page size.
-          body: { query: input.query },
+          body: { query },
         });
         const rows = res.results ?? [];
         const truncated = rows.length > SEARCH_ROW_CAP;
         return {
+          // The SELECT written from the parts, so the caller can see and reuse it. A query given as text is not repeated.
+          ...(input.query === undefined ? { query } : {}),
           rowCount: Math.min(rows.length, SEARCH_ROW_CAP),
           results: rows.slice(0, SEARCH_ROW_CAP),
           ...(truncated
             ? { truncated: true, note: `Google returned ${rows.length} rows on this page. Only the first ${SEARCH_ROW_CAP} are shown; narrow the query to see fewer rows.` }
             : {}),
           ...(res.nextPageToken && !truncated ? { note: 'Google has more pages for this query. This tool returns only the first page.' } : {}),
+        };
+      },
+    }),
+    defineTool({
+      name: 'ads_resource_metadata',
+      title: 'Fields of a Google Ads resource',
+      description:
+        "List the fields a Google Ads resource can select, filter by and sort by in GAQL: its own attributes, and the metrics, segments and attributed-resource fields that are selectable with it (matches get_resource_metadata in Google's Google Ads MCP server). Use it before ads_search to pick valid fields. Needs no customer_id: the field catalog is the same for every account.",
+      kind: 'read',
+      scopes: ADS_SCOPES,
+      inputSchema: metadataShape,
+      async handler(args) {
+        const { resource } = z.object(metadataShape).parse(args);
+        const queries = resourceMetadataQueries(resource);
+        const session = await adsSession(cfg);
+        const fields = new Map<string, AdsField>();
+        let stoppedEarly = false;
+        for (const query of queries) {
+          let pageToken: string | undefined;
+          let pages = 0;
+          do {
+            const res = await session.request<AdsFieldsResponse>({
+              method: 'POST',
+              path: 'googleAdsFields:search',
+              body: { query, ...(pageToken ? { pageToken } : {}) },
+            });
+            for (const f of res.results ?? []) if (f.name && !fields.has(f.name)) fields.set(f.name, f);
+            pageToken = res.nextPageToken || undefined;
+            pages += 1;
+          } while (pageToken && pages < FIELD_PAGES_MAX);
+          if (pageToken) stoppedEarly = true;
+        }
+        const list = [...fields.values()];
+        const names = (keep: (f: AdsField) => boolean) => list.filter(keep).map((f) => f.name as string);
+        return {
+          resource,
+          selectable: names((f) => f.selectable === true),
+          filterable: names((f) => f.filterable === true),
+          sortable: names((f) => f.sortable === true),
+          ...(list.length === 0
+            ? { note: `Google returned no fields for "${resource}". Check the resource name: it is the name used in a FROM clause, such as campaign or ad_group.` }
+            : {}),
+          ...(stoppedEarly ? { truncated: true, note: `Google had more than ${FIELD_PAGES_MAX} pages of fields; only those pages are shown.` } : {}),
         };
       },
     }),

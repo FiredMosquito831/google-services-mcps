@@ -643,7 +643,21 @@ const CASES = {
 
   // gads
   ads_list_customers: [{ args: {}, expect: ['googleads.customers.listAccessibleCustomers'] }],
-  ads_search: [{ args: { customer_id: '1234567890', query: 'SELECT campaign.id FROM campaign' }, expect: ['googleads.customers.googleAds.search'] }],
+  ads_search: [
+    { args: { customer_id: '1234567890', query: 'SELECT campaign.id FROM campaign' }, expect: ['googleads.customers.googleAds.search'] },
+    // 1.16.0: the structured form.
+    {
+      args: { customer_id: '1234567890', fields: ['campaign.id', 'metrics.clicks'], resource: 'campaign', conditions: ["campaign.status = 'ENABLED'"], orderings: ['metrics.clicks DESC'], limit: 10 },
+      expect: ['googleads.customers.googleAds.search'],
+    },
+  ],
+  ads_resource_metadata: [
+    {
+      args: { resource: 'campaign' },
+      expect: ['googleads.googleAdsFields.search'],
+      respond: (call) => (call.body.query.includes('selectable_with') && !call.body.pageToken ? { results: [{ name: 'metrics.clicks', selectable: true }], nextPageToken: 'p2' } : { results: [] }),
+    },
+  ],
   ads_mutate: [
     { args: { customer_id: '1234567890', operations: [{ campaignOperation: { remove: 'customers/1234567890/campaigns/9' } }] }, expect: ['googleads.customers.googleAds.mutate'] },
     {
@@ -762,7 +776,7 @@ test('every curated tool has a contract row, a skip reason or a known defect, an
   const listed = new Set([...Object.keys(CASES), ...Object.keys(SKIPPED), ...Object.keys(KNOWN_DEFECTS)]);
   assert.deepEqual([...tools.keys()].filter((name) => !listed.has(name)), [], 'curated tools without a row');
   assert.deepEqual([...listed].filter((name) => !tools.has(name)), [], 'rows for tools that do not exist');
-  assert.equal(tools.size, 124, 'the curated tool count; update the table when it changes');
+  assert.equal(tools.size, 125, 'the curated tool count; update the table when it changes');
 });
 
 for (const [name, cases] of Object.entries(CASES)) {

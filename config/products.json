@@ -2720,6 +2720,35 @@
           "version": "v26"
         }
       ],
+      "toolsets": {
+        "google": {
+          "source": [
+            "https://developers.google.com/google-ads/api/docs/developer-toolkit/mcp-server",
+            "https://github.com/googleads/google-ads-mcp"
+          ],
+          "tools": [
+            "ads_list_customers",
+            "ads_search",
+            "ads_resource_metadata"
+          ],
+          "matches": {
+            "ads_list_customers": [
+              "list_accessible_customers"
+            ],
+            "ads_search": [
+              "search"
+            ],
+            "ads_resource_metadata": [
+              "get_resource_metadata"
+            ]
+          },
+          "notes": {
+            "ads_list_customers": "The customer resource names the signed-in user can reach; the digits are the customer_id of the other tools. Google's server exposes it as customers_list_accessible_customers.",
+            "ads_search": "One page of GAQL, at most 500 rows, given as text or as fields, resource, conditions, orderings and limit (Google's structured form, with PARAMETERS omit_unselected_resource_names=true). It calls googleAds:search, not searchStream, and never sends pageSize. Google's server is read-only, so ads_mutate (validate first, then gated changes) is not in this list; it stays in the all and curated toolsets. The manager account is GSM_ADS_LOGIN_CUSTOMER_ID, not a per-call login_customer_id.",
+            "ads_resource_metadata": "The two field queries Google's get_resource_metadata runs (the resource's attributes, then every field selectable with it), as selectable, filterable and sortable name lists."
+          }
+        }
+      },
       "generatedToolCount": 323
     },
     "gmerchant": {

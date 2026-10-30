@@ -2,6 +2,17 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.16.0 - 2026-10-30
+
+### New: Google Ads tools that match Google's Google Ads MCP server
+- `ads_search` (`search`) also takes the query as parts, as Google's server does: `fields`, `resource`, `conditions` (joined with AND), `orderings` and `limit`. The tool writes the SELECT, with `PARAMETERS omit_unselected_resource_names=true`, and returns it with the rows. Field and resource names must be plain GAQL names, and a condition may not hold SELECT, FROM, WHERE, ORDER, LIMIT, PARAMETERS or a semicolon outside a quoted value; both are checked before anything is sent. A query given as text works as before, and `pageSize` is still never sent.
+- `ads_resource_metadata` (`get_resource_metadata`): the fields a resource can select, filter by and sort by, from the two field queries Google's tool runs (the resource's attributes, then every field selectable with it). A read.
+- The `google` toolset of gads: `ads_list_customers`, `ads_search` and `ads_resource_metadata`. Google's server is read-only, so `ads_mutate` is not in it (it stays in `all` and `curated`). Google Ads has no read-only scope: a `readwrite` login with it asks for `adwords`; a `readonly` login covers none of the three, as with `all`.
+
+### Not changed
+- `ads_list_customers` and `ads_mutate`, scopes of the `all` toolset (gads' resolve the same; its login requirements grow by one tool), the gateway, the write gate and the hook. Every other plugin lists the same tools with the same schemas.
+- Not tested against the live Google Ads API (Google's HTTP layer stubbed; the request shapes are checked against Google's Discovery document).
+
 ## 1.15.0 - 2026-10-30
 
 ### New: lean google toolsets for Meet, Tasks and Keep, and Apps Script

@@ -258,6 +258,19 @@ test('requirements: the lean gmeet, gtasks and gapps lists resolve to the narrow
   assert.equal(apps.readwrite.includes('https://mail.google.com/'), false);
 });
 
+test('requirements: the gads google list (3 reads, no gateway) resolves to adwords; adwords has no read-only form', async () => {
+  const { cfg } = tempTokens();
+  const google = await requirementsFor(['gads'], cfg, { ...quiet, toolset: 'google' });
+  assert.deepEqual(toolsOf(google), ['ads_list_customers', 'ads_resource_metadata', 'ads_search']);
+  assert.equal(google.filter((r) => r.gateway).length, 0, 'no api_call in the list, so no gateway method counts');
+  // Google Ads publishes no read-only scope, so a readonly login covers none of the three, as with the all toolset.
+  const readonly = resolveScopes(google, 'readonly');
+  assert.deepEqual(readonly.scopes, []);
+  assert.deepEqual(readonly.uncovered.sort(), ['gads/ads_list_customers', 'gads/ads_resource_metadata', 'gads/ads_search']);
+  assert.deepEqual(resolveScopes(google, 'readwrite').scopes, [G('adwords')]);
+  assert.deepEqual(resolveScopes(google, 'full').scopes, [G('adwords')]);
+});
+
 test('--toolset: parsed for login, scopes and setup-admin; an unknown value is a usage error', () => {
   assert.equal(parseToolset(undefined), undefined);
   assert.equal(parseToolset('Google'), 'google');
