@@ -2,6 +2,19 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.26.1 - 2026-10-30
+
+### Fixed: the terminal sign-in and `gsm scopes` count every tool, as the sign-in from the chat does
+- `npx google-services-mcps login <group>`, `scopes <group>` and `setup-admin` (and `node gsm.mjs ...` in a clone) built each server from `config/products.json` without its hand-written tools and its gateway APIs. In a clone, Gmail counted 88 of its 103 tools and none of its 4 gateway methods, and a `google` toolset made of hand-written tools (Calendar, Chat) counted every tool instead; 49 of the 66 product, toolset and `--with` cases outside the `apikey` group differed from the plugin's own CLI.
+- The npm package was worse: it ships no `data/` folder, so the command found no Discovery snapshot and no API catalog and counted 0 tools for every product. A terminal login from npm asked Google for the email scope only, and `setup-admin` saved 4 of the 34 admin scopes of a `readwrite` setup.
+- Now each server is built from its own plugin folder (`plugins/<id>`: its `servers.json` entry, Discovery snapshots, catalog and tool kinds), the files the plugin's own CLI reads. For every product, toolset (`all`, `google`, `curated`), profile and `--with`, `gsm scopes --json` prints exactly what `plugins/<id>/bin/gsm.mjs scopes` prints, from a clone and from the installed package; `setup-admin` saves the same scopes as the gadmin plugin's CLI.
+- `gsm scopes apikey --json` printed invalid JSON when run from another folder: the command it names (`node "<path>\gsm.mjs"`) was put into the text after the JSON was made, so its quotes and backslashes were not escaped. The command is now part of the text before the JSON is made.
+
+### Not changed
+- What the sign-in from the chat asks for: each plugin's own CLI prints the same `gsm scopes` output as 1.26.0 for every group, toolset and profile (the `apikey` note is now escaped).
+- Every server's tools: `tools/list` of all 23 servers is the same as 1.26.0, and every tool map is unchanged.
+- Product names, groups and labels in `products`, `install` and the other commands.
+
 ## 1.26.0 - 2026-10-30
 
 ### Changed: Discovery snapshots and the API catalog refreshed from Google (2026-10-30)

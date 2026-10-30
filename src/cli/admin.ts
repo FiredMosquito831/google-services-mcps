@@ -7,8 +7,8 @@ import { existsSync, readFileSync, statSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { adminScopeFileFor, readAdminScopeFile, saveAdminScopeFile } from '../core/auth.js';
 import { loadConfig, type RuntimeConfig } from '../core/config.js';
-import type { Registry } from '../core/registry.js';
-import { PROFILE_TEXT, requirementsFor, resolveScopes, type Profile } from '../core/scopes.js';
+import { serverByName, type Registry } from '../core/registry.js';
+import { PROFILE_TEXT, requirementsForSpecs, resolveScopes, type Profile } from '../core/scopes.js';
 import { TOOLSET_TEXT, type Toolset } from '../core/toolset.js';
 import { describeMerge, mergeScopes } from './merge.js';
 import { coverageOf, formatCoverage, selectGroupServers } from './scopes.js';
@@ -59,7 +59,13 @@ export async function runSetupAdmin(req: SetupAdminRequest, reg: Registry, out: 
   const cfg = loadConfig();
   const servers = selectGroupServers(reg, 'workspace-admin', req.servers);
   const toolset = req.toolset ?? cfg.toolset;
-  const requirements = await requirementsFor(servers, cfg, toolset !== 'all' ? { toolset } : {});
+  // The specs of this CLI's registry, as gsm login and gsm scopes take them: in the repository layout each one is built
+  // from its plugin folder (withPluginFolders in products.ts), so the npm package counts what the gadmin plugin counts.
+  const requirements = await requirementsForSpecs(
+    servers.map((name) => serverByName(reg, name)),
+    cfg,
+    toolset !== 'all' ? { toolset } : {},
+  );
   if (toolset !== 'all') out.log(`Toolset ${toolset}: only the tools of this toolset count toward the scopes (${TOOLSET_TEXT[toolset]}).`);
   const resolution = resolveScopes(requirements, req.profile);
   const replace = req.replace === true;

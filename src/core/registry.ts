@@ -6,7 +6,7 @@
  */
 import { existsSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { classifyMethod } from './discovery/methods.js';
 import { loadToolKinds } from './discovery/tools.js';
 import { catalogPath } from './gateway.js';
@@ -61,6 +61,24 @@ export interface ServerSpec {
    */
   scopeOverrides?: Record<string, string[]>;
   label: string;
+  /**
+   * The plugin folder the server is built from (plugins/<id>), set only by the CLI of the repository layout (the
+   * repository's gsm.mjs and the npm package's), which reads every product. The server's Discovery snapshots, gateway
+   * catalog and tool kinds are then read in that folder, as the plugin's own CLI reads them (see pluginModuleUrl).
+   * Absent everywhere else (a plugin's CLI, a server, the bundle): those are found from the module, as before. Never
+   * written to a servers.json.
+   */
+  pluginRoot?: string;
+}
+
+/**
+ * The module URL a server's data is looked up from: its plugin's bin/gsm.mjs, the file the plugin's own CLI runs. Each
+ * lookup that walks up from a module (loadRegistry, resolveDataDir, catalogPath) then finds the plugin's servers.json,
+ * Discovery snapshots, catalog.json and tool-kinds.json, as that CLI does. Undefined for a server without pluginRoot: each
+ * lookup then starts from its own module, as before.
+ */
+export function pluginModuleUrl(spec: Pick<ServerSpec, 'pluginRoot'>): string | undefined {
+  return spec.pluginRoot === undefined ? undefined : pathToFileURL(join(spec.pluginRoot, 'bin', 'gsm.mjs')).href;
 }
 
 /**
@@ -243,11 +261,11 @@ function overridesFor(file: string): Record<string, ToolKind> {
 
 /**
  * The methods the gateway serves for the listed APIs, with the scopes and kind the gateway checks at call time.
- * The catalog is the one the gateway reads: GSM_DATA_DIR, else found by walking up from the module. Reads the
- * catalog only; no Discovery document and no network call.
+ * The catalog is the one the gateway reads: GSM_DATA_DIR, else found by walking up from the module, or from `fromUrl`
+ * when given (a plugin's bin/gsm.mjs, see pluginModuleUrl). Reads the catalog only; no Discovery document and no network call.
  */
-export function gatewayMethodsOf(apis: readonly ApiRef[]): GatewayMethods {
-  const file = catalogPath();
+export function gatewayMethodsOf(apis: readonly ApiRef[], fromUrl?: string): GatewayMethods {
+  const file = catalogPath(fromUrl);
   if (!file) return { file: undefined, methods: [], missingApis: [] };
 
   const catalog = readCatalogApis(file);

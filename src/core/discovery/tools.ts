@@ -494,15 +494,21 @@ export function toolNamesOf(tools: ReadonlyArray<{ name: string }>): string[] {
  * Tools for one server: every method of its discovery APIs plus the list tool.
  * Returns [] for a server without discovery APIs. Missing snapshots are
  * reported on stderr and skipped, so the server still starts. `reserved` holds
- * the names of the server's curated tools (see toolNamesOf).
+ * the names of the server's curated tools (see toolNamesOf). The server map, the snapshots and the tool kinds are
+ * found from this module, or from `fromUrl` when given (a plugin's bin/gsm.mjs, see pluginModuleUrl in registry.ts).
  */
-export async function discoveryToolsFor(serverName: string, cfg: RuntimeConfig, reserved: readonly string[] = []): Promise<ToolDef[]> {
-  const reg = loadRegistry();
+export async function discoveryToolsFor(
+  serverName: string,
+  cfg: RuntimeConfig,
+  reserved: readonly string[] = [],
+  fromUrl?: string,
+): Promise<ToolDef[]> {
+  const reg = loadRegistry(fromUrl);
   const server: ServerSpec = serverByName(reg, serverName);
   const apis = uniqueApis(server.apis ?? []);
   if (apis.length === 0) return [];
 
-  const dataDir = resolveDataDir();
+  const dataDir = resolveDataDir(fromUrl);
   if (!dataDir) {
     process.stderr.write(`[${serverName}] no discovery snapshots found. Run: node scripts/snapshot-discovery.mjs\n`);
     return [];
