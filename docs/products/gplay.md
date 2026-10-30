@@ -25,7 +25,7 @@ node <plugin>/bin/gsm.mjs status
 2. In a Google Cloud project, enable the Google Play Developer API (and the other APIs you use), create a service account and a JSON key, and add the service account's email in Play Console under Users and permissions with the rights you need.
 3. Run `setup-service-account` with the key file (or call `auth_setup_service_account` in the chat). Restart the MCP server (`/mcp`).
 
-The key asks for the scopes of every API gplay carries (since 1.23.1; before, only `androidpublisher`). Each product still decides whether the service account may act: Android Management, Android Enterprise, Chrome Web Store, Wallet, Home Graph and Smart Device Management each need the account set up on their side first. See [SETUP.md](../SETUP.md#google-play-and-merchant-center-gplay-gmerchant). Changes need the plugin option `allow_writes`.
+The key asks for the scopes of every API gplay carries (since 1.23.1; before, only `androidpublisher`), and gplay asks only for those: Merchant Center's `content` is gmerchant's alone (since 1.24.4). Each product still decides whether the service account may act: Android Management, Android Enterprise, Chrome Web Store, Wallet, Home Graph and Smart Device Management each need the account set up on their side first. See [SETUP.md](../SETUP.md#google-play-and-merchant-center-gplay-gmerchant). Changes need the plugin option `allow_writes`.
 
 ## What it can do
 

@@ -1810,7 +1810,7 @@
   },
   {
     "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_pro_loc_ser_exe_3072",
-    "kind": "write",
+    "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"
     ],
@@ -1819,7 +1819,7 @@
   },
   {
     "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_pro_loc_ser_gen_8f53",
-    "kind": "write",
+    "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"
     ],
@@ -1828,7 +1828,7 @@
   },
   {
     "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_pro_loc_ser_gen_cf40",
-    "kind": "write",
+    "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"
     ],
@@ -2309,7 +2309,7 @@
   },
   {
     "name": "mcp__plugin_gfirebase_gfirebase__firebaseru_projects_test",
-    "kind": "write",
+    "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform",
       "https://www.googleapis.com/auth/firebase",

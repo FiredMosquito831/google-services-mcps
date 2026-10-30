@@ -4,7 +4,7 @@ Generative and classic AI APIs: Discovery Engine, Vertex AI, Dialogflow, Vision,
 
 - Plugin: `gai`, MCP server: `gai`, login: Desktop OAuth client, then `login cloud`
 - Install: `claude plugin install gai@google-services-mcps`
-- Tools: 366 total. Curated 12, per-method 350, gateway 3. Read 159, write 149, destructive 57, dynamic 1.
+- Tools: 366 total. Curated 12, per-method 350, gateway 3. Read 162, write 146, destructive 57, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
@@ -20,7 +20,7 @@ The tools that match Google's official MCP server for this product (https://docs
 | `vertex_count_tokens` | `count_tokens` | countTokens on the model, or on an endpoint. Discovery lists only cloud-platform for it. |
 | `vertex_embed_content` | `embed_content` | embedContent on a publisher embedding model, such as gemini-embedding-001. |
 | `discoverye_pro_loc_coll_engi_serv_sear_a054` | `search` | Agent Search (Vertex AI Search) on an engine's serving config: Discovery Engine v1 servingConfigs.search. |
-| `discoverye_proj_loca_coll_engin_servi_answe` | `conversational_search` | Discovery Engine v1 servingConfigs.answer. Google marks it read-only; the classifier counts this POST as a write, so it asks first. Changing that kind is a separate change (D2). |
+| `discoverye_proj_loca_coll_engin_servi_answe` | `conversational_search` | Discovery Engine v1 servingConfigs.answer. Google marks it read-only, and since 1.24.2 (D2) the suite counts it as a read too, so it does not ask. |
 | `discoverye_projec_locati_collec_engine_list` | `list_engines` | The engines (search and chat apps) of a collection. |
 
 ## Curated tools (12)
@@ -107,7 +107,7 @@ The tools that match Google's official MCP server for this product (https://docs
 | `discoverye_proj_loca_coll_engin_conve_delet` | destructive | discoveryengine.projects.locations.collections.engines.conversations.delete | cloud-platform, discoveryengine.readwrite |
 | `discoverye_proj_loca_coll_engin_conve_patch` | write | discoveryengine.projects.locations.collections.engines.conversations.patch | cloud-platform, discoveryengine.readwrite |
 | `discoverye_proj_loca_coll_engin_opera_cance` | destructive | discoveryengine.projects.locations.collections.engines.operations.cancel | cloud-platform, discoveryengine.readwrite |
-| `discoverye_proj_loca_coll_engin_servi_answe` | write | discoveryengine.projects.locations.collections.engines.servingConfigs.answer | cloud-platform, discoveryengine.readwrite |
+| `discoverye_proj_loca_coll_engin_servi_answe` | read | discoveryengine.projects.locations.collections.engines.servingConfigs.answer | cloud-platform, discoveryengine.readwrite |
 | `discoverye_proj_loca_coll_engin_servi_creat` | write | discoveryengine.projects.locations.collections.engines.servingConfigs.create | cloud-platform, discoveryengine.readwrite |
 | `discoverye_proj_loca_coll_engin_servi_delet` | destructive | discoveryengine.projects.locations.collections.engines.servingConfigs.delete | cloud-platform, discoveryengine.readwrite |
 | `discoverye_proj_loca_coll_engin_servi_patch` | write | discoveryengine.projects.locations.collections.engines.servingConfigs.patch | cloud-platform, discoveryengine.readwrite |
@@ -131,7 +131,7 @@ The tools that match Google's official MCP server for this product (https://docs
 | `discoverye_proj_loca_colle_data_schem_creat` | write | discoveryengine.projects.locations.collections.dataStores.schemas.create | cloud-platform, discoveryengine.readwrite |
 | `discoverye_proj_loca_colle_data_schem_delet` | destructive | discoveryengine.projects.locations.collections.dataStores.schemas.delete | cloud-platform, discoveryengine.readwrite |
 | `discoverye_proj_loca_colle_data_schem_patch` | write | discoveryengine.projects.locations.collections.dataStores.schemas.patch | cloud-platform, discoveryengine.readwrite |
-| `discoverye_proj_loca_colle_data_servi_answe` | write | discoveryengine.projects.locations.collections.dataStores.servingConfigs.answer | cloud-platform, discoveryengine.readwrite |
+| `discoverye_proj_loca_colle_data_servi_answe` | read | discoveryengine.projects.locations.collections.dataStores.servingConfigs.answer | cloud-platform, discoveryengine.readwrite |
 | `discoverye_proj_loca_colle_data_servi_creat` | write | discoveryengine.projects.locations.collections.dataStores.servingConfigs.create | cloud-platform, discoveryengine.readwrite |
 | `discoverye_proj_loca_colle_data_servi_delet` | destructive | discoveryengine.projects.locations.collections.dataStores.servingConfigs.delete | cloud-platform, discoveryengine.readwrite |
 | `discoverye_proj_loca_colle_data_servi_patch` | write | discoveryengine.projects.locations.collections.dataStores.servingConfigs.patch | cloud-platform, discoveryengine.readwrite |
@@ -217,7 +217,7 @@ The tools that match Google's official MCP server for this product (https://docs
 | `discoverye_proje_locat_data_s_conver_delete` | destructive | discoveryengine.projects.locations.dataStores.conversations.delete | cloud-platform, discoveryengine.readwrite |
 | `discoverye_proje_locat_data_s_schema_create` | write | discoveryengine.projects.locations.dataStores.schemas.create | cloud-platform, discoveryengine.readwrite |
 | `discoverye_proje_locat_data_s_schema_delete` | destructive | discoveryengine.projects.locations.dataStores.schemas.delete | cloud-platform, discoveryengine.readwrite |
-| `discoverye_proje_locat_data_s_servin_answer` | write | discoveryengine.projects.locations.dataStores.servingConfigs.answer | cloud-platform, discoveryengine.readwrite |
+| `discoverye_proje_locat_data_s_servin_answer` | read | discoveryengine.projects.locations.dataStores.servingConfigs.answer | cloud-platform, discoveryengine.readwrite |
 | `discoverye_proje_locat_data_s_servin_create` | write | discoveryengine.projects.locations.dataStores.servingConfigs.create | cloud-platform, discoveryengine.readwrite |
 | `discoverye_proje_locat_data_s_servin_delete` | destructive | discoveryengine.projects.locations.dataStores.servingConfigs.delete | cloud-platform, discoveryengine.readwrite |
 | `discoverye_proje_locat_data_s_servin_recomm` | write | discoveryengine.projects.locations.dataStores.servingConfigs.recommend | cloud-platform, discoveryengine.readwrite |

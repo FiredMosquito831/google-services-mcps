@@ -4,7 +4,7 @@ Public search and web-quality APIs (Custom Search, PageSpeed, CrUX, Safe Browsin
 
 - Plugin: `gsearch`, MCP server: `gsearch`, login: API key, then `setup-apikey` (no login)
 - Install: `claude plugin install gsearch@google-services-mcps`
-- Tools: 60 total. Curated 9, per-method 47, gateway 3. Read 45, write 11, destructive 3, dynamic 1.
+- Tools: 60 total. Curated 9, per-method 47, gateway 3. Read 46, write 10, destructive 3, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
@@ -18,7 +18,7 @@ The tools that match Google's official MCP server for this product (https://deve
 |---|---|---|
 | `developerk_documents_search_documen` | `search_documents` | Searches Google's developer documentation (Developer Knowledge API searchDocumentChunks): matching chunks with their document names. |
 | `developerk_documents_batch_get` | `get_documents` | The full text of up to 20 documents by name (Developer Knowledge API documents.batchGet), after a search. |
-| `developerk_v1_answer_query` | `answer_query` | A grounded answer about Google developer products (Developer Knowledge API answerQuery). Google marks it read-only; the classifier counts this POST as a write, so it asks first. Changing that kind is a separate change (D2). |
+| `developerk_v1_answer_query` | `answer_query` | A grounded answer about Google developer products (Developer Knowledge API answerQuery). Google marks it read-only, and since 1.24.2 (D2) the suite counts it as a read too, so it does not ask. |
 | `pagespeedo_pagespeedap_runpagespeed` | (none) | No official Google MCP server covers PageSpeed Insights; kept for the Lighthouse scores and Core Web Vitals of a page (PageSpeed Insights API runpagespeed). |
 | `chromeuxre_records_query_record` | (none) | No official Google MCP server covers the Chrome UX Report; kept for real-user Core Web Vitals of an origin or URL (CrUX API records.queryRecord). |
 | `kgsearch_entities_search` | (none) | No official Google MCP server covers the Knowledge Graph; kept to look up an entity by name (Knowledge Graph Search API entities.search). |
@@ -59,7 +59,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `developerk_documents_batch_get` | read | developerknowledge.documents.batchGet | cloud-platform |
 | `developerk_documents_get` | read | developerknowledge.documents.get | cloud-platform |
 | `developerk_documents_search_documen` | read | developerknowledge.documents.searchDocumentChunks | cloud-platform |
-| `developerk_v1_answer_query` | write | developerknowledge.answerQuery | cloud-platform |
+| `developerk_v1_answer_query` | read | developerknowledge.answerQuery | cloud-platform |
 | `digitalass_assetlinks_bulk_check` | write | digitalassetlinks.assetlinks.bulkCheck | (none) |
 | `digitalass_assetlinks_check` | read | digitalassetlinks.assetlinks.check | (none) |
 | `digitalass_statements_list` | read | digitalassetlinks.statements.list | (none) |

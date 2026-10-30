@@ -4,7 +4,7 @@ Google Analytics admin and data APIs for GA4 properties, configuration and repor
 
 - Plugin: `ganalytics`, MCP server: `ganalytics`, login: Desktop OAuth client, then `login business`
 - Install: `claude plugin install ganalytics@google-services-mcps`
-- Tools: 84 total. Curated 14, per-method 66, gateway 3. Read 42, write 31, destructive 10, dynamic 1.
+- Tools: 84 total. Curated 14, per-method 66, gateway 3. Read 44, write 29, destructive 10, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
@@ -105,10 +105,10 @@ The tools that match Google's official MCP server for this product (https://gith
 | `gaadmin_properties_run_access` | read | analyticsadmin.properties.runAccessReport | analytics.edit, analytics.readonly |
 | `gaadmin_properties_update_dat` | write | analyticsadmin.properties.updateDataRetentionSettings | analytics.edit |
 | `gadata_propert_audienc_create` | write | analyticsdata.properties.audienceExports.create | analytics, analytics.readonly |
-| `gadata_propert_audience_query` | write | analyticsdata.properties.audienceExports.query | analytics, analytics.readonly |
+| `gadata_propert_audience_query` | read | analyticsdata.properties.audienceExports.query | analytics, analytics.readonly |
 | `gadata_properti_audience_list` | read | analyticsdata.properties.audienceExports.list | analytics, analytics.readonly |
 | `gadata_propertie_audience_get` | read | analyticsdata.properties.audienceExports.get | analytics, analytics.readonly |
-| `gadata_properties_batch_run_p` | write | analyticsdata.properties.batchRunPivotReports | analytics, analytics.readonly |
+| `gadata_properties_batch_run_p` | read | analyticsdata.properties.batchRunPivotReports | analytics, analytics.readonly |
 | `gadata_properties_batch_run_r` | read | analyticsdata.properties.batchRunReports | analytics, analytics.readonly |
 | `gadata_properties_check_compa` | read | analyticsdata.properties.checkCompatibility | analytics, analytics.readonly |
 | `gadata_properties_get_metadat` | read | analyticsdata.properties.getMetadata | analytics, analytics.readonly |

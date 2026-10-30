@@ -776,7 +776,7 @@
   },
   {
     "name": "mcp__plugin_gai_gai__discoverye_proj_loca_coll_engin_servi_answe",
-    "kind": "write",
+    "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform",
       "https://www.googleapis.com/auth/discoveryengine.readwrite",
@@ -1048,7 +1048,7 @@
   },
   {
     "name": "mcp__plugin_gai_gai__discoverye_proj_loca_colle_data_servi_answe",
-    "kind": "write",
+    "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform",
       "https://www.googleapis.com/auth/discoveryengine.readwrite",
@@ -2018,7 +2018,7 @@
   },
   {
     "name": "mcp__plugin_gai_gai__discoverye_proje_locat_data_s_servin_answer",
-    "kind": "write",
+    "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform",
       "https://www.googleapis.com/auth/discoveryengine.readwrite",

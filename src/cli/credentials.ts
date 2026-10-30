@@ -12,16 +12,17 @@ import {
 } from '../core/accounts.js';
 import {
   ADMIN_SCOPES,
-  SERVICE_ACCOUNT_SCOPES,
   adminScopeFileFor,
   adcSourceFor,
   readAdminScopeFile,
   readServiceAccountFile,
   serviceAccountFileFor,
+  serviceAccountScopesFor,
+  serviceAccountServers,
   serviceAccountSource,
   type AuthKind,
 } from '../core/auth.js';
-import { checkGrant, checkKeyRestrictions, checkServiceAccountGrant, revokeGrant, type GrantDeps, type GrantState } from '../core/grant-check.js';
+import { checkGrant, checkKeyRestrictions, checkServiceAccountServers, revokeGrant, type GrantDeps, type GrantState } from '../core/grant-check.js';
 import { loadConfig, type RuntimeConfig } from '../core/config.js';
 import { ALL_GROUPS, OAUTH_GROUPS, type CliGroup } from './args.js';
 import { backupFile } from './fsutil.js';
@@ -145,7 +146,8 @@ export function runStatus(out: Output, env: NodeJS.ProcessEnv = process.env): nu
       } else {
         out.log(`  key file: ${source.keyFile}`);
       }
-      out.log(`  scopes: ${SERVICE_ACCOUNT_SCOPES.join(', ')}`);
+      // Each server's token asks for its own product's scopes only.
+      for (const server of serviceAccountServers()) out.log(`  scopes for ${server}: ${serviceAccountScopesFor(server).join(', ')}`);
       continue;
     }
 
@@ -213,9 +215,9 @@ const CHECK_LABEL: Record<GrantState, string> = {
 /**
  * `gsm status --check`: asks Google whether each stored login still works, what it grants, and whether the saved API
  * key is restricted. It is the only status that makes network calls. Never prints a token or the key. Exits 1 when a
- * check needs attention.
+ * check needs attention. `deps` builds the service-account client (for the tests).
  */
-export async function runStatusCheck(out: Output, env: NodeJS.ProcessEnv = process.env): Promise<number> {
+export async function runStatusCheck(out: Output, env: NodeJS.ProcessEnv = process.env, deps: GrantDeps = {}): Promise<number> {
   const cfg = loadConfig(env);
   let problems = 0;
   for (const group of OAUTH_GROUPS) {
@@ -258,11 +260,13 @@ export async function runStatusCheck(out: Output, env: NodeJS.ProcessEnv = proce
     out.log('apikey: not set, nothing to check');
   }
 
-  // The service-account group: the key is checked with Google's token endpoint. Play and Merchant access is not checked here.
+  // The service-account group: the key is checked with Google's token endpoint, once per server with that server's own
+  // scopes, so a scope Google refuses for one product shows on that product only. Play and Merchant access is not checked.
   if (serviceAccountSource(cfg)) {
-    const result = await checkServiceAccountGrant(cfg);
-    if (result.state !== 'valid') problems += 1;
-    out.log(`service-account: ${CHECK_LABEL[result.state]}. ${result.detail}`);
+    for (const { server, check } of await checkServiceAccountServers(cfg, deps)) {
+      if (check.state !== 'valid') problems += 1;
+      out.log(`service-account (${server}): ${CHECK_LABEL[check.state]}. ${check.detail}`);
+    }
   } else {
     out.log('service-account: not set up, nothing to check');
   }

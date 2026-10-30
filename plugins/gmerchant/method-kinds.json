@@ -18,7 +18,7 @@
   "merchantapi.accounts.createTestAccount": "write",
   "merchantapi.accounts.dataSources.create": "write",
   "merchantapi.accounts.dataSources.delete": "destructive",
-  "merchantapi.accounts.dataSources.fetch": "read",
+  "merchantapi.accounts.dataSources.fetch": "write",
   "merchantapi.accounts.dataSources.fileUploads.get": "read",
   "merchantapi.accounts.dataSources.get": "read",
   "merchantapi.accounts.dataSources.list": "read",

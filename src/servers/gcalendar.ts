@@ -384,6 +384,8 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       description:
         "Change only the fields given (events.patch; matches update_event in Google's Calendar MCP server). add_attendees and remove_attendees change the guest list and keep the other guests and their responses; attendees, if given, replaces the whole guest list instead. add_meet adds a Google Meet link when the event has none. recurrence and reminders replace the old ones. Invitations go out only if send_updates says so.",
       kind: 'write',
+      // Google's update_event is marked idempotent.
+      idempotent: true,
       scopes: googleScopes('calendar', 'calendar.events'),
       inputSchema: {
         calendar_id: calendarId,
@@ -483,6 +485,8 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       description:
         "Answer an invitation as the signed-in guest: accepted, declined or tentative, with an optional comment (matches respond_to_event in Google's Calendar MCP server). Only your own response changes; the other guests are not sent back. The organizer is emailed only if send_updates says so.",
       kind: 'write',
+      // Google's respond_to_event is marked idempotent.
+      idempotent: true,
       scopes: googleScopes('calendar', 'calendar.events'),
       inputSchema: {
         calendar_id: calendarId,
@@ -524,6 +528,8 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       description:
         "Delete an event from a calendar (matches delete_event in Google's Calendar MCP server). It asks first. Guests are notified only if send_updates says so.",
       kind: 'destructive',
+      // One DELETE (events.delete); Google's delete_event is marked idempotent too.
+      idempotent: true,
       scopes: googleScopes('calendar', 'calendar.events'),
       inputSchema: { calendar_id: calendarId, event_id: eventId, send_updates: sendUpdates },
       async preview({ calendar_id, event_id, send_updates }) {

@@ -2,6 +2,40 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.24.4 - 2026-10-30
+
+### Fixed: each service-account plugin asks for its own scopes only
+- Since 1.23.1 every token of the service-account key asked for 13 scopes, the same for gplay and gmerchant. If Google refused one of gplay's scopes for the key, every token request failed, Merchant Center's included.
+- Now each server asks only for its own product's scopes: gmerchant for `content`, gplay for its 12 (the scopes its methods declare). The lists are generated, as before: `scripts/gen-service-account-scopes.mjs` also writes `SERVICE_ACCOUNT_SCOPES_BY_SERVER` into `src/core/service-account-scopes.ts`, and `serviceAccountScopesFor` (src/core/auth.ts) picks the server's list. The server's name goes with its configuration (runServer sets it). A command for the whole group with no server keeps the union.
+- One client per key file and scope set, so gplay and gmerchant in one process each keep their own token.
+- `gsm status --check` checks the key once per server, each with its own scopes (`service-account (gmerchant): ...`, `service-account (gplay): ...`), and `gsm status` prints each server's list. `gsm health --check` and the `health` tool with `live: true` check the key with the scopes of the server they report.
+
+### Not changed
+- The tools gplay and gmerchant list with a key set up (each server's own list covers exactly the tools it registered before), the tool maps, every other group's login and scopes, the write gate and the hook.
+- Not tested against Google with a real key: the token requests were answered by a stub, which also played Google refusing a gplay scope.
+
+## 1.24.3 - 2026-10-30
+
+### Fixed: every tool lists all four MCP annotation hints
+- Tools listed only `readOnlyHint` and `destructiveHint`, and the sign-in tools only `readOnlyHint`. Every tool now lists the four hints of the MCP schema (2025-11-25), as Google's own MCP servers do: `readOnlyHint`, `destructiveHint`, `idempotentHint` and `openWorldHint`.
+- `readOnlyHint` and `destructiveHint` keep their values. `idempotentHint` is true for every read; for a generated tool that changes something it follows the HTTP verb (`GET`, `PUT` and `DELETE` yes; `POST` and `PATCH` no); a hand-written tool says it only when it calls one `PUT`, `DELETE` or `GET` method, or when the Google tool it matches is marked idempotent. Nineteen hand-written changes are idempotent: the deletes of Calendar, Search Console, Cloud projects and API keys and the admin tools, `sc_site_add`, `sc_sitemap_submit`, `sheets_write_values`, `cloud_apikey_reveal`, `gmail_label`, `gmail_unlabel`, `chat_mark_read`, `chat_mark_unread`, `calendar_update_event` and `calendar_respond`.
+- `openWorldHint` is true for every tool that calls a Google API, and false for the tools that read or change only local data: `api_methods`, `api_search`, `auth_status`, `accounts_list`, `account_set_default`, `auth_setup_client`, `auth_setup_admin` and `auth_setup_service_account`. `health` (with `live: true`), `auth_login` and `account_remove` contact Google's sign-in service, so they are true.
+- The sign-in tools also list `destructiveHint` now: true for `auth_setup_client`, `auth_setup_admin`, `auth_setup_service_account` and `account_remove` (each can replace or remove what is stored here), false for `auth_login` and `account_set_default`.
+
+### Not changed
+- Tool names, titles, descriptions and input schemas of every tool on every server (tools/list of all 23 servers compared before and after, with every annotation left out: identical), the existing `readOnlyHint` and `destructiveHint` values, the tool maps, the write gate and the hook. The hints are not read by the gate.
+
+## 1.24.2 - 2026-10-30
+
+### Fixed: the kinds of thirteen methods match what Google says they do
+- Twelve `POST` methods that Google marks read-only, and that change nothing, were writes here by their names, so they asked first and were hidden with writes off. They are reads now: Data Connect `executeGraphqlRead`, `generateQuery` and `generateSchema`; Firebase Rules `projects.test`; Discovery Engine `servingConfigs.answer` (the method of Google's Agent Search `conversational_search`; all three of its bindings: engines, collection data stores and data stores); Developer Knowledge `answerQuery`; Places `autocomplete`; Analytics Data `batchRunPivotReports` and `audienceExports.query`; Calendar `freebusy.query`. Each id covers every version the catalog carries (Data Connect v1 and v1beta, Discovery Engine v1, v1alpha and v1beta, Developer Knowledge v1 and v1alpha).
+- Merchant API `accounts.dataSources.fetch` was a read by its name (`fetch`), so it ran without a prompt. Google says it fetches and processes the data source's file at once. It is a write now: it asks first, and it is hidden with writes off.
+- The change is data in `config/tool-kinds.json`. The classifier code and the credential rule are not changed: a method with a token, credential, secret, password, authorization or key in its name is still a write, and `getKeyString` stays a write.
+- Tools affected: gfirebase `firebaseda_pro_loc_ser_exe_3072`, `firebaseda_pro_loc_ser_gen_8f53`, `firebaseda_pro_loc_ser_gen_cf40`, `firebaseru_projects_test`; gai `discoverye_proj_loca_coll_engin_servi_answe`, `discoverye_proj_loca_colle_data_servi_answe`, `discoverye_proje_locat_data_s_servin_answer`; gsearch `developerk_v1_answer_query`; gmaps `places_places_autocomplete`; ganalytics `gadata_properties_batch_run_p`, `gadata_propert_audience_query`; gcalendar `calendar_freebusy_query` (now in step with the curated `calendar_freebusy`); gmerchant `merchantap_accoun_data_so_fetch` (write). Through `api_call`, the same methods in the gateway APIs of gai, gfirebase, gsearch and gmerchant.
+
+### Not changed
+- The kind of every other tool and gateway method (all 23 tool maps and gateway tables compared), the scopes of every login profile and toolset, the write gate and the hook. Left as they are, for a later decision: Search Console `searchanalytics.query`, the Monitoring Prometheus queries, BigQuery `jobs.query` and the Postmaster `domainStats` queries.
+
 ## 1.24.1 - 2026-10-30
 
 ### Fixed: gbusiness tools ask for business.manage

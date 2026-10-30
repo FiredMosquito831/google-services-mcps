@@ -506,7 +506,7 @@
   },
   {
     "name": "mcp__plugin_gcalendar_gcalendar__calendar_freebusy_query",
-    "kind": "write",
+    "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/calendar",
       "https://www.googleapis.com/auth/calendar.events.freebusy",

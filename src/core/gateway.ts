@@ -809,6 +809,9 @@ export function gatewayTools(input: GatewayInput): ToolDef[] {
       title: TOOL_TEXT.search.title,
       description: TOOL_TEXT.search.description,
       kind: 'read',
+      // It searches the catalog in the plugin folder and sends nothing to Google. api_describe can fetch a Discovery
+      // document from Google, and api_call calls the API, so both keep openWorld true.
+      openWorld: false,
       inputSchema: searchShape,
       handler: async (args: SearchArgs) => runSearch(core, args),
     },

@@ -4,7 +4,7 @@ Firebase management, App Check, App Distribution, Crashlytics, Hosting, Data Con
 
 - Plugin: `gfirebase`, MCP server: `gfirebase`, login: Desktop OAuth client, then `login developer`
 - Install: `claude plugin install gfirebase@google-services-mcps`
-- Tools: 315 total. Curated 14, per-method 297, gateway 3. Read 143, write 127, destructive 44, dynamic 1.
+- Tools: 315 total. Curated 14, per-method 297, gateway 3. Read 147, write 123, destructive 44, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
@@ -29,7 +29,7 @@ The tools that match Google's official MCP server for this product (https://gith
 | `firebase_proje_andro_sha_create` | `firebase_create_android_sha` |  |
 | `firebaseru_project_release_list` | `firebase_get_security_rules` | The rules releases of a project; with firebaseru_project_rulesets_get it gives the rules source, as Google's tool does. Realtime Database rules are not covered (no API here). |
 | `firebaseru_project_rulesets_get` | `firebase_get_security_rules` |  |
-| `firebaseru_projects_test` | `firebase_validate_security_rules` | Checks a rules source. Google marks it read-only; the classifier counts this POST as a write, so it asks first. Changing that kind is a separate change (D2). |
+| `firebaseru_projects_test` | `firebase_validate_security_rules` | Checks a rules source. Google marks it read-only, and since 1.24.2 (D2) the suite counts it as a read too, so it does not ask. |
 | `firebaseap_proj_loca_backe_list` | `apphosting_list_backends` |  |
 | `firebaseap_proj_locat_backe_get` | `apphosting_fetch_logs` | The backend and its state. Google's tool also reads its build and run logs, which are Cloud Logging: use the gcloud server's logging_entries_list. |
 | `firebasecr_proje_apps_issue_get` | `crashlytics_get_issue` |  |
@@ -45,9 +45,9 @@ The tools that match Google's official MCP server for this product (https://gith
 | `firebaseda_pro_loc_ser_sch_list` | `dataconnect_list_services` | The schemas of a Data Connect service; Google's list_services returns them with the services. |
 | `firebaseda_pro_loc_ser_con_list` | `dataconnect_list_services` | The connectors of a Data Connect service; Google's list_services returns them with the services. |
 | `firebaseda_pro_loc_ser_exe_1fce` | `dataconnect_execute_graphql` | Runs any GraphQL operation, mutations too. A write, so it asks first. |
-| `firebaseda_pro_loc_ser_exe_3072` | `dataconnect_execute_graphql_read` | Runs a GraphQL query. Google marks it read-only; the classifier counts this POST as a write, so it asks first. Changing that kind is a separate change (D2). |
-| `firebaseda_pro_loc_ser_gen_8f53` | `dataconnect_generate_query` | Writes a GraphQL query from a prompt. Google marks it read-only; the classifier counts this POST as a write, so it asks first (D2). |
-| `firebaseda_pro_loc_ser_gen_cf40` | `dataconnect_generate_schema` | Writes a Data Connect schema from a prompt. Google marks it read-only; the classifier counts this POST as a write, so it asks first (D2). |
+| `firebaseda_pro_loc_ser_exe_3072` | `dataconnect_execute_graphql_read` | Runs a GraphQL query. Google marks it read-only, and since 1.24.2 (D2) the suite counts it as a read too, so it does not ask. |
+| `firebaseda_pro_loc_ser_gen_8f53` | `dataconnect_generate_query` | Writes a GraphQL query from a prompt. Google marks it read-only, and since 1.24.2 (D2) the suite counts it as a read too, so it does not ask. |
+| `firebaseda_pro_loc_ser_gen_cf40` | `dataconnect_generate_schema` | Writes a Data Connect schema from a prompt. Google marks it read-only, and since 1.24.2 (D2) the suite counts it as a read too, so it does not ask. |
 | `fcm_projects_messages_send` | `messaging_send_message` | Sends a push message to a device or topic. Destructive here (it cannot be taken back), so it asks twice. |
 | `firestore_get_document` | `firestore_get_document` | Firestore is a gcloud API in this suite; this curated tool reads one document here. Fields come back as plain JSON. |
 | `firestore_list_documents` | `firestore_list_documents` |  |
@@ -255,9 +255,9 @@ The tools that match Google's official MCP server for this product (https://gith
 | `firebaseda_pro_loc_ser_con_patc` | write | firebasedataconnect.projects.locations.services.connectors.patch | cloud-platform |
 | `firebaseda_pro_loc_ser_conn_get` | read | firebasedataconnect.projects.locations.services.connectors.get | cloud-platform |
 | `firebaseda_pro_loc_ser_exe_1fce` | write | firebasedataconnect.projects.locations.services.executeGraphql | cloud-platform |
-| `firebaseda_pro_loc_ser_exe_3072` | write | firebasedataconnect.projects.locations.services.executeGraphqlRead | cloud-platform |
-| `firebaseda_pro_loc_ser_gen_8f53` | write | firebasedataconnect.projects.locations.services.generateQuery | cloud-platform |
-| `firebaseda_pro_loc_ser_gen_cf40` | write | firebasedataconnect.projects.locations.services.generateSchema | cloud-platform |
+| `firebaseda_pro_loc_ser_exe_3072` | read | firebasedataconnect.projects.locations.services.executeGraphqlRead | cloud-platform |
+| `firebaseda_pro_loc_ser_gen_8f53` | read | firebasedataconnect.projects.locations.services.generateQuery | cloud-platform |
+| `firebaseda_pro_loc_ser_gen_cf40` | read | firebasedataconnect.projects.locations.services.generateSchema | cloud-platform |
 | `firebaseda_pro_loc_ser_pos_0946` | read | firebasedataconnect.projects.locations.services.postgrest.rpc.postgrestQueryFunction | cloud-platform |
 | `firebaseda_pro_loc_ser_pos_257a` | write | firebasedataconnect.projects.locations.services.postgrest.postgrestUpsert | cloud-platform |
 | `firebaseda_pro_loc_ser_pos_34c4` | write | firebasedataconnect.projects.locations.services.postgrest.postgrestInsert | cloud-platform |
@@ -308,7 +308,7 @@ The tools that match Google's official MCP server for this product (https://gith
 | `firebaseru_project_releases_get` | read | firebaserules.projects.releases.get | cloud-platform, firebase |
 | `firebaseru_project_ruleset_list` | read | firebaserules.projects.rulesets.list | cloud-platform, firebase |
 | `firebaseru_project_rulesets_get` | read | firebaserules.projects.rulesets.get | cloud-platform, firebase |
-| `firebaseru_projects_test` | write | firebaserules.projects.test | cloud-platform, firebase |
+| `firebaseru_projects_test` | read | firebaserules.projects.test | cloud-platform, firebase |
 | `firebasest_projec_bucket_add_fi` | write | firebasestorage.projects.buckets.addFirebase | cloud-platform, firebase |
 | `firebasest_projec_bucket_remove` | write | firebasestorage.projects.buckets.removeFirebase | cloud-platform, firebase |
 | `firebasest_projec_defaul_create` | write | firebasestorage.projects.defaultBucket.create | cloud-platform, firebase |

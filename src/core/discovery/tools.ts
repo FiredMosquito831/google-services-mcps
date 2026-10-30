@@ -36,6 +36,12 @@ export const LIST_METHODS_SUFFIX = 'api_methods';
  */
 const RESERVED_ARGS = ['confirm'];
 
+/**
+ * HTTP verbs whose repeat has no further effect (RFC 9110 section 9.2.2), for the idempotentHint of a generated tool.
+ * Not the retry rule of http.ts, which repeats a request only when it is safe to.
+ */
+const IDEMPOTENT_VERBS: ReadonlySet<string> = new Set(['GET', 'HEAD', 'OPTIONS', 'PUT', 'DELETE']);
+
 type HttpMethodName = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'HEAD' | 'OPTIONS';
 
 export interface ToolKindsFile {
@@ -345,6 +351,9 @@ function buildMethodTool(
     // The method's own scope list from the Discovery document (any one of them grants it). When the document lists none,
     // the product's declared scopes for that API (scopeOverrides), if it has them.
     scopes: m.scopes.length > 0 ? [...m.scopes] : scopesWhenNone?.length ? [...scopesWhenNone] : undefined,
+    // The idempotentHint: a read changes nothing; otherwise the HTTP verb says it (GET, PUT and DELETE are idempotent,
+    // POST and PATCH are not). A hint only: the kind decides the gate.
+    idempotent: m.kind === 'read' || IDEMPOTENT_VERBS.has(m.httpMethod),
     inputSchema: shape,
     async handler(args, ctx) {
       const req = buildRequest(plan, args as Record<string, unknown>);
@@ -387,6 +396,8 @@ function buildListTool(name: string, serverName: string, rows: ListRow[]): ToolD
     title: `${serverName}: API methods`,
     description: `List the ${rows.length} generated API methods of ${serverName}: method id, tool name, HTTP verb, safety kind and description. Pass contains to filter by text.`,
     kind: 'read',
+    // It lists the server's own generated tools and sends nothing to Google.
+    openWorld: false,
     inputSchema: {
       contains: z
         .string()

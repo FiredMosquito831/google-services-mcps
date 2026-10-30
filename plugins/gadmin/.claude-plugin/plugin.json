@@ -1,7 +1,7 @@
 {
   "name": "gadmin",
   "displayName": "Workspace Admin",
-  "version": "1.24.1",
+  "version": "1.24.4",
   "description": "Google Workspace administration: Cloud Identity, Chrome management and policy, Groups Settings, licensing, reports, alerts, Vault, reseller and Cloud Search admin.",
   "author": {
     "name": "FiredMosquito831"

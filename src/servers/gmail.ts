@@ -822,6 +822,8 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       description:
         "Add labels to a whole thread (thread_id) or to one message (message_id) (matches label_thread and label_message in Google's Gmail MCP server). Labels by id or by name; names are looked up in the label list, in any case. System labels: INBOX, STARRED, UNREAD, IMPORTANT and the CATEGORY_* ids. Moving to Trash or Spam is not done here: use gmail_trash. Find label ids and names with gmail_list_labels.",
       kind: 'write',
+      // Google's label_thread and label_message are marked idempotent: a label already there is not added twice.
+      idempotent: true,
       scopes: googleScopes('https://mail.google.com/', 'gmail.modify'),
       inputSchema: {
         thread_id: z.string().optional().describe('The thread to label (all its messages). Give this or message_id.'),
@@ -838,6 +840,8 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       description:
         "Remove labels from a whole thread (thread_id) or from one message (message_id) (matches unlabel_thread and unlabel_message in Google's Gmail MCP server). Labels by id or by name. Removing INBOX archives; removing UNREAD marks as read; removing SPAM marks as not spam. Taking mail out of Trash is gmail_untrash.",
       kind: 'write',
+      // Google's unlabel_thread and unlabel_message are marked idempotent.
+      idempotent: true,
       scopes: googleScopes('https://mail.google.com/', 'gmail.modify'),
       inputSchema: {
         thread_id: z.string().optional().describe('The thread to change (all its messages). Give this or message_id.'),

@@ -950,8 +950,8 @@ test("the gsearch google list: Google's three Developer Knowledge tools, and a l
     assert.match(google.notes[tool], /^No official Google MCP server covers/, tool);
   }
   const kindOf = (tool) => readJson('plugins', 'gsearch', 'tool-map.json').find((t) => t.name === `mcp__plugin_gsearch_gsearch__${tool}`).kind;
-  // answerQuery is a POST the classifier counts as a write (D2); every other tool of the list is a read.
-  for (const tool of SEARCH_GOOGLE) assert.equal(kindOf(tool), tool === 'developerk_v1_answer_query' ? 'write' : 'read', tool);
+  // answerQuery is a POST that Google marks read-only, and a read here since D2 (1.24.2): every tool of the list is a read.
+  for (const tool of SEARCH_GOOGLE) assert.equal(kindOf(tool), 'read', tool);
   assert.match(google.notes.developerk_v1_answer_query, /D2/);
 });
 
@@ -1022,7 +1022,7 @@ test('runServer: google on gtm, gyoutube and gbusiness lists the lean list and t
   }
 });
 
-test("the gmerchant google list covers the 13 tools of Google's Merchant API MCP server; fetch_data_source keeps today's kind", () => {
+test("the gmerchant google list covers the 13 tools of Google's Merchant API MCP server; fetch_data_source is a write (D2)", () => {
   const google = readJson('config', 'products.json').products.gmerchant.toolsets.google;
   assert.deepEqual(google.tools, MERCHANT_GOOGLE);
   assert.equal(google.source, 'https://developers.google.com/merchant/api/guides/agentic-tools/merchant-data-mcp');
@@ -1036,10 +1036,12 @@ test("the gmerchant google list covers the 13 tools of Google's Merchant API MCP
   assert.equal(official.size, 13);
   const kindOf = (tool) => readJson('plugins', 'gmerchant', 'tool-map.json').find((t) => t.name === `mcp__plugin_gmerchant_gmerchant__${tool}`).kind;
   assert.equal(kindOf('merchantap_accoun_data_s_create'), 'write');
-  // Google says fetch triggers processing; the classifier counts it as a read. Changing that is item D2, not this list.
-  assert.equal(kindOf('merchantap_accoun_data_so_fetch'), 'read');
+  // Google says fetch triggers processing, so it is a write here since D2 (1.24.2), and it asks first.
+  assert.equal(kindOf('merchantap_accoun_data_so_fetch'), 'write');
   assert.match(google.notes.merchantap_accoun_data_so_fetch, /triggers processing/);
-  for (const tool of MERCHANT_GOOGLE.filter((t) => t !== 'merchantap_accoun_data_s_create')) assert.equal(kindOf(tool), 'read', tool);
+  assert.match(google.notes.merchantap_accoun_data_so_fetch, /D2/);
+  const writes = ['merchantap_accoun_data_s_create', 'merchantap_accoun_data_so_fetch'];
+  for (const tool of MERCHANT_GOOGLE.filter((t) => !writes.includes(t))) assert.equal(kindOf(tool), 'read', tool);
 });
 
 test('runServer: google on gmerchant (service account key) lists its 13 tools and the runtime tools, with the same schemas as all', async () => {

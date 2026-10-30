@@ -496,6 +496,8 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       description:
         "Write values into a range of a Google Sheet (matches update_values and update_formulas in Google's Sheets MCP server). value_input says how they are read, and must be given: data stores them as given (RAW: \"=A1+B1\" stays text, \"1/2\" stays text), formulas parses them as if typed (USER_ENTERED: formulas, numbers and dates). values is a list of rows; null leaves a cell as it is, \"\" empties it. It overwrites the cells of the range.",
       kind: 'write',
+      // One PUT (spreadsheets.values.update), idempotent as the generated tools' PUT methods are.
+      idempotent: true,
       scopes: googleScopes('drive', 'drive.file', 'spreadsheets'),
       inputSchema: {
         spreadsheet_id: spreadsheetId,

@@ -51,5 +51,18 @@
   "sheets.spreadsheets.values.batchClear": "destructive",
   "sheets.spreadsheets.values.batchClearByDataFilter": "destructive",
   "people.people.batchDeleteContacts": "destructive",
-  "cloudbilling.organizations.billingAccounts.move": "write"
+  "cloudbilling.organizations.billingAccounts.move": "write",
+  "firebasedataconnect.projects.locations.services.executeGraphqlRead": "read",
+  "firebasedataconnect.projects.locations.services.generateQuery": "read",
+  "firebasedataconnect.projects.locations.services.generateSchema": "read",
+  "firebaserules.projects.test": "read",
+  "discoveryengine.projects.locations.collections.engines.servingConfigs.answer": "read",
+  "discoveryengine.projects.locations.collections.dataStores.servingConfigs.answer": "read",
+  "discoveryengine.projects.locations.dataStores.servingConfigs.answer": "read",
+  "developerknowledge.answerQuery": "read",
+  "places.places.autocomplete": "read",
+  "analyticsdata.properties.batchRunPivotReports": "read",
+  "analyticsdata.properties.audienceExports.query": "read",
+  "calendar.freebusy.query": "read",
+  "merchantapi.accounts.dataSources.fetch": "write"
 }

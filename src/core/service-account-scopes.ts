@@ -23,3 +23,27 @@ export const SERVICE_ACCOUNT_KEY_SCOPES: readonly string[] = [
   'https://www.googleapis.com/auth/sdm.service',
   'https://www.googleapis.com/auth/wallet_object.issuer',
 ];
+
+/**
+ * The same lists per server of the group (serviceAccountScopesFor in src/core/auth.ts): a server's token asks for its
+ * own product's scopes only, so a scope Google refuses for one product does not stop the other.
+ */
+export const SERVICE_ACCOUNT_SCOPES_BY_SERVER: Readonly<Record<string, readonly string[]>> = {
+  gmerchant: [
+    'https://www.googleapis.com/auth/content',
+  ],
+  gplay: [
+    'https://www.googleapis.com/auth/androidenterprise',
+    'https://www.googleapis.com/auth/androidmanagement',
+    'https://www.googleapis.com/auth/androidpublisher',
+    'https://www.googleapis.com/auth/chromewebstore',
+    'https://www.googleapis.com/auth/chromewebstore.readonly',
+    'https://www.googleapis.com/auth/drive.appdata',
+    'https://www.googleapis.com/auth/games',
+    'https://www.googleapis.com/auth/homegraph',
+    'https://www.googleapis.com/auth/playdeveloperreporting',
+    'https://www.googleapis.com/auth/playintegrity',
+    'https://www.googleapis.com/auth/sdm.service',
+    'https://www.googleapis.com/auth/wallet_object.issuer',
+  ],
+};

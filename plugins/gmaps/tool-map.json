@@ -142,7 +142,7 @@
   },
   {
     "name": "mcp__plugin_gmaps_gmaps__places_places_autocomplete",
-    "kind": "write",
+    "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform",
       "https://www.googleapis.com/auth/maps-platform.places",

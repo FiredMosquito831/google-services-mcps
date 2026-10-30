@@ -46,8 +46,17 @@ The gate needs to know whether a call changes data. For generated and gateway to
 - A `POST` is a read when its name starts with one of these: `get`, `list`, `search`, `batchGet`, `lookup`, `check`, `validate`, `inspect`, `fetch`, `download`, `describe`, `preview`, `analyze`, `detect`, `evaluate`. Or when its name is one of these exact names: `queryRecord`, `queryHistoryRecord`, `getIamPolicy`, `testIamPermissions`, `runReport`, `runRealtimeReport`, `runPivotReport`, `batchRunReports`, `runAccessReport`, `queryAuditLogs`.
 - Anything else is a write.
 - `config/tool-kinds.json` overrides any method by its full id. A dynamic override is decided per call.
+- Since 1.24.2 it lists as reads twelve `POST` methods that Google marks read-only and that change nothing: Data Connect `executeGraphqlRead`, `generateQuery` and `generateSchema`, Firebase Rules `projects.test`, the three bindings of Discovery Engine `servingConfigs.answer`, Developer Knowledge `answerQuery`, Places `autocomplete`, Analytics Data `batchRunPivotReports` and `audienceExports.query`, and Calendar `freebusy.query`. It lists Merchant API `accounts.dataSources.fetch` as a write, because Google says it starts processing the data source's file. A credential name stays a write.
 
 The read rule for `POST` is a name prefix. It is not a check of what the method does. See the first known limit below.
+
+### Annotation hints
+
+Since 1.24.3 every tool lists the four MCP annotation hints. They are hints for the client: the gate and the hook decide from the kind only.
+
+- `readOnlyHint` is true for a read. `destructiveHint` is true for a destructive tool and for a tool decided per call (`api_call`, the Google Ads mutate tools), as before.
+- `idempotentHint` (a second identical call has no further effect) is true for every read. For a generated tool that is not a read, it follows the HTTP verb: `GET`, `PUT` and `DELETE` yes, `POST` and `PATCH` no. A hand-written tool says it only when it calls one `PUT`, `DELETE` or `GET` method, or when the Google MCP tool it matches is marked idempotent (the Gmail label tools, the Chat read-state tools, the Calendar update and respond tools). Every other change is marked not idempotent.
+- `openWorldHint` is true for every tool that calls a Google API. It is false for `api_methods` and `api_search` (they read the plugin's own data), `auth_status`, `accounts_list`, `account_set_default`, `auth_setup_client`, `auth_setup_admin` and `auth_setup_service_account` (they read or change this machine's sign-in only). `health` (with `live: true`), `auth_login` and `account_remove` contact Google's sign-in service, so they are true.
 
 ## What Google enforces regardless of this plugin
 
