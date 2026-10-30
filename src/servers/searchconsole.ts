@@ -242,6 +242,8 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       title: 'Add Search Console property',
       description: 'Add a property to this account. Adding does not verify ownership; verification still applies.',
       kind: 'write',
+      // One PUT (sites.add), idempotent as the generated tools' PUT methods are.
+      idempotent: true,
       scopes: googleScopes('webmasters'),
       inputSchema: { site_url: siteUrlArg },
       async handler({ site_url }) {
@@ -255,6 +257,8 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       title: 'Submit sitemap',
       description: 'Submit or resubmit a sitemap for a property.',
       kind: 'write',
+      // One PUT (sitemaps.submit), idempotent as the generated tools' PUT methods are.
+      idempotent: true,
       scopes: googleScopes('webmasters'),
       inputSchema: { site_url: siteUrlArg, feedpath: feedpathArg },
       async handler({ site_url, feedpath }) {
@@ -271,6 +275,8 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       description:
         'Remove a property from this account. Its Search Console data and history can no longer be accessed through this account.',
       kind: 'destructive',
+      // One DELETE (sites.delete), idempotent as the generated tools' DELETE methods are.
+      idempotent: true,
       scopes: googleScopes('webmasters'),
       inputSchema: { site_url: siteUrlArg },
       preview: ({ site_url }) => ({
@@ -289,6 +295,8 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       title: 'Delete sitemap',
       description: 'Remove a sitemap from Search Console. The sitemap file on the site is not touched.',
       kind: 'destructive',
+      // One DELETE (sitemaps.delete), idempotent as the generated tools' DELETE methods are.
+      idempotent: true,
       scopes: googleScopes('webmasters'),
       inputSchema: { site_url: siteUrlArg, feedpath: feedpathArg },
       preview: ({ site_url, feedpath }) => ({

@@ -2,6 +2,17 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.24.3 - 2026-10-30
+
+### Fixed: every tool lists all four MCP annotation hints
+- Tools listed only `readOnlyHint` and `destructiveHint`, and the sign-in tools only `readOnlyHint`. Every tool now lists the four hints of the MCP schema (2025-11-25), as Google's own MCP servers do: `readOnlyHint`, `destructiveHint`, `idempotentHint` and `openWorldHint`.
+- `readOnlyHint` and `destructiveHint` keep their values. `idempotentHint` is true for every read; for a generated tool that changes something it follows the HTTP verb (`GET`, `PUT` and `DELETE` yes; `POST` and `PATCH` no); a hand-written tool says it only when it calls one `PUT`, `DELETE` or `GET` method, or when the Google tool it matches is marked idempotent. Nineteen hand-written changes are idempotent: the deletes of Calendar, Search Console, Cloud projects and API keys and the admin tools, `sc_site_add`, `sc_sitemap_submit`, `sheets_write_values`, `cloud_apikey_reveal`, `gmail_label`, `gmail_unlabel`, `chat_mark_read`, `chat_mark_unread`, `calendar_update_event` and `calendar_respond`.
+- `openWorldHint` is true for every tool that calls a Google API, and false for the tools that read or change only local data: `api_methods`, `api_search`, `auth_status`, `accounts_list`, `account_set_default`, `auth_setup_client`, `auth_setup_admin` and `auth_setup_service_account`. `health` (with `live: true`), `auth_login` and `account_remove` contact Google's sign-in service, so they are true.
+- The sign-in tools also list `destructiveHint` now: true for `auth_setup_client`, `auth_setup_admin`, `auth_setup_service_account` and `account_remove` (each can replace or remove what is stored here), false for `auth_login` and `account_set_default`.
+
+### Not changed
+- Tool names, titles, descriptions and input schemas of every tool on every server (tools/list of all 23 servers compared before and after, with every annotation left out: identical), the existing `readOnlyHint` and `destructiveHint` values, the tool maps, the write gate and the hook. The hints are not read by the gate.
+
 ## 1.24.2 - 2026-10-30
 
 ### Fixed: the kinds of thirteen methods match what Google says they do

@@ -101,6 +101,64 @@ export interface ToolDef<A extends ZodRawShape = ZodRawShape> {
    * (withOrigin in toolset.ts). The curated toolset reads it. Never shown to the client.
    */
   origin?: ToolOrigin;
+  /**
+   * The idempotentHint annotation: true when a second call with the same arguments has no further effect on Google's
+   * data. Unset, it is true for a read and false otherwise. A hint for the client only; the gate never reads it.
+   */
+  idempotent?: boolean;
+  /**
+   * The openWorldHint annotation: false for a tool that reads only local data and sends nothing to Google. Unset, it is
+   * true: the tool calls a Google API. A hint for the client only; the gate never reads it.
+   */
+  openWorld?: boolean;
+}
+
+/** The four MCP tool annotation hints (schema 2025-11-25): readOnlyHint, destructiveHint, idempotentHint, openWorldHint. */
+export interface ToolHints {
+  readOnlyHint: boolean;
+  destructiveHint: boolean;
+  idempotentHint: boolean;
+  openWorldHint: boolean;
+}
+
+/**
+ * The annotations of a tool from a server's buildTools. readOnlyHint and destructiveHint follow the kind, as before
+ * 1.24.3 (a dynamic tool may delete, so it is marked destructive); idempotentHint and openWorldHint come from the tool's
+ * declaration, else from its kind (see ToolDef). The kind alone decides what the gate does; these are hints.
+ */
+export function toolAnnotations(tool: Pick<ToolDef, 'kind' | 'idempotent' | 'openWorld'>): ToolHints {
+  return {
+    readOnlyHint: tool.kind === 'read',
+    destructiveHint: tool.kind === 'destructive' || tool.kind === 'dynamic',
+    idempotentHint: tool.idempotent ?? tool.kind === 'read',
+    openWorldHint: tool.openWorld ?? true,
+  };
+}
+
+/**
+ * The annotations of the runtime tools runServer adds. Each one manages this machine's sign-in. openWorldHint is true
+ * for the three that can send a request to Google: health (with live: true it asks Google whether the login works),
+ * auth_login (the sign-in at Google) and account_remove (the revoke at Google). destructiveHint is true where a call can
+ * remove or replace what is stored here: a saved client (force), an admin setup (replace), a service account setup
+ * (remove), an account.
+ */
+export const RUNTIME_TOOL_HINTS: Readonly<Record<string, ToolHints>> = {
+  health: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: true },
+  auth_status: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
+  accounts_list: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
+  auth_setup_client: { readOnlyHint: false, destructiveHint: true, idempotentHint: true, openWorldHint: false },
+  auth_login: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: true },
+  account_set_default: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: false },
+  account_remove: { readOnlyHint: false, destructiveHint: true, idempotentHint: true, openWorldHint: true },
+  auth_setup_admin: { readOnlyHint: false, destructiveHint: true, idempotentHint: true, openWorldHint: false },
+  auth_setup_service_account: { readOnlyHint: false, destructiveHint: true, idempotentHint: true, openWorldHint: false },
+};
+
+/** The hints of one runtime tool. A name missing from the table is a programming error, so it throws at start. */
+function runtimeHints(name: string): ToolHints {
+  const hints = RUNTIME_TOOL_HINTS[name];
+  if (!hints) throw new Error(`No annotation hints for the runtime tool ${name}`);
+  return { ...hints };
 }
 
 /** Wraps a tool definition as the model should see it: a typed schema and the same descriptions. */
@@ -322,10 +380,7 @@ export async function runServer(opts: {
           title: tool.title,
           description: tool.description,
           inputSchema: withAccountArgument(tool.inputSchema),
-          annotations: {
-            readOnlyHint: tool.kind === 'read',
-            destructiveHint: tool.kind === 'destructive' || tool.kind === 'dynamic',
-          },
+          annotations: toolAnnotations(tool),
         },
         async (rawArgs: Record<string, unknown>): Promise<CallToolResult> => {
           try {
@@ -432,7 +487,7 @@ export async function runServer(opts: {
           path: z.string().describe('Full path of the Desktop OAuth client JSON file.'),
           force: z.boolean().optional().describe('Replace a client file that is already saved.'),
         },
-        annotations: { readOnlyHint: false },
+        annotations: runtimeHints('auth_setup_client'),
       },
       async (rawArgs: Record<string, unknown>): Promise<CallToolResult> => {
         const args = ['setup-client', String(rawArgs.path)];
@@ -479,7 +534,7 @@ export async function runServer(opts: {
               'oauth only: the email of the Google account to sign in. Google preselects it, and the scopes that account already holds for the other servers of this group are kept. Without it, the sign-in asks only for this server\'s scopes, and it saves nothing when that would take scopes away from an account already signed in here (auth_status then says to try again with account).',
             ),
         },
-        annotations: { readOnlyHint: false },
+        annotations: runtimeHints('auth_login'),
       },
       async (rawArgs: Record<string, unknown>): Promise<CallToolResult> => {
         if (rawArgs.method !== 'oauth' && rawArgs.method !== 'adc') return text(signInChoice());
@@ -500,7 +555,7 @@ export async function runServer(opts: {
         title: 'Sign-in status',
         description:
           'Says whether this server is signed in to Google, and what a sign-in in progress is doing. Call it after approving a sign-in: the tools load then, without a restart.',
-        annotations: { readOnlyHint: true },
+        annotations: runtimeHints('auth_status'),
       },
       async (): Promise<CallToolResult> => {
         // A sign-in made in a terminal is seen here too: the tokens are read again, not taken from this process's memory.
@@ -531,7 +586,7 @@ export async function runServer(opts: {
           path: z.string().optional().describe('Full path of the service account JSON key file.'),
           remove: z.boolean().optional().describe('Forget the stored setup. The key file is not deleted.'),
         },
-        annotations: { readOnlyHint: false },
+        annotations: runtimeHints('auth_setup_service_account'),
       },
       async (rawArgs: Record<string, unknown>): Promise<CallToolResult> => {
         if (rawArgs.remove === true) {
@@ -555,7 +610,7 @@ export async function runServer(opts: {
         title: 'Service account status',
         description:
           'Says whether this server has a service account key set up, and which account it is. After auth_setup_service_account the tools of this server load without a restart.',
-        annotations: { readOnlyHint: true },
+        annotations: runtimeHints('auth_status'),
       },
       async (): Promise<CallToolResult> => {
         const before = registered.size;
@@ -579,7 +634,7 @@ export async function runServer(opts: {
         title: 'Signed-in accounts',
         description:
           'Lists the Google accounts signed in for this server, which one is the default, and how many scopes each has. Names only: no token is shown.',
-        annotations: { readOnlyHint: true },
+        annotations: runtimeHints('accounts_list'),
       },
       async (): Promise<CallToolResult> => {
         const accounts = listAccounts(group as string, cfg);
@@ -603,7 +658,7 @@ export async function runServer(opts: {
         description:
           'Makes one signed-in account the default for this server. A call without an account argument uses the default.',
         inputSchema: { email: z.string().describe('The signed-in account to make the default.') },
-        annotations: { readOnlyHint: false },
+        annotations: runtimeHints('account_set_default'),
       },
       async (rawArgs: Record<string, unknown>): Promise<CallToolResult> => {
         try {
@@ -621,7 +676,7 @@ export async function runServer(opts: {
         description:
           "Removes one account of this server's group from this machine. It is also revoked at Google, unless the same account is signed in here for another group: Google's revocation ends every sign-in of that account with this OAuth client, so then only the local token is removed, and the answer says how to revoke it everywhere. Other accounts are not touched.",
         inputSchema: { email: z.string().describe('The account to remove.') },
-        annotations: { readOnlyHint: false },
+        annotations: runtimeHints('account_remove'),
       },
       async (rawArgs: Record<string, unknown>): Promise<CallToolResult> => {
         const email = String(rawArgs.email);
@@ -652,7 +707,7 @@ export async function runServer(opts: {
           key_file: z.string().describe('Full path of the service account key JSON file.'),
           replace: z.boolean().optional().describe('Keep only the scopes this setup asks for, instead of merging with the stored ones.'),
         },
-        annotations: { readOnlyHint: false },
+        annotations: runtimeHints('auth_setup_admin'),
       },
       async (rawArgs: Record<string, unknown>): Promise<CallToolResult> => {
         const args = ['setup-admin', '--subject', String(rawArgs.subject), '--key-file', String(rawArgs.key_file), '--profile', 'readonly', '--servers', opts.name];
@@ -673,7 +728,7 @@ export async function runServer(opts: {
       description:
         'Reports this server: its version, its login state and the account it belongs to (as recorded at login), how many tools are registered, and whether writes are allowed. With live: true it also asks Google whether the login still works. It changes nothing.',
       inputSchema: { live: z.boolean().optional().describe('Ask Google whether the login still works. A network call. Default false.') },
-      annotations: { readOnlyHint: true },
+      annotations: runtimeHints('health'),
     },
     async (rawArgs: Record<string, unknown>): Promise<CallToolResult> => {
       const report = await serverHealth({

@@ -323,6 +323,8 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       description: 'Return the secret key string of an API key. Treat the output as a credential.',
       // A credential is a write: hidden unless writes are allowed, and the gate asks before it runs.
       kind: 'write',
+      // One GET (keys.getKeyString): it changes nothing, so a repeat has no further effect.
+      idempotent: true,
       scopes: googleScopes('apikeys', 'apikeys.readonly', 'cloud-platform', 'cloud-platform.read-only'),
       inputSchema: { key_name: z.string() },
       async handler({ key_name }) {
@@ -647,6 +649,8 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       title: 'Delete project',
       description: 'Schedule a project for deletion (recoverable for a limited time). Deletes every resource in it eventually.',
       kind: 'destructive',
+      // One DELETE (projects.delete), idempotent as the generated tools' DELETE methods are.
+      idempotent: true,
       scopes: googleScopes('cloud-platform'),
       inputSchema: { project_id: projectId },
       preview: ({ project_id }) => ({ project: project_id, effect: 'Project is scheduled for deletion along with its resources.' }),
@@ -686,6 +690,8 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       title: 'Delete API key',
       description: 'Delete an API key. It is marked deleted at once and can be restored within 30 days.',
       kind: 'destructive',
+      // One DELETE (keys.delete), idempotent as the generated tools' DELETE methods are.
+      idempotent: true,
       scopes: googleScopes('apikeys', 'cloud-platform'),
       inputSchema: { key_name: z.string() },
       preview: ({ key_name }) => ({ key: key_name, effect: 'Key stops working immediately. Restorable for 30 days.' }),

@@ -476,6 +476,8 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       title: 'Mark Chat conversations read',
       description: `Mark up to ${CHAT_MARK_READ_MAX} Google Chat conversations as read for you, up to their latest message (matches mark_as_read in Google's Chat MCP server). Each conversation is one request, and one that fails does not stop the others: failed lists them with Google's reason. Threads cannot be marked read: the Chat API has no public method for a thread's read state. It asks first.`,
       kind: 'write',
+      // Google's mark_as_read is marked idempotent.
+      idempotent: true,
       scopes: READ_STATE,
       inputSchema: {
         conversation_ids: z.array(z.string()).min(1).max(CHAT_MARK_READ_MAX).describe(`The conversations to mark read (spaces/{space}), 1 to ${CHAT_MARK_READ_MAX}.`),
@@ -510,6 +512,8 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       description:
         "Mark one Google Chat conversation as unread for you from last_read_time on: the messages after that time show as unread (matches mark_as_unread in Google's Chat MCP server). A time at or after your current read point changes nothing in Chat. Threads cannot be marked unread: the Chat API has no public method for it. It asks first.",
       kind: 'write',
+      // Google's mark_as_unread is marked idempotent.
+      idempotent: true,
       scopes: READ_STATE,
       inputSchema: {
         conversation_id: conversationId,

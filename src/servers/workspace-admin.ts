@@ -426,6 +426,8 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       title: 'Delete user',
       description: 'Delete a user. Recoverable for a limited time, after which the deletion is permanent.',
       kind: 'destructive',
+      // One DELETE (users.delete), idempotent as the generated tools' DELETE methods are.
+      idempotent: true,
       scopes: googleScopes('admin.directory.user'),
       inputSchema: { user_key: userKeyField },
       async preview({ user_key }) {
@@ -448,6 +450,8 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       title: 'Delete org unit',
       description: 'Delete an org unit. The API refuses while users remain in it.',
       kind: 'destructive',
+      // One DELETE (orgunits.delete), idempotent as the generated tools' DELETE methods are.
+      idempotent: true,
       scopes: googleScopes('admin.directory.orgunit'),
       inputSchema: { org_unit_path: orgPathField },
       async preview({ org_unit_path }) {
@@ -478,6 +482,8 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       title: 'Delete group',
       description: 'Delete a group and its memberships.',
       kind: 'destructive',
+      // One DELETE (groups.delete), idempotent as the generated tools' DELETE methods are.
+      idempotent: true,
       scopes: googleScopes('admin.directory.group'),
       inputSchema: { group_key: groupKeyField },
       async preview({ group_key }) {
@@ -500,6 +506,8 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       title: 'Remove group member',
       description: 'Remove a user or group from a group.',
       kind: 'destructive',
+      // One DELETE (members.delete), idempotent as the generated tools' DELETE methods are.
+      idempotent: true,
       scopes: googleScopes('admin.directory.group', 'admin.directory.group.member'),
       inputSchema: { group_key: groupKeyField, member_key: z.string().min(1).describe('Member email, alias, or unique ID.') },
       async preview({ group_key, member_key }) {
