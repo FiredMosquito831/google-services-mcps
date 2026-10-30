@@ -1,0 +1,73 @@
+{
+ "_source": "Trimmed from Google's Discovery document logging v2, revision 20261001: only the methods the curated tools call (logging.entries.list) and the schemas their request bodies reach. For tests/curated-contract.test.mjs; this API has no per-method tools, so data/discovery has no snapshot of it.",
+ "name": "logging",
+ "version": "v2",
+ "title": "Cloud Logging API",
+ "rootUrl": "https://logging.googleapis.com/",
+ "servicePath": "",
+ "baseUrl": "https://logging.googleapis.com/",
+ "schemas": {
+  "ListLogEntriesRequest": {
+   "description": "The parameters to ListLogEntries.",
+   "id": "ListLogEntriesRequest",
+   "properties": {
+    "resourceNames": {
+     "items": {
+      "type": "string"
+     },
+     "description": "Required. Names of one or more parent resources from which to retrieve log entries. Resources may either be resource containers or specific LogViews. For the case of resource containers, all logs ingested into that container will be returned regardless of which LogBuckets they are actually stored in - i.e. these queries may fan out to multiple regions. In the event of region unavailability, specify a specific set of LogViews that do not include the unavailable region. projects/[PROJECT_ID] organizations/[ORGANIZATION_ID] billingAccounts/[BILLING_ACCOUNT_ID] folders/[FOLDER_ID] projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID] organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID] billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID] folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]Projects listed in the project_ids field are added to this list. A maximum of 100 resources may be specified in a single request.",
+     "type": "array"
+    },
+    "filter": {
+     "type": "string",
+     "description": "Optional. A filter that chooses which log entries to return. For more information, see Logging query language (https://docs.cloud.google.com/logging/docs/view/logging-query-language).Only log entries that match the filter are returned. An empty filter matches all log entries in the resources listed in resource_names. Referencing a parent resource that is not listed in resource_names will cause the filter to return no results. The maximum length of a filter is 20,000 characters.To make queries faster, you can make the filter more selective by using restrictions on indexed fields (https://docs.cloud.google.com/logging/docs/view/logging-query-language#indexed-fields) as well as limit the time range of the query by adding range restrictions on the timestamp field."
+    },
+    "projectIds": {
+     "description": "Optional. Deprecated. Use resource_names instead. One or more project identifiers or project numbers from which to retrieve log entries. Example: \"my-project-1A\".",
+     "type": "array",
+     "deprecated": true,
+     "items": {
+      "type": "string"
+     }
+    },
+    "pageSize": {
+     "format": "int32",
+     "description": "Optional. The maximum number of results to return from this request. Default is 50. If the value is negative, the request is rejected.The presence of next_page_token in the response indicates that more results might be available.",
+     "type": "integer"
+    },
+    "pageToken": {
+     "description": "Optional. If present, then retrieve the next batch of results from the preceding call to this method. page_token must be the value of next_page_token from the previous response. The values of other method parameters should be identical to those in the previous call.",
+     "type": "string"
+    },
+    "orderBy": {
+     "type": "string",
+     "description": "Optional. How the results should be sorted. Presently, the only permitted values are \"timestamp asc\" (default) and \"timestamp desc\". The first option returns entries in order of increasing values of LogEntry.timestamp (oldest first), and the second option returns entries in order of decreasing timestamps (newest first). Entries with equal timestamps are returned in order of their insert_id values.We recommend setting the order_by field to \"timestamp desc\" when listing recently ingested log entries. If not set, the default value of \"timestamp asc\" may take a long time to fetch matching logs that are only recently ingested."
+    }
+   },
+   "type": "object"
+  }
+ },
+ "resources": {
+  "entries": {
+   "methods": {
+    "list": {
+     "id": "logging.entries.list",
+     "path": "v2/entries:list",
+     "flatPath": "v2/entries:list",
+     "httpMethod": "POST",
+     "description": "Lists log entries. Use this method to retrieve log entries that originated from a project/folder/organization/billing account. For ways to export log entries, see Routing overview (https://docs.cloud.google.com/logging/docs/routing/overview).",
+     "parameters": [],
+     "parameterOrder": [],
+     "request": "ListLogEntriesRequest",
+     "response": "ListLogEntriesResponse",
+     "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-platform.read-only",
+      "https://www.googleapis.com/auth/logging.admin",
+      "https://www.googleapis.com/auth/logging.read"
+     ]
+    }
+   }
+  }
+ }
+}

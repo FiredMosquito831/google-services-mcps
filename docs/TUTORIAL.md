@@ -566,6 +566,8 @@ Each example names the tool an agent would call. The tool names are checked. The
 - **Sheets, a change:** "Add a total row under the expenses." The agent calls `sheets_get_values`, then `sheets_insert_rows` and `sheets_write_values` with `value_input: formulas`. Each write asks first, and needs a `readwrite` login and **Allow write tools**.
 - **Search Console (searchconsole):** "Which sites are in my Search Console?" The agent calls `sc_sites_list`.
 - **Google Cloud (cloud):** "List the BigQuery projects I can see." The agent calls `bigquery_projects_list`.
+- **Google Cloud, logs:** "Why did the checkout service fail this morning?" The agent calls `logging_entries_list` with the service's resource type, `severity: ERROR` and a time window, then `monitoring_query_promql` for the request rate. Reads never ask.
+- **Cloud Storage, a file:** "Read gs://shop-exports/orders.csv and save a summary next to it." The agent calls `gcs_read_text`, then `gcs_write_text`. The write asks first, does not replace an existing object unless asked, and needs a `readwrite` login and **Allow write tools**.
 - **Workspace admin (workspace-admin):** "List the users in my domain." The agent calls `admin_users_list`. This needs the `setup-admin` step.
 - **Business (business):** "List my YouTube channels." The agent calls `youtube_channels_list`.
 - **Developer (developer):** "List my Firebase projects." The agent calls `firebase_projects_list`.

@@ -145,7 +145,16 @@ function toolsetsOf(value, id) {
       if (!Array.isArray(m) || !m.every((x) => typeof x === 'string' && x !== '')) fail(`${at}.matches["${tool}"] must list the official tools it matches`);
       if (m.length === 0 && (typeof notes[tool] !== 'string' || notes[tool] === '')) fail(`${at}: "${tool}" matches no official tool, so it needs a note`);
     }
-    if (entry.source !== undefined && (typeof entry.source !== 'string' || !entry.source.startsWith('https://'))) fail(`${at}.source must be a URL`);
+    // source: the page of Google's server (a URL), or a list of pages when several of Google's servers make up the
+    // product. A product with no official server (every tool matches nothing) says so in text instead.
+    const noOfficial = tools.every((tool) => matches[tool].length === 0);
+    const isUrl = (s) => typeof s === 'string' && s.startsWith('https://');
+    if (entry.source !== undefined) {
+      const ok = Array.isArray(entry.source)
+        ? entry.source.length > 0 && entry.source.every(isUrl)
+        : isUrl(entry.source) || (noOfficial && typeof entry.source === 'string' && entry.source.trim() !== '');
+      if (!ok) fail(`${at}.source must be a URL or a list of URLs${noOfficial ? ', or text that says there is no official server' : ''}`);
+    }
     out[name] = [...tools];
   }
   return Object.keys(out).length > 0 ? out : undefined;

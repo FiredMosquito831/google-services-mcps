@@ -162,7 +162,13 @@ for (const p of perProduct) {
   if (p.google) {
     lines.push(`## Toolset google (${p.google.tools.length})`);
     lines.push('');
-    lines.push(`The tools that match Google's official MCP server for this product${p.google.source ? ` (${p.google.source})` : ''}.`);
+    const official = p.google.tools.some((tool) => (p.google.matches?.[tool] ?? []).length > 0);
+    const source = Array.isArray(p.google.source) ? p.google.source.join(', ') : p.google.source;
+    lines.push(
+      official
+        ? `The tools that match Google's official MCP server for this product${source ? ` (${source})` : ''}.`
+        : `Google has no official MCP server for this product. The google toolset is a lean set chosen here${source ? `: ${source}` : ''}.`,
+    );
     lines.push('');
     lines.push("| Tool | Google's tool | Note |");
     lines.push('|---|---|---|');

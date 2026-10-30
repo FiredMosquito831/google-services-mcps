@@ -1,0 +1,94 @@
+{
+ "_source": "Trimmed from Google's Discovery document cloudbilling v1beta, revision 20261009: only the methods the curated tools call (cloudbilling.billingAccounts.skus.price.get, cloudbilling.skus.price.get) and the schemas their request bodies reach. For tests/curated-contract.test.mjs; this API has no per-method tools, so data/discovery has no snapshot of it.",
+ "name": "cloudbilling",
+ "version": "v1beta",
+ "title": "Cloud Billing API",
+ "rootUrl": "https://cloudbilling.googleapis.com/",
+ "servicePath": "",
+ "baseUrl": "https://cloudbilling.googleapis.com/",
+ "schemas": {},
+ "resources": {
+  "billingAccounts": {
+   "resources": {
+    "skus": {
+     "resources": {
+      "price": {
+       "methods": {
+        "get": {
+         "id": "cloudbilling.billingAccounts.skus.price.get",
+         "path": "v1beta/{+name}",
+         "flatPath": "v1beta/billingAccounts/{billingAccountsId}/skus/{skusId}/price",
+         "httpMethod": "GET",
+         "description": "Gets the latest price for SKUs available to your Cloud Billing account.",
+         "parameters": [
+          {
+           "name": "name",
+           "location": "path",
+           "type": "string",
+           "required": true,
+           "description": "Required. Name of the billing account price to retrieve. Format: billingAccounts/{billing_account}/skus/{sku}/price"
+          },
+          {
+           "name": "currencyCode",
+           "location": "query",
+           "type": "string",
+           "description": "Optional. ISO-4217 currency code for the price. If not specified, the currency of the billing account is used."
+          }
+         ],
+         "parameterOrder": [
+          "name"
+         ],
+         "response": "GoogleCloudBillingBillingaccountpricesV1betaBillingAccountPrice",
+         "scopes": [
+          "https://www.googleapis.com/auth/cloud-billing",
+          "https://www.googleapis.com/auth/cloud-billing.readonly",
+          "https://www.googleapis.com/auth/cloud-platform"
+         ]
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "skus": {
+   "resources": {
+    "price": {
+     "methods": {
+      "get": {
+       "id": "cloudbilling.skus.price.get",
+       "path": "v1beta/{+name}",
+       "flatPath": "v1beta/skus/{skusId}/price",
+       "httpMethod": "GET",
+       "description": "Gets the latest price for the given SKU.",
+       "parameters": [
+        {
+         "name": "name",
+         "location": "path",
+         "type": "string",
+         "required": true,
+         "description": "Required. Name of the latest price to retrieve. Format: skus/{sku}/price"
+        },
+        {
+         "name": "currencyCode",
+         "location": "query",
+         "type": "string",
+         "description": "Optional. ISO-4217 currency code for the price. If not specified, USD will be used."
+        }
+       ],
+       "parameterOrder": [
+        "name"
+       ],
+       "response": "GoogleCloudBillingPricesV1betaPrice",
+       "scopes": [
+        "https://www.googleapis.com/auth/cloud-billing",
+        "https://www.googleapis.com/auth/cloud-billing.readonly",
+        "https://www.googleapis.com/auth/cloud-platform"
+       ]
+      }
+     }
+    }
+   }
+  }
+ }
+}
