@@ -5,7 +5,7 @@
  */
 import type { RuntimeConfig } from '../core/config.js';
 import { discoveryToolsFor, toolNamesOf } from '../core/discovery/tools.js';
-import type { ServerSpec } from '../core/registry.js';
+import { pluginModuleUrl, type ServerSpec } from '../core/registry.js';
 import type { ToolDef } from '../core/tools.js';
 import { withOrigin } from '../core/toolset.js';
 import { buildTools as buildCloud } from './cloud.js';
@@ -46,7 +46,8 @@ const CURATED: Record<string, Builder> = {
 
 /**
  * Curated tools first, then the discovery tools, as the bundled entry registers them. Each tool carries its origin
- * (curated or generated), as in the bundled entry, so the curated toolset can be told apart.
+ * (curated or generated), as in the bundled entry, so the curated toolset can be told apart. A spec with pluginRoot has
+ * its discovery tools built from that plugin folder's files, as the plugin's own CLI builds them.
  */
 export async function buildServerTools(spec: ServerSpec, cfg: RuntimeConfig): Promise<ToolDef[]> {
   const tools: ToolDef[] = [];
@@ -56,6 +57,8 @@ export async function buildServerTools(spec: ServerSpec, cfg: RuntimeConfig): Pr
     tools.push(...withOrigin('curated', await build(cfg)));
   }
   // The generated tools take no curated name, the same rule the bundled entry follows.
-  if (spec.apis?.length) tools.push(...withOrigin('generated', await discoveryToolsFor(spec.name, cfg, toolNamesOf(tools))));
+  if (spec.apis?.length) {
+    tools.push(...withOrigin('generated', await discoveryToolsFor(spec.name, cfg, toolNamesOf(tools), pluginModuleUrl(spec))));
+  }
   return tools;
 }

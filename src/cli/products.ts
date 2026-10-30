@@ -3,10 +3,10 @@
  *
  *  - plugin layout: the plugin's own servers.json, read as the registry (the file findRoots found).
  *  - repo layout: config/products.json. Its shape (products keyed by id, each with a server, a group and
- *    API lists) is not the registry shape, so it is converted here. Each product id is the plugin id.
+ *    API lists) is not the registry shape, so it is converted here. Each product id is the plugin id. Each server then
+ *    takes what it is built from from its plugin folder (withPluginFolders), so the counts match the plugin's own CLI.
  *
- * gsm login and gsm scopes take their server specs from this registry (requirementsForSpecs). gsm setup-admin
- * still calls requirementsFor(), which loads config/servers.json in the repo layout.
+ * gsm login, gsm scopes and gsm setup-admin take their server specs from this registry (requirementsForSpecs).
  */
 import { existsSync, readFileSync, statSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -136,11 +136,43 @@ export function loadRegistryFile(file: string): Registry {
 
 /**
  * The registry for this layout. Plugin layout: the servers.json that findRoots found, which is the
- * plugin's own map. Repo layout: config/products.json, converted.
+ * plugin's own map. Repo layout: config/products.json, converted, with each server as its plugin folder builds it
+ * (withPluginFolders).
  */
 export function loadProductRegistry(roots: InstallRoots): Registry {
   if (roots.layout === 'plugin') return loadRegistryFile(roots.mapFile);
-  return registryFromProducts(JSON.parse(readFileSync(roots.mapFile, 'utf8')) as unknown, roots.root);
+  return withPluginFolders(registryFromProducts(JSON.parse(readFileSync(roots.mapFile, 'utf8')) as unknown, roots.root), roots);
+}
+
+/** The fields of a server entry that say what the server is built from, as its plugin's servers.json holds them. */
+const BUILD_FIELDS = ['curated', 'apis', 'gatewayApis', 'scopes', 'scopePolicy', 'scopeOverrides', 'toolsets', 'toolsetScopes'] as const;
+
+/**
+ * Repo layout (the repository's gsm.mjs, and so the npm package's): each server as its own plugin folder builds it.
+ * plugins/<id> holds the server's entry in its servers.json (curated module, generated and gateway APIs, scope rules,
+ * toolsets), its Discovery snapshots, its catalog.json and its tool kinds, and the plugin's own CLI (the one the sign-in
+ * from the chat runs) counts tools and scopes from exactly those. So each server takes the build fields of that entry,
+ * and the folder as pluginRoot (the snapshots and the catalog are read there, see pluginModuleUrl in core/registry.ts),
+ * and the registry takes the group scope lists the bundle wrote there (groupScopes). Name, group, kind and label stay
+ * those of config/products.json, so listings and installs print what they printed before. A product whose plugin folder
+ * has no entry for its server keeps the conversion alone.
+ */
+export function withPluginFolders(reg: Registry, roots: InstallRoots): Registry {
+  const groupScopes: Partial<Record<AuthGroup, string[]>> = {};
+  const servers = reg.servers.map((spec): ServerSpec => {
+    const folder = pluginFolderFor(roots, spec.plugin);
+    const file = join(folder, 'servers.json');
+    if (!existsSync(file)) return spec;
+    const own = loadRegistryFile(file);
+    const entry = own.servers.find((s) => s.name === spec.name && s.plugin === spec.plugin && s.group === spec.group);
+    if (!entry) return spec;
+    for (const [group, scopes] of Object.entries(own.groupScopes ?? {}) as Array<[AuthGroup, string[]]>) {
+      groupScopes[group] = [...new Set([...(groupScopes[group] ?? []), ...scopes])].sort();
+    }
+    const built = Object.fromEntries(BUILD_FIELDS.filter((key) => entry[key] !== undefined).map((key) => [key, entry[key]])) as Partial<ServerSpec>;
+    return { name: spec.name, plugin: spec.plugin, group: spec.group, kind: spec.kind, ...built, label: spec.label, pluginRoot: folder };
+  });
+  return { ...reg, servers, ...(Object.keys(groupScopes).length > 0 ? { groupScopes } : {}) };
 }
 
 /**

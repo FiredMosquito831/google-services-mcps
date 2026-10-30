@@ -10,7 +10,16 @@
  * profiles and the login summary cover it the same way the gateway checks it per call.
  */
 import type { RuntimeConfig } from './config.js';
-import { gatewayMethodsOf, loadRegistry, serverByName, type AuthGroup, type Registry, type ScopePolicy, type ServerSpec } from './registry.js';
+import {
+  gatewayMethodsOf,
+  loadRegistry,
+  pluginModuleUrl,
+  serverByName,
+  type AuthGroup,
+  type Registry,
+  type ScopePolicy,
+  type ServerSpec,
+} from './registry.js';
 import { buildServerTools } from '../servers/index.js';
 import type { ToolDef, ToolKind } from './tools.js';
 import { GATEWAY_TOOL_NAMES, LISTED_TOOLSETS, selectToolset, type ListedToolset, type PreferredScopes, type Toolset } from './toolset.js';
@@ -388,7 +397,8 @@ export async function requirementsForSpecs(
     // Gateway methods run through api_call. A toolset without it reaches none of them, so they ask for no scope.
     if (kept !== undefined && !kept.has('api_call')) continue;
 
-    const gateway = gatewayMethodsOf(spec.gatewayApis);
+    // A spec with pluginRoot reads its plugin folder's catalog.json, as the plugin's own CLI does.
+    const gateway = gatewayMethodsOf(spec.gatewayApis, pluginModuleUrl(spec));
     if (!gateway.file) {
       withoutCatalog.push(spec.name);
       continue;

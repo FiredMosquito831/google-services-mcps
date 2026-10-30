@@ -5,6 +5,7 @@
  * and does not log in. Also the shared helpers that gsm login and gsm setup-admin use to pick servers and report coverage.
  */
 import { loadConfig, type RuntimeConfig } from '../core/config.js';
+import { invocation } from '../core/invocation.js';
 import { loadRegistry, scopesForGroup, serverByName, type AuthGroup, type Registry } from '../core/registry.js';
 import {
   PROFILES,
@@ -225,8 +226,9 @@ export function hasGatewayApis(reg: Registry, servers: readonly string[]): boole
 
 export async function runScopes(req: ScopesRequest, reg: Registry, out: Output): Promise<number> {
   if (req.group === 'apikey') {
-    // No OAuth scopes here, but --json still prints JSON (products and servers) like the other groups do.
-    const note = 'the products in this group use an API key, not OAuth scopes. Save the key with: node gsm.mjs setup-apikey';
+    // No OAuth scopes here, but --json still prints JSON (products and servers) like the other groups do. The command is
+    // put in before the JSON is made, so a quoted path (node "<path>\gsm.mjs") is escaped like any other text.
+    const note = `the products in this group use an API key, not OAuth scopes. Save the key with: ${invocation()} setup-apikey`;
     if (!req.json) {
       out.log(`apikey: ${note}`);
       return 0;
