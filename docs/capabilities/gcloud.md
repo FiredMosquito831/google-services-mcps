@@ -493,296 +493,298 @@ The tools that match Google's official MCP server for this product (https://docs
 
 ## Generated APIs
 
-- Service Usage API (`serviceusage/v1`), 10 methods in the catalog
-- Cloud Resource Manager API (`cloudresourcemanager/v3`), 78 methods in the catalog
-- API Keys API (`apikeys/v2`), 9 methods in the catalog
-- Cloud Billing API (`cloudbilling/v1`), 28 methods in the catalog
-- Cloud Monitoring API (`monitoring/v3`), 56 methods in the catalog
-- Cloud Storage API (`storage/v1`), 87 methods in the catalog
-- BigQuery API (`bigquery/v2`), 47 methods in the catalog
-- Identity and Access Management (IAM) API (`iam/v2`), 6 methods in the catalog
-- Cloud Asset API (`cloudasset/v1`), 24 methods in the catalog
-- Cloud Trace API (`cloudtrace/v2`), 2 methods in the catalog
-- Cloud Profiler API (`cloudprofiler/v2`), 4 methods in the catalog
-- Policy Troubleshooter API (`policytroubleshooter/v3`), 1 methods in the catalog
+Each API links to Google's documentation for it, as Google's Discovery directory names it (`documentationLink`, kept in `data/catalog.json`). The link is the API's documentation home, not a page per method: the directory gives no link per method, and Google's REST reference pages are laid out differently from product to product.
+
+- Service Usage API (`serviceusage/v1`), 10 methods in the catalog. Documentation: <https://cloud.google.com/service-usage/>
+- Cloud Resource Manager API (`cloudresourcemanager/v3`), 78 methods in the catalog. Documentation: <https://cloud.google.com/resource-manager>
+- API Keys API (`apikeys/v2`), 9 methods in the catalog. Documentation: <https://cloud.google.com/api-keys/docs>
+- Cloud Billing API (`cloudbilling/v1`), 28 methods in the catalog. Documentation: <https://cloud.google.com/billing/docs/apis>
+- Cloud Monitoring API (`monitoring/v3`), 56 methods in the catalog. Documentation: <https://cloud.google.com/monitoring/api/>
+- Cloud Storage API (`storage/v1`), 87 methods in the catalog. Documentation: <https://cloud.google.com/storage/docs/apis>
+- BigQuery API (`bigquery/v2`), 47 methods in the catalog. Documentation: <https://cloud.google.com/bigquery/>
+- Identity and Access Management (IAM) API (`iam/v2`), 6 methods in the catalog. Documentation: <https://cloud.google.com/iam/>
+- Cloud Asset API (`cloudasset/v1`), 24 methods in the catalog. Documentation: <https://cloud.google.com/asset-inventory/docs/quickstart>
+- Cloud Trace API (`cloudtrace/v2`), 2 methods in the catalog. Documentation: <https://cloud.google.com/trace/>
+- Cloud Profiler API (`cloudprofiler/v2`), 4 methods in the catalog. Documentation: <https://cloud.google.com/profiler/>
+- Policy Troubleshooter API (`policytroubleshooter/v3`), 1 methods in the catalog. Documentation: <https://cloud.google.com/iam/>
 
 ## Gateway APIs (reached through api_search, api_describe, api_call)
 
-- Cloud Logging API (`logging/v2`), 254 methods
-- Compute Engine API (`compute/v1`), 1018 methods
-- Cloud Run Admin API (`run/v2`), 59 methods
-- Kubernetes Engine API (`container/v1`), 71 methods
-- Cloud Key Management Service (KMS) API (`cloudkms/v1`), 87 methods
-- Sensitive Data Protection (DLP) (`dlp/v2`), 150 methods
-- Security Command Center API (`securitycenter/v1`), 172 methods
-- Organization Policy API (`orgpolicy/v2`), 26 methods
-- Access Context Manager API (`accesscontextmanager/v1`), 42 methods
-- Secret Manager API (`secretmanager/v1`), 36 methods
-- Cloud Pub/Sub API (`pubsub/v1`), 46 methods
-- Cloud Spanner API (`spanner/v1`), 99 methods
-- Cloud SQL Admin API (`sqladmin/v1`), 85 methods
-- Cloud Firestore API (`firestore/v1`), 60 methods
-- Cloud Functions API (`cloudfunctions/v2`), 21 methods
-- Cloud Scheduler API (`cloudscheduler/v1`), 16 methods
-- Cloud Tasks API (`cloudtasks/v2`), 24 methods
-- Cloud DNS API (`dns/v1`), 51 methods
-- Cloud Build API (`cloudbuild/v2`), 22 methods
-- Artifact Registry API (`artifactregistry/v1`), 69 methods
-- Error Reporting API (`clouderrorreporting/v1beta1`), 11 methods
-- Cloud Shell API (`cloudshell/v1`), 10 methods
-- Essential Contacts API (`essentialcontacts/v1`), 21 methods
-- Public Certificate Authority API (`publicca/v1`), 1 methods
-- Traffic Director API (`trafficdirector/v3`), 1 methods
-- API Discovery Service (`discovery/v1`), 2 methods
-- Service Control API (`servicecontrol/v2`), 2 methods
-- Policy Analyzer API (`policyanalyzer/v1`), 3 methods
-- Cloud Runtime Configuration API (`runtimeconfig/v1`), 3 methods
-- KMS Inventory API (`kmsinventory/v1`), 4 methods
-- Cloud Billing Budget API (`billingbudgets/v1`), 5 methods
-- Cloud Location Finder API (`cloudlocationfinder/v1`), 5 methods
-- Security Token Service API (`sts/v1`), 5 methods
-- IAM Service Account Credentials API (`iamcredentials/v1`), 7 methods
-- On-Demand Scanning API (`ondemandscanning/v1`), 7 methods
-- Advisory Notifications API (`advisorynotifications/v1`), 8 methods
-- BigQuery Connection API (`bigqueryconnection/v1`), 8 methods
-- Database Center API (`databasecenter/v1beta`), 8 methods
-- Data pipelines API (`datapipelines/v1`), 8 methods
-- Transcoder API (`transcoder/v1`), 8 methods
-- Serverless VPC Access API (`vpcaccess/v1`), 8 methods
-- Cloud Product Registry API (`cloudproductregistry/v1`), 9 methods
-- Cloud OS Login API (`oslogin/v1`), 9 methods
-- BigQuery Data Policy API (`bigquerydatapolicy/v2`), 10 methods
-- GKE Hub API (`gkehub/v2`), 10 methods
-- Application Integration API (`integrations/v2`), 10 methods
-- Workflow Executions API (`workflowexecutions/v1`), 10 methods
-- Blockchain Node Engine API (`blockchainnodeengine/v1`), 11 methods
-- Cluster Director API (`hypercomputecluster/v1`), 11 methods
-- Cloud IDS API (`ids/v1`), 11 methods
-- Workflows API (`workflows/v1`), 11 methods
-- Cloud Commerce Partner Procurement API (`cloudcommerceprocurement/v1`), 13 methods
-- Cloud Controls Partner API (`cloudcontrolspartner/v1`), 13 methods
-- Parallelstore API (`parallelstore/v1`), 13 methods
-- Storage Batch Operations API (`storagebatchoperations/v1`), 13 methods
-- Web Security Scanner API (`websecurityscanner/v1`), 13 methods
-- Batch API (`batch/v1`), 14 methods
-- Service Consumer Management API (`serviceconsumermanagement/v1`), 14 methods
-- Rapid Migration Assessment API (`rapidmigrationassessment/v1`), 16 methods
-- Cloud Memorystore for Memcached API (`memcache/v1`), 17 methods
-- Storage Transfer API (`storagetransfer/v1`), 17 methods
-- Cloud Datastore API (`datastore/v1`), 18 methods
-- Cloud Deployment Manager V2 API (`deploymentmanager/v2`), 18 methods
-- Cloud FTP API (`ftp/v1`), 18 methods
-- Cloud Data Fusion API (`datafusion/v1`), 19 methods
-- Cloud Identity-Aware Proxy API (`iap/v1`), 19 methods
-- Looker (Google Cloud core) API (`looker/v1`), 20 methods
-- Binary Authorization API (`binaryauthorization/v1`), 21 methods
-- Google Cloud Support API (`cloudsupport/v2`), 22 methods
-- Service Management API (`servicemanagement/v1`), 22 methods
-- Threat Intelligence API (`threatintelligence/v1beta`), 22 methods
-- API Management API (`apim/v1alpha`), 23 methods
-- Security Posture API (`securityposture/v1`), 23 methods
-- Parameter Manager API (`parametermanager/v1`), 24 methods
-- reCAPTCHA Enterprise API (`recaptchaenterprise/v1`), 24 methods
-- Service Directory API (`servicedirectory/v1`), 24 methods
-- Cloud TPU API (`tpu/v2`), 24 methods
-- Connectors API (`connectors/v2`), 26 methods
-- Cloud Filestore API (`file/v1`), 26 methods
-- Access Approval API (`accessapproval/v1`), 27 methods
-- Lakehouse API (`biglake/v1`), 27 methods
-- OS Config API (`osconfig/v2`), 27 methods
-- Policy Simulator API (`policysimulator/v1`), 27 methods
-- Data Lineage API (`datalineage/v1`), 28 methods
-- Cloud Domains API (`domains/v1`), 28 methods
-- Pub/Sub Lite API (`pubsublite/v1`), 28 methods
-- Cloud Composer API (`composer/v1`), 29 methods
-- Service Networking API (`servicenetworking/v1`), 29 methods
-- API Gateway API (`apigateway/v1`), 30 methods
-- Workload Manager API (`workloadmanager/v1`), 31 methods
-- Assured Workloads API (`assuredworkloads/v1`), 32 methods
-- Datastream API (`datastream/v1`), 32 methods
-- BigQuery Reservation API (`bigqueryreservation/v1`), 33 methods
-- Cloud Workstations API (`workstations/v1`), 33 methods
-- Analytics Hub API (`analyticshub/v1`), 35 methods
-- Certificate Manager API (`certificatemanager/v1`), 36 methods
-- BigQuery Data Transfer API (`bigquerydatatransfer/v1`), 37 methods
-- AlloyDB API (`alloydb/v1`), 40 methods
-- App Hub API (`apphub/v1`), 40 methods
-- App Lifecycle Manager API (`saasservicemgmt/v1`), 42 methods
-- Cloud Number Registry API (`cloudnumberregistry/v1alpha`), 44 methods
-- Container Analysis API (`containeranalysis/v1`), 44 methods
-- Observability API (`observability/v1`), 44 methods
-- Certificate Authority API (`privateca/v1`), 44 methods
-- Developer Connect API (`developerconnect/v1`), 45 methods
-- Managed Service for Microsoft Active Directory API (`managedidentities/v1`), 45 methods
-- Infrastructure Manager API (`config/v1`), 47 methods
-- Google Cloud Memorystore for Redis API (`redis/v1`), 47 methods
-- Dataproc Metastore API (`metastore/v1`), 48 methods
-- Network Management API (`networkmanagement/v1`), 48 methods
-- Recommender API (`recommender/v1`), 48 methods
-- Audit Manager API (`auditmanager/v1`), 51 methods
-- Bare Metal Solution API (`baremetalsolution/v2`), 52 methods
-- BeyondCorp API (`beyondcorp/v1`), 52 methods
-- Dataflow API (`dataflow/v1b3`), 57 methods
-- App Engine Admin API (`appengine/v1`), 59 methods
-- Backup and DR Service API (`backupdr/v1`), 61 methods
-- Cloud Deploy API (`clouddeploy/v1`), 61 methods
-- Secure Source Manager API (`securesourcemanager/v1`), 62 methods
-- Cloud Channel API (`cloudchannel/v1`), 65 methods
-- Eventarc API (`eventarc/v1`), 66 methods
-- Backup for GKE API (`gkebackup/v1`), 67 methods
-- Migration Center API (`migrationcenter/v1`), 67 methods
-- VM Migration API (`vmmigration/v1`), 68 methods
-- Database Migration API (`datamigration/v1`), 70 methods
-- Google Cloud Data Catalog API (`datacatalog/v1`), 71 methods
-- GKE On-Prem API (`gkeonprem/v1`), 79 methods
-- Cloud Bigtable Admin API (`bigtableadmin/v2`), 82 methods
-- NetApp API (`netapp/v1`), 82 methods
-- SAS Portal API (`sasportal/v1alpha1`), 82 methods
-- Dataform API (`dataform/v1`), 88 methods
-- Managed Service for Apache Kafka API (`managedkafka/v1`), 89 methods
-- Oracle Database@Google Cloud API (`oracledatabase/v1`), 95 methods
-- API hub API (`apihub/v1`), 97 methods
-- VMware Engine API (`vmwareengine/v1`), 102 methods
-- Network Connectivity API (`networkconnectivity/v1`), 108 methods
-- Network Services API (`networkservices/v1`), 122 methods
-- Cloud Dataproc API (`dataproc/v1`), 136 methods
-- Cloud Healthcare API (`healthcare/v1`), 154 methods
-- Network Security API (`networksecurity/v1`), 185 methods
-- Cloud Dataplex API (`dataplex/v1`), 206 methods
-- Apigee API (`apigee/v1`), 374 methods
-- AlloyDB API (`alloydb/v1alpha`), 45 methods
-- AlloyDB API (`alloydb/v1beta`), 45 methods
-- Analytics Hub API (`analyticshub/v1beta1`), 18 methods
-- API Gateway API (`apigateway/v1beta`), 30 methods
-- App Engine Admin API (`appengine/v1alpha`), 30 methods
-- App Engine Admin API (`appengine/v1beta`), 63 methods
-- App Hub API (`apphub/v1alpha`), 42 methods
-- Artifact Registry API (`artifactregistry/v1beta1`), 24 methods
-- Artifact Registry API (`artifactregistry/v1beta2`), 32 methods
-- Assured Workloads API (`assuredworkloads/v1beta1`), 31 methods
-- Backup and DR Service API (`backupdr/v1beta`), 73 methods
-- BeyondCorp API (`beyondcorp/v1alpha`), 87 methods
-- BigQuery Connection API (`bigqueryconnection/v1beta1`), 9 methods
-- BigQuery Data Policy API (`bigquerydatapolicy/v1`), 9 methods
-- Cloud Billing Budget API (`billingbudgets/v1beta1`), 5 methods
-- Binary Authorization API (`binaryauthorization/v1beta1`), 15 methods
-- Cloud Asset API (`cloudasset/v1beta1`), 8 methods
-- Cloud Asset API (`cloudasset/v1p1beta1`), 2 methods
-- Cloud Asset API (`cloudasset/v1p5beta1`), 1 methods
-- Cloud Asset API (`cloudasset/v1p7beta1`), 2 methods
-- Cloud Billing API (`cloudbilling/v1beta`), 17 methods
-- Cloud Build API (`cloudbuild/v1`), 57 methods
-- Cloud Controls Partner API (`cloudcontrolspartner/v1beta`), 13 methods
-- Cloud Functions API (`cloudfunctions/v1`), 14 methods
-- Cloud Functions API (`cloudfunctions/v2alpha`), 21 methods
-- Cloud Functions API (`cloudfunctions/v2beta`), 21 methods
-- Cloud Location Finder API (`cloudlocationfinder/v1alpha`), 5 methods
-- Cloud Quotas API (`cloudquotas/v1`), 28 methods
-- Cloud Quotas API (`cloudquotas/v1beta`), 28 methods
-- Cloud Resource Manager API (`cloudresourcemanager/v1`), 38 methods
-- Cloud Resource Manager API (`cloudresourcemanager/v1beta1`), 16 methods
-- Cloud Resource Manager API (`cloudresourcemanager/v2`), 12 methods
-- Cloud Resource Manager API (`cloudresourcemanager/v2beta1`), 12 methods
-- Cloud Scheduler API (`cloudscheduler/v1beta1`), 14 methods
-- Google Cloud Support API (`cloudsupport/v2beta`), 23 methods
-- Cloud Tasks API (`cloudtasks/v2beta2`), 29 methods
-- Cloud Tasks API (`cloudtasks/v2beta3`), 24 methods
-- Cloud Trace API (`cloudtrace/v1`), 3 methods
-- Cloud Trace API (`cloudtrace/v2beta1`), 5 methods
-- Cloud Composer API (`composer/v1beta1`), 31 methods
-- Compute Engine API (`compute/2026-09-01`), 1019 methods
-- Compute Engine API (`compute/2026-10-01-preview`), 1037 methods
-- Compute Engine API (`compute/alpha`), 1212 methods
-- Compute Engine API (`compute/beta`), 1130 methods
-- Compute Engine API (`compute/preview`), 1037 methods
-- Compute Engine API (`compute/stable`), 1019 methods
-- Connectors API (`connectors/v1`), 80 methods
-- Kubernetes Engine API (`container/v1beta1`), 72 methods
-- Container Analysis API (`containeranalysis/v1alpha1`), 33 methods
-- Container Analysis API (`containeranalysis/v1beta1`), 46 methods
-- Google Cloud Data Catalog API (`datacatalog/v1beta1`), 55 methods
-- Dataform API (`dataform/v1beta1`), 95 methods
-- Cloud Data Fusion API (`datafusion/v1beta1`), 25 methods
-- Database Migration API (`datamigration/v1beta1`), 29 methods
-- Cloud Datastore API (`datastore/v1beta1`), 2 methods
-- Cloud Datastore API (`datastore/v1beta3`), 8 methods
-- Datastream API (`datastream/v1alpha1`), 31 methods
-- Cloud Deployment Manager V2 API (`deploymentmanager/alpha`), 33 methods
-- Cloud Deployment Manager V2 API (`deploymentmanager/v2beta`), 32 methods
-- Cloud DNS API (`dns/v1beta2`), 51 methods
-- Cloud Domains API (`domains/v1alpha2`), 28 methods
-- Cloud Domains API (`domains/v1beta1`), 28 methods
-- Cloud Filestore API (`file/v1beta1`), 47 methods
-- Cloud Firestore API (`firestore/v1beta1`), 24 methods
-- Cloud Firestore API (`firestore/v1beta2`), 9 methods
-- Cloud FTP API (`ftp/v1alpha`), 18 methods
-- GKE Hub API (`gkehub/v1`), 73 methods
-- GKE Hub API (`gkehub/v1alpha`), 77 methods
-- GKE Hub API (`gkehub/v1beta`), 73 methods
-- GKE Hub API (`gkehub/v1beta1`), 17 methods
-- GKE Hub API (`gkehub/v2alpha`), 10 methods
-- GKE Hub API (`gkehub/v2beta`), 10 methods
-- Cloud Healthcare API (`healthcare/v1beta1`), 170 methods
-- Identity and Access Management (IAM) API (`iam/v1`), 137 methods
-- Identity and Access Management (IAM) API (`iam/v2beta`), 6 methods
-- Cloud Identity-Aware Proxy API (`iap/v1beta1`), 3 methods
-- Application Integration API (`integrations/v1`), 129 methods
-- Managed Service for Microsoft Active Directory API (`managedidentities/v1alpha1`), 45 methods
-- Managed Service for Microsoft Active Directory API (`managedidentities/v1beta1`), 45 methods
-- Cloud Memorystore for Memcached API (`memcache/v1beta2`), 16 methods
-- Dataproc Metastore API (`metastore/v1alpha`), 52 methods
-- Dataproc Metastore API (`metastore/v1beta`), 52 methods
-- Migration Center API (`migrationcenter/v1alpha1`), 72 methods
-- Cloud Monitoring API (`monitoring/v1`), 17 methods
-- NetApp API (`netapp/v1beta1`), 82 methods
-- Network Connectivity API (`networkconnectivity/v1alpha1`), 30 methods
-- Network Management API (`networkmanagement/v1beta1`), 33 methods
-- Network Security API (`networksecurity/v1beta1`), 190 methods
-- Network Services API (`networkservices/v1beta1`), 113 methods
-- On-Demand Scanning API (`ondemandscanning/v1beta1`), 7 methods
-- OS Config API (`osconfig/v1`), 28 methods
-- OS Config API (`osconfig/v1alpha`), 16 methods
-- OS Config API (`osconfig/v1beta`), 18 methods
-- OS Config API (`osconfig/v2beta`), 27 methods
-- Cloud OS Login API (`oslogin/v1alpha`), 11 methods
-- Cloud OS Login API (`oslogin/v1beta`), 11 methods
-- Parallelstore API (`parallelstore/v1beta`), 13 methods
-- Policy Analyzer API (`policyanalyzer/v1beta1`), 3 methods
-- Policy Simulator API (`policysimulator/v1alpha`), 14 methods
-- Policy Simulator API (`policysimulator/v1beta`), 31 methods
-- Policy Troubleshooter API (`policytroubleshooter/v1`), 1 methods
-- Policy Troubleshooter API (`policytroubleshooter/v1beta`), 1 methods
-- Policy Troubleshooter API (`policytroubleshooter/v3beta`), 2 methods
-- Certificate Authority API (`privateca/v1beta1`), 15 methods
-- Public Certificate Authority API (`publicca/v1alpha1`), 1 methods
-- Public Certificate Authority API (`publicca/v1beta1`), 1 methods
-- Cloud Pub/Sub API (`pubsub/v1beta1a`), 15 methods
-- Cloud Pub/Sub API (`pubsub/v1beta2`), 20 methods
-- Recommender API (`recommender/v1beta1`), 54 methods
-- Google Cloud Memorystore for Redis API (`redis/v1beta1`), 47 methods
-- Cloud Run Admin API (`run/v1`), 76 methods
-- Cloud Runtime Configuration API (`runtimeconfig/v1beta1`), 22 methods
-- App Lifecycle Manager API (`saasservicemgmt/v1beta1`), 77 methods
-- Secret Manager API (`secretmanager/v1beta1`), 17 methods
-- Secret Manager API (`secretmanager/v1beta2`), 32 methods
-- Security Command Center API (`securitycenter/v1beta1`), 23 methods
-- Security Command Center API (`securitycenter/v1beta2`), 61 methods
-- Service Consumer Management API (`serviceconsumermanagement/v1beta1`), 14 methods
-- Service Control API (`servicecontrol/v1`), 3 methods
-- Service Directory API (`servicedirectory/v1beta1`), 27 methods
-- Service Networking API (`servicenetworking/v1beta`), 6 methods
-- Service Usage API (`serviceusage/v1beta1`), 21 methods
-- Cloud SQL Admin API (`sqladmin/v1beta4`), 85 methods
-- Security Token Service API (`sts/v1beta`), 1 methods
-- Cloud TPU API (`tpu/v1`), 17 methods
-- Cloud TPU API (`tpu/v1alpha1`), 17 methods
-- Cloud TPU API (`tpu/v2alpha1`), 29 methods
-- Traffic Director API (`trafficdirector/v2`), 1 methods
-- VM Migration API (`vmmigration/v1alpha1`), 68 methods
-- Serverless VPC Access API (`vpcaccess/v1beta1`), 8 methods
-- Web Security Scanner API (`websecurityscanner/v1alpha`), 13 methods
-- Web Security Scanner API (`websecurityscanner/v1beta`), 13 methods
-- Workflow Executions API (`workflowexecutions/v1beta`), 4 methods
-- Workflows API (`workflows/v1beta`), 10 methods
-- Cloud Workstations API (`workstations/v1beta`), 32 methods
+- Cloud Logging API (`logging/v2`), 254 methods. Documentation: <https://cloud.google.com/logging/docs/>
+- Compute Engine API (`compute/v1`), 1018 methods. Documentation: <https://developers.google.com/compute/docs/reference/latest/>
+- Cloud Run Admin API (`run/v2`), 59 methods. Documentation: <https://cloud.google.com/run/>
+- Kubernetes Engine API (`container/v1`), 71 methods. Documentation: <https://cloud.google.com/kubernetes-engine/docs/>
+- Cloud Key Management Service (KMS) API (`cloudkms/v1`), 87 methods. Documentation: <https://cloud.google.com/kms/>
+- Sensitive Data Protection (DLP) (`dlp/v2`), 150 methods. Documentation: <https://cloud.google.com/sensitive-data-protection/docs/>
+- Security Command Center API (`securitycenter/v1`), 172 methods. Documentation: <https://cloud.google.com/security-command-center>
+- Organization Policy API (`orgpolicy/v2`), 26 methods. Documentation: <https://cloud.google.com/orgpolicy/docs/reference/rest/index.html>
+- Access Context Manager API (`accesscontextmanager/v1`), 42 methods. Documentation: <https://cloud.google.com/access-context-manager/docs/reference/rest/>
+- Secret Manager API (`secretmanager/v1`), 36 methods. Documentation: <https://cloud.google.com/secret-manager/>
+- Cloud Pub/Sub API (`pubsub/v1`), 46 methods. Documentation: <https://cloud.google.com/pubsub/docs>
+- Cloud Spanner API (`spanner/v1`), 99 methods. Documentation: <https://cloud.google.com/spanner/>
+- Cloud SQL Admin API (`sqladmin/v1`), 85 methods. Documentation: <https://cloud.google.com/sql/docs>
+- Cloud Firestore API (`firestore/v1`), 60 methods. Documentation: <https://cloud.google.com/firestore>
+- Cloud Functions API (`cloudfunctions/v2`), 21 methods. Documentation: <https://cloud.google.com/functions>
+- Cloud Scheduler API (`cloudscheduler/v1`), 16 methods. Documentation: <https://cloud.google.com/scheduler/>
+- Cloud Tasks API (`cloudtasks/v2`), 24 methods. Documentation: <https://cloud.google.com/tasks/>
+- Cloud DNS API (`dns/v1`), 51 methods. Documentation: <https://cloud.google.com/dns/docs>
+- Cloud Build API (`cloudbuild/v2`), 22 methods. Documentation: <https://cloud.google.com/cloud-build/docs/>
+- Artifact Registry API (`artifactregistry/v1`), 69 methods. Documentation: <https://cloud.google.com/artifacts/docs/>
+- Error Reporting API (`clouderrorreporting/v1beta1`), 11 methods. Documentation: <https://cloud.google.com/error-reporting/>
+- Cloud Shell API (`cloudshell/v1`), 10 methods. Documentation: <https://cloud.google.com/shell/docs/>
+- Essential Contacts API (`essentialcontacts/v1`), 21 methods. Documentation: <https://cloud.google.com/essentialcontacts/docs/>
+- Public Certificate Authority API (`publicca/v1`), 1 methods. Documentation: <https://cloud.google.com/public-certificate-authority/docs>
+- Traffic Director API (`trafficdirector/v3`), 1 methods. Documentation: <https://cloud.google.com/traffic-director>
+- API Discovery Service (`discovery/v1`), 2 methods. Documentation: <https://developers.google.com/discovery>
+- Service Control API (`servicecontrol/v2`), 2 methods. Documentation: <https://cloud.google.com/service-control/>
+- Policy Analyzer API (`policyanalyzer/v1`), 3 methods. Documentation: <https://cloud.google.com/policy-intelligence/docs/overview>
+- Cloud Runtime Configuration API (`runtimeconfig/v1`), 3 methods. Documentation: <https://cloud.google.com/deployment-manager/runtime-configurator/>
+- KMS Inventory API (`kmsinventory/v1`), 4 methods. Documentation: <https://cloud.google.com/kms/>
+- Cloud Billing Budget API (`billingbudgets/v1`), 5 methods. Documentation: <https://cloud.google.com/billing/docs/how-to/budget-api-overview>
+- Cloud Location Finder API (`cloudlocationfinder/v1`), 5 methods. Documentation: <https://cloud.google.com/location-finder/docs>
+- Security Token Service API (`sts/v1`), 5 methods. Documentation: <http://cloud.google.com/iam/docs/workload-identity-federation>
+- IAM Service Account Credentials API (`iamcredentials/v1`), 7 methods. Documentation: <https://cloud.google.com/iam/docs/creating-short-lived-service-account-credentials>
+- On-Demand Scanning API (`ondemandscanning/v1`), 7 methods. Documentation: <https://cloud.google.com/container-analysis/docs/on-demand-scanning/>
+- Advisory Notifications API (`advisorynotifications/v1`), 8 methods. Documentation: <https://cloud.google.com/advisory-notifications>
+- BigQuery Connection API (`bigqueryconnection/v1`), 8 methods. Documentation: <https://cloud.google.com/bigquery/docs/connections-api-intro>
+- Database Center API (`databasecenter/v1beta`), 8 methods. Documentation: <https://docs.cloud.google.com/database-center/docs/overview>
+- Data pipelines API (`datapipelines/v1`), 8 methods. Documentation: <https://cloud.google.com/dataflow/docs/guides/data-pipelines>
+- Transcoder API (`transcoder/v1`), 8 methods. Documentation: <https://cloud.google.com/transcoder/docs/>
+- Serverless VPC Access API (`vpcaccess/v1`), 8 methods. Documentation: <https://cloud.google.com/vpc/docs/configure-serverless-vpc-access>
+- Cloud Product Registry API (`cloudproductregistry/v1`), 9 methods. Documentation: <https://docs.cloud.google.com/product-registry>
+- Cloud OS Login API (`oslogin/v1`), 9 methods. Documentation: <https://cloud.google.com/compute/docs/oslogin/>
+- BigQuery Data Policy API (`bigquerydatapolicy/v2`), 10 methods. Documentation: <https://cloud.google.com/bigquery/docs/column-data-masking>
+- GKE Hub API (`gkehub/v2`), 10 methods. Documentation: <https://cloud.google.com/anthos/multicluster-management/connect/registering-a-cluster>
+- Application Integration API (`integrations/v2`), 10 methods. Documentation: <https://cloud.google.com/application-integration>
+- Workflow Executions API (`workflowexecutions/v1`), 10 methods. Documentation: <https://cloud.google.com/workflows>
+- Blockchain Node Engine API (`blockchainnodeengine/v1`), 11 methods. Documentation: <https://cloud.google.com/blockchain-node-engine>
+- Cluster Director API (`hypercomputecluster/v1`), 11 methods. Documentation: <https://docs.cloud.google.com/cluster-director/docs>
+- Cloud IDS API (`ids/v1`), 11 methods. Documentation: <https://cloud.google.com/>
+- Workflows API (`workflows/v1`), 11 methods. Documentation: <https://cloud.google.com/workflows>
+- Cloud Commerce Partner Procurement API (`cloudcommerceprocurement/v1`), 13 methods. Documentation: <https://cloud.google.com/marketplace/docs/partners/>
+- Cloud Controls Partner API (`cloudcontrolspartner/v1`), 13 methods. Documentation: <https://cloud.google.com/sovereign-controls-by-partners/docs/sovereign-partners/reference/rest>
+- Parallelstore API (`parallelstore/v1`), 13 methods. Documentation: <https://cloud.google.com/parallelstore>
+- Storage Batch Operations API (`storagebatchoperations/v1`), 13 methods. Documentation: <https://cloud.google.com/storage/docs/batch-operations/overview>
+- Web Security Scanner API (`websecurityscanner/v1`), 13 methods. Documentation: <https://cloud.google.com/security-command-center/docs/concepts-web-security-scanner-overview/>
+- Batch API (`batch/v1`), 14 methods. Documentation: <https://cloud.google.com/batch/>
+- Service Consumer Management API (`serviceconsumermanagement/v1`), 14 methods. Documentation: <https://cloud.google.com/service-consumer-management/docs/overview>
+- Rapid Migration Assessment API (`rapidmigrationassessment/v1`), 16 methods. Documentation: <https://cloud.google.com/migration-center>
+- Cloud Memorystore for Memcached API (`memcache/v1`), 17 methods. Documentation: <https://cloud.google.com/memorystore/>
+- Storage Transfer API (`storagetransfer/v1`), 17 methods. Documentation: <https://cloud.google.com/storage-transfer/docs>
+- Cloud Datastore API (`datastore/v1`), 18 methods. Documentation: <https://cloud.google.com/datastore/>
+- Cloud Deployment Manager V2 API (`deploymentmanager/v2`), 18 methods. Documentation: <https://cloud.google.com/deployment-manager>
+- Cloud FTP API (`ftp/v1`), 18 methods. Documentation: <https://docs.cloud.google.com/cloud-ftp>
+- Cloud Data Fusion API (`datafusion/v1`), 19 methods. Documentation: <https://cloud.google.com/data-fusion/docs>
+- Cloud Identity-Aware Proxy API (`iap/v1`), 19 methods. Documentation: <https://cloud.google.com/iap>
+- Looker (Google Cloud core) API (`looker/v1`), 20 methods. Documentation: <https://cloud.google.com/looker/docs/reference/rest/>
+- Binary Authorization API (`binaryauthorization/v1`), 21 methods. Documentation: <https://cloud.google.com/binary-authorization/>
+- Google Cloud Support API (`cloudsupport/v2`), 22 methods. Documentation: <https://cloud.google.com/support/docs/apis>
+- Service Management API (`servicemanagement/v1`), 22 methods. Documentation: <https://cloud.google.com/service-management/>
+- Threat Intelligence API (`threatintelligence/v1beta`), 22 methods. Documentation: <https://docs.cloud.google.com/threatintelligence/>
+- API Management API (`apim/v1alpha`), 23 methods. Documentation: <https://cloud.google.com/apigee/>
+- Security Posture API (`securityposture/v1`), 23 methods. Documentation: <https://cloud.google.com/security-command-center>
+- Parameter Manager API (`parametermanager/v1`), 24 methods. Documentation: <https://cloud.google.com/secret-manager/parameter-manager/docs/overview>
+- reCAPTCHA Enterprise API (`recaptchaenterprise/v1`), 24 methods. Documentation: <https://cloud.google.com/recaptcha-enterprise/>
+- Service Directory API (`servicedirectory/v1`), 24 methods. Documentation: <https://cloud.google.com/service-directory>
+- Cloud TPU API (`tpu/v2`), 24 methods. Documentation: <https://cloud.google.com/tpu/>
+- Connectors API (`connectors/v2`), 26 methods. Documentation: <https://cloud.google.com/apigee/docs/api-platform/connectors/about-connectors>
+- Cloud Filestore API (`file/v1`), 26 methods. Documentation: <https://cloud.google.com/filestore/>
+- Access Approval API (`accessapproval/v1`), 27 methods. Documentation: <https://cloud.google.com/assured-workloads/access-approval/docs>
+- Lakehouse API (`biglake/v1`), 27 methods. Documentation: <https://cloud.google.com/products/lakehouse>
+- OS Config API (`osconfig/v2`), 27 methods. Documentation: <https://cloud.google.com/compute/docs/osconfig/rest>
+- Policy Simulator API (`policysimulator/v1`), 27 methods. Documentation: <https://cloud.google.com/iam/docs/simulating-access>
+- Data Lineage API (`datalineage/v1`), 28 methods. Documentation: <https://cloud.google.com/data-catalog>
+- Cloud Domains API (`domains/v1`), 28 methods. Documentation: <https://cloud.google.com/domains/>
+- Pub/Sub Lite API (`pubsublite/v1`), 28 methods. Documentation: <https://cloud.google.com/pubsub/lite/docs>
+- Cloud Composer API (`composer/v1`), 29 methods. Documentation: <https://cloud.google.com/composer/>
+- Service Networking API (`servicenetworking/v1`), 29 methods. Documentation: <https://cloud.google.com/service-infrastructure/docs/service-networking/getting-started>
+- API Gateway API (`apigateway/v1`), 30 methods. Documentation: <https://cloud.google.com/api-gateway/docs>
+- Workload Manager API (`workloadmanager/v1`), 31 methods. Documentation: <https://cloud.google.com/workload-manager/docs>
+- Assured Workloads API (`assuredworkloads/v1`), 32 methods. Documentation: <https://cloud.google.com/learnmoreurl>
+- Datastream API (`datastream/v1`), 32 methods. Documentation: <https://cloud.google.com/datastream/>
+- BigQuery Reservation API (`bigqueryreservation/v1`), 33 methods. Documentation: <https://cloud.google.com/bigquery/>
+- Cloud Workstations API (`workstations/v1`), 33 methods. Documentation: <https://cloud.google.com/workstations>
+- Analytics Hub API (`analyticshub/v1`), 35 methods. Documentation: <https://cloud.google.com/bigquery/docs/analytics-hub-introduction>
+- Certificate Manager API (`certificatemanager/v1`), 36 methods. Documentation: <https://docs.cloud.google.com/certificate-manager/docs/overview>
+- BigQuery Data Transfer API (`bigquerydatatransfer/v1`), 37 methods. Documentation: <https://cloud.google.com/bigquery-transfer/>
+- AlloyDB API (`alloydb/v1`), 40 methods. Documentation: <https://cloud.google.com/alloydb/>
+- App Hub API (`apphub/v1`), 40 methods. Documentation: <https://cloud.google.com/app-hub/docs/>
+- App Lifecycle Manager API (`saasservicemgmt/v1`), 42 methods. Documentation: <https://docs.cloud.google.com/app-lifecycle-manager>
+- Cloud Number Registry API (`cloudnumberregistry/v1alpha`), 44 methods. Documentation: <https://docs.cloud.google.com/number-registry/reference/rest>
+- Container Analysis API (`containeranalysis/v1`), 44 methods. Documentation: <https://cloud.google.com/container-analysis/api/reference/rest/>
+- Observability API (`observability/v1`), 44 methods. Documentation: <https://cloud.google.com/stackdriver/docs/>
+- Certificate Authority API (`privateca/v1`), 44 methods. Documentation: <https://cloud.google.com/>
+- Developer Connect API (`developerconnect/v1`), 45 methods. Documentation: <http://cloud.google.com/developer-connect/docs/overview>
+- Managed Service for Microsoft Active Directory API (`managedidentities/v1`), 45 methods. Documentation: <https://cloud.google.com/managed-microsoft-ad/>
+- Infrastructure Manager API (`config/v1`), 47 methods. Documentation: <https://cloud.google.com/infrastructure-manager/docs>
+- Google Cloud Memorystore for Redis API (`redis/v1`), 47 methods. Documentation: <https://cloud.google.com/memorystore/docs/redis/>
+- Dataproc Metastore API (`metastore/v1`), 48 methods. Documentation: <https://cloud.google.com/dataproc-metastore/docs>
+- Network Management API (`networkmanagement/v1`), 48 methods. Documentation: <https://cloud.google.com/>
+- Recommender API (`recommender/v1`), 48 methods. Documentation: <https://cloud.google.com/recommender/docs/>
+- Audit Manager API (`auditmanager/v1`), 51 methods. Documentation: <https://cloud.google.com/assured-workloads/docs/audit-manager>
+- Bare Metal Solution API (`baremetalsolution/v2`), 52 methods. Documentation: <https://cloud.google.com/bare-metal>
+- BeyondCorp API (`beyondcorp/v1`), 52 methods. Documentation: <https://cloud.google.com/>
+- Dataflow API (`dataflow/v1b3`), 57 methods. Documentation: <https://cloud.google.com/dataflow>
+- App Engine Admin API (`appengine/v1`), 59 methods. Documentation: <https://cloud.google.com/appengine/docs/admin-api/>
+- Backup and DR Service API (`backupdr/v1`), 61 methods. Documentation: <https://cloud.google.com/backup-disaster-recovery>
+- Cloud Deploy API (`clouddeploy/v1`), 61 methods. Documentation: <https://cloud.google.com/deploy/>
+- Secure Source Manager API (`securesourcemanager/v1`), 62 methods. Documentation: <https://cloud.google.com/secure-source-manager>
+- Cloud Channel API (`cloudchannel/v1`), 65 methods. Documentation: <https://cloud.google.com/channel>
+- Eventarc API (`eventarc/v1`), 66 methods. Documentation: <https://cloud.google.com/eventarc>
+- Backup for GKE API (`gkebackup/v1`), 67 methods. Documentation: <https://cloud.google.com/kubernetes-engine/docs/add-on/backup-for-gke>
+- Migration Center API (`migrationcenter/v1`), 67 methods. Documentation: <https://cloud.google.com/migration-center>
+- VM Migration API (`vmmigration/v1`), 68 methods. Documentation: <https://cloud.google.com/migrate/virtual-machines>
+- Database Migration API (`datamigration/v1`), 70 methods. Documentation: <https://cloud.google.com/database-migration/>
+- Google Cloud Data Catalog API (`datacatalog/v1`), 71 methods. Documentation: <https://cloud.google.com/data-catalog/docs/>
+- GKE On-Prem API (`gkeonprem/v1`), 79 methods. Documentation: <https://cloud.google.com/anthos/clusters/docs/on-prem/>
+- Cloud Bigtable Admin API (`bigtableadmin/v2`), 82 methods. Documentation: <https://cloud.google.com/bigtable/>
+- NetApp API (`netapp/v1`), 82 methods. Documentation: <https://cloud.google.com/netapp/>
+- SAS Portal API (`sasportal/v1alpha1`), 82 methods. Documentation: <https://developers.google.com/spectrum-access-system/>
+- Dataform API (`dataform/v1`), 88 methods. Documentation: <https://cloud.google.com/dataform/docs>
+- Managed Service for Apache Kafka API (`managedkafka/v1`), 89 methods. Documentation: <https://cloud.google.com/managed-service-for-apache-kafka/docs>
+- Oracle Database@Google Cloud API (`oracledatabase/v1`), 95 methods. Documentation: <https://cloud.google.com/oracle/database/docs>
+- API hub API (`apihub/v1`), 97 methods. Documentation: <https://cloud.google.com/apigee/docs/api-hub/what-is-api-hub>
+- VMware Engine API (`vmwareengine/v1`), 102 methods. Documentation: <https://cloud.google.com/solutions/vmware-as-a-service>
+- Network Connectivity API (`networkconnectivity/v1`), 108 methods. Documentation: <https://cloud.google.com/network-connectivity/docs/reference/networkconnectivity/rest>
+- Network Services API (`networkservices/v1`), 122 methods. Documentation: <https://cloud.google.com/networking>
+- Cloud Dataproc API (`dataproc/v1`), 136 methods. Documentation: <https://cloud.google.com/dataproc/>
+- Cloud Healthcare API (`healthcare/v1`), 154 methods. Documentation: <https://cloud.google.com/healthcare>
+- Network Security API (`networksecurity/v1`), 185 methods. Documentation: <https://cloud.google.com/networking>
+- Cloud Dataplex API (`dataplex/v1`), 206 methods. Documentation: <https://cloud.google.com/dataplex/docs>
+- Apigee API (`apigee/v1`), 374 methods. Documentation: <https://cloud.google.com/apigee-api-management/>
+- AlloyDB API (`alloydb/v1alpha`), 45 methods. Documentation: <https://cloud.google.com/alloydb/>
+- AlloyDB API (`alloydb/v1beta`), 45 methods. Documentation: <https://cloud.google.com/alloydb/>
+- Analytics Hub API (`analyticshub/v1beta1`), 18 methods. Documentation: <https://cloud.google.com/bigquery/docs/analytics-hub-introduction>
+- API Gateway API (`apigateway/v1beta`), 30 methods. Documentation: <https://cloud.google.com/api-gateway/docs>
+- App Engine Admin API (`appengine/v1alpha`), 30 methods. Documentation: <https://cloud.google.com/appengine/docs/admin-api/>
+- App Engine Admin API (`appengine/v1beta`), 63 methods. Documentation: <https://cloud.google.com/appengine/docs/admin-api/>
+- App Hub API (`apphub/v1alpha`), 42 methods. Documentation: <https://cloud.google.com/app-hub/docs/>
+- Artifact Registry API (`artifactregistry/v1beta1`), 24 methods. Documentation: <https://cloud.google.com/artifacts/docs/>
+- Artifact Registry API (`artifactregistry/v1beta2`), 32 methods. Documentation: <https://cloud.google.com/artifacts/docs/>
+- Assured Workloads API (`assuredworkloads/v1beta1`), 31 methods. Documentation: <https://cloud.google.com/learnmoreurl>
+- Backup and DR Service API (`backupdr/v1beta`), 73 methods. Documentation: <https://cloud.google.com/backup-disaster-recovery>
+- BeyondCorp API (`beyondcorp/v1alpha`), 87 methods. Documentation: <https://cloud.google.com/>
+- BigQuery Connection API (`bigqueryconnection/v1beta1`), 9 methods. Documentation: <https://cloud.google.com/bigquery/docs/connections-api-intro>
+- BigQuery Data Policy API (`bigquerydatapolicy/v1`), 9 methods. Documentation: <https://cloud.google.com/bigquery/docs/column-data-masking>
+- Cloud Billing Budget API (`billingbudgets/v1beta1`), 5 methods. Documentation: <https://cloud.google.com/billing/docs/how-to/budget-api-overview>
+- Binary Authorization API (`binaryauthorization/v1beta1`), 15 methods. Documentation: <https://cloud.google.com/binary-authorization/>
+- Cloud Asset API (`cloudasset/v1beta1`), 8 methods. Documentation: <https://cloud.google.com/asset-inventory/docs/quickstart>
+- Cloud Asset API (`cloudasset/v1p1beta1`), 2 methods. Documentation: <https://cloud.google.com/asset-inventory/docs/quickstart>
+- Cloud Asset API (`cloudasset/v1p5beta1`), 1 methods. Documentation: <https://cloud.google.com/asset-inventory/docs/quickstart>
+- Cloud Asset API (`cloudasset/v1p7beta1`), 2 methods. Documentation: <https://cloud.google.com/asset-inventory/docs/quickstart>
+- Cloud Billing API (`cloudbilling/v1beta`), 17 methods. Documentation: <https://cloud.google.com/billing/docs/apis>
+- Cloud Build API (`cloudbuild/v1`), 57 methods. Documentation: <https://cloud.google.com/cloud-build/docs/>
+- Cloud Controls Partner API (`cloudcontrolspartner/v1beta`), 13 methods. Documentation: <https://cloud.google.com/sovereign-controls-by-partners/docs/sovereign-partners/reference/rest>
+- Cloud Functions API (`cloudfunctions/v1`), 14 methods. Documentation: <https://cloud.google.com/functions>
+- Cloud Functions API (`cloudfunctions/v2alpha`), 21 methods. Documentation: <https://cloud.google.com/functions>
+- Cloud Functions API (`cloudfunctions/v2beta`), 21 methods. Documentation: <https://cloud.google.com/functions>
+- Cloud Location Finder API (`cloudlocationfinder/v1alpha`), 5 methods. Documentation: <https://cloud.google.com/location-finder/docs>
+- Cloud Quotas API (`cloudquotas/v1`), 28 methods. Documentation: <https://cloud.google.com/docs/quotas>
+- Cloud Quotas API (`cloudquotas/v1beta`), 28 methods. Documentation: <https://cloud.google.com/docs/quotas>
+- Cloud Resource Manager API (`cloudresourcemanager/v1`), 38 methods. Documentation: <https://cloud.google.com/resource-manager>
+- Cloud Resource Manager API (`cloudresourcemanager/v1beta1`), 16 methods. Documentation: <https://cloud.google.com/resource-manager>
+- Cloud Resource Manager API (`cloudresourcemanager/v2`), 12 methods. Documentation: <https://cloud.google.com/resource-manager>
+- Cloud Resource Manager API (`cloudresourcemanager/v2beta1`), 12 methods. Documentation: <https://cloud.google.com/resource-manager>
+- Cloud Scheduler API (`cloudscheduler/v1beta1`), 14 methods. Documentation: <https://cloud.google.com/scheduler/>
+- Google Cloud Support API (`cloudsupport/v2beta`), 23 methods. Documentation: <https://cloud.google.com/support/docs/apis>
+- Cloud Tasks API (`cloudtasks/v2beta2`), 29 methods. Documentation: <https://cloud.google.com/tasks/>
+- Cloud Tasks API (`cloudtasks/v2beta3`), 24 methods. Documentation: <https://cloud.google.com/tasks/>
+- Cloud Trace API (`cloudtrace/v1`), 3 methods. Documentation: <https://cloud.google.com/trace/>
+- Cloud Trace API (`cloudtrace/v2beta1`), 5 methods. Documentation: <https://cloud.google.com/trace/>
+- Cloud Composer API (`composer/v1beta1`), 31 methods. Documentation: <https://cloud.google.com/composer/>
+- Compute Engine API (`compute/2026-09-01`), 1019 methods. Documentation: <https://cloud.google.com/compute/>
+- Compute Engine API (`compute/2026-10-01-preview`), 1037 methods. Documentation: <https://cloud.google.com/compute/>
+- Compute Engine API (`compute/alpha`), 1212 methods. Documentation: <https://developers.google.com/compute/docs/reference/latest/>
+- Compute Engine API (`compute/beta`), 1130 methods. Documentation: <https://developers.google.com/compute/docs/reference/latest/>
+- Compute Engine API (`compute/preview`), 1037 methods. Documentation: <https://cloud.google.com/compute/>
+- Compute Engine API (`compute/stable`), 1019 methods. Documentation: <https://cloud.google.com/compute/>
+- Connectors API (`connectors/v1`), 80 methods. Documentation: <https://cloud.google.com/apigee/docs/api-platform/connectors/about-connectors>
+- Kubernetes Engine API (`container/v1beta1`), 72 methods. Documentation: <https://cloud.google.com/kubernetes-engine/docs/>
+- Container Analysis API (`containeranalysis/v1alpha1`), 33 methods. Documentation: <https://cloud.google.com/container-analysis/api/reference/rest/>
+- Container Analysis API (`containeranalysis/v1beta1`), 46 methods. Documentation: <https://cloud.google.com/container-analysis/api/reference/rest/>
+- Google Cloud Data Catalog API (`datacatalog/v1beta1`), 55 methods. Documentation: <https://cloud.google.com/data-catalog/docs/>
+- Dataform API (`dataform/v1beta1`), 95 methods. Documentation: <https://cloud.google.com/dataform/docs>
+- Cloud Data Fusion API (`datafusion/v1beta1`), 25 methods. Documentation: <https://cloud.google.com/data-fusion/docs>
+- Database Migration API (`datamigration/v1beta1`), 29 methods. Documentation: <https://cloud.google.com/database-migration/>
+- Cloud Datastore API (`datastore/v1beta1`), 2 methods. Documentation: <https://cloud.google.com/datastore/>
+- Cloud Datastore API (`datastore/v1beta3`), 8 methods. Documentation: <https://cloud.google.com/datastore/>
+- Datastream API (`datastream/v1alpha1`), 31 methods. Documentation: <https://cloud.google.com/datastream/>
+- Cloud Deployment Manager V2 API (`deploymentmanager/alpha`), 33 methods. Documentation: <https://cloud.google.com/deployment-manager>
+- Cloud Deployment Manager V2 API (`deploymentmanager/v2beta`), 32 methods. Documentation: <https://cloud.google.com/deployment-manager>
+- Cloud DNS API (`dns/v1beta2`), 51 methods. Documentation: <https://cloud.google.com/dns/docs>
+- Cloud Domains API (`domains/v1alpha2`), 28 methods. Documentation: <https://cloud.google.com/domains/>
+- Cloud Domains API (`domains/v1beta1`), 28 methods. Documentation: <https://cloud.google.com/domains/>
+- Cloud Filestore API (`file/v1beta1`), 47 methods. Documentation: <https://cloud.google.com/filestore/>
+- Cloud Firestore API (`firestore/v1beta1`), 24 methods. Documentation: <https://cloud.google.com/firestore>
+- Cloud Firestore API (`firestore/v1beta2`), 9 methods. Documentation: <https://cloud.google.com/firestore>
+- Cloud FTP API (`ftp/v1alpha`), 18 methods. Documentation: <https://docs.cloud.google.com/cloud-ftp>
+- GKE Hub API (`gkehub/v1`), 73 methods. Documentation: <https://cloud.google.com/anthos/multicluster-management/connect/registering-a-cluster>
+- GKE Hub API (`gkehub/v1alpha`), 77 methods. Documentation: <https://cloud.google.com/anthos/multicluster-management/connect/registering-a-cluster>
+- GKE Hub API (`gkehub/v1beta`), 73 methods. Documentation: <https://cloud.google.com/anthos/multicluster-management/connect/registering-a-cluster>
+- GKE Hub API (`gkehub/v1beta1`), 17 methods. Documentation: <https://cloud.google.com/anthos/multicluster-management/connect/registering-a-cluster>
+- GKE Hub API (`gkehub/v2alpha`), 10 methods. Documentation: <https://cloud.google.com/anthos/multicluster-management/connect/registering-a-cluster>
+- GKE Hub API (`gkehub/v2beta`), 10 methods. Documentation: <https://cloud.google.com/anthos/multicluster-management/connect/registering-a-cluster>
+- Cloud Healthcare API (`healthcare/v1beta1`), 170 methods. Documentation: <https://cloud.google.com/healthcare>
+- Identity and Access Management (IAM) API (`iam/v1`), 137 methods. Documentation: <https://cloud.google.com/iam/>
+- Identity and Access Management (IAM) API (`iam/v2beta`), 6 methods. Documentation: <https://cloud.google.com/iam/>
+- Cloud Identity-Aware Proxy API (`iap/v1beta1`), 3 methods. Documentation: <https://cloud.google.com/iap>
+- Application Integration API (`integrations/v1`), 129 methods. Documentation: <https://cloud.google.com/application-integration>
+- Managed Service for Microsoft Active Directory API (`managedidentities/v1alpha1`), 45 methods. Documentation: <https://cloud.google.com/managed-microsoft-ad/>
+- Managed Service for Microsoft Active Directory API (`managedidentities/v1beta1`), 45 methods. Documentation: <https://cloud.google.com/managed-microsoft-ad/>
+- Cloud Memorystore for Memcached API (`memcache/v1beta2`), 16 methods. Documentation: <https://cloud.google.com/memorystore/>
+- Dataproc Metastore API (`metastore/v1alpha`), 52 methods. Documentation: <https://cloud.google.com/dataproc-metastore/docs>
+- Dataproc Metastore API (`metastore/v1beta`), 52 methods. Documentation: <https://cloud.google.com/dataproc-metastore/docs>
+- Migration Center API (`migrationcenter/v1alpha1`), 72 methods. Documentation: <https://cloud.google.com/migration-center>
+- Cloud Monitoring API (`monitoring/v1`), 17 methods. Documentation: <https://cloud.google.com/monitoring/api/>
+- NetApp API (`netapp/v1beta1`), 82 methods. Documentation: <https://cloud.google.com/netapp/>
+- Network Connectivity API (`networkconnectivity/v1alpha1`), 30 methods. Documentation: <https://cloud.google.com/network-connectivity/docs/reference/networkconnectivity/rest>
+- Network Management API (`networkmanagement/v1beta1`), 33 methods. Documentation: <https://cloud.google.com/>
+- Network Security API (`networksecurity/v1beta1`), 190 methods. Documentation: <https://cloud.google.com/networking>
+- Network Services API (`networkservices/v1beta1`), 113 methods. Documentation: <https://cloud.google.com/networking>
+- On-Demand Scanning API (`ondemandscanning/v1beta1`), 7 methods. Documentation: <https://cloud.google.com/container-analysis/docs/on-demand-scanning/>
+- OS Config API (`osconfig/v1`), 28 methods. Documentation: <https://cloud.google.com/compute/docs/osconfig/rest>
+- OS Config API (`osconfig/v1alpha`), 16 methods. Documentation: <https://cloud.google.com/compute/docs/osconfig/rest>
+- OS Config API (`osconfig/v1beta`), 18 methods. Documentation: <https://cloud.google.com/compute/docs/osconfig/rest>
+- OS Config API (`osconfig/v2beta`), 27 methods. Documentation: <https://cloud.google.com/compute/docs/osconfig/rest>
+- Cloud OS Login API (`oslogin/v1alpha`), 11 methods. Documentation: <https://cloud.google.com/compute/docs/oslogin/>
+- Cloud OS Login API (`oslogin/v1beta`), 11 methods. Documentation: <https://cloud.google.com/compute/docs/oslogin/>
+- Parallelstore API (`parallelstore/v1beta`), 13 methods. Documentation: <https://cloud.google.com/parallelstore>
+- Policy Analyzer API (`policyanalyzer/v1beta1`), 3 methods. Documentation: <https://cloud.google.com/policy-intelligence/docs/overview>
+- Policy Simulator API (`policysimulator/v1alpha`), 14 methods. Documentation: <https://cloud.google.com/iam/docs/simulating-access>
+- Policy Simulator API (`policysimulator/v1beta`), 31 methods. Documentation: <https://cloud.google.com/iam/docs/simulating-access>
+- Policy Troubleshooter API (`policytroubleshooter/v1`), 1 methods. Documentation: <https://cloud.google.com/iam/>
+- Policy Troubleshooter API (`policytroubleshooter/v1beta`), 1 methods. Documentation: <https://cloud.google.com/iam/>
+- Policy Troubleshooter API (`policytroubleshooter/v3beta`), 2 methods. Documentation: <https://cloud.google.com/iam/>
+- Certificate Authority API (`privateca/v1beta1`), 15 methods. Documentation: <https://cloud.google.com/>
+- Public Certificate Authority API (`publicca/v1alpha1`), 1 methods. Documentation: <https://cloud.google.com/public-certificate-authority/docs>
+- Public Certificate Authority API (`publicca/v1beta1`), 1 methods. Documentation: <https://cloud.google.com/public-certificate-authority/docs>
+- Cloud Pub/Sub API (`pubsub/v1beta1a`), 15 methods. Documentation: <https://cloud.google.com/pubsub/docs>
+- Cloud Pub/Sub API (`pubsub/v1beta2`), 20 methods. Documentation: <https://cloud.google.com/pubsub/docs>
+- Recommender API (`recommender/v1beta1`), 54 methods. Documentation: <https://cloud.google.com/recommender/docs/>
+- Google Cloud Memorystore for Redis API (`redis/v1beta1`), 47 methods. Documentation: <https://cloud.google.com/memorystore/docs/redis/>
+- Cloud Run Admin API (`run/v1`), 76 methods. Documentation: <https://cloud.google.com/run/>
+- Cloud Runtime Configuration API (`runtimeconfig/v1beta1`), 22 methods. Documentation: <https://cloud.google.com/deployment-manager/runtime-configurator/>
+- App Lifecycle Manager API (`saasservicemgmt/v1beta1`), 77 methods. Documentation: <https://docs.cloud.google.com/app-lifecycle-manager>
+- Secret Manager API (`secretmanager/v1beta1`), 17 methods. Documentation: <https://cloud.google.com/secret-manager/>
+- Secret Manager API (`secretmanager/v1beta2`), 32 methods. Documentation: <https://cloud.google.com/secret-manager/>
+- Security Command Center API (`securitycenter/v1beta1`), 23 methods. Documentation: <https://cloud.google.com/security-command-center>
+- Security Command Center API (`securitycenter/v1beta2`), 61 methods. Documentation: <https://cloud.google.com/security-command-center>
+- Service Consumer Management API (`serviceconsumermanagement/v1beta1`), 14 methods. Documentation: <https://cloud.google.com/service-consumer-management/docs/overview>
+- Service Control API (`servicecontrol/v1`), 3 methods. Documentation: <https://cloud.google.com/service-control/>
+- Service Directory API (`servicedirectory/v1beta1`), 27 methods. Documentation: <https://cloud.google.com/service-directory>
+- Service Networking API (`servicenetworking/v1beta`), 6 methods. Documentation: <https://cloud.google.com/service-infrastructure/docs/service-networking/getting-started>
+- Service Usage API (`serviceusage/v1beta1`), 21 methods. Documentation: <https://cloud.google.com/service-usage/>
+- Cloud SQL Admin API (`sqladmin/v1beta4`), 85 methods. Documentation: <https://cloud.google.com/sql/docs>
+- Security Token Service API (`sts/v1beta`), 1 methods. Documentation: <http://cloud.google.com/iam/docs/workload-identity-federation>
+- Cloud TPU API (`tpu/v1`), 17 methods. Documentation: <https://cloud.google.com/tpu/>
+- Cloud TPU API (`tpu/v1alpha1`), 17 methods. Documentation: <https://cloud.google.com/tpu/>
+- Cloud TPU API (`tpu/v2alpha1`), 29 methods. Documentation: <https://cloud.google.com/tpu/>
+- Traffic Director API (`trafficdirector/v2`), 1 methods. Documentation: <https://cloud.google.com/traffic-director>
+- VM Migration API (`vmmigration/v1alpha1`), 68 methods. Documentation: <https://cloud.google.com/migrate/virtual-machines>
+- Serverless VPC Access API (`vpcaccess/v1beta1`), 8 methods. Documentation: <https://cloud.google.com/vpc/docs/configure-serverless-vpc-access>
+- Web Security Scanner API (`websecurityscanner/v1alpha`), 13 methods. Documentation: <https://cloud.google.com/security-command-center/docs/concepts-web-security-scanner-overview/>
+- Web Security Scanner API (`websecurityscanner/v1beta`), 13 methods. Documentation: <https://cloud.google.com/security-command-center/docs/concepts-web-security-scanner-overview/>
+- Workflow Executions API (`workflowexecutions/v1beta`), 4 methods. Documentation: <https://cloud.google.com/workflows>
+- Workflows API (`workflows/v1beta`), 10 methods. Documentation: <https://cloud.google.com/workflows>
+- Cloud Workstations API (`workstations/v1beta`), 32 methods. Documentation: <https://cloud.google.com/workstations>
 

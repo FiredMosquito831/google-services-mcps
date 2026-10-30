@@ -382,37 +382,39 @@ The tools that match Google's official MCP server for this product (https://deve
 
 ## Generated APIs
 
-- Google Ads API (`googleads/v26`), 175 methods in the catalog
-- Search Ads 360 Reporting API (`searchads360/v23`), 161 methods in the catalog
-- Display & Video 360 API (`displayvideo/v4`), 179 methods in the catalog
-- AdMob API (`admob/v1`), 6 methods in the catalog
-- DoubleClick Bid Manager API (`doubleclickbidmanager/v2`), 7 methods in the catalog
+Each API links to Google's documentation for it, as Google's Discovery directory names it (`documentationLink`, kept in `data/catalog.json`). The link is the API's documentation home, not a page per method: the directory gives no link per method, and Google's REST reference pages are laid out differently from product to product.
+
+- Google Ads API (`googleads/v26`), 175 methods in the catalog. Documentation: <https://developers.google.com/google-ads/api/>
+- Search Ads 360 Reporting API (`searchads360/v23`), 161 methods in the catalog. Documentation: <https://developers.google.com/search-ads/reporting>
+- Display & Video 360 API (`displayvideo/v4`), 179 methods in the catalog. Documentation: <https://developers.google.com/display-video/>
+- AdMob API (`admob/v1`), 6 methods in the catalog. Documentation: <https://developers.google.com/admob/api/>
+- DoubleClick Bid Manager API (`doubleclickbidmanager/v2`), 7 methods in the catalog. Documentation: <https://developers.google.com/bid-manager/>
 
 ## Gateway APIs (reached through api_search, api_describe, api_call)
 
-- AdSense Management API (`adsense/v2`), 33 methods
-- Ad Exchange Buyer API II (`adexchangebuyer2/v2beta1`), 78 methods
-- Campaign Manager 360 API (`dfareporting/v5`), 218 methods
-- Real-time Bidding API (`realtimebidding/v1`), 39 methods
-- Search Ads 360 API (`doubleclicksearch/v2`), 11 methods
-- AdSense Platform API (`adsenseplatform/v1`), 11 methods
-- Google Marketing Platform Admin API (`marketingplatformadmin/v1alpha`), 22 methods
-- Authorized Buyers Marketplace API (`authorizedbuyersmarketplace/v1`), 40 methods
-- Data Manager API (`datamanager/v1`), 26 methods
-- Agencies and Brands API (`agenciesandbrands/v1`), 8 methods
-- Curation Partners API (`curationpartners/v1`), 21 methods
-- Local Services API (`localservices/v1`), 2 methods
-- Reader Revenue Subscription Linking API (`readerrevenuesubscriptionlinking/v1`), 4 methods
-- Web Content Publisher API (`webcontentpublisher/v1`), 11 methods
-- Checks API (`checks/v1alpha`), 15 methods
-- AdMob API (`admob/v1beta`), 19 methods
-- AdSense Platform API (`adsenseplatform/v1alpha`), 19 methods
-- Authorized Buyers Marketplace API (`authorizedbuyersmarketplace/v1alpha`), 53 methods
-- Authorized Buyers Marketplace API (`authorizedbuyersmarketplace/v1beta`), 13 methods
-- Campaign Manager 360 API (`dfareporting/v3.5`), 1 methods
-- Display & Video 360 API (`displayvideo/v2`), 144 methods
-- Display & Video 360 API (`displayvideo/v3`), 151 methods
-- Search Ads 360 Reporting API (`searchads360/v0`), 6 methods
-- Display & Video 360 API (`displayvideo/v4`), 179 methods
-- Google Ads API (`googleads/v26`), 175 methods
+- AdSense Management API (`adsense/v2`), 33 methods. Documentation: <https://developers.google.com/adsense/management/>
+- Ad Exchange Buyer API II (`adexchangebuyer2/v2beta1`), 78 methods. Documentation: <https://developers.google.com/authorized-buyers/apis/reference/rest/>
+- Campaign Manager 360 API (`dfareporting/v5`), 218 methods. Documentation: <https://developers.google.com/doubleclick-advertisers/>
+- Real-time Bidding API (`realtimebidding/v1`), 39 methods. Documentation: <https://developers.google.com/authorized-buyers/apis/realtimebidding/reference/rest/>
+- Search Ads 360 API (`doubleclicksearch/v2`), 11 methods. Documentation: <https://developers.google.com/search-ads>
+- AdSense Platform API (`adsenseplatform/v1`), 11 methods. Documentation: <https://developers.google.com/adsense/platforms/>
+- Google Marketing Platform Admin API (`marketingplatformadmin/v1alpha`), 22 methods. Documentation: <https://developers.google.com/analytics/devguides/config/gmp/v1>
+- Authorized Buyers Marketplace API (`authorizedbuyersmarketplace/v1`), 40 methods. Documentation: <https://developers.google.com/authorized-buyers/apis/marketplace/reference/rest/>
+- Data Manager API (`datamanager/v1`), 26 methods. Documentation: <https://developers.google.com/data-manager>
+- Agencies and Brands API (`agenciesandbrands/v1`), 8 methods. Documentation: <https://developers.google.com/authorized-buyers/agencies-and-brands/get-started/start>
+- Curation Partners API (`curationpartners/v1`), 21 methods. Documentation: <https://developers.google.com/authorized-buyers/curation/apis/guides/curationpartners/overview>
+- Local Services API (`localservices/v1`), 2 methods. Documentation: <https://ads.google.com/local-services-ads/>
+- Reader Revenue Subscription Linking API (`readerrevenuesubscriptionlinking/v1`), 4 methods. Documentation: <https://developers.google.com/news/subscribe/subscription-linking/overview>
+- Web Content Publisher API (`webcontentpublisher/v1`), 11 methods. Documentation: <https://developers.google.com/news/subscribe>
+- Checks API (`checks/v1alpha`), 15 methods. Documentation: <https://developers.google.com/checks>
+- AdMob API (`admob/v1beta`), 19 methods. Documentation: <https://developers.google.com/admob/api/>
+- AdSense Platform API (`adsenseplatform/v1alpha`), 19 methods. Documentation: <https://developers.google.com/adsense/platforms/>
+- Authorized Buyers Marketplace API (`authorizedbuyersmarketplace/v1alpha`), 53 methods. Documentation: <https://developers.google.com/authorized-buyers/apis/marketplace/reference/rest/>
+- Authorized Buyers Marketplace API (`authorizedbuyersmarketplace/v1beta`), 13 methods. Documentation: <https://developers.google.com/authorized-buyers/apis/marketplace/reference/rest/>
+- Campaign Manager 360 API (`dfareporting/v3.5`), 1 methods. Documentation: <https://developers.google.com/doubleclick-advertisers/>
+- Display & Video 360 API (`displayvideo/v2`), 144 methods. Documentation: <https://developers.google.com/display-video/>
+- Display & Video 360 API (`displayvideo/v3`), 151 methods. Documentation: <https://developers.google.com/display-video/>
+- Search Ads 360 Reporting API (`searchads360/v0`), 6 methods. Documentation: <https://developers.google.com/search-ads/reporting>
+- Display & Video 360 API (`displayvideo/v4`), 179 methods. Documentation: <https://developers.google.com/display-video/>
+- Google Ads API (`googleads/v26`), 175 methods. Documentation: <https://developers.google.com/google-ads/api/>
 

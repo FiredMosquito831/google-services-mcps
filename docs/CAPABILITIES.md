@@ -49,3 +49,544 @@ Products with gateway APIs also expose `api_search`, `api_describe` and `api_cal
 - `api_describe`: parameters, request body and scopes of one method. Read.
 - `api_call`: call any method of the product, subject to the same safety classes.
 
+## Google's documentation for each API
+
+Each API links to Google's documentation for it, as Google's Discovery directory names it (`documentationLink`, kept in `data/catalog.json`). The link is the API's documentation home, not a page per method: the directory gives no link per method, and Google's REST reference pages are laid out differently from product to product.
+
+| Product | API | Discovery name/version | Tools | Documentation |
+|---|---|---|---|---|
+| `gcloud` | Service Usage API | `serviceusage/v1` | per-method | <https://cloud.google.com/service-usage/> |
+| `gcloud` | Cloud Resource Manager API | `cloudresourcemanager/v3` | per-method | <https://cloud.google.com/resource-manager> |
+| `gcloud` | API Keys API | `apikeys/v2` | per-method | <https://cloud.google.com/api-keys/docs> |
+| `gcloud` | Cloud Billing API | `cloudbilling/v1` | per-method | <https://cloud.google.com/billing/docs/apis> |
+| `gcloud` | Cloud Monitoring API | `monitoring/v3` | per-method | <https://cloud.google.com/monitoring/api/> |
+| `gcloud` | Cloud Storage API | `storage/v1` | per-method | <https://cloud.google.com/storage/docs/apis> |
+| `gcloud` | BigQuery API | `bigquery/v2` | per-method | <https://cloud.google.com/bigquery/> |
+| `gcloud` | Identity and Access Management (IAM) API | `iam/v2` | per-method | <https://cloud.google.com/iam/> |
+| `gcloud` | Cloud Asset API | `cloudasset/v1` | per-method | <https://cloud.google.com/asset-inventory/docs/quickstart> |
+| `gcloud` | Cloud Trace API | `cloudtrace/v2` | per-method | <https://cloud.google.com/trace/> |
+| `gcloud` | Cloud Profiler API | `cloudprofiler/v2` | per-method | <https://cloud.google.com/profiler/> |
+| `gcloud` | Policy Troubleshooter API | `policytroubleshooter/v3` | per-method | <https://cloud.google.com/iam/> |
+| `gcloud` | Cloud Logging API | `logging/v2` | gateway | <https://cloud.google.com/logging/docs/> |
+| `gcloud` | Compute Engine API | `compute/v1` | gateway | <https://developers.google.com/compute/docs/reference/latest/> |
+| `gcloud` | Cloud Run Admin API | `run/v2` | gateway | <https://cloud.google.com/run/> |
+| `gcloud` | Kubernetes Engine API | `container/v1` | gateway | <https://cloud.google.com/kubernetes-engine/docs/> |
+| `gcloud` | Cloud Key Management Service (KMS) API | `cloudkms/v1` | gateway | <https://cloud.google.com/kms/> |
+| `gcloud` | Sensitive Data Protection (DLP) | `dlp/v2` | gateway | <https://cloud.google.com/sensitive-data-protection/docs/> |
+| `gcloud` | Security Command Center API | `securitycenter/v1` | gateway | <https://cloud.google.com/security-command-center> |
+| `gcloud` | Organization Policy API | `orgpolicy/v2` | gateway | <https://cloud.google.com/orgpolicy/docs/reference/rest/index.html> |
+| `gcloud` | Access Context Manager API | `accesscontextmanager/v1` | gateway | <https://cloud.google.com/access-context-manager/docs/reference/rest/> |
+| `gcloud` | Secret Manager API | `secretmanager/v1` | gateway | <https://cloud.google.com/secret-manager/> |
+| `gcloud` | Cloud Pub/Sub API | `pubsub/v1` | gateway | <https://cloud.google.com/pubsub/docs> |
+| `gcloud` | Cloud Spanner API | `spanner/v1` | gateway | <https://cloud.google.com/spanner/> |
+| `gcloud` | Cloud SQL Admin API | `sqladmin/v1` | gateway | <https://cloud.google.com/sql/docs> |
+| `gcloud` | Cloud Firestore API | `firestore/v1` | gateway | <https://cloud.google.com/firestore> |
+| `gcloud` | Cloud Functions API | `cloudfunctions/v2` | gateway | <https://cloud.google.com/functions> |
+| `gcloud` | Cloud Scheduler API | `cloudscheduler/v1` | gateway | <https://cloud.google.com/scheduler/> |
+| `gcloud` | Cloud Tasks API | `cloudtasks/v2` | gateway | <https://cloud.google.com/tasks/> |
+| `gcloud` | Cloud DNS API | `dns/v1` | gateway | <https://cloud.google.com/dns/docs> |
+| `gcloud` | Cloud Build API | `cloudbuild/v2` | gateway | <https://cloud.google.com/cloud-build/docs/> |
+| `gcloud` | Artifact Registry API | `artifactregistry/v1` | gateway | <https://cloud.google.com/artifacts/docs/> |
+| `gcloud` | Error Reporting API | `clouderrorreporting/v1beta1` | gateway | <https://cloud.google.com/error-reporting/> |
+| `gcloud` | Cloud Shell API | `cloudshell/v1` | gateway | <https://cloud.google.com/shell/docs/> |
+| `gcloud` | Essential Contacts API | `essentialcontacts/v1` | gateway | <https://cloud.google.com/essentialcontacts/docs/> |
+| `gcloud` | Public Certificate Authority API | `publicca/v1` | gateway | <https://cloud.google.com/public-certificate-authority/docs> |
+| `gcloud` | Traffic Director API | `trafficdirector/v3` | gateway | <https://cloud.google.com/traffic-director> |
+| `gcloud` | API Discovery Service | `discovery/v1` | gateway | <https://developers.google.com/discovery> |
+| `gcloud` | Service Control API | `servicecontrol/v2` | gateway | <https://cloud.google.com/service-control/> |
+| `gcloud` | Policy Analyzer API | `policyanalyzer/v1` | gateway | <https://cloud.google.com/policy-intelligence/docs/overview> |
+| `gcloud` | Cloud Runtime Configuration API | `runtimeconfig/v1` | gateway | <https://cloud.google.com/deployment-manager/runtime-configurator/> |
+| `gcloud` | KMS Inventory API | `kmsinventory/v1` | gateway | <https://cloud.google.com/kms/> |
+| `gcloud` | Cloud Billing Budget API | `billingbudgets/v1` | gateway | <https://cloud.google.com/billing/docs/how-to/budget-api-overview> |
+| `gcloud` | Cloud Location Finder API | `cloudlocationfinder/v1` | gateway | <https://cloud.google.com/location-finder/docs> |
+| `gcloud` | Security Token Service API | `sts/v1` | gateway | <http://cloud.google.com/iam/docs/workload-identity-federation> |
+| `gcloud` | IAM Service Account Credentials API | `iamcredentials/v1` | gateway | <https://cloud.google.com/iam/docs/creating-short-lived-service-account-credentials> |
+| `gcloud` | On-Demand Scanning API | `ondemandscanning/v1` | gateway | <https://cloud.google.com/container-analysis/docs/on-demand-scanning/> |
+| `gcloud` | Advisory Notifications API | `advisorynotifications/v1` | gateway | <https://cloud.google.com/advisory-notifications> |
+| `gcloud` | BigQuery Connection API | `bigqueryconnection/v1` | gateway | <https://cloud.google.com/bigquery/docs/connections-api-intro> |
+| `gcloud` | Database Center API | `databasecenter/v1beta` | gateway | <https://docs.cloud.google.com/database-center/docs/overview> |
+| `gcloud` | Data pipelines API | `datapipelines/v1` | gateway | <https://cloud.google.com/dataflow/docs/guides/data-pipelines> |
+| `gcloud` | Transcoder API | `transcoder/v1` | gateway | <https://cloud.google.com/transcoder/docs/> |
+| `gcloud` | Serverless VPC Access API | `vpcaccess/v1` | gateway | <https://cloud.google.com/vpc/docs/configure-serverless-vpc-access> |
+| `gcloud` | Cloud Product Registry API | `cloudproductregistry/v1` | gateway | <https://docs.cloud.google.com/product-registry> |
+| `gcloud` | Cloud OS Login API | `oslogin/v1` | gateway | <https://cloud.google.com/compute/docs/oslogin/> |
+| `gcloud` | BigQuery Data Policy API | `bigquerydatapolicy/v2` | gateway | <https://cloud.google.com/bigquery/docs/column-data-masking> |
+| `gcloud` | GKE Hub API | `gkehub/v2` | gateway | <https://cloud.google.com/anthos/multicluster-management/connect/registering-a-cluster> |
+| `gcloud` | Application Integration API | `integrations/v2` | gateway | <https://cloud.google.com/application-integration> |
+| `gcloud` | Workflow Executions API | `workflowexecutions/v1` | gateway | <https://cloud.google.com/workflows> |
+| `gcloud` | Blockchain Node Engine API | `blockchainnodeengine/v1` | gateway | <https://cloud.google.com/blockchain-node-engine> |
+| `gcloud` | Cluster Director API | `hypercomputecluster/v1` | gateway | <https://docs.cloud.google.com/cluster-director/docs> |
+| `gcloud` | Cloud IDS API | `ids/v1` | gateway | <https://cloud.google.com/> |
+| `gcloud` | Workflows API | `workflows/v1` | gateway | <https://cloud.google.com/workflows> |
+| `gcloud` | Cloud Commerce Partner Procurement API | `cloudcommerceprocurement/v1` | gateway | <https://cloud.google.com/marketplace/docs/partners/> |
+| `gcloud` | Cloud Controls Partner API | `cloudcontrolspartner/v1` | gateway | <https://cloud.google.com/sovereign-controls-by-partners/docs/sovereign-partners/reference/rest> |
+| `gcloud` | Parallelstore API | `parallelstore/v1` | gateway | <https://cloud.google.com/parallelstore> |
+| `gcloud` | Storage Batch Operations API | `storagebatchoperations/v1` | gateway | <https://cloud.google.com/storage/docs/batch-operations/overview> |
+| `gcloud` | Web Security Scanner API | `websecurityscanner/v1` | gateway | <https://cloud.google.com/security-command-center/docs/concepts-web-security-scanner-overview/> |
+| `gcloud` | Batch API | `batch/v1` | gateway | <https://cloud.google.com/batch/> |
+| `gcloud` | Service Consumer Management API | `serviceconsumermanagement/v1` | gateway | <https://cloud.google.com/service-consumer-management/docs/overview> |
+| `gcloud` | Rapid Migration Assessment API | `rapidmigrationassessment/v1` | gateway | <https://cloud.google.com/migration-center> |
+| `gcloud` | Cloud Memorystore for Memcached API | `memcache/v1` | gateway | <https://cloud.google.com/memorystore/> |
+| `gcloud` | Storage Transfer API | `storagetransfer/v1` | gateway | <https://cloud.google.com/storage-transfer/docs> |
+| `gcloud` | Cloud Datastore API | `datastore/v1` | gateway | <https://cloud.google.com/datastore/> |
+| `gcloud` | Cloud Deployment Manager V2 API | `deploymentmanager/v2` | gateway | <https://cloud.google.com/deployment-manager> |
+| `gcloud` | Cloud FTP API | `ftp/v1` | gateway | <https://docs.cloud.google.com/cloud-ftp> |
+| `gcloud` | Cloud Data Fusion API | `datafusion/v1` | gateway | <https://cloud.google.com/data-fusion/docs> |
+| `gcloud` | Cloud Identity-Aware Proxy API | `iap/v1` | gateway | <https://cloud.google.com/iap> |
+| `gcloud` | Looker (Google Cloud core) API | `looker/v1` | gateway | <https://cloud.google.com/looker/docs/reference/rest/> |
+| `gcloud` | Binary Authorization API | `binaryauthorization/v1` | gateway | <https://cloud.google.com/binary-authorization/> |
+| `gcloud` | Google Cloud Support API | `cloudsupport/v2` | gateway | <https://cloud.google.com/support/docs/apis> |
+| `gcloud` | Service Management API | `servicemanagement/v1` | gateway | <https://cloud.google.com/service-management/> |
+| `gcloud` | Threat Intelligence API | `threatintelligence/v1beta` | gateway | <https://docs.cloud.google.com/threatintelligence/> |
+| `gcloud` | API Management API | `apim/v1alpha` | gateway | <https://cloud.google.com/apigee/> |
+| `gcloud` | Security Posture API | `securityposture/v1` | gateway | <https://cloud.google.com/security-command-center> |
+| `gcloud` | Parameter Manager API | `parametermanager/v1` | gateway | <https://cloud.google.com/secret-manager/parameter-manager/docs/overview> |
+| `gcloud` | reCAPTCHA Enterprise API | `recaptchaenterprise/v1` | gateway | <https://cloud.google.com/recaptcha-enterprise/> |
+| `gcloud` | Service Directory API | `servicedirectory/v1` | gateway | <https://cloud.google.com/service-directory> |
+| `gcloud` | Cloud TPU API | `tpu/v2` | gateway | <https://cloud.google.com/tpu/> |
+| `gcloud` | Connectors API | `connectors/v2` | gateway | <https://cloud.google.com/apigee/docs/api-platform/connectors/about-connectors> |
+| `gcloud` | Cloud Filestore API | `file/v1` | gateway | <https://cloud.google.com/filestore/> |
+| `gcloud` | Access Approval API | `accessapproval/v1` | gateway | <https://cloud.google.com/assured-workloads/access-approval/docs> |
+| `gcloud` | Lakehouse API | `biglake/v1` | gateway | <https://cloud.google.com/products/lakehouse> |
+| `gcloud` | OS Config API | `osconfig/v2` | gateway | <https://cloud.google.com/compute/docs/osconfig/rest> |
+| `gcloud` | Policy Simulator API | `policysimulator/v1` | gateway | <https://cloud.google.com/iam/docs/simulating-access> |
+| `gcloud` | Data Lineage API | `datalineage/v1` | gateway | <https://cloud.google.com/data-catalog> |
+| `gcloud` | Cloud Domains API | `domains/v1` | gateway | <https://cloud.google.com/domains/> |
+| `gcloud` | Pub/Sub Lite API | `pubsublite/v1` | gateway | <https://cloud.google.com/pubsub/lite/docs> |
+| `gcloud` | Cloud Composer API | `composer/v1` | gateway | <https://cloud.google.com/composer/> |
+| `gcloud` | Service Networking API | `servicenetworking/v1` | gateway | <https://cloud.google.com/service-infrastructure/docs/service-networking/getting-started> |
+| `gcloud` | API Gateway API | `apigateway/v1` | gateway | <https://cloud.google.com/api-gateway/docs> |
+| `gcloud` | Workload Manager API | `workloadmanager/v1` | gateway | <https://cloud.google.com/workload-manager/docs> |
+| `gcloud` | Assured Workloads API | `assuredworkloads/v1` | gateway | <https://cloud.google.com/learnmoreurl> |
+| `gcloud` | Datastream API | `datastream/v1` | gateway | <https://cloud.google.com/datastream/> |
+| `gcloud` | BigQuery Reservation API | `bigqueryreservation/v1` | gateway | <https://cloud.google.com/bigquery/> |
+| `gcloud` | Cloud Workstations API | `workstations/v1` | gateway | <https://cloud.google.com/workstations> |
+| `gcloud` | Analytics Hub API | `analyticshub/v1` | gateway | <https://cloud.google.com/bigquery/docs/analytics-hub-introduction> |
+| `gcloud` | Certificate Manager API | `certificatemanager/v1` | gateway | <https://docs.cloud.google.com/certificate-manager/docs/overview> |
+| `gcloud` | BigQuery Data Transfer API | `bigquerydatatransfer/v1` | gateway | <https://cloud.google.com/bigquery-transfer/> |
+| `gcloud` | AlloyDB API | `alloydb/v1` | gateway | <https://cloud.google.com/alloydb/> |
+| `gcloud` | App Hub API | `apphub/v1` | gateway | <https://cloud.google.com/app-hub/docs/> |
+| `gcloud` | App Lifecycle Manager API | `saasservicemgmt/v1` | gateway | <https://docs.cloud.google.com/app-lifecycle-manager> |
+| `gcloud` | Cloud Number Registry API | `cloudnumberregistry/v1alpha` | gateway | <https://docs.cloud.google.com/number-registry/reference/rest> |
+| `gcloud` | Container Analysis API | `containeranalysis/v1` | gateway | <https://cloud.google.com/container-analysis/api/reference/rest/> |
+| `gcloud` | Observability API | `observability/v1` | gateway | <https://cloud.google.com/stackdriver/docs/> |
+| `gcloud` | Certificate Authority API | `privateca/v1` | gateway | <https://cloud.google.com/> |
+| `gcloud` | Developer Connect API | `developerconnect/v1` | gateway | <http://cloud.google.com/developer-connect/docs/overview> |
+| `gcloud` | Managed Service for Microsoft Active Directory API | `managedidentities/v1` | gateway | <https://cloud.google.com/managed-microsoft-ad/> |
+| `gcloud` | Infrastructure Manager API | `config/v1` | gateway | <https://cloud.google.com/infrastructure-manager/docs> |
+| `gcloud` | Google Cloud Memorystore for Redis API | `redis/v1` | gateway | <https://cloud.google.com/memorystore/docs/redis/> |
+| `gcloud` | Dataproc Metastore API | `metastore/v1` | gateway | <https://cloud.google.com/dataproc-metastore/docs> |
+| `gcloud` | Network Management API | `networkmanagement/v1` | gateway | <https://cloud.google.com/> |
+| `gcloud` | Recommender API | `recommender/v1` | gateway | <https://cloud.google.com/recommender/docs/> |
+| `gcloud` | Audit Manager API | `auditmanager/v1` | gateway | <https://cloud.google.com/assured-workloads/docs/audit-manager> |
+| `gcloud` | Bare Metal Solution API | `baremetalsolution/v2` | gateway | <https://cloud.google.com/bare-metal> |
+| `gcloud` | BeyondCorp API | `beyondcorp/v1` | gateway | <https://cloud.google.com/> |
+| `gcloud` | Dataflow API | `dataflow/v1b3` | gateway | <https://cloud.google.com/dataflow> |
+| `gcloud` | App Engine Admin API | `appengine/v1` | gateway | <https://cloud.google.com/appengine/docs/admin-api/> |
+| `gcloud` | Backup and DR Service API | `backupdr/v1` | gateway | <https://cloud.google.com/backup-disaster-recovery> |
+| `gcloud` | Cloud Deploy API | `clouddeploy/v1` | gateway | <https://cloud.google.com/deploy/> |
+| `gcloud` | Secure Source Manager API | `securesourcemanager/v1` | gateway | <https://cloud.google.com/secure-source-manager> |
+| `gcloud` | Cloud Channel API | `cloudchannel/v1` | gateway | <https://cloud.google.com/channel> |
+| `gcloud` | Eventarc API | `eventarc/v1` | gateway | <https://cloud.google.com/eventarc> |
+| `gcloud` | Backup for GKE API | `gkebackup/v1` | gateway | <https://cloud.google.com/kubernetes-engine/docs/add-on/backup-for-gke> |
+| `gcloud` | Migration Center API | `migrationcenter/v1` | gateway | <https://cloud.google.com/migration-center> |
+| `gcloud` | VM Migration API | `vmmigration/v1` | gateway | <https://cloud.google.com/migrate/virtual-machines> |
+| `gcloud` | Database Migration API | `datamigration/v1` | gateway | <https://cloud.google.com/database-migration/> |
+| `gcloud` | Google Cloud Data Catalog API | `datacatalog/v1` | gateway | <https://cloud.google.com/data-catalog/docs/> |
+| `gcloud` | GKE On-Prem API | `gkeonprem/v1` | gateway | <https://cloud.google.com/anthos/clusters/docs/on-prem/> |
+| `gcloud` | Cloud Bigtable Admin API | `bigtableadmin/v2` | gateway | <https://cloud.google.com/bigtable/> |
+| `gcloud` | NetApp API | `netapp/v1` | gateway | <https://cloud.google.com/netapp/> |
+| `gcloud` | SAS Portal API | `sasportal/v1alpha1` | gateway | <https://developers.google.com/spectrum-access-system/> |
+| `gcloud` | Dataform API | `dataform/v1` | gateway | <https://cloud.google.com/dataform/docs> |
+| `gcloud` | Managed Service for Apache Kafka API | `managedkafka/v1` | gateway | <https://cloud.google.com/managed-service-for-apache-kafka/docs> |
+| `gcloud` | Oracle Database@Google Cloud API | `oracledatabase/v1` | gateway | <https://cloud.google.com/oracle/database/docs> |
+| `gcloud` | API hub API | `apihub/v1` | gateway | <https://cloud.google.com/apigee/docs/api-hub/what-is-api-hub> |
+| `gcloud` | VMware Engine API | `vmwareengine/v1` | gateway | <https://cloud.google.com/solutions/vmware-as-a-service> |
+| `gcloud` | Network Connectivity API | `networkconnectivity/v1` | gateway | <https://cloud.google.com/network-connectivity/docs/reference/networkconnectivity/rest> |
+| `gcloud` | Network Services API | `networkservices/v1` | gateway | <https://cloud.google.com/networking> |
+| `gcloud` | Cloud Dataproc API | `dataproc/v1` | gateway | <https://cloud.google.com/dataproc/> |
+| `gcloud` | Cloud Healthcare API | `healthcare/v1` | gateway | <https://cloud.google.com/healthcare> |
+| `gcloud` | Network Security API | `networksecurity/v1` | gateway | <https://cloud.google.com/networking> |
+| `gcloud` | Cloud Dataplex API | `dataplex/v1` | gateway | <https://cloud.google.com/dataplex/docs> |
+| `gcloud` | Apigee API | `apigee/v1` | gateway | <https://cloud.google.com/apigee-api-management/> |
+| `gcloud` | AlloyDB API | `alloydb/v1alpha` | gateway | <https://cloud.google.com/alloydb/> |
+| `gcloud` | AlloyDB API | `alloydb/v1beta` | gateway | <https://cloud.google.com/alloydb/> |
+| `gcloud` | Analytics Hub API | `analyticshub/v1beta1` | gateway | <https://cloud.google.com/bigquery/docs/analytics-hub-introduction> |
+| `gcloud` | API Gateway API | `apigateway/v1beta` | gateway | <https://cloud.google.com/api-gateway/docs> |
+| `gcloud` | App Engine Admin API | `appengine/v1alpha` | gateway | <https://cloud.google.com/appengine/docs/admin-api/> |
+| `gcloud` | App Engine Admin API | `appengine/v1beta` | gateway | <https://cloud.google.com/appengine/docs/admin-api/> |
+| `gcloud` | App Hub API | `apphub/v1alpha` | gateway | <https://cloud.google.com/app-hub/docs/> |
+| `gcloud` | Artifact Registry API | `artifactregistry/v1beta1` | gateway | <https://cloud.google.com/artifacts/docs/> |
+| `gcloud` | Artifact Registry API | `artifactregistry/v1beta2` | gateway | <https://cloud.google.com/artifacts/docs/> |
+| `gcloud` | Assured Workloads API | `assuredworkloads/v1beta1` | gateway | <https://cloud.google.com/learnmoreurl> |
+| `gcloud` | Backup and DR Service API | `backupdr/v1beta` | gateway | <https://cloud.google.com/backup-disaster-recovery> |
+| `gcloud` | BeyondCorp API | `beyondcorp/v1alpha` | gateway | <https://cloud.google.com/> |
+| `gcloud` | BigQuery Connection API | `bigqueryconnection/v1beta1` | gateway | <https://cloud.google.com/bigquery/docs/connections-api-intro> |
+| `gcloud` | BigQuery Data Policy API | `bigquerydatapolicy/v1` | gateway | <https://cloud.google.com/bigquery/docs/column-data-masking> |
+| `gcloud` | Cloud Billing Budget API | `billingbudgets/v1beta1` | gateway | <https://cloud.google.com/billing/docs/how-to/budget-api-overview> |
+| `gcloud` | Binary Authorization API | `binaryauthorization/v1beta1` | gateway | <https://cloud.google.com/binary-authorization/> |
+| `gcloud` | Cloud Asset API | `cloudasset/v1beta1` | gateway | <https://cloud.google.com/asset-inventory/docs/quickstart> |
+| `gcloud` | Cloud Asset API | `cloudasset/v1p1beta1` | gateway | <https://cloud.google.com/asset-inventory/docs/quickstart> |
+| `gcloud` | Cloud Asset API | `cloudasset/v1p5beta1` | gateway | <https://cloud.google.com/asset-inventory/docs/quickstart> |
+| `gcloud` | Cloud Asset API | `cloudasset/v1p7beta1` | gateway | <https://cloud.google.com/asset-inventory/docs/quickstart> |
+| `gcloud` | Cloud Billing API | `cloudbilling/v1beta` | gateway | <https://cloud.google.com/billing/docs/apis> |
+| `gcloud` | Cloud Build API | `cloudbuild/v1` | gateway | <https://cloud.google.com/cloud-build/docs/> |
+| `gcloud` | Cloud Controls Partner API | `cloudcontrolspartner/v1beta` | gateway | <https://cloud.google.com/sovereign-controls-by-partners/docs/sovereign-partners/reference/rest> |
+| `gcloud` | Cloud Functions API | `cloudfunctions/v1` | gateway | <https://cloud.google.com/functions> |
+| `gcloud` | Cloud Functions API | `cloudfunctions/v2alpha` | gateway | <https://cloud.google.com/functions> |
+| `gcloud` | Cloud Functions API | `cloudfunctions/v2beta` | gateway | <https://cloud.google.com/functions> |
+| `gcloud` | Cloud Location Finder API | `cloudlocationfinder/v1alpha` | gateway | <https://cloud.google.com/location-finder/docs> |
+| `gcloud` | Cloud Quotas API | `cloudquotas/v1` | gateway | <https://cloud.google.com/docs/quotas> |
+| `gcloud` | Cloud Quotas API | `cloudquotas/v1beta` | gateway | <https://cloud.google.com/docs/quotas> |
+| `gcloud` | Cloud Resource Manager API | `cloudresourcemanager/v1` | gateway | <https://cloud.google.com/resource-manager> |
+| `gcloud` | Cloud Resource Manager API | `cloudresourcemanager/v1beta1` | gateway | <https://cloud.google.com/resource-manager> |
+| `gcloud` | Cloud Resource Manager API | `cloudresourcemanager/v2` | gateway | <https://cloud.google.com/resource-manager> |
+| `gcloud` | Cloud Resource Manager API | `cloudresourcemanager/v2beta1` | gateway | <https://cloud.google.com/resource-manager> |
+| `gcloud` | Cloud Scheduler API | `cloudscheduler/v1beta1` | gateway | <https://cloud.google.com/scheduler/> |
+| `gcloud` | Google Cloud Support API | `cloudsupport/v2beta` | gateway | <https://cloud.google.com/support/docs/apis> |
+| `gcloud` | Cloud Tasks API | `cloudtasks/v2beta2` | gateway | <https://cloud.google.com/tasks/> |
+| `gcloud` | Cloud Tasks API | `cloudtasks/v2beta3` | gateway | <https://cloud.google.com/tasks/> |
+| `gcloud` | Cloud Trace API | `cloudtrace/v1` | gateway | <https://cloud.google.com/trace/> |
+| `gcloud` | Cloud Trace API | `cloudtrace/v2beta1` | gateway | <https://cloud.google.com/trace/> |
+| `gcloud` | Cloud Composer API | `composer/v1beta1` | gateway | <https://cloud.google.com/composer/> |
+| `gcloud` | Compute Engine API | `compute/2026-09-01` | gateway | <https://cloud.google.com/compute/> |
+| `gcloud` | Compute Engine API | `compute/2026-10-01-preview` | gateway | <https://cloud.google.com/compute/> |
+| `gcloud` | Compute Engine API | `compute/alpha` | gateway | <https://developers.google.com/compute/docs/reference/latest/> |
+| `gcloud` | Compute Engine API | `compute/beta` | gateway | <https://developers.google.com/compute/docs/reference/latest/> |
+| `gcloud` | Compute Engine API | `compute/preview` | gateway | <https://cloud.google.com/compute/> |
+| `gcloud` | Compute Engine API | `compute/stable` | gateway | <https://cloud.google.com/compute/> |
+| `gcloud` | Connectors API | `connectors/v1` | gateway | <https://cloud.google.com/apigee/docs/api-platform/connectors/about-connectors> |
+| `gcloud` | Kubernetes Engine API | `container/v1beta1` | gateway | <https://cloud.google.com/kubernetes-engine/docs/> |
+| `gcloud` | Container Analysis API | `containeranalysis/v1alpha1` | gateway | <https://cloud.google.com/container-analysis/api/reference/rest/> |
+| `gcloud` | Container Analysis API | `containeranalysis/v1beta1` | gateway | <https://cloud.google.com/container-analysis/api/reference/rest/> |
+| `gcloud` | Google Cloud Data Catalog API | `datacatalog/v1beta1` | gateway | <https://cloud.google.com/data-catalog/docs/> |
+| `gcloud` | Dataform API | `dataform/v1beta1` | gateway | <https://cloud.google.com/dataform/docs> |
+| `gcloud` | Cloud Data Fusion API | `datafusion/v1beta1` | gateway | <https://cloud.google.com/data-fusion/docs> |
+| `gcloud` | Database Migration API | `datamigration/v1beta1` | gateway | <https://cloud.google.com/database-migration/> |
+| `gcloud` | Cloud Datastore API | `datastore/v1beta1` | gateway | <https://cloud.google.com/datastore/> |
+| `gcloud` | Cloud Datastore API | `datastore/v1beta3` | gateway | <https://cloud.google.com/datastore/> |
+| `gcloud` | Datastream API | `datastream/v1alpha1` | gateway | <https://cloud.google.com/datastream/> |
+| `gcloud` | Cloud Deployment Manager V2 API | `deploymentmanager/alpha` | gateway | <https://cloud.google.com/deployment-manager> |
+| `gcloud` | Cloud Deployment Manager V2 API | `deploymentmanager/v2beta` | gateway | <https://cloud.google.com/deployment-manager> |
+| `gcloud` | Cloud DNS API | `dns/v1beta2` | gateway | <https://cloud.google.com/dns/docs> |
+| `gcloud` | Cloud Domains API | `domains/v1alpha2` | gateway | <https://cloud.google.com/domains/> |
+| `gcloud` | Cloud Domains API | `domains/v1beta1` | gateway | <https://cloud.google.com/domains/> |
+| `gcloud` | Cloud Filestore API | `file/v1beta1` | gateway | <https://cloud.google.com/filestore/> |
+| `gcloud` | Cloud Firestore API | `firestore/v1beta1` | gateway | <https://cloud.google.com/firestore> |
+| `gcloud` | Cloud Firestore API | `firestore/v1beta2` | gateway | <https://cloud.google.com/firestore> |
+| `gcloud` | Cloud FTP API | `ftp/v1alpha` | gateway | <https://docs.cloud.google.com/cloud-ftp> |
+| `gcloud` | GKE Hub API | `gkehub/v1` | gateway | <https://cloud.google.com/anthos/multicluster-management/connect/registering-a-cluster> |
+| `gcloud` | GKE Hub API | `gkehub/v1alpha` | gateway | <https://cloud.google.com/anthos/multicluster-management/connect/registering-a-cluster> |
+| `gcloud` | GKE Hub API | `gkehub/v1beta` | gateway | <https://cloud.google.com/anthos/multicluster-management/connect/registering-a-cluster> |
+| `gcloud` | GKE Hub API | `gkehub/v1beta1` | gateway | <https://cloud.google.com/anthos/multicluster-management/connect/registering-a-cluster> |
+| `gcloud` | GKE Hub API | `gkehub/v2alpha` | gateway | <https://cloud.google.com/anthos/multicluster-management/connect/registering-a-cluster> |
+| `gcloud` | GKE Hub API | `gkehub/v2beta` | gateway | <https://cloud.google.com/anthos/multicluster-management/connect/registering-a-cluster> |
+| `gcloud` | Cloud Healthcare API | `healthcare/v1beta1` | gateway | <https://cloud.google.com/healthcare> |
+| `gcloud` | Identity and Access Management (IAM) API | `iam/v1` | gateway | <https://cloud.google.com/iam/> |
+| `gcloud` | Identity and Access Management (IAM) API | `iam/v2beta` | gateway | <https://cloud.google.com/iam/> |
+| `gcloud` | Cloud Identity-Aware Proxy API | `iap/v1beta1` | gateway | <https://cloud.google.com/iap> |
+| `gcloud` | Application Integration API | `integrations/v1` | gateway | <https://cloud.google.com/application-integration> |
+| `gcloud` | Managed Service for Microsoft Active Directory API | `managedidentities/v1alpha1` | gateway | <https://cloud.google.com/managed-microsoft-ad/> |
+| `gcloud` | Managed Service for Microsoft Active Directory API | `managedidentities/v1beta1` | gateway | <https://cloud.google.com/managed-microsoft-ad/> |
+| `gcloud` | Cloud Memorystore for Memcached API | `memcache/v1beta2` | gateway | <https://cloud.google.com/memorystore/> |
+| `gcloud` | Dataproc Metastore API | `metastore/v1alpha` | gateway | <https://cloud.google.com/dataproc-metastore/docs> |
+| `gcloud` | Dataproc Metastore API | `metastore/v1beta` | gateway | <https://cloud.google.com/dataproc-metastore/docs> |
+| `gcloud` | Migration Center API | `migrationcenter/v1alpha1` | gateway | <https://cloud.google.com/migration-center> |
+| `gcloud` | Cloud Monitoring API | `monitoring/v1` | gateway | <https://cloud.google.com/monitoring/api/> |
+| `gcloud` | NetApp API | `netapp/v1beta1` | gateway | <https://cloud.google.com/netapp/> |
+| `gcloud` | Network Connectivity API | `networkconnectivity/v1alpha1` | gateway | <https://cloud.google.com/network-connectivity/docs/reference/networkconnectivity/rest> |
+| `gcloud` | Network Management API | `networkmanagement/v1beta1` | gateway | <https://cloud.google.com/> |
+| `gcloud` | Network Security API | `networksecurity/v1beta1` | gateway | <https://cloud.google.com/networking> |
+| `gcloud` | Network Services API | `networkservices/v1beta1` | gateway | <https://cloud.google.com/networking> |
+| `gcloud` | On-Demand Scanning API | `ondemandscanning/v1beta1` | gateway | <https://cloud.google.com/container-analysis/docs/on-demand-scanning/> |
+| `gcloud` | OS Config API | `osconfig/v1` | gateway | <https://cloud.google.com/compute/docs/osconfig/rest> |
+| `gcloud` | OS Config API | `osconfig/v1alpha` | gateway | <https://cloud.google.com/compute/docs/osconfig/rest> |
+| `gcloud` | OS Config API | `osconfig/v1beta` | gateway | <https://cloud.google.com/compute/docs/osconfig/rest> |
+| `gcloud` | OS Config API | `osconfig/v2beta` | gateway | <https://cloud.google.com/compute/docs/osconfig/rest> |
+| `gcloud` | Cloud OS Login API | `oslogin/v1alpha` | gateway | <https://cloud.google.com/compute/docs/oslogin/> |
+| `gcloud` | Cloud OS Login API | `oslogin/v1beta` | gateway | <https://cloud.google.com/compute/docs/oslogin/> |
+| `gcloud` | Parallelstore API | `parallelstore/v1beta` | gateway | <https://cloud.google.com/parallelstore> |
+| `gcloud` | Policy Analyzer API | `policyanalyzer/v1beta1` | gateway | <https://cloud.google.com/policy-intelligence/docs/overview> |
+| `gcloud` | Policy Simulator API | `policysimulator/v1alpha` | gateway | <https://cloud.google.com/iam/docs/simulating-access> |
+| `gcloud` | Policy Simulator API | `policysimulator/v1beta` | gateway | <https://cloud.google.com/iam/docs/simulating-access> |
+| `gcloud` | Policy Troubleshooter API | `policytroubleshooter/v1` | gateway | <https://cloud.google.com/iam/> |
+| `gcloud` | Policy Troubleshooter API | `policytroubleshooter/v1beta` | gateway | <https://cloud.google.com/iam/> |
+| `gcloud` | Policy Troubleshooter API | `policytroubleshooter/v3beta` | gateway | <https://cloud.google.com/iam/> |
+| `gcloud` | Certificate Authority API | `privateca/v1beta1` | gateway | <https://cloud.google.com/> |
+| `gcloud` | Public Certificate Authority API | `publicca/v1alpha1` | gateway | <https://cloud.google.com/public-certificate-authority/docs> |
+| `gcloud` | Public Certificate Authority API | `publicca/v1beta1` | gateway | <https://cloud.google.com/public-certificate-authority/docs> |
+| `gcloud` | Cloud Pub/Sub API | `pubsub/v1beta1a` | gateway | <https://cloud.google.com/pubsub/docs> |
+| `gcloud` | Cloud Pub/Sub API | `pubsub/v1beta2` | gateway | <https://cloud.google.com/pubsub/docs> |
+| `gcloud` | Recommender API | `recommender/v1beta1` | gateway | <https://cloud.google.com/recommender/docs/> |
+| `gcloud` | Google Cloud Memorystore for Redis API | `redis/v1beta1` | gateway | <https://cloud.google.com/memorystore/docs/redis/> |
+| `gcloud` | Cloud Run Admin API | `run/v1` | gateway | <https://cloud.google.com/run/> |
+| `gcloud` | Cloud Runtime Configuration API | `runtimeconfig/v1beta1` | gateway | <https://cloud.google.com/deployment-manager/runtime-configurator/> |
+| `gcloud` | App Lifecycle Manager API | `saasservicemgmt/v1beta1` | gateway | <https://docs.cloud.google.com/app-lifecycle-manager> |
+| `gcloud` | Secret Manager API | `secretmanager/v1beta1` | gateway | <https://cloud.google.com/secret-manager/> |
+| `gcloud` | Secret Manager API | `secretmanager/v1beta2` | gateway | <https://cloud.google.com/secret-manager/> |
+| `gcloud` | Security Command Center API | `securitycenter/v1beta1` | gateway | <https://cloud.google.com/security-command-center> |
+| `gcloud` | Security Command Center API | `securitycenter/v1beta2` | gateway | <https://cloud.google.com/security-command-center> |
+| `gcloud` | Service Consumer Management API | `serviceconsumermanagement/v1beta1` | gateway | <https://cloud.google.com/service-consumer-management/docs/overview> |
+| `gcloud` | Service Control API | `servicecontrol/v1` | gateway | <https://cloud.google.com/service-control/> |
+| `gcloud` | Service Directory API | `servicedirectory/v1beta1` | gateway | <https://cloud.google.com/service-directory> |
+| `gcloud` | Service Networking API | `servicenetworking/v1beta` | gateway | <https://cloud.google.com/service-infrastructure/docs/service-networking/getting-started> |
+| `gcloud` | Service Usage API | `serviceusage/v1beta1` | gateway | <https://cloud.google.com/service-usage/> |
+| `gcloud` | Cloud SQL Admin API | `sqladmin/v1beta4` | gateway | <https://cloud.google.com/sql/docs> |
+| `gcloud` | Security Token Service API | `sts/v1beta` | gateway | <http://cloud.google.com/iam/docs/workload-identity-federation> |
+| `gcloud` | Cloud TPU API | `tpu/v1` | gateway | <https://cloud.google.com/tpu/> |
+| `gcloud` | Cloud TPU API | `tpu/v1alpha1` | gateway | <https://cloud.google.com/tpu/> |
+| `gcloud` | Cloud TPU API | `tpu/v2alpha1` | gateway | <https://cloud.google.com/tpu/> |
+| `gcloud` | Traffic Director API | `trafficdirector/v2` | gateway | <https://cloud.google.com/traffic-director> |
+| `gcloud` | VM Migration API | `vmmigration/v1alpha1` | gateway | <https://cloud.google.com/migrate/virtual-machines> |
+| `gcloud` | Serverless VPC Access API | `vpcaccess/v1beta1` | gateway | <https://cloud.google.com/vpc/docs/configure-serverless-vpc-access> |
+| `gcloud` | Web Security Scanner API | `websecurityscanner/v1alpha` | gateway | <https://cloud.google.com/security-command-center/docs/concepts-web-security-scanner-overview/> |
+| `gcloud` | Web Security Scanner API | `websecurityscanner/v1beta` | gateway | <https://cloud.google.com/security-command-center/docs/concepts-web-security-scanner-overview/> |
+| `gcloud` | Workflow Executions API | `workflowexecutions/v1beta` | gateway | <https://cloud.google.com/workflows> |
+| `gcloud` | Workflows API | `workflows/v1beta` | gateway | <https://cloud.google.com/workflows> |
+| `gcloud` | Cloud Workstations API | `workstations/v1beta` | gateway | <https://cloud.google.com/workstations> |
+| `gsc` | Google Search Console API | `searchconsole/v1` | per-method | <https://developers.google.com/webmaster-tools/about> |
+| `gsc` | Site Verification API | `siteVerification/v1` | per-method | <https://code.google.com/apis/siteverification/> |
+| `gsc` | Web Search Indexing API | `indexing/v3` | per-method | <https://developers.google.com/search/apis/indexing-api/> |
+| `gsearch` | Custom Search API | `customsearch/v1` | per-method | <https://developers.google.com/custom-search/v1/introduction> |
+| `gsearch` | PageSpeed Insights API | `pagespeedonline/v5` | per-method | <https://developers.google.com/speed/docs/insights/v5/about> |
+| `gsearch` | Chrome UX Report API | `chromeuxreport/v1` | per-method | <https://developers.google.com/web/tools/chrome-user-experience-report/api/reference> |
+| `gsearch` | Knowledge Graph Search API | `kgsearch/v1` | per-method | <https://developers.google.com/knowledge-graph/> |
+| `gsearch` | Safe Browsing API | `safebrowsing/v5` | per-method | <https://developers.google.com/safe-browsing/> |
+| `gsearch` | Fact Check Tools API | `factchecktools/v1alpha1` | per-method | <https://developers.google.com/fact-check/tools/api/> |
+| `gsearch` | Accelerated Mobile Pages (AMP) URL API | `acceleratedmobilepageurl/v1` | per-method | <https://developers.google.com/amp/cache/> |
+| `gsearch` | Abusive Experience Report API | `abusiveexperiencereport/v1` | per-method | <https://developers.google.com/abusive-experience-report/> |
+| `gsearch` | Ad Experience Report API | `adexperiencereport/v1` | per-method | <https://developers.google.com/ad-experience-report/> |
+| `gsearch` | Web Fonts Developer API | `webfonts/v1` | per-method | <https://developers.google.com/fonts/docs/developer_api> |
+| `gsearch` | Web Risk API | `webrisk/v1` | per-method | <https://cloud.google.com/web-risk/> |
+| `gsearch` | Google Civic Information API | `civicinfo/v2` | per-method | <https://developers.google.com/civic-information/> |
+| `gsearch` | Digital Asset Links API | `digitalassetlinks/v1` | per-method | <https://developers.google.com/digital-asset-links/> |
+| `gsearch` | versionhistory.googleapis.com API | `versionhistory/v1` | per-method | <https://developer.chrome.com/docs/web-platform/versionhistory/guide> |
+| `gsearch` | Developer Knowledge API | `developerknowledge/v1` | per-method | <https://developers.google.com/knowledge> |
+| `gsearch` | Developer Knowledge API | `developerknowledge/v1alpha` | gateway | <https://developers.google.com/knowledge> |
+| `gsearch` | Safe Browsing API | `safebrowsing/v4` | gateway | <https://developers.google.com/safe-browsing/> |
+| `gdrive` | Drive API | `drive/v3` | per-method | <https://developers.google.com/drive/> |
+| `gdrive` | Drive Activity API | `driveactivity/v2` | per-method | <https://developers.google.com/workspace/drive/activity/> |
+| `gdrive` | Drive Labels API | `drivelabels/v2` | per-method | <https://developers.google.com/workspace/drive/labels> |
+| `gdrive` | Google Docs API | `docs/v1` | per-method | <https://developers.google.com/workspace/docs/> |
+| `gdrive` | Google Sheets API | `sheets/v4` | per-method | <https://developers.google.com/workspace/sheets/> |
+| `gdrive` | Google Slides API | `slides/v1` | per-method | <https://developers.google.com/workspace/slides/> |
+| `gdrive` | Google Forms API | `forms/v1` | per-method | <https://developers.google.com/workspace/forms/api> |
+| `gdrive` | Books API | `books/v1` | per-method | <https://code.google.com/apis/books/docs/v1/getting_started.html> |
+| `gdrive` | Drive API | `drive/v2` | gateway | <https://developers.google.com/drive/> |
+| `gdrive` | Drive Labels API | `drivelabels/v2beta` | gateway | <https://developers.google.com/workspace/drive/labels> |
+| `gmail` | Gmail API | `gmail/v1` | per-method | <https://developers.google.com/workspace/gmail/api/> |
+| `gmail` | Gmail Postmaster Tools API | `gmailpostmastertools/v2` | per-method | <https://developers.google.com/workspace/gmail/postmaster> |
+| `gmail` | Gmail Postmaster Tools API | `gmailpostmastertools/v1` | gateway | <https://developers.google.com/workspace/gmail/postmaster> |
+| `gmail` | Gmail Postmaster Tools API | `gmailpostmastertools/v1beta1` | gateway | <https://developers.google.com/workspace/gmail/postmaster> |
+| `gcalendar` | Google Calendar API | `calendar/v3` | per-method | <http://code.google.com/apis/calendar/v3/> |
+| `gchat` | Google Chat API | `chat/v1` | per-method | <https://developers.google.com/workspace/chat> |
+| `gchat` | Google Workspace Events API | `workspaceevents/v1` | per-method | <https://developers.google.com/workspace/events> |
+| `gmeet` | Google Meet API | `meet/v2` | per-method | <https://developers.google.com/workspace/meet/api> |
+| `gcontacts` | People API | `people/v1` | per-method | <https://developers.google.com/people/> |
+| `gcontacts` | Google Health API | `health/v4` | per-method | <https://developers.google.com/health> |
+| `gcontacts` | Data Portability API | `dataportability/v1` | per-method | <https://developers.google.com/data-portability> |
+| `gcontacts` | Google OAuth2 API | `oauth2/v2` | per-method | <https://developers.google.com/accounts/docs/OAuth2> |
+| `gcontacts` | Data Portability API | `dataportability/v1beta` | gateway | <https://developers.google.com/data-portability> |
+| `gcontacts` | Google Health API | `health/v4beta` | gateway | <https://developers.google.com/health> |
+| `gtasks` | Google Tasks API | `tasks/v1` | per-method | <https://developers.google.com/workspace/tasks/> |
+| `gtasks` | Google Keep API | `keep/v1` | per-method | <https://developers.google.com/workspace/keep/api> |
+| `gclassroom` | Google Classroom API | `classroom/v1` | per-method | <https://developers.google.com/workspace/classroom> |
+| `gapps` | Apps Script API | `script/v1` | per-method | <https://developers.google.com/apps-script/api/> |
+| `gapps` | Google Workspace Marketplace API | `appsmarket/v2` | per-method | <https://developers.google.com/workspace/marketplace> |
+| `gadmin` | Admin SDK API | `admin/reports_v1` | per-method | <https://developers.google.com/workspace/admin/> |
+| `gadmin` | Google Workspace Alert Center API | `alertcenter/v1beta1` | per-method | <https://developers.google.com/workspace/admin/alertcenter/> |
+| `gadmin` | Cloud Identity API | `cloudidentity/v1` | per-method | <https://cloud.google.com/identity/> |
+| `gadmin` | Chrome Policy API | `chromepolicy/v1` | per-method | <http://developers.google.com/chrome/policy> |
+| `gadmin` | Groups Settings API | `groupssettings/v1` | per-method | <https://developers.google.com/admin-sdk/groups-settings> |
+| `gadmin` | Google Vault API | `vault/v1` | per-method | <https://developers.google.com/vault> |
+| `gadmin` | Google Workspace Reseller API | `reseller/v1` | per-method | <https://developers.google.com/google-apps/reseller/> |
+| `gadmin` | Enterprise License Manager API | `licensing/v1` | per-method | <https://developers.google.com/workspace/admin/licensing/> |
+| `gadmin` | Chrome Verified Access API | `verifiedaccess/v2` | per-method | <https://developers.google.com/chrome/verified-access> |
+| `gadmin` | Cloud Search API | `cloudsearch/v1` | per-method | <https://developers.google.com/workspace/cloud-search/docs/guides/> |
+| `gadmin` | Admin SDK API | `admin/datatransfer_v1` | per-method | <https://developers.google.com/workspace/admin/> |
+| `gadmin` | Admin SDK API | `admin/directory_v1` | per-method | <https://developers.google.com/workspace/admin/> |
+| `gadmin` | Groups Migration API | `groupsmigration/v1` | gateway | <https://developers.google.com/google-apps/groups-migration/> |
+| `gadmin` | Chrome Management API | `chromemanagement/v1` | gateway | <https://developers.google.com/chrome/management/> |
+| `gadmin` | Cloud Identity API | `cloudidentity/v1beta1` | gateway | <https://cloud.google.com/identity/> |
+| `gadmin` | Chrome Verified Access API | `verifiedaccess/v1` | gateway | <https://developers.google.com/chrome/verified-access> |
+| `ganalytics` | Google Analytics Admin API | `analyticsadmin/v1beta` | per-method | <http://code.google.com/apis/analytics/docs/mgmt/home.html> |
+| `ganalytics` | Google Analytics Data API | `analyticsdata/v1beta` | per-method | <https://developers.google.com/analytics/devguides/reporting/data/v1/> |
+| `ganalytics` | Google Analytics Admin API | `analyticsadmin/v1alpha` | gateway | <http://code.google.com/apis/analytics/docs/mgmt/home.html> |
+| `gtm` | Tag Manager API | `tagmanager/v2` | per-method | <https://developers.google.com/tag-manager> |
+| `gtm` | Tag Manager API | `tagmanager/v1` | gateway | <https://developers.google.com/tag-manager> |
+| `gyoutube` | YouTube Data API v3 | `youtube/v3` | per-method | <https://developers.google.com/youtube/> |
+| `gyoutube` | YouTube Analytics API | `youtubeAnalytics/v2` | per-method | <https://developers.google.com/youtube/analytics> |
+| `gyoutube` | YouTube Reporting API | `youtubereporting/v1` | per-method | <https://developers.google.com/youtube/reporting/v1/reports/> |
+| `gyoutube` | Blogger API | `blogger/v3` | per-method | <https://developers.google.com/blogger/docs/3.0/getting_started> |
+| `gbusiness` | My Business Account Management API | `mybusinessaccountmanagement/v1` | per-method | <https://developers.google.com/my-business/> |
+| `gbusiness` | My Business Business Information API | `mybusinessbusinessinformation/v1` | per-method | <https://developers.google.com/my-business/> |
+| `gbusiness` | My Business Lodging API | `mybusinesslodging/v1` | per-method | <https://developers.google.com/my-business/> |
+| `gbusiness` | My Business Notifications API | `mybusinessnotifications/v1` | per-method | <https://developers.google.com/my-business/> |
+| `gbusiness` | My Business Place Actions API | `mybusinessplaceactions/v1` | per-method | <https://developers.google.com/my-business/> |
+| `gbusiness` | My Business Verifications API | `mybusinessverifications/v1` | per-method | <https://developers.google.com/my-business/> |
+| `gbusiness` | Business Profile Performance API | `businessprofileperformance/v1` | per-method | <https://developers.google.com/my-business/> |
+| `gads` | Google Ads API | `googleads/v26` | per-method | <https://developers.google.com/google-ads/api/> |
+| `gads` | Search Ads 360 Reporting API | `searchads360/v23` | per-method | <https://developers.google.com/search-ads/reporting> |
+| `gads` | Display & Video 360 API | `displayvideo/v4` | per-method | <https://developers.google.com/display-video/> |
+| `gads` | AdMob API | `admob/v1` | per-method | <https://developers.google.com/admob/api/> |
+| `gads` | DoubleClick Bid Manager API | `doubleclickbidmanager/v2` | per-method | <https://developers.google.com/bid-manager/> |
+| `gads` | AdSense Management API | `adsense/v2` | gateway | <https://developers.google.com/adsense/management/> |
+| `gads` | Ad Exchange Buyer API II | `adexchangebuyer2/v2beta1` | gateway | <https://developers.google.com/authorized-buyers/apis/reference/rest/> |
+| `gads` | Campaign Manager 360 API | `dfareporting/v5` | gateway | <https://developers.google.com/doubleclick-advertisers/> |
+| `gads` | Real-time Bidding API | `realtimebidding/v1` | gateway | <https://developers.google.com/authorized-buyers/apis/realtimebidding/reference/rest/> |
+| `gads` | Search Ads 360 API | `doubleclicksearch/v2` | gateway | <https://developers.google.com/search-ads> |
+| `gads` | AdSense Platform API | `adsenseplatform/v1` | gateway | <https://developers.google.com/adsense/platforms/> |
+| `gads` | Google Marketing Platform Admin API | `marketingplatformadmin/v1alpha` | gateway | <https://developers.google.com/analytics/devguides/config/gmp/v1> |
+| `gads` | Authorized Buyers Marketplace API | `authorizedbuyersmarketplace/v1` | gateway | <https://developers.google.com/authorized-buyers/apis/marketplace/reference/rest/> |
+| `gads` | Data Manager API | `datamanager/v1` | gateway | <https://developers.google.com/data-manager> |
+| `gads` | Agencies and Brands API | `agenciesandbrands/v1` | gateway | <https://developers.google.com/authorized-buyers/agencies-and-brands/get-started/start> |
+| `gads` | Curation Partners API | `curationpartners/v1` | gateway | <https://developers.google.com/authorized-buyers/curation/apis/guides/curationpartners/overview> |
+| `gads` | Local Services API | `localservices/v1` | gateway | <https://ads.google.com/local-services-ads/> |
+| `gads` | Reader Revenue Subscription Linking API | `readerrevenuesubscriptionlinking/v1` | gateway | <https://developers.google.com/news/subscribe/subscription-linking/overview> |
+| `gads` | Web Content Publisher API | `webcontentpublisher/v1` | gateway | <https://developers.google.com/news/subscribe> |
+| `gads` | Checks API | `checks/v1alpha` | gateway | <https://developers.google.com/checks> |
+| `gads` | AdMob API | `admob/v1beta` | gateway | <https://developers.google.com/admob/api/> |
+| `gads` | AdSense Platform API | `adsenseplatform/v1alpha` | gateway | <https://developers.google.com/adsense/platforms/> |
+| `gads` | Authorized Buyers Marketplace API | `authorizedbuyersmarketplace/v1alpha` | gateway | <https://developers.google.com/authorized-buyers/apis/marketplace/reference/rest/> |
+| `gads` | Authorized Buyers Marketplace API | `authorizedbuyersmarketplace/v1beta` | gateway | <https://developers.google.com/authorized-buyers/apis/marketplace/reference/rest/> |
+| `gads` | Campaign Manager 360 API | `dfareporting/v3.5` | gateway | <https://developers.google.com/doubleclick-advertisers/> |
+| `gads` | Display & Video 360 API | `displayvideo/v2` | gateway | <https://developers.google.com/display-video/> |
+| `gads` | Display & Video 360 API | `displayvideo/v3` | gateway | <https://developers.google.com/display-video/> |
+| `gads` | Search Ads 360 Reporting API | `searchads360/v0` | gateway | <https://developers.google.com/search-ads/reporting> |
+| `gads` | Display & Video 360 API | `displayvideo/v4` | gateway | <https://developers.google.com/display-video/> |
+| `gads` | Google Ads API | `googleads/v26` | gateway | <https://developers.google.com/google-ads/api/> |
+| `gmerchant` | Merchant API | `merchantapi/reviews_v1beta` | per-method | <https://developers.google.com/merchant/api> |
+| `gmerchant` | CSS API | `css/v1` | per-method | <https://developers.google.com/comparison-shopping-services/api/overview> |
+| `gmerchant` | Manufacturer Center API | `manufacturers/v1` | per-method | <https://developers.google.com/manufacturers/> |
+| `gmerchant` | Merchant API | `merchantapi/accounts_v1` | per-method | <https://developers.google.com/merchant/api> |
+| `gmerchant` | Merchant API | `merchantapi/conversions_v1` | per-method | <https://developers.google.com/merchant/api> |
+| `gmerchant` | Merchant API | `merchantapi/datasources_v1` | per-method | <https://developers.google.com/merchant/api> |
+| `gmerchant` | Merchant API | `merchantapi/inventories_v1` | per-method | <https://developers.google.com/merchant/api> |
+| `gmerchant` | Merchant API | `merchantapi/issueresolution_v1` | per-method | <https://developers.google.com/merchant/api> |
+| `gmerchant` | Merchant API | `merchantapi/lfp_v1` | per-method | <https://developers.google.com/merchant/api> |
+| `gmerchant` | Merchant API | `merchantapi/loyaltycustomers_v1` | per-method | <https://developers.google.com/merchant/api> |
+| `gmerchant` | Merchant API | `merchantapi/notifications_v1` | per-method | <https://developers.google.com/merchant/api> |
+| `gmerchant` | Merchant API | `merchantapi/ordertracking_v1` | per-method | <https://developers.google.com/merchant/api> |
+| `gmerchant` | Merchant API | `merchantapi/products_v1` | per-method | <https://developers.google.com/merchant/api> |
+| `gmerchant` | Merchant API | `merchantapi/promotions_v1` | per-method | <https://developers.google.com/merchant/api> |
+| `gmerchant` | Merchant API | `merchantapi/quota_v1` | per-method | <https://developers.google.com/merchant/api> |
+| `gmerchant` | Merchant API | `merchantapi/reports_v1` | per-method | <https://developers.google.com/merchant/api> |
+| `gmerchant` | Merchant API | `merchantapi/accounts_v1beta` | gateway | <https://developers.google.com/merchant/api> |
+| `gmerchant` | Merchant API | `merchantapi/conversions_v1beta` | gateway | <https://developers.google.com/merchant/api> |
+| `gmerchant` | Merchant API | `merchantapi/datasources_v1beta` | gateway | <https://developers.google.com/merchant/api> |
+| `gmerchant` | Merchant API | `merchantapi/inventories_v1beta` | gateway | <https://developers.google.com/merchant/api> |
+| `gmerchant` | Merchant API | `merchantapi/issueresolution_v1beta` | gateway | <https://developers.google.com/merchant/api> |
+| `gmerchant` | Merchant API | `merchantapi/lfp_v1beta` | gateway | <https://developers.google.com/merchant/api> |
+| `gmerchant` | Merchant API | `merchantapi/notifications_v1beta` | gateway | <https://developers.google.com/merchant/api> |
+| `gmerchant` | Merchant API | `merchantapi/ordertracking_v1beta` | gateway | <https://developers.google.com/merchant/api> |
+| `gmerchant` | Merchant API | `merchantapi/products_v1beta` | gateway | <https://developers.google.com/merchant/api> |
+| `gmerchant` | Merchant API | `merchantapi/promotions_v1beta` | gateway | <https://developers.google.com/merchant/api> |
+| `gmerchant` | Merchant API | `merchantapi/quota_v1beta` | gateway | <https://developers.google.com/merchant/api> |
+| `gmerchant` | Merchant API | `merchantapi/reports_v1beta` | gateway | <https://developers.google.com/merchant/api> |
+| `gplay` | Google Play Android Developer API | `androidpublisher/v3` | per-method | <https://developers.google.com/android-publisher> |
+| `gplay` | Google Play Developer Reporting API | `playdeveloperreporting/v1beta1` | per-method | <https://developers.google.com/play/developer/reporting> |
+| `gplay` | Google Play Games Services API | `games/v1` | per-method | <https://developers.google.com/games/> |
+| `gplay` | Google Play Games Services Management API | `gamesManagement/v1management` | per-method | <https://developers.google.com/games/> |
+| `gplay` | Google Play Games Services Publishing API | `gamesConfiguration/v1configuration` | per-method | <https://developers.google.com/games/> |
+| `gplay` | Google Play EMM API | `androidenterprise/v1` | per-method | <https://developers.google.com/android/work/play/emm-api> |
+| `gplay` | Android Device Provisioning Partner API | `androiddeviceprovisioning/v1` | per-method | <https://developers.google.com/zero-touch/> |
+| `gplay` | Google Play Integrity API | `playintegrity/v1` | per-method | <https://developer.android.com/google/play/integrity> |
+| `gplay` | Google Play Grouping API | `playgrouping/v1alpha1` | per-method | <https://cloud.google.com/playgrouping/> |
+| `gplay` | Android Developer ID Status API | `androiddeveloperidstatus/v1` | per-method | <https://developer.android.com/developer-verification/guides/check-registration-status> |
+| `gplay` | Chrome Web Store API | `chromewebstore/v2` | per-method | <https://developer.chrome.com/docs/webstore/api> |
+| `gplay` | Smart Device Management API | `smartdevicemanagement/v1` | per-method | <https://developers.google.com/nest/device-access> |
+| `gplay` | Android Management API | `androidmanagement/v1` | gateway | <https://developers.google.com/android/management> |
+| `gplay` | HomeGraph API | `homegraph/v1` | gateway | <https://developers.home.google.com/cloud-to-cloud/get-started> |
+| `gplay` | Payments Reseller Subscription API | `paymentsresellersubscription/v1` | gateway | <https://developers.google.com/payments/reseller/subscription/> |
+| `gplay` | Google Wallet API | `walletobjects/v1` | gateway | <https://developers.google.com/pay/passes> |
+| `gplay` | Google Play Custom App Publishing API | `playcustomapp/v1` | gateway | <https://developers.google.com/android/work/play/custom-app-api/> |
+| `gplay` | Chrome Web Store API | `chromewebstore/v1.1` | gateway | <https://developer.chrome.com/docs/webstore/api> |
+| `gplay` | Google Play Developer Reporting API | `playdeveloperreporting/v1alpha1` | gateway | <https://developers.google.com/play/developer/reporting> |
+| `gfirebase` | Firebase Management API | `firebase/v1beta1` | per-method | <https://firebase.google.com> |
+| `gfirebase` | Firebase App Check API | `firebaseappcheck/v1` | per-method | <https://firebase.google.com/docs/app-check> |
+| `gfirebase` | Firebase App Distribution API | `firebaseappdistribution/v1` | per-method | <https://firebase.google.com/products/app-distribution> |
+| `gfirebase` | Firebase App Hosting API | `firebaseapphosting/v1` | per-method | <https://firebase.google.com/docs/app-hosting> |
+| `gfirebase` | Firebase Crashlytics API | `firebasecrashlytics/v1alpha` | per-method | <https://firebase.google.com/docs/crashlytics> |
+| `gfirebase` | Firebase Realtime Database Management API | `firebasedatabase/v1beta` | per-method | <https://firebase.google.com/docs/reference/rest/database/database-management/rest/> |
+| `gfirebase` | Firebase SQL Connect API | `firebasedataconnect/v1` | per-method | <https://firebase.google.com/docs/data-connect> |
+| `gfirebase` | Firebase Hosting API | `firebasehosting/v1` | per-method | <https://firebase.google.com/docs/hosting/> |
+| `gfirebase` | Firebase ML API | `firebaseml/v1` | per-method | <https://firebase.google.com> |
+| `gfirebase` | Firebase Rules API | `firebaserules/v1` | per-method | <https://firebase.google.com/docs/storage/security> |
+| `gfirebase` | Cloud Storage for Firebase API | `firebasestorage/v1beta` | per-method | <https://firebase.google.com/docs/storage> |
+| `gfirebase` | Identity Toolkit API | `identitytoolkit/v3` | per-method | <https://cloud.google.com/identity-platform> |
+| `gfirebase` | Firebase Cloud Messaging API | `fcm/v1` | per-method | <https://firebase.google.com/docs/cloud-messaging> |
+| `gfirebase` | Firebase Cloud Messaging Data API | `fcmdata/v1beta1` | per-method | <https://firebase.google.com/docs/cloud-messaging> |
+| `gfirebase` | Cloud Testing API | `testing/v1` | per-method | <https://firebase.google.com/docs/test-lab/> |
+| `gfirebase` | Cloud Tool Results API | `toolresults/v1beta3` | per-method | <https://firebase.google.com/docs/test-lab/> |
+| `gfirebase` | Device Run API | `devicerun/v1alpha` | per-method | <https://docs.cloud.google.com/developer-device-platform/device-run> |
+| `gfirebase` | Firebase App Check API | `firebaseappcheck/v1beta` | gateway | <https://firebase.google.com/docs/app-check> |
+| `gfirebase` | Firebase App Distribution API | `firebaseappdistribution/v1alpha` | gateway | <https://firebase.google.com/products/app-distribution> |
+| `gfirebase` | Firebase App Hosting API | `firebaseapphosting/v1beta` | gateway | <https://firebase.google.com/docs/app-hosting> |
+| `gfirebase` | Firebase SQL Connect API | `firebasedataconnect/v1beta` | gateway | <https://firebase.google.com/docs/data-connect> |
+| `gfirebase` | Firebase Hosting API | `firebasehosting/v1beta1` | gateway | <https://firebase.google.com/docs/hosting/> |
+| `gfirebase` | Firebase ML API | `firebaseml/v1beta2` | gateway | <https://firebase.google.com> |
+| `gfirebase` | Firebase ML API | `firebaseml/v2beta` | gateway | <https://firebase.google.com> |
+| `gfirebase` | Identity Toolkit API | `identitytoolkit/v1` | gateway | <https://cloud.google.com/identity-platform> |
+| `gfirebase` | Identity Toolkit API | `identitytoolkit/v2` | gateway | <https://cloud.google.com/identity-platform> |
+| `gmaps` | Places API (New) | `places/v1` | per-method | <https://mapsplatform.google.com/maps-products/#places-section> |
+| `gmaps` | Address Validation API | `addressvalidation/v1` | per-method | <https://developers.google.com/maps/documentation/addressvalidation> |
+| `gmaps` | Air Quality API | `airquality/v1` | per-method | <https://developers.google.com/maps/documentation/air-quality> |
+| `gmaps` | Places Aggregate API | `areainsights/v1` | per-method | <https://developers.google.com/maps/documentation/places-aggregate/overview> |
+| `gmaps` | Pollen API | `pollen/v1` | per-method | <https://developers.google.com/maps/documentation/pollen> |
+| `gmaps` | Solar API | `solar/v1` | per-method | <https://developers.google.com/maps/documentation/solar> |
+| `gmaps` | Street View Publish API | `streetviewpublish/v1` | per-method | <https://developers.google.com/streetview/publish/> |
+| `gmaps` | Travel Impact Model API | `travelimpactmodel/v1` | per-method | <https://developers.google.com/travel/impact-model> |
+| `gai` | Discovery Engine API | `discoveryengine/v1` | per-method | <https://cloud.google.com/generative-ai-app-builder/docs/> |
+| `gai` | Cloud Vision API | `vision/v1` | per-method | <https://cloud.google.com/vision/> |
+| `gai` | Cloud Speech-to-Text API | `speech/v1` | per-method | <https://cloud.google.com/speech-to-text/docs/quickstart-protocol> |
+| `gai` | Cloud Text-to-Speech API | `texttospeech/v1` | per-method | <https://cloud.google.com/text-to-speech/> |
+| `gai` | Cloud Natural Language API | `language/v2` | per-method | <https://cloud.google.com/natural-language/> |
+| `gai` | Cloud Video Intelligence API | `videointelligence/v1` | per-method | <https://cloud.google.com/video-intelligence/docs/> |
+| `gai` | Cloud Translation API | `translate/v3` | gateway | <https://cloud.google.com/translate/docs/quickstarts> |
+| `gai` | Cloud Document AI API | `documentai/v1` | gateway | <https://cloud.google.com/document-ai/docs/> |
+| `gai` | Dialogflow API | `dialogflow/v3` | gateway | <https://cloud.google.com/dialogflow/> |
+| `gai` | Gemini Enterprise for Customer Experience API | `ces/v1` | gateway | <https://docs.cloud.google.com/customer-engagement-ai/conversational-agents/ps> |
+| `gai` | Agent Registry API | `agentregistry/v1` | gateway | <https://docs.cloud.google.com/agent-registry/overview> |
+| `gai` | Agent Identity API | `agentidentity/v1` | gateway | <https://cloud.google.com/iam/docs/> |
+| `gai` | Agent Identity Credentials API | `agentidentitycredentials/v1` | gateway | <https://cloud.google.com/iam/docs/> |
+| `gai` | AI Platform Training & Prediction API | `ml/v1` | gateway | <https://cloud.google.com/ml/> |
+| `gai` | Notebooks API | `notebooks/v2` | gateway | <https://cloud.google.com/notebooks/docs/> |
+| `gai` | AI Commerce Search API | `retail/v2` | gateway | <https://cloud.google.com/recommendations> |
+| `gai` | Contact Center AI Insights API | `contactcenterinsights/v1` | gateway | <https://cloud.google.com/contact-center/insights/docs> |
+| `gai` | Contact Center AI Platform API | `contactcenteraiplatform/v1alpha1` | gateway | <https://cloud.google.com/solutions/contact-center-ai-platform> |
+| `gai` | Cloud Talent Solution API | `jobs/v4` | gateway | <https://cloud.google.com/talent-solution/job-search/docs/> |
+| `gai` | Recommendations AI (Beta) | `recommendationengine/v1beta1` | gateway | <https://cloud.google.com/recommendations-ai/docs> |
+| `gai` | Agent Platform API | `aiplatform/v1` | gateway | <https://cloud.google.com/vertex-ai/> |
+| `gai` | Agent Identity API | `agentidentity/v1alpha` | gateway | <https://cloud.google.com/iam/docs/> |
+| `gai` | Agent Identity API | `agentidentity/v1beta` | gateway | <https://cloud.google.com/iam/docs/> |
+| `gai` | Agent Identity Credentials API | `agentidentitycredentials/v1alpha` | gateway | <https://cloud.google.com/iam/docs/> |
+| `gai` | Agent Identity Credentials API | `agentidentitycredentials/v1beta` | gateway | <https://cloud.google.com/iam/docs/> |
+| `gai` | Agent Registry API | `agentregistry/v1alpha` | gateway | <https://docs.cloud.google.com/agent-registry/overview> |
+| `gai` | Agent Platform API | `aiplatform/v1beta1` | gateway | <https://cloud.google.com/vertex-ai/> |
+| `gai` | Gemini Enterprise for Customer Experience API | `ces/v1beta` | gateway | <https://docs.cloud.google.com/customer-engagement-ai/conversational-agents/ps> |
+| `gai` | Dialogflow API | `dialogflow/v2` | gateway | <https://cloud.google.com/dialogflow/> |
+| `gai` | Dialogflow API | `dialogflow/v2beta1` | gateway | <https://cloud.google.com/dialogflow/> |
+| `gai` | Dialogflow API | `dialogflow/v3beta1` | gateway | <https://cloud.google.com/dialogflow/> |
+| `gai` | Discovery Engine API | `discoveryengine/v1alpha` | gateway | <https://cloud.google.com/generative-ai-app-builder/docs/> |
+| `gai` | Discovery Engine API | `discoveryengine/v1beta` | gateway | <https://cloud.google.com/generative-ai-app-builder/docs/> |
+| `gai` | Cloud Document AI API | `documentai/v1beta3` | gateway | <https://cloud.google.com/document-ai/docs/> |
+| `gai` | Cloud Talent Solution API | `jobs/v3` | gateway | <https://cloud.google.com/talent-solution/job-search/docs/> |
+| `gai` | Cloud Talent Solution API | `jobs/v3p1beta1` | gateway | <https://cloud.google.com/talent-solution/job-search/docs/> |
+| `gai` | Cloud Natural Language API | `language/v1` | gateway | <https://cloud.google.com/natural-language/> |
+| `gai` | Cloud Natural Language API | `language/v1beta2` | gateway | <https://cloud.google.com/natural-language/> |
+| `gai` | Notebooks API | `notebooks/v1` | gateway | <https://cloud.google.com/notebooks/docs/> |
+| `gai` | AI Commerce Search API | `retail/v2alpha` | gateway | <https://cloud.google.com/recommendations> |
+| `gai` | AI Commerce Search API | `retail/v2beta` | gateway | <https://cloud.google.com/recommendations> |
+| `gai` | Cloud Speech-to-Text API | `speech/v1p1beta1` | gateway | <https://cloud.google.com/speech-to-text/docs/quickstart-protocol> |
+| `gai` | Cloud Text-to-Speech API | `texttospeech/v1beta1` | gateway | <https://cloud.google.com/text-to-speech/> |
+| `gai` | Cloud Translation API | `translate/v2` | gateway | <https://cloud.google.com/translate/docs/quickstarts> |
+| `gai` | Cloud Translation API | `translate/v3beta1` | gateway | <https://cloud.google.com/translate/docs/quickstarts> |
+| `gai` | Cloud Video Intelligence API | `videointelligence/v1beta2` | gateway | <https://cloud.google.com/video-intelligence/docs/> |
+| `gai` | Cloud Video Intelligence API | `videointelligence/v1p1beta1` | gateway | <https://cloud.google.com/video-intelligence/docs/> |
+| `gai` | Cloud Video Intelligence API | `videointelligence/v1p2beta1` | gateway | <https://cloud.google.com/video-intelligence/docs/> |
+| `gai` | Cloud Video Intelligence API | `videointelligence/v1p3beta1` | gateway | <https://cloud.google.com/video-intelligence/docs/> |
+| `gai` | Cloud Vision API | `vision/v1p1beta1` | gateway | <https://cloud.google.com/vision/> |
+| `gai` | Cloud Vision API | `vision/v1p2beta1` | gateway | <https://cloud.google.com/vision/> |
+| `gai` | Gemini API | `generativelanguage/v1beta` | gateway | <https://developers.generativeai.google/api> |
+| `gai` | Gemini API | `generativelanguage/v1` | gateway | <https://developers.generativeai.google/api> |
+

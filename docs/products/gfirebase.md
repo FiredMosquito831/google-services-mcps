@@ -2,7 +2,7 @@
 
 Install with the simplest command: `npx google-services-mcps install --agent claude --plugin <id>` (see docs/TUTORIAL.md).
 
-Firebase management, App Check, App Distribution, App Hosting, Crashlytics, Hosting, Data Connect, Rules, Cloud Messaging (FCM), Test Lab and Identity Toolkit. It manages Firebase projects and apps, sends push messages, distributes builds and runs device tests. It has 301 tools.
+Firebase management, App Check, App Distribution, App Hosting, Crashlytics, Hosting, Data Connect, Rules, Cloud Messaging (FCM), Test Lab and Identity Toolkit. It manages Firebase projects and apps, sends push messages, distributes builds and runs device tests. It has 306 tools.
 
 ## When to install it
 

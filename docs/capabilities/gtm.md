@@ -171,9 +171,11 @@ Google has no official MCP server for this product. The google toolset is a lean
 
 ## Generated APIs
 
-- Tag Manager API (`tagmanager/v2`), 106 methods in the catalog
+Each API links to Google's documentation for it, as Google's Discovery directory names it (`documentationLink`, kept in `data/catalog.json`). The link is the API's documentation home, not a page per method: the directory gives no link per method, and Google's REST reference pages are laid out differently from product to product.
+
+- Tag Manager API (`tagmanager/v2`), 106 methods in the catalog. Documentation: <https://developers.google.com/tag-manager>
 
 ## Gateway APIs (reached through api_search, api_describe, api_call)
 
-- Tag Manager API (`tagmanager/v1`), 49 methods
+- Tag Manager API (`tagmanager/v1`), 49 methods. Documentation: <https://developers.google.com/tag-manager>
 

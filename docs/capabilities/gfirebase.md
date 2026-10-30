@@ -392,33 +392,35 @@ The tools that match Google's official MCP server for this product (https://gith
 
 ## Generated APIs
 
-- Firebase Management API (`firebase/v1beta1`), 37 methods in the catalog
-- Firebase App Check API (`firebaseappcheck/v1`), 46 methods in the catalog
-- Firebase App Distribution API (`firebaseappdistribution/v1`), 26 methods in the catalog
-- Firebase App Hosting API (`firebaseapphosting/v1`), 25 methods in the catalog
-- Firebase Crashlytics API (`firebasecrashlytics/v1alpha`), 11 methods in the catalog
-- Firebase Realtime Database Management API (`firebasedatabase/v1beta`), 7 methods in the catalog
-- Firebase SQL Connect API (`firebasedataconnect/v1`), 38 methods in the catalog
-- Firebase Hosting API (`firebasehosting/v1`), 5 methods in the catalog
-- Firebase ML API (`firebaseml/v1`), 3 methods in the catalog
-- Firebase Rules API (`firebaserules/v1`), 11 methods in the catalog
-- Cloud Storage for Firebase API (`firebasestorage/v1beta`), 7 methods in the catalog
-- Identity Toolkit API (`identitytoolkit/v3`), 20 methods in the catalog
-- Firebase Cloud Messaging API (`fcm/v1`), 6 methods in the catalog
-- Firebase Cloud Messaging Data API (`fcmdata/v1beta1`), 1 methods in the catalog
-- Cloud Testing API (`testing/v1`), 10 methods in the catalog
-- Cloud Tool Results API (`toolresults/v1beta3`), 29 methods in the catalog
-- Device Run API (`devicerun/v1alpha`), 16 methods in the catalog
+Each API links to Google's documentation for it, as Google's Discovery directory names it (`documentationLink`, kept in `data/catalog.json`). The link is the API's documentation home, not a page per method: the directory gives no link per method, and Google's REST reference pages are laid out differently from product to product.
+
+- Firebase Management API (`firebase/v1beta1`), 37 methods in the catalog. Documentation: <https://firebase.google.com>
+- Firebase App Check API (`firebaseappcheck/v1`), 46 methods in the catalog. Documentation: <https://firebase.google.com/docs/app-check>
+- Firebase App Distribution API (`firebaseappdistribution/v1`), 26 methods in the catalog. Documentation: <https://firebase.google.com/products/app-distribution>
+- Firebase App Hosting API (`firebaseapphosting/v1`), 25 methods in the catalog. Documentation: <https://firebase.google.com/docs/app-hosting>
+- Firebase Crashlytics API (`firebasecrashlytics/v1alpha`), 11 methods in the catalog. Documentation: <https://firebase.google.com/docs/crashlytics>
+- Firebase Realtime Database Management API (`firebasedatabase/v1beta`), 7 methods in the catalog. Documentation: <https://firebase.google.com/docs/reference/rest/database/database-management/rest/>
+- Firebase SQL Connect API (`firebasedataconnect/v1`), 38 methods in the catalog. Documentation: <https://firebase.google.com/docs/data-connect>
+- Firebase Hosting API (`firebasehosting/v1`), 5 methods in the catalog. Documentation: <https://firebase.google.com/docs/hosting/>
+- Firebase ML API (`firebaseml/v1`), 3 methods in the catalog. Documentation: <https://firebase.google.com>
+- Firebase Rules API (`firebaserules/v1`), 11 methods in the catalog. Documentation: <https://firebase.google.com/docs/storage/security>
+- Cloud Storage for Firebase API (`firebasestorage/v1beta`), 7 methods in the catalog. Documentation: <https://firebase.google.com/docs/storage>
+- Identity Toolkit API (`identitytoolkit/v3`), 20 methods in the catalog. Documentation: <https://cloud.google.com/identity-platform>
+- Firebase Cloud Messaging API (`fcm/v1`), 6 methods in the catalog. Documentation: <https://firebase.google.com/docs/cloud-messaging>
+- Firebase Cloud Messaging Data API (`fcmdata/v1beta1`), 1 methods in the catalog. Documentation: <https://firebase.google.com/docs/cloud-messaging>
+- Cloud Testing API (`testing/v1`), 10 methods in the catalog. Documentation: <https://firebase.google.com/docs/test-lab/>
+- Cloud Tool Results API (`toolresults/v1beta3`), 29 methods in the catalog. Documentation: <https://firebase.google.com/docs/test-lab/>
+- Device Run API (`devicerun/v1alpha`), 16 methods in the catalog. Documentation: <https://docs.cloud.google.com/developer-device-platform/device-run>
 
 ## Gateway APIs (reached through api_search, api_describe, api_call)
 
-- Firebase App Check API (`firebaseappcheck/v1beta`), 57 methods
-- Firebase App Distribution API (`firebaseappdistribution/v1alpha`), 23 methods
-- Firebase App Hosting API (`firebaseapphosting/v1beta`), 26 methods
-- Firebase SQL Connect API (`firebasedataconnect/v1beta`), 38 methods
-- Firebase Hosting API (`firebasehosting/v1beta1`), 66 methods
-- Firebase ML API (`firebaseml/v1beta2`), 7 methods
-- Firebase ML API (`firebaseml/v2beta`), 3 methods
-- Identity Toolkit API (`identitytoolkit/v1`), 41 methods
-- Identity Toolkit API (`identitytoolkit/v2`), 50 methods
+- Firebase App Check API (`firebaseappcheck/v1beta`), 57 methods. Documentation: <https://firebase.google.com/docs/app-check>
+- Firebase App Distribution API (`firebaseappdistribution/v1alpha`), 23 methods. Documentation: <https://firebase.google.com/products/app-distribution>
+- Firebase App Hosting API (`firebaseapphosting/v1beta`), 26 methods. Documentation: <https://firebase.google.com/docs/app-hosting>
+- Firebase SQL Connect API (`firebasedataconnect/v1beta`), 38 methods. Documentation: <https://firebase.google.com/docs/data-connect>
+- Firebase Hosting API (`firebasehosting/v1beta1`), 66 methods. Documentation: <https://firebase.google.com/docs/hosting/>
+- Firebase ML API (`firebaseml/v1beta2`), 7 methods. Documentation: <https://firebase.google.com>
+- Firebase ML API (`firebaseml/v2beta`), 3 methods. Documentation: <https://firebase.google.com>
+- Identity Toolkit API (`identitytoolkit/v1`), 41 methods. Documentation: <https://cloud.google.com/identity-platform>
+- Identity Toolkit API (`identitytoolkit/v2`), 50 methods. Documentation: <https://cloud.google.com/identity-platform>
 

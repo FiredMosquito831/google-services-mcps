@@ -70,8 +70,10 @@ Google has no official MCP server for this product. The google toolset is a lean
 
 ## Generated APIs
 
-- Apps Script API (`script/v1`), 16 methods in the catalog
-- Google Workspace Marketplace API (`appsmarket/v2`), 2 methods in the catalog
+Each API links to Google's documentation for it, as Google's Discovery directory names it (`documentationLink`, kept in `data/catalog.json`). The link is the API's documentation home, not a page per method: the directory gives no link per method, and Google's REST reference pages are laid out differently from product to product.
+
+- Apps Script API (`script/v1`), 16 methods in the catalog. Documentation: <https://developers.google.com/apps-script/api/>
+- Google Workspace Marketplace API (`appsmarket/v2`), 2 methods in the catalog. Documentation: <https://developers.google.com/workspace/marketplace>
 
 ## Gateway APIs (reached through api_search, api_describe, api_call)
 

@@ -182,7 +182,9 @@ The tools that match Google's official MCP server for this product (https://deve
 
 ## Generated APIs
 
-- Google Classroom API (`classroom/v1`), 104 methods in the catalog
+Each API links to Google's documentation for it, as Google's Discovery directory names it (`documentationLink`, kept in `data/catalog.json`). The link is the API's documentation home, not a page per method: the directory gives no link per method, and Google's REST reference pages are laid out differently from product to product.
+
+- Google Classroom API (`classroom/v1`), 104 methods in the catalog. Documentation: <https://developers.google.com/workspace/classroom>
 
 ## Gateway APIs (reached through api_search, api_describe, api_call)
 

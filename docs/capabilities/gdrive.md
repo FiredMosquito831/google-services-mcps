@@ -258,17 +258,19 @@ The tools that match Google's official MCP server for this product (https://deve
 
 ## Generated APIs
 
-- Drive API (`drive/v3`), 64 methods in the catalog
-- Drive Activity API (`driveactivity/v2`), 1 methods in the catalog
-- Drive Labels API (`drivelabels/v2`), 26 methods in the catalog
-- Google Docs API (`docs/v1`), 3 methods in the catalog
-- Google Sheets API (`sheets/v4`), 17 methods in the catalog
-- Google Slides API (`slides/v1`), 5 methods in the catalog
-- Google Forms API (`forms/v1`), 10 methods in the catalog
-- Books API (`books/v1`), 51 methods in the catalog
+Each API links to Google's documentation for it, as Google's Discovery directory names it (`documentationLink`, kept in `data/catalog.json`). The link is the API's documentation home, not a page per method: the directory gives no link per method, and Google's REST reference pages are laid out differently from product to product.
+
+- Drive API (`drive/v3`), 64 methods in the catalog. Documentation: <https://developers.google.com/drive/>
+- Drive Activity API (`driveactivity/v2`), 1 methods in the catalog. Documentation: <https://developers.google.com/workspace/drive/activity/>
+- Drive Labels API (`drivelabels/v2`), 26 methods in the catalog. Documentation: <https://developers.google.com/workspace/drive/labels>
+- Google Docs API (`docs/v1`), 3 methods in the catalog. Documentation: <https://developers.google.com/workspace/docs/>
+- Google Sheets API (`sheets/v4`), 17 methods in the catalog. Documentation: <https://developers.google.com/workspace/sheets/>
+- Google Slides API (`slides/v1`), 5 methods in the catalog. Documentation: <https://developers.google.com/workspace/slides/>
+- Google Forms API (`forms/v1`), 10 methods in the catalog. Documentation: <https://developers.google.com/workspace/forms/api>
+- Books API (`books/v1`), 51 methods in the catalog. Documentation: <https://code.google.com/apis/books/docs/v1/getting_started.html>
 
 ## Gateway APIs (reached through api_search, api_describe, api_call)
 
-- Drive API (`drive/v2`), 75 methods
-- Drive Labels API (`drivelabels/v2beta`), 26 methods
+- Drive API (`drive/v2`), 75 methods. Documentation: <https://developers.google.com/drive/>
+- Drive Labels API (`drivelabels/v2beta`), 26 methods. Documentation: <https://developers.google.com/workspace/drive/labels>
 

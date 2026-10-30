@@ -132,10 +132,12 @@ The tools that match Google's official MCP server for this product (https://gith
 
 ## Generated APIs
 
-- Google Analytics Admin API (`analyticsadmin/v1beta`), 55 methods in the catalog
-- Google Analytics Data API (`analyticsdata/v1beta`), 11 methods in the catalog
+Each API links to Google's documentation for it, as Google's Discovery directory names it (`documentationLink`, kept in `data/catalog.json`). The link is the API's documentation home, not a page per method: the directory gives no link per method, and Google's REST reference pages are laid out differently from product to product.
+
+- Google Analytics Admin API (`analyticsadmin/v1beta`), 55 methods in the catalog. Documentation: <http://code.google.com/apis/analytics/docs/mgmt/home.html>
+- Google Analytics Data API (`analyticsdata/v1beta`), 11 methods in the catalog. Documentation: <https://developers.google.com/analytics/devguides/reporting/data/v1/>
 
 ## Gateway APIs (reached through api_search, api_describe, api_call)
 
-- Google Analytics Admin API (`analyticsadmin/v1alpha`), 166 methods
+- Google Analytics Admin API (`analyticsadmin/v1alpha`), 166 methods. Documentation: <http://code.google.com/apis/analytics/docs/mgmt/home.html>
 

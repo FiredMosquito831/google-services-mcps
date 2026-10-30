@@ -83,9 +83,11 @@ Google has no official MCP server for this product. The google toolset is a lean
 
 ## Generated APIs
 
-- Google Search Console API (`searchconsole/v1`), 11 methods in the catalog
-- Site Verification API (`siteVerification/v1`), 7 methods in the catalog
-- Web Search Indexing API (`indexing/v3`), 2 methods in the catalog
+Each API links to Google's documentation for it, as Google's Discovery directory names it (`documentationLink`, kept in `data/catalog.json`). The link is the API's documentation home, not a page per method: the directory gives no link per method, and Google's REST reference pages are laid out differently from product to product.
+
+- Google Search Console API (`searchconsole/v1`), 11 methods in the catalog. Documentation: <https://developers.google.com/webmaster-tools/about>
+- Site Verification API (`siteVerification/v1`), 7 methods in the catalog. Documentation: <https://code.google.com/apis/siteverification/>
+- Web Search Indexing API (`indexing/v3`), 2 methods in the catalog. Documentation: <https://developers.google.com/search/apis/indexing-api/>
 
 ## Gateway APIs (reached through api_search, api_describe, api_call)
 

@@ -591,7 +591,7 @@ There is no npm script named `capabilities`. Run `node scripts/gen-capabilities.
 The suite is free. Google's quotas, billing and approval rules apply to each call you make. Claude's own usage grows with each installed product, because every product adds tool definitions. See [Limits and costs](#limits-and-costs).
 
 **Which Google accounts do I need?**
-A Google Workspace account is the main target. Each login group needs a Desktop OAuth client in a Google Cloud project. `gadmin` needs a super admin and a service account with domain-wide delegation. `gsearch` needs an API key. Consumer Google accounts are UNVERIFIED for most products.
+A Google Workspace account is the main target. Each login group needs a Desktop OAuth client in a Google Cloud project. `gadmin` needs a super admin and a service account with domain-wide delegation. `gsearch` needs an API key. Personal (@gmail.com) accounts worked for Gmail reads in a live test on 2026-10-29. For the other products they are UNVERIFIED.
 
 **Is my data sent anywhere except Google?**
 As far as the source shows, the servers call only Google's API and OAuth endpoints, and the code has no separate telemetry path. Tokens stay in the token directory on your machine. Note that anything a tool returns, such as mail text, becomes part of the agent's conversation, so it goes to that agent's model provider as usual.
@@ -606,7 +606,27 @@ Changes and deletions ask by default (`every-change`). Deletions and sends also 
 Usually one of these: **Allow write tools** is off, so write and destructive tools are hidden. The login uses the `readonly` profile, so the token lacks the write scopes and the tool is not registered. The server is switched off in `/mcp`, or the plugin is disabled. If the group is not logged in, the tool is listed but each call fails with a login message. After a login, restart the server. `npx google-services-mcps doctor --plugin <id>` checks the install.
 
 **Why are there so many tools?**
-Google's APIs are large. Each plugin has a tool for many of the methods of its APIs, and generated tools are capped at 350 per plugin. Gateway tools reach the methods that have no tool of their own. Install only the products you need. Claude Code's tool search loads definitions when they are needed.
+Google's APIs are large. Each plugin has a tool for many of the methods of its APIs, and generated tools are capped at 350 per plugin. Gateway tools reach the methods that have no tool of their own. Install only the products you need. Claude Code's tool search loads definitions when they are needed. To list fewer tools, set the plugin option `toolset` to `google` or `curated`.
+
+**Google's official MCP servers or these?**
+Google runs MCP servers of its own for some products. You can use them next to these. What we found, as of 2026-10-29:
+
+- **Google Workspace**, hosted by Google, in Developer Preview: Gmail (11 tools), Drive (8), Calendar (9), Chat (9), People (3), Classroom (16), Docs (2), Sheets (6), Slides (4) and one Workspace search tool. To use them, you enrol a Google Workspace account in the [Developer Preview Program](https://developers.google.com/workspace/preview), enable each server's API, and create a Web application OAuth client marked "Use this client for an AI-powered agent" ([setup guide](https://developers.google.com/workspace/guides/configure-mcp-servers)). Google's Workspace release note of 2026-10-12 says that from 2026-11-11 these servers refuse requests from an app whose OAuth client is not marked that way. The tools are task-shaped: search threads, read a thread, create a draft, suggest a meeting time. The [Gmail server](https://developers.google.com/workspace/gmail/api/reference/mcp) creates drafts but has no tool that sends mail. Whether a personal @gmail.com account can use these servers is not verified.
+- **Google Cloud**, hosted by Google: 67 products on Google's [list of supported products](https://docs.cloud.google.com/mcp/supported-products), 20 of them in Preview, for example BigQuery, Compute Engine, GKE, Cloud Run, Cloud Storage, Cloud Logging, IAM and Resource Manager. Access is controlled with IAM (the role `roles/mcp.toolUser`).
+- **Other servers from Google**, among them: [Google Ads](https://github.com/googleads/google-ads-mcp) (3 read-only tools; you run it), [Google Analytics](https://github.com/googleanalytics/google-analytics-mcp) (experimental, read-only; you run it), [Firebase](https://firebase.google.com/docs/cli/mcp-server) (the `firebase mcp` command), [gcloud-mcp](https://github.com/googleapis/gcloud-mcp), [Merchant API](https://developers.google.com/merchant/api/guides/agentic-tools/merchant-data-mcp) (hosted, alpha, 13 tools) and [Maps Grounding Lite](https://developers.google.com/maps/ai/grounding-lite/reference/mcp) (hosted: places, weather, routes).
+- **Only here:** we found no official MCP server for Search Console, Tag Manager, YouTube and Blogger, Google Play publishing, Business Profile, Meet, Tasks and Keep, Apps Script, or the Admin SDK. That comes from a search of Google's pages, so it is not proof.
+
+What this suite adds:
+
+- Changes with consent. By default every change asks first, and deletions and sends ask a second time with an exact preview. Policy rules allow, ask or deny by tool or method. The audit log records each call with a hash of its arguments, never the values.
+- Several Google accounts per login group. A call picks one with its `account` argument.
+- Personal Google accounts. Gmail reads worked on personal @gmail.com accounts in a live test on 2026-10-29.
+- Sending mail: `gmail_send` and `gmail_reply`. Each asks twice.
+- Full coverage: per-method tools for each product's main APIs, and `api_search`, `api_describe` and `api_call` for the other methods (536 API versions and 29,205 methods in the catalog).
+- No enrolment: a Desktop OAuth client in your own Google Cloud project, or your gcloud application-default login.
+- The plugin option `toolset`. `google` lists tools that do the same jobs as Google's server for the product, under this suite's names; the product's file in `docs/capabilities/` names the Google tool each one matches. Where Google has no server, it is a small set chosen here. `curated` lists the hand-written and gateway tools, and `all` (the default) every tool. The lists per product are in [docs/USING.md](docs/USING.md) and [docs/CAPABILITIES.md](docs/CAPABILITIES.md).
+
+Prefer Google's servers when you are a Workspace user enrolled in the preview and you need simple reads and drafts in Gmail, Drive, Calendar or Chat. Prefer them also when your Cloud administrator wants servers hosted by Google and controlled through IAM. They list fewer tools, which matters in a client that loads every tool definition at the start.
 
 **Is this an official Google product?**
 No. It is not affiliated with or endorsed by Google. See [Acknowledgements and trademarks](#acknowledgements-and-trademarks).
@@ -628,17 +648,22 @@ The full steps are in [docs/TUTORIAL.md](docs/TUTORIAL.md), section 12.
 **Built and tested offline.**
 
 - 23 plugins are generated and bundled, one per product.
-- 408 unit and build tests pass.
+- 1107 unit and build tests on Windows: 1104 pass, 3 are skipped (2026-10-30).
 - A smoke test starts all 23 servers over stdio, with an empty token directory, so nothing reaches Google.
 - Claude plugin validation passes for the marketplace and the gmail plugin, which are the two checked so far.
 
-**Not yet tested against live Google accounts.** Nothing has been run against a real account, including the approval hook and form in Claude Code, and the approval behaviour of Codex, OpenCode and Antigravity.
+**Tested against live Google accounts so far:**
+
+- `gcloud`: the project readiness check and enabling APIs, with an application-default login on a Workspace account.
+- `gsc`: reads, and a live login check (`health` with `live: true`) that found the login valid on 2026-10-29.
+- `gmail`: reads on 2026-10-29. The profile on six accounts, personal @gmail.com accounts among them, and search, labels and one full message on one of them.
+
+Nothing else has run against a real account. No mail has been sent, and the approval behaviour of Codex, OpenCode and Antigravity has not been tested live.
 
 **Next, live tests.** Test one product at a time, starting with a read:
 
-1. `gsc` (Search Console). Read-only profile, then list sites and one search analytics query.
-2. `gmail`. Read-only profile, then read a few messages. Then create one draft on a test account.
-3. `gcalendar`. Read-only profile, then create one event on a test account, with the approval prompt.
+1. `gmail`. Create one draft, then send one message, on a test account.
+2. `gcalendar`. Read-only profile, then create one event on a test account, with the approval prompt.
 
 Then the other products, one at a time. The known limits are listed in [docs/SECURITY.md](docs/SECURITY.md#known-limits) and [docs/LIMITS-AND-COSTS.md](docs/LIMITS-AND-COSTS.md#9-known-conflicts-and-open-items).
 

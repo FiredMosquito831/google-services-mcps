@@ -103,13 +103,15 @@ Google has no official MCP server for this product. The google toolset is a lean
 
 ## Generated APIs
 
-- My Business Account Management API (`mybusinessaccountmanagement/v1`), 16 methods in the catalog
-- My Business Business Information API (`mybusinessbusinessinformation/v1`), 15 methods in the catalog
-- My Business Lodging API (`mybusinesslodging/v1`), 3 methods in the catalog
-- My Business Notifications API (`mybusinessnotifications/v1`), 2 methods in the catalog
-- My Business Place Actions API (`mybusinessplaceactions/v1`), 6 methods in the catalog
-- My Business Verifications API (`mybusinessverifications/v1`), 6 methods in the catalog
-- Business Profile Performance API (`businessprofileperformance/v1`), 3 methods in the catalog
+Each API links to Google's documentation for it, as Google's Discovery directory names it (`documentationLink`, kept in `data/catalog.json`). The link is the API's documentation home, not a page per method: the directory gives no link per method, and Google's REST reference pages are laid out differently from product to product.
+
+- My Business Account Management API (`mybusinessaccountmanagement/v1`), 16 methods in the catalog. Documentation: <https://developers.google.com/my-business/>
+- My Business Business Information API (`mybusinessbusinessinformation/v1`), 15 methods in the catalog. Documentation: <https://developers.google.com/my-business/>
+- My Business Lodging API (`mybusinesslodging/v1`), 3 methods in the catalog. Documentation: <https://developers.google.com/my-business/>
+- My Business Notifications API (`mybusinessnotifications/v1`), 2 methods in the catalog. Documentation: <https://developers.google.com/my-business/>
+- My Business Place Actions API (`mybusinessplaceactions/v1`), 6 methods in the catalog. Documentation: <https://developers.google.com/my-business/>
+- My Business Verifications API (`mybusinessverifications/v1`), 6 methods in the catalog. Documentation: <https://developers.google.com/my-business/>
+- Business Profile Performance API (`businessprofileperformance/v1`), 3 methods in the catalog. Documentation: <https://developers.google.com/my-business/>
 
 ## Gateway APIs (reached through api_search, api_describe, api_call)
 

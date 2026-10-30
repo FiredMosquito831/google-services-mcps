@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 /**
  * Writes the capability inventory from the built plugins:
- *   docs/CAPABILITIES.md            overview: every product, its server, login, tool counts, APIs
- *   docs/capabilities/<product>.md  every tool of that product: name, safety class, method, scopes
+ *   docs/CAPABILITIES.md            overview: every product, its server, login, tool counts, APIs, and each API's link
+ *                                   to Google's documentation
+ *   docs/capabilities/<product>.md  every tool of that product: name, safety class, method, scopes; its APIs with the
+ *                                   same links (documentationLink in data/catalog.json, the API's documentation home)
  *
  * Reads config/products.json, data/catalog.json and plugins/<id>/tool-map.json, so run it after
  * `npm run build`. Curated tools are the tools with no method id that are not gateway or list
@@ -62,8 +64,26 @@ const apiByKey = new Map(catalog.apis.map((a) => [`${a.name}/${a.version}`, a]))
 const apiLine = (entry) => {
   const api = apiByKey.get(`${entry.api}/${entry.version}`);
   const methods = api ? api.methods.length : 0;
-  return { key: `${entry.api}/${entry.version}`, title: api?.title ?? entry.api, methods };
+  return {
+    key: `${entry.api}/${entry.version}`,
+    title: api?.title ?? entry.api,
+    methods,
+    inCatalog: Boolean(api),
+    documentationLink: typeof api?.documentationLink === 'string' && api.documentationLink ? api.documentationLink : null,
+  };
 };
+
+/**
+ * Google's documentation of an API, as the Discovery directory names it (documentationLink in data/catalog.json),
+ * printed as Google publishes it. It is the API's documentation home: the directory gives no link per method, and the
+ * REST reference pages are laid out differently from product to product, so no per-method link is built.
+ */
+function docLink(a) {
+  if (a.documentationLink) return `<${a.documentationLink.replace(/[<>|\s]/g, encodeURIComponent)}>`;
+  return a.inCatalog ? '(no link in the directory)' : '(not in the catalog)';
+}
+const DOC_LINK_NOTE =
+  "Each API links to Google's documentation for it, as Google's Discovery directory names it (`documentationLink`, kept in `data/catalog.json`). The link is the API's documentation home, not a page per method: the directory gives no link per method, and Google's REST reference pages are laid out differently from product to product.";
 
 function shortName(fullName, plugin, server) {
   const prefix = `mcp__plugin_${plugin}_${server}__`.replace(/[^A-Za-z0-9_-]/g, '_');
@@ -194,13 +214,17 @@ for (const p of perProduct) {
   }
   lines.push('## Generated APIs');
   lines.push('');
+  if (p.generatedApis.length || p.gatewayApis.length) {
+    lines.push(DOC_LINK_NOTE);
+    lines.push('');
+  }
   if (!p.generatedApis.length) lines.push('None.');
-  for (const a of p.generatedApis) lines.push(`- ${a.title} (\`${a.key}\`), ${a.methods} methods in the catalog`);
+  for (const a of p.generatedApis) lines.push(`- ${a.title} (\`${a.key}\`), ${a.methods} methods in the catalog. Documentation: ${docLink(a)}`);
   lines.push('');
   lines.push('## Gateway APIs (reached through api_search, api_describe, api_call)');
   lines.push('');
   if (!p.gatewayApis.length) lines.push('None.');
-  for (const a of p.gatewayApis) lines.push(`- ${a.title} (\`${a.key}\`), ${a.methods} methods`);
+  for (const a of p.gatewayApis) lines.push(`- ${a.title} (\`${a.key}\`), ${a.methods} methods. Documentation: ${docLink(a)}`);
   lines.push('');
   emit(join(detailDir, `${p.id}.md`), lines.join('\n') + '\n');
 }
@@ -246,6 +270,20 @@ out.push('');
 out.push('- `api_search`: find methods by text in an API the product covers. Read.');
 out.push('- `api_describe`: parameters, request body and scopes of one method. Read.');
 out.push('- `api_call`: call any method of the product, subject to the same safety classes.');
+out.push('');
+out.push("## Google's documentation for each API");
+out.push('');
+out.push(DOC_LINK_NOTE);
+out.push('');
+out.push('| Product | API | Discovery name/version | Tools | Documentation |');
+out.push('|---|---|---|---|---|');
+for (const p of perProduct) {
+  for (const [how, list] of [['per-method', p.generatedApis], ['gateway', p.gatewayApis]]) {
+    for (const a of list) {
+      out.push(`| \`${p.id}\` | ${a.title.replace(/\|/g, '\\|')} | \`${a.key}\` | ${how} | ${docLink(a)} |`);
+    }
+  }
+}
 out.push('');
 emit(join(root, 'docs', 'CAPABILITIES.md'), out.join('\n') + '\n');
 if (checkOnly) {
