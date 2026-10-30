@@ -15,18 +15,17 @@ Google Play developer publishing and reporting, Play Games Services, Android Ent
 
 ```
 claude plugin install gplay@google-services-mcps --scope user
-node <plugin>/bin/gsm.mjs setup-client <client_secret.json>
-node <plugin>/bin/gsm.mjs login developer --profile readonly
+node <plugin>/bin/gsm.mjs setup-service-account --key-file <service account key.json>
 node <plugin>/bin/gsm.mjs status
 ```
 
-`<plugin>` is the plugin folder (in this repo, `plugins/gplay`).
+`<plugin>` is the plugin folder (in this repo, `plugins/gplay`). gplay is in the service-account group: it uses a service account key, not a login.
 
 1. Create a Google Play Console developer account. Registration costs US$25, once. Personal accounts have extra testing and device checks.
-2. In a Google Cloud project, enable the Google Play Developer API. The sources describe a service account granted rights in Play Console's Users and Permissions page. How the OAuth login maps to those rights is UNVERIFIED.
-3. Set up the OAuth consent screen. Create an OAuth client ID of type Desktop app and download the JSON file. Run `setup-client`, then `login developer`. Restart the MCP server (`/mcp`) after login.
+2. In a Google Cloud project, enable the Google Play Developer API (and the other APIs you use), create a service account and a JSON key, and add the service account's email in Play Console under Users and permissions with the rights you need.
+3. Run `setup-service-account` with the key file (or call `auth_setup_service_account` in the chat). Restart the MCP server (`/mcp`).
 
-Start with `--profile readonly`. Changes need a `readwrite` login and the plugin option `allow_writes`.
+The key asks for the scopes of every API gplay carries (since 1.23.1; before, only `androidpublisher`). Each product still decides whether the service account may act: Android Management, Android Enterprise, Chrome Web Store, Wallet, Home Graph and Smart Device Management each need the account set up on their side first. See [SETUP.md](../SETUP.md#google-play-and-merchant-center-gplay-gmerchant). Changes need the plugin option `allow_writes`.
 
 ## What it can do
 

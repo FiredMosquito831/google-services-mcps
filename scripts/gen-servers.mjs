@@ -167,6 +167,20 @@ function toolsetsOf(value, id) {
   return Object.keys(out).length > 0 ? out : undefined;
 }
 
+/**
+ * A product's "serviceAccountScopes": required for a product of the service-account group, and only there. "methods"
+ * (every scope the product's methods declare) or a non-empty list of scope URLs.
+ */
+function serviceAccountScopesOf(p, id) {
+  const value = p.serviceAccountScopes;
+  if (p.group !== 'service-account') {
+    if (value !== undefined) fail(`product ${id}: serviceAccountScopes is only for the service-account group`);
+    return;
+  }
+  const ok = value === 'methods' || (Array.isArray(value) && value.length > 0 && value.every((s) => typeof s === 'string' && s.startsWith('https://')));
+  if (!ok) fail(`product ${id}: serviceAccountScopes must be "methods" or a non-empty list of scope URLs`);
+}
+
 function kindOf(curated, apis) {
   if (curated && apis.length) return 'curated+discovery';
   if (curated) return 'curated';
@@ -220,6 +234,9 @@ function main() {
     // Only a product that lists a toolset gets the key, so the entries of the others stay as they were.
     const toolsets = toolsetsOf(p.toolsets, id);
     if (toolsets) server.toolsets = toolsets;
+    // The service-account key's scopes for this product (scripts/gen-service-account-scopes.mjs reads them). Checked
+    // here, not copied: the key's list is compiled into src/core/service-account-scopes.ts.
+    serviceAccountScopesOf(p, id);
     server.label = `${p.title}: ${p.description}`;
     servers.push(server);
   }

@@ -10,6 +10,7 @@ import { invocation } from './invocation.js';
 import { isIdempotentMethod, requestWithRetry, type HttpResult } from './http.js';
 import { adcFilePath, adcGrantFor, GCLOUD_DEFAULT_SCOPES, readAdcState, type AdcGrant } from './adc.js';
 import { forgetCachedSecrets, readSecretText, secretFileExists, writeSecretText } from './secret-files.js';
+import { SERVICE_ACCOUNT_KEY_SCOPES } from './service-account-scopes.js';
 
 /**
  * One auth group per token file. Each group maps to one or more MCP servers
@@ -25,12 +26,11 @@ export type AuthKind = 'cloud' | 'workspace-user' | 'workspace-admin' | 'searchc
 
 /**
  * Scopes of the service-account group (Google Play and Merchant Center). A service account needs no user consent; the
- * person adds the account's email to Play Console or Merchant Center. These are the scopes of those two APIs.
+ * person adds the account's email to Play Console, Merchant Center or the product in question. The list is generated
+ * (src/core/service-account-scopes.ts, from config/products.json serviceAccountScopes): every scope the methods of the
+ * APIs gplay carries declare, and content for Merchant Center. It held only androidpublisher and content before 1.23.1.
  */
-export const SERVICE_ACCOUNT_SCOPES = [
-  'https://www.googleapis.com/auth/androidpublisher',
-  'https://www.googleapis.com/auth/content',
-];
+export const SERVICE_ACCOUNT_SCOPES: string[] = [...SERVICE_ACCOUNT_KEY_SCOPES];
 
 /** Domain-wide delegation scopes for the Admin SDK Directory API. The admin login uses a service account and needs no login. */
 export const ADMIN_SCOPES = [

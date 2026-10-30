@@ -2,6 +2,18 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.23.1 - 2026-10-30
+
+### Fixed: the service account key asks for the scopes of every API gplay carries
+- The service-account key (gplay, gmerchant) asked only for `androidpublisher` and `content`, while gplay carries 17 APIs. With a key set up, gplay registered 189 of its tools; Android Enterprise, Play Games Services and Games Management, Play Developer Reporting, Play Integrity, the Chrome Web Store and Smart Device Management registered none, and the gateway's Android Management, Home Graph and Wallet calls had no scope.
+- The key now asks for every scope gplay's methods declare (`androidenterprise`, `androidmanagement`, `androidpublisher`, `chromewebstore`, `chromewebstore.readonly`, `drive.appdata`, `games`, `homegraph`, `playdeveloperreporting`, `playintegrity`, `sdm.service`, `wallet_object.issuer`) and `content` for Merchant Center: 13 scopes. With a key set up, gplay lists 356 tools (167 more). gmerchant is unchanged (Manufacturer Center is not added).
+- The list is derived, not written by hand: each product of the group declares `serviceAccountScopes` in `config/products.json` (`"methods"` for gplay, `["…/auth/content"]` for gmerchant), and `scripts/gen-service-account-scopes.mjs` writes `src/core/service-account-scopes.ts`, which `src/core/auth.ts` reads. A test runs the generator's check.
+- A scope only lets the key ask. Android Management, Android Enterprise, the Chrome Web Store, Google Wallet, Home Graph and Smart Device Management each accept the service account only once it is set up on their side; docs/SETUP.md says how. docs/products/gplay.md now describes the service-account setup (it described an OAuth login).
+
+### Not changed
+- The tools every plugin lists without a service-account setup, the tool maps, the login scopes of every OAuth group, the write gate and the hook.
+- Not tested against Google with a real key.
+
 ## 1.23.0 - 2026-10-30
 
 ### New: google toolsets for gsearch and gadmin

@@ -373,7 +373,7 @@ test('requirements: the gmerchant google list (13 generated tools, no gateway) n
   assert.equal(google.filter((r) => r.gateway).length, 0);
   assert.deepEqual(resolveScopes(google, 'readonly').scopes, []);
   assert.deepEqual(resolveScopes(google, 'readwrite').scopes, [G('content')]);
-  // The service-account key's scopes are fixed (androidpublisher and content), so these figures size nothing at sign-in.
+  // The service-account key's scopes are fixed (src/core/service-account-scopes.ts), so these figures size nothing at sign-in.
 });
 
 test('--toolset: parsed for login, scopes and setup-admin; an unknown value is a usage error', () => {

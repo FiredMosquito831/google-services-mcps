@@ -3020,6 +3020,9 @@
       "title": "Merchant Center",
       "description": "Merchant Center: Merchant API, Comparison Shopping Service and Manufacturer Center.",
       "group": "service-account",
+      "serviceAccountScopes": [
+        "https://www.googleapis.com/auth/content"
+      ],
       "server": {
         "name": "gmerchant",
         "curated": null
@@ -3222,6 +3225,7 @@
       "title": "Google Play",
       "description": "Google Play developer publishing and reporting, Play Games Services, Android Enterprise and Management, Play Integrity and device APIs.",
       "group": "service-account",
+      "serviceAccountScopes": "methods",
       "server": {
         "name": "gplay",
         "curated": null
