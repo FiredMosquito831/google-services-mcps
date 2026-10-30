@@ -1583,6 +1583,47 @@
           "version": "v4"
         }
       ],
+      "toolsets": {
+        "google": {
+          "source": "https://developerknowledge.googleapis.com/mcp",
+          "tools": [
+            "developerk_documents_search_documen",
+            "developerk_documents_batch_get",
+            "developerk_v1_answer_query",
+            "pagespeedo_pagespeedap_runpagespeed",
+            "chromeuxre_records_query_record",
+            "kgsearch_entities_search",
+            "factcheckt_claims_search",
+            "webrisk_uris_search"
+          ],
+          "matches": {
+            "developerk_documents_search_documen": [
+              "search_documents"
+            ],
+            "developerk_documents_batch_get": [
+              "get_documents"
+            ],
+            "developerk_v1_answer_query": [
+              "answer_query"
+            ],
+            "pagespeedo_pagespeedap_runpagespeed": [],
+            "chromeuxre_records_query_record": [],
+            "kgsearch_entities_search": [],
+            "factcheckt_claims_search": [],
+            "webrisk_uris_search": []
+          },
+          "notes": {
+            "developerk_documents_search_documen": "Searches Google's developer documentation (Developer Knowledge API searchDocumentChunks): matching chunks with their document names.",
+            "developerk_documents_batch_get": "The full text of up to 20 documents by name (Developer Knowledge API documents.batchGet), after a search.",
+            "developerk_v1_answer_query": "A grounded answer about Google developer products (Developer Knowledge API answerQuery). Google marks it read-only; the classifier counts this POST as a write, so it asks first. Changing that kind is a separate change (D2).",
+            "pagespeedo_pagespeedap_runpagespeed": "No official Google MCP server covers PageSpeed Insights; kept for the Lighthouse scores and Core Web Vitals of a page (PageSpeed Insights API runpagespeed).",
+            "chromeuxre_records_query_record": "No official Google MCP server covers the Chrome UX Report; kept for real-user Core Web Vitals of an origin or URL (CrUX API records.queryRecord).",
+            "kgsearch_entities_search": "No official Google MCP server covers the Knowledge Graph; kept to look up an entity by name (Knowledge Graph Search API entities.search).",
+            "factcheckt_claims_search": "No official Google MCP server covers Fact Check Tools; kept to find published fact checks of a claim (Fact Check Tools API claims.search).",
+            "webrisk_uris_search": "No official Google MCP server covers Web Risk; kept to check a URL against Google's threat lists (Web Risk API uris.search)."
+          }
+        }
+      },
       "generatedToolCount": 47
     },
     "gdrive": {
@@ -2407,6 +2448,47 @@
           "version": "v1"
         }
       ],
+      "toolsets": {
+        "google": {
+          "source": "No official Google MCP server for Google Workspace administration (the Admin SDK, reports and the alert center) was found in Google's Workspace and Cloud MCP lists on 2026-10-29; a lean set chosen here.",
+          "tools": [
+            "admin_users_list",
+            "admin_user_get",
+            "admin_groups_list",
+            "admin_group_members_list",
+            "admin_orgunits_list",
+            "admin_domains_list",
+            "admin_activities_list",
+            "alerts_alerts_list",
+            "admin_user_set_suspended",
+            "admin_group_member_add"
+          ],
+          "matches": {
+            "admin_users_list": [],
+            "admin_user_get": [],
+            "admin_groups_list": [],
+            "admin_group_members_list": [],
+            "admin_orgunits_list": [],
+            "admin_domains_list": [],
+            "admin_activities_list": [],
+            "alerts_alerts_list": [],
+            "admin_user_set_suspended": [],
+            "admin_group_member_add": []
+          },
+          "notes": {
+            "admin_users_list": "The domain's users, searchable by name or email (Directory API users.list). Start here for a user key.",
+            "admin_user_get": "One user, with the groups they belong to (Directory API users.get and groups.list).",
+            "admin_groups_list": "The account's groups, or the groups of one user (Directory API groups.list).",
+            "admin_group_members_list": "The members of a group and their roles (Directory API members.list).",
+            "admin_orgunits_list": "The organizational units (Directory API orgunits.list).",
+            "admin_domains_list": "The domains of the account (Directory API domains.list).",
+            "admin_activities_list": "Audit activity of the domain: logins, admin console changes, Drive and others (Reports API activities.list).",
+            "alerts_alerts_list": "Security and system alerts of the domain (Alert Center API alerts.list).",
+            "admin_user_set_suspended": "Suspends or restores a user. A write: it asks first.",
+            "admin_group_member_add": "Adds a member to a group. A write: it asks first."
+          }
+        }
+      },
       "generatedToolCount": 343
     },
     "ganalytics": {

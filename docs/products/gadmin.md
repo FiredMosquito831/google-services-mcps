@@ -48,6 +48,8 @@ Restart the MCP server (`/mcp`) after setup.
 
 The full list is in `docs/capabilities/gadmin.md`.
 
+Google has no official MCP server for Workspace administration (none was found on 2026-10-29), so with the plugin option `toolset: google` the server lists a small set chosen here: `admin_users_list`, `admin_user_get`, `admin_groups_list`, `admin_group_members_list`, `admin_orgunits_list`, `admin_domains_list`, `admin_activities_list` (Reports API), `alerts_alerts_list` (Alert Center), and two writes, `admin_user_set_suspended` and `admin_group_member_add`. 10 tools, with `health` and the setup tools. No delete is in it. `setup-admin --toolset google` delegates only the scopes those tools need.
+
 ## Example requests
 
 - "Suspend jdoe@company.test until the HR review ends." Claude runs `admin_user_set_suspended`. It asks first.

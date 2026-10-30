@@ -81,6 +81,20 @@
           "version": "v1"
         }
       ],
+      "toolsets": {
+        "google": [
+          "admin_users_list",
+          "admin_user_get",
+          "admin_groups_list",
+          "admin_group_members_list",
+          "admin_orgunits_list",
+          "admin_domains_list",
+          "admin_activities_list",
+          "alerts_alerts_list",
+          "admin_user_set_suspended",
+          "admin_group_member_add"
+        ]
+      },
       "scopes": [
         "https://www.googleapis.com/auth/admin.directory.domain",
         "https://www.googleapis.com/auth/admin.directory.domain.readonly",

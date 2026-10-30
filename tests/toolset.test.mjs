@@ -249,6 +249,30 @@ const AI_GOOGLE = [
 ];
 /** The gmaps list (1.22.0): Google's Maps Grounding Lite tools that have a public API, and place details. */
 const MAPS_GOOGLE = ['places_places_search_text', 'places_places_get', 'maps_compute_routes', 'maps_lookup_weather'];
+/** The gsearch list (1.23.0): Google's 3 Developer Knowledge MCP tools and a lean set of the other APIs (no official server). */
+const SEARCH_GOOGLE = [
+  'developerk_documents_search_documen',
+  'developerk_documents_batch_get',
+  'developerk_v1_answer_query',
+  'pagespeedo_pagespeedap_runpagespeed',
+  'chromeuxre_records_query_record',
+  'kgsearch_entities_search',
+  'factcheckt_claims_search',
+  'webrisk_uris_search',
+];
+/** The gadmin list (1.23.0): a lean set (no official Google MCP server for Workspace administration). */
+const ADMIN_GOOGLE = [
+  'admin_users_list',
+  'admin_user_get',
+  'admin_groups_list',
+  'admin_group_members_list',
+  'admin_orgunits_list',
+  'admin_domains_list',
+  'admin_activities_list',
+  'alerts_alerts_list',
+  'admin_user_set_suspended',
+  'admin_group_member_add',
+];
 /** The tools runServer adds for a server of an OAuth group. No toolset removes them. */
 const RUNTIME_OAUTH = ['account_remove', 'account_set_default', 'accounts_list', 'auth_login', 'auth_setup_client', 'auth_status', 'health'];
 
@@ -541,6 +565,8 @@ test('both registry loaders carry the toolsets: the CLI conversion of config/pro
   assert.deepEqual(reg.servers.find((s) => s.name === 'gfirebase').toolsets, { google: FIREBASE_GOOGLE });
   assert.deepEqual(reg.servers.find((s) => s.name === 'gai').toolsets, { google: AI_GOOGLE });
   assert.deepEqual(reg.servers.find((s) => s.name === 'gmaps').toolsets, { google: MAPS_GOOGLE });
+  assert.deepEqual(reg.servers.find((s) => s.name === 'gsearch').toolsets, { google: SEARCH_GOOGLE });
+  assert.deepEqual(reg.servers.find((s) => s.name === 'gadmin').toolsets, { google: ADMIN_GOOGLE });
   // A product without toolsets gets no key (the same products.json, gfirebase's toolsets left out).
   const products = readJson('config', 'products.json');
   const { toolsets: _dropped, ...bare } = products.products.gfirebase;
@@ -892,6 +918,34 @@ test('runServer: google on gmaps (API key) lists its 4 tools and health, with th
   assert.equal(JSON.stringify(google.health).includes('fake-key-for-tools-list'), false, 'health never shows the key');
 });
 
+test("the gsearch google list: Google's three Developer Knowledge tools, and a lean set for the APIs no official server covers", () => {
+  const google = readJson('config', 'products.json').products.gsearch.toolsets.google;
+  assert.deepEqual(google.tools, SEARCH_GOOGLE);
+  assert.equal(google.source, 'https://developerknowledge.googleapis.com/mcp');
+  assert.deepEqual([...new Set(Object.values(google.matches).flat())].sort(), ['answer_query', 'get_documents', 'search_documents']);
+  for (const tool of SEARCH_GOOGLE.slice(3)) {
+    assert.deepEqual(google.matches[tool], [], tool);
+    assert.match(google.notes[tool], /^No official Google MCP server covers/, tool);
+  }
+  const kindOf = (tool) => readJson('plugins', 'gsearch', 'tool-map.json').find((t) => t.name === `mcp__plugin_gsearch_gsearch__${tool}`).kind;
+  // answerQuery is a POST the classifier counts as a write (D2); every other tool of the list is a read.
+  for (const tool of SEARCH_GOOGLE) assert.equal(kindOf(tool), tool === 'developerk_v1_answer_query' ? 'write' : 'read', tool);
+  assert.match(google.notes.developerk_v1_answer_query, /D2/);
+});
+
+test('the gadmin google list is a lean set: no official server, every tool says why it is kept; two writes, no delete', () => {
+  const google = readJson('config', 'products.json').products.gadmin.toolsets.google;
+  assert.deepEqual(google.tools, ADMIN_GOOGLE);
+  assert.ok(google.source.startsWith('No official Google MCP server for Google Workspace administration'));
+  for (const tool of ADMIN_GOOGLE) {
+    assert.deepEqual(google.matches[tool], [], tool);
+    assert.ok(typeof google.notes[tool] === 'string' && google.notes[tool].length > 10, tool);
+  }
+  const kindOf = (tool) => readJson('plugins', 'gadmin', 'tool-map.json').find((t) => t.name === `mcp__plugin_gadmin_gadmin__${tool}`).kind;
+  for (const tool of ADMIN_GOOGLE) assert.equal(kindOf(tool), ['admin_user_set_suspended', 'admin_group_member_add'].includes(tool) ? 'write' : 'read', tool);
+  for (const name of ['admin_user_delete', 'admin_group_delete', 'admin_member_remove', 'admin_orgunit_delete']) assert.equal(ADMIN_GOOGLE.includes(name), false, name);
+});
+
 /** A server of generated tools only, as scripts/bundle.mjs writes its entry. */
 function generatedEntry(dir, name) {
   const entry = join(dir, `${name}-entry.mjs`);
@@ -989,6 +1043,37 @@ test('runServer: google on gmerchant (service account key) lists its 13 tools an
   assert.equal(google.health.toolset.requested, 'google');
   assert.equal(google.health.toolset.effective, 'google');
   assert.ok(google.health.toolset.outsideToolset >= unset.length - google.tools.length);
+});
+
+test('runServer: google on gsearch (API key) and gadmin lists the list and the runtime tools, with the same schemas as all', async () => {
+  // gsearch: generated tools only, the apikey group (a fake key, never sent: tools/list and health only).
+  const sdir = tempDir('gsm-toolset-gsearch-');
+  const sentry = generatedEntry(sdir, 'gsearch');
+  const stokens = join(sdir, 'tokens');
+  mkdirSync(stokens, { recursive: true });
+  const senv = (extra = {}) => childEnv(sdir, stokens, { GSM_API_KEY: 'fake-key-for-tools-list', ...extra });
+  const sall = await withClient(sentry, senv(), listTools);
+  const sgoogle = await withClient(sentry, senv({ GSM_TOOLSET: 'google' }), async (c) => ({ tools: await listTools(c), health: await health(c) }));
+  assert.deepEqual(sgoogle.tools.map((t) => t.name).filter((n) => SEARCH_GOOGLE.includes(n)).sort(), [...SEARCH_GOOGLE].sort());
+  for (const t of sgoogle.tools) assert.deepEqual(t, sall.find((u) => u.name === t.name), t.name);
+  for (const t of sgoogle.tools) assert.ok(SEARCH_GOOGLE.includes(t.name) || t.name === 'health' || t.name.startsWith('auth_') || t.name.startsWith('account'), `only runtime tools besides the list: ${t.name}`);
+  assert.equal(sgoogle.health.toolset.effective, 'google');
+
+  // gadmin: the curated Workspace admin tools and the generated ones, the admin group.
+  const adir = tempDir('gsm-toolset-gadmin-');
+  const aentry = curatedEntry(adir, 'gadmin', 'workspace-admin');
+  const atokens = join(adir, 'tokens');
+  mkdirSync(atokens, { recursive: true });
+  // What setup-admin stores, with every scope the plugin's tools list (fake values; the key file is never read here).
+  const adminScopes = [...new Set(readJson('plugins', 'gadmin', 'tool-map.json').flatMap((t) => t.scopes ?? []))].sort();
+  writeFileSync(join(atokens, 'workspace-admin.scopes.json'), JSON.stringify({ subject: 'admin@example.com', scopes: adminScopes, profile: 'custom', keyFile: join(adir, 'no-key.json') }));
+  const aall = await withClient(aentry, childEnv(adir, atokens), listTools);
+  const agoogle = await withClient(aentry, childEnv(adir, atokens, { GSM_TOOLSET: 'google' }), async (c) => ({ tools: await listTools(c), health: await health(c) }));
+  const listed = agoogle.tools.map((t) => t.name).filter((n) => ADMIN_GOOGLE.includes(n)).sort();
+  assert.deepEqual(listed, [...ADMIN_GOOGLE].sort());
+  for (const t of agoogle.tools) assert.deepEqual(t, aall.find((u) => u.name === t.name), t.name);
+  for (const t of agoogle.tools) assert.ok(ADMIN_GOOGLE.includes(t.name) || t.name === 'health' || t.name.startsWith('auth_') || t.name.startsWith('account'), `only runtime tools besides the list: ${t.name}`);
+  assert.equal(agoogle.health.toolset.effective, 'google');
 });
 
 test('runServer: google on gmeet, gtasks and gapps lists the lean list and the runtime tools, with the same schemas as all', async () => {

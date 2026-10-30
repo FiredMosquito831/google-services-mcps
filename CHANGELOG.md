@@ -2,6 +2,16 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.23.0 - 2026-10-30
+
+### New: google toolsets for gsearch and gadmin
+- gsearch (8): `developerk_documents_search_documen`, `developerk_documents_batch_get` and `developerk_v1_answer_query`, which match Google's Developer Knowledge MCP server (`search_documents`, `get_documents`, `answer_query`), and a small set chosen here for the APIs no official server covers: PageSpeed Insights, the Chrome UX Report record query, Knowledge Graph search, Fact Check claims search and Web Risk URL search. The answer tool keeps today's write kind (it asks first), though Google marks it read-only; reviewing that kind is a separate change.
+- gadmin (10): Google has no official MCP server for Workspace administration, so a small set chosen here: users list and get, groups list, group members, org units, domains, audit activity, alerts, and two writes (`admin_user_set_suspended`, `admin_group_member_add`). No delete. `readonly`: the read-only Directory scopes and `admin.reports.audit.readonly`; `readwrite`: the Directory write scopes, the audit scope and `apps.alerts`.
+- Data only: no tool is added or changed.
+
+### Not changed
+- The tools every plugin lists with `all`, their schemas, the tool maps, scopes of the `all` toolset (every server's requirements are byte-identical), the write gate and the hook.
+
 ## 1.22.0 - 2026-10-30
 
 ### New: route and weather tools that match Google's Maps Grounding Lite MCP server

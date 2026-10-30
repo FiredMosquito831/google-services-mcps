@@ -85,6 +85,18 @@
           "version": "v4"
         }
       ],
+      "toolsets": {
+        "google": [
+          "developerk_documents_search_documen",
+          "developerk_documents_batch_get",
+          "developerk_v1_answer_query",
+          "pagespeedo_pagespeedap_runpagespeed",
+          "chromeuxre_records_query_record",
+          "kgsearch_entities_search",
+          "factcheckt_claims_search",
+          "webrisk_uris_search"
+        ]
+      },
       "label": "Search and Web Quality: Public search and web-quality APIs (Custom Search, PageSpeed, CrUX, Safe Browsing, Web Risk, Fact Check) that take an API key instead of OAuth. The Custom Search JSON API is closed to new customers and is scheduled to be discontinued on 2027-01-01."
     }
   ]

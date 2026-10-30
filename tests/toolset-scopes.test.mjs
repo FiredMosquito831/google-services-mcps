@@ -354,6 +354,18 @@ test('requirements: the gai google list (6 tools, no gateway) resolves to cloud-
   assert.deepEqual(resolveScopes(all, 'readwrite').scopes, [G('cloud-platform'), G('devstorage.read_only')]);
 });
 
+test('requirements: the lean gadmin google list resolves to the read-only Directory and audit scopes, and adds the write scopes and alerts for readwrite', async () => {
+  const { cfg } = tempTokens();
+  const google = await requirementsFor(['gadmin'], cfg, { ...quiet, toolset: 'google' });
+  assert.equal(google.length, 10);
+  assert.equal(google.filter((r) => r.gateway).length, 0);
+  const readonly = resolveScopes(google, 'readonly');
+  assert.deepEqual(readonly.scopes, ['domain', 'group', 'orgunit', 'user'].map((s) => G(`admin.directory.${s}.readonly`)).concat(G('admin.reports.audit.readonly')));
+  // The alert center lists only apps.alerts, which has no read-only form; the two writes need the write scopes.
+  assert.deepEqual(readonly.uncovered.sort(), ['gadmin/admin_group_member_add', 'gadmin/admin_user_set_suspended', 'gadmin/alerts_alerts_list']);
+  assert.deepEqual(resolveScopes(google, 'readwrite').scopes, ['domain', 'group', 'orgunit', 'user'].map((s) => G(`admin.directory.${s}`)).concat(G('admin.reports.audit.readonly'), G('apps.alerts')));
+});
+
 test('requirements: the gmerchant google list (13 generated tools, no gateway) needs content, which has no read-only form', async () => {
   const { cfg } = tempTokens();
   const google = await requirementsFor(['gmerchant'], cfg, { ...quiet, toolset: 'google' });
