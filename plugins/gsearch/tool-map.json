@@ -191,7 +191,7 @@
   },
   {
     "name": "mcp__plugin_gsearch_gsearch__developerk_v1_answer_query",
-    "kind": "write",
+    "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"
     ],

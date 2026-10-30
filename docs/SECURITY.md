@@ -46,6 +46,7 @@ The gate needs to know whether a call changes data. For generated and gateway to
 - A `POST` is a read when its name starts with one of these: `get`, `list`, `search`, `batchGet`, `lookup`, `check`, `validate`, `inspect`, `fetch`, `download`, `describe`, `preview`, `analyze`, `detect`, `evaluate`. Or when its name is one of these exact names: `queryRecord`, `queryHistoryRecord`, `getIamPolicy`, `testIamPermissions`, `runReport`, `runRealtimeReport`, `runPivotReport`, `batchRunReports`, `runAccessReport`, `queryAuditLogs`.
 - Anything else is a write.
 - `config/tool-kinds.json` overrides any method by its full id. A dynamic override is decided per call.
+- Since 1.24.2 it lists as reads twelve `POST` methods that Google marks read-only and that change nothing: Data Connect `executeGraphqlRead`, `generateQuery` and `generateSchema`, Firebase Rules `projects.test`, the three bindings of Discovery Engine `servingConfigs.answer`, Developer Knowledge `answerQuery`, Places `autocomplete`, Analytics Data `batchRunPivotReports` and `audienceExports.query`, and Calendar `freebusy.query`. It lists Merchant API `accounts.dataSources.fetch` as a write, because Google says it starts processing the data source's file. A credential name stays a write.
 
 The read rule for `POST` is a name prefix. It is not a check of what the method does. See the first known limit below.
 

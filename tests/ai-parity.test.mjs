@@ -168,7 +168,7 @@ test("the gai google list: Google's three Agent Search tools and the three Verte
   assert.equal(google.tools.includes('api_call'), false, 'no gateway method counts toward its scopes');
   const map = JSON.parse(readFileSync(join(REPO, 'plugins', 'gai', 'tool-map.json'), 'utf8'));
   const kind = (name) => map.find((t) => t.name === `mcp__plugin_gai_gai__${name}`)?.kind;
-  // Discovery Engine's answer is a POST the classifier counts as a write; changing that is item D2.
-  for (const name of google.tools) assert.equal(kind(name), name === 'discoverye_proj_loca_coll_engin_servi_answe' ? 'write' : 'read', name);
+  // Discovery Engine's answer is a POST that Google marks read-only, and a read here since D2 (1.24.2): every tool of the list is a read.
+  for (const name of google.tools) assert.equal(kind(name), 'read', name);
   assert.match(google.notes.discoverye_proj_loca_coll_engin_servi_answe, /D2/);
 });

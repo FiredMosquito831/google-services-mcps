@@ -4,7 +4,7 @@ Merchant Center: Merchant API, Comparison Shopping Service and Manufacturer Cent
 
 - Plugin: `gmerchant`, MCP server: `gmerchant`, login: Service account key, then `setup-service-account` (no login)
 - Install: `claude plugin install gmerchant@google-services-mcps`
-- Tools: 167 total. Curated 9, per-method 154, gateway 3. Read 76, write 70, destructive 20, dynamic 1.
+- Tools: 167 total. Curated 9, per-method 154, gateway 3. Read 75, write 71, destructive 20, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
@@ -27,7 +27,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `merchantap_account_data_so_list` | `list_data_sources` | The data sources of an account. |
 | `merchantap_account_data_sou_get` | `get_data_source` | One data source. |
 | `merchantap_accoun_data_s_create` | `create_data_source` | Creates a data source. A write, so it asks first. |
-| `merchantap_accoun_data_so_fetch` | `fetch_data_source` | Fetches and processes a data source's file now. Google says it triggers processing; the classifier counts this POST as a read, so it does not ask. Changing that kind is a separate change (D2). |
+| `merchantap_accoun_data_so_fetch` | `fetch_data_source` | Fetches and processes a data source's file now. Google says it triggers processing, so since 1.24.2 (D2) the suite counts it as a write, and it asks first. |
 | `merchantap_accou_data_file_get` | `get_file_upload` | The latest file upload of a data source and its processing state (accounts/{account}/dataSources/{datasource}/fileUploads/latest). |
 
 ## Curated tools (9)
@@ -106,7 +106,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `merchantap_accoun_convers_patch` | write | merchantapi.accounts.conversionSources.patch | content |
 | `merchantap_accoun_data_s_create` | write | merchantapi.accounts.dataSources.create | content |
 | `merchantap_accoun_data_s_delete` | destructive | merchantapi.accounts.dataSources.delete | content |
-| `merchantap_accoun_data_so_fetch` | read | merchantapi.accounts.dataSources.fetch | content |
+| `merchantap_accoun_data_so_fetch` | write | merchantapi.accounts.dataSources.fetch | content |
 | `merchantap_accoun_data_so_patch` | write | merchantapi.accounts.dataSources.patch | content |
 | `merchantap_accoun_develo_get_ac` | read | merchantapi.accounts.developerRegistration.getAccountForGcpRegistration | content |
 | `merchantap_accoun_develo_get_de` | read | merchantapi.accounts.developerRegistration.getDeveloperRegistration | content |

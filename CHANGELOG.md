@@ -2,6 +2,17 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.24.2 - 2026-10-30
+
+### Fixed: the kinds of thirteen methods match what Google says they do
+- Twelve `POST` methods that Google marks read-only, and that change nothing, were writes here by their names, so they asked first and were hidden with writes off. They are reads now: Data Connect `executeGraphqlRead`, `generateQuery` and `generateSchema`; Firebase Rules `projects.test`; Discovery Engine `servingConfigs.answer` (the method of Google's Agent Search `conversational_search`; all three of its bindings: engines, collection data stores and data stores); Developer Knowledge `answerQuery`; Places `autocomplete`; Analytics Data `batchRunPivotReports` and `audienceExports.query`; Calendar `freebusy.query`. Each id covers every version the catalog carries (Data Connect v1 and v1beta, Discovery Engine v1, v1alpha and v1beta, Developer Knowledge v1 and v1alpha).
+- Merchant API `accounts.dataSources.fetch` was a read by its name (`fetch`), so it ran without a prompt. Google says it fetches and processes the data source's file at once. It is a write now: it asks first, and it is hidden with writes off.
+- The change is data in `config/tool-kinds.json`. The classifier code and the credential rule are not changed: a method with a token, credential, secret, password, authorization or key in its name is still a write, and `getKeyString` stays a write.
+- Tools affected: gfirebase `firebaseda_pro_loc_ser_exe_3072`, `firebaseda_pro_loc_ser_gen_8f53`, `firebaseda_pro_loc_ser_gen_cf40`, `firebaseru_projects_test`; gai `discoverye_proj_loca_coll_engin_servi_answe`, `discoverye_proj_loca_colle_data_servi_answe`, `discoverye_proje_locat_data_s_servin_answer`; gsearch `developerk_v1_answer_query`; gmaps `places_places_autocomplete`; ganalytics `gadata_properties_batch_run_p`, `gadata_propert_audience_query`; gcalendar `calendar_freebusy_query` (now in step with the curated `calendar_freebusy`); gmerchant `merchantap_accoun_data_so_fetch` (write). Through `api_call`, the same methods in the gateway APIs of gai, gfirebase, gsearch and gmerchant.
+
+### Not changed
+- The kind of every other tool and gateway method (all 23 tool maps and gateway tables compared), the scopes of every login profile and toolset, the write gate and the hook. Left as they are, for a later decision: Search Console `searchanalytics.query`, the Monitoring Prometheus queries, BigQuery `jobs.query` and the Postmaster `domainStats` queries.
+
 ## 1.24.1 - 2026-10-30
 
 ### Fixed: gbusiness tools ask for business.manage

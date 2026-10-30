@@ -601,7 +601,7 @@
   },
   {
     "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_data_so_fetch",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/content"
     ],

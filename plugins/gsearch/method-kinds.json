@@ -1,5 +1,5 @@
 {
-  "developerknowledge.answerQuery": "write",
+  "developerknowledge.answerQuery": "read",
   "developerknowledge.documents.batchGet": "read",
   "developerknowledge.documents.get": "read",
   "developerknowledge.documents.searchDocumentChunks": "read",

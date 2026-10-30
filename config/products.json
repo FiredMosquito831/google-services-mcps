@@ -1615,7 +1615,7 @@
           "notes": {
             "developerk_documents_search_documen": "Searches Google's developer documentation (Developer Knowledge API searchDocumentChunks): matching chunks with their document names.",
             "developerk_documents_batch_get": "The full text of up to 20 documents by name (Developer Knowledge API documents.batchGet), after a search.",
-            "developerk_v1_answer_query": "A grounded answer about Google developer products (Developer Knowledge API answerQuery). Google marks it read-only; the classifier counts this POST as a write, so it asks first. Changing that kind is a separate change (D2).",
+            "developerk_v1_answer_query": "A grounded answer about Google developer products (Developer Knowledge API answerQuery). Google marks it read-only, and since 1.24.2 (D2) the suite counts it as a read too, so it does not ask.",
             "pagespeedo_pagespeedap_runpagespeed": "No official Google MCP server covers PageSpeed Insights; kept for the Lighthouse scores and Core Web Vitals of a page (PageSpeed Insights API runpagespeed).",
             "chromeuxre_records_query_record": "No official Google MCP server covers the Chrome UX Report; kept for real-user Core Web Vitals of an origin or URL (CrUX API records.queryRecord).",
             "kgsearch_entities_search": "No official Google MCP server covers the Knowledge Graph; kept to look up an entity by name (Knowledge Graph Search API entities.search).",
@@ -3237,7 +3237,7 @@
             "merchantap_account_data_so_list": "The data sources of an account.",
             "merchantap_account_data_sou_get": "One data source.",
             "merchantap_accoun_data_s_create": "Creates a data source. A write, so it asks first.",
-            "merchantap_accoun_data_so_fetch": "Fetches and processes a data source's file now. Google says it triggers processing; the classifier counts this POST as a read, so it does not ask. Changing that kind is a separate change (D2).",
+            "merchantap_accoun_data_so_fetch": "Fetches and processes a data source's file now. Google says it triggers processing, so since 1.24.2 (D2) the suite counts it as a write, and it asks first.",
             "merchantap_accou_data_file_get": "The latest file upload of a data source and its processing state (accounts/{account}/dataSources/{datasource}/fileUploads/latest)."
           }
         }
@@ -3683,14 +3683,14 @@
             "firebase_projects_search_apps": "Every app of a project (iOS, Android and web) in one list; Google's tool filters by platform.",
             "firebase_projec_web_app_get_con": "The web app's SDK configuration; Google's one tool takes the platform, here there is one tool per platform.",
             "firebaseru_project_release_list": "The rules releases of a project; with firebaseru_project_rulesets_get it gives the rules source, as Google's tool does. Realtime Database rules are not covered (no API here).",
-            "firebaseru_projects_test": "Checks a rules source. Google marks it read-only; the classifier counts this POST as a write, so it asks first. Changing that kind is a separate change (D2).",
+            "firebaseru_projects_test": "Checks a rules source. Google marks it read-only, and since 1.24.2 (D2) the suite counts it as a read too, so it does not ask.",
             "firebaseap_proj_locat_backe_get": "The backend and its state. Google's tool also reads its build and run logs, which are Cloud Logging: use the gcloud server's logging_entries_list.",
             "firebaseda_pro_loc_ser_sch_list": "The schemas of a Data Connect service; Google's list_services returns them with the services.",
             "firebaseda_pro_loc_ser_con_list": "The connectors of a Data Connect service; Google's list_services returns them with the services.",
             "firebaseda_pro_loc_ser_exe_1fce": "Runs any GraphQL operation, mutations too. A write, so it asks first.",
-            "firebaseda_pro_loc_ser_exe_3072": "Runs a GraphQL query. Google marks it read-only; the classifier counts this POST as a write, so it asks first. Changing that kind is a separate change (D2).",
-            "firebaseda_pro_loc_ser_gen_8f53": "Writes a GraphQL query from a prompt. Google marks it read-only; the classifier counts this POST as a write, so it asks first (D2).",
-            "firebaseda_pro_loc_ser_gen_cf40": "Writes a Data Connect schema from a prompt. Google marks it read-only; the classifier counts this POST as a write, so it asks first (D2).",
+            "firebaseda_pro_loc_ser_exe_3072": "Runs a GraphQL query. Google marks it read-only, and since 1.24.2 (D2) the suite counts it as a read too, so it does not ask.",
+            "firebaseda_pro_loc_ser_gen_8f53": "Writes a GraphQL query from a prompt. Google marks it read-only, and since 1.24.2 (D2) the suite counts it as a read too, so it does not ask.",
+            "firebaseda_pro_loc_ser_gen_cf40": "Writes a Data Connect schema from a prompt. Google marks it read-only, and since 1.24.2 (D2) the suite counts it as a read too, so it does not ask.",
             "fcm_projects_messages_send": "Sends a push message to a device or topic. Destructive here (it cannot be taken back), so it asks twice.",
             "firestore_get_document": "Firestore is a gcloud API in this suite; this curated tool reads one document here. Fields come back as plain JSON.",
             "firestore_query_collection": "Firestore runQuery: field conditions joined with AND, an order and a limit; values as plain JSON. A read, as Google marks it.",
@@ -4043,7 +4043,7 @@
             "vertex_count_tokens": "countTokens on the model, or on an endpoint. Discovery lists only cloud-platform for it.",
             "vertex_embed_content": "embedContent on a publisher embedding model, such as gemini-embedding-001.",
             "discoverye_pro_loc_coll_engi_serv_sear_a054": "Agent Search (Vertex AI Search) on an engine's serving config: Discovery Engine v1 servingConfigs.search.",
-            "discoverye_proj_loca_coll_engin_servi_answe": "Discovery Engine v1 servingConfigs.answer. Google marks it read-only; the classifier counts this POST as a write, so it asks first. Changing that kind is a separate change (D2).",
+            "discoverye_proj_loca_coll_engin_servi_answe": "Discovery Engine v1 servingConfigs.answer. Google marks it read-only, and since 1.24.2 (D2) the suite counts it as a read too, so it does not ask.",
             "discoverye_projec_locati_collec_engine_list": "The engines (search and chat apps) of a collection."
           }
         }

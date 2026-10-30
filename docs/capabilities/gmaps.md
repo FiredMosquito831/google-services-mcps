@@ -4,7 +4,7 @@ Maps Platform and location APIs: Places, Address Validation, Solar, Air Quality,
 
 - Plugin: `gmaps`, MCP server: `gmaps`, login: API key, then `setup-apikey` (no login)
 - Install: `claude plugin install gmaps@google-services-mcps`
-- Tools: 47 total. Curated 11, per-method 35, gateway 0. Read 25, write 19, destructive 3, dynamic 0.
+- Tools: 47 total. Curated 11, per-method 35, gateway 0. Read 26, write 18, destructive 3, dynamic 0.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
@@ -48,7 +48,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `airquality_history_lookup` | read | airquality.history.lookup | cloud-platform |
 | `airquality_map_type_heatmap_t_lookup_he` | read | airquality.mapTypes.heatmapTiles.lookupHeatmapTile | cloud-platform |
 | `areainsigh_v1_compute_insights` | write | areainsights.computeInsights | cloud-platform |
-| `places_places_autocomplete` | write | places.places.autocomplete | cloud-platform, maps-platform.places |
+| `places_places_autocomplete` | read | places.places.autocomplete | cloud-platform, maps-platform.places |
 | `places_places_get` | read | places.places.get | cloud-platform, maps-platform.places |
 | `places_places_photos_get_media` | read | places.places.photos.getMedia | cloud-platform, maps-platform.places |
 | `places_places_search_nearby` | read | places.places.searchNearby | cloud-platform, maps-platform.places |
