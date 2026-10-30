@@ -2,6 +2,19 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.14.0 - 2026-10-30
+
+### New: readable Classroom tools that match Google's Classroom MCP server
+The generated Classroom tools have hashed names (the 64-character budget). These have readable ones, each naming the Google tool it matches, and their answers carry the Classroom web links (stream `https://classroom.google.com/c/{course_id}`, Classwork, People, and each item's link). Dates are UTC unless `time_zone` (an IANA name) is given.
+- Reads: `classroom_list_courses` (`list_courses`; active by default, `role` for courses you teach or take), `classroom_get_course`, `classroom_list_topics` (`list_topics`), `classroom_list_coursework` (`list_course_work_summaries`: assignments, questions and materials in one list, newest change first, published unless `include_drafts`, filters by type, topic and title; `include_submission_overview` adds counts by state, late and graded, or a student's own submission; one page token covers both lists; materials without their scope give a note instead of an error), `classroom_get_coursework` (`get_course_work`; up to 50 ids, each tried as coursework then as a material), `classroom_get_roster` (`get_course_roster`; teachers and students), `classroom_list_announcements` (`list_announcement_summaries`; text cut at 300 characters), `classroom_get_announcements` (`get_announcements`; up to 50 ids), `classroom_list_submissions` (`list_course_work_submissions`; student names from the roster, grade and percentage, the student's attachments, answer and rubric grades on request), `classroom_get_rubric` (`get_course_work_rubric`) and `classroom_get_guardians` (`get_guardian_info`; up to 50 students).
+- Writes, each asking first: `classroom_create_topic` (`create_topic`), `classroom_create_announcement` (`create_announcement`; a draft unless `publish: true` or `scheduled_time`; links and Drive files, at most 20 materials; some students only), `classroom_create_rubric` (`create_course_work_rubric`; Classroom's rubric rules checked before the request).
+- Google's `search_course_standards` has no public REST method; no tool matches it.
+- The `google` toolset of gclassroom: these 14 and the generated coursework create, patch, assignee and materials-list tools (20). A `readonly` login with it asks for the read-only scopes of announcements, courses, coursework (`coursework.me.readonly`), coursework materials, guardian links of students, rosters and topics; a `readwrite` login for the read-write scopes of the same areas.
+
+### Not changed
+- Scopes of the `all` toolset (gclassroom's resolve the same; its login requirements grow by the 14 tools), the generated tool names, the write gate and the hook. Every other plugin lists the same tools with the same schemas.
+- Not tested against the live Classroom API (Google's HTTP layer stubbed; the request shapes are checked against Google's Discovery document).
+
 ## 1.13.0 - 2026-10-30
 
 ### New: Contacts and profile tools that match Google's People MCP server

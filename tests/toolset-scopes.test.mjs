@@ -204,6 +204,34 @@ test('requirements: the gcontacts google list resolves to contacts and directory
   assert.deepEqual(resolveScopes(google, 'readwrite').scopes, [G('contacts'), G('directory.readonly'), EMAIL]);
 });
 
+test('requirements: the gclassroom google list resolves to the Classroom read-only scopes, materials included', async () => {
+  const { cfg } = tempTokens();
+  const google = await requirementsFor(['gclassroom'], cfg, { ...quiet, toolset: 'google' });
+  assert.equal(google.length, 20);
+  const C = (s) => G(`classroom.${s}`);
+  assert.deepEqual(resolveScopes(google, 'readonly').scopes, [
+    C('announcements.readonly'),
+    C('courses.readonly'),
+    C('coursework.me.readonly'),
+    C('courseworkmaterials.readonly'),
+    C('guardianlinks.students.readonly'),
+    C('rosters.readonly'),
+    C('topics.readonly'),
+  ]);
+  assert.deepEqual(resolveScopes(google, 'readwrite').scopes, [
+    C('announcements'),
+    C('courses'),
+    C('coursework.students'),
+    C('courseworkmaterials'),
+    C('guardianlinks.students'),
+    C('rosters'),
+    C('topics'),
+  ]);
+  // Without the generated materials list, no tool of the list would bring the materials scope to a readonly login.
+  const withoutMaterialsList = google.filter((r) => r.tool !== 'gclassroom/classroom_cour_cour_list_1590');
+  assert.equal(resolveScopes(withoutMaterialsList, 'readonly').scopes.includes(C('courseworkmaterials.readonly')), false);
+});
+
 test('--toolset: parsed for login, scopes and setup-admin; an unknown value is a usage error', () => {
   assert.equal(parseToolset(undefined), undefined);
   assert.equal(parseToolset('Google'), 'google');

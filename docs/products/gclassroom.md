@@ -32,6 +32,8 @@ Start with `--profile readonly`. Changes need a `readwrite` login and the plugin
 
 | Area | Tools | Safety | What it does |
 |---|---|---|---|
+| Readable task tools | `classroom_list_courses`, `classroom_get_course`, `classroom_list_topics`, `classroom_list_coursework`, `classroom_get_coursework`, `classroom_get_roster`, `classroom_list_announcements`, `classroom_get_announcements`, `classroom_list_submissions`, `classroom_get_rubric`, `classroom_get_guardians` | read | Courses, topics, coursework and materials with a submission overview, the roster, announcements, submissions with names and grades, rubrics, guardians; with Classroom web links |
+| | `classroom_create_topic`, `classroom_create_announcement`, `classroom_create_rubric` | write | Add a topic, an announcement (a draft unless `publish`), a rubric |
 | Courses | list and get | read | List courses and read one |
 | | create, update | write | Create or change a course |
 | | delete | destructive | Delete a course |
@@ -50,10 +52,12 @@ Start with `--profile readonly`. Changes need a `readwrite` login and the plugin
 
 The full list is in `docs/capabilities/gclassroom.md`.
 
+The readable task tools match 15 of the 16 tools of Google's Classroom MCP server (https://developers.google.com/workspace/classroom/reference/mcp/tools_list); Google's `create_course_work` and `update_course_work` map to the generated create, patch and assignee tools. Google's `search_course_standards` has no public REST method, so nothing matches it. With the plugin option `toolset: google`, the server lists these 20 tools, plus `health` and the sign-in tools. A `readonly` login with that toolset asks for the read-only scopes of announcements, courses, coursework (`classroom.coursework.me.readonly`: the greedy choice takes the shorter of the two scopes that cover these tools; Google describes it as your own coursework and grades, so a teacher reading students' submissions may need `classroom.coursework.students.readonly`, which a `readwrite` login or an explicit scope list gives; not verified live), coursework materials, guardian links of students, rosters and topics; a `readwrite` login asks for the read-write scopes of the same areas, with `classroom.coursework.students`. Dates are in UTC unless you give `time_zone`.
+
 ## Example requests
 
-- "Which students have not turned in the Chapter 4 quiz?" Claude lists coursework and submissions. No prompt.
-- "Post an announcement in Biology 101: the lab moved to room 12." Claude creates an announcement. It asks first.
+- "Which students have not turned in the Chapter 4 quiz?" Claude finds the course with `classroom_list_courses`, the quiz with `classroom_list_coursework`, then runs `classroom_list_submissions`. No prompt.
+- "Post an announcement in Biology 101: the lab moved to room 12." Claude runs `classroom_create_announcement`, which makes a draft unless you say to publish it. It asks first.
 - "Add Ms. Ortiz as a teacher in the Spanish course." Claude adds a teacher. It asks first.
 - "Delete the old draft assignment." Claude runs a coursework delete. It asks twice.
 

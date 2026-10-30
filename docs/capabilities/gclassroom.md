@@ -4,13 +4,40 @@ Google Classroom courses, coursework, submissions, students and teachers.
 
 - Plugin: `gclassroom`, MCP server: `gclassroom`, login: Desktop OAuth client, then `login workspace-user`
 - Install: `claude plugin install gclassroom@google-services-mcps`
-- Tools: 114 total. Curated 9, per-method 104, gateway 0. Read 47, write 49, destructive 18, dynamic 0.
+- Tools: 128 total. Curated 23, per-method 104, gateway 0. Read 58, write 52, destructive 18, dynamic 0.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 114, google 114 (all), curated 114 (all) tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 128, google 29, curated 23 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
 
-## Curated tools (9)
+## Toolset google (20)
+
+The tools that match Google's official MCP server for this product (https://developers.google.com/workspace/classroom/reference/mcp/tools_list).
+
+| Tool | Google's tool | Note |
+|---|---|---|
+| `classroom_list_courses` | `list_courses` |  |
+| `classroom_get_course` | (none) | One course by id, with its description and links. Google's list_courses returns these fields per course and has no get; kept so a known course id needs no list. |
+| `classroom_list_topics` | `list_topics` |  |
+| `classroom_create_topic` | `create_topic` |  |
+| `classroom_list_coursework` | `list_course_work_summaries` | Assignments, questions and materials of a course in one list (courseWork.list and courseWorkMaterials.list), published only unless include_drafts; include_submission_overview adds one studentSubmissions.list per item. Materials need a classroom.courseworkmaterials scope; without one the answer lists the coursework and says so. |
+| `classroom_get_coursework` | `get_course_work` |  |
+| `classroom_cour_cour_list_1590` | `list_course_work_summaries` | Generated from courseWorkMaterials.list. Kept so a readonly login of this toolset asks for classroom.courseworkmaterials.readonly, which classroom_list_coursework needs for the materials (one tool can declare only one any-of scope list). |
+| `classroom_cour_cour_crea_e311` | `create_course_work` | Generated from courseWork.create (assignments and questions): a raw CourseWork body. Classroom makes it a DRAFT unless state is set. Not curated in this release. |
+| `classroom_cour_cour_crea_3302` | `create_course_work` | Generated from courseWorkMaterials.create (materials): a raw CourseWorkMaterial body. Classroom makes it a DRAFT unless state is set. |
+| `classroom_cour_cour_patc_dea2` | `update_course_work` | Generated from courseWork.patch: updateMask names the fields to change. |
+| `classroom_cours_course_modify` | `update_course_work` | Generated from courseWork.modifyAssignees: adds or removes the students of a coursework item. |
+| `classroom_cour_cour_patc_480d` | `update_course_work` | Generated from courseWorkMaterials.patch: updateMask names the fields to change. |
+| `classroom_list_submissions` | `list_course_work_submissions` |  |
+| `classroom_get_rubric` | `get_course_work_rubric` |  |
+| `classroom_create_rubric` | `create_course_work_rubric` | Google's learningGoalId comes from search_course_standards, which has no public REST method (no learning-standards method in Classroom v1 Discovery), so no tool here matches search_course_standards. Google takes rubrics only for coursework of the same Cloud project. |
+| `classroom_get_roster` | `get_course_roster` |  |
+| `classroom_list_announcements` | `list_announcement_summaries` |  |
+| `classroom_get_announcements` | `get_announcements` |  |
+| `classroom_create_announcement` | `create_announcement` |  |
+| `classroom_get_guardians` | `get_guardian_info` |  |
+
+## Curated tools (23)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
@@ -22,6 +49,20 @@ Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 114, google 114 (all)
 | `auth_setup_client` | write | Save the Google OAuth client | (none) |
 | `auth_setup_service_account` | write | Set up the service account key | (none) |
 | `auth_status` | read | Sign-in status | (none) |
+| `classroom_create_announcement` | write | Create a Classroom announcement | classroom.announcements |
+| `classroom_create_rubric` | write | Create a Classroom rubric | classroom.coursework.students |
+| `classroom_create_topic` | write | Create a Classroom topic | classroom.topics |
+| `classroom_get_announcements` | read | Get Classroom announcements | classroom.announcements, classroom.announcements.readonly |
+| `classroom_get_course` | read | Get a Classroom course | classroom.courses, classroom.courses.readonly |
+| `classroom_get_coursework` | read | Get Classroom coursework | classroom.coursework.me, classroom.coursework.me.readonly |
+| `classroom_get_guardians` | read | Get Classroom guardians | classroom.guardianlinks.students, classroom.guardianlinks.students.readonly |
+| `classroom_get_roster` | read | Get a Classroom roster | classroom.rosters, classroom.rosters.readonly |
+| `classroom_get_rubric` | read | Get a Classroom rubric | classroom.coursework.me, classroom.coursework.me.readonly |
+| `classroom_list_announcements` | read | List Classroom announcements | classroom.announcements, classroom.announcements.readonly |
+| `classroom_list_courses` | read | List Classroom courses | classroom.courses, classroom.courses.readonly |
+| `classroom_list_coursework` | read | List Classroom coursework | classroom.coursework.me, classroom.coursework.me.readonly |
+| `classroom_list_submissions` | read | List Classroom submissions | classroom.coursework.me, classroom.coursework.me.readonly |
+| `classroom_list_topics` | read | List Classroom topics | classroom.topics, classroom.topics.readonly |
 | `health` | read | Server health | (none) |
 
 ## Per-method tools (104)

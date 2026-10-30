@@ -131,6 +131,7 @@ const DOCS = [
   'chat.v1',
   'people.v1',
   'oauth2.v2',
+  'classroom.v1',
 ];
 
 /**
@@ -266,7 +267,7 @@ function problemsOf(call) {
 // ---------------------------------------------------------------------------
 // The servers and their tools.
 
-const SERVERS = ['gmail', 'gcalendar', 'gdrive', 'searchconsole', 'cloud', 'gads', 'workspace-admin', 'gchat', 'gcontacts'];
+const SERVERS = ['gmail', 'gcalendar', 'gdrive', 'searchconsole', 'cloud', 'gads', 'workspace-admin', 'gchat', 'gcontacts', 'gclassroom'];
 const tools = new Map();
 for (const mod of SERVERS) {
   const { buildTools } = await import(DIST(`servers/${mod}.js`));
@@ -711,6 +712,44 @@ const CASES = {
   ],
   contacts_search: [{ args: { query: 'ana', fields: ['names', 'emailAddresses'], max_results: 5 }, expect: ['people.people.searchContacts'] }],
   profile_me: [{ args: {}, expect: ['oauth2.userinfo.get'] }],
+
+  // gclassroom (1.14.0)
+  classroom_list_courses: [
+    { args: { states: ['ACTIVE', 'ARCHIVED'], role: 'teacher', page_size: 10, page_token: 'p1' }, expect: ['classroom.courses.list'] },
+    { args: { role: 'student' }, expect: ['classroom.courses.list'] },
+  ],
+  classroom_get_course: [{ args: { course_id: '123' }, expect: ['classroom.courses.get'] }],
+  classroom_list_topics: [{ args: { course_id: '123', page_size: 5, page_token: 'p1' }, expect: ['classroom.courses.topics.list'] }],
+  classroom_list_coursework: [
+    {
+      args: { course_id: '123', include_drafts: true, include_submission_overview: true, page_size: 5 },
+      expect: ['classroom.courses.courseWork.list', 'classroom.courses.courseWorkMaterials.list', 'classroom.courses.courseWork.studentSubmissions.list'],
+      respond: (call) => (call.url.endsWith('/courseWork') ? { courseWork: [{ id: 'w1', workType: 'ASSIGNMENT' }] } : {}),
+    },
+  ],
+  classroom_get_coursework: [{ args: { course_id: '123', coursework_ids: ['w1'] }, expect: ['classroom.courses.courseWork.get'] }],
+  classroom_get_roster: [{ args: { course_id: '123', page_size: 20 }, expect: ['classroom.courses.teachers.list', 'classroom.courses.students.list'] }],
+  classroom_list_announcements: [{ args: { course_id: '123', include_drafts: true, page_size: 5, page_token: 'p1' }, expect: ['classroom.courses.announcements.list'] }],
+  classroom_get_announcements: [{ args: { course_id: '123', announcement_ids: ['a1', 'a2'] }, expect: ['classroom.courses.announcements.get'] }],
+  classroom_list_submissions: [
+    {
+      args: { course_id: '123', coursework_id: 'w1', states: ['TURNED_IN'], late: true, page_size: 5, page_token: 'p1' },
+      expect: ['classroom.courses.courseWork.get', 'classroom.courses.courseWork.studentSubmissions.list', 'classroom.courses.students.list'],
+    },
+    { args: { course_id: '123', coursework_id: 'w1', student_ids: ['s1'] }, expect: ['classroom.courses.courseWork.get', 'classroom.courses.courseWork.studentSubmissions.list', 'classroom.courses.students.list'] },
+  ],
+  classroom_get_rubric: [{ args: { course_id: '123', coursework_id: 'w1' }, expect: ['classroom.courses.courseWork.rubrics.list'] }],
+  classroom_get_guardians: [{ args: { student_ids: ['s1'] }, expect: ['classroom.userProfiles.guardians.list'] }],
+  classroom_create_topic: [{ args: { course_id: '123', name: 'Unit 1' }, expect: ['classroom.courses.topics.create'] }],
+  classroom_create_announcement: [
+    {
+      args: { course_id: '123', text: 'Hello', links: ['https://example.com'], drive_file_ids: ['f1'], assignee_ids: ['s1'], scheduled_time: '2026-11-02T07:00:00Z' },
+      expect: ['classroom.courses.announcements.create'],
+    },
+  ],
+  classroom_create_rubric: [
+    { args: { course_id: '123', coursework_id: 'w1', criteria: [{ title: 'Clarity', description: 'Clear', levels: [{ title: 'Poor', points: 0 }, { title: 'Good', description: 'd', points: 2 }] }] }, expect: ['classroom.courses.courseWork.rubrics.create'] },
+  ],
 };
 
 /** Tools that cannot run here, with the reason. Counted. */
@@ -723,7 +762,7 @@ test('every curated tool has a contract row, a skip reason or a known defect, an
   const listed = new Set([...Object.keys(CASES), ...Object.keys(SKIPPED), ...Object.keys(KNOWN_DEFECTS)]);
   assert.deepEqual([...tools.keys()].filter((name) => !listed.has(name)), [], 'curated tools without a row');
   assert.deepEqual([...listed].filter((name) => !tools.has(name)), [], 'rows for tools that do not exist');
-  assert.equal(tools.size, 110,'the curated tool count; update the table when it changes');
+  assert.equal(tools.size, 124, 'the curated tool count; update the table when it changes');
 });
 
 for (const [name, cases] of Object.entries(CASES)) {

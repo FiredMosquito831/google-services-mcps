@@ -75,6 +75,29 @@ const CHAT_GOOGLE = [
 ];
 /** The gcontacts list (1.13.0): Google's 3 People MCP tools. */
 const CONTACTS_GOOGLE = ['contacts_search_directory', 'contacts_search', 'profile_me'];
+/** The gclassroom list (1.14.0): curated tools for 15 of Google's 16 Classroom MCP tools, generated ones for the rest. */
+const CLASSROOM_GOOGLE = [
+  'classroom_list_courses',
+  'classroom_get_course',
+  'classroom_list_topics',
+  'classroom_create_topic',
+  'classroom_list_coursework',
+  'classroom_get_coursework',
+  'classroom_cour_cour_list_1590',
+  'classroom_cour_cour_crea_e311',
+  'classroom_cour_cour_crea_3302',
+  'classroom_cour_cour_patc_dea2',
+  'classroom_cours_course_modify',
+  'classroom_cour_cour_patc_480d',
+  'classroom_list_submissions',
+  'classroom_get_rubric',
+  'classroom_create_rubric',
+  'classroom_get_roster',
+  'classroom_list_announcements',
+  'classroom_get_announcements',
+  'classroom_create_announcement',
+  'classroom_get_guardians',
+];
 /** The tools runServer adds for a server of an OAuth group. No toolset removes them. */
 const RUNTIME_OAUTH = ['account_remove', 'account_set_default', 'accounts_list', 'auth_login', 'auth_setup_client', 'auth_status', 'health'];
 
@@ -310,12 +333,30 @@ test("the gcontacts google list covers the 3 tools of Google's People MCP server
   assert.match(google.notes.contacts_search, /warm-up/);
 });
 
+test("the gclassroom google list covers 15 of the 16 tools of Google's Classroom MCP server; search_course_standards has no public method", () => {
+  const google = readJson('config', 'products.json').products.gclassroom.toolsets.google;
+  assert.deepEqual(google.tools, CLASSROOM_GOOGLE);
+  assert.equal(google.source, 'https://developers.google.com/workspace/classroom/reference/mcp/tools_list');
+  const official = new Set(Object.values(google.matches).flat());
+  const expected = [
+    'list_courses', 'list_course_work_summaries', 'get_course_work', 'create_course_work', 'update_course_work', 'list_course_work_submissions',
+    'list_topics', 'create_topic', 'list_announcement_summaries', 'get_announcements', 'create_announcement',
+    'get_course_work_rubric', 'create_course_work_rubric', 'get_course_roster', 'get_guardian_info',
+  ];
+  for (const name of expected) assert.ok(official.has(name), `no tool of ours matches ${name}`);
+  assert.equal(official.size, 15);
+  assert.equal(official.has('search_course_standards'), false);
+  assert.match(google.notes.classroom_create_rubric, /search_course_standards, which has no public REST method/);
+  assert.deepEqual(google.matches.classroom_get_course, []);
+});
+
 test('both registry loaders carry the toolsets: the CLI conversion of config/products.json and a plugin servers.json', () => {
   const reg = registryFromProducts(readJson('config', 'products.json'), ROOT);
   assert.deepEqual(reg.servers.find((s) => s.name === 'gmail').toolsets, { google: GMAIL_GOOGLE });
   assert.deepEqual(reg.servers.find((s) => s.name === 'gsc').toolsets, { google: GSC_GOOGLE });
   assert.deepEqual(reg.servers.find((s) => s.name === 'gchat').toolsets, { google: CHAT_GOOGLE });
   assert.deepEqual(reg.servers.find((s) => s.name === 'gcontacts').toolsets, { google: CONTACTS_GOOGLE });
+  assert.deepEqual(reg.servers.find((s) => s.name === 'gclassroom').toolsets, { google: CLASSROOM_GOOGLE });
   assert.equal(reg.servers.find((s) => s.name === 'gtasks').toolsets, undefined);
   const plugin = loadRegistryFile(join(ROOT, 'plugins', 'gmail', 'servers.json'));
   assert.deepEqual(plugin.servers[0].toolsets, { google: GMAIL_GOOGLE });
@@ -584,4 +625,14 @@ test('runServer: google on gcontacts lists its 3 tools and the runtime tools, wi
   assert.deepEqual(google.map((t) => t.name), [...CONTACTS_GOOGLE, ...RUNTIME_OAUTH].sort());
   for (const t of google) assert.deepEqual(t, unset.find((u) => u.name === t.name), t.name);
   for (const name of CONTACTS_GOOGLE) assert.equal(google.find((t) => t.name === name).annotations.readOnlyHint, true, name);
+});
+
+test('runServer: google on gclassroom lists its 20 tools and the runtime tools, with the same schemas as all', async () => {
+  const dir = tempDir('gsm-toolset-gclassroom-');
+  const entry = curatedEntry(dir, 'gclassroom', 'gclassroom');
+  const tokenDir = fakeLogin(dir, 'gclassroom', 'workspace-user');
+  const unset = await withClient(entry, childEnv(dir, tokenDir), listTools);
+  const google = await withClient(entry, childEnv(dir, tokenDir, { GSM_TOOLSET: 'google' }), listTools);
+  assert.deepEqual(google.map((t) => t.name), [...CLASSROOM_GOOGLE, ...RUNTIME_OAUTH].sort());
+  for (const t of google) assert.deepEqual(t, unset.find((u) => u.name === t.name), t.name);
 });

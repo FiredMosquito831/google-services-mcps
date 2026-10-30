@@ -1652,14 +1652,38 @@
       "name": "gclassroom",
       "plugin": "gclassroom",
       "group": "workspace-user",
-      "kind": "discovery",
-      "curated": null,
+      "kind": "curated+discovery",
+      "curated": "src/servers/gclassroom.ts",
       "apis": [
         {
           "api": "classroom",
           "version": "v1"
         }
       ],
+      "toolsets": {
+        "google": [
+          "classroom_list_courses",
+          "classroom_get_course",
+          "classroom_list_topics",
+          "classroom_create_topic",
+          "classroom_list_coursework",
+          "classroom_get_coursework",
+          "classroom_cour_cour_list_1590",
+          "classroom_cour_cour_crea_e311",
+          "classroom_cour_cour_crea_3302",
+          "classroom_cour_cour_patc_dea2",
+          "classroom_cours_course_modify",
+          "classroom_cour_cour_patc_480d",
+          "classroom_list_submissions",
+          "classroom_get_rubric",
+          "classroom_create_rubric",
+          "classroom_get_roster",
+          "classroom_list_announcements",
+          "classroom_get_announcements",
+          "classroom_create_announcement",
+          "classroom_get_guardians"
+        ]
+      },
       "label": "Google Classroom: Google Classroom courses, coursework, submissions, students and teachers."
     },
     {

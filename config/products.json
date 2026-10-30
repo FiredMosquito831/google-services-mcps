@@ -2090,7 +2090,7 @@
       "group": "workspace-user",
       "server": {
         "name": "gclassroom",
-        "curated": null
+        "curated": "classroom"
       },
       "generated": [
         {
@@ -2099,6 +2099,104 @@
         }
       ],
       "gateway": [],
+      "toolsets": {
+        "google": {
+          "source": "https://developers.google.com/workspace/classroom/reference/mcp/tools_list",
+          "tools": [
+            "classroom_list_courses",
+            "classroom_get_course",
+            "classroom_list_topics",
+            "classroom_create_topic",
+            "classroom_list_coursework",
+            "classroom_get_coursework",
+            "classroom_cour_cour_list_1590",
+            "classroom_cour_cour_crea_e311",
+            "classroom_cour_cour_crea_3302",
+            "classroom_cour_cour_patc_dea2",
+            "classroom_cours_course_modify",
+            "classroom_cour_cour_patc_480d",
+            "classroom_list_submissions",
+            "classroom_get_rubric",
+            "classroom_create_rubric",
+            "classroom_get_roster",
+            "classroom_list_announcements",
+            "classroom_get_announcements",
+            "classroom_create_announcement",
+            "classroom_get_guardians"
+          ],
+          "matches": {
+            "classroom_list_courses": [
+              "list_courses"
+            ],
+            "classroom_get_course": [],
+            "classroom_list_topics": [
+              "list_topics"
+            ],
+            "classroom_create_topic": [
+              "create_topic"
+            ],
+            "classroom_list_coursework": [
+              "list_course_work_summaries"
+            ],
+            "classroom_get_coursework": [
+              "get_course_work"
+            ],
+            "classroom_cour_cour_list_1590": [
+              "list_course_work_summaries"
+            ],
+            "classroom_cour_cour_crea_e311": [
+              "create_course_work"
+            ],
+            "classroom_cour_cour_crea_3302": [
+              "create_course_work"
+            ],
+            "classroom_cour_cour_patc_dea2": [
+              "update_course_work"
+            ],
+            "classroom_cours_course_modify": [
+              "update_course_work"
+            ],
+            "classroom_cour_cour_patc_480d": [
+              "update_course_work"
+            ],
+            "classroom_list_submissions": [
+              "list_course_work_submissions"
+            ],
+            "classroom_get_rubric": [
+              "get_course_work_rubric"
+            ],
+            "classroom_create_rubric": [
+              "create_course_work_rubric"
+            ],
+            "classroom_get_roster": [
+              "get_course_roster"
+            ],
+            "classroom_list_announcements": [
+              "list_announcement_summaries"
+            ],
+            "classroom_get_announcements": [
+              "get_announcements"
+            ],
+            "classroom_create_announcement": [
+              "create_announcement"
+            ],
+            "classroom_get_guardians": [
+              "get_guardian_info"
+            ]
+          },
+          "notes": {
+            "classroom_get_course": "One course by id, with its description and links. Google's list_courses returns these fields per course and has no get; kept so a known course id needs no list.",
+            "classroom_list_coursework": "Assignments, questions and materials of a course in one list (courseWork.list and courseWorkMaterials.list), published only unless include_drafts; include_submission_overview adds one studentSubmissions.list per item. Materials need a classroom.courseworkmaterials scope; without one the answer lists the coursework and says so.",
+            "classroom_cour_cour_list_1590": "Generated from courseWorkMaterials.list. Kept so a readonly login of this toolset asks for classroom.courseworkmaterials.readonly, which classroom_list_coursework needs for the materials (one tool can declare only one any-of scope list).",
+            "classroom_cour_cour_crea_e311": "Generated from courseWork.create (assignments and questions): a raw CourseWork body. Classroom makes it a DRAFT unless state is set. Not curated in this release.",
+            "classroom_cour_cour_crea_3302": "Generated from courseWorkMaterials.create (materials): a raw CourseWorkMaterial body. Classroom makes it a DRAFT unless state is set.",
+            "classroom_cour_cour_patc_dea2": "Generated from courseWork.patch: updateMask names the fields to change.",
+            "classroom_cours_course_modify": "Generated from courseWork.modifyAssignees: adds or removes the students of a coursework item.",
+            "classroom_cour_cour_patc_480d": "Generated from courseWorkMaterials.patch: updateMask names the fields to change.",
+            "classroom_create_rubric": "Google's learningGoalId comes from search_course_standards, which has no public REST method (no learning-standards method in Classroom v1 Discovery), so no tool here matches search_course_standards. Google takes rubrics only for coursework of the same Cloud project."
+          }
+        }
+      },
       "generatedToolCount": 104
     },
     "gapps": {
