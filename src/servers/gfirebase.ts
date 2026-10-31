@@ -29,6 +29,7 @@ import { z } from 'zod';
 import type { RuntimeConfig } from '../core/config.js';
 import { getAuthClient, googleScopes } from '../core/auth.js';
 import { defineTool, type ToolDef } from '../core/tools.js';
+import { fitItems } from '../core/result-shape.js';
 import { makeCloudCall, type CloudCall } from './cloud-http.js';
 
 const FIRESTORE = 'https://firestore.googleapis.com/v1';
@@ -196,8 +197,15 @@ export function filterOf(f: z.infer<typeof queryFilter>) {
   return { fieldFilter: { field, op: f.op, value: toFirestoreValue(f.value) } };
 }
 
-/** The RunQueryRequest of firestore_query_collection: the collection, the filters joined with AND, the order and limit. */
-export function runQueryBody(input: { collectionId: string; filters?: Array<z.infer<typeof queryFilter>>; order_by?: Array<{ field: string; direction?: 'ASCENDING' | 'DESCENDING' }>; limit?: number; all_descendants?: boolean }) {
+/** The RunQueryRequest of firestore_query_collection: the collection, the filters joined with AND, the order, offset and limit. */
+export function runQueryBody(input: {
+  collectionId: string;
+  filters?: Array<z.infer<typeof queryFilter>>;
+  order_by?: Array<{ field: string; direction?: 'ASCENDING' | 'DESCENDING' }>;
+  limit?: number;
+  offset?: number;
+  all_descendants?: boolean;
+}) {
   const filters = (input.filters ?? []).map(filterOf);
   const where = filters.length === 0 ? undefined : filters.length === 1 ? filters[0] : { compositeFilter: { op: 'AND', filters } };
   return {
@@ -205,9 +213,32 @@ export function runQueryBody(input: { collectionId: string; filters?: Array<z.in
       from: [{ collectionId: input.collectionId, ...(input.all_descendants ? { allDescendants: true } : {}) }],
       ...(where ? { where } : {}),
       ...(input.order_by?.length ? { orderBy: input.order_by.map((o) => ({ field: { fieldPath: o.field }, ...(o.direction ? { direction: o.direction } : {}) })) } : {}),
+      ...(input.offset ? { offset: input.offset } : {}),
       ...(input.limit !== undefined ? { limit: input.limit } : {}),
     },
   };
+}
+
+/**
+ * Documents of firestore_query_collection when no limit is given (before 1.29.0: none was sent, and Firestore returned
+ * every match). Google's Firebase MCP server uses 10.
+ */
+export const FIRESTORE_QUERY_DEFAULT = 10;
+/** Users of auth_get_users when no limit is given (before 1.29.0: none was sent, and Google returns 500). Google's Firebase MCP server uses 100. */
+export const AUTH_USERS_DEFAULT = 100;
+
+/**
+ * A page of documents or users that pages by offset: next_offset when the page was full (more may match), and, when the
+ * items do not fit the result limit, only those that fit, with next_offset after the last one shown.
+ */
+function offsetPage<T extends Record<string, unknown>>(answer: T, key: string, offset: number, limit: number, budget: number, what: string): T {
+  const items = answer[key] as unknown[];
+  const full = limit > 0 && items.length >= limit;
+  const paged = { ...(full ? { next_offset: offset + items.length } : {}), ...answer };
+  return fitItems(paged, key, budget, (shown) => ({
+    fields: { next_offset: offset + shown, count: shown },
+    how_to_continue: `Google returned ${items.length} ${what}; the first ${shown} fit the result limit (${budget} characters). Call again with offset=${offset + shown} and the same other arguments for the next ones.`,
+  }));
 }
 
 /** Identity Toolkit fields never returned: the password hash and salt (Google returns them to an OAuth caller). */
@@ -253,7 +284,18 @@ const queryShape = {
     .array(z.object({ field: z.string().trim().min(1), direction: z.enum(['ASCENDING', 'DESCENDING']).optional() }))
     .optional()
     .describe('The order, such as [{"field": "createdAt", "direction": "DESCENDING"}]. Ordering on a field Firestore has no index for fails with a link to create one.'),
-  limit: z.number().int().min(0).optional().describe('The most documents to return. Without it Firestore returns every match, so set it for a large collection.'),
+  limit: z
+    .number()
+    .int()
+    .min(0)
+    .optional()
+    .describe(`The most documents to return. Default ${FIRESTORE_QUERY_DEFAULT}, as in Google's Firebase MCP server; next_offset, when the page is full, reads on.`),
+  offset: z
+    .number()
+    .int()
+    .min(0)
+    .optional()
+    .describe('Documents to skip first (next_offset of the previous answer). Firestore bills skipped documents as reads.'),
   all_descendants: z.boolean().optional().describe('true queries every collection with this id under the parent (a collection group query), not only the one at collection_path.'),
   raw_values: rawValues,
 };
@@ -268,7 +310,14 @@ const getUsersShape = {
   uids: z.array(z.string().trim().min(1)).optional().describe('User ids (localId) to look up.'),
   emails: z.array(z.string().trim().min(1)).optional().describe('Email addresses to look up.'),
   phone_numbers: z.array(z.string().trim().min(1)).optional().describe('Phone numbers to look up, in E.164 form such as +15555550100.'),
-  limit: z.number().int().min(1).max(500).optional().describe('Without uids, emails or phone numbers: the most users to list, 1 to 500 (Google\'s limit). Google returns 500 by default.'),
+  limit: z
+    .number()
+    .int()
+    .min(1)
+    .max(500)
+    .optional()
+    .describe(`Without uids, emails or phone numbers: the most users to list, 1 to 500 (Google's limit). Default ${AUTH_USERS_DEFAULT}, as in Google's Firebase MCP server; next_offset, when the page is full, reads on.`),
+  offset: z.number().int().min(0).optional().describe('Without uids, emails or phone numbers: users to skip first (next_offset of the previous answer).'),
 };
 
 export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
@@ -326,11 +375,13 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       async handler(args) {
         const input = z.object(queryShape).parse(args);
         const { parent, collectionId } = collectionOf(input.project_id, input.database, input.collection_path);
-        const body = runQueryBody({ collectionId, filters: input.filters, order_by: input.order_by, limit: input.limit, all_descendants: input.all_descendants });
+        const limit = input.limit ?? FIRESTORE_QUERY_DEFAULT;
+        const offset = input.offset ?? 0;
+        const body = runQueryBody({ collectionId, filters: input.filters, order_by: input.order_by, limit, offset, all_descendants: input.all_descendants });
         const res = await call<Array<{ document?: FsDocument; readTime?: string }>>({ url: `${FIRESTORE}/${parent}:runQuery`, method: 'POST', body });
         const parts = Array.isArray(res.data) ? res.data : [];
         const documents = parts.filter((p) => p.document).map((p) => documentSummary(p.document as FsDocument, input.raw_values));
-        return { documents, count: documents.length };
+        return offsetPage({ documents, count: documents.length }, 'documents', offset, limit, cfg.maxResultChars, 'documents');
       },
     }),
     defineTool({
@@ -376,13 +427,15 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
           const users = (res.data.users ?? []).map(userSummary);
           return { users, count: users.length };
         }
+        const limit = input.limit ?? AUTH_USERS_DEFAULT;
+        const offset = input.offset ?? 0;
         const res = await call<{ userInfo?: Array<Record<string, unknown>>; recordsCount?: string }>({
           url: `${IDENTITY}/projects/${project}/accounts:query`,
           method: 'POST',
-          body: { returnUserInfo: true, ...(input.limit !== undefined ? { limit: String(input.limit) } : {}) },
+          body: { returnUserInfo: true, limit: String(limit), ...(offset ? { offset: String(offset) } : {}) },
         });
         const users = (res.data.userInfo ?? []).map(userSummary);
-        return { users, count: users.length };
+        return offsetPage({ users, count: users.length }, 'users', offset, limit, cfg.maxResultChars, 'users');
       },
     }),
   ];

@@ -27,7 +27,9 @@ writeFileSync(join(tokenDir, 'developer.token.json'), JSON.stringify({ access_to
 const cfg = loadConfig({ GSM_TOKEN_DIR: tokenDir, GSM_ALLOW_WRITES: 'true' });
 const tools = new Map((await fb.buildTools(cfg)).map((t) => [t.name, t]));
 const ctx = { gate: async () => undefined, grantedScopes: null, hasScope: () => true };
-const run = (name, args) => tools.get(name).handler(args, ctx);
+// A server with a result limit of 2,000 characters, for the pages that do not fit.
+const small = new Map((await fb.buildTools({ ...cfg, maxResultChars: 2000 })).map((t) => [t.name, t]));
+const run = (name, args, set = tools) => set.get(name).handler(args, ctx);
 
 let calls = [];
 let respond = () => ({});
@@ -199,12 +201,46 @@ test('firestore_query_collection: runQuery with the filters joined with AND, the
   assert.deepEqual(out, { documents: [{ path: 'users/alice', id: 'alice', fields: PLAIN, create_time: '2026-10-01T00:00:00Z', update_time: '2026-10-02T00:00:00Z' }], count: 1 });
 
   // One filter is sent as itself, not inside a composite filter; no filter means no where; a collection group query.
+  // Without a limit, 10 is sent (FIRESTORE_QUERY_DEFAULT, as Google's Firebase MCP server; before 1.29.0 none, every match).
   reset(() => []);
   await run('firestore_query_collection', { project_id: 'my-app-1234', collection_path: 'users', filters: [{ field: 'age', op: 'LESS_THAN', value: 30 }] });
-  assert.deepEqual(calls[0].body.structuredQuery, { from: [{ collectionId: 'users' }], where: { fieldFilter: { field: { fieldPath: 'age' }, op: 'LESS_THAN', value: { integerValue: '30' } } } });
+  assert.deepEqual(calls[0].body.structuredQuery, { from: [{ collectionId: 'users' }], where: { fieldFilter: { field: { fieldPath: 'age' }, op: 'LESS_THAN', value: { integerValue: '30' } } }, limit: 10 });
   reset(() => []);
   assert.deepEqual(await run('firestore_query_collection', { project_id: 'my-app-1234', collection_path: 'orders', all_descendants: true }), { documents: [], count: 0 });
-  assert.deepEqual(calls[0].body.structuredQuery, { from: [{ collectionId: 'orders', allDescendants: true }] });
+  assert.deepEqual(calls[0].body.structuredQuery, { from: [{ collectionId: 'orders', allDescendants: true }], limit: 10 });
+});
+
+test('firestore_query_collection and auth_get_users page by offset: next_offset when the page is full, and after the last item shown when the rest does not fit', async () => {
+  const docs = (n, from = 0) => [{ readTime: 't' }, ...Array.from({ length: n }, (_, i) => ({ document: { ...DOC, name: `${DOC.name.replace(/alice$/, '')}user${from + i}` }, readTime: 't' }))];
+  // A full page of 10: next_offset 10; offset is sent and counted from.
+  reset(() => docs(10, 20));
+  const full = await run('firestore_query_collection', { project_id: 'my-app-1234', collection_path: 'users', offset: 20 });
+  assert.equal(calls[0].body.structuredQuery.offset, 20);
+  assert.equal(calls[0].body.structuredQuery.limit, 10);
+  assert.equal(full.count, 10);
+  assert.equal(full.next_offset, 30);
+  assert.equal(Object.keys(full)[0], 'next_offset', 'the paging field first');
+  // A short page is the last one.
+  reset(() => docs(3));
+  assert.equal('next_offset' in (await run('firestore_query_collection', { project_id: 'my-app-1234', collection_path: 'users' })), false);
+  // A page larger than the result limit keeps the documents that fit, and next_offset follows the last one shown.
+  reset(() => docs(60));
+  const cut = await run('firestore_query_collection', { project_id: 'my-app-1234', collection_path: 'users', limit: 60, offset: 5 }, small);
+  assert.ok(JSON.stringify(cut).length <= 2000);
+  assert.ok(cut.count > 0 && cut.count < 60, `${cut.count} shown`);
+  assert.equal(cut.documents.length, cut.count);
+  assert.equal(cut.next_offset, 5 + cut.count);
+  assert.equal(cut.truncated.omitted, 60 - cut.count);
+
+  // Users: 100 by default, offset sent, next_offset on a full page.
+  const users = (n) => ({ userInfo: Array.from({ length: n }, (_, i) => ({ localId: `u${i}`, email: `u${i}@example.com`, passwordHash: 'SECRET-HASH', salt: 'SECRET-SALT' })) });
+  reset(() => users(100));
+  const page = await run('auth_get_users', { project_id: 'my-app-1234', offset: 200 });
+  assert.deepEqual(calls[0].body, { returnUserInfo: true, limit: '100', offset: '200' });
+  assert.equal(page.next_offset, 300);
+  assert.equal(JSON.stringify(page).includes('SECRET'), false);
+  reset(() => users(7));
+  assert.equal('next_offset' in (await run('auth_get_users', { project_id: 'my-app-1234' })), false);
 });
 
 test('firestore_query_collection: a filter that does not fit its operator is refused, and nothing is sent', async () => {
@@ -250,7 +286,8 @@ test('auth_get_users: lookup by uid, email and phone; a page of users otherwise;
   assert.equal(page.count, 1);
   reset(() => ({}));
   await run('auth_get_users', { project_id: 'my-app-1234', uids: [] });
-  assert.deepEqual(calls[0].body, { returnUserInfo: true }, 'an empty list is no lookup');
+  // An empty list is no lookup: a page of 100 users (AUTH_USERS_DEFAULT, as Google's Firebase MCP server; before 1.29.0 no limit, Google's 500).
+  assert.deepEqual(calls[0].body, { returnUserInfo: true, limit: '100' }, 'an empty list is no lookup');
   assert.equal(z.object(tools.get('auth_get_users').inputSchema).safeParse({ project_id: 'p', limit: 501 }).success, false, "Google's limit is 500");
 });
 

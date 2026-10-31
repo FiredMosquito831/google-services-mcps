@@ -33,6 +33,7 @@ import { getAuthClient, googleScopes } from '../core/auth.js';
 import { adsHeaders, redactSecret } from '../core/ads.js';
 import { curatedMutateBody, GOOGLE_ADS_MUTATE_METHOD, operationsRisk, resolveDynamicKind } from '../core/dynamic.js';
 import { defineTool, type ActionKind, type ToolDef } from '../core/tools.js';
+import { fitItems } from '../core/result-shape.js';
 
 /** The Google Ads REST API version. v26 is the newest that answers the discovery document. */
 export const ADS_API_VERSION = 'v26';
@@ -323,6 +324,10 @@ const searchShape = {
     ),
   orderings: z.array(z.string()).optional().describe('Structured form: ORDER BY items, such as ["metrics.clicks DESC"].'),
   limit: z.number().int().min(1).optional().describe('Structured form: LIMIT, the most rows Google returns. This tool shows at most 500 rows of a page.'),
+  page_token: z
+    .string()
+    .optional()
+    .describe('next_page_token of the previous answer, with the same query: the next page of rows (Google Ads sets the page size).'),
 };
 
 const metadataShape = {
@@ -364,7 +369,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       name: 'ads_search',
       title: 'Search Google Ads (GAQL)',
       description:
-        "Run one page of a GAQL SELECT query against a Google Ads account and return the rows, at most 500 (matches search in Google's Google Ads MCP server). Give the query as text, or as fields, resource, conditions, orderings and limit, from which the SELECT is written (with PARAMETERS omit_unselected_resource_names=true, as Google's server does). ads_resource_metadata lists the fields a resource can select, filter and sort by. Read only: any statement other than SELECT is refused before a request is sent.",
+        "Run one page of a GAQL SELECT query against a Google Ads account and return the rows, at most 500 and at most what fits the result limit (matches search in Google's Google Ads MCP server). Give the query as text, or as fields, resource, conditions, orderings and limit, from which the SELECT is written (with PARAMETERS omit_unselected_resource_names=true, as Google's server does). next_page_token, with page_token, reads the next page. Google Ads has no row offset, so rows left out of a page are reached by narrowing the query (a WHERE condition, fewer fields or a LIMIT). ads_resource_metadata lists the fields a resource can select, filter and sort by. Read only: any statement other than SELECT is refused before a request is sent.",
       kind: 'read',
       scopes: ADS_SCOPES,
       inputSchema: searchShape,
@@ -378,20 +383,30 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
           method: 'POST',
           path: `customers/${input.customer_id}/googleAds:search`,
           // No pageSize: Google Ads (v26 Discovery) answers PAGE_SIZE_NOT_SUPPORTED when it is set. Google sets the page size.
-          body: { query },
+          body: { query, ...(input.page_token ? { pageToken: input.page_token } : {}) },
         });
         const rows = res.results ?? [];
         const truncated = rows.length > SEARCH_ROW_CAP;
-        return {
+        const next = res.nextPageToken || undefined;
+        const answer = {
+          ...(next ? { next_page_token: next } : {}),
           // The SELECT written from the parts, so the caller can see and reuse it. A query given as text is not repeated.
           ...(input.query === undefined ? { query } : {}),
           rowCount: Math.min(rows.length, SEARCH_ROW_CAP),
           results: rows.slice(0, SEARCH_ROW_CAP),
           ...(truncated
-            ? { truncated: true, note: `Google returned ${rows.length} rows on this page. Only the first ${SEARCH_ROW_CAP} are shown; narrow the query to see fewer rows.` }
+            ? {
+                truncated: true,
+                note: `Google returned ${rows.length} rows on this page. Only the first ${SEARCH_ROW_CAP} are shown; narrow the query to see fewer rows.${next ? ' next_page_token continues after this whole page.' : ''}`,
+              }
             : {}),
-          ...(res.nextPageToken && !truncated ? { note: 'Google has more pages for this query. This tool returns only the first page.' } : {}),
+          ...(next && !truncated ? { note: 'Google has more pages for this query: call again with page_token set to next_page_token.' } : {}),
         };
+        // Rows that do not fit the result limit are left out at the end; rowCount then counts the rows shown.
+        return fitItems(answer, 'results', cfg.maxResultChars, (shown) => ({
+          fields: { rowCount: shown },
+          how_to_continue: `Google returned ${rows.length} rows on this page; the first ${shown} fit the result limit (${cfg.maxResultChars} characters). Google Ads has no row offset: to see the others, narrow the query (a WHERE condition, fewer fields or a LIMIT).${next ? ' next_page_token continues after this whole page, not after the rows shown.' : ''}`,
+        }));
       },
     }),
     defineTool({

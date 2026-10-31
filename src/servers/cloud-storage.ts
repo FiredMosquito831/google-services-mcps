@@ -88,6 +88,33 @@ export function utf8Boundary(bytes: Buffer, end: number): number {
   return cut;
 }
 
+/**
+ * The text of a part read by gcs_read_text, and how many of its bytes it covers. The text must fit `room` characters
+ * as JSON: quotes, backslashes, newlines and control characters take more room escaped than as bytes, so a part full
+ * of them is shortened (at a character boundary) instead of being cut later by the result limit, and next_offset counts
+ * only the bytes whose text is returned. `cut` says the part does not end the object (a UTF-8 character may be split).
+ */
+export function fitDecoded(bytes: Buffer, cut: boolean, charset: string, room: number): { end: number; text: string } {
+  const decoder = new TextDecoder(charset);
+  const boundary = (n: number) => (charset === 'utf-8' && (cut || n < bytes.length) ? utf8Boundary(bytes, n) : n);
+  const at = (n: number) => {
+    const end = boundary(n);
+    return { end, text: decoder.decode(bytes.subarray(0, end)) };
+  };
+  // The quotes are part of the room kept for the fields around the text; the escapes are what may not fit.
+  const fits = (text: string) => JSON.stringify(text).length - 2 <= room;
+  const whole = at(bytes.length);
+  if (fits(whole.text)) return whole;
+  let lo = 0;
+  let hi = bytes.length;
+  while (lo < hi) {
+    const mid = Math.ceil((lo + hi) / 2);
+    if (fits(at(mid).text)) lo = mid;
+    else hi = mid - 1;
+  }
+  return at(lo);
+}
+
 /** What gcs_write_text will do: worked out before the approval, shown in it, and handed to the handler. */
 export interface GcsWritePlan extends PreparedAction {
   bucket: string;
@@ -199,9 +226,9 @@ export function storageTools(cfg: RuntimeConfig, call: CloudCall): ToolDef[] {
           throw new Error(`gs://${args.bucket}/${args.object} looks binary (content type ${meta.contentType ?? 'unknown'}). Use gcs_read_object to get its bytes as base64.`);
         }
         const charset = charsetOf(meta.contentType);
-        const more = offset + bytes.length < size;
-        const end = more && charset === 'utf-8' ? utf8Boundary(bytes, bytes.length) : bytes.length;
-        const text = new TextDecoder(charset).decode(bytes.subarray(0, end));
+        const fit = fitDecoded(bytes, offset + bytes.length < size, charset, room);
+        const end = fit.end;
+        const text = fit.text;
         return {
           bucket: args.bucket,
           object: args.object,

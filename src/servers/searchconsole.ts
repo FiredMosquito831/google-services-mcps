@@ -17,6 +17,7 @@ import { z } from 'zod';
 import type { RuntimeConfig } from '../core/config.js';
 import { getAuthClient, googleScopes } from '../core/auth.js';
 import { defineTool, type ToolDef } from '../core/tools.js';
+import { fitItems } from '../core/result-shape.js';
 
 type Auth = OAuth2Client | JWT;
 
@@ -99,6 +100,33 @@ const feedpathArg = z.string().describe(`Sitemap URL, for example ${EX_SITEMAP}`
 const DIMENSIONS = ['date', 'query', 'page', 'country', 'device', 'searchAppearance'] as const;
 const SEARCH_TYPES = ['web', 'image', 'video', 'news', 'discover', 'googleNews'] as const;
 
+/**
+ * Rows of sc_search_analytics_query when no row_limit is given (before 1.29.0: 1000, Google's own default). A row with
+ * the query and page dimensions is about 170 characters of compact JSON, so 100 rows fit the 25,000-character result
+ * limit, and a page is fetched once: Google's usage guide asks clients not to query the same data again.
+ */
+export const SC_ROWS_DEFAULT = 100;
+
+/**
+ * The answer of sc_search_analytics_query: row_count (the rows Google returned) and next_start_row first, then Google's
+ * answer. Rows that do not fit the result limit are left out at the end, and next_start_row counts only the rows shown.
+ * Without a cut, next_start_row is given when the page was full (Google may have more rows).
+ */
+export function analyticsAnswer(data: { rows?: unknown[] | null; responseAggregationType?: string | null }, start: number, limit: number, budget: number) {
+  const rows = data.rows ?? [];
+  const { rows: _rows, ...rest } = data;
+  const answer = {
+    row_count: rows.length,
+    ...(rows.length >= limit ? { next_start_row: start + rows.length } : {}),
+    rows,
+    ...rest,
+  };
+  return fitItems(answer, 'rows', budget, (shown) => ({
+    fields: { next_start_row: start + shown },
+    how_to_continue: `Google returned ${rows.length} rows; the first ${shown} fit the result limit (${budget} characters). Call again with start_row=${start + shown} and the same other arguments for the next rows.`,
+  }));
+}
+
 export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
   const wm = async () => webmasters({ version: 'v3', auth: await authClient(cfg) });
   const sc = async () => searchconsole({ version: 'v1', auth: await authClient(cfg) });
@@ -170,7 +198,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       name: 'sc_search_analytics_query',
       title: 'Query search analytics',
       description:
-        'Query search performance (clicks, impressions, CTR, position) for a property, grouped by the chosen dimensions. Dates are Pacific time per Google. The response rows are in the order of the dimensions.',
+        `Query search performance (clicks, impressions, CTR, position) for a property, grouped by the chosen dimensions. Dates are Pacific time per Google. The response rows are in the order of the dimensions. row_count is the number of rows Google returned; next_start_row, when there may be more, is the start_row of the next page. Rows that do not fit the result limit are left out at the end, and next_start_row then starts at the first row not shown.`,
       kind: 'read',
       scopes: googleScopes('webmasters', 'webmasters.readonly'),
       inputSchema: {
@@ -182,7 +210,13 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
           .optional()
           .describe('Group-by dimensions, in order. Omit or [] for one total row.'),
         type: z.enum(SEARCH_TYPES).optional().describe('Search type. Default web.'),
-        row_limit: z.number().int().min(1).max(25000).optional().describe('Rows to return, 1 to 25000. Default 1000.'),
+        row_limit: z
+          .number()
+          .int()
+          .min(1)
+          .max(25000)
+          .optional()
+          .describe(`Rows to return, 1 to 25000. Default ${SC_ROWS_DEFAULT}, about what fits the result limit (Google's own default is 1000); a larger page is shown as far as it fits, and next_start_row continues.`),
         start_row: z.number().int().min(0).optional().describe('Zero-based index of the first row, for paging. Default 0.'),
         dimension_filter_groups: z
           .array(z.record(z.unknown()))
@@ -196,6 +230,8 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
         const endDate = isoDate(end_date, 'end_date');
         if (endDate < startDate) throw new Error(`end_date (${endDate}) is before start_date (${startDate}).`);
 
+        const limit = row_limit ?? SC_ROWS_DEFAULT;
+        const start = start_row ?? 0;
         const res = await (await wm()).searchanalytics.query({
           siteUrl: propertyUrl(site_url),
           requestBody: {
@@ -203,12 +239,12 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
             endDate,
             dimensions: dimensions ?? [],
             searchType: type ?? 'web',
-            rowLimit: row_limit ?? 1000,
-            startRow: start_row ?? 0,
+            rowLimit: limit,
+            startRow: start,
             dimensionFilterGroups: dimension_filter_groups as webmasters_v3.Schema$ApiDimensionFilterGroup[] | undefined,
           },
         });
-        return { rows: [], ...res.data };
+        return analyticsAnswer(res.data, start, limit, cfg.maxResultChars);
       },
     }),
     defineTool({

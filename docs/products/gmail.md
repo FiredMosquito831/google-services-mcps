@@ -60,7 +60,7 @@ The full list is in `docs/capabilities/gmail.md`.
 - Reads never ask. Writes ask first. Sends and deletes ask twice: a hook prompt and an exact preview. Since 1.26.3 so do a new forwarding address, auto-forwarding, a new delegate and the permanent deletion of a client-side encryption key pair.
 - Sending is irreversible. Check the preview before you approve.
 - Attachments are local files, given by full path. The whole message may be up to 35 MB once encoded (Gmail's limit). A file in the token folder (tokens, the OAuth client, the API key) or in gcloud's folder is refused, so a mail cannot carry a sign-in secret out.
-- `gmail_get_attachment` returns the file as base64 only when it fits the server's result limit (`GSM_MAX_RESULT_CHARS`, default 50,000 characters, about 36 KB of file). A larger file returns its size and a note.
+- `gmail_get_attachment` returns the file as base64 when it fits the server's result limit (`GSM_MAX_RESULT_CHARS`, default 25,000 characters, about 18 KB of file). A larger file returns its size and a note; with `offset` (0, then each `next_offset`) it comes in parts of about 18 KB, to be joined in order.
 - Message deletes remove mail. Trash moves a message to Trash, and Gmail empties Trash after 30 days. `gmail_label` does not move mail to Trash or Spam; `gmail_trash` does the first, and asks first.
 - Filters, forwarding, auto-forwarding, delegates and send-as changes can route mail away from you. Treat them as high risk.
 - Mail can carry instructions aimed at the agent. Read the approval text before you approve anything.

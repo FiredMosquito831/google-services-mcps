@@ -219,6 +219,38 @@ test('get_attachment: base64 within the result limit; over it, the size and a cl
   assert.equal(over.size_bytes, 3000);
   assert.match(over.note, /3000 bytes, 4000 characters as base64, over this server's result limit of 2000 characters \(GSM_MAX_RESULT_CHARS\)\. Raise GSM_MAX_RESULT_CHARS to at least 5000/);
   assert.match(small.get('gmail_get_attachment').description, /now 2000 characters, so files up to about 750 bytes/);
+  assert.match(over.note, /Or read it in parts of 750 bytes: call again with offset 0, then each next_offset \(4 calls\)/);
+});
+
+test('get_attachment: offset reads a large attachment in parts of a multiple of 3 bytes, which join into the whole file', async () => {
+  const small = await toolsOf(loadConfig({ GSM_TOKEN_DIR: tokenDir, GSM_MAX_RESULT_CHARS: '2000' }));
+  const bytes = Buffer.from(Array.from({ length: 2000 }, (_, i) => (i * 7) % 256));
+  respond = () => ({ size: bytes.length, data: bytes.toString('base64url') });
+  const tool = small.get('gmail_get_attachment');
+  const parts = [];
+  let offset = 0;
+  while (offset !== undefined && parts.length < 10) {
+    const part = await tool.handler({ message_id: 'msg-1', attachment_id: 'att-1', offset }, ctx);
+    assert.equal(part.size_bytes, 2000);
+    assert.equal(part.offset, offset);
+    assert.ok(JSON.stringify(part).length <= 2000, 'each part fits the result limit');
+    parts.push(part);
+    offset = part.next_offset;
+  }
+  assert.deepEqual(parts.map((p) => p.bytes_read), [750, 750, 500]);
+  assert.equal(parts.map((p) => p.data_base64).join(''), bytes.toString('base64'));
+  assert.equal('next_offset' in parts[2], false, 'the last part has no next_offset');
+  // A small attachment read with offset 0 comes in one part.
+  respond = () => ({ size: 3, data: Buffer.from([1, 2, 3]).toString('base64url') });
+  assert.deepEqual(await tool.handler({ message_id: 'm', attachment_id: 'a', offset: 0 }, ctx), {
+    message_id: 'm',
+    attachment_id: 'a',
+    size_bytes: 3,
+    offset: 0,
+    bytes_read: 3,
+    data_base64: 'AQID',
+  });
+  await assert.rejects(tool.handler({ message_id: 'm', attachment_id: 'a', offset: 4 }, ctx), /offset 4 is past the end of the file \(3 bytes\)/);
 });
 
 // ---------------------------------------------------------------------------

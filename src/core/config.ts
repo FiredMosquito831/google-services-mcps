@@ -4,6 +4,7 @@ import { homedir } from 'node:os';
 import { join } from 'node:path';
 import { DEFAULT_CONFIRMATION, isConfirmationMode, type ConfirmationMode } from './policy.js';
 import { readToolset, type Toolset } from './toolset.js';
+import { DEFAULT_MAX_RESULT_CHARS } from './result-shape.js';
 
 /**
  * Runtime settings, read from environment variables. The plugin manifest and
@@ -20,7 +21,10 @@ export interface RuntimeConfig {
   adminSubject?: string;
   /** Service account key file used for domain-wide delegation. Admin server only. */
   serviceAccountKeyFile?: string;
-  /** Hard cap on tool output size, in characters, to protect the model's context. */
+  /**
+   * The result budget, in characters (GSM_MAX_RESULT_CHARS, default DEFAULT_MAX_RESULT_CHARS): a longer result is cut at
+   * whole items, with a truncated object that says how to read on (src/core/result-shape.ts). Protects the model's context.
+   */
   maxResultChars: number;
   /** Consent mode from GSM_CONFIRMATION: every-change (default), destructive-only or off. */
   confirmation: ConfirmationMode;
@@ -91,7 +95,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): RuntimeConfig 
   const tokenDir = env.GSM_TOKEN_DIR?.trim() || join(homedir(), '.google-services-mcps');
 
   const maxRaw = Number(env.GSM_MAX_RESULT_CHARS);
-  const maxResultChars = Number.isFinite(maxRaw) && maxRaw > 0 ? Math.floor(maxRaw) : 50_000;
+  const maxResultChars = Number.isFinite(maxRaw) && maxRaw > 0 ? Math.floor(maxRaw) : DEFAULT_MAX_RESULT_CHARS;
   const confirmation = readConfirmation(env.GSM_CONFIRMATION);
 
   return {

@@ -15,6 +15,7 @@ import type { RuntimeConfig } from '../core/config.js';
 import { getAuthClient, googleScopes } from '../core/auth.js';
 import { requestedAccount } from '../core/account-context.js';
 import { defineTool, type PreparedAction, type ToolDef } from '../core/tools.js';
+import { base64Part, base64PartBytes, base64PartsNote } from '../core/result-shape.js';
 import { checkLocalFile, mimeTypeOf, protectedPaths } from './local-files.js';
 import {
   GMAIL_JSON_RAW_MAX_BYTES,
@@ -263,6 +264,66 @@ function threadLine(t: gmail_v1.Schema$Thread) {
     snippet: last?.snippet ?? t.snippet ?? undefined,
     label_ids: [...new Set(messages.flatMap((m) => m.labelIds ?? []))],
   };
+}
+
+/**
+ * Messages or threads per page of gmail_search and gmail_search_threads when none is asked for (before 1.29.0: 20).
+ * Each one found costs a further Gmail read (messages.get or threads.get) on top of the list, so the page size sets
+ * the cost of a search.
+ */
+export const GMAIL_PAGE_DEFAULT = 10;
+
+/**
+ * gmail_get_thread within the result limit, the newest messages kept whole. When the thread is longer, the oldest
+ * messages first lose their bodies (their header line, snippet and id stay, with body_omitted: true; `lines` gives
+ * them, null for the concise view, which has no bodies), then the oldest are left out. The order stays oldest first, and
+ * a truncated object says what was left out. A thread that fits is returned as it is.
+ */
+export function fitThread<T extends { id?: string | null; message_count: number; messages: Array<Record<string, unknown>> }>(
+  thread: T,
+  lines: Array<Record<string, unknown>> | null,
+  budget: number,
+): T {
+  const size = (value: unknown) => JSON.stringify(value)?.length ?? 4;
+  if (size(thread) <= budget) return thread;
+  const n = thread.messages.length;
+  const messages = [...thread.messages];
+  const sizes = messages.map(size);
+  let shortened = 0;
+  let omitted = 0;
+  const build = (kept: Array<Record<string, unknown>>): T => {
+    const full = n - Math.max(shortened, omitted);
+    const withoutBody = Math.max(0, shortened - omitted);
+    const told = [`The newest ${full === 1 ? 'message is' : `${full} messages are`} shown in full`];
+    if (withoutBody) told.push(`the ${withoutBody} before ${full === 1 ? 'it' : 'them'} without their bodies (body_omitted)`);
+    if (omitted) told.push(`the ${omitted} oldest are left out`);
+    const note = {
+      limit_chars: budget,
+      shown: n - omitted,
+      omitted,
+      ...(withoutBody ? { without_body: withoutBody } : {}),
+      items: 'messages',
+      how_to_continue: `This thread of ${n} messages is longer than the result limit (${budget} characters). ${told.join(', ')}. Read any message in full with gmail_get_message and its id${omitted ? '; view "concise" lists the messages without bodies' : ''}, or call again with a lower max_body_chars.`,
+    };
+    // The note before the messages, so it is read first.
+    const { messages: _all, ...rest } = thread;
+    return { ...rest, truncated: note, messages: kept } as unknown as T;
+  };
+  // The length of the answer, from the message sizes: only the small rest is serialized at each step.
+  const length = () => {
+    let sum = 0;
+    for (let i = omitted; i < n; i++) sum += sizes[i]! + 1;
+    return size(build([])) + sum - 1;
+  };
+  // Older messages without their bodies, oldest first; the newest stays whole.
+  while (lines && shortened < n - 1 && length() > budget) {
+    messages[shortened] = { ...lines[shortened], body_omitted: true };
+    sizes[shortened] = size(messages[shortened]);
+    shortened += 1;
+  }
+  // Still too long: the oldest are left out, the newest always kept.
+  while (omitted < n - 1 && length() > budget) omitted += 1;
+  return build(messages.slice(omitted));
 }
 
 /** What gmail_trash moves to Trash, read before the approval. */
@@ -553,17 +614,18 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
     defineTool({
       name: 'gmail_search',
       title: 'Search Gmail',
-      description: 'Search messages with Gmail search syntax. Returns ids, thread ids and From, Subject, Date headers. Use gmail_get_message for the body.',
+      description:
+        'Search messages with Gmail search syntax. Returns ids, thread ids and From, Subject, Date headers. Use gmail_get_message for the body. Each message found costs one more Gmail read, so a page of 10 (the default) costs a tenth of a page of 100; next_page_token reads on.',
       kind: 'read',
       scopes: googleScopes('https://mail.google.com/', 'gmail.metadata', 'gmail.modify', 'gmail.readonly'),
       inputSchema: {
         q: z.string().optional().describe('Gmail search, for example "from:anna@example.com has:attachment newer_than:7d"'),
-        max_results: z.number().int().min(1).max(100).optional().describe('1 to 100. Default 20.'),
+        max_results: z.number().int().min(1).max(100).optional().describe(`1 to 100. Default ${GMAIL_PAGE_DEFAULT}.`),
         page_token: z.string().optional().describe('next_page_token from the previous call'),
       },
       async handler({ q, max_results, page_token }) {
         const api = await gmailApi();
-        const list = await api.users.messages.list({ userId: ME, q, maxResults: max_results ?? 20, pageToken: page_token });
+        const list = await api.users.messages.list({ userId: ME, q, maxResults: max_results ?? GMAIL_PAGE_DEFAULT, pageToken: page_token });
         const messages = await inChunks(ids(list.data.messages), 10, async (id) => {
           const res = await api.users.messages.get({ userId: ME, id, format: 'metadata', metadataHeaders: ['From', 'Subject', 'Date'] });
           return messageSummary(res.data);
@@ -617,17 +679,24 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
     defineTool({
       name: 'gmail_get_attachment',
       title: 'Get Gmail attachment',
-      description: `Download one attachment of a message as base64 (data_base64). Take message_id and attachment_id from gmail_get_message. The base64 text must fit this server's result limit (GSM_MAX_RESULT_CHARS, now ${cfg.maxResultChars} characters, so files up to about ${Math.floor(((cfg.maxResultChars - 1000) * 3) / 4)} bytes); a larger file returns its size and a note instead of the data.`,
+      description: `Download one attachment of a message as base64 (data_base64). Take message_id and attachment_id from gmail_get_message. The base64 text must fit this server's result limit (GSM_MAX_RESULT_CHARS, now ${cfg.maxResultChars} characters, so files up to about ${base64PartBytes(cfg.maxResultChars)} bytes); a larger file returns its size and a note instead of the data, or, with offset, one part of ${base64PartBytes(cfg.maxResultChars)} bytes and next_offset (join the data_base64 parts in order).`,
       kind: 'read',
       scopes: googleScopes('https://mail.google.com/', 'gmail.modify', 'gmail.readonly'),
       inputSchema: {
         message_id: z.string().describe('The message that holds the attachment (gmail_get_message id).'),
         attachment_id: z.string().describe('attachment_id from the attachments list of gmail_get_message.'),
+        offset: z
+          .number()
+          .int()
+          .min(0)
+          .optional()
+          .describe('Read the attachment in parts: the first byte of this part, 0 for the first, then next_offset from the previous answer. Without it, an attachment over the result limit returns its size and a note.'),
       },
-      async handler({ message_id, attachment_id }) {
+      async handler({ message_id, attachment_id, offset }) {
         const api = await gmailApi();
         const res = await api.users.messages.attachments.get({ userId: ME, messageId: message_id, id: attachment_id });
         const bytes = Buffer.from(res.data.data ?? '', 'base64url');
+        if (offset !== undefined) return { message_id, attachment_id, ...base64Part(bytes, offset, base64PartBytes(cfg.maxResultChars)) };
         const data = bytes.toString('base64');
         // Room for the JSON around the data: the whole answer must fit the result limit, or it would be cut.
         const room = cfg.maxResultChars - 1000;
@@ -637,7 +706,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
             attachment_id,
             size_bytes: bytes.length,
             data_base64: null,
-            note: `The attachment is ${bytes.length} bytes, ${data.length} characters as base64, over this server's result limit of ${cfg.maxResultChars} characters (GSM_MAX_RESULT_CHARS). Raise GSM_MAX_RESULT_CHARS to at least ${data.length + 1000} to download it here, or open it in Gmail.`,
+            note: `The attachment is ${bytes.length} bytes, ${data.length} characters as base64, over this server's result limit of ${cfg.maxResultChars} characters (GSM_MAX_RESULT_CHARS). Raise GSM_MAX_RESULT_CHARS to at least ${data.length + 1000} to download it here, or open it in Gmail. ${base64PartsNote(bytes.length, base64PartBytes(cfg.maxResultChars))}`,
           };
         }
         return { message_id, attachment_id, size_bytes: bytes.length, data_base64: data };
@@ -647,19 +716,19 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       name: 'gmail_search_threads',
       title: 'Search Gmail threads',
       description:
-        "Search conversations with Gmail search syntax (matches search_threads in Google's Gmail MCP server). Returns threads, each with its messages summarised: from, to, cc, date, subject, snippet and labels (view \"detailed\", the default), or one line per thread (view \"concise\"). Bodies are not returned: use gmail_get_thread with a thread id. Spam and Trash are left out unless include_trash is true. A thread matches when one of its messages matches.",
+        "Search conversations with Gmail search syntax (matches search_threads in Google's Gmail MCP server). Returns threads, each with its messages summarised: from, to, cc, date, subject, snippet and labels (view \"detailed\", the default), or one line per thread (view \"concise\"). Bodies are not returned: use gmail_get_thread with a thread id. Spam and Trash are left out unless include_trash is true. A thread matches when one of its messages matches. Each thread found costs one more Gmail read, so the default page is 10; next_page_token reads on.",
       kind: 'read',
       scopes: googleScopes('https://mail.google.com/', 'gmail.metadata', 'gmail.modify', 'gmail.readonly'),
       inputSchema: {
         query: z.string().optional().describe('Gmail search, for example "from:anna@example.com newer_than:7d". Omit it for every thread.'),
-        page_size: z.number().int().min(1).max(50).optional().describe('Threads per page, 1 to 50. Default 20.'),
+        page_size: z.number().int().min(1).max(50).optional().describe(`Threads per page, 1 to 50. Default ${GMAIL_PAGE_DEFAULT}.`),
         page_token: z.string().optional().describe('next_page_token from the previous call'),
         include_trash: z.boolean().optional().describe("Also search Trash and Spam (Gmail's includeSpamTrash). Default false."),
         view: z.enum(['detailed', 'concise']).optional().describe('detailed (default): each message of each thread. concise: one line per thread.'),
       },
       async handler({ query, page_size, page_token, include_trash, view }) {
         const api = await gmailApi();
-        const list = await api.users.threads.list({ userId: ME, q: query, maxResults: page_size ?? 20, pageToken: page_token, includeSpamTrash: include_trash === true });
+        const list = await api.users.threads.list({ userId: ME, q: query, maxResults: page_size ?? GMAIL_PAGE_DEFAULT, pageToken: page_token, includeSpamTrash: include_trash === true });
         const threads = await inChunks(ids(list.data.threads), 10, async (id) => {
           const res = await api.users.threads.get({ userId: ME, id, format: 'metadata', metadataHeaders: THREAD_HEADERS });
           if (view === 'concise') return threadLine(res.data);
@@ -677,7 +746,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       name: 'gmail_get_thread',
       title: 'Get Gmail thread',
       description:
-        "Read a whole conversation (matches get_thread in Google's Gmail MCP server): every message, oldest first, decoded as gmail_get_message does (each part in its own charset, blank lines at the start and end removed, attachment ids). view \"concise\" returns the headers and snippet of each message without bodies. Find thread ids with gmail_search_threads.",
+        "Read a whole conversation (matches get_thread in Google's Gmail MCP server): every message, oldest first, decoded as gmail_get_message does (each part in its own charset, blank lines at the start and end removed, attachment ids). view \"concise\" returns the headers and snippet of each message without bodies. Find thread ids with gmail_search_threads. A thread longer than the result limit keeps its newest messages whole: older ones are shown without their bodies (body_omitted), then the oldest are left out, and a truncated object says so; gmail_get_message reads any of them.",
       kind: 'read',
       scopes: googleScopes('https://mail.google.com/', 'gmail.modify', 'gmail.readonly'),
       inputSchema: {
@@ -698,7 +767,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
         for (const m of messages) {
           out.push(concise ? messageLine(m) : { ...messageLine(m), ...(await readMessage(api, m, max, include_html === true)) });
         }
-        return { id: res.data.id, message_count: messages.length, messages: out };
+        return fitThread({ id: res.data.id, message_count: messages.length, messages: out }, concise ? null : messages.map(messageLine), cfg.maxResultChars);
       },
     }),
     defineTool({

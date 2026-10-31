@@ -160,7 +160,8 @@ test('list_messages: newest first in Markdown, a time window and a thread as the
 
   reset(() => ({ messages: [msg('m1', 'hello')] }));
   const plain = await run('chat_list_messages', { conversation_id: 'spaces/AAA', order: 'oldest', format: 'chat', page_size: 1000 });
-  assert.deepEqual(calls[0].query, { pageSize: '1000', orderBy: 'create_time asc' }, 'no filter and no markup without them');
+  // page_size 1000 is still accepted; at most 50 are read a call (CHAT_PAGE_MAX, as Google's Chat MCP server), next_page_token gives the rest.
+  assert.deepEqual(calls[0].query, { pageSize: '50', orderBy: 'create_time asc' }, 'no filter and no markup without them');
   assert.equal(plain.messages[0].text, 'hello');
 });
 

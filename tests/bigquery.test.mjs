@@ -201,7 +201,7 @@ test('bq_dataset_list and bq_table_list pass the paging limit and map the list i
     return { tables: [{ tableReference: { tableId: 'events' }, type: 'TABLE' }, { tableReference: { tableId: 'v_daily' }, type: 'VIEW' }] };
   });
   const datasets = await tool('bq_dataset_list').handler({ project_id: 'my-project-123', max_results: 5 });
-  assert.deepEqual(datasets, { datasets: [{ dataset_id: 'analytics', location: 'EU', friendly_name: 'Analytics' }], has_more: true });
+  assert.deepEqual(datasets, { datasets: [{ dataset_id: 'analytics', location: 'EU', friendly_name: 'Analytics' }], has_more: true, next_page_token: 'more' });
   assert.equal(calls[0].query.maxResults, '5');
 
   const tables = await tool('bq_table_list').handler({ project_id: 'my-project-123', dataset_id: 'analytics' });
