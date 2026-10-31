@@ -129,6 +129,26 @@
           "version": "reports_v1beta"
         }
       ],
+      "pageSizeDefaults": {
+        "merchantapi": {
+          "source": "Discovery, merchantapi inventories_v1: regionalInventories.list and localInventories.list pageSize, default 25000",
+          "reason": "Google's default page is far over the 25,000-character result limit. Sizes are estimates from Google's resource schemas, not measured on live data.",
+          "methods": {
+            "merchantapi.accounts.products.regionalInventories.list": {
+              "parameter": "pageSize",
+              "value": 50,
+              "googleDefault": 25000,
+              "reason": "A regional inventory entry (region, price, availability) is about 0.3 to 0.5 KB; 25,000 are hundreds of times the limit."
+            },
+            "merchantapi.accounts.products.localInventories.list": {
+              "parameter": "pageSize",
+              "value": 50,
+              "googleDefault": 25000,
+              "reason": "A local inventory entry (store code, price, availability, pickup) is about 0.3 to 0.5 KB; 25,000 are hundreds of times the limit."
+            }
+          }
+        }
+      },
       "toolsets": {
         "google": [
           "merchantap_accounts_list",

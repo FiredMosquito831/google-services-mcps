@@ -31,6 +31,20 @@
           "version": "v3"
         }
       ],
+      "pageSizeDefaults": {
+        "youtube": {
+          "source": "Discovery, youtube v3: liveChatMessages.list maxResults, default 500, maximum 2000",
+          "reason": "Google's default page is far over the 25,000-character result limit. Sizes are estimates from Google's resource schemas, not measured on live data.",
+          "methods": {
+            "youtube.liveChatMessages.list": {
+              "parameter": "maxResults",
+              "value": 25,
+              "googleDefault": 500,
+              "reason": "A chat message with its author details is about 0.6 to 1 KB; 500 are 12 to 20 times the limit."
+            }
+          }
+        }
+      },
       "toolsets": {
         "google": [
           "youtube_search_list",

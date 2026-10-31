@@ -2,6 +2,20 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.30.1 - 2026-10-31
+
+### Fixed: required parameters are required
+- A query parameter whose Google description starts with "Required." was optional in its per-method tool, because Discovery marks few parameters required; a call without it went to Google and failed there. It is now required in the tool's schema, so the call is refused before any request with the argument named: 270 arguments of 224 tools (284 parameters in the snapshots; the others belong to methods with no tool). The YouTube Analytics document says `required: true` in the text instead; its `ids`, `metrics`, `startDate` and `endDate` count too.
+- Two stay optional, because their own description says what happens without them: `people.people.createContact` `personFields` ("Defaults to all fields if not set") and `streetviewpublish.photo.update` `updateMask` ("If not present, the old Photo metadata is entirely replaced").
+- Request body fields are unchanged.
+
+### Fixed: default pages that cannot fit
+- Twelve list methods whose Google default page is far over the 25,000-character result limit now ask for a smaller page when the call gives no size: Admin Reports `activities.list` 25 (Google 1,000), `userUsageReport.get` and `entityUsageReports.get` 10 (1,000), Cloud Search `settings.datasources.list` 25 (1,000), Calendar `events.list` 25 (250), Cloud Storage `objects.list` and `buckets.list` 25 (1,000), YouTube `liveChatMessages.list` 25 (500), Display & Video 360 `bulkListAssignedTargetingOptions` for line items and ad groups 50 (5,000), Merchant `regionalInventories.list` and `localInventories.list` 50 (25,000). Before, the answer was cut by the runtime and Google's page token skipped what was cut. A size the call gives is sent as it is, and the argument's description now names both defaults.
+- They are data, `pageSizeDefaults` in `config/products.json`, each with Google's default and the reason; the item sizes behind them are estimates from Google's schemas, not measured live. `gen-servers` checks that each names an integer query parameter of a method in the snapshot, below Google's default.
+
+### Not changed
+- No tool's kind, scopes or name: tool maps and gateway kinds of all 23 plugins (0 kind changes) and `gsm scopes` for every plugin, profile and toolset (207 cases) are the same as in 1.30.0. tools/list: 224 tools gained required arguments and 12 tools a page size description (two of them both), nothing else.
+
 ## 1.30.0 - 2026-10-31
 
 ### Added: `fields` on every per-method read

@@ -81,6 +81,44 @@
           "version": "v1"
         }
       ],
+      "pageSizeDefaults": {
+        "admin": {
+          "source": "Discovery, admin reports_v1: maxResults \"Determines how many activity records are shown on each response page\"; default 1000, maximum 1000",
+          "reason": "Google's default page is far over the 25,000-character result limit, so the answer would be cut and Google's nextPageToken would skip what was cut. Sizes are estimates from Google's resource schemas, not measured on live data.",
+          "methods": {
+            "reports.activities.list": {
+              "parameter": "maxResults",
+              "value": 25,
+              "googleDefault": 1000,
+              "reason": "Each record is one event (actor, IP address, the events and their parameters), about 0.5 to 1 KB of compact JSON; 1,000 are 20 to 40 times the limit."
+            },
+            "reports.userUsageReport.get": {
+              "parameter": "maxResults",
+              "value": 10,
+              "googleDefault": 1000,
+              "reason": "One report per user; without the parameters filter a report holds every application's parameters, several KB, so 1,000 are megabytes."
+            },
+            "reports.entityUsageReports.get": {
+              "parameter": "maxResults",
+              "value": 10,
+              "googleDefault": 1000,
+              "reason": "One report per entity; without the parameters filter a report holds every parameter of the entity type, several KB, so 1,000 are megabytes."
+            }
+          }
+        },
+        "cloudsearch": {
+          "source": "Discovery, cloudsearch v1: settings.datasources.list pageSize \"The default value is 1000\"",
+          "reason": "Google's default page is far over the 25,000-character result limit. Sizes are estimates from Google's resource schemas, not measured on live data.",
+          "methods": {
+            "cloudsearch.settings.datasources.list": {
+              "parameter": "pageSize",
+              "value": 25,
+              "googleDefault": 1000,
+              "reason": "A data source with its indexing service accounts, operation ids and item names is about 0.5 to 1 KB; 1,000 are 20 to 40 times the limit."
+            }
+          }
+        }
+      },
       "toolsets": {
         "google": [
           "admin_users_list",

@@ -262,23 +262,24 @@ function snapshotMethodsOf(apis) {
       out.set(api, out.get(api));
       continue;
     }
-    const ids = out.get(api) ?? new Set();
+    const byId = out.get(api) ?? new Map();
     const walk = (resources) => {
       for (const r of Object.values(resources ?? {})) {
-        for (const m of Object.values(r.methods ?? {})) ids.add(m.id);
+        for (const m of Object.values(r.methods ?? {})) byId.set(m.id, m);
         walk(r.resources);
       }
     };
     walk(readJson(file).resources);
-    out.set(api, ids);
+    out.set(api, byId);
   }
   return out;
 }
 
-/** Fails unless method is a method of api's snapshot (when there is one). */
+/** Fails unless method is a method of api's snapshot (when there is one). Returns the snapshot's method, if any. */
 function checkMethodOf(where, api, method, apiMethods) {
-  const ids = apiMethods.get(api);
-  if (!isText(method) || (ids && !ids.has(method))) fail(`${where}: "${method}" is not a method of the ${api} snapshot`);
+  const byId = apiMethods.get(api);
+  if (!isText(method) || (byId && !byId.has(method))) fail(`${where}: "${method}" is not a method of the ${api} snapshot`);
+  return byId?.get(method);
 }
 
 /** Fails unless value is a non-empty object keyed by generated APIs of the product, each entry with a source and a reason. */
@@ -324,6 +325,33 @@ function fieldMaskDefaultsOf(value, id, apiMethods) {
     for (const [method, mask] of Object.entries(methods)) {
       checkMethodOf(`${where}["${api}"]`, api, method, apiMethods);
       if (!isText(mask) || /\s/.test(mask)) fail(`${where}["${api}"]["${method}"] must be a comma-separated field list without spaces`);
+    }
+  }
+  return value;
+}
+
+/**
+ * A product's "pageSizeDefaults" (ServerSpec.pageSizeDefaults in src/core/registry.ts), checked and copied as is: per
+ * generated API of the product, the list methods whose Google default page is far over the result limit, and the page
+ * size their tools send when a call gives none ({ methods: { id: { parameter, value, googleDefault, reason } }, source,
+ * reason }). The parameter must be an integer query parameter of the method, and the value smaller than Google's default.
+ */
+function pageSizeDefaultsOf(value, id, apiMethods) {
+  if (value === undefined) return undefined;
+  const where = `product ${id} pageSizeDefaults`;
+  checkPerApi(value, where, apiMethods);
+  for (const [api, entry] of Object.entries(value)) {
+    const methods = entry.methods;
+    if (typeof methods !== 'object' || methods === null || Array.isArray(methods) || Object.keys(methods).length === 0) fail(`${where}["${api}"].methods must be a non-empty object`);
+    for (const [method, size] of Object.entries(methods)) {
+      const at = `${where}["${api}"]["${method}"]`;
+      const found = checkMethodOf(`${where}["${api}"]`, api, method, apiMethods);
+      if (!isText(size?.parameter) || !isText(size?.reason)) fail(`${at} needs a parameter and a reason`);
+      if (!Number.isInteger(size.value) || size.value < 1 || !Number.isInteger(size.googleDefault) || size.value >= size.googleDefault) {
+        fail(`${at}: value must be a whole number from 1 up to below googleDefault`);
+      }
+      const param = found?.parameters?.find((p) => p.name === size.parameter);
+      if (found && (!param || param.location !== 'query' || param.type !== 'integer')) fail(`${at}: "${size.parameter}" is not an integer query parameter of the method`);
     }
   }
   return value;
@@ -402,6 +430,8 @@ function main() {
     if (fieldsDefaults) server.fieldsDefaults = fieldsDefaults;
     const fieldMaskDefaults = fieldMaskDefaultsOf(p.fieldMaskDefaults, id, apiMethods);
     if (fieldMaskDefaults) server.fieldMaskDefaults = fieldMaskDefaults;
+    const pageSizeDefaults = pageSizeDefaultsOf(p.pageSizeDefaults, id, apiMethods);
+    if (pageSizeDefaults) server.pageSizeDefaults = pageSizeDefaults;
     // Only a product that lists a toolset gets the key, so the entries of the others stay as they were.
     const toolsets = toolsetsOf(p.toolsets, id);
     if (toolsets) server.toolsets = toolsets;

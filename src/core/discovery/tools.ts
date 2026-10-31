@@ -17,7 +17,7 @@ import { verboseOn, type RuntimeConfig } from '../config.js';
 import { getAuthClient, type AuthKind } from '../auth.js';
 import { isIdempotentMethod, requestWithRetry } from '../http.js';
 import type { ToolContext, ToolDef, ToolKind } from '../tools.js';
-import { loadRegistry, serverByName, type ApiRef, type AuthGroup, type ServerSpec } from '../registry.js';
+import { loadRegistry, serverByName, type ApiRef, type AuthGroup, type PageSizeDefault, type ServerSpec } from '../registry.js';
 import { assignToolNames, flattenMethods, MAX_TOOL_NAME, nameBudget, type DiscoveryDoc, type MethodRecord } from './methods.js';
 import { clipText, paramToZod, schemaToZod } from './schema.js';
 import { ApiKeyClient } from './apikey-client.js';
@@ -148,27 +148,53 @@ export interface DiscoverySource {
    * without one (ServerSpec.fieldMaskDefaults). Such a tool takes field_mask, not fields. Absent: no mask.
    */
   fieldMasks?: Readonly<Record<string, string>>;
+  /**
+   * Method id to the page size its tool sends when a call gives none: list methods whose Google default page is far over
+   * the result limit (ServerSpec.pageSizeDefaults). Absent: Google's default.
+   */
+  pageSizes?: Readonly<Record<string, PageSizeDefault>>;
 }
 
 /** The request defaults of one method, from its source (see DiscoverySource). */
 interface MethodDefaults {
   fields?: string;
   fieldMask?: string;
+  pageSize?: PageSizeDefault;
 }
 
-function defaultsOf(src: Pick<DiscoverySource, 'fieldsDefaults' | 'fieldMasks'>, id: string): MethodDefaults {
+type DefaultsSource = Pick<DiscoverySource, 'fieldsDefaults' | 'fieldMasks' | 'pageSizes'>;
+
+function defaultsOf(src: DefaultsSource, id: string): MethodDefaults {
   return {
     ...(src.fieldsDefaults?.[id] !== undefined ? { fields: src.fieldsDefaults[id] } : {}),
     ...(src.fieldMasks?.[id] !== undefined ? { fieldMask: src.fieldMasks[id] } : {}),
+    ...(src.pageSizes?.[id] !== undefined ? { pageSize: src.pageSizes[id] } : {}),
   };
 }
 
 /** The query and header defaults a method's request plan carries, or nothing when it has none. */
 function planDefaults(d: MethodDefaults): Pick<RequestPlan, 'queryDefaults' | 'headerDefaults'> {
+  const query: Record<string, string | number> = {
+    ...(d.fields !== undefined ? { fields: d.fields } : {}),
+    ...(d.pageSize !== undefined ? { [d.pageSize.parameter]: d.pageSize.value } : {}),
+  };
   return {
-    ...(d.fields !== undefined ? { queryDefaults: { fields: d.fields } } : {}),
+    ...(Object.keys(query).length > 0 ? { queryDefaults: query } : {}),
     ...(d.fieldMask !== undefined ? { headerDefaults: { [FIELD_MASK_HEADER]: d.fieldMask } } : {}),
   };
+}
+
+/**
+ * A query parameter Google's text says is required: its description starts with "Required." (the convention of Google's
+ * newer APIs), or carries "required: true" (the YouTube Analytics document puts its field options in the text). Not when
+ * the same text says what happens without it ("Defaults to all fields if not set", "If not present, ... is replaced").
+ * Discovery itself marks such parameters required only now and then, so the tools left them optional until 1.30.1.
+ */
+const REQUIRED_TEXT = /^Required\.|\brequired: true\b/;
+const OPTIONAL_TEXT = /\bif (?:it is )?not (?:set|present|specified|provided)\b|\bif omitted\b/i;
+
+export function requiredByText(description: string | undefined): boolean {
+  return description !== undefined && REQUIRED_TEXT.test(description) && !OPTIONAL_TEXT.test(description);
 }
 
 /** True when the method is in the subset (see DiscoverySource.include). */
@@ -397,7 +423,7 @@ function buildMethodTool(
   note: string | undefined,
   scopesWhenNone?: readonly string[],
   target?: MethodRecord,
-  src: Pick<DiscoverySource, 'fieldsDefaults' | 'fieldMasks'> = {},
+  src: DefaultsSource = {},
 ): ToolDef {
   const shape: ZodRawShape = {};
   const fields: RequestField[] = [];
@@ -411,7 +437,13 @@ function buildMethodTool(
   }
   for (const p of m.parameters.filter((p) => p.location !== 'path')) {
     const arg = argFor(p.name);
-    shape[arg] = paramToZod(p);
+    const size = defaults.pageSize?.parameter === p.name ? defaults.pageSize : undefined;
+    shape[arg] = paramToZod({
+      ...p,
+      ...(requiredByText(p.description) ? { required: true } : {}),
+      // A page size this tool sends when the call gives none (pageSizeDefaults) is the default it describes.
+      ...(size ? { default: `${size.value} (sent when the call gives none; Google's default is ${size.googleDefault})` } : {}),
+    });
     fields.push({ arg, api: p.name, location: 'query' });
   }
 
@@ -613,14 +645,16 @@ export function generateDiscoveryTools(
  * fieldMaskDefaults), by method id. Nothing for an API without any.
  */
 export function requestDefaultsFor(
-  server: Pick<ServerSpec, 'fieldsDefaults' | 'fieldMaskDefaults'>,
+  server: Pick<ServerSpec, 'fieldsDefaults' | 'fieldMaskDefaults' | 'pageSizeDefaults'>,
   api: string,
-): Pick<DiscoverySource, 'fieldsDefaults' | 'fieldMasks'> {
+): DefaultsSource {
   const fields = server.fieldsDefaults?.[api];
   const masks = server.fieldMaskDefaults?.[api]?.methods;
+  const sizes = server.pageSizeDefaults?.[api]?.methods;
   return {
     ...(fields ? { fieldsDefaults: Object.fromEntries(fields.methods.map((id) => [id, fields.value])) } : {}),
     ...(masks ? { fieldMasks: { ...masks } } : {}),
+    ...(sizes ? { pageSizes: { ...sizes } } : {}),
   };
 }
 

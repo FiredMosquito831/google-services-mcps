@@ -10,7 +10,7 @@
  */
 import { existsSync, readFileSync, statSync } from 'node:fs';
 import { dirname, join } from 'node:path';
-import type { AuthGroup, FieldMaskDefaults, FieldsDefaults, Registry, ScopePolicy, ServerSpec } from '../core/registry.js';
+import type { AuthGroup, FieldMaskDefaults, FieldsDefaults, PageSizeDefaults, Registry, ScopePolicy, ServerSpec } from '../core/registry.js';
 import type { InstallRoots } from './paths.js';
 import { LISTED_TOOLSETS, PREFER_PROFILES, type PreferredScopes, type ServerToolsets, type ServerToolsetScopes } from '../core/toolset.js';
 
@@ -73,6 +73,7 @@ export function registryFromProducts(raw: unknown, dataRoot: string): Registry {
       // response field mask sent when a call gives none.
       ...(isPlainObject(value.fieldsDefaults) ? { fieldsDefaults: value.fieldsDefaults as Record<string, FieldsDefaults> } : {}),
       ...(isPlainObject(value.fieldMaskDefaults) ? { fieldMaskDefaults: value.fieldMaskDefaults as Record<string, FieldMaskDefaults> } : {}),
+      ...(isPlainObject(value.pageSizeDefaults) ? { pageSizeDefaults: value.pageSizeDefaults as Record<string, PageSizeDefaults> } : {}),
       // The product's listed toolsets, as tool names (scripts/gen-servers.mjs writes the same into config/servers.json).
       ...toolsetsField(value.toolsets),
       // Their preferred scopes per profile (preferScopes), as gen-servers writes them (toolsetScopes).
@@ -160,6 +161,7 @@ const BUILD_FIELDS = [
   'scopeOverrides',
   'fieldsDefaults',
   'fieldMaskDefaults',
+  'pageSizeDefaults',
   'toolsets',
   'toolsetScopes',
 ] as const;

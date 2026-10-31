@@ -72,6 +72,12 @@ export interface ServerSpec {
    * fieldMaskDefaults; Places search and details). Absent for a product that has none.
    */
   fieldMaskDefaults?: Record<string, FieldMaskDefaults>;
+  /**
+   * Per generated API of the product, the list methods whose Google default page is far over the result limit, and the
+   * page size their tools send when a call gives none (config/products.json pageSizeDefaults; Admin Reports activities,
+   * for one). Absent for a product that has none.
+   */
+  pageSizeDefaults?: Record<string, PageSizeDefaults>;
   label: string;
   /**
    * The plugin folder the server is built from (plugins/<id>), set only by the CLI of the repository layout (the
@@ -94,6 +100,22 @@ export interface FieldsDefaults {
 /** One API's entry of ServerSpec.fieldMaskDefaults: the default mask per method id, with the evidence for people. */
 export interface FieldMaskDefaults {
   methods: Record<string, string>;
+  source?: string;
+  reason?: string;
+}
+
+/** The page size one list method's tool sends when a call gives none, with Google's default and the reason. */
+export interface PageSizeDefault {
+  /** The method's page size parameter (maxResults, pageSize). */
+  parameter: string;
+  value: number;
+  googleDefault: number;
+  reason?: string;
+}
+
+/** One API's entry of ServerSpec.pageSizeDefaults. */
+export interface PageSizeDefaults {
+  methods: Record<string, PageSizeDefault>;
   source?: string;
   reason?: string;
 }

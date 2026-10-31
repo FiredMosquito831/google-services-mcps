@@ -5,6 +5,7 @@
 //   1.30.0: fields on reads, the fields Google requires (Drive), the Places response field mask.
 import { test, after } from 'node:test';
 import assert from 'node:assert/strict';
+import { generateKeyPairSync } from 'node:crypto';
 import { mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync, cpSync, mkdirSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import { tmpdir } from 'node:os';
@@ -33,7 +34,18 @@ after(() => {
 writeFileSync(join(tokenDir, 'client_secret.json'), JSON.stringify({ installed: { client_id: 'test-client', client_secret: 'test-secret' } }));
 const token = { access_token: 'test-token', refresh_token: 'test-refresh', expiry_date: Date.now() + 3600_000, token_type: 'Bearer' };
 for (const group of ['cloud', 'workspace-user', 'searchconsole', 'business', 'developer']) writeFileSync(join(tokenDir, `${group}.token.json`), JSON.stringify(token));
-const cfg = loadConfig({ GSM_TOKEN_DIR: tokenDir, GSM_ALLOW_WRITES: 'true', GSM_API_KEY: 'test-api-key' });
+// A throwaway service account key for the admin group (domain-wide delegation) and the service-account group (gmerchant).
+const { privateKey } = generateKeyPairSync('rsa', { modulusLength: 2048, privateKeyEncoding: { type: 'pkcs8', format: 'pem' }, publicKeyEncoding: { type: 'spki', format: 'pem' } });
+const keyFile = join(tokenDir, 'sa-key.json');
+writeFileSync(keyFile, JSON.stringify({ type: 'service_account', client_email: 'sa@test-project.iam.gserviceaccount.com', private_key: privateKey, private_key_id: 'k1' }));
+writeFileSync(join(tokenDir, 'service-account.json'), JSON.stringify({ keyFile, clientEmail: 'sa@test-project.iam.gserviceaccount.com', savedAt: '2026-10-31T00:00:00Z' }));
+const cfg = loadConfig({
+  GSM_TOKEN_DIR: tokenDir,
+  GSM_ALLOW_WRITES: 'true',
+  GSM_API_KEY: 'test-api-key',
+  GSM_SERVICE_ACCOUNT_KEY_FILE: keyFile,
+  GSM_ADMIN_SUBJECT: 'admin@example.com',
+});
 
 let calls = [];
 let respond = () => ({});
@@ -283,14 +295,125 @@ test('the data reaches every copy: config/servers.json, the plugin servers.json 
   const { registryFromProducts } = await import(DIST('cli/products.js'));
   const products = readJson('config', 'products.json').products;
   const converted = registryFromProducts(readJson('config', 'products.json'), REPO).servers;
-  for (const [id, key] of [['gdrive', 'fieldsDefaults'], ['gmaps', 'fieldMaskDefaults']]) {
-    assert.deepEqual(readJson('config', 'servers.json').servers.find((s) => s.name === id)[key], products[id][key], `${id} config/servers.json`);
-    assert.deepEqual(readJson('plugins', id, 'servers.json').servers[0][key], products[id][key], `${id} plugin servers.json`);
-    assert.deepEqual(converted.find((s) => s.name === id)[key], products[id][key], `${id} CLI conversion`);
+  const owners = { fieldsDefaults: ['gdrive'], fieldMaskDefaults: ['gmaps'], pageSizeDefaults: ['gadmin', 'gads', 'gcalendar', 'gcloud', 'gmerchant', 'gyoutube'] };
+  for (const [key, ids] of Object.entries(owners)) {
+    for (const id of ids) {
+      assert.ok(products[id][key], `${id} declares ${key}`);
+      assert.deepEqual(readJson('config', 'servers.json').servers.find((s) => s.name === id)[key], products[id][key], `${id} config/servers.json`);
+      assert.deepEqual(readJson('plugins', id, 'servers.json').servers[0][key], products[id][key], `${id} plugin servers.json`);
+      assert.deepEqual(converted.find((s) => s.name === id)[key], products[id][key], `${id} CLI conversion`);
+    }
+    for (const [id, p] of Object.entries(products)) if (!ids.includes(id)) assert.equal(p[key], undefined, `${id} ${key}`);
   }
+});
+
+// ---------------------------------------------------------------------------
+// 1.30.1: required parameters, default page sizes
+
+const methodsById = new Map();
+for (const doc of Object.values(snapshots)) {
+  const walk = (resources) => {
+    for (const r of Object.values(resources ?? {})) {
+      for (const m of Object.values(r.methods ?? {})) methodsById.set(m.id, m);
+      walk(r.resources);
+    }
+  };
+  walk(doc.resources);
+}
+
+test('requiredByText: "Required." at the start or "required: true", unless the text says what happens without it', async () => {
+  const { requiredByText } = await import(DIST('core/discovery/tools.js'));
+  assert.equal(requiredByText('Required. The parent.'), true);
+  assert.equal(requiredByText('The ids. required: true, pattern: x'), true);
+  assert.equal(requiredByText('Optional. Required. later'), false, 'only at the start');
+  assert.equal(requiredByText('Required. A field mask. Defaults to all fields if not set.'), false);
+  assert.equal(requiredByText('Required. Mask. If not present, the old metadata is replaced.'), false);
+  assert.equal(requiredByText('Required field indicating the granularity.'), false, 'not the "Required." convention');
+  assert.equal(requiredByText(undefined), false);
+});
+
+test('required: every query parameter Google says is required is required in its tool; the two that say otherwise stay optional', async () => {
+  const { requiredByText } = await import(DIST('core/discovery/tools.js'));
+  const servers = readJson('config', 'servers.json').servers.filter((s) => (s.apis ?? []).length > 0);
+  let byText = 0;
+  for (const server of servers) {
+    for (const tool of await toolsOf(server.name)) {
+      if (!tool.methodId) continue;
+      for (const p of methodsById.get(tool.methodId)?.parameters ?? []) {
+        if (p.location === 'path') continue;
+        const arg = p.name === 'confirm' ? 'confirmParam' : p.name;
+        const required = p.required === true || requiredByText(p.description);
+        assert.equal(!tool.inputSchema[arg].isOptional(), required, `${server.name}/${tool.name} ${p.name}`);
+        if (required && !p.required) byText += 1;
+      }
+    }
+  }
+  assert.ok(byText > 250, `${byText} parameters required by Google's text`);
+  const optional = async (server, id, name) => (await byMethod(server, id)).inputSchema[name].isOptional();
+  assert.equal(await optional('gcontacts', 'people.people.createContact', 'personFields'), true, '"Defaults to all fields if not set"');
+  assert.equal(await optional('gmaps', 'streetviewpublish.photo.update', 'updateMask'), true, '"If not present, the old Photo metadata is entirely replaced"');
+  for (const name of ['ids', 'metrics', 'startDate', 'endDate']) assert.equal(await optional('gyoutube', 'youtubeAnalytics.reports.query', name), false, `YouTube Analytics ${name}`);
+  for (const name of ['readMask']) assert.equal(await optional('gbusiness', 'mybusinessbusinessinformation.accounts.locations.list', name), false, `Business Profile ${name}`);
+  // A call without a required parameter is refused before any request.
+  const query = await byMethod('gyoutube', 'youtubeAnalytics.reports.query');
+  const { z } = await import('zod');
+  assert.equal(z.object(query.inputSchema).safeParse({ ids: 'channel==MINE', metrics: 'views', startDate: '2026-10-01' }).success, false, 'endDate is missing');
+});
+
+test('page sizes: each listed method sends its page size when the call gives none, and the given one otherwise', async () => {
+  const products = readJson('config', 'products.json').products;
+  let checked = 0;
+  respond = () => ({ items: [] });
   for (const [id, p] of Object.entries(products)) {
-    if (id !== 'gdrive') assert.equal(p.fieldsDefaults, undefined, id);
-    if (id !== 'gmaps') assert.equal(p.fieldMaskDefaults, undefined, id);
+    for (const entry of Object.values(p.pageSizeDefaults ?? {})) {
+      for (const [method, size] of Object.entries(entry.methods)) {
+        const tool = await byMethod(p.server.name, method);
+        assert.ok(tool, `${id} has a tool for ${method}`);
+        assert.ok(size.value < size.googleDefault, method);
+        assert.match(tool.inputSchema[size.parameter].description, new RegExp(`Default: ${size.value} \\(sent when the call gives none; Google's default is ${size.googleDefault}\\)\\.$`), method);
+        const [call] = await requestsOf(tool, requiredArgs(tool));
+        assert.equal(call.query[size.parameter], String(size.value), `${method} sends ${size.parameter}=${size.value}`);
+        assert.deepEqual(contract(call, method), { id: method, problems: [] }, method);
+        const [given] = await requestsOf(tool, { ...requiredArgs(tool), [size.parameter]: 3 });
+        assert.equal(given.query[size.parameter], '3', `${method}: the given size wins`);
+        checked += 1;
+      }
+    }
+  }
+  assert.equal(checked, 12);
+  const activities = readJson('config', 'products.json').products.gadmin.pageSizeDefaults.admin.methods['reports.activities.list'];
+  assert.deepEqual({ value: activities.value, googleDefault: activities.googleDefault }, { value: 25, googleDefault: 1000 });
+  // A list method with no entry sends no page size of its own.
+  const [plain] = await requestsOf(await byMethod('gdrive', 'drive.files.list'), {});
+  assert.equal('pageSize' in plain.query, false);
+});
+
+test('gen-servers: pageSizeDefaults name an integer query parameter of a snapshot method, below Google default, with a reason', () => {
+  const run = (pageSizeDefaults) => {
+    const root = mkdtempSync(join(tmpdir(), 'gsm-gen-size-'));
+    temps.push(root);
+    mkdirSync(join(root, 'scripts'));
+    mkdirSync(join(root, 'config'));
+    mkdirSync(join(root, 'data', 'discovery'), { recursive: true });
+    cpSync(join(REPO, 'scripts', 'gen-servers.mjs'), join(root, 'scripts', 'gen-servers.mjs'));
+    cpSync(join(REPO, 'data', 'discovery', 'drive.v3.json'), join(root, 'data', 'discovery', 'drive.v3.json'));
+    const product = { title: 'X', description: 'X.', group: 'workspace-user', server: { name: 'gx', curated: null }, generated: [{ api: 'drive', version: 'v3' }], pageSizeDefaults };
+    writeFileSync(join(root, 'config', 'products.json'), JSON.stringify({ products: { gx: product } }));
+    return spawnSync(process.execPath, [join(root, 'scripts', 'gen-servers.mjs')], { encoding: 'utf8' });
+  };
+  const entry = (over) => ({ drive: { source: 'Discovery', reason: 'Too large.', methods: { 'drive.revisions.list': { parameter: 'pageSize', value: 30, googleDefault: 200, reason: 'Big.', ...over } } } });
+  assert.equal(run(entry()).status, 0);
+  for (const [value, message] of [
+    [entry({ parameter: 'fileId' }), /is not an integer query parameter of the method/],
+    [entry({ parameter: 'pageToken' }), /is not an integer query parameter of the method/],
+    [entry({ value: 200 }), /value must be a whole number from 1 up to below googleDefault/],
+    [entry({ value: 0 }), /value must be a whole number/],
+    [entry({ reason: '' }), /needs a parameter and a reason/],
+    [{ drive: { source: 'Discovery', reason: 'x', methods: { 'drive.nothing.list': { parameter: 'pageSize', value: 1, googleDefault: 2, reason: 'x' } } } }, /is not a method of the drive snapshot/],
+  ]) {
+    const res = run(value);
+    assert.notEqual(res.status, 0, JSON.stringify(value));
+    assert.match(res.stderr, message);
   }
 });
 
