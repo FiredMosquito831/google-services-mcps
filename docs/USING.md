@@ -323,6 +323,8 @@ Products with gateway APIs have three gateway tools. They reach those APIs, for 
 
 `api_call` takes the same safety rules as any other tool. A read runs without a prompt. A write or a delete asks, as described in section 3.
 
+`api_describe` and `api_call` read the method's Discovery document from Google once and keep it for seven days (`discovery-cache` in the token folder). Google serves many documents only on the API's own host, so when its directory path answers 404 the gateway reads the document there (since 1.36.1; before, those methods could not be described or called).
+
 ### Worked example: list Google Analytics account summaries
 
 This uses the `ganalytics` product. Its gateway API `analyticsadmin` (version `v1alpha`) has the method `analyticsadmin.accountSummaries.list`. It is a read. It needs a read-only Analytics scope (`analytics.readonly` or `analytics.edit`).

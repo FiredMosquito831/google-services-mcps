@@ -422,7 +422,50 @@ function parseDiscovery(text: string, api: string, version: string): RawDiscover
 /** The Discovery document, from <tokenDir>/discovery-cache when it is under seven days old, else fetched and cached. */
 let fetchOverride: typeof fetch | undefined;
 
-async function loadRawDiscovery(api: string, version: string, cfg: RuntimeConfig, discoveryRestUrl?: string): Promise<RawDiscovery> {
+/**
+ * Where a Discovery document is read from, in order. An entry with its own URL (the catalog's supplemental entries) is read
+ * from that URL only. Any other is read from the directory path, then, when that path answers 404, from the API's own
+ * host (its catalog rootUrl, https under googleapis.com only): Google serves many documents only there (every Merchant
+ * API version, Gmail Postmaster Tools v1, Analytics Admin v1alpha, Vertex AI v1 and others answer 404 at the directory
+ * path, checked 2026-10-31), and its directory lists them as https://<api>.googleapis.com/$discovery/rest?version=<v>.
+ */
+export function discoveryUrlsFor(api: string, version: string, discoveryRestUrl?: string, rootUrl?: string): string[] {
+  if (discoveryRestUrl) return [discoveryRestUrl];
+  const urls = [`https://www.googleapis.com/discovery/v1/apis/${encodeURIComponent(api)}/${encodeURIComponent(version)}/rest`];
+  const host = hostDiscoveryUrl(rootUrl, version);
+  if (host) urls.push(host);
+  return urls;
+}
+
+/** The API host's Discovery URL from a catalog rootUrl, or undefined unless the root is plain https under googleapis.com. */
+function hostDiscoveryUrl(rootUrl: string | undefined, version: string): string | undefined {
+  if (!rootUrl) return undefined;
+  let root: URL;
+  try {
+    root = new URL(rootUrl);
+  } catch {
+    return undefined;
+  }
+  if (root.protocol !== 'https:' || !root.hostname.endsWith('.googleapis.com') || root.port || root.username || root.password) return undefined;
+  return `${root.origin}/$discovery/rest?version=${encodeURIComponent(version)}`;
+}
+
+/** One GET of a Discovery document: its text, or an error that carries the HTTP status. */
+async function fetchDiscoveryText(url: string): Promise<{ text?: string; status?: number; error?: string }> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), DISCOVERY_TIMEOUT_MS);
+  try {
+    const res = await (fetchOverride ?? fetch)(url, { signal: controller.signal, headers: { accept: 'application/json' } });
+    if (!res.ok) return { status: res.status, error: `HTTP ${res.status}` };
+    return { text: await res.text() };
+  } catch (err) {
+    return { error: controller.signal.aborted ? `no answer within ${DISCOVERY_TIMEOUT_MS / 1000} seconds` : (err as Error).message };
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+async function loadRawDiscovery(api: string, version: string, cfg: RuntimeConfig, discoveryRestUrl?: string, rootUrl?: string): Promise<RawDiscovery> {
   if (!SAFE_NAME.test(api) || !SAFE_NAME.test(version)) {
     throw new Error(`The catalog has an unexpected API name or version: ${api}.${version}.`);
   }
@@ -436,22 +479,15 @@ async function loadRawDiscovery(api: string, version: string, cfg: RuntimeConfig
     }
   }
 
-  const url = discoveryRestUrl ?? `https://www.googleapis.com/discovery/v1/apis/${encodeURIComponent(api)}/${encodeURIComponent(version)}/rest`;
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), DISCOVERY_TIMEOUT_MS);
-  let text: string;
-  try {
-    const res = await (fetchOverride ?? fetch)(url, { signal: controller.signal, headers: { accept: 'application/json' } });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    text = await res.text();
-  } catch (err) {
-    const why = controller.signal.aborted
-      ? `no answer within ${DISCOVERY_TIMEOUT_MS / 1000} seconds`
-      : (err as Error).message;
-    throw new Error(`Could not fetch the Discovery document for ${api}.${version}: ${why}.`);
-  } finally {
-    clearTimeout(timer);
+  // Only a 404 moves on to the next URL; any other failure is reported as it is.
+  const urls = discoveryUrlsFor(api, version, discoveryRestUrl, rootUrl);
+  let text: string | undefined;
+  for (let i = 0; i < urls.length && text === undefined; i++) {
+    const got = await fetchDiscoveryText(urls[i]!);
+    if (got.text !== undefined) text = got.text;
+    else if (got.status !== 404 || i === urls.length - 1) throw new Error(`Could not fetch the Discovery document for ${api}.${version}: ${got.error}.`);
   }
+  if (text === undefined) throw new Error(`Could not fetch the Discovery document for ${api}.${version}.`);
 
   const doc = parseDiscovery(text, api, version);
   try {
@@ -478,7 +514,7 @@ function findRawMethod(doc: RawDiscovery, id: string): RawMethod | undefined {
 }
 
 async function rawMethodFor(entry: IndexEntry, cfg: RuntimeConfig): Promise<{ doc: RawDiscovery; raw: RawMethod }> {
-  const doc = await loadRawDiscovery(entry.api.name, entry.api.version, cfg, entry.api.discoveryRestUrl);
+  const doc = await loadRawDiscovery(entry.api.name, entry.api.version, cfg, entry.api.discoveryRestUrl, entry.api.rootUrl);
   const raw = findRawMethod(doc, entry.id);
   if (!raw) {
     throw new Error(

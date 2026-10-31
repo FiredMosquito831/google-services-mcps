@@ -2,6 +2,15 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.36.1 - 2026-10-31
+
+### Fixed: api_describe and api_call read the Discovery document where Google serves it
+- `api_describe` and `api_call` read a method's full Discovery document (cached seven days) from `https://www.googleapis.com/discovery/v1/apis/<api>/<version>/rest`. Google serves many documents only on the API's own host: that path answers 404 for them (checked 2026-10-31 with GET: every Merchant API version, Gmail Postmaster Tools v1, Analytics Admin v1alpha, Vertex AI v1, Drive Labels v2beta; Compute v1, Android Management v1 and Drive v3 answer 200 there), and Google's directory lists 387 of the 396 gateway APIs at `https://<api>.googleapis.com/$discovery/rest?version=<version>`. For those, both tools failed before any request with "Could not fetch the Discovery document ... HTTP 404"; the gateway of gmerchant (since 1.35.2 on Merchant API v1) and the worked example in docs/USING.md (Analytics Admin v1alpha) were among them.
+- When the directory path answers 404, the gateway now reads the document from the API's host, built from the catalog's `rootUrl` (plain https under `googleapis.com` only). Any other failure (5xx, 403, a timeout) is reported as before, with the same text, and an entry with its own URL (the supplemental ones, such as Google Ads) is read from that URL only. Checked against Google's public documents (no key, no sign-in): on 1.35.1, `api_describe` of `merchantapi.accounts.products.get` and of `analyticsadmin.accountSummaries.list` failed with HTTP 404; now both read the document from the host (`merchantapi.googleapis.com`, `analyticsadmin.googleapis.com`).
+
+### Not changed
+- Tool maps, tool kinds, tools/list and scopes. No Google API was called.
+
 ## 1.36.0 - 2026-10-31
 
 ### Changed: a full gapps login no longer asks for the whole mailbox; `--with mail` asks for it

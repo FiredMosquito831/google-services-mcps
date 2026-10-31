@@ -4,7 +4,7 @@
 // Network is never used: the Discovery fetch and the authorized request are injected.
 import { test, afterEach } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
@@ -546,4 +546,75 @@ test('gatewayTools returns the three tools, and its api_call refuses writes befo
 
   await tools.api_call.handler({ method: 'demoapi.items.list', pathParams: { projectId: 'p1' } });
   assert.equal(requests.length, 1, 'reads still run');
+});
+
+// ---------------------------------------------------------------------------
+// 1.36.1: where the Discovery document is read from. Google serves many documents only on the API's host; the directory
+// path answers 404 for them (every Merchant API version, Analytics Admin v1alpha, Vertex AI v1, checked 2026-10-31).
+
+const WWW = 'https://www.googleapis.com/discovery/v1/apis/demoapi/v1/rest';
+const HOST = 'https://demo.example.googleapis.com/$discovery/rest?version=v1';
+
+test('api_describe and api_call: when the directory path answers 404, the document is read from the API host, then cached', async () => {
+  const { cfg, tokenDir } = setup({ cache: false });
+  const fetched = [];
+  gw.setFetchForTests(async (url) => {
+    fetched.push(String(url));
+    return String(url) === WWW ? new Response('Not Found', { status: 404 }) : new Response(JSON.stringify(discovery), { status: 200 });
+  });
+  const tools = gateway(cfg);
+  const described = await tools.api_describe.handler({ method: 'demoapi.items.get' });
+  assert.deepEqual(fetched, [WWW, HOST]);
+  assert.equal(described.httpMethod, 'GET');
+  assert.ok(existsSync(join(tokenDir, 'discovery-cache', 'demoapi.v1.json')));
+  const requests = fakeRequest({ status: 200, data: { name: 'items/1' } });
+  await tools.api_call.handler({ method: 'demoapi.items.get', pathParams: { name: 'items/1' } });
+  assert.equal(requests.length, 1, 'the call runs');
+  assert.equal(fetched.length, 2, 'the cached document is used');
+});
+
+test('api_describe: only a 404 moves on to the host; another failure is reported as before, and a 404 there too says so', async () => {
+  const failWith = async (status) => {
+    const { cfg } = setup({ cache: false });
+    const fetched = [];
+    gw.setFetchForTests(async (url) => {
+      fetched.push(String(url));
+      return new Response('x', { status: String(url) === WWW ? status : 404 });
+    });
+    await assert.rejects(gateway(cfg).api_describe.handler({ method: 'demoapi.items.get' }), new RegExp(`^Error: Could not fetch the Discovery document for demoapi\\.v1: HTTP ${status}\\.$`));
+    return fetched;
+  };
+  assert.deepEqual(await failWith(500), [WWW]);
+  assert.deepEqual(await failWith(403), [WWW]);
+  assert.deepEqual(await failWith(404), [WWW, HOST]);
+});
+
+test('discoveryUrlsFor: the catalog URL alone when there is one; the host only for plain https under googleapis.com', () => {
+  assert.deepEqual(gw.discoveryUrlsFor('googleads', 'v26', 'https://googleads.googleapis.com/$discovery/rest?version=v26', 'https://googleads.googleapis.com/'), [
+    'https://googleads.googleapis.com/$discovery/rest?version=v26',
+  ]);
+  assert.deepEqual(gw.discoveryUrlsFor('merchantapi', 'accounts_v1', undefined, 'https://merchantapi.googleapis.com/'), [
+    'https://www.googleapis.com/discovery/v1/apis/merchantapi/accounts_v1/rest',
+    'https://merchantapi.googleapis.com/$discovery/rest?version=accounts_v1',
+  ]);
+  for (const root of ['http://merchantapi.googleapis.com/', 'https://merchantapi.example.com/', 'https://googleapis.com.evil.example/', 'https://x.googleapis.com:8443/', 'https://u:p@x.googleapis.com/', 'not a url', undefined]) {
+    assert.deepEqual(gw.discoveryUrlsFor('demoapi', 'v1', undefined, root), [WWW], String(root));
+  }
+});
+
+test('every gateway API of every built plugin has a host to fall back to, or its own URL', () => {
+  const root = new URL('..', import.meta.url);
+  const servers = JSON.parse(readFileSync(new URL('config/servers.json', root), 'utf8')).servers;
+  const catalog = JSON.parse(readFileSync(new URL('data/catalog.json', root), 'utf8'));
+  const byKey = new Map(catalog.apis.map((a) => [`${a.name}.${a.version}`, a]));
+  let checked = 0;
+  for (const s of servers) {
+    for (const g of s.gatewayApis ?? []) {
+      const api = byKey.get(`${g.api}.${g.version}`);
+      const urls = gw.discoveryUrlsFor(api.name, api.version, api.discoveryRestUrl, api.rootUrl);
+      assert.ok(api.discoveryRestUrl ? urls.length === 1 : urls.length === 2, `${g.api}.${g.version}: ${urls.join(' ')}`);
+      checked += 1;
+    }
+  }
+  assert.equal(checked, 396);
 });
