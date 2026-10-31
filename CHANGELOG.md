@@ -2,6 +2,21 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.31.0 - 2026-10-31
+
+### Added: files from the per-method tools and the gateway
+- The 11 per-method tools whose method Google marks as a media download take `alt` and `offset`. With `alt: "media"` they return the content instead of the metadata: a Keep attachment (`keep_media_download`, which never sent `alt=media` before, so it could only return metadata), a Cloud Storage object, a Drive file, revision or export, a Chat attachment, a YouTube caption track or report, a Play APK, a Health export. The 9 GETs whose answer is a file (Solar GeoTIFF, Air Quality and Pollen heatmap tiles, and others) take `offset`.
+- A file comes back one part at a time, as much as fits the result limit (about 18,000 bytes by default): `{ mime_type, size_bytes, offset, bytes_read, next_offset, note, data_base64 }`. Call again with `offset` set to `next_offset`; the base64 parts join into the base64 of the file. A text file comes back as `text`, cut at a whole character and where its escaped text fits. A media download asks Google for that part only (a `Range` header).
+- `api_call` does the same for the gateway's APIs: query `alt: "media"`, and a new `offset` argument. A file's base64 is not passed through the gateway's secret-text patterns, which can match base64 by chance and would corrupt it; a text file still is.
+
+### Fixed: binary answers are no longer lost
+- An answer that is neither JSON nor text came back as `{}` through an OAuth client (the HTTP library reads it as a Blob) and as its bytes read as text through the API key client (gmaps, gsearch): the Solar GeoTIFF, the heatmap tiles, a Places photo behind its redirect, a Drive export to PDF. They now come back as the parts above. `places_places_photos_get_media` has no `offset`: a photo larger than one part returns its first part and says to ask for a smaller one, or for its link with `skipHttpRedirect`.
+- JSON and text answers are parsed as before, and requests of methods that cannot answer a file are sent exactly as before.
+
+### Changed
+- tools/list: 20 per-method tools gained `alt` and `offset` or `offset` alone, and `api_call` gained `offset` and one sentence of description; nothing else changed (+0.1 % writes on). Tool maps and gateway kinds of all 23 plugins (0 kind changes) and `gsm scopes` for every plugin, profile and toolset (207 cases) are the same as in 1.30.1.
+- Nothing here was checked against live Google: the Range answers, the content types and the redirect follow Google's documentation and the HTTP standard.
+
 ## 1.30.1 - 2026-10-31
 
 ### Fixed: required parameters are required

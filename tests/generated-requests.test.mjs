@@ -50,13 +50,24 @@ const cfg = loadConfig({
 let calls = [];
 let respond = () => ({});
 
+/** An HTTP answer with its own status, headers and raw body (bytes or text), instead of a JSON value. */
+const http = (body, headers = {}, status = 200) => ({ __http: true, body, headers, status });
+
 async function fakeRequest(opts) {
   const url = new URL(opts.url);
   const query = Object.fromEntries(url.searchParams);
   for (const [key, value] of Object.entries(opts.params ?? {})) if (value !== undefined) query[key] = Array.isArray(value) ? value.map(String) : String(value);
-  const call = { method: String(opts.method ?? 'GET').toUpperCase(), url: `${url.origin}${url.pathname}`, query, headers: { ...(opts.headers ?? {}) }, body: opts.data };
+  const call = { method: String(opts.method ?? 'GET').toUpperCase(), url: `${url.origin}${url.pathname}`, query, headers: { ...(opts.headers ?? {}) }, body: opts.data, responseType: opts.responseType };
   calls.push(call);
-  return { data: await respond(call), status: 200, headers: new Headers(), config: opts };
+  const answer = await respond(call);
+  if (answer?.__http) {
+    // As gaxios answers: bytes for responseType arraybuffer; otherwise parsed by content type.
+    const raw = typeof answer.body === 'string' ? Buffer.from(answer.body, 'utf8') : answer.body;
+    const json = /json/.test(answer.headers['content-type'] ?? '');
+    const data = opts.responseType === 'arraybuffer' ? raw.buffer.slice(raw.byteOffset, raw.byteOffset + raw.byteLength) : json ? JSON.parse(raw.toString('utf8')) : raw.toString('utf8');
+    return { data, status: answer.status, headers: new Headers(answer.headers), config: opts };
+  }
+  return { data: answer, status: 200, headers: new Headers(), config: opts };
 }
 OAuth2Client.prototype.request = fakeRequest;
 if (Object.prototype.hasOwnProperty.call(JWT.prototype, 'request')) JWT.prototype.request = fakeRequest;
@@ -70,7 +81,9 @@ setFetchForTests(async (input, init = {}) => {
     body: typeof init.body === 'string' ? JSON.parse(init.body) : undefined,
   };
   calls.push(call);
-  return new Response(JSON.stringify(await respond(call)), { status: 200, headers: { 'content-type': 'application/json' } });
+  const answer = await respond(call);
+  if (answer?.__http) return new Response(answer.body, { status: answer.status, headers: answer.headers });
+  return new Response(JSON.stringify(answer), { status: 200, headers: { 'content-type': 'application/json' } });
 });
 
 /** Runs one tool's handler and returns the requests it sent. */
@@ -448,4 +461,158 @@ test('gen-servers: fieldsDefaults and fieldMaskDefaults are checked against the 
     assert.notEqual(res.status, 0, JSON.stringify(extra));
     assert.match(res.stderr, message);
   }
+});
+
+// ---------------------------------------------------------------------------
+// 1.31.0: media downloads and answers that are files
+
+const PART = 18000; // base64PartBytes(25,000): the default result limit
+const bytesOf = (n, seed = 7) => Buffer.from(Array.from({ length: n }, (_, i) => (i * seed + 3) % 256));
+
+test('media: every method Discovery marks supportsMediaDownload takes alt and offset; a GET answering an HttpBody takes offset', async () => {
+  const servers = readJson('config', 'servers.json').servers.filter((s) => (s.apis ?? []).length > 0);
+  const downloads = [];
+  const files = [];
+  for (const server of servers) {
+    for (const tool of await toolsOf(server.name)) {
+      if (!tool.methodId) continue;
+      const m = methodsById.get(tool.methodId);
+      if (m.supportsMediaDownload) {
+        downloads.push(tool.methodId);
+        assert.deepEqual(tool.inputSchema.alt._def.innerType._def.values, ['json', 'media'], tool.name);
+        assert.ok(tool.inputSchema.offset.isOptional(), tool.name);
+      } else if (m.httpMethod === 'GET' && /HttpBody$/.test(m.response ?? '')) {
+        files.push(tool.methodId);
+        assert.equal(tool.inputSchema.alt, undefined, tool.name);
+        assert.ok(tool.inputSchema.offset.isOptional(), tool.name);
+      } else {
+        assert.equal(tool.inputSchema.alt, undefined, `${tool.name} takes no alt`);
+        // Three Fact Check methods declare a parameter named offset of their own (a result offset): it stays theirs.
+        if (!(m.parameters ?? []).some((p) => p.name === 'offset')) assert.equal(tool.inputSchema.offset, undefined, `${tool.name} takes no offset`);
+      }
+    }
+  }
+  assert.ok(downloads.includes('keep.media.download') && downloads.includes('storage.objects.get') && downloads.includes('drive.files.export'), downloads.join(', '));
+  assert.ok(files.includes('solar.geoTiff.get') && files.includes('airquality.mapTypes.heatmapTiles.lookupHeatmapTile'), files.join(', '));
+});
+
+test('media: a Keep attachment with alt=media asks for one part with a Range and returns it as base64; offset reads on and the parts join', async () => {
+  const tool = await byMethod('gtasks', 'keep.media.download');
+  const file = bytesOf(40000);
+  respond = (call) => {
+    const [, from, to] = /bytes=(\d+)-(\d+)/.exec(call.headers.Range);
+    const end = Math.min(Number(to), file.length - 1);
+    return http(file.subarray(Number(from), end + 1), { 'content-type': 'image/png', 'content-range': `bytes ${from}-${end}/${file.length}` }, 206);
+  };
+  const parts = [];
+  let offset = 0;
+  for (let i = 0; i < 5 && offset !== undefined; i++) {
+    calls = [];
+    const out = await tool.handler({ name: 'notes/n1/attachments/a1', mimeType: 'image/png', alt: 'media', ...(offset ? { offset } : {}) });
+    assert.equal(calls.length, 1);
+    assert.equal(calls[0].query.alt, 'media');
+    assert.equal(calls[0].headers.Range, `bytes=${offset}-${offset + PART - 1}`);
+    assert.equal(calls[0].responseType, 'arraybuffer');
+    assert.equal('offset' in calls[0].query, false, 'offset is not sent to Google');
+    assert.deepEqual(contract(calls[0], 'keep.media.download'), { id: 'keep.media.download', problems: [] });
+    assert.equal(out.mime_type, 'image/png');
+    assert.equal(out.size_bytes, 40000);
+    assert.equal(out.offset, offset);
+    parts.push(out.data_base64);
+    offset = out.next_offset;
+    if (offset !== undefined) assert.match(out.note, new RegExp(`Call again with offset ${offset}`));
+  }
+  assert.equal(parts.length, 3);
+  assert.ok(Buffer.from(parts.join(''), 'base64').equals(file), 'the base64 parts join into the file');
+  // A server that ignores the range answers the whole file: the part is cut from it.
+  respond = () => http(file, { 'content-type': 'image/png' });
+  const whole = await tool.handler({ name: 'notes/n1/attachments/a1', mimeType: 'image/png', alt: 'media', offset: 36000 });
+  assert.deepEqual({ size: whole.size_bytes, read: whole.bytes_read, next: whole.next_offset }, { size: 40000, read: 4000, next: undefined });
+  assert.ok(Buffer.from(whole.data_base64, 'base64').equals(file.subarray(36000)));
+  await assert.rejects(tool.handler({ name: 'notes/n1/attachments/a1', mimeType: 'image/png', alt: 'media', offset: 50000 }), /past the end/);
+});
+
+test('media: a text file comes back as text, cut at a character; without alt=media the metadata is the JSON it was', async () => {
+  const tool = await byMethod('gcloud', 'storage.objects.get');
+  // Quotes take two characters in JSON, and "é" two bytes: a part is cut where the escaped text fits, and on a character.
+  const text = `${'"'.repeat(15000)}${'é'.repeat(10000)}`;
+  const file = Buffer.from(text, 'utf8');
+  respond = (call) => {
+    const [, from, to] = /bytes=(\d+)-(\d+)/.exec(call.headers.Range);
+    const end = Math.min(Number(to), file.length - 1);
+    return http(file.subarray(Number(from), end + 1), { 'content-type': 'text/plain; charset=utf-8', 'content-range': `bytes ${from}-${end}/${file.length}` }, 206);
+  };
+  const texts = [];
+  let offset = 0;
+  for (let i = 0; i < 6 && offset !== undefined; i++) {
+    const out = await tool.handler({ bucket: 'b1', object: 'notes.txt', alt: 'media', offset });
+    assert.equal(out.mime_type, 'text/plain; charset=utf-8');
+    assert.equal('data_base64' in out, false);
+    assert.equal(out.bytes_read, Buffer.byteLength(out.text, 'utf8'));
+    assert.ok(JSON.stringify(out).length <= 25000, `part ${i} fits the result limit, escapes counted`);
+    texts.push(out.text);
+    offset = out.next_offset;
+  }
+  assert.equal(texts.length, 3);
+  assert.ok(texts[0].length < 15000, 'the first part stopped where its escaped text filled the limit');
+  assert.equal(texts.join(''), text, 'the text parts join into the file, no character split');
+  // Metadata: read as bytes and parsed as JSON, the same value as before.
+  const meta = { kind: 'storage#object', name: 'notes.txt', size: '25001', contentType: 'text/plain' };
+  respond = () => http(JSON.stringify(meta), { 'content-type': 'application/json; charset=UTF-8' });
+  calls = [];
+  assert.deepEqual(await tool.handler({ bucket: 'b1', object: 'notes.txt' }), meta);
+  assert.equal(calls[0].responseType, 'arraybuffer');
+  assert.equal(calls[0].headers.Range, undefined, 'no range without alt=media');
+  // A method that answers no file reads its answer as before.
+  respond = () => ({ items: [] });
+  calls = [];
+  await (await byMethod('gcloud', 'storage.buckets.list')).handler({ project: 'p1' });
+  assert.equal(calls[0].responseType, undefined);
+});
+
+test('fromBytes reads an answer as the HTTP library would, and a file as a MediaBody; contentRange and isTextual', async () => {
+  const { fromBytes, MediaBody, contentRange, isTextual } = await import(DIST('core/media.js'));
+  const b = (s) => Buffer.from(s, 'utf8');
+  assert.deepEqual(fromBytes(b('{"a":1}'), 'application/json; charset=UTF-8'), { a: 1 });
+  assert.equal(fromBytes(b('{bad'), 'application/json'), '{bad');
+  assert.equal(fromBytes(b('plain'), 'text/plain'), 'plain');
+  assert.equal(fromBytes(b('no type'), null), 'no type');
+  assert.deepEqual(fromBytes({ already: 'parsed' }, 'image/png'), { already: 'parsed' }, 'a value that is not bytes is left as it is');
+  const png = fromBytes(new Uint8Array([137, 80, 78, 71]).buffer, 'image/png');
+  assert.ok(png instanceof MediaBody);
+  assert.deepEqual({ type: png.mimeType, start: png.start, total: png.total, n: png.bytes.length }, { type: 'image/png', start: 0, total: 4, n: 4 });
+  const asMedia = fromBytes(b('{"a":1}'), 'application/json', { media: true, range: { start: 10, total: 100 } });
+  assert.deepEqual({ media: asMedia instanceof MediaBody, start: asMedia.start, total: asMedia.total }, { media: true, start: 10, total: 100 });
+  assert.deepEqual(contentRange('bytes 100-199/1000'), { start: 100, total: 1000 });
+  assert.deepEqual(contentRange('bytes 0-9/*'), { start: 0 });
+  assert.equal(contentRange('nonsense'), undefined);
+  for (const t of ['text/csv', 'application/json', 'application/ld+json', 'application/xml', 'image/svg+xml', 'text/vtt; charset=utf-8']) assert.ok(isTextual(t), t);
+  for (const t of ['image/png', 'image/tiff', 'application/pdf', 'application/octet-stream']) assert.ok(!isTextual(t), t);
+});
+
+test('files over the API key: a GeoTIFF, a heatmap tile and a photo come back as base64 parts, never as text', async () => {
+  const tiff = bytesOf(30000, 11);
+  respond = () => http(tiff, { 'content-type': 'image/tiff' });
+  const geo = await (await byMethod('gmaps', 'solar.geoTiff.get')).handler({ id: 'abc' });
+  assert.deepEqual({ type: geo.mime_type, size: geo.size_bytes, read: geo.bytes_read, next: geo.next_offset }, { type: 'image/tiff', size: 30000, read: PART, next: PART });
+  assert.ok(Buffer.from(geo.data_base64, 'base64').equals(tiff.subarray(0, PART)));
+  const rest = await (await byMethod('gmaps', 'solar.geoTiff.get')).handler({ id: 'abc', offset: PART });
+  assert.ok(Buffer.from(rest.data_base64, 'base64').equals(tiff.subarray(PART)));
+  const png = bytesOf(900, 5);
+  respond = () => http(png, { 'content-type': 'image/png' });
+  const tile = await (await byMethod('gmaps', 'pollen.mapTypes.heatmapTiles.lookupHeatmapTile')).handler(requiredArgs(await byMethod('gmaps', 'pollen.mapTypes.heatmapTiles.lookupHeatmapTile')));
+  assert.deepEqual({ size: tile.size_bytes, next: tile.next_offset, note: tile.note }, { size: 900, next: undefined, note: undefined });
+  assert.ok(Buffer.from(tile.data_base64, 'base64').equals(png));
+  // A photo: Google redirects to the image; the tool has no offset, so a part that is not the whole photo says so.
+  const photo = bytesOf(25000, 13);
+  respond = () => http(photo, { 'content-type': 'image/jpeg' });
+  const media = await byMethod('gmaps', 'places.places.photos.getMedia');
+  assert.equal(media.inputSchema.offset, undefined);
+  const got = await media.handler({ name: 'places/p/photos/x/media', maxWidthPx: 400 });
+  assert.equal(got.mime_type, 'image/jpeg');
+  assert.equal(got.next_offset, PART);
+  assert.match(got.note, /this tool takes no offset/);
+  // JSON over the API key is parsed as before.
+  respond = () => ({ name: 'places/p/photos/x/media', photoUri: 'https://lh3.example/x' });
+  assert.deepEqual(await media.handler({ name: 'places/p/photos/x/media', skipHttpRedirect: true }), { name: 'places/p/photos/x/media', photoUri: 'https://lh3.example/x' });
 });

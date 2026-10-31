@@ -18,13 +18,24 @@ import { getAuthClient, type AuthKind } from '../auth.js';
 import { isIdempotentMethod, requestWithRetry } from '../http.js';
 import type { ToolContext, ToolDef, ToolKind } from '../tools.js';
 import { loadRegistry, serverByName, type ApiRef, type AuthGroup, type PageSizeDefault, type ServerSpec } from '../registry.js';
-import { assignToolNames, flattenMethods, MAX_TOOL_NAME, nameBudget, type DiscoveryDoc, type MethodRecord } from './methods.js';
+import {
+  assignToolNames,
+  flattenMethods,
+  MAX_TOOL_NAME,
+  nameBudget,
+  type DiscoveryDoc,
+  type DiscoveryMethod,
+  type DiscoveryResource,
+  type MethodRecord,
+} from './methods.js';
 import { clipText, paramToZod, schemaToZod } from './schema.js';
 import { ApiKeyClient } from './apikey-client.js';
 import { adsHeaders, isGoogleAdsUrl, redactedError } from '../ads.js';
 import { resolveDynamicKind } from '../dynamic.js';
 import { redactCredentials } from '../credential-fields.js';
 import { targetFieldsOf, targetGetFor } from '../target-preview.js';
+import { contentRange, fromBytes, MediaBody, mediaPart, rangeHeader } from '../media.js';
+import { base64PartBytes } from '../result-shape.js';
 
 /**
  * Name of the per-server list tool. It is unique within its server, and short,
@@ -116,6 +127,36 @@ function fieldsText(fallback: string | undefined): string {
   return fallback === undefined
     ? `${lead} Omit for the method's default fields.`
     : `${lead} This method returns no default fields, so "${fallback}" is sent when it is omitted.`;
+}
+
+/** The argument that asks for a media download (Google's alt system parameter), and the one that picks a part of a file. */
+const ALT_ARG = 'alt';
+const OFFSET_ARG = 'offset';
+
+/** The method as the snapshot holds it, for the flags MethodRecord leaves out (supportsMediaDownload). */
+function snapshotMethod(doc: DiscoveryDoc, m: Pick<MethodRecord, 'resource' | 'methodName'>): DiscoveryMethod | undefined {
+  let node: DiscoveryResource | undefined = { resources: doc.resources };
+  for (const name of m.resource) node = node?.resources?.[name];
+  return node?.methods?.[m.methodName];
+}
+
+/**
+ * How a method's answer may be a file: 'download' for a method Discovery marks supportsMediaDownload (its content comes
+ * with alt=media; some, such as Drive's export, answer with content anyway), 'file' for a GET whose answer is an HttpBody
+ * (an image tile, a GeoTIFF), undefined for every other method.
+ */
+function mediaKindOf(doc: DiscoveryDoc, m: MethodRecord): 'download' | 'file' | undefined {
+  if (snapshotMethod(doc, m)?.supportsMediaDownload) return 'download';
+  if (m.httpMethod === 'GET' && /HttpBody$/.test(m.responseRef ?? '')) return 'file';
+  return undefined;
+}
+
+function altText(partBytes: number): string {
+  return `media returns the content (the file) instead of its metadata, ${partBytes} bytes a part: text as text, anything else as base64 (data_base64), with offset and next_offset for the parts. Omit for the metadata.`;
+}
+
+function offsetText(partBytes: number): string {
+  return `When the answer is a file: the first byte of the part to return, 0 for the first, then next_offset of the previous answer (parts of up to ${partBytes} bytes; join them in order).`;
 }
 
 function fieldMaskText(fallback: string): string {
@@ -290,6 +331,21 @@ export interface AuthorizedRequest {
   data?: unknown;
   /** Extra request headers, such as a response field mask. Absent for most requests. */
   headers?: Record<string, string>;
+  /**
+   * How to read the answer (core/media.ts). 'bytes': as bytes, then JSON and text as the HTTP library parses them, and
+   * anything else (an image, a GeoTIFF) as a MediaBody. 'media': always a MediaBody (a media download, alt=media).
+   * Absent: as before (the API key client always reads bytes, and returns a MediaBody only for content that is not text).
+   */
+  read?: 'bytes' | 'media';
+}
+
+/** A response header from either shape the HTTP layer returns (a Headers object, or a plain object). */
+function headerOf(headers: unknown, name: string): string | undefined {
+  if (!headers || typeof headers !== 'object') return undefined;
+  const h = headers as { get?: (n: string) => string | null } & Record<string, unknown>;
+  if (typeof h.get === 'function') return h.get(name) ?? undefined;
+  const key = Object.keys(h).find((k) => k.toLowerCase() === name.toLowerCase());
+  return key && typeof h[key] === 'string' ? (h[key] as string) : undefined;
 }
 
 /**
@@ -325,7 +381,13 @@ export async function sendAuthorized(
       paramsSerializer: serializeQuery,
       data: req.data,
       ...(Object.keys(headers).length > 0 ? { headers } : {}),
+      ...(req.read ? { responseType: 'arraybuffer' as const } : {}),
     });
+    if (req.read) {
+      // Read as bytes: a file becomes a MediaBody; JSON and text are parsed as the library would (core/media.ts).
+      const range = res.status === 206 ? contentRange(headerOf(res.headers, 'content-range')) : undefined;
+      return { status: res.status, data: fromBytes(res.data, headerOf(res.headers, 'content-type'), { media: req.read === 'media', ...(range ? { range } : {}) }) };
+    }
     return { status: res.status, data: res.data };
   } catch (err) {
     if (ads) throw redactedError(err, ads['developer-token'] ?? '');
@@ -467,6 +529,16 @@ function buildMethodTool(
     shape[FIELDS_ARG] = z.string().min(1).optional().describe(fieldsText(defaults.fields));
     fields.push({ arg: FIELDS_ARG, api: 'fields', location: 'query' });
   }
+  // A method whose answer may be a file: alt (media downloads) and offset, the part of the file to return. The handler
+  // reads such an answer as bytes and returns one part (core/media.ts); offset is not sent to Google.
+  const media = mediaKindOf(doc, m);
+  const partBytes = base64PartBytes(cfg.maxResultChars);
+  if (media === 'download' && free(ALT_ARG)) {
+    shape[ALT_ARG] = z.enum(['json', 'media']).optional().describe(altText(partBytes));
+    fields.push({ arg: ALT_ARG, api: 'alt', location: 'query' });
+  }
+  const takesOffset = media !== undefined && free(OFFSET_ARG);
+  if (takesOffset) shape[OFFSET_ARG] = z.number().int().min(0).optional().describe(offsetText(partBytes));
 
   const tail = [...(note ? [`Note: ${note}`] : []), `Method ${m.fullId}: ${m.httpMethod} ${m.path}.`].join(' ');
   const lead = m.description || `Calls ${m.fullId}.`;
@@ -511,7 +583,15 @@ function buildMethodTool(
           await ctx.gate({ kind, target: name, methodId: m.fullId, args: req.data });
         }
       }
-      const res = await sendAuthorized(group, cfg, req);
+      // A media download (alt=media) asks for one part with a Range header; a method that may answer with a file reads the
+      // answer as bytes. Every other request is sent as before.
+      const a = args as Record<string, unknown>;
+      const offset = takesOffset && typeof a[OFFSET_ARG] === 'number' ? (a[OFFSET_ARG] as number) : 0;
+      const asMedia = media === 'download' && a[ALT_ARG] === 'media';
+      const sent: AuthorizedRequest = asMedia ? { ...req, headers: { ...(req.headers ?? {}), Range: rangeHeader(offset, cfg.maxResultChars) }, read: 'media' } : media ? { ...req, read: 'bytes' } : req;
+      const res = await sendAuthorized(group, cfg, sent);
+      // A file is returned as one part that fits the result limit, never as text.
+      if (res.data instanceof MediaBody) return mediaPart(res.data, { offset, maxResultChars: cfg.maxResultChars, canContinue: takesOffset });
       // A read never asks, so the credential fields it returns are replaced (core/credential-fields.ts). A write was approved.
       return callKind === 'read' ? redactCredentials(res.data, { api: doc.name, schema: m.responseRef, schemas: doc.schemas }) : res.data;
     },
