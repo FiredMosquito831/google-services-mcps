@@ -4,7 +4,7 @@ Google Analytics admin and data APIs for GA4 properties, configuration and repor
 
 - Plugin: `ganalytics`, MCP server: `ganalytics`, login: Desktop OAuth client, then `login business`
 - Install: `claude plugin install ganalytics@google-services-mcps`
-- Tools: 84 total. Curated 14, per-method 66, gateway 3. Read 44, write 29, destructive 10, dynamic 1.
+- Tools: 84 total. Curated 14, per-method 66, gateway 3. Read 43, write 30, destructive 10, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
@@ -68,7 +68,7 @@ The tools that match Google's official MCP server for this product (https://gith
 | `gaadmin_prop_data_measu_delet` | destructive | analyticsadmin.properties.dataStreams.measurementProtocolSecrets.delete | analytics.edit |
 | `gaadmin_prop_data_measu_patch` | write | analyticsadmin.properties.dataStreams.measurementProtocolSecrets.patch | analytics.edit |
 | `gaadmin_prope_data_measu_list` | read | analyticsadmin.properties.dataStreams.measurementProtocolSecrets.list | analytics.edit, analytics.readonly |
-| `gaadmin_prope_data_measur_get` | read | analyticsadmin.properties.dataStreams.measurementProtocolSecrets.get | analytics.edit, analytics.readonly |
+| `gaadmin_prope_data_measur_get` | write | analyticsadmin.properties.dataStreams.measurementProtocolSecrets.get | analytics.edit, analytics.readonly |
 | `gaadmin_proper_convers_create` | write | analyticsadmin.properties.conversionEvents.create | analytics.edit |
 | `gaadmin_proper_convers_delete` | destructive | analyticsadmin.properties.conversionEvents.delete | analytics.edit |
 | `gaadmin_proper_data_st_create` | write | analyticsadmin.properties.dataStreams.create | analytics.edit |

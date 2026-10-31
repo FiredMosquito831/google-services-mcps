@@ -51,6 +51,51 @@ The gate needs to know whether a call changes data. For generated and gateway to
 
 The read rule for `POST` is a name prefix. It is not a check of what the method does. See the first known limit below.
 
+### Credential reveals and credential fields in read results
+
+A read never asks. So a read must not hand the model a credential. Since 1.26.2 the suite closes this in two ways.
+
+**Methods that exist to return a credential are writes.** `config/tool-kinds.json` lists these `GET` (or read-named) methods as writes, so they ask first and are hidden while writes are off:
+
+| Method | What it returns (Google's words) |
+|---|---|
+| `secretmanager.projects.secrets.versions.access`, `secretmanager.projects.locations.secrets.versions.access` | "This call returns the secret data." |
+| `apigee.organizations.developers.apps.keys.get`, `apigee.organizations.appgroups.apps.keys.get` | the consumer key "and secret value" |
+| `integrations.projects.locations.authConfigs.get`, `integrations.projects.locations.products.authConfigs.get` | "the decrypted auth config" |
+| `analyticsadmin.properties.dataStreams.measurementProtocolSecrets.get` | the Measurement Protocol API secret (`secretValue`) |
+| `androidenterprise.enterprises.getServiceAccount` | a service account with private key data; each call makes new credentials |
+| `androidmanagement.enterprises.enrollmentTokens.get`, `androidmanagement.enterprises.migrationTokens.get` | the token value (and the enrollment QR code) |
+| `identitytoolkit.relyingparty.getOobConfirmationCode` | an out-of-band code for a password reset or email change |
+| `directory.verificationCodes.list` | a user's current 2-Step Verification backup codes |
+| `redis.projects.locations.instances.getAuthString` | the Redis AUTH string |
+| `compute.interconnects.getMacsecConfig` | the MACsec pre-shared keys (CAK and CKN) |
+| `aiplatform.vertexExpress.retrieveExpressProject` | the Vertex AI Express mode API key |
+| `parametermanager.projects.locations.parameters.versions.render`, `parametermanager.projects.locations.templates.versions.render` | the payload with Secret Manager references replaced by their values |
+
+**Reads that return a credential among other fields keep working, without it.** In the result of a read, each listed credential field is replaced by a short text, such as `[redacted: stream key]`. When a write returns the value, the text names it: `[redacted: Measurement Protocol secret; to see it, call analyticsadmin.properties.dataStreams.measurementProtocolSecrets.get, which asks first]`. The list is in `src/core/credential-fields.ts`, one entry per Discovery schema property. The result is walked along the method's response schema, so every method that returns that schema is covered, in a per-method tool and through `api_call` alike. A write or delete is not changed: you approved it, and its result is how you see the value.
+
+| API | Field (schema) | Seen in |
+|---|---|---|
+| YouTube | `streamName` (`IngestionInfo`), the stream key | `liveStreams.list` |
+| Identity Toolkit | `passwordHash`, `salt` (`UserInfo`, `GoogleCloudIdentitytoolkitV1UserInfo`); `secret` (`IdpConfig`); `signerKey` (`GoogleCloudIdentitytoolkitAdminV2HashConfig`) | account lookups, `batchGet`, `query`, `getAccountInfo`, `downloadAccount`; project config |
+| Google Analytics | `secretValue` (Measurement Protocol secret) | `measurementProtocolSecrets.list`, change history search |
+| Application Integration | `decryptedCredential` (auth config); `encryptedPrivateKey`, `passphrase` (client certificate) | `authConfigs.list`, `certificates.get` and `list` |
+| Android Management | `value`, `qrCode` (enrollment token); `value` (migration token); `signinEnrollmentToken`, `qrCode` (sign-in details) | token lists, `enterprises.get` |
+| Integration Connectors | `secretValue` (`EUASecret`) | end-user authentications |
+| Customer Engagement Suite | `pin` (WhatsApp two-step verification) | deployments |
+| Campaign Manager 360 | `value` (third-party authentication token) | Floodlight configurations |
+| Dialogflow | `callCompanionAuthCode` | `analyzeContent` replies |
+| Sensitive Data Protection | `key` (unwrapped crypto key) | de-identify templates, jobs |
+| Eventarc | `activationToken` | channels |
+| NetApp Volumes | `passphrase` (cluster peering) | volumes, replications |
+| Drive | `jwt` (client-side encryption key access) | files, changes |
+| Google Ads, Search Ads 360 | `googleSecret` (lead form webhook), `httpAuthorizationToken` (Business Profile location set) | GAQL search, `searchStream` |
+| Monitoring, Merchant API, Discovery Engine, Cloud Billing | stored passwords and push notification tokens: `password` (uptime check basic auth, fetch settings, AlloyDB connection), `token` and `credentials` (A2A push notifications) | their gets and lists |
+
+Not listed, after review: fields Google documents as input only or never returned (the Admin SDK user `password`, Gmail's SMTP password, App Check secrets), references to a secret (a Secret Manager version name), hashes and fingerprints, values encrypted with a key the suite cannot use, values that are public by design (Firebase web API keys, DNS verification tokens, the `gtm_auth` code in a container snippet, meeting PINs shown to every invitee), and one-time authorization codes already exchanged at setup. `api_call` also keeps its own name list, as before: any field named like `password`, `secret`, `clientSecret`, `token`, `apiKey`, `credentials` or `privateKey` comes back as `[redacted]`, in reads and writes alike. So an Apigee app's whole `credentials` array was already hidden there.
+
+`tests/credential-reveals.test.mjs` holds this as a contract. It walks every Discovery snapshot from each read method's response schema: a credential-like field that is neither listed, nor a write, nor reviewed as not a credential fails the test. It also scans the catalog for reads whose method id names a credential. A new one after a Discovery refresh fails until it has a decision.
+
 ### Annotation hints
 
 Since 1.24.3 every tool lists the four MCP annotation hints. They are hints for the client: the gate and the hook decide from the kind only.
@@ -69,9 +114,11 @@ Since 1.24.3 every tool lists the four MCP annotation hints. They are hints for 
 
 - **Testing apps lose refresh tokens after 7 days.** An app left in Testing in the OAuth consent screen expires its refresh tokens after 7 days. The error says so, and `gsm status --check` reports the login as expired. Publish the app, or log in again each week.
 - **Automation keys have no expiry.** A saved API key (`apikey.json`) keeps working until it is deleted or restricted in Google Cloud console. `gsm status` shows its age, and warns after 90 days. Restrict it to the APIs it needs, and to your servers or addresses. `gsm status --check` reads the restrictions with your cloud login and warns when the key is unrestricted.
-- **Read-named POST methods that may run work or return credentials.** A `POST` method is classed as a read by its name prefix (see Method classification). Some of these names may hide work or credentials. They are classed as reads, so they do not ask. Examples from the build's catalogue, found by a name scan. The scan does not prove what each method does:
-  - `gcloud`: `developerconnect.projects.locations.connections.gitRepositoryLinks.fetchReadWriteToken`. Its name suggests it returns a read-write credential. `apigee.organizations.getSyncAuthorization`. Its name suggests a credential. `gkehub.projects.locations.memberships.validateCreate`. Its name includes `Create`.
+- **Read-named POST methods that may run work.** A `POST` method is classed as a read by its name prefix (see Method classification). Some of these names may hide work. They are classed as reads, so they do not ask. Examples from the build's catalogue, found by a name scan. The scan does not prove what each method does (a credential word in the name makes a `POST` a write, so `fetchReadWriteToken` and `getSyncAuthorization` ask):
+  - `gcloud`: `gkehub.projects.locations.memberships.validateCreate`. Its name includes `Create`.
   - `gai`: `aiplatform.evaluateDataset` and `aiplatform.projects.locations.evaluateDataset`. The `evaluate` prefix is a read prefix, but the method may start an evaluation job.
+
+- **Credential reveals and settings.** The credential reveals ask because they are writes (see Credential reveals above). With `confirmation` set to `destructive-only` or `off`, or with a policy `allow` rule for them, a write runs without a question, and so does a reveal. Hand-written tools are not walked by the credential list: `androidmgmt_get_enterprise` (gplay) returns an enterprise's sign-in details as Google sends them, and `ads_search` (gads) returns the GAQL rows a query selects, including a lead form webhook secret if the query asks for it. Some listed fields may never be returned by Google; for those the redaction changes nothing.
 
   Until this is fixed in the code, you can close the gap yourself. Add an `ask` rule for these method ids in `policy.json`. The hook applies policy rules to reads too. See [USING.md](USING.md#5-the-policy-file).
 

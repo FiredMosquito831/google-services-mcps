@@ -4,7 +4,7 @@ Firebase management, App Check, App Distribution, Crashlytics, Hosting, Data Con
 
 - Plugin: `gfirebase`, MCP server: `gfirebase`, login: Desktop OAuth client, then `login developer`
 - Install: `claude plugin install gfirebase@google-services-mcps`
-- Tools: 316 total. Curated 14, per-method 298, gateway 3. Read 147, write 124, destructive 44, dynamic 1.
+- Tools: 316 total. Curated 14, per-method 298, gateway 3. Read 146, write 125, destructive 44, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
@@ -322,7 +322,7 @@ The tools that match Google's official MCP server for this product (https://gith
 | `identityto_relyingpa_download_a` | read | identitytoolkit.relyingparty.downloadAccount | cloud-platform, firebase |
 | `identityto_relyingpa_email_link` | write | identitytoolkit.relyingparty.emailLinkSignin | cloud-platform |
 | `identityto_relyingpa_get_accoun` | read | identitytoolkit.relyingparty.getAccountInfo | cloud-platform |
-| `identityto_relyingpa_get_oob_co` | read | identitytoolkit.relyingparty.getOobConfirmationCode | cloud-platform |
+| `identityto_relyingpa_get_oob_co` | write | identitytoolkit.relyingparty.getOobConfirmationCode | cloud-platform |
 | `identityto_relyingpa_get_projec` | read | identitytoolkit.relyingparty.getProjectConfig | cloud-platform |
 | `identityto_relyingpa_get_public` | read | identitytoolkit.relyingparty.getPublicKeys | cloud-platform |
 | `identityto_relyingpa_get_recapt` | read | identitytoolkit.relyingparty.getRecaptchaParam | cloud-platform |

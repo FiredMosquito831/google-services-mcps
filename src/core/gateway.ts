@@ -23,6 +23,8 @@
  *  - every write or destructive call calls ctx.gate first, and no request is sent
  *    when the gate throws. Without a gate, writes are refused;
  *  - secrets are redacted from the gate arguments, from errors and from results;
+ *  - the result of a read also has its listed credential fields replaced, by the method's response schema
+ *    (core/credential-fields.ts). The methods that exist to return a credential are writes, so they ask first;
  *  - the apikey group's client (discovery/apikey-client.ts) adds the API key as the key
  *    query parameter. The gateway never builds the key into a URL, and the key never
  *    appears in an error message.
@@ -44,6 +46,7 @@ import { classifyMethod } from './discovery/methods.js';
 import { buildUrl, loadToolKinds, sendAuthorized } from './discovery/tools.js';
 import type { GateFn } from './approval.js';
 import { resolveDynamicKind } from './dynamic.js';
+import { redactCredentials } from './credential-fields.js';
 import { describeError, scopeHint, type ActionKind, type ToolContext, type ToolDef, type ToolKind } from './tools.js';
 
 // ---------------------------------------------------------------------------
@@ -771,7 +774,13 @@ async function runCall(core: Core, args: CallArgs, ctx: ToolContext | undefined)
   } catch (err) {
     throw new Error(httpError(err, input.group, isApiKey ? input.cfg.apiKey : undefined));
   }
-  return { status: res.status, data: redactValue(res.data) };
+  // A read never asks, so the credential fields it returns are replaced first (core/credential-fields.ts), by the method's
+  // response schema. Then the name-based redaction below applies to every result, as before.
+  const result =
+    kind === 'read'
+      ? redactCredentials(res.data, { api: doc.name ?? api.name, schema: refOf(raw.response), schemas: doc.schemas })
+      : res.data;
+  return { status: res.status, data: redactValue(result) };
 }
 
 // ---------------------------------------------------------------------------

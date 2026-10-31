@@ -4,7 +4,7 @@ Google Play developer publishing and reporting, Play Games Services, Android Ent
 
 - Plugin: `gplay`, MCP server: `gplay`, login: Service account key, then `setup-service-account` (no login)
 - Install: `claude plugin install gplay@google-services-mcps`
-- Tools: 371 total. Curated 18, per-method 349, gateway 3. Read 162, write 166, destructive 42, dynamic 1.
+- Tools: 371 total. Curated 18, per-method 349, gateway 3. Read 161, write 167, destructive 42, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
@@ -102,7 +102,7 @@ The tools that match Google's official MCP server for this product (https://andr
 | `androident_enterprises_generate_enterpr` | write | androidenterprise.enterprises.generateEnterpriseUpgradeUrl | androidenterprise |
 | `androident_enterprises_generate_signup` | write | androidenterprise.enterprises.generateSignupUrl | androidenterprise |
 | `androident_enterprises_get` | read | androidenterprise.enterprises.get | androidenterprise |
-| `androident_enterprises_get_service_acco` | read | androidenterprise.enterprises.getServiceAccount | androidenterprise |
+| `androident_enterprises_get_service_acco` | write | androidenterprise.enterprises.getServiceAccount | androidenterprise |
 | `androident_enterprises_get_store_layout` | read | androidenterprise.enterprises.getStoreLayout | androidenterprise |
 | `androident_enterprises_list` | read | androidenterprise.enterprises.list | androidenterprise |
 | `androident_enterprises_pull_notificatio` | write | androidenterprise.enterprises.pullNotificationSet | androidenterprise |

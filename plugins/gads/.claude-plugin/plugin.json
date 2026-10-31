@@ -1,7 +1,7 @@
 {
   "name": "gads",
   "displayName": "Ads and Publisher",
-  "version": "1.26.1",
+  "version": "1.26.2",
   "description": "Google Ads API (accounts, campaigns, ad groups, ads, keywords, budgets, conversions, assets and GAQL reporting, with every other method through the gateway), plus advertising and publisher APIs: Search Ads 360, Display & Video 360, Campaign Manager, Ad Exchange, AdSense, AdMob, Real-time Bidding and more.",
   "author": {
     "name": "FiredMosquito831"

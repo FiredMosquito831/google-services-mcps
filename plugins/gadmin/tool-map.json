@@ -1497,7 +1497,7 @@
   },
   {
     "name": "mcp__plugin_gadmin_gadmin__admin_verification_codes_list",
-    "kind": "read",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/admin.directory.user.security"
     ],
