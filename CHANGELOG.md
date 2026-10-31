@@ -2,6 +2,21 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.29.1 - 2026-10-31
+
+### Fixed: the per-method tools keep Google's whole descriptions
+- The Discovery snapshots cut each method's description at 300 characters and each parameter's at 200, so a tool lost what it needed: a filter's syntax, the fields an `updateMask` takes (`merchantapi.accounts.omnichannelSettings.patch` lost `inventory_verification` and that a full replacement with the wildcard `*` is supported), a parameter's value format (`youtubeAnalytics.reports.query` `ids` lost `channel==CHANNEL_ID`), the `accounts/-` wildcard of a Business Profile location list. They now keep 1,500 and 1,000 characters: 99.4 % of the 3,458 methods and 99.0 % of the 7,891 parameters of the generated APIs fit whole.
+- Every tool description stays within 2,048 characters (Claude Code cut longer ones before 2.1.296): a generated tool's method text is cut to fit, and its note and method line are kept whole. The longest now is 1,888 (`googleads_customers_google_ads_mutate`). A test checks every tool of every bundled server.
+- Size of tools/list, every server with writes on: 10,469,270 to 10,970,986 characters (+4.8 %); with writes off (the default): 2,939,815 to 3,210,407 (+9.2 %). The largest growth is gchat with writes off (+51 %: Chat's filter and update-mask texts are long). 1,371 tools changed, in their description or their parameter descriptions only.
+- `api_methods` rows keep a 200-character description, as before. Body field descriptions (160) are unchanged.
+
+### Changed: scripts
+- `node scripts/snapshot-discovery.mjs --offline` rebuilds the snapshots from the raw documents `scripts/build-catalog.mjs` keeps in `data/cache-discovery` (or `--cache <dir>`), with no request. A cached document with the recorded revision keeps its record; another takes the cache's revision and file time.
+- A refresh keeps the key order of the snapshot it replaces, so its diff shows only what changed. With the old limits, an offline refresh rewrote no snapshot except `analyticsadmin.v1beta`, whose cached revision (20261028) is a day newer than the one recorded and has one shorter schema description (`ProvisionAccountTicketRequest.redirectUri`); that is the one change in a body schema in this release. The records of `cloudidentity.v1`, `drivelabels.v2` and `speech.v1` now name the revision of the cached document they were rebuilt from; their trimmed content was the same.
+
+### Not changed
+- No tool's kind, scopes, name or arguments: the tool maps and gateway kinds of all 23 plugins (3,622 tools, 14,156 gateway methods) and `gsm scopes` for every plugin, profile and toolset (207 cases) are the same as in 1.29.0.
+
 ## 1.29.0 - 2026-10-31
 
 ### Changed: hand-written tools page properly and ask for pages that fit

@@ -19,7 +19,7 @@ import { isIdempotentMethod, requestWithRetry } from '../http.js';
 import type { ToolContext, ToolDef, ToolKind } from '../tools.js';
 import { loadRegistry, serverByName, type ApiRef, type AuthGroup, type ServerSpec } from '../registry.js';
 import { assignToolNames, flattenMethods, MAX_TOOL_NAME, nameBudget, type DiscoveryDoc, type MethodRecord } from './methods.js';
-import { clipText, paramToZod, schemaToZod, PARAM_DESC_MAX } from './schema.js';
+import { clipText, paramToZod, schemaToZod } from './schema.js';
 import { ApiKeyClient } from './apikey-client.js';
 import { adsHeaders, isGoogleAdsUrl, redactedError } from '../ads.js';
 import { resolveDynamicKind } from '../dynamic.js';
@@ -37,6 +37,17 @@ export const LIST_METHODS_SUFFIX = 'api_methods';
  * (confirm becomes confirmParam), so it cannot be mistaken for a tool's own argument.
  */
 const RESERVED_ARGS = ['confirm'];
+
+/**
+ * The longest tool description the suite sends. Claude Code cut longer descriptions before version 2.1.296 (since then
+ * 4,096 for tools loaded at start; the 2026-10-30 review's reading of code.claude.com/docs/en/mcp), and other clients may
+ * still. A generated tool's description is its method's description, the API's note and the method line; when the three
+ * pass this, the method's description is cut to fit, so the note and the method line are never lost.
+ */
+export const TOOL_DESCRIPTION_MAX = 2048;
+
+/** A method's description in the rows api_methods returns: a short line per method, as before 1.29.1. */
+const METHOD_ROW_DESC_MAX = 200;
 
 /**
  * HTTP verbs whose repeat has no further effect (RFC 9110 section 9.2.2), for the idempotentHint of a generated tool.
@@ -331,9 +342,9 @@ function buildMethodTool(
     fields.push({ arg: bodyArg, api: 'body', location: 'body' });
   }
 
-  const parts = [m.description || `Calls ${m.fullId}.`];
-  if (note) parts.push(`Note: ${note}`);
-  parts.push(`Method ${m.fullId}: ${m.httpMethod} ${m.path}.`);
+  const tail = [...(note ? [`Note: ${note}`] : []), `Method ${m.fullId}: ${m.httpMethod} ${m.path}.`].join(' ');
+  const lead = m.description || `Calls ${m.fullId}.`;
+  const parts = [clipText(lead, TOOL_DESCRIPTION_MAX - tail.length - 1) ?? lead, tail];
 
   const plan: RequestPlan = {
     fullId: m.fullId,
@@ -492,7 +503,7 @@ export function generateDiscoveryTools(
       tool: name,
       httpMethod: m.httpMethod,
       kind: m.kind,
-      description: clipText(m.description, PARAM_DESC_MAX) ?? '',
+      description: clipText(m.description, METHOD_ROW_DESC_MAX) ?? '',
     });
   });
   tools.push(buildListTool(listName, serverName, rows));

@@ -1,7 +1,7 @@
 // Tests for the Discovery tool engine. Run after compiling: npx tsc -p tsconfig.json && node --test tests/
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, mkdtempSync, readFileSync } from 'node:fs';
+import { existsSync, mkdtempSync, readdirSync, readFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -355,6 +355,70 @@ test('generate: a generated tool never takes a reserved (curated) name, and gets
   assert.equal(new Set(tools.map((t) => t.name)).size, tools.length, 'names stay unique');
   // The delete method does not clash, so it keeps its plain name.
   assert.equal(tools.find((t) => t.title === 'demo.things.delete').name, 'demo_things_delete');
+});
+
+test('generate: a long description is kept up to 2,048 characters with its note and method line; api_methods rows stay short', async () => {
+  const { TOOL_DESCRIPTION_MAX } = await import(dist('core/discovery/tools.js'));
+  const doc = demoDoc();
+  doc.resources.things.methods.list.description = `Lists things. ${'x'.repeat(2500)}`;
+  doc.resources.things.methods.list.parameters = [{ name: 'filter', location: 'query', type: 'string', description: `Filter syntax: ${'f'.repeat(985)}` }];
+  doc.resources.things.methods.delete.description = 'Deletes a thing.';
+  const note = 'A note for every demo tool.';
+  const { tools } = generateDiscoveryTools('demo-server', 'cloud', [{ apiName: 'demo', apiVersion: 'v1', doc }], { overrides: {}, notes: { demo: note } }, testConfig());
+  const list = tools.find((t) => t.title === 'demo.things.list');
+  assert.equal(list.description.length, TOOL_DESCRIPTION_MAX);
+  assert.ok(list.description.startsWith('Lists things. xxx'));
+  assert.ok(list.description.endsWith(`... Note: ${note} Method demo.things.list: GET v1/things.`), 'the note and the method line are kept whole');
+  assert.equal(list.inputSchema.filter.description.length, 1000, 'a 1,000-character parameter description is kept whole');
+  const del = tools.find((t) => t.title === 'demo.things.delete');
+  assert.equal(del.description, `Deletes a thing. Note: ${note} Method demo.things.delete: DELETE v1/things/{thingId}.`, 'a short description is as before');
+  const rows = await tools.find((t) => t.name === 'api_methods').handler({});
+  assert.equal(rows.find((r) => r.method === 'demo.things.list').description.length, 200, 'api_methods rows keep 200 characters');
+});
+
+test('schema: a parameter description over 1,000 characters is cut at 1,000', () => {
+  const p = paramToZod({ name: 'q', location: 'query', type: 'string', description: 'q'.repeat(1001), default: 'x' });
+  assert.equal(p.description, `${'q'.repeat(997)}... Default: x.`);
+});
+
+test('real snapshots keep the texts the 300 and 200 character limits cut (1.29.1)', (t) => {
+  const dir = join(ROOT, 'data', 'discovery');
+  if (!existsSync(join(dir, 'chat.v1.json'))) {
+    t.skip('data/discovery is missing');
+    return;
+  }
+  const methodOf = (file, id) => {
+    let found;
+    const walk = (resources) => {
+      for (const r of Object.values(resources ?? {})) {
+        for (const m of Object.values(r.methods ?? {})) if (m.id === id) found = m;
+        walk(r.resources);
+      }
+    };
+    walk(JSON.parse(readFileSync(join(dir, file), 'utf8')).resources);
+    return found;
+  };
+  const param = (file, id, name) => methodOf(file, id).parameters.find((p) => p.name === name).description;
+  // An updateMask's field list, a filter's fields, a parameter's value syntax, the wildcard parent of a list.
+  assert.match(param('merchantapi.accounts_v1.json', 'merchantapi.accounts.omnichannelSettings.patch', 'updateMask'), /inventory_verification` Full replacement with wildcard/);
+  assert.match(param('chat.v1.json', 'chat.spaces.search', 'query'), /space_history_state/);
+  assert.match(param('youtubeAnalytics.v2.json', 'youtubeAnalytics.reports.query', 'ids'), /channel==CHANNEL_ID/);
+  assert.match(param('mybusinessbusinessinformation.v1.json', 'mybusinessbusinessinformation.accounts.locations.list', 'parent'), /accounts\/-/);
+  let longest = 0;
+  for (const file of readdirSync(dir).filter((f) => f.endsWith('.json') && !f.startsWith('_'))) {
+    const walk = (resources) => {
+      for (const r of Object.values(resources ?? {})) {
+        for (const m of Object.values(r.methods ?? {})) {
+          assert.ok((m.description ?? '').length <= 1500, m.id);
+          longest = Math.max(longest, (m.description ?? '').length);
+          for (const p of m.parameters ?? []) assert.ok((p.description ?? '').length <= 1000, `${m.id} ${p.name}`);
+        }
+        walk(r.resources);
+      }
+    };
+    walk(JSON.parse(readFileSync(join(dir, file), 'utf8')).resources);
+  }
+  assert.ok(longest > 300, `method descriptions are longer than the old 300-character limit (${longest})`);
 });
 
 test('real snapshot: gcloud tools are unique, short and carry a working preview', async (t) => {

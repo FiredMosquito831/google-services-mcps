@@ -197,14 +197,27 @@ async function listedTools(plugin, env) {
   }
 }
 
+let everyServer;
+/** Every bundled server's tools/list (writes on, a fake sign-in), listed once for the tests below. */
+function everyServerTools() {
+  everyServer ??= (async () => {
+    const plugins = readdirSync(join(ROOT, 'plugins')).sort();
+    const out = [];
+    for (const plugin of plugins) {
+      const map = readJson('plugins', plugin, 'tool-map.json');
+      out.push({ plugin, map, tools: await listedTools(plugin, fakeSignIn(plugin, map)) });
+    }
+    return out;
+  })();
+  return everyServer;
+}
+
 test('every tool of every bundled server lists all four hints as booleans, and they agree with the kind in its tool map', { timeout: 600_000 }, async () => {
-  const plugins = readdirSync(join(ROOT, 'plugins')).sort();
-  assert.equal(plugins.length, 23);
+  const servers = await everyServerTools();
+  assert.equal(servers.length, 23);
   let checked = 0;
-  for (const plugin of plugins) {
-    const map = readJson('plugins', plugin, 'tool-map.json');
+  for (const { plugin, map, tools } of servers) {
     const kindOf = new Map(map.map((t) => [t.name.slice(t.name.lastIndexOf('__') + 2), t.kind]));
-    const tools = await listedTools(plugin, fakeSignIn(plugin, map));
     assert.ok(tools.length > 5, `${plugin} lists its tools`);
     for (const tool of tools) {
       const at = `${plugin}/${tool.name}`;
@@ -225,4 +238,25 @@ test('every tool of every bundled server lists all four hints as booleans, and t
     }
   }
   assert.ok(checked > 3000, `${checked} tools checked`);
+});
+
+// 1.29.1: the snapshots keep longer method descriptions, and a generated tool's description is cut to TOOL_DESCRIPTION_MAX
+// with its note and method line kept. Claude Code cut longer descriptions before 2.1.296; other clients may still.
+test('every tool description of every bundled server is at most 2,048 characters', { timeout: 600_000 }, async () => {
+  const { TOOL_DESCRIPTION_MAX } = await import(dist('core/discovery/tools.js'));
+  assert.equal(TOOL_DESCRIPTION_MAX, 2048);
+  const servers = await everyServerTools();
+  let checked = 0;
+  let longest = 0;
+  for (const { plugin, tools } of servers) {
+    for (const tool of tools) {
+      const length = (tool.description ?? '').length;
+      assert.ok(length > 0, `${plugin}/${tool.name} has a description`);
+      assert.ok(length <= TOOL_DESCRIPTION_MAX, `${plugin}/${tool.name}: ${length} characters`);
+      longest = Math.max(longest, length);
+      checked += 1;
+    }
+  }
+  assert.ok(checked > 3000, `${checked} tools checked`);
+  assert.ok(longest > 1000, `the longest description (${longest}) shows the longer snapshot texts`);
 });

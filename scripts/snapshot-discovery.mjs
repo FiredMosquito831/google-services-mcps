@@ -10,9 +10,13 @@
  * fetched (ISO, UTC). The snapshot files themselves keep their trimmed shape. A failed API keeps its recorded revision.
  * scripts/check-discovery-freshness.mjs compares these records with Google's current documents.
  *
- * Usage: node scripts/snapshot-discovery.mjs
+ * Usage: node scripts/snapshot-discovery.mjs [--offline [--cache <dir>]]
  * Exit code is 1 only when every fetch failed. Failures are listed in
  * data/discovery/_errors.json. A failed API keeps its previous snapshot, if any.
+ * --offline reads each document from the raw cache that scripts/build-catalog.mjs keeps (data/cache-discovery, or
+ * --cache <dir>) and sends no request; a document the cache lacks fails as a fetch does. A cached document whose
+ * revision is the one recorded keeps its record; another gets the cache's revision and the cache file's time.
+ * Each snapshot keeps the key order of the snapshot it replaces (new keys after), so a refresh rewrites only what changed.
  * For tests: --root <dir> reads config/ and writes data/ under <dir>; --origin <loopback URL> sends every request to a
  * local server (scripts/discovery-urls.mjs).
  */
@@ -23,10 +27,15 @@ import { candidateUrls, flagValue, parseTestOrigin, routeUrl } from './discovery
 
 let ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 let ORIGIN;
+let CACHE_DIR;
+const OFFLINE = process.argv.includes('--offline');
 try {
   const rootArg = flagValue(process.argv, '--root');
   if (rootArg) ROOT = resolve(rootArg);
   ORIGIN = parseTestOrigin(flagValue(process.argv, '--origin'));
+  const cacheArg = flagValue(process.argv, '--cache');
+  if (cacheArg && !OFFLINE) throw new Error('--cache is for --offline');
+  CACHE_DIR = cacheArg ? resolve(cacheArg) : join(ROOT, 'data', 'cache-discovery');
 } catch (err) {
   console.error(err.message);
   process.exit(2);
@@ -39,8 +48,16 @@ const REVISIONS_FILE = join(OUT_DIR, '_revisions.json');
 const REVISIONS_COMMENT =
   'Written by scripts/snapshot-discovery.mjs. For each snapshot in this folder: the revision field of the Discovery document Google served and the time it was fetched (ISO, UTC). "unknown (snapshot 2026-10-15)" marks a snapshot written before revisions were recorded; the date is that of the commit that last changed the file. scripts/check-discovery-freshness.mjs compares these records with Google\'s current documents.';
 
-const METHOD_DESC_MAX = 300;
-const PARAM_DESC_MAX = 200;
+/**
+ * Description limits, in characters. A method's description becomes its tool's description, and a parameter's becomes
+ * the description of the tool argument, so a clipped text loses what the tool needs: a filter's syntax, the fields an
+ * updateMask takes, the values of a parameter, a warning such as "clears all files". About 99 % of the methods and
+ * parameters of the generated APIs fit whole (2026-10-31: 99.4 % of 3,458 methods within 1,500, 99.0 % of 7,891
+ * parameters within 1,000). The tool description, with its note and method line, stays within 2,048 characters
+ * (TOOL_DESCRIPTION_MAX in src/core/discovery/tools.ts). Until 1.29.0 the limits were 300 and 200.
+ */
+const METHOD_DESC_MAX = 1500;
+const PARAM_DESC_MAX = 1000;
 const SIZE_LIMIT_BYTES = 15 * 1024 * 1024;
 const FETCH_ATTEMPTS = 3;
 const FETCH_TIMEOUT_MS = 60_000;
@@ -130,6 +147,53 @@ function collectScopes(resources, into) {
   }
 }
 
+const isPlainObject = (v) => typeof v === 'object' && v !== null && !Array.isArray(v);
+const isNamedList = (v) => Array.isArray(v) && v.every((x) => isPlainObject(x) && typeof x.name === 'string');
+
+/**
+ * `fresh` with the key order of `previous`: an object's keys that both have come in previous's order, then fresh's new
+ * keys in fresh's order; a list of named entries (a method's parameters) in previous's name order, new names after.
+ * Every value is fresh's. A refresh then rewrites only what changed, not the order Google happened to serve.
+ */
+function alignTo(fresh, previous) {
+  if (Array.isArray(fresh)) {
+    if (!Array.isArray(previous)) return fresh;
+    if (isNamedList(fresh) && isNamedList(previous)) {
+      const rank = new Map(previous.map((p, i) => [p.name, i]));
+      const before = new Map(previous.map((p) => [p.name, p]));
+      const pos = (x, i) => rank.get(x.name) ?? previous.length + i;
+      return fresh
+        .map((x, i) => [x, pos(x, i)])
+        .sort((a, b) => a[1] - b[1])
+        .map(([x]) => alignTo(x, before.get(x.name)));
+    }
+    return fresh.map((x, i) => alignTo(x, previous[i]));
+  }
+  if (!isPlainObject(fresh) || !isPlainObject(previous)) return fresh;
+  const out = {};
+  for (const key of Object.keys(previous)) if (key in fresh) out[key] = alignTo(fresh[key], previous[key]);
+  for (const key of Object.keys(fresh)) if (!(key in out)) out[key] = fresh[key];
+  return out;
+}
+
+/**
+ * --offline: the document from the raw cache, with its revision record: the recorded one when the revision is the same
+ * (Google served this document then), else the cache's revision and the time the cache file was written.
+ */
+async function readCached(key, recorded) {
+  const file = join(CACHE_DIR, `${key}.json`);
+  let text;
+  try {
+    text = await readFile(file, 'utf8');
+  } catch {
+    throw new Error(`not in the cache (${file}); run without --offline, or node scripts/build-catalog.mjs, to fetch it`);
+  }
+  const raw = JSON.parse(text);
+  const revision = typeof raw.revision === 'string' && raw.revision ? raw.revision : 'none in the document';
+  if (recorded?.revision === revision) return { raw, record: recorded };
+  return { raw, record: { revision, fetchedAt: (await stat(file)).mtime.toISOString() } };
+}
+
 /** Returns the parsed document, or throws. A 404 moves on to the next candidate. */
 async function fetchDiscovery(key, api, version) {
   const errors = [];
@@ -203,20 +267,36 @@ async function main() {
 
   await mkdir(OUT_DIR, { recursive: true });
 
+  let recordedRevisions = {};
+  if (OFFLINE) {
+    try {
+      recordedRevisions = JSON.parse(await readFile(REVISIONS_FILE, 'utf8')).snapshots ?? {};
+    } catch {
+      recordedRevisions = {};
+    }
+  }
+
   const compacted = new Map();
   const fetchedRevisions = new Map();
   const failures = [];
   for (const [key, { api, version }] of wanted) {
     try {
-      const raw = await fetchDiscovery(key, api, version);
-      const fetchedAt = new Date().toISOString();
-      const doc = compactDoc(raw);
+      let raw;
+      let record;
+      if (OFFLINE) {
+        ({ raw, record } = await readCached(key, recordedRevisions[key]));
+      } else {
+        raw = await fetchDiscovery(key, api, version);
+        record = {
+          revision: typeof raw.revision === 'string' && raw.revision ? raw.revision : 'none in the document',
+          fetchedAt: new Date().toISOString(),
+        };
+      }
+      const previous = await readExistingDoc(key);
+      const doc = previous ? alignTo(compactDoc(raw), previous) : compactDoc(raw);
       await writeFile(join(OUT_DIR, `${key}.json`), JSON.stringify(doc), 'utf8');
       compacted.set(key, doc);
-      fetchedRevisions.set(key, {
-        revision: typeof raw.revision === 'string' && raw.revision ? raw.revision : 'none in the document',
-        fetchedAt,
-      });
+      fetchedRevisions.set(key, record);
       console.log(`ok      ${key} (${countMethods(doc.resources).total} methods)`);
     } catch (err) {
       failures.push({ api, version, error: err.message ?? String(err) });
