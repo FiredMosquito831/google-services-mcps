@@ -2,6 +2,17 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.36.0 - 2026-10-31
+
+### Changed: a full gapps login no longer asks for the whole mailbox; `--with mail` asks for it
+- `scripts.run` (Apps Script) lists twelve scopes Google accepts for it, `https://mail.google.com/` among them (the whole mailbox, permanent deletes included). The `full` profile takes the broadest, shortest scope, so every `--profile full` gapps login asked for the full Gmail scope only to run scripts; `readwrite` took `userinfo.email` for the same tool.
+- gapps gets a scope policy in `config/products.json`: the optional part `mail` (the full Gmail scope; as gyoutube's `monetary`, 1.35.0) and the preference `full: userinfo.email` (as gmeet's, 1.33.0). Without the preference, `full` would have taken the next-shortest scope of `scripts.run`, the legacy Contacts scope `https://www.google.com/m8/feeds`. Now `full` asks for what `readwrite` asks for; `--with mail` (in the chat: `auth_login` with `"with": ["mail"]`) adds the full Gmail scope, for a script that uses Gmail.
+- `readonly` and `readwrite` ask for the same scopes as before, with every toolset (tests compare them with the requirements without the policy). `readwrite` and `full` gain a `Held back:` line that names the part and how to add it.
+- An account that already holds `https://mail.google.com/` keeps it: the scope stays in the group's scopes (Gmail's tools use it too), so a login that names the account merges it, and one that does not name it and would drop it saves nothing (the rule of 1.1.2; tested).
+
+### Not changed
+- Tool maps and tool kinds. tools/list changes only for `auth_login` on gapps, which takes `with` (`mail`). `gsm scopes` over all 207 cases against 1.35.5: 201 identical; the 3 gapps `full` cases ask for `userinfo.email` instead of `https://mail.google.com/` with the same tools covered, and the 3 gapps `readwrite` cases only gain the `Held back:` line. Not checked against live Google.
+
 ## 1.35.5 - 2026-10-31
 
 ### Fixed: gsearch says which tools an API key cannot run

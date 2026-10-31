@@ -1968,6 +1968,18 @@
           "version": "v2"
         }
       ],
+      "scopePolicy": {
+        "optional": {
+          "mail": [
+            "https://mail.google.com/"
+          ]
+        },
+        "prefer": {
+          "full": [
+            "https://www.googleapis.com/auth/userinfo.email"
+          ]
+        }
+      },
       "toolsets": {
         "google": [
           "appsscript_projects_get",

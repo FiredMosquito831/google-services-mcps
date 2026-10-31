@@ -93,6 +93,7 @@ test('no other product has a preference, so every other server resolves exactly 
       assert.equal(reqs.some((r) => r.policyPrefer !== undefined), false, `${spec.name} ${toolset}`);
     }
   }
-  // gcontacts since 1.35.1 (userinfo.profile for readwrite and full; tests/profile-name.test.mjs).
-  assert.deepEqual(withPrefer.sort(), ['gclassroom', 'gcontacts', 'gmeet']);
+  // gcontacts since 1.35.1 (userinfo.profile for readwrite and full; tests/profile-name.test.mjs). gapps since 1.36.0
+  // (userinfo.email for full, so full no longer takes the full Gmail scope for scripts.run; tests/gapps-mail.test.mjs).
+  assert.deepEqual(withPrefer.sort(), ['gapps', 'gclassroom', 'gcontacts', 'gmeet']);
 });
