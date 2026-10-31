@@ -12,6 +12,8 @@ import {
   PROFILE_TEXT,
   coveredTools,
   heldBackBy,
+  notCoveredBy,
+  notCoveredLine,
   optionalPartsOf,
   requirementsForSpecs,
   resolveScopes,
@@ -129,6 +131,29 @@ export function heldBackLines(requirements: readonly Requirement[], profile: Pro
     lines.push(
       `Held back: the optional part "${name}" (${countText(list.tools, requirements)}). Add it with --with ${name} (in the chat: auth_login with "with": ["${name}"]).`,
     );
+  }
+  return lines;
+}
+
+/**
+ * The "Not covered:" lines for the products of these servers that the scopes leave with no tool that calls Google
+ * (notCoveredBy in core/scopes.ts), in server-map order. Empty when every product has a covered tool, so the output of
+ * every other login is unchanged.
+ */
+export function notCoveredLines(
+  reg: Registry,
+  servers: readonly string[],
+  requirements: readonly Requirement[],
+  profile: Profile,
+  include: readonly string[],
+  scopes: readonly string[],
+): string[] {
+  const lines: string[] = [];
+  for (const p of productsOf(reg, servers)) {
+    // Requirements are keyed "<server>/<tool>", so a product's tools are the ones whose server is one of its servers.
+    const subset = requirements.filter((r) => p.servers.some((name) => r.tool.startsWith(`${name}/`)));
+    const n = notCoveredBy(subset, profile, include, scopes);
+    if (n) lines.push(notCoveredLine(p.id, profile, n));
   }
   return lines;
 }
@@ -260,6 +285,9 @@ export async function runScopes(req: ScopesRequest, reg: Registry, out: Output):
     const resolution: ScopeResolution = resolveScopes(requirements, profile, include);
     // What the product's scope policy left out. Empty, and not shown, for products without a policy.
     const heldBack = heldBackLines(requirements, profile, include, resolution.scopes);
+    // The products this profile leaves with no tool that calls Google. Empty, and not shown, when each has one. The
+    // service-account group signs in with a key whose scopes are fixed, not with a profile, so it names none.
+    const notCovered = group === 'service-account' ? [] : notCoveredLines(reg, servers, requirements, profile, include, resolution.scopes);
     const byProduct = products.map((p) => {
       // Requirements are keyed "<server>/<tool>", so a product's tools are the ones whose server is one of its servers.
       const subset = requirements.filter((r) => p.servers.some((name) => r.tool.startsWith(`${name}/`)));
@@ -276,6 +304,7 @@ export async function runScopes(req: ScopesRequest, reg: Registry, out: Output):
       gateway: gatewayCoverageOf(requirements, resolution.scopes),
       byProduct,
       heldBack,
+      notCovered,
     };
   });
 
@@ -306,6 +335,7 @@ export async function runScopes(req: ScopesRequest, reg: Registry, out: Output):
             ]),
           ),
           ...(r.heldBack.length > 0 ? { heldBack: r.heldBack } : {}),
+          ...(r.notCovered.length > 0 ? { notCovered: r.notCovered } : {}),
         },
       ]),
     );
@@ -352,6 +382,7 @@ export async function runScopes(req: ScopesRequest, reg: Registry, out: Output):
     out.log(`  scopes (${r.scopes.length}):`);
     for (const scope of r.scopes) out.log(`    ${scope}`);
     for (const line of r.heldBack) out.log(`  ${line}`);
+    for (const line of r.notCovered) out.log(`  ${line}`);
   }
   out.log('');
   if (optionalParts.length > 0) {

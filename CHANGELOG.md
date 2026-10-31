@@ -2,6 +2,21 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.32.0 - 2026-10-31
+
+### Added: a login that covers no tool of a product says so
+- Business Profile's only scope, `business.manage`, has no read-only form, and neither has Google Ads' `adwords`. A `readonly` login, the default, then loaded none of their tools, and nothing said why. Now `gsm login`, `gsm scopes` and the chat sign-in (`auth_login`, oauth and adc) print a `Not covered:` line for each product the scopes leave with no tool that needs a Google scope: how many tools, whether none of them offers a read-only scope, how many gateway methods `api_call` still reaches, and the first broader profile that covers them, with the flag and the chat argument. The terminal login prints it before the browser opens; the chat sign-in returns it with the sign-in address. The login goes on as asked: nothing is blocked and no scope changes.
+- The rule is one check on the requirements the login already counts (`notCoveredBy` in `src/core/scopes.ts`), never a product name. Counted against the scopes the login asks for, merged ones included, so an account that already holds the scope gets no line. A tool that needs no scope (`api_methods`) does not count as covered. The service-account group signs in with a key, not a profile, so `gsm scopes service-account` names none.
+- Where it appears (every plugin, profile and toolset of the login groups): gbusiness `readonly` with every toolset, gads `readonly` with `google` and `curated`, gfirebase `readonly` with `curated` (`api_call` still reaches 33 gateway methods). gads with `all` is not named: a `readonly` login covers 6 AdSense and AdMob reads there, and none of the Google Ads tools.
+- `gsm scopes --json` adds a `notCovered` list to a profile only when it has a line, so every other answer is unchanged.
+
+### Fixed: sign-in text that sent people to a login with no tools
+- The gbusiness skill now says `login business --profile readwrite`, and the gads and gfirebase skills say which toolsets need it. Derived at build time from the same check, so only these three skills changed.
+- `docs/products/gads.md` and `docs/products/gai.md` said to start with `--profile readonly`; they say `readwrite` now, with the reason (gai: a `readonly` login covers two of its tools that call Google). `docs/products/gbusiness.md` no longer says the `google` toolset's tools declare no scope (they declare `business.manage` since 1.24.1). `docs/TUTORIAL.md` section 8 listed gmerchant under `business`, gplay and gmaps under `developer`; they use a service account key and the API key.
+
+### Not changed
+- Tool maps, tool kinds, tools/list of every server and `gsm scopes` scopes for all 207 cases are the same as in 1.31.1. Not checked against live Google.
+
 ## 1.31.1 - 2026-10-31
 
 ### Fixed: regional resources go to their region's host

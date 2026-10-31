@@ -296,6 +296,79 @@ export function nothingHeldBack(h: HeldBack): boolean {
 }
 
 /**
+ * A scope list that covers none of a product's tools that need a Google scope, so the product loads nothing that calls
+ * Google (tools without a scope, such as api_methods, load anyway). Business Profile under readonly is one: its only scope,
+ * business.manage, has no read-only form.
+ */
+export interface NotCovered {
+  /** The product's per-method and hand-written tools that need a Google scope. Gateway methods are not counted here. */
+  tools: number;
+  /** The product's gateway methods, and how many of them the scopes reach through api_call. */
+  gateway: { reached: number; total: number };
+  /** readonly only: none of the product's read tools lists a scope the readonly profile may request. */
+  noReadOnlyForm: boolean;
+  /** The first broader profile whose own scopes cover some of those tools, and how many. Undefined when none does. */
+  next?: { profile: Profile; covers: number };
+}
+
+/**
+ * Whether a scope list leaves a product with no tool that calls Google. `subset` holds the requirements of one product
+ * (the same ones the login or gsm scopes counts), `scopes` the scopes asked for (merged ones included). Undefined when
+ * at least one of its tools that need a scope is covered, or when none of its tools needs one. The broader profiles are
+ * resolved from the same requirements and optional parts, so `next` names what that profile would really cover.
+ */
+export function notCoveredBy(
+  subset: readonly Requirement[],
+  profile: Profile,
+  include: readonly string[],
+  scopes: readonly string[],
+): NotCovered | undefined {
+  const scoped = subset.filter((r) => !r.gateway && r.scopes.length > 0);
+  if (scoped.length === 0) return undefined;
+  const coveredCount = (granted: ReadonlySet<string>): number => scoped.filter((r) => r.scopes.some((s) => granted.has(s))).length;
+  if (coveredCount(new Set(scopes)) > 0) return undefined;
+  const gatewayAll = subset.filter((r) => r.gateway);
+  const granted = new Set(scopes);
+  const reached = gatewayAll.filter((r) => r.scopes.length === 0 || r.scopes.some((s) => granted.has(s))).length;
+  let next: NotCovered['next'];
+  for (const p of PROFILES.slice(PROFILES.indexOf(profile) + 1)) {
+    const covers = coveredCount(new Set(resolveScopes(subset, p, include).scopes));
+    if (covers > 0) {
+      next = { profile: p, covers };
+      break;
+    }
+  }
+  const reads = scoped.filter((r) => r.kind === 'read');
+  return {
+    tools: scoped.length,
+    gateway: { reached, total: gatewayAll.length },
+    noReadOnlyForm: profile === 'readonly' && reads.every((r) => !r.scopes.some((s) => isReadonlyScope(s))),
+    ...(next ? { next } : {}),
+  };
+}
+
+/**
+ * The line a login and gsm scopes print for a product the scopes leave with no tool (notCoveredBy). It starts with
+ * "Not covered:", so the sign-in from the chat can pass it on. It names the profile that covers the tools; it never stops
+ * the login.
+ */
+export function notCoveredLine(product: string, profile: Profile, n: NotCovered): string {
+  const parts = [
+    `Not covered: the ${profile} profile covers none of the ${n.tools} tool(s) of ${product} that need a Google scope` +
+      (n.noReadOnlyForm ? ' (none of them offers a read-only scope).' : '.'),
+  ];
+  if (n.gateway.reached > 0) parts.push(`api_call still reaches ${n.gateway.reached} of its ${n.gateway.total} gateway methods.`);
+  if (n.next) {
+    const how = n.next.covers === n.tools ? `all ${n.tools}` : `${n.next.covers} of them`;
+    parts.push(`The ${n.next.profile} profile covers ${how}: --profile ${n.next.profile} (in the chat: auth_login with profile "${n.next.profile}").`);
+    if (profile === 'readonly') parts.push('Its write tools stay hidden until writes are allowed in the plugin settings.');
+  } else {
+    parts.push('No broader profile covers them.');
+  }
+  return parts.join(' ');
+}
+
+/**
  * The tools a token holding these scopes can run, by the same rule as runtime
  * gating: a tool with no scopes, or one holding at least one of its scopes.
  */

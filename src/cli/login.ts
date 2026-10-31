@@ -36,6 +36,7 @@ import {
   groupScopeUniverse,
   hasGatewayApis,
   heldBackLines,
+  notCoveredLines,
   selectGroupServers,
 } from './scopes.js';
 import type { Output } from './report.js';
@@ -176,6 +177,9 @@ export async function runLogin(req: LoginRequest, loadRegistryFn: () => Registry
   // What a product's scope rules left out of this profile (empty for products without rules). Counted against the scopes
   // this login asks for, merged ones included, so a held-back tool that a kept scope covers is not listed.
   if (req.profile !== 'custom') for (const line of heldBackLines(requirements, req.profile, include, scopes)) out.log(line);
+  // A product this login would leave with no tool that calls Google (Business Profile under readonly, say): said before the
+  // browser opens, with the profile that covers it. The login goes on as asked; empty for every other product.
+  if (req.profile !== 'custom') for (const line of notCoveredLines(registry, servers, requirements, req.profile, include, scopes)) out.log(line);
   if (hint === undefined) {
     out.log(
       `No account named: no stored scope is merged, and this login asks only for the scopes below. If the account you pick is already signed in for ${group} and holds scopes this login does not ask for, nothing is saved${replace ? ' unless --replace is given' : ''}. To keep its scopes for the other servers of ${group}, name it: --account <email> (in the chat: auth_login with account).`,

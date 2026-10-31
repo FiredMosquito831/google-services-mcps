@@ -439,7 +439,7 @@ Desktop OAuth client, then one login for the products you use:
 npx google-services-mcps login workspace-user --profile readonly --servers gmail,gcalendar
 ```
 
-### 8.5 business: ganalytics, gtm, gyoutube, gbusiness, gads, gmerchant
+### 8.5 business: ganalytics, gtm, gyoutube, gbusiness, gads
 
 Desktop OAuth client, then:
 
@@ -447,15 +447,23 @@ Desktop OAuth client, then:
 npx google-services-mcps login business --profile readonly --servers ganalytics,gtm
 ```
 
+`gbusiness` and `gads` need `--profile readwrite`: their scopes (`business.manage`, `adwords`) have no read-only form, so a `readonly` login covers none of their tools, and the login says so in a `Not covered:` line. With writes off, a `readwrite` login of them lists their reads only.
+
+```
+npx google-services-mcps login business --profile readwrite --servers gbusiness,gads
+```
+
 For `gads`, also read the Google Ads notes in [SETUP.md](SETUP.md). The developer token is an optional plugin option (section 6.1).
 
-### 8.6 developer: gplay, gfirebase, gmaps
+### 8.6 developer: gfirebase
 
 Desktop OAuth client, then:
 
 ```
-npx google-services-mcps login developer --profile readonly --servers gplay,gfirebase,gmaps
+npx google-services-mcps login developer --profile readonly --servers gfirebase
 ```
+
+`gplay` and `gmerchant` use a service account key instead, with `setup-service-account` (see [SETUP.md](SETUP.md#google-play-and-merchant-center-gplay-gmerchant)); `gmaps` uses the API key of section 8.8.
 
 ### 8.7 workspace-admin: gadmin
 
@@ -467,9 +475,9 @@ npx google-services-mcps setup-admin --subject admin@example.com --key-file "C:\
 
 Checked with a test service account file. The command checks that the file has a `client_email`, saves the setup in the token directory, and prints the scopes to authorize for the service account's client ID under **Google Admin console > Security > API controls > Domain-wide delegation**. It does not call Google. The key file is referenced where it is, and it is not copied. Use `--replace` to drop the stored scopes, as for `login`.
 
-### 8.8 apikey: gsearch
+### 8.8 apikey: gsearch, gmaps
 
-`gsearch` uses an API key and has no login.
+`gsearch` and `gmaps` use an API key and have no login.
 
 ```
 npx google-services-mcps setup-apikey

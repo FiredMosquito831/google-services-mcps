@@ -236,6 +236,14 @@ A **profile** decides which Google scopes the login asks for. The token's scopes
 | `full` | Every tool, with the broadest scope listed for each method. | You need every method, for example in an admin setup. Use rarely. |
 | `--scopes <urls>` | Exactly the scopes you list. Nothing else is added. | You know the scopes you need. |
 
+**A profile that covers no tool of a product.** Some products have no read-only scope at all: Business Profile (`business.manage`) and Google Ads (`adwords`). A `readonly` login then loads none of their tools. Since 1.32.0, `gsm login`, `gsm scopes` and the chat sign-in (`auth_login`) say so in a `Not covered:` line, before the browser opens, and name the profile that covers them, for example:
+
+```
+Not covered: the readonly profile covers none of the 51 tool(s) of gbusiness that need a Google scope (none of them offers a read-only scope). The readwrite profile covers all 51: --profile readwrite (in the chat: auth_login with profile "readwrite"). Its write tools stay hidden until writes are allowed in the plugin settings.
+```
+
+The login still runs as asked. With `readwrite`, the write tools stay hidden until **Allow write tools** is on, so a `readwrite` login of these products lists their reads only. The line appears only when none of a product's tools that call Google is covered: for gbusiness with every toolset, and for gads with the `google` and `curated` toolsets (with the `all` toolset a `readonly` login covers a few AdSense and AdMob reads, and none of the Google Ads tools). AI and ML (`gai`) is close: of its tools that call Google, a `readonly` login covers two (`vertex_generate_content` and `vertex_embed_content`), so its page says to sign in with `readwrite` too.
+
 **Gmail.** A product can hold scopes back from a profile. For Gmail:
 
 | Profile | Gmail scopes |

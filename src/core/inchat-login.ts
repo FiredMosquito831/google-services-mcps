@@ -62,6 +62,11 @@ export interface SignInOptions {
    * login does).
    */
   adcScopes: (profile: SignInProfile, include: readonly string[]) => string[];
+  /**
+   * Lines to add to the answer of an ADC sign-in that uses those scopes: a product they leave with no tool (notCoveredLine
+   * in core/scopes.ts). The OAuth sign-in prints its own, which are passed on from the login's output. Absent: none.
+   */
+  adcNotes?: (profile: SignInProfile, include: readonly string[]) => string[];
   /** Called when the sign-in has saved a token, so the server can load its tools. */
   onSignedIn: () => void;
 }
@@ -110,6 +115,17 @@ export function heldBackOutput(output: string): string[] {
     .filter((line) => line.startsWith('Held back:'));
 }
 
+/**
+ * The "Not covered:" lines of a login's output: a product the login leaves with no tool that calls Google, and the profile
+ * that covers it (notCoveredLine in core/scopes.ts). Empty for every other login. Exported for the tests.
+ */
+export function notCoveredOutput(output: string): string[] {
+  return output
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter((line) => line.startsWith('Not covered:'));
+}
+
 export function createSignIn(opts: SignInOptions): SignIn {
   let child: ChildProcess | undefined;
   let phase: 'idle' | 'waiting' | 'signed-in' | 'failed' = 'idle';
@@ -119,7 +135,7 @@ export function createSignIn(opts: SignInOptions): SignIn {
    * Waits for a sign-in child to print its URL, or to exit. The first answer goes back to the caller; the exit then
    * settles the phase and runs onExit, which may store the result.
    */
-  const waitFor = (proc: ChildProcess, onExit: (code: number | null, output: string) => string): Promise<string> =>
+  const waitFor = (proc: ChildProcess, onExit: (code: number | null, output: string) => string, extra: readonly string[] = []): Promise<string> =>
     new Promise((resolve) => {
       let out = '';
       let err = '';
@@ -141,8 +157,9 @@ export function createSignIn(opts: SignInOptions): SignIn {
         if (url) {
           note = url[0];
           // The URL sits on its own line, so no punctuation can end up inside it when it is copied.
-          // The login prints what a product's scope rules leave out before the URL. Empty for products without rules.
-          const held = heldBackOutput(out + err);
+          // The login prints what a product's scope rules leave out before the URL. Empty for products without rules. Then
+          // a product the login leaves with no tool (Not covered), from the login's output or, for ADC, from `extra`.
+          const held = [...heldBackOutput(out + err), ...notCoveredOutput(out + err), ...extra];
           answer(
             `Approve the sign-in in your browser. The sign-in address is:\n${url[0]}\nOnce Google redirects back, the tools of this server load. Then call auth_status.` +
               (held.length > 0 ? `\n${held.join('\n')}` : ''),
@@ -184,7 +201,7 @@ export function createSignIn(opts: SignInOptions): SignIn {
       if (code === 0) {
         phase = 'signed-in';
         // What the product's scope rules left out of this sign-in, so the person can ask for a broader one.
-        note = ['Signed in.', ...said, ...heldBackOutput(output)].join(' ');
+        note = ['Signed in.', ...said, ...heldBackOutput(output), ...notCoveredOutput(output)].join(' ');
         opts.onSignedIn();
       } else {
         phase = 'failed';
@@ -205,6 +222,8 @@ export function createSignIn(opts: SignInOptions): SignIn {
     if (ownClient && !clientFileReady(opts.cfg)) return Promise.resolve(NO_CLIENT_MESSAGE);
 
     const scopes = ownClient ? opts.adcScopes(profile, include) : [...GCLOUD_DEFAULT_SCOPES];
+    // A product these scopes leave with no tool, said with the sign-in address. gcloud's own scopes (cloud) take no profile.
+    const notes = ownClient ? (opts.adcNotes?.(profile, include) ?? []) : [];
     const args = ['auth', 'application-default', 'login'];
     if (ownClient) args.push(`--client-id-file=${opts.cfg.clientSecretFile}`, `--scopes=${scopes.join(',')}`);
 
@@ -227,10 +246,10 @@ export function createSignIn(opts: SignInOptions): SignIn {
       }
       saveAdcRecord(opts.cfg, { group: opts.group, scopes, fingerprint: state.fingerprint });
       phase = 'signed-in';
-      note = 'Signed in with Application Default Credentials.';
+      note = ['Signed in with Application Default Credentials.', ...notes].join(' ');
       opts.onSignedIn();
       return `The ADC sign-in finished: ${note}`;
-    });
+    }, notes);
   };
 
   return {

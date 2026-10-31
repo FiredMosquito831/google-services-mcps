@@ -34,7 +34,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const AUTHOR = { name: 'FiredMosquito831' };
-const MANIFEST_VERSION = '1.31.1';
+const MANIFEST_VERSION = '1.32.0';
 const TOOL_NAME_MAX = 64;
 /** When two API versions give one method two kinds, the riskier one is kept. A dynamic method is kept as dynamic (decided per call). */
 const RANK = { read: 0, write: 1, dynamic: 2, destructive: 3 };
@@ -352,7 +352,44 @@ const LOGIN_TEXT = {
     `No sign-in. Add the service account's email in Play Console (Users and permissions) or Merchant Center (Admin), then set up its key once: \`node ${p}/bin/gsm.mjs setup-service-account --key-file <service account JSON>\`. Or set GOOGLE_APPLICATION_CREDENTIALS to the key.`,
 };
 
-function skillFile(product, id, server, toolCount, titles) {
+/**
+ * The skill's sign-in text. `uncovered` lists the toolsets (all, google, curated) under which the default readonly
+ * profile covers none of the product's tools that need a Google scope (readonlyLeavesNothing): with all, the login line names
+ * --profile readwrite; with another toolset, a sentence says so. Empty for most products, whose text is unchanged.
+ */
+function loginText(group, uncovered) {
+  const base = LOGIN_TEXT[group]('<plugin>');
+  if (uncovered.length === 0) return base;
+  if (uncovered.includes('all')) {
+    return (
+      `${base.replace(/login (\S+)`/, 'login $1 --profile readwrite`')} ` +
+      'Use `--profile readwrite`: the default readonly profile covers none of this plugin\'s tools that need a Google scope. Write tools stay hidden until writes are allowed in the plugin settings.'
+    );
+  }
+  const names = uncovered.map((t) => `\`${t}\``).join(' or ');
+  return (
+    `${base} With the ${names} toolset, the default readonly profile covers none of its tools that need a Google scope: sign in with \`--profile readwrite\` ` +
+    '(write tools stay hidden until writes are allowed in the plugin settings).'
+  );
+}
+
+/**
+ * The toolsets under which a readonly login covers none of a product's tools that need a Google scope (notCoveredBy in
+ * src/core/scopes.ts), resolved the way gsm login resolves them. Only for the groups a person signs in to with gsm login.
+ */
+async function readonlyLeavesNothing(server, dist, tokenDir) {
+  if (!LOGIN_GROUPS.includes(server.group)) return [];
+  const { requirementsFor, resolveScopes, notCoveredBy } = await import(pathToFileURL(join(ROOT, 'dist', 'core', 'scopes.js')).href);
+  const cfg = dist.loadConfig({ GSM_TOKEN_DIR: tokenDir });
+  const out = [];
+  for (const toolset of ['all', 'google', 'curated']) {
+    const requirements = await requirementsFor([server.name], cfg, { warn: () => undefined, ...(toolset !== 'all' ? { toolset } : {}) });
+    if (notCoveredBy(requirements, 'readonly', [], resolveScopes(requirements, 'readonly').scopes)) out.push(toolset);
+  }
+  return out;
+}
+
+function skillFile(product, id, server, toolCount, titles, uncovered = []) {
   const generated = titles.generated.map((a) => `- ${a.title} (${a.api} ${a.version})`);
   const gateway = titles.gateway.map((a) => `- ${a.title} (${a.api} ${a.version}), reached through api_search, api_describe and api_call`);
   return [
@@ -377,7 +414,7 @@ function skillFile(product, id, server, toolCount, titles) {
     '',
     '## Log in',
     '',
-    `Replace \`<plugin>\` with this plugin's folder, the one that holds \`bin/gsm.mjs\`. ${LOGIN_TEXT[product.group]('<plugin>')}`,
+    `Replace \`<plugin>\` with this plugin's folder, the one that holds \`bin/gsm.mjs\`. ${loginText(product.group, uncovered)}`,
     '',
     '## Safety',
     '',
@@ -512,7 +549,8 @@ async function buildPlugin(id, product, ctx) {
     titles.gateway.push({ ...ref, title: api?.title ?? `${ref.api} ${ref.version}` });
   }
   mkdirSync(join(pluginDir, 'skills', id), { recursive: true });
-  writeFileSync(join(pluginDir, 'skills', id, 'SKILL.md'), skillFile(product, id, server.name, toolMap.length, titles), 'utf8');
+  const uncovered = await readonlyLeavesNothing(server, ctx.dist, ctx.tokenDir);
+  writeFileSync(join(pluginDir, 'skills', id, 'SKILL.md'), skillFile(product, id, server.name, toolMap.length, titles, uncovered), 'utf8');
 
   return {
     id,

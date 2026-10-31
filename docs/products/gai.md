@@ -16,7 +16,7 @@ Generative and classic AI APIs: the Gemini API, Vertex AI (catalogued as the Age
 ```
 claude plugin install gai@google-services-mcps --scope user
 node <plugin>/bin/gsm.mjs setup-client <client_secret.json>
-node <plugin>/bin/gsm.mjs login cloud --profile readonly
+node <plugin>/bin/gsm.mjs login cloud --profile readwrite
 node <plugin>/bin/gsm.mjs status
 ```
 
@@ -26,7 +26,7 @@ node <plugin>/bin/gsm.mjs status
 2. Set up the OAuth consent screen. Create an OAuth client ID of type Desktop app and download the JSON file.
 3. Run `setup-client`, then `login cloud`. Restart the MCP server (`/mcp`) after login.
 
-The `cloud` login is shared with `gcloud`. Start with `--profile readonly`. Writes need a `readwrite` login and the plugin option `allow_writes`.
+The `cloud` login is shared with `gcloud`. Sign in with `--profile readwrite`: almost none of these APIs offer a read-only scope (Discovery Engine, Vision, Speech, Text-to-Speech, Natural Language and Video Intelligence list `cloud-platform` only), so of the tools that call Google a `readonly` login covers two, `vertex_generate_content` and `vertex_embed_content`. With `readwrite`, writes still need the plugin option `allow_writes`, so with writes off a `readwrite` login lists the reads only.
 
 ## What it can do
 
