@@ -5,6 +5,7 @@ import { join } from 'node:path';
 import { DEFAULT_CONFIRMATION, isConfirmationMode, type ConfirmationMode } from './policy.js';
 import { readToolset, type Toolset } from './toolset.js';
 import { DEFAULT_MAX_RESULT_CHARS } from './result-shape.js';
+import { optionValue } from './plugin-option.js';
 
 /**
  * Runtime settings, read from environment variables. The plugin manifest and
@@ -92,23 +93,25 @@ export function verboseOn(env: NodeJS.ProcessEnv = process.env): boolean {
 export function loadConfig(env: NodeJS.ProcessEnv = process.env): RuntimeConfig {
   // Fixed default on purpose: the CLI (run from a shell) and the MCP servers
   // (started by Claude Code, which sets CLAUDE_PLUGIN_DATA) must read the same tokens.
-  const tokenDir = env.GSM_TOKEN_DIR?.trim() || join(homedir(), '.google-services-mcps');
+  // The plugin options (GSM_TOKEN_DIR, GSM_CONFIRMATION, GSM_TOOLSET and the admin ones) read as unset when empty or when
+  // they hold an unexpanded ${user_config.*} reference (plugin-option.ts), so the default applies.
+  const tokenDir = optionValue(env.GSM_TOKEN_DIR) ?? join(homedir(), '.google-services-mcps');
 
   const maxRaw = Number(env.GSM_MAX_RESULT_CHARS);
   const maxResultChars = Number.isFinite(maxRaw) && maxRaw > 0 ? Math.floor(maxRaw) : DEFAULT_MAX_RESULT_CHARS;
-  const confirmation = readConfirmation(env.GSM_CONFIRMATION);
+  const confirmation = readConfirmation(optionValue(env.GSM_CONFIRMATION));
 
   return {
     allowWrites: env.GSM_ALLOW_WRITES === 'true',
     tokenDir,
     clientSecretFile: join(tokenDir, 'client_secret.json'),
-    adminSubject: env.GSM_ADMIN_SUBJECT?.trim() || undefined,
-    serviceAccountKeyFile: env.GSM_SERVICE_ACCOUNT_KEY_FILE?.trim() || undefined,
+    adminSubject: optionValue(env.GSM_ADMIN_SUBJECT),
+    serviceAccountKeyFile: optionValue(env.GSM_SERVICE_ACCOUNT_KEY_FILE),
     maxResultChars,
     confirmation: confirmation.mode,
     confirmationFromEnv: confirmation.fromEnv,
     hookActive: env.GSM_HOOK_ACTIVE === '1',
     apiKey: env.GSM_API_KEY?.trim() || readApiKeyFile(tokenDir),
-    toolset: readToolset(env.GSM_TOOLSET),
+    toolset: readToolset(optionValue(env.GSM_TOOLSET)),
   };
 }

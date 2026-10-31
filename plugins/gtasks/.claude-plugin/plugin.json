@@ -1,7 +1,7 @@
 {
   "name": "gtasks",
   "displayName": "Tasks and Keep",
-  "version": "1.37.0",
+  "version": "1.37.1",
   "description": "Google Tasks task lists and tasks, plus Google Keep notes.",
   "author": {
     "name": "FiredMosquito831"
@@ -22,7 +22,7 @@
     "confirmation": {
       "type": "string",
       "title": "Confirm before changes",
-      "description": "every-change asks before any change or delete (recommended). destructive-only asks only before destructive actions: deleting, sending to other people, sharing or permission changes, security changes, device commands, publishing, refunds and whole-content replacement. off asks for nothing; deny rules still apply. Change it here at any time.",
+      "description": "every-change: ask before any change (recommended). destructive-only: ask only before deleting, sending to other people, sharing or permission changes, security changes, device commands, publishing, refunds and whole-content replacement. off: never ask.",
       "options": [
         "every-change",
         "destructive-only",
@@ -33,7 +33,7 @@
     "toolset": {
       "type": "string",
       "title": "Toolset",
-      "description": "Which tools this server lists. all: every tool (the default). google: the tools that match Google's official MCP server for this product, or a small set chosen here where Google has no server; where that list is not defined yet, all tools, and health says so. curated: the hand-written tools and the gateway tools (api_search, api_describe, api_call); where a product has neither, all tools. It takes effect when the server starts again.",
+      "description": "Which tools this server lists. all: every tool (the default). google: the set that matches Google's own MCP server. curated: hand-written and gateway tools. Applies on restart.",
       "options": [
         "all",
         "google",
@@ -42,7 +42,7 @@
       "default": "all"
     },
     "token_dir": {
-      "type": "string",
+      "type": "directory",
       "title": "Token directory (optional)",
       "description": "Where OAuth tokens are stored. Leave empty for ~/.google-services-mcps.",
       "required": false

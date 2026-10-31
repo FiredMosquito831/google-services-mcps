@@ -16,6 +16,7 @@ import { fileURLToPath } from 'node:url';
 import { decide, describeAction, loadPolicyFile, riskFromKind, type Policy } from '../core/policy.js';
 import { curatedMutateBody, GOOGLE_ADS_MUTATE_METHOD, resolveDynamicKind } from '../core/dynamic.js';
 import type { ToolMapEntry, ToolMapKind } from '../core/dump.js';
+import { optionValue } from '../core/plugin-option.js';
 
 const TOOL_MAP_FILE = 'tool-map.json';
 /** Written by the build: method id -> read, write, dynamic or destructive, for every gateway method of this plugin. */
@@ -133,9 +134,9 @@ function ownToolPrefix(root: string): string | null {
   }
 }
 
+/** The token folder: GSM_TOKEN_DIR, unless it is empty or an unexpanded ${user_config.*} reference (plugin-option.ts). */
 function tokenDirectory(): string {
-  const fromEnv = process.env.GSM_TOKEN_DIR;
-  return fromEnv && fromEnv.length > 0 ? fromEnv : join(homedir(), DEFAULT_TOKEN_DIR_NAME);
+  return optionValue(process.env.GSM_TOKEN_DIR) ?? join(homedir(), DEFAULT_TOKEN_DIR_NAME);
 }
 
 async function readStdin(): Promise<string> {

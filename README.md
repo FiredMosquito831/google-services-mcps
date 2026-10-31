@@ -205,7 +205,20 @@ For Claude Code, the marketplace is declared in the same scope as the plugin. A 
 
 ### Plugin options (Claude Code)
 
-The Claude Code plugin has four options: `allow_writes`, `confirmation`, `toolset` and `token_dir`. `--allow-writes` and `--confirmation` set the first two. `toolset` picks which tools a server lists: `all` (the default, every tool), `google` (the tools that match Google's official MCP server, or a small set chosen here where Google has none; a product without such a list shows all tools) or `curated` (the hand-written tools and the gateway tools). Options that are not given keep their values. To see them, run `claude plugin configure gmail@google-services-mcps`. To change one later, pipe JSON to `claude plugin configure gmail@google-services-mcps --values-stdin` (the values are strings, for example `{"confirmation":"destructive-only"}`), or use `/plugin configure` in Claude Code.
+The plugins need Claude Code 2.1.271 or later: their options offer fixed choices, and Claude Code's plugin reference says "If you declare `options` on any field, users on Claude Code versions before v2.1.271 can't load the plugin."
+
+Every Claude Code plugin has four options. `--allow-writes` and `--confirmation` set the first two.
+
+| Option | What it does | Default |
+|---|---|---|
+| `allow_writes` | Lists the tools that create, change, delete or send. Off, only reads are listed. Each change still asks, unless `confirmation` is `off` | off |
+| `confirmation` | `every-change` asks before any change or delete. `destructive-only` asks only before destructive actions: deleting, sending to other people, sharing or permission changes, security changes, device commands, publishing, refunds and whole-content replacement (see [SECURITY.md](docs/SECURITY.md)). `off` asks for nothing; deny rules in the policy file still apply | `every-change` |
+| `toolset` | `all`: every tool. `google`: the tools that match Google's official MCP server for the product, or a small set chosen here where Google has none; a product without such a list shows all tools, and `health` says so. `curated`: the hand-written tools and the gateway tools (`api_search`, `api_describe`, `api_call`); a product with neither shows all tools. It applies when the server starts again | `all` |
+| `token_dir` | The folder for tokens and the OAuth client. Empty means `~/.google-services-mcps`, the folder the terminal commands use too | empty |
+
+gadmin adds `admin_subject` and `service_account_key_file` (or use `auth_setup_admin` in the chat). gads adds `ads_developer_token` (optional; Google no longer requires it, and it is kept in the system credential store) and `ads_login_customer_id` (the manager account's 10-digit ID, when you reach client accounts through one).
+
+An option left empty is treated as unset: the server uses its default, also when the value arrives as an unexpanded `${user_config.<option>}` reference. Options that are not given keep their values. To see them, run `claude plugin configure gmail@google-services-mcps`. To change one later, pipe JSON to `claude plugin configure gmail@google-services-mcps --values-stdin` (the values are strings, for example `{"confirmation":"destructive-only"}`), or use `/plugin configure` in Claude Code.
 
 ### The one-line installers
 

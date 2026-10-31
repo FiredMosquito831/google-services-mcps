@@ -9,6 +9,7 @@
  * nothing at run time.
  */
 import { DEFAULT_TOOLSET, isToolset, type Toolset } from '../core/toolset.js';
+import { optionValue } from '../core/plugin-option.js';
 import { CONFIRMATION_MODES, type ConfirmationMode } from './types.js';
 
 /** The default the servers use when GSM_CONFIRMATION is unset. Shown by status. */
@@ -37,7 +38,8 @@ export interface ToolsetStatus {
 }
 
 export function toolsetStatus(env: NodeJS.ProcessEnv): ToolsetStatus {
-  const raw = (env.GSM_TOOLSET ?? '').trim();
+  // As the servers read it: an unexpanded ${user_config.*} reference is unset (core/plugin-option.ts).
+  const raw = optionValue(env.GSM_TOOLSET) ?? '';
   if (raw === '') return { toolset: DEFAULT_TOOLSET, set: false, known: true };
   return { toolset: raw, set: true, known: isToolset(raw.toLowerCase()) };
 }
@@ -56,7 +58,7 @@ export interface ConfirmationStatus {
 }
 
 export function confirmationStatus(env: NodeJS.ProcessEnv): ConfirmationStatus {
-  const raw = (env.GSM_CONFIRMATION ?? '').trim();
+  const raw = optionValue(env.GSM_CONFIRMATION) ?? '';
   if (raw === '') return { mode: CONFIRMATION_DEFAULT, set: false, known: true };
   return { mode: raw, set: true, known: (CONFIRMATION_MODES as readonly string[]).includes(raw) };
 }

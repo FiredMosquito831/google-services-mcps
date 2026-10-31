@@ -11,6 +11,7 @@ import { accessSync, constants as fsConstants, existsSync, readFileSync, statSyn
 import { dirname, join } from 'node:path';
 import type { Registry } from '../core/registry.js';
 import { loadConfig } from '../core/config.js';
+import { optionValue } from '../core/plugin-option.js';
 import { aclExtras } from '../core/acl.js';
 import { adminScopeFileFor, serviceAccountSource } from '../core/auth.js';
 import { getSecretSync } from '../core/secret-store.js';
@@ -298,7 +299,7 @@ export function runDoctor(req: DoctorRequest, out: Output): number {
   // Google Ads no longer needs a developer token: access belongs to the Cloud project of the OAuth client, and the
   // header is optional. So this is an information line only. It is never a FAIL, and the value is never printed.
   if (active.includes(ADS_PRODUCT)) {
-    const set = (req.env[ADS_TOKEN_ENV] ?? '').trim() !== '';
+    const set = optionValue(req.env[ADS_TOKEN_ENV]) !== undefined;
     out.log(`INFO ${ADS_TOKEN_ENV} is ${set ? 'set' : 'not set'} (optional for ${ADS_PRODUCT}). Google Ads access is granted to the Cloud project of your OAuth client; the developer token is no longer required.`);
   }
 
@@ -306,7 +307,7 @@ export function runDoctor(req: DoctorRequest, out: Output): number {
   const adminIds = active.filter((id) => groupOf(id) === 'workspace-admin');
   if (adminIds.length > 0) {
     const file = adminScopeFileFor({ tokenDir });
-    const fromEnv = (req.env.GSM_ADMIN_SUBJECT ?? '').trim() !== '' && (req.env.GSM_SERVICE_ACCOUNT_KEY_FILE ?? '').trim() !== '';
+    const fromEnv = optionValue(req.env.GSM_ADMIN_SUBJECT) !== undefined && optionValue(req.env.GSM_SERVICE_ACCOUNT_KEY_FILE) !== undefined;
     const stored = existsSync(file);
     tally.check(stored || fromEnv, stored || fromEnv
       ? `workspace-admin is set up (needed by ${list(adminIds)}): ${stored ? file : 'GSM_ADMIN_SUBJECT and GSM_SERVICE_ACCOUNT_KEY_FILE are set'}`

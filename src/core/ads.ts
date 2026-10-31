@@ -12,6 +12,7 @@ import { existsSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import type { RuntimeConfig } from './config.js';
 import { readSecretText } from './secret-files.js';
+import { optionValue } from './plugin-option.js';
 
 /** The host of the Google Ads REST API. A request to this host is an Ads request. */
 export const ADS_HOST = 'googleads.googleapis.com';
@@ -33,7 +34,8 @@ export function isGoogleAdsUrl(url: string): boolean {
  * never printed: a warning names only its path and mode, or says that the file is not valid JSON.
  */
 export function developerTokenOf(cfg: Pick<RuntimeConfig, 'tokenDir'>): string | undefined {
-  const fromEnv = process.env[DEVELOPER_TOKEN_ENV]?.trim();
+  // The plugin option ads_developer_token: unset when empty or an unexpanded ${user_config.*} reference (plugin-option.ts).
+  const fromEnv = optionValue(process.env[DEVELOPER_TOKEN_ENV]);
   if (fromEnv) return fromEnv;
   const file = join(cfg.tokenDir, 'ads.json');
   const text = readSecretText(cfg, file);
@@ -57,7 +59,8 @@ export function developerTokenOf(cfg: Pick<RuntimeConfig, 'tokenDir'>): string |
 
 /** The optional manager account ID, digits only (dashes are allowed and removed). */
 export function loginCustomerIdOf(): string | undefined {
-  const raw = process.env[LOGIN_CUSTOMER_ENV]?.trim();
+  // The plugin option ads_login_customer_id: unset when empty or an unexpanded ${user_config.*} reference.
+  const raw = optionValue(process.env[LOGIN_CUSTOMER_ENV]);
   if (!raw) return undefined;
   const digits = raw.replace(/-/g, '');
   if (!/^\d+$/.test(digits)) throw new Error(`${LOGIN_CUSTOMER_ENV} must be the manager account ID, digits only.`);

@@ -2,6 +2,16 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.37.1 - 2026-10-31
+
+### Fixed: a plugin option that was never set always reads as unset
+- Each plugin's `.mcp.json` passes its options to the server as `${user_config.<key>}` (`GSM_TOKEN_DIR`, `GSM_CONFIRMATION`, `GSM_TOOLSET`, `GSM_ALLOW_WRITES`, and for gadmin and gads their own). Claude Code does not document what an unset `${user_config.KEY}` becomes; for a plain variable it says an unset `${VAR}` is used "as-is" (https://code.claude.com/docs/en/mcp). On Claude Code 2.1.316 a probe plugin got an empty string; older versions failed on a blank optional field until 2.1.119 ("Fixed plugin MCP servers failing when `${user_config.*}` references an optional field left blank", changelog). Had the reference arrived as text, the server would have used `${user_config.token_dir}` as a relative folder for tokens, policy and audit log, and a literal manager id would have failed every Google Ads call.
+- An option value that is empty, or that starts with `${user_config.`, now reads as unset wherever it is read (src/core/plugin-option.ts): the servers and the CLI (`loadConfig`: token folder, confirmation, toolset, admin subject and key file), the Google Ads headers (developer token, manager id), the hook's token folder, and `gsm status` and `gsm doctor`. The default applies, with no warning line. Other values are read as before.
+- `token_dir` is now a `directory` option, a type the plugin reference lists ("One of `string`, `number`, `boolean`, `directory`, or `file`", https://code.claude.com/docs/en/plugins-reference). The `toolset` and Ads developer token option texts are shorter (the dialog shows them under the field); the confirmation text keeps every class the destructive rule asks before. The details moved to README.md, which now states that the plugins need Claude Code 2.1.271 or later: "If you declare `options` on any field, users on Claude Code versions before v2.1.271 can't load the plugin" (plugins reference).
+
+### Not changed
+- tools/list (byte-identical), server instructions, tool maps and kinds, `gsm scopes` (207 cases identical), and the hook's decision for every tool of every plugin. tests/unset-options.test.mjs starts gmail, gadmin and gads with every option literal and checks they list the same tools as with no option, from the default token folder, and that the hook applies the default folder's policy.
+
 ## 1.37.0 - 2026-10-31
 
 ### Added: server instructions

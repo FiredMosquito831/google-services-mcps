@@ -34,7 +34,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const AUTHOR = { name: 'FiredMosquito831' };
-const MANIFEST_VERSION = '1.37.0';
+const MANIFEST_VERSION = '1.37.1';
 const TOOL_NAME_MAX = 64;
 /** When two API versions give one method two kinds, the riskier one is kept. A dynamic method is kept as dynamic (decided per call). */
 const RANK = { read: 0, write: 1, dynamic: 2, destructive: 3 };
@@ -97,6 +97,11 @@ function serverEnv(group, serverName) {
   return env;
 }
 
+/**
+ * The plugin options (userConfig). Each description is short (the dialog shows it under the field); the details are in
+ * README.md ("Plugin options (Claude Code)"). The confirmation text names every class the destructive rule asks before
+ * (tests/kinds-destructive.test.mjs). `options` needs Claude Code 2.1.271 or later (code.claude.com/docs/en/plugins-reference).
+ */
 const CONSENT_CONFIG = {
   allow_writes: {
     type: 'boolean',
@@ -109,7 +114,7 @@ const CONSENT_CONFIG = {
     type: 'string',
     title: 'Confirm before changes',
     description:
-      'every-change asks before any change or delete (recommended). destructive-only asks only before destructive actions: deleting, sending to other people, sharing or permission changes, security changes, device commands, publishing, refunds and whole-content replacement. off asks for nothing; deny rules still apply. Change it here at any time.',
+      'every-change: ask before any change (recommended). destructive-only: ask only before deleting, sending to other people, sharing or permission changes, security changes, device commands, publishing, refunds and whole-content replacement. off: never ask.',
     options: ['every-change', 'destructive-only', 'off'],
     default: 'every-change',
   },
@@ -117,12 +122,12 @@ const CONSENT_CONFIG = {
     type: 'string',
     title: 'Toolset',
     description:
-      "Which tools this server lists. all: every tool (the default). google: the tools that match Google's official MCP server for this product, or a small set chosen here where Google has no server; where that list is not defined yet, all tools, and health says so. curated: the hand-written tools and the gateway tools (api_search, api_describe, api_call); where a product has neither, all tools. It takes effect when the server starts again.",
+      "Which tools this server lists. all: every tool (the default). google: the set that matches Google's own MCP server. curated: hand-written and gateway tools. Applies on restart.",
     options: ['all', 'google', 'curated'],
     default: 'all',
   },
   token_dir: {
-    type: 'string',
+    type: 'directory',
     title: 'Token directory (optional)',
     description: 'Where OAuth tokens are stored. Leave empty for ~/.google-services-mcps.',
     required: false,
@@ -134,7 +139,7 @@ const ADS_CONFIG = {
     type: 'string',
     title: 'Google Ads developer token (optional)',
     description:
-      'Optional. Google Ads access is granted to the Cloud project of your OAuth client; the developer token is no longer required. Sent only when set. Stored in the system credential store, not in a file. Leave empty to use the token-directory file instead.',
+      'Optional; Google no longer requires it. Sent only when set, and kept in the system credential store. Empty: the token-directory file is used.',
     sensitive: true,
     required: false,
   },
