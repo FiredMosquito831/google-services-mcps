@@ -1,7 +1,7 @@
 {
   "name": "gai",
   "displayName": "AI and ML",
-  "version": "1.36.1",
+  "version": "1.37.0",
   "description": "Generative and classic AI APIs: Discovery Engine, Vertex AI, Dialogflow, Vision, Speech, Translate, Document AI and agent services.",
   "author": {
     "name": "FiredMosquito831"

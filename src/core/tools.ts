@@ -32,6 +32,7 @@ import { invocation, invocationFor, setInvocation } from './invocation.js';
 import { selectToolset, type ServerToolsets, type ToolOrigin, type ToolsetSelection } from './toolset.js';
 import { settleWithin, TARGET_PREVIEW_KEY, TARGET_READ_TIMEOUT_MS } from './target-preview.js';
 import { pageSizeArgOf, shapeResult, type ShapeOptions } from './result-shape.js';
+import { serverInstructions } from './instructions.js';
 
 /**
  * read        : safe, always registered and never gated.
@@ -301,6 +302,17 @@ function toolsetReport(selection: ToolsetSelection<unknown>): Record<string, unk
   };
 }
 
+/** What the server's product covers: its plugin's description in the server map. Undefined when the map cannot be read. */
+function productDescriptionOf(serverName: string): string | undefined {
+  try {
+    const reg = loadRegistry();
+    return reg.plugins[serverByName(reg, serverName).plugin];
+  } catch {
+    // groupOf reports an unreadable map already.
+    return undefined;
+  }
+}
+
 /** The auth group of a server, from the server map. Undefined (no scope filtering) when the map cannot be read. */
 function groupOf(serverName: string): AuthGroup | undefined {
   try {
@@ -366,7 +378,6 @@ export async function runServer(opts: {
     return;
   }
 
-  const server = new McpServer({ name: opts.name, version: opts.version });
   // Every tool of the server, then the ones of the chosen toolset (GSM_TOOLSET). With all, `defined` is `built` itself.
   // Everything below registers from `defined`; the tool map (dumpTools above) is built from every tool.
   const built = await opts.buildTools(cfg);
@@ -376,6 +387,49 @@ export async function runServer(opts: {
 
   // The grant is read at registration, and again on each access to ctx, so a new login is seen without a restart.
   const group = groupOf(opts.name);
+
+  // The product's scope rules (config/products.json scopePolicy), when it has them. Undefined for most servers.
+  const policy = scopePolicyOf(opts.name);
+  const optionalParts = Object.keys(policy?.optional ?? {}).sort();
+  // The parts that name a scope rather than APIs (YouTube's monetary analytics): their tools load without them.
+  const scopeParts = optionalParts.filter((part) => (policy?.optional?.[part] ?? []).some((entry) => entry.startsWith('https://')));
+  // The scopes an ADC login for this server asks for: the scopes its tools need, resolved as the OAuth login resolves them.
+  // Only the tools of the toolset count (`defined`), as for the OAuth sign-in (--toolset in the child's argv).
+  const adcRequirements = (): Requirement[] => {
+    const prefer = serverPreferFields(opts.name, selection.effective); // the toolset's preferred scopes, as the OAuth login takes them
+    return defined.map((tool) => ({
+      tool: tool.name,
+      kind: tool.kind,
+      scopes: [...(tool.scopes ?? [])],
+      ...policyFields(policy, apiOfMethod(tool.methodId)),
+      ...prefer,
+    }));
+  };
+  const adcScopesFor = (profile: SignInProfile, include: readonly string[]): string[] =>
+    withIdentityScope(resolveScopes(adcRequirements(), profile, include).scopes);
+  // What an ADC login with those scopes would leave out: this product with no tool that calls Google (Business Profile under
+  // readonly, say). The OAuth sign-in prints the same line itself (gsm login), and the chat passes it on.
+  const adcNotesFor = (profile: SignInProfile, include: readonly string[]): string[] => {
+    const requirements = adcRequirements();
+    const n = notCoveredBy(requirements, profile, include, withIdentityScope(resolveScopes(requirements, profile, include).scopes));
+    return n ? [notCoveredLine(opts.name, profile, n)] : [];
+  };
+
+  // The server instructions (initialize result): what the product covers, the toolset, writes, sign-in in the chat and
+  // the gateway flow. Built here from the server map and the settings, never from the token folder (instructions.ts).
+  const signsInWithOAuth = group === 'cloud' || group === 'workspace-user' || group === 'searchconsole' || group === 'business' || group === 'developer';
+  const instructions = serverInstructions({
+    server: opts.name,
+    description: productDescriptionOf(opts.name),
+    group,
+    toolset: { requested: selection.requested, effective: selection.effective, ...(selection.note !== undefined ? { note: selection.note } : {}) },
+    writesAllowed: cfg.allowWrites,
+    toolNames: defined.map((tool) => tool.name),
+    cli: invocation(),
+    // The same rule as the login's "Not covered" line: a readonly sign-in that covers none of the toolset's tools.
+    readonlyCoversNothing: signsInWithOAuth && adcNotesFor('readonly', []).length > 0,
+  });
+  const server = new McpServer({ name: opts.name, version: opts.version }, { instructions });
   const currentGrant = (): string[] | null => (group ? grantedScopes(group, cfg) : null);
 
   // Before a login, the OAuth groups register only the tools that need no scope. auth_status loads the rest after a login.
@@ -475,32 +529,6 @@ export async function runServer(opts: {
   const canSignIn = group !== undefined && ACCOUNT_GROUPS.has(group);
   const cliFile = fileURLToPath(new URL('../bin/gsm.mjs', import.meta.url));
   const text = (value: string): CallToolResult => ({ content: [{ type: 'text', text: value }] });
-  // The product's scope rules (config/products.json scopePolicy), when it has them. Undefined for most servers.
-  const policy = scopePolicyOf(opts.name);
-  const optionalParts = Object.keys(policy?.optional ?? {}).sort();
-  // The parts that name a scope rather than APIs (YouTube's monetary analytics): their tools load without them.
-  const scopeParts = optionalParts.filter((part) => (policy?.optional?.[part] ?? []).some((entry) => entry.startsWith('https://')));
-  // The scopes an ADC login for this server asks for: the scopes its tools need, resolved as the OAuth login resolves them.
-  // Only the tools of the toolset count (`defined`), as for the OAuth sign-in (--toolset in the child's argv).
-  const adcRequirements = (): Requirement[] => {
-    const prefer = serverPreferFields(opts.name, selection.effective); // the toolset's preferred scopes, as the OAuth login takes them
-    return defined.map((tool) => ({
-      tool: tool.name,
-      kind: tool.kind,
-      scopes: [...(tool.scopes ?? [])],
-      ...policyFields(policy, apiOfMethod(tool.methodId)),
-      ...prefer,
-    }));
-  };
-  const adcScopesFor = (profile: SignInProfile, include: readonly string[]): string[] =>
-    withIdentityScope(resolveScopes(adcRequirements(), profile, include).scopes);
-  // What an ADC login with those scopes would leave out: this product with no tool that calls Google (Business Profile under
-  // readonly, say). The OAuth sign-in prints the same line itself (gsm login), and the chat passes it on.
-  const adcNotesFor = (profile: SignInProfile, include: readonly string[]): string[] => {
-    const requirements = adcRequirements();
-    const n = notCoveredBy(requirements, profile, include, withIdentityScope(resolveScopes(requirements, profile, include).scopes));
-    return n ? [notCoveredLine(opts.name, profile, n)] : [];
-  };
 
   // The two ways to sign in, with their costs. auth_login shows them first, so the person chooses before anything starts.
   const signInChoice = (): string => {

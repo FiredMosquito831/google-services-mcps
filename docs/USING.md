@@ -34,6 +34,8 @@ mcp__plugin_gmail_gmail__api_call
 
 The full tool list of each product is in `plugins/<id>/tool-map.json`, and in [CAPABILITIES.md](CAPABILITIES.md).
 
+Each server also sends short instructions when it starts (the MCP `instructions` field, at most 1,500 characters). Claude Code reads them at session start, also when tool search defers the tool definitions. They say what the product covers, which toolset is in effect, whether write tools are on, which tool to call when a tool seems missing (`auth_status` or `health`), how to sign in from the chat, and, where the server has the gateway, the `api_search`, `api_describe`, `api_call` flow. They are built from the plugin settings and the product map only: no account, token or email is in them. A change of a setting shows in them after the server restarts.
+
 ## 2. Reads and changes
 
 Every tool is in one of four safety classes.

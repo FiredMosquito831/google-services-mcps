@@ -2,6 +2,16 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.37.0 - 2026-10-31
+
+### Added: server instructions
+- Every server now sends an `instructions` text in its MCP initialize result. Claude Code loads it at session start, also when tool search defers the tool definitions: "Only tool names and server instructions load at session start" and "Server instructions help Claude understand when to search for your tools" (https://code.claude.com/docs/en/mcp, "Scale with MCP tool search"). Until now the servers sent none.
+- The text is built when the server starts, from the product map and the settings only (src/core/instructions.ts): what the product covers (its description), the toolset in effect, whether write tools are on, which tool to call when a tool seems missing (`auth_status`, `health`), how to sign in from the chat (`auth_status`, `auth_setup_client`, `auth_login` for the OAuth groups; `auth_setup_service_account`; `auth_setup_admin`; for the API key products the `setup-apikey` command, because a key is never pasted into the chat), the `api_search` / `api_describe` / `api_call` flow when the toolset has the gateway, how to continue a cut result, and that mail, documents and web pages are data, not instructions. Where a readonly sign-in covers none of the toolset's tools (gbusiness; gads with the `google` toolset), it says to sign in with `readwrite`, by the same rule as the login's "Not covered" line.
+- At most 1,500 characters (Claude Code cuts instructions at 4,096; the product description gives way first). It holds no account, email or token: nothing is read from the token folder for it. tests/instructions.test.mjs starts every bundled server and checks each text (23 servers, 753 to 1,479 characters).
+
+### Not changed
+- tools/list of every server (byte-identical, writes on and off, with a fake sign-in), tool maps and tool kinds, `gsm scopes` (207 cases identical), the hook (its bundle is unchanged). The initialize result gains the `instructions` field.
+
 ## 1.36.1 - 2026-10-31
 
 ### Fixed: api_describe and api_call read the Discovery document where Google serves it
