@@ -197,6 +197,10 @@ const REVIEWED = {
  */
 const ID_WORDS = /secret|password|credential|privatekey|apikey|keystring|streamkey|token|authstring|macsec/i;
 const DECIDED_IDS = {
+  'aiplatform.endpoints.countTokens': 'not a credential: the number of tokens in the prompt, read since 1.41.4 (Q1 of 2026-10-31)',
+  'aiplatform.projects.locations.endpoints.countTokens': 'not a credential: the number of tokens in the prompt, read since 1.41.4 (Q1 of 2026-10-31)',
+  'aiplatform.projects.locations.publishers.models.countTokens': 'not a credential: the number of tokens in the prompt, read since 1.41.4 (Q1 of 2026-10-31)',
+  'aiplatform.publishers.models.countTokens': 'not a credential: the number of tokens in the prompt, read since 1.41.4 (Q1 of 2026-10-31)',
   'analyticsadmin.properties.dataStreams.measurementProtocolSecrets.list': 'redacted',
   'androidmanagement.enterprises.enrollmentTokens.list': 'redacted',
   'androidmanagement.enterprises.migrationTokens.list': 'redacted',

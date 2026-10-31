@@ -1485,7 +1485,7 @@
   },
   {
     "name": "mcp__plugin_gads_gads__googleads_customers_generate_keyword_idea",
-    "kind": "write",
+    "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/adwords"
     ],

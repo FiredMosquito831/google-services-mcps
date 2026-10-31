@@ -2,6 +2,20 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.41.4 - 2026-10-31
+
+### Changed: seven methods that only read are reads now
+- Google Ads `generateKeywordIdeas`, `generateKeywordHistoricalMetrics` and `suggestKeywordThemes`, and Vertex AI `countTokens` in its four bindings, are reads by exact id in config/tool-kinds.json. This is the outcome Q1 of the 2026-10-30 review names; 1.41.3 fixed the rule, and this is the decision that names them, because a `POST` with no read rule is a write.
+- What the user sees: `googleads_customers_generate_keyword_idea` is listed with writes off (gads lists 133 tools instead of 132), and the six gateway methods no longer prompt through `api_call`. `gsm scopes` asks for the same scopes as before; only its read and write counts move (gads 99/186 → 100/185, gai 1389/1226 → 1393/1222).
+
+### Not changed, on purpose
+- The same RPCs on other APIs still ask: Search Ads 360 `generateKeywordIdeas`, `generateKeywordHistoricalMetrics`, `suggestKeywordThemes` and `generateKeywordForecastMetrics`, Google Ads `generateKeywordForecastMetrics`, Firebase ML `countTokens` and Gemini `generativelanguage.models.countTokens`. They need their own decision; tests/credential-reads.test.mjs pins that they still ask, so the difference stays visible.
+- No other method's kind moves, no scope list changes, and the tool maps and gateway tables differ only in these seven ids.
+
+### Tests
+- tests/credential-reads.test.mjs: the seven entries exist as the catalog spells them; both classifiers give read for every version; the built plugin tables carry read; the generated tool is listed with writes off by a real server with a fake sign-in; the bundled hooks print nothing for the seven and still ask for the seven left out.
+- tests/kinds-postreads.test.mjs: countTokens moved from "stays a write" to "is a read, on the owner's decision of 2026-10-31", in the classifier, the built table, the hook and the server.
+
 ## 1.41.3 - 2026-10-31
 
 ### Fixed: a credential word is a whole word of the method name
