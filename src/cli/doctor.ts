@@ -104,16 +104,23 @@ function readJson(file: string): JsonRead {
   }
 }
 
-/** The plugin's hooks: PreToolUse must have an entry with the matcher ^mcp__plugin_<id>_ that runs bin/gsm-hook.mjs. */
-function checkHooks(tally: Tally, id: string, hooks: unknown): void {
-  const matcher = `^mcp__plugin_${id}_`;
+/**
+ * The plugin's hooks: PreToolUse must have an entry that runs bin/gsm-hook.mjs with the matcher of this plugin's tools:
+ * ^mcp__plugin_<id>_<server>__ for a server of its .mcp.json (the bundle's since 1.38.2), or ^mcp__plugin_<id>_ (the
+ * bundle's before 1.38.2, still accepted, so a plugin built earlier passes as before).
+ */
+function checkHooks(tally: Tally, id: string, hooks: unknown, servers: readonly string[]): void {
+  const legacy = `^mcp__plugin_${id}_`;
+  const anchored = servers.map((server) => `^mcp__plugin_${id}_${server}__`.replace(/[^A-Za-z0-9_^-]/g, '_'));
+  const accepted = [...anchored, legacy];
   const pre = isObject(hooks) && isObject(hooks.hooks) ? hooks.hooks.PreToolUse : undefined;
   const entries: unknown[] = Array.isArray(pre) ? pre : [];
-  const entry = entries.find((e) => isObject(e) && e.matcher === matcher);
+  const entry = entries.find((e) => isObject(e) && typeof e.matcher === 'string' && accepted.includes(e.matcher));
   if (!isObject(entry)) {
-    tally.check(false, `${id}: hooks/hooks.json has no PreToolUse entry with matcher ${matcher}`);
+    tally.check(false, `${id}: hooks/hooks.json has no PreToolUse entry with matcher ${accepted.join(' or ')}`);
     return;
   }
+  const matcher = String(entry.matcher);
   const commands = Array.isArray(entry.hooks) ? entry.hooks : [];
   const runsHook = commands.some(
     (h) =>
@@ -184,7 +191,11 @@ function checkPluginFolder(tally: Tally, id: string, folder: string): void {
     for (const path of invalid) tally.check(false, `${id}: ${path} is not valid JSON`);
   }
 
-  if (parsed.has('hooks/hooks.json')) checkHooks(tally, id, parsed.get('hooks/hooks.json'));
+  if (parsed.has('hooks/hooks.json')) {
+    const mcp = parsed.get('.mcp.json');
+    const servers = isObject(mcp) && isObject(mcp.mcpServers) ? Object.keys(mcp.mcpServers) : [];
+    checkHooks(tally, id, parsed.get('hooks/hooks.json'), servers);
+  }
   if (parsed.has('.mcp.json')) checkMcpServers(tally, id, folder, parsed.get('.mcp.json'));
   if (parsed.has('tool-map.json')) checkToolNames(tally, id, parsed.get('tool-map.json'));
 }

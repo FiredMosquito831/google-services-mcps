@@ -2,7 +2,7 @@
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "^mcp__plugin_gmeet_",
+        "matcher": "^mcp__plugin_gmeet_gmeet__",
         "hooks": [
           {
             "type": "command",

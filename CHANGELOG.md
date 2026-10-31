@@ -2,6 +2,16 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.38.2 - 2026-10-31
+
+### Changed: the hook runs for its own server's tools only, and trusts Claude Code's server source
+- Each plugin's PreToolUse matcher was `^mcp__plugin_<plugin>_`, which also matches another plugin whose name starts with this one and an underscore. It is now anchored to the plugin's own server: `^mcp__plugin_<plugin>_<server>__`, the prefix Claude Code gives every tool of a plugin's server ("`mcp__plugin_<plugin-name>_<server-name>__<tool>`", https://code.claude.com/docs/en/hooks). It matches every tool of the plugin's map and none of another plugin's (tested over all 23).
+- The hook now reads `mcp_server` from the hook input: "For an MCP tool, the input also carries `mcp_server`, an object with the server's `name` and a `source` that says where the server's definition came from. The `source` values include `plugin`, `sdk`, and configuration scopes such as `user` and `project`. ... Base trust decisions on `source` rather than on `name` or the `mcp__<server>__` tool-name prefix. The `mcp_server` field requires Claude Code v2.1.274 or later." (same page). When `source` is a string other than `plugin`, the call comes from a server the person configured (or an SDK), not from this plugin, so the hook prints nothing and Claude Code's own permission rules apply. Fail closed: when `mcp_server` or its `source` is missing or not a string (an older Claude Code), the hook decides by the tool name exactly as before.
+- `gsm doctor` checks for the anchored matcher of a server in the plugin's `.mcp.json`, and still accepts the older `^mcp__plugin_<plugin>_`, so a plugin folder built before 1.38.2 passes as before. `scripts/smoke.mjs` expects the anchored matcher.
+
+### Not changed
+- The hook's answer for every call of this plugin's tools: over every tool-map entry of every plugin and four other names each, with confirmation unset and `destructive-only`, and with `mcp_server` absent, `source: "plugin"`, no `source`, a non-string `source` or a non-object `mcp_server`, the output equals 1.36.1's (tests/hook-source.test.mjs, and a full dump: 29,704 hook runs, 25,704 identical). The 4,000 that differ are the calls whose `source` is `user` or `project` that asked before: they print nothing now. tools/list, instructions, tool maps and kinds.
+
 ## 1.38.1 - 2026-10-31
 
 ### Changed: plugin manifests name their homepage, repository and licence; each plugin has a README; the marketplace has categories and tags

@@ -2,7 +2,7 @@
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "^mcp__plugin_gcalendar_",
+        "matcher": "^mcp__plugin_gcalendar_gcalendar__",
         "hooks": [
           {
             "type": "command",

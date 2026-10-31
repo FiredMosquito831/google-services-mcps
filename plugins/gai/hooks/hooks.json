@@ -2,7 +2,7 @@
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "^mcp__plugin_gai_",
+        "matcher": "^mcp__plugin_gai_gai__",
         "hooks": [
           {
             "type": "command",

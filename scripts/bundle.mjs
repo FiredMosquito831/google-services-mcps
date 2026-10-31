@@ -34,7 +34,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const AUTHOR = { name: 'FiredMosquito831' };
-const MANIFEST_VERSION = '1.38.1';
+const MANIFEST_VERSION = '1.38.2';
 const TOOL_NAME_MAX = 64;
 /** When two API versions give one method two kinds, the riskier one is kept. A dynamic method is kept as dynamic (decided per call). */
 const RANK = { read: 0, write: 1, dynamic: 2, destructive: 3 };
@@ -399,12 +399,17 @@ function pluginReadme(product, id, group) {
   ].join('\n');
 }
 
-function hooksFile(id) {
+/**
+ * hooks/hooks.json. The matcher is a regular expression anchored to this plugin's own server, the prefix of every tool
+ * Claude Code names for it (mcp__plugin_<plugin>_<server>__<tool>, code.claude.com/docs/en/hooks), so the hook runs for
+ * this plugin's tools only. The hook checks the prefix and the MCP server's source again itself.
+ */
+function hooksFile(id, serverName) {
   return {
     hooks: {
       PreToolUse: [
         {
-          matcher: `^mcp__plugin_${id}_`,
+          matcher: `^mcp__plugin_${id}_${serverName}__`.replace(/[^A-Za-z0-9_^-]/g, '_'),
           hooks: [{ type: 'command', command: 'node', args: ['${CLAUDE_PLUGIN_ROOT}/bin/gsm-hook.mjs'], timeout: 10 }],
         },
       ],
@@ -717,7 +722,7 @@ async function buildPlugin(id, product, ctx) {
       },
     },
   });
-  writeJson(join(pluginDir, 'hooks', 'hooks.json'), hooksFile(id));
+  writeJson(join(pluginDir, 'hooks', 'hooks.json'), hooksFile(id, server.name));
   writeJson(join(pluginDir, '.claude-plugin', 'plugin.json'), pluginManifest(product, id, server.group));
   writeFileSync(join(pluginDir, 'README.md'), pluginReadme(product, id, server.group), 'utf8');
 

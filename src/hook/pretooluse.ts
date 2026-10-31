@@ -82,6 +82,22 @@ type HookDecision = 'ask' | 'deny';
 interface HookEvent {
   tool_name: string;
   tool_input?: unknown;
+  /** Claude Code 2.1.274 or later, for an MCP tool: the server's name and where its definition came from. */
+  mcp_server?: unknown;
+}
+
+/**
+ * True when Claude Code says the call's MCP server is not a plugin's: the input's mcp_server.source (Claude Code 2.1.274
+ * or later) is a string other than "plugin". Such a call is not this plugin's tool, whatever its name ("Base trust
+ * decisions on source rather than on name or the mcp__<server>__ tool-name prefix", code.claude.com/docs/en/hooks), so
+ * the hook prints nothing and Claude Code's own permission rules apply. Fail closed: when mcp_server or its source is
+ * missing or not a string (an older Claude Code), the call is checked by its name, as before.
+ */
+function fromAnotherKindOfServer(event: HookEvent): boolean {
+  const server = event.mcp_server;
+  if (server === null || typeof server !== 'object') return false;
+  const source = (server as { source?: unknown }).source;
+  return typeof source === 'string' && source !== 'plugin';
 }
 
 function emit(decision: HookDecision, reason: string): void {
@@ -256,6 +272,8 @@ async function run(): Promise<void> {
   // Only this plugin's own tools are checked. A tool of another plugin, or of any other MCP server, prints nothing.
   // When this plugin cannot be identified, every plugin tool is asked about, because any of them could be ours.
   if (!event.tool_name.startsWith(PLUGIN_TOOL_PREFIX)) return;
+  // A server that Claude Code says is not a plugin's (a user, project or SDK server named like this plugin's) is not ours.
+  if (fromAnotherKindOfServer(event)) return;
 
   const root = pluginRoot();
   const prefix = ownToolPrefix(root);

@@ -2,7 +2,7 @@
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "^mcp__plugin_gyoutube_",
+        "matcher": "^mcp__plugin_gyoutube_gyoutube__",
         "hooks": [
           {
             "type": "command",
