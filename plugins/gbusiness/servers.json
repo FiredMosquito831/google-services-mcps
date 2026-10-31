@@ -71,10 +71,10 @@
           "mbaccount_accounts_list",
           "mbinfo_accounts_locations_list",
           "mbinfo_locations_get",
-          "bpperf_locations_get_daily_metr",
-          "bpperf_locations_fetch_multi_da",
-          "bpperf_loca_sear_impr_mont_list",
-          "mbverify_location_verifica_list",
+          "bpperf_loc_get_dai_met_tim_seri",
+          "bpperf_locations_time_series",
+          "bpperf_impressions_monthly_list",
+          "mbverify_verifications_list",
           "mbinfo_locations_patch"
         ]
       },

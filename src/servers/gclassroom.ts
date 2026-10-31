@@ -1,6 +1,6 @@
 /**
  * Curated Google Classroom tools (classroom_*) of the gclassroom server, with readable names in place of the hashed
- * generated ones (the 64-character budget hashes them, for example classroom_cour_stud_list_140b). They match the tools
+ * generated ones (the 64-character budget cut them, for example classroom_students_list). They match the tools
  * of Google's Classroom MCP server (developers.google.com/workspace/classroom/reference/mcp/tools_list) for the common
  * tasks: courses, topics, coursework and material summaries with an optional submission overview, coursework details,
  * the roster, announcements, submissions, rubrics and guardians. Google's search_course_standards has no public REST

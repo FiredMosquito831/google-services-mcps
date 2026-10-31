@@ -162,124 +162,7 @@
     "title": "Sign-in status"
   },
   {
-    "name": "mcp__plugin_gads_gads__displayvid_adver_ad_gr_targe_assig_create",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.advertisers.adGroups.targetingTypes.assignedTargetingOptions.create",
-    "title": "displayvideo.advertisers.adGroups.targetingTypes.assignedTargetingOptions.create"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_adver_ad_gr_targe_assig_delete",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.advertisers.adGroups.targetingTypes.assignedTargetingOptions.delete",
-    "title": "displayvideo.advertisers.adGroups.targetingTypes.assignedTargetingOptions.delete"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_adver_ad_gr_target_assign_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.advertisers.adGroups.targetingTypes.assignedTargetingOptions.list",
-    "title": "displayvideo.advertisers.adGroups.targetingTypes.assignedTargetingOptions.list"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_adver_ad_gr_youtu_youtu_create",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.advertisers.adGroups.youtubeAssetTypes.youtubeAssetAssociations.create",
-    "title": "displayvideo.advertisers.adGroups.youtubeAssetTypes.youtubeAssetAssociations.create"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_adver_ad_gr_youtu_youtu_delete",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.advertisers.adGroups.youtubeAssetTypes.youtubeAssetAssociations.delete",
-    "title": "displayvideo.advertisers.adGroups.youtubeAssetTypes.youtubeAssetAssociations.delete"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_adver_ad_gr_youtub_youtub_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.advertisers.adGroups.youtubeAssetTypes.youtubeAssetAssociations.list",
-    "title": "displayvideo.advertisers.adGroups.youtubeAssetTypes.youtubeAssetAssociations.list"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_adver_ad_gro_target_assign_get",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.advertisers.adGroups.targetingTypes.assignedTargetingOptions.get",
-    "title": "displayvideo.advertisers.adGroups.targetingTypes.assignedTargetingOptions.get"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_adver_line_i_target_assign_get",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.advertisers.lineItems.targetingTypes.assignedTargetingOptions.get",
-    "title": "displayvideo.advertisers.lineItems.targetingTypes.assignedTargetingOptions.get"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_adver_line_targe_assign_create",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.advertisers.lineItems.targetingTypes.assignedTargetingOptions.create",
-    "title": "displayvideo.advertisers.lineItems.targetingTypes.assignedTargetingOptions.create"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_adver_line_targe_assign_delete",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.advertisers.lineItems.targetingTypes.assignedTargetingOptions.delete",
-    "title": "displayvideo.advertisers.lineItems.targetingTypes.assignedTargetingOptions.delete"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_adver_line_target_assign_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.advertisers.lineItems.targetingTypes.assignedTargetingOptions.list",
-    "title": "displayvideo.advertisers.lineItems.targetingTypes.assignedTargetingOptions.list"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_adver_line_youtu_youtub_create",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.advertisers.lineItems.youtubeAssetTypes.youtubeAssetAssociations.create",
-    "title": "displayvideo.advertisers.lineItems.youtubeAssetTypes.youtubeAssetAssociations.create"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_adver_line_youtu_youtub_delete",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.advertisers.lineItems.youtubeAssetTypes.youtubeAssetAssociations.delete",
-    "title": "displayvideo.advertisers.lineItems.youtubeAssetTypes.youtubeAssetAssociations.delete"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_adver_line_youtub_youtub_list",
+    "name": "mcp__plugin_gads_gads__dis_youtube_asset_types_associations_list",
     "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/display-video"
@@ -288,97 +171,7 @@
     "title": "displayvideo.advertisers.lineItems.youtubeAssetTypes.youtubeAssetAssociations.list"
   },
   {
-    "name": "mcp__plugin_gads_gads__displayvid_advert_locatio_assigne_bulk_ed",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.advertisers.locationLists.assignedLocations.bulkEdit",
-    "title": "displayvideo.advertisers.locationLists.assignedLocations.bulkEdit"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_advert_negativ_negativ_bulk_ed",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.advertisers.negativeKeywordLists.negativeKeywords.bulkEdit",
-    "title": "displayvideo.advertisers.negativeKeywordLists.negativeKeywords.bulkEdit"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_advert_negativ_negativ_replace",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.advertisers.negativeKeywordLists.negativeKeywords.replace",
-    "title": "displayvideo.advertisers.negativeKeywordLists.negativeKeywords.replace"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_adverti_channel_sites_bulk_edi",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.advertisers.channels.sites.bulkEdit",
-    "title": "displayvideo.advertisers.channels.sites.bulkEdit"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_adverti_channels_sites_replace",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.advertisers.channels.sites.replace",
-    "title": "displayvideo.advertisers.channels.sites.replace"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_adverti_locatio_assigne_create",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.advertisers.locationLists.assignedLocations.create",
-    "title": "displayvideo.advertisers.locationLists.assignedLocations.create"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_adverti_locatio_assigne_delete",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.advertisers.locationLists.assignedLocations.delete",
-    "title": "displayvideo.advertisers.locationLists.assignedLocations.delete"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_adverti_location_assigned_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.advertisers.locationLists.assignedLocations.list",
-    "title": "displayvideo.advertisers.locationLists.assignedLocations.list"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_adverti_negativ_negativ_create",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.advertisers.negativeKeywordLists.negativeKeywords.create",
-    "title": "displayvideo.advertisers.negativeKeywordLists.negativeKeywords.create"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_adverti_negativ_negativ_delete",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.advertisers.negativeKeywordLists.negativeKeywords.delete",
-    "title": "displayvideo.advertisers.negativeKeywordLists.negativeKeywords.delete"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_adverti_negative_negative_list",
+    "name": "mcp__plugin_gads_gads__disp_negative_keyword_lists_keywords_list",
     "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/display-video"
@@ -387,79 +180,7 @@
     "title": "displayvideo.advertisers.negativeKeywordLists.negativeKeywords.list"
   },
   {
-    "name": "mcp__plugin_gads_gads__displayvid_adverti_targeti_assigne_create",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.advertisers.targetingTypes.assignedTargetingOptions.create",
-    "title": "displayvideo.advertisers.targetingTypes.assignedTargetingOptions.create"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_adverti_targeti_assigne_delete",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.advertisers.targetingTypes.assignedTargetingOptions.delete",
-    "title": "displayvideo.advertisers.targetingTypes.assignedTargetingOptions.delete"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_adverti_targetin_assigned_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.advertisers.targetingTypes.assignedTargetingOptions.list",
-    "title": "displayvideo.advertisers.targetingTypes.assignedTargetingOptions.list"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_advertis_channels_sites_create",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.advertisers.channels.sites.create",
-    "title": "displayvideo.advertisers.channels.sites.create"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_advertis_channels_sites_delete",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.advertisers.channels.sites.delete",
-    "title": "displayvideo.advertisers.channels.sites.delete"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_advertis_targetin_assigned_get",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.advertisers.targetingTypes.assignedTargetingOptions.get",
-    "title": "displayvideo.advertisers.targetingTypes.assignedTargetingOptions.get"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_advertise_ad_assets_bulk_creat",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.advertisers.adAssets.bulkCreate",
-    "title": "displayvideo.advertisers.adAssets.bulkCreate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_advertise_line_item_bulk_updat",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.advertisers.lineItems.bulkUpdate",
-    "title": "displayvideo.advertisers.lineItems.bulkUpdate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_advertise_line_items_bulk_edit",
+    "name": "mcp__plugin_gads_gads__displa_line_items_bulk_edit_asgn_tgt_opts",
     "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/display-video"
@@ -468,7 +189,7 @@
     "title": "displayvideo.advertisers.lineItems.bulkEditAssignedTargetingOptions"
   },
   {
-    "name": "mcp__plugin_gads_gads__displayvid_advertise_line_items_bulk_list",
+    "name": "mcp__plugin_gads_gads__displa_line_items_bulk_list_asgn_tgt_opts",
     "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/display-video"
@@ -477,34 +198,62 @@
     "title": "displayvideo.advertisers.lineItems.bulkListAssignedTargetingOptions"
   },
   {
-    "name": "mcp__plugin_gads_gads__displayvid_advertise_line_items_duplicate",
+    "name": "mcp__plugin_gads_gads__displa_location_lists_locations_bulk_edit",
     "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/display-video"
     ],
-    "methodId": "displayvideo.advertisers.lineItems.duplicate",
-    "title": "displayvideo.advertisers.lineItems.duplicate"
+    "methodId": "displayvideo.advertisers.locationLists.assignedLocations.bulkEdit",
+    "title": "displayvideo.advertisers.locationLists.assignedLocations.bulkEdit"
   },
   {
-    "name": "mcp__plugin_gads_gads__displayvid_advertiser_ad_groups_bulk_edit",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.advertisers.adGroups.bulkEditAssignedTargetingOptions",
-    "title": "displayvideo.advertisers.adGroups.bulkEditAssignedTargetingOptions"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_advertiser_ad_groups_bulk_list",
+    "name": "mcp__plugin_gads_gads__displayv_invoices_lookup_invoice_currency",
     "kind": "read",
     "scopes": [
-      "https://www.googleapis.com/auth/display-video"
+      "https://www.googleapis.com/auth/display-video",
+      "https://www.googleapis.com/auth/display-video-mediaplanning"
     ],
-    "methodId": "displayvideo.advertisers.adGroups.bulkListAssignedTargetingOptions",
-    "title": "displayvideo.advertisers.adGroups.bulkListAssignedTargetingOptions"
+    "methodId": "displayvideo.advertisers.invoices.lookupInvoiceCurrency",
+    "title": "displayvideo.advertisers.invoices.lookupInvoiceCurrency"
   },
   {
-    "name": "mcp__plugin_gads_gads__displayvid_advertiser_channels_sites_list",
+    "name": "mcp__plugin_gads_gads__displayv_line_items_tgt_types_opts_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/display-video"
+    ],
+    "methodId": "displayvideo.advertisers.lineItems.targetingTypes.assignedTargetingOptions.create",
+    "title": "displayvideo.advertisers.lineItems.targetingTypes.assignedTargetingOptions.create"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__displayv_line_items_tgt_types_opts_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/display-video"
+    ],
+    "methodId": "displayvideo.advertisers.lineItems.targetingTypes.assignedTargetingOptions.delete",
+    "title": "displayvideo.advertisers.lineItems.targetingTypes.assignedTargetingOptions.delete"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__displayvi_advertisers_ad_group_ads_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/display-video"
+    ],
+    "methodId": "displayvideo.advertisers.adGroupAds.create",
+    "title": "displayvideo.advertisers.adGroupAds.create"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__displayvi_advertisers_ad_group_ads_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/display-video"
+    ],
+    "methodId": "displayvideo.advertisers.adGroupAds.delete",
+    "title": "displayvideo.advertisers.adGroupAds.delete"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__displayvi_advertisers_channels_sites_list",
     "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/display-video"
@@ -513,14 +262,86 @@
     "title": "displayvideo.advertisers.channels.sites.list"
   },
   {
-    "name": "mcp__plugin_gads_gads__displayvid_advertiser_invoices_lookup_inv",
+    "name": "mcp__plugin_gads_gads__displayvi_advertisers_location_lists_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/display-video"
+    ],
+    "methodId": "displayvideo.advertisers.locationLists.list",
+    "title": "displayvideo.advertisers.locationLists.list"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__displayvi_advs_groups_tgt_types_opts_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/display-video"
+    ],
+    "methodId": "displayvideo.advertisers.adGroups.targetingTypes.assignedTargetingOptions.list",
+    "title": "displayvideo.advertisers.adGroups.targetingTypes.assignedTargetingOptions.list"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__displayvi_advs_negative_keyword_lists_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/display-video"
+    ],
+    "methodId": "displayvideo.advertisers.negativeKeywordLists.get",
+    "title": "displayvideo.advertisers.negativeKeywordLists.get"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__displayvi_location_lists_locations_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/display-video"
+    ],
+    "methodId": "displayvideo.advertisers.locationLists.assignedLocations.create",
+    "title": "displayvideo.advertisers.locationLists.assignedLocations.create"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__displayvi_location_lists_locations_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/display-video"
+    ],
+    "methodId": "displayvideo.advertisers.locationLists.assignedLocations.delete",
+    "title": "displayvideo.advertisers.locationLists.assignedLocations.delete"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__displayvi_sdfdownloadtasks_operations_get",
     "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/display-video",
-      "https://www.googleapis.com/auth/display-video-mediaplanning"
+      "https://www.googleapis.com/auth/doubleclickbidmanager"
     ],
-    "methodId": "displayvideo.advertisers.invoices.lookupInvoiceCurrency",
-    "title": "displayvideo.advertisers.invoices.lookupInvoiceCurrency"
+    "methodId": "displayvideo.sdfdownloadtasks.operations.get",
+    "title": "displayvideo.sdfdownloadtasks.operations.get"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__displayvid_adv_ad_gro_you_ass_typ_ass_cre",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/display-video"
+    ],
+    "methodId": "displayvideo.advertisers.adGroups.youtubeAssetTypes.youtubeAssetAssociations.create",
+    "title": "displayvideo.advertisers.adGroups.youtubeAssetTypes.youtubeAssetAssociations.create"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__displayvid_adv_ad_gro_you_ass_typ_ass_del",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/display-video"
+    ],
+    "methodId": "displayvideo.advertisers.adGroups.youtubeAssetTypes.youtubeAssetAssociations.delete",
+    "title": "displayvideo.advertisers.adGroups.youtubeAssetTypes.youtubeAssetAssociations.delete"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__displayvid_adv_ad_gro_you_ass_typ_ass_lis",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/display-video"
+    ],
+    "methodId": "displayvideo.advertisers.adGroups.youtubeAssetTypes.youtubeAssetAssociations.list",
+    "title": "displayvideo.advertisers.adGroups.youtubeAssetTypes.youtubeAssetAssociations.list"
   },
   {
     "name": "mcp__plugin_gads_gads__displayvid_advertisers_ad_assets_create",
@@ -557,24 +378,6 @@
     ],
     "methodId": "displayvideo.advertisers.adAssets.patch",
     "title": "displayvideo.advertisers.adAssets.patch"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_advertisers_ad_group_ad_create",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.advertisers.adGroupAds.create",
-    "title": "displayvideo.advertisers.adGroupAds.create"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_advertisers_ad_group_ad_delete",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.advertisers.adGroupAds.delete",
-    "title": "displayvideo.advertisers.adGroupAds.delete"
   },
   {
     "name": "mcp__plugin_gads_gads__displayvid_advertisers_ad_group_ads_get",
@@ -807,15 +610,6 @@
     "title": "displayvideo.advertisers.delete"
   },
   {
-    "name": "mcp__plugin_gads_gads__displayvid_advertisers_edit_assigned_targ",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.advertisers.editAssignedTargetingOptions",
-    "title": "displayvideo.advertisers.editAssignedTargetingOptions"
-  },
-  {
     "name": "mcp__plugin_gads_gads__displayvid_advertisers_get",
     "kind": "read",
     "scopes": [
@@ -823,51 +617,6 @@
     ],
     "methodId": "displayvideo.advertisers.get",
     "title": "displayvideo.advertisers.get"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_advertisers_insertion_o_create",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.advertisers.insertionOrders.create",
-    "title": "displayvideo.advertisers.insertionOrders.create"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_advertisers_insertion_o_delete",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.advertisers.insertionOrders.delete",
-    "title": "displayvideo.advertisers.insertionOrders.delete"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_advertisers_insertion_or_patch",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.advertisers.insertionOrders.patch",
-    "title": "displayvideo.advertisers.insertionOrders.patch"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_advertisers_insertion_ord_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.advertisers.insertionOrders.list",
-    "title": "displayvideo.advertisers.insertionOrders.list"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_advertisers_insertion_orde_get",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.advertisers.insertionOrders.get",
-    "title": "displayvideo.advertisers.insertionOrders.get"
   },
   {
     "name": "mcp__plugin_gads_gads__displayvid_advertisers_invoices_list",
@@ -934,42 +683,6 @@
     "title": "displayvideo.advertisers.list"
   },
   {
-    "name": "mcp__plugin_gads_gads__displayvid_advertisers_list_assigned_targ",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.advertisers.listAssignedTargetingOptions",
-    "title": "displayvideo.advertisers.listAssignedTargetingOptions"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_advertisers_location_li_create",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.advertisers.locationLists.create",
-    "title": "displayvideo.advertisers.locationLists.create"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_advertisers_location_lis_patch",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.advertisers.locationLists.patch",
-    "title": "displayvideo.advertisers.locationLists.patch"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_advertisers_location_list_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.advertisers.locationLists.list",
-    "title": "displayvideo.advertisers.locationLists.list"
-  },
-  {
     "name": "mcp__plugin_gads_gads__displayvid_advertisers_location_lists_get",
     "kind": "read",
     "scopes": [
@@ -979,51 +692,6 @@
     "title": "displayvideo.advertisers.locationLists.get"
   },
   {
-    "name": "mcp__plugin_gads_gads__displayvid_advertisers_negative_ke_create",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.advertisers.negativeKeywordLists.create",
-    "title": "displayvideo.advertisers.negativeKeywordLists.create"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_advertisers_negative_ke_delete",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.advertisers.negativeKeywordLists.delete",
-    "title": "displayvideo.advertisers.negativeKeywordLists.delete"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_advertisers_negative_key_patch",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.advertisers.negativeKeywordLists.patch",
-    "title": "displayvideo.advertisers.negativeKeywordLists.patch"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_advertisers_negative_keyw_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.advertisers.negativeKeywordLists.list",
-    "title": "displayvideo.advertisers.negativeKeywordLists.list"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_advertisers_negative_keywo_get",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.advertisers.negativeKeywordLists.get",
-    "title": "displayvideo.advertisers.negativeKeywordLists.get"
-  },
-  {
     "name": "mcp__plugin_gads_gads__displayvid_advertisers_patch",
     "kind": "write",
     "scopes": [
@@ -1031,6 +699,249 @@
     ],
     "methodId": "displayvideo.advertisers.patch",
     "title": "displayvideo.advertisers.patch"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__displayvid_advs_ad_assets_bulk_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/display-video"
+    ],
+    "methodId": "displayvideo.advertisers.adAssets.bulkCreate",
+    "title": "displayvideo.advertisers.adAssets.bulkCreate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__displayvid_advs_chans_sites_bulk_edit",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/display-video"
+    ],
+    "methodId": "displayvideo.advertisers.channels.sites.bulkEdit",
+    "title": "displayvideo.advertisers.channels.sites.bulkEdit"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__displayvid_advs_chans_sites_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/display-video"
+    ],
+    "methodId": "displayvideo.advertisers.channels.sites.create",
+    "title": "displayvideo.advertisers.channels.sites.create"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__displayvid_advs_chans_sites_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/display-video"
+    ],
+    "methodId": "displayvideo.advertisers.channels.sites.delete",
+    "title": "displayvideo.advertisers.channels.sites.delete"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__displayvid_advs_chans_sites_replace",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/display-video"
+    ],
+    "methodId": "displayvideo.advertisers.channels.sites.replace",
+    "title": "displayvideo.advertisers.channels.sites.replace"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__displayvid_advs_edit_asgn_tgt_opts",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/display-video"
+    ],
+    "methodId": "displayvideo.advertisers.editAssignedTargetingOptions",
+    "title": "displayvideo.advertisers.editAssignedTargetingOptions"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__displayvid_advs_groups_tgt_types_opts_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/display-video"
+    ],
+    "methodId": "displayvideo.advertisers.adGroups.targetingTypes.assignedTargetingOptions.get",
+    "title": "displayvideo.advertisers.adGroups.targetingTypes.assignedTargetingOptions.get"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__displayvid_advs_insertion_orders_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/display-video"
+    ],
+    "methodId": "displayvideo.advertisers.insertionOrders.create",
+    "title": "displayvideo.advertisers.insertionOrders.create"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__displayvid_advs_insertion_orders_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/display-video"
+    ],
+    "methodId": "displayvideo.advertisers.insertionOrders.delete",
+    "title": "displayvideo.advertisers.insertionOrders.delete"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__displayvid_advs_insertion_orders_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/display-video"
+    ],
+    "methodId": "displayvideo.advertisers.insertionOrders.get",
+    "title": "displayvideo.advertisers.insertionOrders.get"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__displayvid_advs_insertion_orders_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/display-video"
+    ],
+    "methodId": "displayvideo.advertisers.insertionOrders.list",
+    "title": "displayvideo.advertisers.insertionOrders.list"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__displayvid_advs_insertion_orders_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/display-video"
+    ],
+    "methodId": "displayvideo.advertisers.insertionOrders.patch",
+    "title": "displayvideo.advertisers.insertionOrders.patch"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__displayvid_advs_line_items_bulk_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/display-video"
+    ],
+    "methodId": "displayvideo.advertisers.lineItems.bulkUpdate",
+    "title": "displayvideo.advertisers.lineItems.bulkUpdate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__displayvid_advs_line_items_duplicate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/display-video"
+    ],
+    "methodId": "displayvideo.advertisers.lineItems.duplicate",
+    "title": "displayvideo.advertisers.lineItems.duplicate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__displayvid_advs_list_asgn_tgt_opts",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/display-video"
+    ],
+    "methodId": "displayvideo.advertisers.listAssignedTargetingOptions",
+    "title": "displayvideo.advertisers.listAssignedTargetingOptions"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__displayvid_advs_location_lists_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/display-video"
+    ],
+    "methodId": "displayvideo.advertisers.locationLists.create",
+    "title": "displayvideo.advertisers.locationLists.create"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__displayvid_advs_location_lists_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/display-video"
+    ],
+    "methodId": "displayvideo.advertisers.locationLists.patch",
+    "title": "displayvideo.advertisers.locationLists.patch"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__displayvid_advs_tgt_types_opts_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/display-video"
+    ],
+    "methodId": "displayvideo.advertisers.targetingTypes.assignedTargetingOptions.create",
+    "title": "displayvideo.advertisers.targetingTypes.assignedTargetingOptions.create"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__displayvid_advs_tgt_types_opts_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/display-video"
+    ],
+    "methodId": "displayvideo.advertisers.targetingTypes.assignedTargetingOptions.delete",
+    "title": "displayvideo.advertisers.targetingTypes.assignedTargetingOptions.delete"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__displayvid_advs_tgt_types_opts_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/display-video"
+    ],
+    "methodId": "displayvideo.advertisers.targetingTypes.assignedTargetingOptions.get",
+    "title": "displayvideo.advertisers.targetingTypes.assignedTargetingOptions.get"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__displayvid_advs_tgt_types_opts_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/display-video"
+    ],
+    "methodId": "displayvideo.advertisers.targetingTypes.assignedTargetingOptions.list",
+    "title": "displayvideo.advertisers.targetingTypes.assignedTargetingOptions.list"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__displayvid_associations_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/display-video"
+    ],
+    "methodId": "displayvideo.advertisers.lineItems.youtubeAssetTypes.youtubeAssetAssociations.create",
+    "title": "displayvideo.advertisers.lineItems.youtubeAssetTypes.youtubeAssetAssociations.create"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__displayvid_associations_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/display-video"
+    ],
+    "methodId": "displayvideo.advertisers.lineItems.youtubeAssetTypes.youtubeAssetAssociations.delete",
+    "title": "displayvideo.advertisers.lineItems.youtubeAssetTypes.youtubeAssetAssociations.delete"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__displayvid_auds_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/display-video"
+    ],
+    "methodId": "displayvideo.firstPartyAndPartnerAudiences.create",
+    "title": "displayvideo.firstPartyAndPartnerAudiences.create"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__displayvid_auds_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/display-video"
+    ],
+    "methodId": "displayvideo.firstPartyAndPartnerAudiences.get",
+    "title": "displayvideo.firstPartyAndPartnerAudiences.get"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__displayvid_auds_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/display-video"
+    ],
+    "methodId": "displayvideo.firstPartyAndPartnerAudiences.list",
+    "title": "displayvideo.firstPartyAndPartnerAudiences.list"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__displayvid_auds_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/display-video"
+    ],
+    "methodId": "displayvideo.firstPartyAndPartnerAudiences.patch",
+    "title": "displayvideo.firstPartyAndPartnerAudiences.patch"
   },
   {
     "name": "mcp__plugin_gads_gads__displayvid_combined_audiences_get",
@@ -1069,67 +980,13 @@
     "title": "displayvideo.customLists.list"
   },
   {
-    "name": "mcp__plugin_gads_gads__displayvid_first_party_an_edit_customer_m",
+    "name": "mcp__plugin_gads_gads__displayvid_edit_customer_match_members",
     "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/display-video"
     ],
     "methodId": "displayvideo.firstPartyAndPartnerAudiences.editCustomerMatchMembers",
     "title": "displayvideo.firstPartyAndPartnerAudiences.editCustomerMatchMembers"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_first_party_and_partner_a_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.firstPartyAndPartnerAudiences.list",
-    "title": "displayvideo.firstPartyAndPartnerAudiences.list"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_first_party_and_partner_au_get",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.firstPartyAndPartnerAudiences.get",
-    "title": "displayvideo.firstPartyAndPartnerAudiences.get"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_first_party_and_partner_create",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.firstPartyAndPartnerAudiences.create",
-    "title": "displayvideo.firstPartyAndPartnerAudiences.create"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_first_party_and_partner_patch",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.firstPartyAndPartnerAudiences.patch",
-    "title": "displayvideo.firstPartyAndPartnerAudiences.patch"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_floodlight_g_floodlight_a_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.floodlightGroups.floodlightActivities.list",
-    "title": "displayvideo.floodlightGroups.floodlightActivities.list"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__displayvid_floodlight_g_floodlight_ac_get",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/display-video"
-    ],
-    "methodId": "displayvideo.floodlightGroups.floodlightActivities.get",
-    "title": "displayvideo.floodlightGroups.floodlightActivities.get"
   },
   {
     "name": "mcp__plugin_gads_gads__displayvid_floodlight_groups_get",
@@ -1168,14 +1025,157 @@
     "title": "displayvideo.googleAudiences.list"
   },
   {
-    "name": "mcp__plugin_gads_gads__displayvid_sdfdownloadtask_operations_get",
+    "name": "mcp__plugin_gads_gads__displayvid_groups_activities_get",
     "kind": "read",
     "scopes": [
-      "https://www.googleapis.com/auth/display-video",
-      "https://www.googleapis.com/auth/doubleclickbidmanager"
+      "https://www.googleapis.com/auth/display-video"
     ],
-    "methodId": "displayvideo.sdfdownloadtasks.operations.get",
-    "title": "displayvideo.sdfdownloadtasks.operations.get"
+    "methodId": "displayvideo.floodlightGroups.floodlightActivities.get",
+    "title": "displayvideo.floodlightGroups.floodlightActivities.get"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__displayvid_groups_activities_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/display-video"
+    ],
+    "methodId": "displayvideo.floodlightGroups.floodlightActivities.list",
+    "title": "displayvideo.floodlightGroups.floodlightActivities.list"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__displayvid_groups_bulk_edit_asgn_tgt_opts",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/display-video"
+    ],
+    "methodId": "displayvideo.advertisers.adGroups.bulkEditAssignedTargetingOptions",
+    "title": "displayvideo.advertisers.adGroups.bulkEditAssignedTargetingOptions"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__displayvid_groups_bulk_list_asgn_tgt_opts",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/display-video"
+    ],
+    "methodId": "displayvideo.advertisers.adGroups.bulkListAssignedTargetingOptions",
+    "title": "displayvideo.advertisers.adGroups.bulkListAssignedTargetingOptions"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__displayvid_groups_tgt_types_opts_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/display-video"
+    ],
+    "methodId": "displayvideo.advertisers.adGroups.targetingTypes.assignedTargetingOptions.create",
+    "title": "displayvideo.advertisers.adGroups.targetingTypes.assignedTargetingOptions.create"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__displayvid_groups_tgt_types_opts_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/display-video"
+    ],
+    "methodId": "displayvideo.advertisers.adGroups.targetingTypes.assignedTargetingOptions.delete",
+    "title": "displayvideo.advertisers.adGroups.targetingTypes.assignedTargetingOptions.delete"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__displayvid_keywords_bulk_edit",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/display-video"
+    ],
+    "methodId": "displayvideo.advertisers.negativeKeywordLists.negativeKeywords.bulkEdit",
+    "title": "displayvideo.advertisers.negativeKeywordLists.negativeKeywords.bulkEdit"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__displayvid_keywords_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/display-video"
+    ],
+    "methodId": "displayvideo.advertisers.negativeKeywordLists.negativeKeywords.create",
+    "title": "displayvideo.advertisers.negativeKeywordLists.negativeKeywords.create"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__displayvid_keywords_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/display-video"
+    ],
+    "methodId": "displayvideo.advertisers.negativeKeywordLists.negativeKeywords.delete",
+    "title": "displayvideo.advertisers.negativeKeywordLists.negativeKeywords.delete"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__displayvid_keywords_replace",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/display-video"
+    ],
+    "methodId": "displayvideo.advertisers.negativeKeywordLists.negativeKeywords.replace",
+    "title": "displayvideo.advertisers.negativeKeywordLists.negativeKeywords.replace"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__displayvid_line_items_tgt_types_opts_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/display-video"
+    ],
+    "methodId": "displayvideo.advertisers.lineItems.targetingTypes.assignedTargetingOptions.get",
+    "title": "displayvideo.advertisers.lineItems.targetingTypes.assignedTargetingOptions.get"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__displayvid_line_items_tgt_types_opts_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/display-video"
+    ],
+    "methodId": "displayvideo.advertisers.lineItems.targetingTypes.assignedTargetingOptions.list",
+    "title": "displayvideo.advertisers.lineItems.targetingTypes.assignedTargetingOptions.list"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__displayvid_location_lists_locations_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/display-video"
+    ],
+    "methodId": "displayvideo.advertisers.locationLists.assignedLocations.list",
+    "title": "displayvideo.advertisers.locationLists.assignedLocations.list"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__displayvid_negative_keyword_lists_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/display-video"
+    ],
+    "methodId": "displayvideo.advertisers.negativeKeywordLists.create",
+    "title": "displayvideo.advertisers.negativeKeywordLists.create"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__displayvid_negative_keyword_lists_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/display-video"
+    ],
+    "methodId": "displayvideo.advertisers.negativeKeywordLists.delete",
+    "title": "displayvideo.advertisers.negativeKeywordLists.delete"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__displayvid_negative_keyword_lists_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/display-video"
+    ],
+    "methodId": "displayvideo.advertisers.negativeKeywordLists.list",
+    "title": "displayvideo.advertisers.negativeKeywordLists.list"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__displayvid_negative_keyword_lists_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/display-video"
+    ],
+    "methodId": "displayvideo.advertisers.negativeKeywordLists.patch",
+    "title": "displayvideo.advertisers.negativeKeywordLists.patch"
   },
   {
     "name": "mcp__plugin_gads_gads__displayvid_sdfdownloadtasks_create",
@@ -1187,16 +1187,16 @@
     "title": "displayvideo.sdfdownloadtasks.create"
   },
   {
-    "name": "mcp__plugin_gads_gads__displayvid_targeting_t_targeting_o_search",
+    "name": "mcp__plugin_gads_gads__displayvid_tgt_types_tgt_opts_get",
     "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/display-video"
     ],
-    "methodId": "displayvideo.targetingTypes.targetingOptions.search",
-    "title": "displayvideo.targetingTypes.targetingOptions.search"
+    "methodId": "displayvideo.targetingTypes.targetingOptions.get",
+    "title": "displayvideo.targetingTypes.targetingOptions.get"
   },
   {
-    "name": "mcp__plugin_gads_gads__displayvid_targeting_ty_targeting_op_list",
+    "name": "mcp__plugin_gads_gads__displayvid_tgt_types_tgt_opts_list",
     "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/display-video"
@@ -1205,13 +1205,13 @@
     "title": "displayvideo.targetingTypes.targetingOptions.list"
   },
   {
-    "name": "mcp__plugin_gads_gads__displayvid_targeting_ty_targeting_opt_get",
+    "name": "mcp__plugin_gads_gads__displayvid_tgt_types_tgt_opts_search",
     "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/display-video"
     ],
-    "methodId": "displayvideo.targetingTypes.targetingOptions.get",
-    "title": "displayvideo.targetingTypes.targetingOptions.get"
+    "methodId": "displayvideo.targetingTypes.targetingOptions.search",
+    "title": "displayvideo.targetingTypes.targetingOptions.search"
   },
   {
     "name": "mcp__plugin_gads_gads__doubleclic_queries_create",
@@ -1277,7 +1277,16 @@
     "title": "doubleclickbidmanager.queries.run"
   },
   {
-    "name": "mcp__plugin_gads_gads__googleads_customers_account_budget_mutate",
+    "name": "mcp__plugin_gads_gads__googl_remove_automatically_created_assets",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "methodId": "googleads.customers.adGroupAds.removeAutomaticallyCreatedAssets",
+    "title": "googleads.customers.adGroupAds.removeAutomaticallyCreatedAssets"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__googleads_account_budget_proposals_mutate",
     "kind": "dynamic",
     "scopes": [
       "https://www.googleapis.com/auth/adwords"
@@ -1286,13 +1295,121 @@
     "title": "googleads.customers.accountBudgetProposals.mutate"
   },
   {
-    "name": "mcp__plugin_gads_gads__googleads_customers_ad_group_a_remove_aut",
+    "name": "mcp__plugin_gads_gads__googleads_ad_group_assets_mutate",
+    "kind": "dynamic",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "methodId": "googleads.customers.adGroupAssets.mutate",
+    "title": "googleads.customers.adGroupAssets.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__googleads_ad_group_criteria_mutate",
+    "kind": "dynamic",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "methodId": "googleads.customers.adGroupCriteria.mutate",
+    "title": "googleads.customers.adGroupCriteria.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__googleads_asset_group_assets_mutate",
+    "kind": "dynamic",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "methodId": "googleads.customers.assetGroupAssets.mutate",
+    "title": "googleads.customers.assetGroupAssets.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__googleads_bidding_strategies_mutate",
+    "kind": "dynamic",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "methodId": "googleads.customers.biddingStrategies.mutate",
+    "title": "googleads.customers.biddingStrategies.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__googleads_campaign_assets_mutate",
+    "kind": "dynamic",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "methodId": "googleads.customers.campaignAssets.mutate",
+    "title": "googleads.customers.campaignAssets.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__googleads_campaign_budgets_mutate",
+    "kind": "dynamic",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "methodId": "googleads.customers.campaignBudgets.mutate",
+    "title": "googleads.customers.campaignBudgets.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__googleads_campaign_conv_goals_mutate",
+    "kind": "dynamic",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "methodId": "googleads.customers.campaignConversionGoals.mutate",
+    "title": "googleads.customers.campaignConversionGoals.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__googleads_campaign_criteria_mutate",
+    "kind": "dynamic",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "methodId": "googleads.customers.campaignCriteria.mutate",
+    "title": "googleads.customers.campaignCriteria.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__googleads_conversion_actions_mutate",
+    "kind": "dynamic",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "methodId": "googleads.customers.conversionActions.mutate",
+    "title": "googleads.customers.conversionActions.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__googleads_create_customer_client",
     "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/adwords"
     ],
-    "methodId": "googleads.customers.adGroupAds.removeAutomaticallyCreatedAssets",
-    "title": "googleads.customers.adGroupAds.removeAutomaticallyCreatedAssets"
+    "methodId": "googleads.customers.createCustomerClient",
+    "title": "googleads.customers.createCustomerClient"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__googleads_criteria_mutate",
+    "kind": "dynamic",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "methodId": "googleads.customers.customerNegativeCriteria.mutate",
+    "title": "googleads.customers.customerNegativeCriteria.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__googleads_custom_conversion_goals_mutate",
+    "kind": "dynamic",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "methodId": "googleads.customers.customConversionGoals.mutate",
+    "title": "googleads.customers.customConversionGoals.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__googleads_customer_assets_mutate",
+    "kind": "dynamic",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "methodId": "googleads.customers.customerAssets.mutate",
+    "title": "googleads.customers.customerAssets.mutate"
   },
   {
     "name": "mcp__plugin_gads_gads__googleads_customers_ad_group_ads_mutate",
@@ -1302,24 +1419,6 @@
     ],
     "methodId": "googleads.customers.adGroupAds.mutate",
     "title": "googleads.customers.adGroupAds.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__googleads_customers_ad_group_asset_mutate",
-    "kind": "dynamic",
-    "scopes": [
-      "https://www.googleapis.com/auth/adwords"
-    ],
-    "methodId": "googleads.customers.adGroupAssets.mutate",
-    "title": "googleads.customers.adGroupAssets.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__googleads_customers_ad_group_crite_mutate",
-    "kind": "dynamic",
-    "scopes": [
-      "https://www.googleapis.com/auth/adwords"
-    ],
-    "methodId": "googleads.customers.adGroupCriteria.mutate",
-    "title": "googleads.customers.adGroupCriteria.mutate"
   },
   {
     "name": "mcp__plugin_gads_gads__googleads_customers_ad_groups_mutate",
@@ -1338,15 +1437,6 @@
     ],
     "methodId": "googleads.customers.ads.mutate",
     "title": "googleads.customers.ads.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__googleads_customers_asset_group_as_mutate",
-    "kind": "dynamic",
-    "scopes": [
-      "https://www.googleapis.com/auth/adwords"
-    ],
-    "methodId": "googleads.customers.assetGroupAssets.mutate",
-    "title": "googleads.customers.assetGroupAssets.mutate"
   },
   {
     "name": "mcp__plugin_gads_gads__googleads_customers_asset_groups_mutate",
@@ -1376,60 +1466,6 @@
     "title": "googleads.customers.assets.mutate"
   },
   {
-    "name": "mcp__plugin_gads_gads__googleads_customers_bidding_strate_mutate",
-    "kind": "dynamic",
-    "scopes": [
-      "https://www.googleapis.com/auth/adwords"
-    ],
-    "methodId": "googleads.customers.biddingStrategies.mutate",
-    "title": "googleads.customers.biddingStrategies.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__googleads_customers_campaign_asset_mutate",
-    "kind": "dynamic",
-    "scopes": [
-      "https://www.googleapis.com/auth/adwords"
-    ],
-    "methodId": "googleads.customers.campaignAssets.mutate",
-    "title": "googleads.customers.campaignAssets.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__googleads_customers_campaign_budge_mutate",
-    "kind": "dynamic",
-    "scopes": [
-      "https://www.googleapis.com/auth/adwords"
-    ],
-    "methodId": "googleads.customers.campaignBudgets.mutate",
-    "title": "googleads.customers.campaignBudgets.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__googleads_customers_campaign_conve_mutate",
-    "kind": "dynamic",
-    "scopes": [
-      "https://www.googleapis.com/auth/adwords"
-    ],
-    "methodId": "googleads.customers.campaignConversionGoals.mutate",
-    "title": "googleads.customers.campaignConversionGoals.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__googleads_customers_campaign_crite_mutate",
-    "kind": "dynamic",
-    "scopes": [
-      "https://www.googleapis.com/auth/adwords"
-    ],
-    "methodId": "googleads.customers.campaignCriteria.mutate",
-    "title": "googleads.customers.campaignCriteria.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__googleads_customers_campaigns_enable_p_ma",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/adwords"
-    ],
-    "methodId": "googleads.customers.campaigns.enablePMaxBrandGuidelines",
-    "title": "googleads.customers.campaigns.enablePMaxBrandGuidelines"
-  },
-  {
     "name": "mcp__plugin_gads_gads__googleads_customers_campaigns_mutate",
     "kind": "dynamic",
     "scopes": [
@@ -1437,60 +1473,6 @@
     ],
     "methodId": "googleads.customers.campaigns.mutate",
     "title": "googleads.customers.campaigns.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__googleads_customers_conversion_act_mutate",
-    "kind": "dynamic",
-    "scopes": [
-      "https://www.googleapis.com/auth/adwords"
-    ],
-    "methodId": "googleads.customers.conversionActions.mutate",
-    "title": "googleads.customers.conversionActions.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__googleads_customers_create_customer_clien",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/adwords"
-    ],
-    "methodId": "googleads.customers.createCustomerClient",
-    "title": "googleads.customers.createCustomerClient"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__googleads_customers_custom_convers_mutate",
-    "kind": "dynamic",
-    "scopes": [
-      "https://www.googleapis.com/auth/adwords"
-    ],
-    "methodId": "googleads.customers.customConversionGoals.mutate",
-    "title": "googleads.customers.customConversionGoals.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__googleads_customers_customer_asset_mutate",
-    "kind": "dynamic",
-    "scopes": [
-      "https://www.googleapis.com/auth/adwords"
-    ],
-    "methodId": "googleads.customers.customerAssets.mutate",
-    "title": "googleads.customers.customerAssets.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__googleads_customers_customer_negat_mutate",
-    "kind": "dynamic",
-    "scopes": [
-      "https://www.googleapis.com/auth/adwords"
-    ],
-    "methodId": "googleads.customers.customerNegativeCriteria.mutate",
-    "title": "googleads.customers.customerNegativeCriteria.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__googleads_customers_generate_keyword_idea",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/adwords"
-    ],
-    "methodId": "googleads.customers.generateKeywordIdeas",
-    "title": "googleads.customers.generateKeywordIdeas"
   },
   {
     "name": "mcp__plugin_gads_gads__googleads_customers_google_ads_mutate",
@@ -1511,24 +1493,6 @@
     "title": "googleads.customers.googleAds.search"
   },
   {
-    "name": "mcp__plugin_gads_gads__googleads_customers_google_ads_search_str",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/adwords"
-    ],
-    "methodId": "googleads.customers.googleAds.searchStream",
-    "title": "googleads.customers.googleAds.searchStream"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__googleads_customers_list_accessible_custo",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/adwords"
-    ],
-    "methodId": "googleads.customers.listAccessibleCustomers",
-    "title": "googleads.customers.listAccessibleCustomers"
-  },
-  {
     "name": "mcp__plugin_gads_gads__googleads_customers_mutate",
     "kind": "dynamic",
     "scopes": [
@@ -1536,6 +1500,24 @@
     ],
     "methodId": "googleads.customers.mutate",
     "title": "googleads.customers.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__googleads_enable_p_max_brand_guidelines",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "methodId": "googleads.customers.campaigns.enablePMaxBrandGuidelines",
+    "title": "googleads.customers.campaigns.enablePMaxBrandGuidelines"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__googleads_generate_keyword_ideas",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "methodId": "googleads.customers.generateKeywordIdeas",
+    "title": "googleads.customers.generateKeywordIdeas"
   },
   {
     "name": "mcp__plugin_gads_gads__googleads_geo_target_constants_suggest",
@@ -1565,6 +1547,15 @@
     "title": "googleads.googleAdsFields.search"
   },
   {
+    "name": "mcp__plugin_gads_gads__googleads_google_ads_search_stream",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "methodId": "googleads.customers.googleAds.searchStream",
+    "title": "googleads.customers.googleAds.searchStream"
+  },
+  {
     "name": "mcp__plugin_gads_gads__googleads_keyword_theme_constants_suggest",
     "kind": "read",
     "scopes": [
@@ -1574,49 +1565,22 @@
     "title": "googleads.keywordThemeConstants.suggest"
   },
   {
+    "name": "mcp__plugin_gads_gads__googleads_list_accessible_customers",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "methodId": "googleads.customers.listAccessibleCustomers",
+    "title": "googleads.customers.listAccessibleCustomers"
+  },
+  {
     "name": "mcp__plugin_gads_gads__health",
     "kind": "read",
     "scopes": [],
     "title": "Server health"
   },
   {
-    "name": "mcp__plugin_gads_gads__searchads3_audience_insig_list_insights_e",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.audienceInsights.listInsightsEligibleDates",
-    "title": "searchads360.audienceInsights.listInsightsEligibleDates"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customer_conversio_mutate_0fe7",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.conversionValueRules.mutate",
-    "title": "searchads360.customers.conversionValueRules.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customer_conversio_mutate_8ad7",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.conversionValueRuleSets.mutate",
-    "title": "searchads360.customers.conversionValueRuleSets.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customer_keyword_p_mutate_0c15",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.keywordPlanCampaigns.mutate",
-    "title": "searchads360.customers.keywordPlanCampaigns.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customer_keyword_p_mutate_115f",
+    "name": "mcp__plugin_gads_gads__sea_keyword_plan_campaign_keywords_mutate",
     "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/doubleclicksearch"
@@ -1625,49 +1589,445 @@
     "title": "searchads360.customers.keywordPlanCampaignKeywords.mutate"
   },
   {
-    "name": "mcp__plugin_gads_gads__searchads3_customer_keyword_p_mutate_b05e",
+    "name": "mcp__plugin_gads_gads__searc_remove_automatically_created_assets",
     "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/doubleclicksearch"
     ],
-    "methodId": "searchads360.customers.keywordPlanAdGroupKeywords.mutate",
-    "title": "searchads360.customers.keywordPlanAdGroupKeywords.mutate"
+    "methodId": "searchads360.customers.adGroupAds.removeAutomaticallyCreatedAssets",
+    "title": "searchads360.customers.adGroupAds.removeAutomaticallyCreatedAssets"
   },
   {
-    "name": "mcp__plugin_gads_gads__searchads3_customer_keyword_p_mutate_d883",
+    "name": "mcp__plugin_gads_gads__search_configure_campaign_lifecycle_goals",
     "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/doubleclicksearch"
     ],
-    "methodId": "searchads360.customers.keywordPlanAdGroups.mutate",
-    "title": "searchads360.customers.keywordPlanAdGroups.mutate"
+    "methodId": "searchads360.customers.campaignLifecycleGoal.configureCampaignLifecycleGoals",
+    "title": "searchads360.customers.campaignLifecycleGoal.configureCampaignLifecycleGoals"
   },
   {
-    "name": "mcp__plugin_gads_gads__searchads3_customer_search_ad_mutate_1848",
+    "name": "mcp__plugin_gads_gads__search_configure_customer_lifecycle_goals",
     "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/doubleclicksearch"
     ],
-    "methodId": "searchads360.customers.searchAds360Campaigns.mutate",
-    "title": "searchads360.customers.searchAds360Campaigns.mutate"
+    "methodId": "searchads360.customers.customerLifecycleGoal.configureCustomerLifecycleGoals",
+    "title": "searchads360.customers.customerLifecycleGoal.configureCustomerLifecycleGoals"
   },
   {
-    "name": "mcp__plugin_gads_gads__searchads3_customer_search_ad_mutate_51b5",
+    "name": "mcp__plugin_gads_gads__searchads3_ad_group_ad_labels_mutate",
     "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/doubleclicksearch"
     ],
-    "methodId": "searchads360.customers.searchAds360.mutate",
-    "title": "searchads360.customers.searchAds360.mutate"
+    "methodId": "searchads360.customers.adGroupAdLabels.mutate",
+    "title": "searchads360.customers.adGroupAdLabels.mutate"
   },
   {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_account_budge_mutate",
+    "name": "mcp__plugin_gads_gads__searchads3_ad_group_asset_sets_mutate",
     "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/doubleclicksearch"
     ],
-    "methodId": "searchads360.customers.accountBudgetProposals.mutate",
-    "title": "searchads360.customers.accountBudgetProposals.mutate"
+    "methodId": "searchads360.customers.adGroupAssetSets.mutate",
+    "title": "searchads360.customers.adGroupAssetSets.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_ad_group_assets_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.adGroupAssets.mutate",
+    "title": "searchads360.customers.adGroupAssets.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_ad_group_bid_modifiers_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.adGroupBidModifiers.mutate",
+    "title": "searchads360.customers.adGroupBidModifiers.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_ad_group_criteria_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.adGroupCriteria.mutate",
+    "title": "searchads360.customers.adGroupCriteria.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_ad_group_customizers_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.adGroupCustomizers.mutate",
+    "title": "searchads360.customers.adGroupCustomizers.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_ad_group_labels_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.adGroupLabels.mutate",
+    "title": "searchads360.customers.adGroupLabels.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_adjustments_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.biddingSeasonalityAdjustments.mutate",
+    "title": "searchads360.customers.biddingSeasonalityAdjustments.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_append_lead_conversation",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.localServices.appendLeadConversation",
+    "title": "searchads360.customers.localServices.appendLeadConversation"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_asset_group_assets_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.assetGroupAssets.mutate",
+    "title": "searchads360.customers.assetGroupAssets.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_asset_group_signals_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.assetGroupSignals.mutate",
+    "title": "searchads360.customers.assetGroupSignals.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_asset_set_assets_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.assetSetAssets.mutate",
+    "title": "searchads360.customers.assetSetAssets.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_batch_jobs_add_operations",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.batchJobs.addOperations",
+    "title": "searchads360.customers.batchJobs.addOperations"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_batch_jobs_list_results",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.batchJobs.listResults",
+    "title": "searchads360.customers.batchJobs.listResults"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_bidding_data_exclusions_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.biddingDataExclusions.mutate",
+    "title": "searchads360.customers.biddingDataExclusions.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_bidding_strategies_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.biddingStrategies.mutate",
+    "title": "searchads360.customers.biddingStrategies.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_campaign_asset_sets_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.campaignAssetSets.mutate",
+    "title": "searchads360.customers.campaignAssetSets.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_campaign_assets_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.campaignAssets.mutate",
+    "title": "searchads360.customers.campaignAssets.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_campaign_bid_modifiers_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.campaignBidModifiers.mutate",
+    "title": "searchads360.customers.campaignBidModifiers.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_campaign_budgets_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.campaignBudgets.mutate",
+    "title": "searchads360.customers.campaignBudgets.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_campaign_conv_goals_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.campaignConversionGoals.mutate",
+    "title": "searchads360.customers.campaignConversionGoals.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_campaign_criteria_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.campaignCriteria.mutate",
+    "title": "searchads360.customers.campaignCriteria.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_campaign_customizers_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.campaignCustomizers.mutate",
+    "title": "searchads360.customers.campaignCustomizers.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_campaign_drafts_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.campaignDrafts.mutate",
+    "title": "searchads360.customers.campaignDrafts.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_campaign_drafts_promote",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.campaignDrafts.promote",
+    "title": "searchads360.customers.campaignDrafts.promote"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_campaign_goal_configs_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.CampaignGoalConfigs.mutate",
+    "title": "searchads360.customers.CampaignGoalConfigs.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_campaign_groups_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.campaignGroups.mutate",
+    "title": "searchads360.customers.campaignGroups.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_campaign_labels_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.campaignLabels.mutate",
+    "title": "searchads360.customers.campaignLabels.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_campaign_shared_sets_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.campaignSharedSets.mutate",
+    "title": "searchads360.customers.campaignSharedSets.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_conv_custom_variables_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.conversionCustomVariables.mutate",
+    "title": "searchads360.customers.conversionCustomVariables.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_conv_value_rule_sets_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.conversionValueRuleSets.mutate",
+    "title": "searchads360.customers.conversionValueRuleSets.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_conversion_actions_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.conversionActions.mutate",
+    "title": "searchads360.customers.conversionActions.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_conversion_value_rules_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.conversionValueRules.mutate",
+    "title": "searchads360.customers.conversionValueRules.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_create_customer_client",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.createCustomerClient",
+    "title": "searchads360.customers.createCustomerClient"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_criteria_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.customerNegativeCriteria.mutate",
+    "title": "searchads360.customers.customerNegativeCriteria.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_custom_audiences_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.customAudiences.mutate",
+    "title": "searchads360.customers.customAudiences.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_custom_conversion_goals_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.customConversionGoals.mutate",
+    "title": "searchads360.customers.customConversionGoals.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_custom_interests_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.customInterests.mutate",
+    "title": "searchads360.customers.customInterests.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_customer_asset_sets_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.customerAssetSets.mutate",
+    "title": "searchads360.customers.customerAssetSets.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_customer_assets_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.customerAssets.mutate",
+    "title": "searchads360.customers.customerAssets.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_customer_client_links_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.customerClientLinks.mutate",
+    "title": "searchads360.customers.customerClientLinks.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_customer_conv_goals_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.customerConversionGoals.mutate",
+    "title": "searchads360.customers.customerConversionGoals.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_customer_customizers_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.CustomerCustomizers.mutate",
+    "title": "searchads360.customers.CustomerCustomizers.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_customer_labels_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.customerLabels.mutate",
+    "title": "searchads360.customers.customerLabels.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_customer_manager_links_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.customerManagerLinks.mutate",
+    "title": "searchads360.customers.customerManagerLinks.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_customer_user_accesses_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.customerUserAccesses.mutate",
+    "title": "searchads360.customers.customerUserAccesses.mutate"
   },
   {
     "name": "mcp__plugin_gads_gads__searchads3_customers_account_links_create",
@@ -1688,15 +2048,6 @@
     "title": "searchads360.customers.accountLinks.mutate"
   },
   {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_ad_group_ad_l_mutate",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.adGroupAdLabels.mutate",
-    "title": "searchads360.customers.adGroupAdLabels.mutate"
-  },
-  {
     "name": "mcp__plugin_gads_gads__searchads3_customers_ad_group_ads_mutate",
     "kind": "write",
     "scopes": [
@@ -1704,87 +2055,6 @@
     ],
     "methodId": "searchads360.customers.adGroupAds.mutate",
     "title": "searchads360.customers.adGroupAds.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_ad_group_bid_mutate",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.adGroupBidModifiers.mutate",
-    "title": "searchads360.customers.adGroupBidModifiers.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_ad_group_cust_mutate",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.adGroupCustomizers.mutate",
-    "title": "searchads360.customers.adGroupCustomizers.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_ad_group_labe_mutate",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.adGroupLabels.mutate",
-    "title": "searchads360.customers.adGroupLabels.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_ad_group_mutate_831a",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.AdGroupCriterionCustomizers.mutate",
-    "title": "searchads360.customers.AdGroupCriterionCustomizers.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_ad_group_mutate_8836",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.adGroupCriteria.mutate",
-    "title": "searchads360.customers.adGroupCriteria.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_ad_group_mutate_a2ee",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.adGroupAssetSets.mutate",
-    "title": "searchads360.customers.adGroupAssetSets.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_ad_group_mutate_ca08",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.adGroupAssets.mutate",
-    "title": "searchads360.customers.adGroupAssets.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_ad_group_mutate_cabd",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.adGroupCriterionLabels.mutate",
-    "title": "searchads360.customers.adGroupCriterionLabels.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_ad_group_remove_aut",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.adGroupAds.removeAutomaticallyCreatedAssets",
-    "title": "searchads360.customers.adGroupAds.removeAutomaticallyCreatedAssets"
   },
   {
     "name": "mcp__plugin_gads_gads__searchads3_customers_ad_groups_mutate",
@@ -1814,33 +2084,6 @@
     "title": "searchads360.customers.ads.mutate"
   },
   {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_asset_group_a_mutate",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.assetGroupAssets.mutate",
-    "title": "searchads360.customers.assetGroupAssets.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_asset_group_l_mutate",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.assetGroupListingGroupFilters.mutate",
-    "title": "searchads360.customers.assetGroupListingGroupFilters.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_asset_group_s_mutate",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.assetGroupSignals.mutate",
-    "title": "searchads360.customers.assetGroupSignals.mutate"
-  },
-  {
     "name": "mcp__plugin_gads_gads__searchads3_customers_asset_groups_mutate",
     "kind": "write",
     "scopes": [
@@ -1848,15 +2091,6 @@
     ],
     "methodId": "searchads360.customers.assetGroups.mutate",
     "title": "searchads360.customers.assetGroups.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_asset_set_ass_mutate",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.assetSetAssets.mutate",
-    "title": "searchads360.customers.assetSetAssets.mutate"
   },
   {
     "name": "mcp__plugin_gads_gads__searchads3_customers_asset_sets_mutate",
@@ -1886,24 +2120,6 @@
     "title": "searchads360.customers.audiences.mutate"
   },
   {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_batch_job_add_operat",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.batchJobs.addOperations",
-    "title": "searchads360.customers.batchJobs.addOperations"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_batch_job_list_resul",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.batchJobs.listResults",
-    "title": "searchads360.customers.batchJobs.listResults"
-  },
-  {
     "name": "mcp__plugin_gads_gads__searchads3_customers_batch_jobs_mutate",
     "kind": "write",
     "scopes": [
@@ -1922,184 +2138,13 @@
     "title": "searchads360.customers.batchJobs.run"
   },
   {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_bidding_data_mutate",
+    "name": "mcp__plugin_gads_gads__searchads3_customers_budget_opts",
     "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/doubleclicksearch"
     ],
-    "methodId": "searchads360.customers.biddingDataExclusions.mutate",
-    "title": "searchads360.customers.biddingDataExclusions.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_bidding_seaso_mutate",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.biddingSeasonalityAdjustments.mutate",
-    "title": "searchads360.customers.biddingSeasonalityAdjustments.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_bidding_strat_mutate",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.biddingStrategies.mutate",
-    "title": "searchads360.customers.biddingStrategies.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_billing_setup_mutate",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.billingSetups.mutate",
-    "title": "searchads360.customers.billingSetups.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_campaign_bid_mutate",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.campaignBidModifiers.mutate",
-    "title": "searchads360.customers.campaignBidModifiers.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_campaign_budg_mutate",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.campaignBudgets.mutate",
-    "title": "searchads360.customers.campaignBudgets.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_campaign_conv_mutate",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.campaignConversionGoals.mutate",
-    "title": "searchads360.customers.campaignConversionGoals.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_campaign_crit_mutate",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.campaignCriteria.mutate",
-    "title": "searchads360.customers.campaignCriteria.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_campaign_cust_mutate",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.campaignCustomizers.mutate",
-    "title": "searchads360.customers.campaignCustomizers.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_campaign_dra_promote",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.campaignDrafts.promote",
-    "title": "searchads360.customers.campaignDrafts.promote"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_campaign_draf_mutate",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.campaignDrafts.mutate",
-    "title": "searchads360.customers.campaignDrafts.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_campaign_goal_mutate",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.CampaignGoalConfigs.mutate",
-    "title": "searchads360.customers.CampaignGoalConfigs.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_campaign_grou_mutate",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.campaignGroups.mutate",
-    "title": "searchads360.customers.campaignGroups.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_campaign_l_configure",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.campaignLifecycleGoal.configureCampaignLifecycleGoals",
-    "title": "searchads360.customers.campaignLifecycleGoal.configureCampaignLifecycleGoals"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_campaign_labe_mutate",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.campaignLabels.mutate",
-    "title": "searchads360.customers.campaignLabels.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_campaign_list_async",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.campaignDrafts.listAsyncErrors",
-    "title": "searchads360.customers.campaignDrafts.listAsyncErrors"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_campaign_mutate_1e45",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.campaignAssets.mutate",
-    "title": "searchads360.customers.campaignAssets.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_campaign_mutate_4bc8",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.campaignAssetSets.mutate",
-    "title": "searchads360.customers.campaignAssetSets.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_campaign_shar_mutate",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.campaignSharedSets.mutate",
-    "title": "searchads360.customers.campaignSharedSets.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_campaigns_enable_p_m",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.campaigns.enablePMaxBrandGuidelines",
-    "title": "searchads360.customers.campaigns.enablePMaxBrandGuidelines"
+    "methodId": "searchads360.customers.suggestSmartCampaignBudgetOptions",
+    "title": "searchads360.customers.suggestSmartCampaignBudgetOptions"
   },
   {
     "name": "mcp__plugin_gads_gads__searchads3_customers_campaigns_mutate",
@@ -2111,49 +2156,22 @@
     "title": "searchads360.customers.campaigns.mutate"
   },
   {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_conversion_ac_mutate",
+    "name": "mcp__plugin_gads_gads__searchads3_customers_composition_insights",
     "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/doubleclicksearch"
     ],
-    "methodId": "searchads360.customers.conversionActions.mutate",
-    "title": "searchads360.customers.conversionActions.mutate"
+    "methodId": "searchads360.customers.generateAudienceCompositionInsights",
+    "title": "searchads360.customers.generateAudienceCompositionInsights"
   },
   {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_conversion_cu_mutate",
+    "name": "mcp__plugin_gads_gads__searchads3_customers_created_asset",
     "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/doubleclicksearch"
     ],
-    "methodId": "searchads360.customers.conversionCustomVariables.mutate",
-    "title": "searchads360.customers.conversionCustomVariables.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_conversion_go_mutate",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.conversionGoalCampaignConfigs.mutate",
-    "title": "searchads360.customers.conversionGoalCampaignConfigs.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_create_customer_clie",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.createCustomerClient",
-    "title": "searchads360.customers.createCustomerClient"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_custom_audien_mutate",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.customAudiences.mutate",
-    "title": "searchads360.customers.customAudiences.mutate"
+    "methodId": "searchads360.customers.removeCampaignAutomaticallyCreatedAsset",
+    "title": "searchads360.customers.removeCampaignAutomaticallyCreatedAsset"
   },
   {
     "name": "mcp__plugin_gads_gads__searchads3_customers_custom_columns_get",
@@ -2172,150 +2190,6 @@
     ],
     "methodId": "searchads360.customers.customColumns.list",
     "title": "searchads360.customers.customColumns.list"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_custom_conver_mutate",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.customConversionGoals.mutate",
-    "title": "searchads360.customers.customConversionGoals.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_custom_intere_mutate",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.customInterests.mutate",
-    "title": "searchads360.customers.customInterests.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_customer_clie_mutate",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.customerClientLinks.mutate",
-    "title": "searchads360.customers.customerClientLinks.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_customer_conv_mutate",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.customerConversionGoals.mutate",
-    "title": "searchads360.customers.customerConversionGoals.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_customer_cust_mutate",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.CustomerCustomizers.mutate",
-    "title": "searchads360.customers.CustomerCustomizers.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_customer_l_configure",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.customerLifecycleGoal.configureCustomerLifecycleGoals",
-    "title": "searchads360.customers.customerLifecycleGoal.configureCustomerLifecycleGoals"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_customer_labe_mutate",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.customerLabels.mutate",
-    "title": "searchads360.customers.customerLabels.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_customer_mana_mutate",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.customerManagerLinks.mutate",
-    "title": "searchads360.customers.customerManagerLinks.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_customer_move_manag",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.customerManagerLinks.moveManagerLink",
-    "title": "searchads360.customers.customerManagerLinks.moveManagerLink"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_customer_mutate_4bb6",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.customerUserAccesses.mutate",
-    "title": "searchads360.customers.customerUserAccesses.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_customer_mutate_664f",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.customerAssetSets.mutate",
-    "title": "searchads360.customers.customerAssetSets.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_customer_mutate_73fa",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.customerUserAccessInvitations.mutate",
-    "title": "searchads360.customers.customerUserAccessInvitations.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_customer_mutate_aa87",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.customerAssets.mutate",
-    "title": "searchads360.customers.customerAssets.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_customer_nega_mutate",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.customerNegativeCriteria.mutate",
-    "title": "searchads360.customers.customerNegativeCriteria.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_customer_sk_a_mutate",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.customerSkAdNetworkConversionValueSchemas.mutate",
-    "title": "searchads360.customers.customerSkAdNetworkConversionValueSchemas.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_customizer_at_mutate",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.customizerAttributes.mutate",
-    "title": "searchads360.customers.customizerAttributes.mutate"
   },
   {
     "name": "mcp__plugin_gads_gads__searchads3_customers_data_links_create",
@@ -2345,60 +2219,6 @@
     "title": "searchads360.customers.dataLinks.update"
   },
   {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_experimen_end_experi",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.experiments.endExperiment",
-    "title": "searchads360.customers.experiments.endExperiment"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_experimen_graduate_e",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.experiments.graduateExperiment",
-    "title": "searchads360.customers.experiments.graduateExperiment"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_experimen_list_exper",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.experiments.listExperimentAsyncErrors",
-    "title": "searchads360.customers.experiments.listExperimentAsyncErrors"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_experimen_promote_ex",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.experiments.promoteExperiment",
-    "title": "searchads360.customers.experiments.promoteExperiment"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_experimen_schedule_e",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.experiments.scheduleExperiment",
-    "title": "searchads360.customers.experiments.scheduleExperiment"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_experiment_ar_mutate",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.experimentArms.mutate",
-    "title": "searchads360.customers.experimentArms.mutate"
-  },
-  {
     "name": "mcp__plugin_gads_gads__searchads3_customers_experiments_mutate",
     "kind": "write",
     "scopes": [
@@ -2408,121 +2228,13 @@
     "title": "searchads360.customers.experiments.mutate"
   },
   {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_generate_ad_group_th",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.generateAdGroupThemes",
-    "title": "searchads360.customers.generateAdGroupThemes"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_generate_audience_co",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.generateAudienceCompositionInsights",
-    "title": "searchads360.customers.generateAudienceCompositionInsights"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_generate_audience_de",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.generateAudienceDefinition",
-    "title": "searchads360.customers.generateAudienceDefinition"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_generate_audience_ov",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.generateAudienceOverlapInsights",
-    "title": "searchads360.customers.generateAudienceOverlapInsights"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_generate_benchmarks",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.generateBenchmarksMetrics",
-    "title": "searchads360.customers.generateBenchmarksMetrics"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_generate_insights_fi",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.generateInsightsFinderReport",
-    "title": "searchads360.customers.generateInsightsFinderReport"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_generate_keyword_for",
+    "name": "mcp__plugin_gads_gads__searchads3_customers_forecast_metrics",
     "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/doubleclicksearch"
     ],
     "methodId": "searchads360.customers.generateKeywordForecastMetrics",
     "title": "searchads360.customers.generateKeywordForecastMetrics"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_generate_keyword_his",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.generateKeywordHistoricalMetrics",
-    "title": "searchads360.customers.generateKeywordHistoricalMetrics"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_generate_keyword_ide",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.generateKeywordIdeas",
-    "title": "searchads360.customers.generateKeywordIdeas"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_generate_reach_forec",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.generateReachForecast",
-    "title": "searchads360.customers.generateReachForecast"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_generate_suggested_t",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.generateSuggestedTargetingInsights",
-    "title": "searchads360.customers.generateSuggestedTargetingInsights"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_generate_targeting_s",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.generateTargetingSuggestionMetrics",
-    "title": "searchads360.customers.generateTargetingSuggestionMetrics"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_get_identity_verific",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.getIdentityVerification",
-    "title": "searchads360.customers.getIdentityVerification"
   },
   {
     "name": "mcp__plugin_gads_gads__searchads3_customers_goals_mutate",
@@ -2534,13 +2246,13 @@
     "title": "searchads360.customers.Goals.mutate"
   },
   {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_incentive_apply_ince",
+    "name": "mcp__plugin_gads_gads__searchads3_customers_historical_metrics",
     "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/doubleclicksearch"
     ],
-    "methodId": "searchads360.customers.incentives.applyIncentive",
-    "title": "searchads360.customers.incentives.applyIncentive"
+    "methodId": "searchads360.customers.generateKeywordHistoricalMetrics",
+    "title": "searchads360.customers.generateKeywordHistoricalMetrics"
   },
   {
     "name": "mcp__plugin_gads_gads__searchads3_customers_invoices_list",
@@ -2570,33 +2282,6 @@
     "title": "searchads360.customers.labels.mutate"
   },
   {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_list_accessible_cust",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.listAccessibleCustomers",
-    "title": "searchads360.customers.listAccessibleCustomers"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_local_ser_append_lea",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.localServices.appendLeadConversation",
-    "title": "searchads360.customers.localServices.appendLeadConversation"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_local_ser_provide_le",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.localServicesLeads.provideLeadFeedback",
-    "title": "searchads360.customers.localServicesLeads.provideLeadFeedback"
-  },
-  {
     "name": "mcp__plugin_gads_gads__searchads3_customers_mutate",
     "kind": "write",
     "scopes": [
@@ -2604,69 +2289,6 @@
     ],
     "methodId": "searchads360.customers.mutate",
     "title": "searchads360.customers.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_offline_u_add_operat",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.offlineUserDataJobs.addOperations",
-    "title": "searchads360.customers.offlineUserDataJobs.addOperations"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_offline_user_create",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.offlineUserDataJobs.create",
-    "title": "searchads360.customers.offlineUserDataJobs.create"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_offline_user_dat_run",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.offlineUserDataJobs.run",
-    "title": "searchads360.customers.offlineUserDataJobs.run"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_payments_accoun_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.paymentsAccounts.list",
-    "title": "searchads360.customers.paymentsAccounts.list"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_product_link_create",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.productLinkInvitations.create",
-    "title": "searchads360.customers.productLinkInvitations.create"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_product_link_remove",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.productLinkInvitations.remove",
-    "title": "searchads360.customers.productLinkInvitations.remove"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_product_link_update",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.productLinkInvitations.update",
-    "title": "searchads360.customers.productLinkInvitations.update"
   },
   {
     "name": "mcp__plugin_gads_gads__searchads3_customers_product_links_create",
@@ -2687,58 +2309,13 @@
     "title": "searchads360.customers.productLinks.remove"
   },
   {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_recommend_mutate_rec",
+    "name": "mcp__plugin_gads_gads__searchads3_customers_search_ads360_mutate",
     "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/doubleclicksearch"
     ],
-    "methodId": "searchads360.customers.recommendationSubscriptions.mutateRecommendationSubscription",
-    "title": "searchads360.customers.recommendationSubscriptions.mutateRecommendationSubscription"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_recommendat_generate",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.recommendations.generate",
-    "title": "searchads360.customers.recommendations.generate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_recommendati_dismiss",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.recommendations.dismiss",
-    "title": "searchads360.customers.recommendations.dismiss"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_recommendation_apply",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.recommendations.apply",
-    "title": "searchads360.customers.recommendations.apply"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_remarketing_a_mutate",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.remarketingActions.mutate",
-    "title": "searchads360.customers.remarketingActions.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_remove_campaign_auto",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.removeCampaignAutomaticallyCreatedAsset",
-    "title": "searchads360.customers.removeCampaignAutomaticallyCreatedAsset"
+    "methodId": "searchads360.customers.searchAds360.mutate",
+    "title": "searchads360.customers.searchAds360.mutate"
   },
   {
     "name": "mcp__plugin_gads_gads__searchads3_customers_search_ads360_search",
@@ -2750,24 +2327,6 @@
     "title": "searchads360.customers.searchAds360.search"
   },
   {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_search_audience_insi",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.searchAudienceInsightsAttributes",
-    "title": "searchads360.customers.searchAudienceInsightsAttributes"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_shared_criter_mutate",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.sharedCriteria.mutate",
-    "title": "searchads360.customers.sharedCriteria.mutate"
-  },
-  {
     "name": "mcp__plugin_gads_gads__searchads3_customers_shared_sets_mutate",
     "kind": "write",
     "scopes": [
@@ -2775,105 +2334,6 @@
     ],
     "methodId": "searchads360.customers.sharedSets.mutate",
     "title": "searchads360.customers.sharedSets.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_smart_camp_get_smart",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.smartCampaignSettings.getSmartCampaignStatus",
-    "title": "searchads360.customers.smartCampaignSettings.getSmartCampaignStatus"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_smart_campaig_mutate",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.smartCampaignSettings.mutate",
-    "title": "searchads360.customers.smartCampaignSettings.mutate"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_start_identity_verif",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.startIdentityVerification",
-    "title": "searchads360.customers.startIdentityVerification"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_suggest_keyword_them",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.suggestKeywordThemes",
-    "title": "searchads360.customers.suggestKeywordThemes"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_suggest_smart_c_54cd",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.suggestSmartCampaignBudgetOptions",
-    "title": "searchads360.customers.suggestSmartCampaignBudgetOptions"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_suggest_smart_c_5d7f",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.suggestSmartCampaignAd",
-    "title": "searchads360.customers.suggestSmartCampaignAd"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_suggest_travel_asset",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.suggestTravelAssets",
-    "title": "searchads360.customers.suggestTravelAssets"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_third_par_regenerate",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.thirdPartyAppAnalyticsLinks.regenerateShareableLinkId",
-    "title": "searchads360.customers.thirdPartyAppAnalyticsLinks.regenerateShareableLinkId"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_upload_call_conversi",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.uploadCallConversions",
-    "title": "searchads360.customers.uploadCallConversions"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_upload_click_convers",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.uploadClickConversions",
-    "title": "searchads360.customers.uploadClickConversions"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_upload_conversion_ad",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.uploadConversionAdjustments",
-    "title": "searchads360.customers.uploadConversionAdjustments"
   },
   {
     "name": "mcp__plugin_gads_gads__searchads3_customers_upload_user_data",
@@ -2885,15 +2345,6 @@
     "title": "searchads360.customers.uploadUserData"
   },
   {
-    "name": "mcp__plugin_gads_gads__searchads3_customers_user_list_cus_mutate",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.customers.userListCustomerTypes.mutate",
-    "title": "searchads360.customers.userListCustomerTypes.mutate"
-  },
-  {
     "name": "mcp__plugin_gads_gads__searchads3_customers_user_lists_mutate",
     "kind": "write",
     "scopes": [
@@ -2901,6 +2352,141 @@
     ],
     "methodId": "searchads360.customers.userLists.mutate",
     "title": "searchads360.customers.userLists.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_customizer_attributes_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.customizerAttributes.mutate",
+    "title": "searchads360.customers.customizerAttributes.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_customizers_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.AdGroupCriterionCustomizers.mutate",
+    "title": "searchads360.customers.AdGroupCriterionCustomizers.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_drafts_list_async_errors",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.campaignDrafts.listAsyncErrors",
+    "title": "searchads360.customers.campaignDrafts.listAsyncErrors"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_enable_p_max_brand_guidelines",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.campaigns.enablePMaxBrandGuidelines",
+    "title": "searchads360.customers.campaigns.enablePMaxBrandGuidelines"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_experiment_arms_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.experimentArms.mutate",
+    "title": "searchads360.customers.experimentArms.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_experiments_end_experiment",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.experiments.endExperiment",
+    "title": "searchads360.customers.experiments.endExperiment"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_experiments_promote_experiment",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.experiments.promoteExperiment",
+    "title": "searchads360.customers.experiments.promoteExperiment"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_exps_list_exp_async_errors",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.experiments.listExperimentAsyncErrors",
+    "title": "searchads360.customers.experiments.listExperimentAsyncErrors"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_filters_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.assetGroupListingGroupFilters.mutate",
+    "title": "searchads360.customers.assetGroupListingGroupFilters.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_generate_ad_group_themes",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.generateAdGroupThemes",
+    "title": "searchads360.customers.generateAdGroupThemes"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_generate_aud_overlap_insights",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.generateAudienceOverlapInsights",
+    "title": "searchads360.customers.generateAudienceOverlapInsights"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_generate_audience_definition",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.generateAudienceDefinition",
+    "title": "searchads360.customers.generateAudienceDefinition"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_generate_benchmarks_metrics",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.generateBenchmarksMetrics",
+    "title": "searchads360.customers.generateBenchmarksMetrics"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_generate_keyword_ideas",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.generateKeywordIdeas",
+    "title": "searchads360.customers.generateKeywordIdeas"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_generate_reach_forecast",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.generateReachForecast",
+    "title": "searchads360.customers.generateReachForecast"
   },
   {
     "name": "mcp__plugin_gads_gads__searchads3_geo_target_constants_suggest",
@@ -2912,6 +2498,33 @@
     "title": "searchads360.geoTargetConstants.suggest"
   },
   {
+    "name": "mcp__plugin_gads_gads__searchads3_get_identity_verification",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.getIdentityVerification",
+    "title": "searchads360.customers.getIdentityVerification"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_get_smart_campaign_status",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.smartCampaignSettings.getSmartCampaignStatus",
+    "title": "searchads360.customers.smartCampaignSettings.getSmartCampaignStatus"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_incentives_apply_incentive",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.incentives.applyIncentive",
+    "title": "searchads360.customers.incentives.applyIncentive"
+  },
+  {
     "name": "mcp__plugin_gads_gads__searchads3_incentives_fetch_incentive",
     "kind": "read",
     "scopes": [
@@ -2921,13 +2534,202 @@
     "title": "searchads360.incentives.fetchIncentive"
   },
   {
-    "name": "mcp__plugin_gads_gads__searchads3_keyword_theme_constant_suggest",
+    "name": "mcp__plugin_gads_gads__searchads3_invitations_mutate",
     "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/doubleclicksearch"
     ],
-    "methodId": "searchads360.keywordThemeConstants.suggest",
-    "title": "searchads360.keywordThemeConstants.suggest"
+    "methodId": "searchads360.customers.customerUserAccessInvitations.mutate",
+    "title": "searchads360.customers.customerUserAccessInvitations.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_keyword_plan_ad_groups_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.keywordPlanAdGroups.mutate",
+    "title": "searchads360.customers.keywordPlanAdGroups.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_keyword_plan_campaigns_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.keywordPlanCampaigns.mutate",
+    "title": "searchads360.customers.keywordPlanCampaigns.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_keywords_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.keywordPlanAdGroupKeywords.mutate",
+    "title": "searchads360.customers.keywordPlanAdGroupKeywords.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_labels_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.adGroupCriterionLabels.mutate",
+    "title": "searchads360.customers.adGroupCriterionLabels.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_leads_provide_lead_feedback",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.localServicesLeads.provideLeadFeedback",
+    "title": "searchads360.customers.localServicesLeads.provideLeadFeedback"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_links_move_manager_link",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.customerManagerLinks.moveManagerLink",
+    "title": "searchads360.customers.customerManagerLinks.moveManagerLink"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_list_accessible_customers",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.listAccessibleCustomers",
+    "title": "searchads360.customers.listAccessibleCustomers"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_list_insights_eligible_dates",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.audienceInsights.listInsightsEligibleDates",
+    "title": "searchads360.audienceInsights.listInsightsEligibleDates"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_list_plannable_user_interests",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.listPlannableUserInterests",
+    "title": "searchads360.listPlannableUserInterests"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.conversionGoalCampaignConfigs.mutate",
+    "title": "searchads360.customers.conversionGoalCampaignConfigs.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_offline_user_data_jobs_add_ops",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.offlineUserDataJobs.addOperations",
+    "title": "searchads360.customers.offlineUserDataJobs.addOperations"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_offline_user_data_jobs_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.offlineUserDataJobs.create",
+    "title": "searchads360.customers.offlineUserDataJobs.create"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_offline_user_data_jobs_run",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.offlineUserDataJobs.run",
+    "title": "searchads360.customers.offlineUserDataJobs.run"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_payments_accounts_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.paymentsAccounts.list",
+    "title": "searchads360.customers.paymentsAccounts.list"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_rec_subs_mutate_rec_sub",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.recommendationSubscriptions.mutateRecommendationSubscription",
+    "title": "searchads360.customers.recommendationSubscriptions.mutateRecommendationSubscription"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_recommendations_dismiss",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.recommendations.dismiss",
+    "title": "searchads360.customers.recommendations.dismiss"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_recommendations_generate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.recommendations.generate",
+    "title": "searchads360.customers.recommendations.generate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_regenerate_shareable_link_id",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.thirdPartyAppAnalyticsLinks.regenerateShareableLinkId",
+    "title": "searchads360.customers.thirdPartyAppAnalyticsLinks.regenerateShareableLinkId"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_remarketing_actions_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.remarketingActions.mutate",
+    "title": "searchads360.customers.remarketingActions.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_schemas_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.customerSkAdNetworkConversionValueSchemas.mutate",
+    "title": "searchads360.customers.customerSkAdNetworkConversionValueSchemas.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_search_ads360_campaigns_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.searchAds360Campaigns.mutate",
+    "title": "searchads360.customers.searchAds360Campaigns.mutate"
   },
   {
     "name": "mcp__plugin_gads_gads__searchads3_search_ads360_fields_get",
@@ -2948,6 +2750,87 @@
     "title": "searchads360.searchAds360Fields.search"
   },
   {
+    "name": "mcp__plugin_gads_gads__searchads3_search_aud_insights_attributes",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.searchAudienceInsightsAttributes",
+    "title": "searchads360.customers.searchAudienceInsightsAttributes"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_shared_criteria_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.sharedCriteria.mutate",
+    "title": "searchads360.customers.sharedCriteria.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_smart_campaign_settings_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.smartCampaignSettings.mutate",
+    "title": "searchads360.customers.smartCampaignSettings.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_start_identity_verification",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.startIdentityVerification",
+    "title": "searchads360.customers.startIdentityVerification"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_suggest_keyword_themes",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.suggestKeywordThemes",
+    "title": "searchads360.customers.suggestKeywordThemes"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_suggest_smart_campaign_ad",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.suggestSmartCampaignAd",
+    "title": "searchads360.customers.suggestSmartCampaignAd"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_upload_call_conversions",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.uploadCallConversions",
+    "title": "searchads360.customers.uploadCallConversions"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_upload_click_conversions",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.uploadClickConversions",
+    "title": "searchads360.customers.uploadClickConversions"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads3_upload_conversion_adjustments",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.uploadConversionAdjustments",
+    "title": "searchads360.customers.uploadConversionAdjustments"
+  },
+  {
     "name": "mcp__plugin_gads_gads__searchads3_v23_generate_conversion_rates",
     "kind": "write",
     "scopes": [
@@ -2955,15 +2838,6 @@
     ],
     "methodId": "searchads360.generateConversionRates",
     "title": "searchads360.generateConversionRates"
-  },
-  {
-    "name": "mcp__plugin_gads_gads__searchads3_v23_list_benchmarks_available",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.listBenchmarksAvailableDates",
-    "title": "searchads360.listBenchmarksAvailableDates"
   },
   {
     "name": "mcp__plugin_gads_gads__searchads3_v23_list_benchmarks_locations",
@@ -3011,15 +2885,6 @@
     "title": "searchads360.listPlannableProducts"
   },
   {
-    "name": "mcp__plugin_gads_gads__searchads3_v23_list_plannable_user_intere",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/doubleclicksearch"
-    ],
-    "methodId": "searchads360.listPlannableUserInterests",
-    "title": "searchads360.listPlannableUserInterests"
-  },
-  {
     "name": "mcp__plugin_gads_gads__searchads3_v23_list_plannable_user_lists",
     "kind": "read",
     "scopes": [
@@ -3027,5 +2892,140 @@
     ],
     "methodId": "searchads360.listPlannableUserLists",
     "title": "searchads360.listPlannableUserLists"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads_account_budget_proposals_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.accountBudgetProposals.mutate",
+    "title": "searchads360.customers.accountBudgetProposals.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads_customers_billing_setups_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.billingSetups.mutate",
+    "title": "searchads360.customers.billingSetups.mutate"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads_customers_recommendations_apply",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.recommendations.apply",
+    "title": "searchads360.customers.recommendations.apply"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads_customers_suggest_travel_assets",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.suggestTravelAssets",
+    "title": "searchads360.customers.suggestTravelAssets"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads_experiments_graduate_experiment",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.experiments.graduateExperiment",
+    "title": "searchads360.customers.experiments.graduateExperiment"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads_experiments_schedule_experiment",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.experiments.scheduleExperiment",
+    "title": "searchads360.customers.experiments.scheduleExperiment"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads_generate_insights_finder_report",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.generateInsightsFinderReport",
+    "title": "searchads360.customers.generateInsightsFinderReport"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads_generate_suggested_tgt_insights",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.generateSuggestedTargetingInsights",
+    "title": "searchads360.customers.generateSuggestedTargetingInsights"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads_generate_tgt_suggestion_metrics",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.generateTargetingSuggestionMetrics",
+    "title": "searchads360.customers.generateTargetingSuggestionMetrics"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads_keyword_theme_constants_suggest",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.keywordThemeConstants.suggest",
+    "title": "searchads360.keywordThemeConstants.suggest"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads_list_benchmarks_available_dates",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.listBenchmarksAvailableDates",
+    "title": "searchads360.listBenchmarksAvailableDates"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads_product_link_invitations_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.productLinkInvitations.create",
+    "title": "searchads360.customers.productLinkInvitations.create"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads_product_link_invitations_remove",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.productLinkInvitations.remove",
+    "title": "searchads360.customers.productLinkInvitations.remove"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads_product_link_invitations_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.productLinkInvitations.update",
+    "title": "searchads360.customers.productLinkInvitations.update"
+  },
+  {
+    "name": "mcp__plugin_gads_gads__searchads_user_list_customer_types_mutate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/doubleclicksearch"
+    ],
+    "methodId": "searchads360.customers.userListCustomerTypes.mutate",
+    "title": "searchads360.customers.userListCustomerTypes.mutate"
   }
 ]

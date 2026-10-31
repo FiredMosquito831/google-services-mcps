@@ -30,7 +30,7 @@ The tools that match Google's official MCP server for this product (https://docs
 | `cloud_apikey_create` | `apikeys_create_key` |  |
 | `apikeys_projects_locations_keys_patch` | `apikeys_update_key` |  |
 | `cloud_apikey_delete` | `apikeys_delete_key` |  |
-| `apikeys_project_locatio_keys_undelete` | `apikeys_undelete_key` |  |
+| `apikeys_keys_undelete` | `apikeys_undelete_key` |  |
 | `apikeys_keys_lookup_key` | `apikeys_lookup_key` |  |
 | `bq_dataset_list` | `list_dataset_ids` |  |
 | `bigquery_datasets_get` | `get_dataset_info` |  |
@@ -46,11 +46,11 @@ The tools that match Google's official MCP server for this product (https://docs
 | `billing_billing_accounts_get` | `get_billing_account` |  |
 | `billing_billing_accounts_create` | `create_billing_account` |  |
 | `billing_billing_accounts_move` | `move_billing_account` |  |
-| `billing_billing_accoun_get_iam_policy` | `get_iam_policy` |  |
-| `billing_billing_accoun_set_iam_policy` | `set_iam_policy` |  |
-| `billing_billing_accoun_test_iam_permi` | `test_iam_permissions` |  |
+| `billing_billing_accts_get_iam_policy` | `get_iam_policy` |  |
+| `billing_billing_accts_set_iam_policy` | `set_iam_policy` |  |
+| `billing_billing_accts_test_iam_perms` | `test_iam_permissions` |  |
 | `billing_projects_get_billing_info` | `get_project_billing_info` |  |
-| `billing_billing_account_projects_list` | `list_project_billing_info` |  |
+| `billin_billing_accounts_projects_list` | `list_project_billing_info` |  |
 | `billing_services_list` | `list_services`, `get_service` | Google's get_service has no method in Cloud Billing v1; the list covers it. |
 | `billing_services_skus_list` | `list_skus`, `get_sku` | Google's get_sku has no method in Cloud Billing v1; the list covers it, and billing_price_lookup finds SKUs by words. |
 | `billing_price_lookup` | `list_prices`, `get_price`, `list_billing_account_prices`, `get_billing_account_price` | Prices of one SKU (v1beta skus.price.get), or SKUs of a service found by words and region with their list prices, and a billing account's own prices (v1beta billingAccounts.skus.price.get). Google's SKU-group and billing-account SKU and service listings are reached with the gateway (api_call) in the all toolset. |
@@ -65,7 +65,7 @@ The tools that match Google's official MCP server for this product (https://docs
 | `logging_entries_list` | `list_log_entries` | Google's list_log_names, list_buckets, list_views (and the observability server's sinks and log scopes) are reached with the gateway (api_call) in the all toolset. Without a time limit the last day is searched, as gcloud logging read does. |
 | `monitor_projects_time_series_list` | `list_timeseries` |  |
 | `monitoring_query_promql` | `query_range` | Also runs instant queries (Prometheus /query) when no range is given. Our kind is read, as Google marks query_range; since 1.24.5 the gateway's Prometheus POST queries (query, query_range, query_exemplars, series, labels) are reads too (config/tool-kinds.json). |
-| `monitor_projects_metric_descript_list` | `list_metric_descriptors` |  |
+| `monitor_metric_descriptors_list` | `list_metric_descriptors` |  |
 | `monitor_projects_alert_policies_list` | `list_alert_policies` |  |
 | `monitor_projects_alert_policies_get` | `get_alert_policy` |  |
 | `monitor_projects_alerts_list` | `list_alerts` |  |
@@ -130,36 +130,36 @@ The tools that match Google's official MCP server for this product (https://docs
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
+| `apikeys_keys_create` | write | apikeys.projects.locations.keys.create | apikeys, cloud-platform |
+| `apikeys_keys_delete` | destructive | apikeys.projects.locations.keys.delete | apikeys, cloud-platform |
+| `apikeys_keys_get_key_string` | write | apikeys.projects.locations.keys.getKeyString | apikeys, apikeys.readonly |
 | `apikeys_keys_lookup_key` | read | apikeys.keys.lookupKey | apikeys, apikeys.readonly |
+| `apikeys_keys_undelete` | write | apikeys.projects.locations.keys.undelete | apikeys, cloud-platform |
 | `apikeys_operations_get` | read | apikeys.operations.get | apikeys, apikeys.readonly |
-| `apikeys_project_locatio_keys_undelete` | write | apikeys.projects.locations.keys.undelete | apikeys, cloud-platform |
-| `apikeys_project_location_keys_get_key` | write | apikeys.projects.locations.keys.getKeyString | apikeys, apikeys.readonly |
-| `apikeys_projects_location_keys_create` | write | apikeys.projects.locations.keys.create | apikeys, cloud-platform |
-| `apikeys_projects_location_keys_delete` | destructive | apikeys.projects.locations.keys.delete | apikeys, cloud-platform |
 | `apikeys_projects_locations_keys_get` | read | apikeys.projects.locations.keys.get | apikeys, apikeys.readonly |
 | `apikeys_projects_locations_keys_list` | read | apikeys.projects.locations.keys.list | apikeys, apikeys.readonly |
 | `apikeys_projects_locations_keys_patch` | write | apikeys.projects.locations.keys.patch | apikeys, cloud-platform |
+| `assets_analyze_iam_policy_longrunning` | read | cloudasset.analyzeIamPolicyLongrunning | cloud-platform, cloudasset |
 | `assets_assets_list` | read | cloudasset.assets.list | cloud-platform, cloudasset |
-| `assets_effective_iam_polici_batch_get` | read | cloudasset.effectiveIamPolicies.batchGet | cloud-platform |
 | `assets_feeds_create` | write | cloudasset.feeds.create | cloud-platform |
 | `assets_feeds_delete` | destructive | cloudasset.feeds.delete | cloud-platform |
 | `assets_feeds_get` | read | cloudasset.feeds.get | cloud-platform |
 | `assets_feeds_list` | read | cloudasset.feeds.list | cloud-platform |
 | `assets_feeds_patch` | write | cloudasset.feeds.patch | cloud-platform |
 | `assets_operations_get` | read | cloudasset.operations.get | cloud-platform, cloudasset |
+| `assets_policies_batch_get` | read | cloudasset.effectiveIamPolicies.batchGet | cloud-platform |
 | `assets_saved_queries_create` | write | cloudasset.savedQueries.create | cloud-platform |
 | `assets_saved_queries_delete` | destructive | cloudasset.savedQueries.delete | cloud-platform |
 | `assets_saved_queries_get` | read | cloudasset.savedQueries.get | cloud-platform |
 | `assets_saved_queries_list` | read | cloudasset.savedQueries.list | cloud-platform |
 | `assets_saved_queries_patch` | write | cloudasset.savedQueries.patch | cloud-platform |
 | `assets_v1_analyze_iam_policy` | read | cloudasset.analyzeIamPolicy | cloud-platform, cloudasset |
-| `assets_v1_analyze_iam_policy_longrunn` | read | cloudasset.analyzeIamPolicyLongrunning | cloud-platform, cloudasset |
 | `assets_v1_analyze_move` | read | cloudasset.analyzeMove | cloud-platform |
 | `assets_v1_analyze_org_policies` | read | cloudasset.analyzeOrgPolicies | cloud-platform |
-| `assets_v1_analyze_org_policy_gov_0f01` | read | cloudasset.analyzeOrgPolicyGovernedAssets | cloud-platform |
-| `assets_v1_analyze_org_policy_gov_37e7` | read | cloudasset.analyzeOrgPolicyGovernedContainers | cloud-platform |
 | `assets_v1_batch_get_assets_history` | read | cloudasset.batchGetAssetsHistory | cloud-platform |
 | `assets_v1_export_assets` | write | cloudasset.exportAssets | cloud-platform |
+| `assets_v1_governed_assets` | read | cloudasset.analyzeOrgPolicyGovernedAssets | cloud-platform |
+| `assets_v1_governed_ctrs` | read | cloudasset.analyzeOrgPolicyGovernedContainers | cloud-platform |
 | `assets_v1_query_assets` | write | cloudasset.queryAssets | cloud-platform |
 | `assets_v1_search_all_iam_policies` | read | cloudasset.searchAllIamPolicies | cloud-platform |
 | `assets_v1_search_all_resources` | read | cloudasset.searchAllResources | cloud-platform |
@@ -180,6 +180,9 @@ The tools that match Google's official MCP server for this product (https://docs
 | `bigquery_models_get` | read | bigquery.models.get | bigquery, cloud-platform |
 | `bigquery_models_list` | read | bigquery.models.list | bigquery, cloud-platform |
 | `bigquery_models_patch` | write | bigquery.models.patch | bigquery, cloud-platform |
+| `bigquery_policies_batch_delete` | destructive | bigquery.rowAccessPolicies.batchDelete | bigquery, cloud-platform |
+| `bigquery_policies_get_iam_policy` | read | bigquery.rowAccessPolicies.getIamPolicy | bigquery, cloud-platform |
+| `bigquery_policies_test_iam_perms` | read | bigquery.rowAccessPolicies.testIamPermissions | bigquery, cloud-platform |
 | `bigquery_projects_get_service_account` | read | bigquery.projects.getServiceAccount | bigquery, cloud-platform |
 | `bigquery_projects_list` | read | bigquery.projects.list | bigquery, cloud-platform |
 | `bigquery_routines_delete` | destructive | bigquery.routines.delete | bigquery, cloud-platform |
@@ -188,11 +191,8 @@ The tools that match Google's official MCP server for this product (https://docs
 | `bigquery_routines_insert` | write | bigquery.routines.insert | bigquery, cloud-platform |
 | `bigquery_routines_list` | read | bigquery.routines.list | bigquery, cloud-platform |
 | `bigquery_routines_set_iam_policy` | destructive | bigquery.routines.setIamPolicy | bigquery, cloud-platform |
-| `bigquery_routines_test_iam_permission` | read | bigquery.routines.testIamPermissions | bigquery, cloud-platform |
+| `bigquery_routines_test_iam_perms` | read | bigquery.routines.testIamPermissions | bigquery, cloud-platform |
 | `bigquery_routines_update` | write | bigquery.routines.update | bigquery, cloud-platform |
-| `bigquery_row_access_po_get_iam_policy` | read | bigquery.rowAccessPolicies.getIamPolicy | bigquery, cloud-platform |
-| `bigquery_row_access_po_test_iam_permi` | read | bigquery.rowAccessPolicies.testIamPermissions | bigquery, cloud-platform |
-| `bigquery_row_access_poli_batch_delete` | destructive | bigquery.rowAccessPolicies.batchDelete | bigquery, cloud-platform |
 | `bigquery_row_access_policies_delete` | destructive | bigquery.rowAccessPolicies.delete | bigquery, cloud-platform |
 | `bigquery_row_access_policies_get` | read | bigquery.rowAccessPolicies.get | bigquery, cloud-platform |
 | `bigquery_row_access_policies_insert` | write | bigquery.rowAccessPolicies.insert | bigquery, cloud-platform |
@@ -209,38 +209,41 @@ The tools that match Google's official MCP server for this product (https://docs
 | `bigquery_tables_set_iam_policy` | destructive | bigquery.tables.setIamPolicy | bigquery, cloud-platform |
 | `bigquery_tables_test_iam_permissions` | read | bigquery.tables.testIamPermissions | bigquery, cloud-platform |
 | `bigquery_tables_update` | write | bigquery.tables.update | bigquery, cloud-platform |
-| `billing_billing_ac_sub_account_create` | write | cloudbilling.billingAccounts.subAccounts.create | cloud-billing, cloud-platform |
-| `billing_billing_acc_sub_accounts_list` | read | cloudbilling.billingAccounts.subAccounts.list | cloud-billing, cloud-billing.readonly |
-| `billing_billing_accoun_get_iam_policy` | read | cloudbilling.billingAccounts.getIamPolicy | cloud-billing, cloud-billing.readonly |
-| `billing_billing_accoun_set_iam_policy` | destructive | cloudbilling.billingAccounts.setIamPolicy | cloud-billing, cloud-platform |
-| `billing_billing_accoun_test_iam_permi` | read | cloudbilling.billingAccounts.testIamPermissions | cloud-billing, cloud-billing.readonly |
-| `billing_billing_account_projects_list` | read | cloudbilling.billingAccounts.projects.list | cloud-billing, cloud-billing.readonly |
+| `billin_billing_accounts_projects_list` | read | cloudbilling.billingAccounts.projects.list | cloud-billing, cloud-billing.readonly |
 | `billing_billing_accounts_create` | write | cloudbilling.billingAccounts.create | cloud-billing, cloud-platform |
 | `billing_billing_accounts_get` | read | cloudbilling.billingAccounts.get | cloud-billing, cloud-billing.readonly |
 | `billing_billing_accounts_list` | read | cloudbilling.billingAccounts.list | cloud-billing, cloud-billing.readonly |
 | `billing_billing_accounts_move` | write | cloudbilling.billingAccounts.move | cloud-billing, cloud-platform |
 | `billing_billing_accounts_patch` | write | cloudbilling.billingAccounts.patch | cloud-billing, cloud-platform |
+| `billing_billing_accts_get_iam_policy` | read | cloudbilling.billingAccounts.getIamPolicy | cloud-billing, cloud-billing.readonly |
+| `billing_billing_accts_set_iam_policy` | destructive | cloudbilling.billingAccounts.setIamPolicy | cloud-billing, cloud-platform |
+| `billing_billing_accts_sub_accts_list` | read | cloudbilling.billingAccounts.subAccounts.list | cloud-billing, cloud-billing.readonly |
+| `billing_billing_accts_test_iam_perms` | read | cloudbilling.billingAccounts.testIamPermissions | cloud-billing, cloud-billing.readonly |
 | `billing_message_send` | destructive | cloudbilling.message.send | cloud-billing, cloud-billing.readonly |
 | `billing_message_stream` | write | cloudbilling.message.stream | cloud-billing, cloud-billing.readonly |
-| `billing_organizati_billing_acc_create` | write | cloudbilling.organizations.billingAccounts.create | cloud-billing, cloud-platform |
-| `billing_organizatio_billing_acco_list` | read | cloudbilling.organizations.billingAccounts.list | cloud-billing, cloud-billing.readonly |
-| `billing_organizatio_billing_acco_move` | write | cloudbilling.organizations.billingAccounts.move | cloud-billing, cloud-platform |
+| `billing_orgs_billing_accts_create` | write | cloudbilling.organizations.billingAccounts.create | cloud-billing, cloud-platform |
+| `billing_orgs_billing_accts_list` | read | cloudbilling.organizations.billingAccounts.list | cloud-billing, cloud-billing.readonly |
+| `billing_orgs_billing_accts_move` | write | cloudbilling.organizations.billingAccounts.move | cloud-billing, cloud-platform |
 | `billing_projects_get_billing_info` | read | cloudbilling.projects.getBillingInfo | cloud-billing, cloud-billing.readonly |
 | `billing_projects_update_billing_info` | write | cloudbilling.projects.updateBillingInfo | cloud-billing, cloud-platform |
+| `billing_push_notif_configs_create` | write | cloudbilling.tasks.pushNotificationConfigs.create | cloud-billing, cloud-billing.readonly |
+| `billing_push_notif_configs_delete` | destructive | cloudbilling.tasks.pushNotificationConfigs.delete | cloud-billing, cloud-billing.readonly |
 | `billing_services_list` | read | cloudbilling.services.list | cloud-billing, cloud-billing.readonly |
 | `billing_services_skus_list` | read | cloudbilling.services.skus.list | cloud-billing, cloud-billing.readonly |
+| `billing_sub_accts_create` | write | cloudbilling.billingAccounts.subAccounts.create | cloud-billing, cloud-platform |
 | `billing_tasks_cancel` | destructive | cloudbilling.tasks.cancel | cloud-billing, cloud-billing.readonly |
 | `billing_tasks_get` | read | cloudbilling.tasks.get | cloud-billing, cloud-billing.readonly |
-| `billing_tasks_push_notificatio_create` | write | cloudbilling.tasks.pushNotificationConfigs.create | cloud-billing, cloud-billing.readonly |
-| `billing_tasks_push_notificatio_delete` | destructive | cloudbilling.tasks.pushNotificationConfigs.delete | cloud-billing, cloud-billing.readonly |
-| `billing_tasks_push_notification_c_get` | read | cloudbilling.tasks.pushNotificationConfigs.get | cloud-billing, cloud-billing.readonly |
-| `billing_tasks_push_notification_list` | read | cloudbilling.tasks.pushNotificationConfigs.list | cloud-billing, cloud-billing.readonly |
+| `billing_tasks_push_notif_configs_get` | read | cloudbilling.tasks.pushNotificationConfigs.get | cloud-billing, cloud-billing.readonly |
+| `billing_tasks_push_notif_configs_list` | read | cloudbilling.tasks.pushNotificationConfigs.list | cloud-billing, cloud-billing.readonly |
 | `billing_tasks_subscribe` | read | cloudbilling.tasks.subscribe | cloud-billing, cloud-billing.readonly |
 | `billing_v1_get_card` | read | cloudbilling.getCard | cloud-billing, cloud-billing.readonly |
+| `cloudprofi_profiles_create_offline` | write | cloudprofiler.projects.profiles.createOffline | cloud-platform, monitoring |
 | `cloudprofi_projects_profiles_create` | write | cloudprofiler.projects.profiles.create | cloud-platform, monitoring |
-| `cloudprofi_projects_profiles_create_o` | write | cloudprofiler.projects.profiles.createOffline | cloud-platform, monitoring |
 | `cloudprofi_projects_profiles_list` | read | cloudprofiler.projects.profiles.list | cloud-platform, monitoring |
 | `cloudprofi_projects_profiles_patch` | write | cloudprofiler.projects.profiles.patch | cloud-platform, monitoring |
+| `crm_capability_configs_create` | write | cloudresourcemanager.projects.capabilityConfigs.create | cloud-platform |
+| `crm_capability_configs_delete` | destructive | cloudresourcemanager.projects.capabilityConfigs.delete | cloud-platform |
+| `crm_effective_tag_binding_colls_get` | read | cloudresourcemanager.locations.effectiveTagBindingCollections.get | cloud-platform, cloud-platform.read-only |
 | `crm_effective_tags_list` | read | cloudresourcemanager.effectiveTags.list | cloud-platform, cloud-platform.read-only |
 | `crm_folders_capabilities_get` | read | cloudresourcemanager.folders.capabilities.get | cloud-platform |
 | `crm_folders_capabilities_patch` | write | cloudresourcemanager.folders.capabilities.patch | cloud-platform |
@@ -264,22 +267,17 @@ The tools that match Google's official MCP server for this product (https://docs
 | `crm_liens_delete` | destructive | cloudresourcemanager.liens.delete | cloud-platform, cloud-platform.read-only |
 | `crm_liens_get` | read | cloudresourcemanager.liens.get | cloud-platform, cloud-platform.read-only |
 | `crm_liens_list` | read | cloudresourcemanager.liens.list | cloud-platform, cloud-platform.read-only |
-| `crm_locations_effective_tag_bindi_get` | read | cloudresourcemanager.locations.effectiveTagBindingCollections.get | cloud-platform, cloud-platform.read-only |
-| `crm_locations_tag_binding_colle_patch` | write | cloudresourcemanager.locations.tagBindingCollections.patch | cloud-platform |
-| `crm_locations_tag_binding_collect_get` | read | cloudresourcemanager.locations.tagBindingCollections.get | cloud-platform, cloud-platform.read-only |
 | `crm_operations_get` | read | cloudresourcemanager.operations.get | cloud-platform, cloud-platform.read-only |
-| `crm_organization_capability_co_create` | write | cloudresourcemanager.organizations.capabilityConfigs.create | cloud-platform |
-| `crm_organization_capability_co_delete` | destructive | cloudresourcemanager.organizations.capabilityConfigs.delete | cloud-platform |
-| `crm_organizations_capability_co_patch` | write | cloudresourcemanager.organizations.capabilityConfigs.patch | cloud-platform |
-| `crm_organizations_capability_con_list` | read | cloudresourcemanager.organizations.capabilityConfigs.list | cloud-platform, cloud-platform.read-only |
-| `crm_organizations_capability_conf_get` | read | cloudresourcemanager.organizations.capabilityConfigs.get | cloud-platform, cloud-platform.read-only |
 | `crm_organizations_get` | read | cloudresourcemanager.organizations.get | cloud-platform, cloud-platform.read-only |
 | `crm_organizations_get_iam_policy` | read | cloudresourcemanager.organizations.getIamPolicy | cloud-platform, cloud-platform.read-only |
 | `crm_organizations_search` | read | cloudresourcemanager.organizations.search | cloud-platform, cloud-platform.read-only |
 | `crm_organizations_set_iam_policy` | destructive | cloudresourcemanager.organizations.setIamPolicy | cloud-platform |
-| `crm_organizations_test_iam_permission` | read | cloudresourcemanager.organizations.testIamPermissions | cloud-platform, cloud-platform.read-only |
-| `crm_projects_capability_config_create` | write | cloudresourcemanager.projects.capabilityConfigs.create | cloud-platform |
-| `crm_projects_capability_config_delete` | destructive | cloudresourcemanager.projects.capabilityConfigs.delete | cloud-platform |
+| `crm_orgs_capability_configs_create` | write | cloudresourcemanager.organizations.capabilityConfigs.create | cloud-platform |
+| `crm_orgs_capability_configs_delete` | destructive | cloudresourcemanager.organizations.capabilityConfigs.delete | cloud-platform |
+| `crm_orgs_capability_configs_get` | read | cloudresourcemanager.organizations.capabilityConfigs.get | cloud-platform, cloud-platform.read-only |
+| `crm_orgs_capability_configs_list` | read | cloudresourcemanager.organizations.capabilityConfigs.list | cloud-platform, cloud-platform.read-only |
+| `crm_orgs_capability_configs_patch` | write | cloudresourcemanager.organizations.capabilityConfigs.patch | cloud-platform |
+| `crm_orgs_test_iam_perms` | read | cloudresourcemanager.organizations.testIamPermissions | cloud-platform, cloud-platform.read-only |
 | `crm_projects_capability_configs_get` | read | cloudresourcemanager.projects.capabilityConfigs.get | cloud-platform, cloud-platform.read-only |
 | `crm_projects_capability_configs_list` | read | cloudresourcemanager.projects.capabilityConfigs.list | cloud-platform, cloud-platform.read-only |
 | `crm_projects_capability_configs_patch` | write | cloudresourcemanager.projects.capabilityConfigs.patch | cloud-platform |
@@ -294,6 +292,8 @@ The tools that match Google's official MCP server for this product (https://docs
 | `crm_projects_set_iam_policy` | destructive | cloudresourcemanager.projects.setIamPolicy | cloud-platform |
 | `crm_projects_test_iam_permissions` | read | cloudresourcemanager.projects.testIamPermissions | cloud-platform, cloud-platform.read-only |
 | `crm_projects_undelete` | write | cloudresourcemanager.projects.undelete | cloud-platform |
+| `crm_tag_binding_collections_get` | read | cloudresourcemanager.locations.tagBindingCollections.get | cloud-platform, cloud-platform.read-only |
+| `crm_tag_binding_collections_patch` | write | cloudresourcemanager.locations.tagBindingCollections.patch | cloud-platform |
 | `crm_tag_bindings_create` | write | cloudresourcemanager.tagBindings.create | cloud-platform |
 | `crm_tag_bindings_delete` | destructive | cloudresourcemanager.tagBindings.delete | cloud-platform |
 | `crm_tag_bindings_list` | read | cloudresourcemanager.tagBindings.list | cloud-platform, cloud-platform.read-only |
@@ -325,61 +325,61 @@ The tools that match Google's official MCP server for this product (https://docs
 | `iam_policies_list_policies` | read | iam.policies.listPolicies | cloud-platform |
 | `iam_policies_operations_get` | read | iam.policies.operations.get | cloud-platform |
 | `iam_policies_update` | write | iam.policies.update | cloud-platform |
+| `monitor_alert_policies_create` | write | monitoring.projects.alertPolicies.create | cloud-platform, monitoring |
+| `monitor_alert_policies_delete` | destructive | monitoring.projects.alertPolicies.delete | cloud-platform, monitoring |
+| `monitor_chans_get_verification_code` | read | monitoring.projects.notificationChannels.getVerificationCode | cloud-platform, monitoring |
+| `monitor_chans_send_verification_code` | write | monitoring.projects.notificationChannels.sendVerificationCode | cloud-platform, monitoring |
+| `monitor_collectd_time_series_create` | write | monitoring.projects.collectdTimeSeries.create | cloud-platform, monitoring |
 | `monitor_folders_time_series_list` | read | monitoring.folders.timeSeries.list | cloud-platform, monitoring |
-| `monitor_organization_time_series_list` | read | monitoring.organizations.timeSeries.list | cloud-platform, monitoring |
-| `monitor_projects_alert_policie_create` | write | monitoring.projects.alertPolicies.create | cloud-platform, monitoring |
-| `monitor_projects_alert_policie_delete` | destructive | monitoring.projects.alertPolicies.delete | cloud-platform, monitoring |
+| `monitor_metric_descriptors_create` | write | monitoring.projects.metricDescriptors.create | cloud-platform, monitoring |
+| `monitor_metric_descriptors_delete` | destructive | monitoring.projects.metricDescriptors.delete | cloud-platform, monitoring |
+| `monitor_metric_descriptors_get` | read | monitoring.projects.metricDescriptors.get | cloud-platform, monitoring |
+| `monitor_metric_descriptors_list` | read | monitoring.projects.metricDescriptors.list | cloud-platform, monitoring |
+| `monitor_monitored_resource_descs_get` | read | monitoring.projects.monitoredResourceDescriptors.get | cloud-platform, monitoring |
+| `monitor_monitored_resource_descs_list` | read | monitoring.projects.monitoredResourceDescriptors.list | cloud-platform, monitoring |
+| `monitor_notif_chan_descs_get` | read | monitoring.projects.notificationChannelDescriptors.get | cloud-platform, monitoring |
+| `monitor_notif_chan_descs_list` | read | monitoring.projects.notificationChannelDescriptors.list | cloud-platform, monitoring |
+| `monitor_notification_channels_create` | write | monitoring.projects.notificationChannels.create | cloud-platform, monitoring |
+| `monitor_notification_channels_delete` | destructive | monitoring.projects.notificationChannels.delete | cloud-platform, monitoring |
+| `monitor_notification_channels_get` | read | monitoring.projects.notificationChannels.get | cloud-platform, monitoring |
+| `monitor_notification_channels_list` | read | monitoring.projects.notificationChannels.list | cloud-platform, monitoring |
+| `monitor_notification_channels_patch` | write | monitoring.projects.notificationChannels.patch | cloud-platform, monitoring |
+| `monitor_notification_channels_verify` | write | monitoring.projects.notificationChannels.verify | cloud-platform, monitoring |
+| `monitor_orgs_time_series_list` | read | monitoring.organizations.timeSeries.list | cloud-platform, monitoring |
 | `monitor_projects_alert_policies_get` | read | monitoring.projects.alertPolicies.get | cloud-platform, monitoring |
 | `monitor_projects_alert_policies_list` | read | monitoring.projects.alertPolicies.list | cloud-platform, monitoring |
 | `monitor_projects_alert_policies_patch` | write | monitoring.projects.alertPolicies.patch | cloud-platform, monitoring |
 | `monitor_projects_alerts_get` | read | monitoring.projects.alerts.get | cloud-platform, monitoring |
 | `monitor_projects_alerts_list` | read | monitoring.projects.alerts.list | cloud-platform, monitoring |
-| `monitor_projects_collectd_time_create` | write | monitoring.projects.collectdTimeSeries.create | cloud-platform, monitoring |
 | `monitor_projects_groups_create` | write | monitoring.projects.groups.create | cloud-platform, monitoring |
 | `monitor_projects_groups_delete` | destructive | monitoring.projects.groups.delete | cloud-platform, monitoring |
 | `monitor_projects_groups_get` | read | monitoring.projects.groups.get | cloud-platform, monitoring |
 | `monitor_projects_groups_list` | read | monitoring.projects.groups.list | cloud-platform, monitoring |
 | `monitor_projects_groups_members_list` | read | monitoring.projects.groups.members.list | cloud-platform, monitoring |
 | `monitor_projects_groups_update` | write | monitoring.projects.groups.update | cloud-platform, monitoring |
-| `monitor_projects_metric_descri_create` | write | monitoring.projects.metricDescriptors.create | cloud-platform, monitoring |
-| `monitor_projects_metric_descri_delete` | destructive | monitoring.projects.metricDescriptors.delete | cloud-platform, monitoring |
-| `monitor_projects_metric_descript_list` | read | monitoring.projects.metricDescriptors.list | cloud-platform, monitoring |
-| `monitor_projects_metric_descripto_get` | read | monitoring.projects.metricDescriptors.get | cloud-platform, monitoring |
-| `monitor_projects_monitored_resou_list` | read | monitoring.projects.monitoredResourceDescriptors.list | cloud-platform, monitoring |
-| `monitor_projects_monitored_resour_get` | read | monitoring.projects.monitoredResourceDescriptors.get | cloud-platform, monitoring |
-| `monitor_projects_notificat_get_verifi` | read | monitoring.projects.notificationChannels.getVerificationCode | cloud-platform, monitoring |
-| `monitor_projects_notificat_send_verif` | write | monitoring.projects.notificationChannels.sendVerificationCode | cloud-platform, monitoring |
-| `monitor_projects_notificati_list_11a2` | read | monitoring.projects.notificationChannels.list | cloud-platform, monitoring |
-| `monitor_projects_notificati_list_7e4a` | read | monitoring.projects.notificationChannelDescriptors.list | cloud-platform, monitoring |
-| `monitor_projects_notificatio_get_8dde` | read | monitoring.projects.notificationChannelDescriptors.get | cloud-platform, monitoring |
-| `monitor_projects_notificatio_get_a4cc` | read | monitoring.projects.notificationChannels.get | cloud-platform, monitoring |
-| `monitor_projects_notification_c_patch` | write | monitoring.projects.notificationChannels.patch | cloud-platform, monitoring |
-| `monitor_projects_notification_create` | write | monitoring.projects.notificationChannels.create | cloud-platform, monitoring |
-| `monitor_projects_notification_delete` | destructive | monitoring.projects.notificationChannels.delete | cloud-platform, monitoring |
-| `monitor_projects_notification_verify` | write | monitoring.projects.notificationChannels.verify | cloud-platform, monitoring |
 | `monitor_projects_snoozes_create` | write | monitoring.projects.snoozes.create | cloud-platform, monitoring |
 | `monitor_projects_snoozes_get` | read | monitoring.projects.snoozes.get | cloud-platform, monitoring |
 | `monitor_projects_snoozes_list` | read | monitoring.projects.snoozes.list | cloud-platform, monitoring |
 | `monitor_projects_snoozes_patch` | write | monitoring.projects.snoozes.patch | cloud-platform, monitoring |
-| `monitor_projects_time_seri_create_ser` | write | monitoring.projects.timeSeries.createService | cloud-platform, monitoring |
 | `monitor_projects_time_series_create` | write | monitoring.projects.timeSeries.create | cloud-platform, monitoring |
 | `monitor_projects_time_series_list` | read | monitoring.projects.timeSeries.list | cloud-platform, monitoring |
 | `monitor_projects_time_series_query` | read | monitoring.projects.timeSeries.query | cloud-platform, monitoring |
-| `monitor_projects_uptime_check_c_patch` | write | monitoring.projects.uptimeCheckConfigs.patch | cloud-platform, monitoring |
-| `monitor_projects_uptime_check_co_list` | read | monitoring.projects.uptimeCheckConfigs.list | cloud-platform, monitoring |
-| `monitor_projects_uptime_check_con_get` | read | monitoring.projects.uptimeCheckConfigs.get | cloud-platform, monitoring |
-| `monitor_projects_uptime_check_create` | write | monitoring.projects.uptimeCheckConfigs.create | cloud-platform, monitoring |
-| `monitor_projects_uptime_check_delete` | destructive | monitoring.projects.uptimeCheckConfigs.delete | cloud-platform, monitoring |
 | `monitor_services_create` | write | monitoring.services.create | cloud-platform, monitoring |
 | `monitor_services_delete` | destructive | monitoring.services.delete | cloud-platform, monitoring |
 | `monitor_services_get` | read | monitoring.services.get | cloud-platform, monitoring |
 | `monitor_services_list` | read | monitoring.services.list | cloud-platform, monitoring |
+| `monitor_services_objectives_create` | write | monitoring.services.serviceLevelObjectives.create | cloud-platform, monitoring |
+| `monitor_services_objectives_delete` | destructive | monitoring.services.serviceLevelObjectives.delete | cloud-platform, monitoring |
+| `monitor_services_objectives_get` | read | monitoring.services.serviceLevelObjectives.get | cloud-platform, monitoring |
+| `monitor_services_objectives_list` | read | monitoring.services.serviceLevelObjectives.list | cloud-platform, monitoring |
+| `monitor_services_objectives_patch` | write | monitoring.services.serviceLevelObjectives.patch | cloud-platform, monitoring |
 | `monitor_services_patch` | write | monitoring.services.patch | cloud-platform, monitoring |
-| `monitor_services_service_level_create` | write | monitoring.services.serviceLevelObjectives.create | cloud-platform, monitoring |
-| `monitor_services_service_level_delete` | destructive | monitoring.services.serviceLevelObjectives.delete | cloud-platform, monitoring |
-| `monitor_services_service_level_o_list` | read | monitoring.services.serviceLevelObjectives.list | cloud-platform, monitoring |
-| `monitor_services_service_level_ob_get` | read | monitoring.services.serviceLevelObjectives.get | cloud-platform, monitoring |
-| `monitor_services_service_level_patch` | write | monitoring.services.serviceLevelObjectives.patch | cloud-platform, monitoring |
+| `monitor_time_series_create_service` | write | monitoring.projects.timeSeries.createService | cloud-platform, monitoring |
+| `monitor_uptime_check_configs_create` | write | monitoring.projects.uptimeCheckConfigs.create | cloud-platform, monitoring |
+| `monitor_uptime_check_configs_delete` | destructive | monitoring.projects.uptimeCheckConfigs.delete | cloud-platform, monitoring |
+| `monitor_uptime_check_configs_get` | read | monitoring.projects.uptimeCheckConfigs.get | cloud-platform, monitoring |
+| `monitor_uptime_check_configs_list` | read | monitoring.projects.uptimeCheckConfigs.list | cloud-platform, monitoring |
+| `monitor_uptime_check_configs_patch` | write | monitoring.projects.uptimeCheckConfigs.patch | cloud-platform, monitoring |
 | `monitor_uptime_check_ips_list` | read | monitoring.uptimeCheckIps.list | cloud-platform, monitoring |
 | `policytrou_iam_troubleshoot` | write | policytroubleshooter.iam.troubleshoot | cloud-platform |
 | `serviceusa_operations_cancel` | destructive | serviceusage.operations.cancel | cloud-platform, service.management |
@@ -418,21 +418,21 @@ The tools that match Google's official MCP server for this product (https://docs
 | `storage_buckets_set_iam_policy` | destructive | storage.buckets.setIamPolicy | cloud-platform, devstorage.full_control |
 | `storage_buckets_test_iam_permissions` | read | storage.buckets.testIamPermissions | cloud-platform, cloud-platform.read-only |
 | `storage_buckets_update` | write | storage.buckets.update | cloud-platform, devstorage.full_control |
-| `storage_default_object_access_c_patch` | write | storage.defaultObjectAccessControls.patch | cloud-platform, devstorage.full_control |
-| `storage_default_object_access_co_list` | read | storage.defaultObjectAccessControls.list | cloud-platform, devstorage.full_control |
-| `storage_default_object_access_con_get` | read | storage.defaultObjectAccessControls.get | cloud-platform, devstorage.full_control |
-| `storage_default_object_access_delete` | destructive | storage.defaultObjectAccessControls.delete | cloud-platform, devstorage.full_control |
-| `storage_default_object_access_insert` | write | storage.defaultObjectAccessControls.insert | cloud-platform, devstorage.full_control |
-| `storage_default_object_access_update` | write | storage.defaultObjectAccessControls.update | cloud-platform, devstorage.full_control |
+| `storage_controls_delete` | destructive | storage.defaultObjectAccessControls.delete | cloud-platform, devstorage.full_control |
+| `storage_controls_get` | read | storage.defaultObjectAccessControls.get | cloud-platform, devstorage.full_control |
+| `storage_controls_insert` | write | storage.defaultObjectAccessControls.insert | cloud-platform, devstorage.full_control |
+| `storage_controls_list` | read | storage.defaultObjectAccessControls.list | cloud-platform, devstorage.full_control |
+| `storage_controls_patch` | write | storage.defaultObjectAccessControls.patch | cloud-platform, devstorage.full_control |
+| `storage_controls_update` | write | storage.defaultObjectAccessControls.update | cloud-platform, devstorage.full_control |
 | `storage_folders_delete` | destructive | storage.folders.delete | cloud-platform, devstorage.full_control |
 | `storage_folders_delete_recursive` | destructive | storage.folders.deleteRecursive | cloud-platform, devstorage.full_control |
 | `storage_folders_get` | read | storage.folders.get | cloud-platform, cloud-platform.read-only |
+| `storage_folders_get_iam_policy` | read | storage.managedFolders.getIamPolicy | cloud-platform, cloud-platform.read-only |
 | `storage_folders_insert` | write | storage.folders.insert | cloud-platform, devstorage.full_control |
 | `storage_folders_list` | read | storage.folders.list | cloud-platform, cloud-platform.read-only |
 | `storage_folders_rename` | write | storage.folders.rename | cloud-platform, devstorage.full_control |
-| `storage_managed_folder_get_iam_policy` | read | storage.managedFolders.getIamPolicy | cloud-platform, cloud-platform.read-only |
-| `storage_managed_folder_set_iam_policy` | destructive | storage.managedFolders.setIamPolicy | cloud-platform, devstorage.full_control |
-| `storage_managed_folder_test_iam_permi` | read | storage.managedFolders.testIamPermissions | cloud-platform, cloud-platform.read-only |
+| `storage_folders_set_iam_policy` | destructive | storage.managedFolders.setIamPolicy | cloud-platform, devstorage.full_control |
+| `storage_folders_test_iam_perms` | read | storage.managedFolders.testIamPermissions | cloud-platform, cloud-platform.read-only |
 | `storage_managed_folders_delete` | destructive | storage.managedFolders.delete | cloud-platform, devstorage.full_control |
 | `storage_managed_folders_get` | read | storage.managedFolders.get | cloud-platform, cloud-platform.read-only |
 | `storage_managed_folders_insert` | write | storage.managedFolders.insert | cloud-platform, devstorage.full_control |
@@ -463,10 +463,10 @@ The tools that match Google's official MCP server for this product (https://docs
 | `storage_objects_test_iam_permissions` | read | storage.objects.testIamPermissions | cloud-platform, cloud-platform.read-only |
 | `storage_objects_update` | write | storage.objects.update | cloud-platform, devstorage.full_control |
 | `storage_objects_view_full_context` | read | storage.objects.viewFullContext | cloud-platform, cloud-platform.read-only |
-| `storage_operations_advance_relocate_b` | write | storage.buckets.operations.advanceRelocateBucket | cloud-platform, devstorage.full_control |
 | `storage_operations_cancel` | destructive | storage.buckets.operations.cancel | cloud-platform, devstorage.full_control |
 | `storage_operations_get` | read | storage.buckets.operations.get | cloud-platform, cloud-platform.read-only |
 | `storage_operations_list` | read | storage.buckets.operations.list | cloud-platform, cloud-platform.read-only |
+| `storage_ops_advance_relocate_bucket` | write | storage.buckets.operations.advanceRelocateBucket | cloud-platform, devstorage.full_control |
 | `storage_projects_hmac_keys_create` | write | storage.projects.hmacKeys.create | cloud-platform, devstorage.full_control |
 | `storage_projects_hmac_keys_delete` | destructive | storage.projects.hmacKeys.delete | cloud-platform, devstorage.full_control |
 | `storage_projects_hmac_keys_get` | read | storage.projects.hmacKeys.get | cloud-platform, cloud-platform.read-only |
@@ -479,7 +479,7 @@ The tools that match Google's official MCP server for this product (https://docs
 | `storage_rapid_caches_list` | read | storage.rapidCaches.list | cloud-platform, cloud-platform.read-only |
 | `storage_rapid_caches_update` | write | storage.rapidCaches.update | cloud-platform, devstorage.full_control |
 | `trace_projects_traces_batch_write` | write | cloudtrace.projects.traces.batchWrite | cloud-platform, trace.append |
-| `trace_projects_traces_spans_create_sp` | write | cloudtrace.projects.traces.spans.createSpan | cloud-platform, trace.append |
+| `trace_traces_spans_create_span` | write | cloudtrace.projects.traces.spans.createSpan | cloud-platform, trace.append |
 
 ## Gateway tools (3)
 

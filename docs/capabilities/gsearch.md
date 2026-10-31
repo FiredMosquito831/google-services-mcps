@@ -22,10 +22,10 @@ The tools that match Google's official MCP server for this product (https://deve
 
 | Tool | Google's tool | Note |
 |---|---|---|
-| `developerk_documents_search_documen` | `search_documents` | Searches Google's developer documentation (Developer Knowledge API searchDocumentChunks): matching chunks with their document names. |
+| `developerk_docs_search_doc_chunks` | `search_documents` | Searches Google's developer documentation (Developer Knowledge API searchDocumentChunks): matching chunks with their document names. |
 | `developerk_documents_batch_get` | `get_documents` | The full text of up to 20 documents by name (Developer Knowledge API documents.batchGet), after a search. |
 | `developerk_v1_answer_query` | `answer_query` | A grounded answer about Google developer products (Developer Knowledge API answerQuery). Google marks it read-only, and since 1.24.2 (D2) the suite counts it as a read too, so it does not ask. |
-| `pagespeedo_pagespeedap_runpagespeed` | (none) | No official Google MCP server covers PageSpeed Insights; kept for the Lighthouse scores and Core Web Vitals of a page (PageSpeed Insights API runpagespeed). |
+| `pagespeed_pagespeedapi_runpagespeed` | (none) | No official Google MCP server covers PageSpeed Insights; kept for the Lighthouse scores and Core Web Vitals of a page (PageSpeed Insights API runpagespeed). |
 | `chromeuxre_records_query_record` | (none) | No official Google MCP server covers the Chrome UX Report; kept for real-user Core Web Vitals of an origin or URL (CrUX API records.queryRecord). |
 | `kgsearch_entities_search` | (none) | No official Google MCP server covers the Knowledge Graph; kept to look up an entity by name (Knowledge Graph Search API entities.search). |
 | `factcheckt_claims_search` | (none) | No official Google MCP server covers Fact Check Tools; kept to find published fact checks of a claim (Fact Check Tools API claims.search). |
@@ -46,17 +46,17 @@ The tools that match Google's official MCP server for this product (https://deve
 | `accelerate_amp_urls_batch_get` | read | acceleratedmobilepageurl.ampUrls.batchGet | (none) |
 | `adexperien_sites_get` | read | adexperiencereport.sites.get | (none) |
 | `adexperien_violating_sites_list` | read | adexperiencereport.violatingSites.list | (none) |
-| `chromeuxre_records_query_history_re` | read | chromeuxreport.records.queryHistoryRecord | (none) |
+| `chromeuxre_query_history_record` | read | chromeuxreport.records.queryHistoryRecord | (none) |
 | `chromeuxre_records_query_record` | read | chromeuxreport.records.queryRecord | (none) |
-| `civicinfo_divisions_query_division` | read | civicinfo.divisions.queryDivisionByAddress | (none) |
 | `civicinfo_divisions_search` | read | civicinfo.divisions.search | (none) |
 | `civicinfo_elections_election_query` | read | civicinfo.elections.electionQuery | (none) |
-| `civicinfo_elections_voter_info_quer` | read | civicinfo.elections.voterInfoQuery | (none) |
+| `civicinfo_query_division_by_address` | read | civicinfo.divisions.queryDivisionByAddress | (none) |
+| `civicinfo_voter_info_query` | read | civicinfo.elections.voterInfoQuery | (none) |
 | `cse_cse_list` | read | search.cse.list | (none) |
 | `cse_cse_siterestrict_list` | read | search.cse.siterestrict.list | (none) |
+| `developerk_docs_search_doc_chunks` | read | developerknowledge.documents.searchDocumentChunks | cloud-platform |
 | `developerk_documents_batch_get` | read | developerknowledge.documents.batchGet | cloud-platform |
 | `developerk_documents_get` | read | developerknowledge.documents.get | cloud-platform |
-| `developerk_documents_search_documen` | read | developerknowledge.documents.searchDocumentChunks | cloud-platform |
 | `developerk_v1_answer_query` | read | developerknowledge.answerQuery | cloud-platform |
 | `digitalass_assetlinks_bulk_check` | read | digitalassetlinks.assetlinks.bulkCheck | (none) |
 | `digitalass_assetlinks_check` | read | digitalassetlinks.assetlinks.check | (none) |
@@ -69,14 +69,14 @@ The tools that match Google's official MCP server for this product (https://deve
 | `factcheckt_pages_list` | read | factchecktools.pages.list | factchecktools |
 | `factcheckt_pages_update` | write | factchecktools.pages.update | factchecktools |
 | `kgsearch_entities_search` | read | kgsearch.entities.search | (none) |
-| `pagespeedo_pagespeedap_runpagespeed` | read | pagespeedonline.pagespeedapi.runpagespeed | openid |
+| `pagespeed_pagespeedapi_runpagespeed` | read | pagespeedonline.pagespeedapi.runpagespeed | openid |
 | `safebrowsi_hash_list_get` | read | safebrowsing.hashList.get | (none) |
 | `safebrowsi_hash_lists_batch_get` | read | safebrowsing.hashLists.batchGet | (none) |
 | `safebrowsi_hash_lists_list` | read | safebrowsing.hashLists.list | (none) |
 | `safebrowsi_hashes_search` | read | safebrowsing.hashes.search | (none) |
 | `safebrowsi_urls_search` | read | safebrowsing.urls.search | (none) |
-| `versionhis_plat_chan_vers_rele_list` | read | versionhistory.platforms.channels.versions.releases.list | (none) |
-| `versionhis_platf_channe_versio_list` | read | versionhistory.platforms.channels.versions.list | (none) |
+| `versionhi_platforms_chans_vers_list` | read | versionhistory.platforms.channels.versions.list | (none) |
+| `versionhis_chans_vers_releases_list` | read | versionhistory.platforms.channels.versions.releases.list | (none) |
 | `versionhis_platforms_channels_list` | read | versionhistory.platforms.channels.list | (none) |
 | `versionhis_platforms_list` | read | versionhistory.platforms.list | (none) |
 | `webfonts_webfonts_list` | read | webfonts.webfonts.list | (none) |

@@ -112,10 +112,10 @@ test("the gplay google list: Google's nine Android Management tools and a lean P
   assert.deepEqual(publishing, [
     'androidpub_reviews_list',
     'androidpub_reviews_reply',
-    'androidpub_applica_tracks_releases_list',
+    'androidpub_tracks_releases_list',
     'androidpub_edits_tracks_list',
-    'androidpub_purchases_subscriptionsv_get',
-    'androidpub_monetizatio_subscriptio_list',
+    'androidpu_purchases_subscriptionsv2_get',
+    'androidpub_monetization_subs_list',
     'androidpub_orders_get',
   ]);
   for (const tool of publishing) {

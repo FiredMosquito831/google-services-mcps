@@ -1256,7 +1256,7 @@
             "cloud_apikey_create",
             "apikeys_projects_locations_keys_patch",
             "cloud_apikey_delete",
-            "apikeys_project_locatio_keys_undelete",
+            "apikeys_keys_undelete",
             "apikeys_keys_lookup_key",
             "bq_dataset_list",
             "bigquery_datasets_get",
@@ -1272,11 +1272,11 @@
             "billing_billing_accounts_get",
             "billing_billing_accounts_create",
             "billing_billing_accounts_move",
-            "billing_billing_accoun_get_iam_policy",
-            "billing_billing_accoun_set_iam_policy",
-            "billing_billing_accoun_test_iam_permi",
+            "billing_billing_accts_get_iam_policy",
+            "billing_billing_accts_set_iam_policy",
+            "billing_billing_accts_test_iam_perms",
             "billing_projects_get_billing_info",
-            "billing_billing_account_projects_list",
+            "billin_billing_accounts_projects_list",
             "billing_services_list",
             "billing_services_skus_list",
             "billing_price_lookup",
@@ -1291,7 +1291,7 @@
             "logging_entries_list",
             "monitor_projects_time_series_list",
             "monitoring_query_promql",
-            "monitor_projects_metric_descript_list",
+            "monitor_metric_descriptors_list",
             "monitor_projects_alert_policies_list",
             "monitor_projects_alert_policies_get",
             "monitor_projects_alerts_list",
@@ -1331,7 +1331,7 @@
             "cloud_apikey_delete": [
               "apikeys_delete_key"
             ],
-            "apikeys_project_locatio_keys_undelete": [
+            "apikeys_keys_undelete": [
               "apikeys_undelete_key"
             ],
             "apikeys_keys_lookup_key": [
@@ -1377,19 +1377,19 @@
             "billing_billing_accounts_move": [
               "move_billing_account"
             ],
-            "billing_billing_accoun_get_iam_policy": [
+            "billing_billing_accts_get_iam_policy": [
               "get_iam_policy"
             ],
-            "billing_billing_accoun_set_iam_policy": [
+            "billing_billing_accts_set_iam_policy": [
               "set_iam_policy"
             ],
-            "billing_billing_accoun_test_iam_permi": [
+            "billing_billing_accts_test_iam_perms": [
               "test_iam_permissions"
             ],
             "billing_projects_get_billing_info": [
               "get_project_billing_info"
             ],
-            "billing_billing_account_projects_list": [
+            "billin_billing_accounts_projects_list": [
               "list_project_billing_info"
             ],
             "billing_services_list": [
@@ -1439,7 +1439,7 @@
             "monitoring_query_promql": [
               "query_range"
             ],
-            "monitor_projects_metric_descript_list": [
+            "monitor_metric_descriptors_list": [
               "list_metric_descriptors"
             ],
             "monitor_projects_alert_policies_list": [
@@ -1708,17 +1708,17 @@
         "google": {
           "source": "https://developerknowledge.googleapis.com/mcp",
           "tools": [
-            "developerk_documents_search_documen",
+            "developerk_docs_search_doc_chunks",
             "developerk_documents_batch_get",
             "developerk_v1_answer_query",
-            "pagespeedo_pagespeedap_runpagespeed",
+            "pagespeed_pagespeedapi_runpagespeed",
             "chromeuxre_records_query_record",
             "kgsearch_entities_search",
             "factcheckt_claims_search",
             "webrisk_uris_search"
           ],
           "matches": {
-            "developerk_documents_search_documen": [
+            "developerk_docs_search_doc_chunks": [
               "search_documents"
             ],
             "developerk_documents_batch_get": [
@@ -1727,17 +1727,17 @@
             "developerk_v1_answer_query": [
               "answer_query"
             ],
-            "pagespeedo_pagespeedap_runpagespeed": [],
+            "pagespeed_pagespeedapi_runpagespeed": [],
             "chromeuxre_records_query_record": [],
             "kgsearch_entities_search": [],
             "factcheckt_claims_search": [],
             "webrisk_uris_search": []
           },
           "notes": {
-            "developerk_documents_search_documen": "Searches Google's developer documentation (Developer Knowledge API searchDocumentChunks): matching chunks with their document names.",
+            "developerk_docs_search_doc_chunks": "Searches Google's developer documentation (Developer Knowledge API searchDocumentChunks): matching chunks with their document names.",
             "developerk_documents_batch_get": "The full text of up to 20 documents by name (Developer Knowledge API documents.batchGet), after a search.",
             "developerk_v1_answer_query": "A grounded answer about Google developer products (Developer Knowledge API answerQuery). Google marks it read-only, and since 1.24.2 (D2) the suite counts it as a read too, so it does not ask.",
-            "pagespeedo_pagespeedap_runpagespeed": "No official Google MCP server covers PageSpeed Insights; kept for the Lighthouse scores and Core Web Vitals of a page (PageSpeed Insights API runpagespeed).",
+            "pagespeed_pagespeedapi_runpagespeed": "No official Google MCP server covers PageSpeed Insights; kept for the Lighthouse scores and Core Web Vitals of a page (PageSpeed Insights API runpagespeed).",
             "chromeuxre_records_query_record": "No official Google MCP server covers the Chrome UX Report; kept for real-user Core Web Vitals of an origin or URL (CrUX API records.queryRecord).",
             "kgsearch_entities_search": "No official Google MCP server covers the Knowledge Graph; kept to look up an entity by name (Knowledge Graph Search API entities.search).",
             "factcheckt_claims_search": "No official Google MCP server covers Fact Check Tools; kept to find published fact checks of a claim (Fact Check Tools API claims.search).",
@@ -1846,7 +1846,7 @@
             "sheets_insert_rows",
             "slides_presentations_get",
             "slides_presentations_pages_get",
-            "slides_presentatio_pages_get_thumbnai",
+            "slides_pages_get_thumbnail",
             "slides_presentations_batch_update"
           ],
           "matches": {
@@ -1902,7 +1902,7 @@
             "slides_presentations_pages_get": [
               "read_slide_page"
             ],
-            "slides_presentatio_pages_get_thumbnai": [
+            "slides_pages_get_thumbnail": [
               "read_slide_page_thumbnail"
             ],
             "slides_presentations_batch_update": [
@@ -1915,7 +1915,7 @@
             "drive_create_file": "Converts to a Google type only when google_type is given; Google's create_file converts by default.",
             "sheets_write_values": "One tool for Google's update_values and update_formulas: value_input data (RAW) or formulas (USER_ENTERED), always given.",
             "docs_documents_get": "Generated from Docs' documents.get: the full document JSON. Comments (Google's commentsIncluded) are in drive_read_text with include_comments.",
-            "slides_presentatio_pages_get_thumbnai": "The generated name is cut to fit the 64-character tool name budget."
+            "slides_pages_get_thumbnail": "The generated name is cut to fit the 64-character tool name budget."
           }
         }
       },
@@ -2210,8 +2210,8 @@
             "chat_send_message",
             "chat_mark_read",
             "chat_mark_unread",
-            "chat_users_spaces_space_notificatio_get",
-            "chat_users_spaces_space_notificat_patch"
+            "chat_spaces_space_notif_setting_get",
+            "chat_spaces_space_notif_setting_patch"
           ],
           "matches": {
             "chat_search_conversations": [
@@ -2235,10 +2235,10 @@
             "chat_mark_unread": [
               "mark_as_unread"
             ],
-            "chat_users_spaces_space_notificatio_get": [
+            "chat_spaces_space_notif_setting_get": [
               "get_notification_settings"
             ],
-            "chat_users_spaces_space_notificat_patch": [
+            "chat_spaces_space_notif_setting_patch": [
               "update_notification_settings"
             ]
           },
@@ -2247,8 +2247,8 @@
             "chat_send_message": "Text in Markdown (or Chat's own syntax), as a new thread or a reply. Google's cards and citations are left out: only Chat apps can post them.",
             "chat_mark_read": "Conversations only, up to 10 a call, each its own request with its own failure. Google's thread_ids have no public REST method (the Chat API has getThreadReadState only).",
             "chat_mark_unread": "Conversations only; a thread's read state has no public REST method.",
-            "chat_users_spaces_space_notificatio_get": "Generated from spaceNotificationSetting.get: name is users/me/spaces/{space}/spaceNotificationSetting.",
-            "chat_users_spaces_space_notificat_patch": "Generated from spaceNotificationSetting.patch: name is users/me/spaces/{space}/spaceNotificationSetting, updateMask notification_setting and/or mute_setting. A write, so it asks first."
+            "chat_spaces_space_notif_setting_get": "Generated from spaceNotificationSetting.get: name is users/me/spaces/{space}/spaceNotificationSetting.",
+            "chat_spaces_space_notif_setting_patch": "Generated from spaceNotificationSetting.patch: name is users/me/spaces/{space}/spaceNotificationSetting, updateMask notification_setting and/or mute_setting. A write, so it asks first."
           }
         }
       },
@@ -2287,11 +2287,11 @@
             "meet_spaces_get",
             "meet_conference_records_list",
             "meet_conference_records_get",
-            "meet_conference_recor_participants_list",
-            "meet_conference_record_transcripts_list",
-            "meet_conference_transcript_entries_list",
+            "meet_records_participants_list",
+            "meet_records_transcripts_list",
+            "meet_records_transcripts_entries_list",
             "meet_conference_records_recordings_list",
-            "meet_conference_record_smart_notes_list",
+            "meet_records_smart_notes_list",
             "meet_conference_records_smart_notes_get"
           ],
           "matches": {
@@ -2299,11 +2299,11 @@
             "meet_spaces_get": [],
             "meet_conference_records_list": [],
             "meet_conference_records_get": [],
-            "meet_conference_recor_participants_list": [],
-            "meet_conference_record_transcripts_list": [],
-            "meet_conference_transcript_entries_list": [],
+            "meet_records_participants_list": [],
+            "meet_records_transcripts_list": [],
+            "meet_records_transcripts_entries_list": [],
             "meet_conference_records_recordings_list": [],
-            "meet_conference_record_smart_notes_list": [],
+            "meet_records_smart_notes_list": [],
             "meet_conference_records_smart_notes_get": []
           },
           "notes": {
@@ -2311,11 +2311,11 @@
             "meet_spaces_get": "A meeting space by its name (spaces/{space}) or meeting code: its link, code and settings.",
             "meet_conference_records_list": "Past and current conferences (one per meeting held in a space), newest first; filter by space or time. Start here for a meeting that took place.",
             "meet_conference_records_get": "One conference: its space, start and end time.",
-            "meet_conference_recor_participants_list": "Who joined a conference, with join and leave times.",
-            "meet_conference_record_transcripts_list": "The transcripts of a conference and their Google Docs.",
-            "meet_conference_transcript_entries_list": "The spoken text of a transcript, entry by entry with the speaker and time.",
+            "meet_records_participants_list": "Who joined a conference, with join and leave times.",
+            "meet_records_transcripts_list": "The transcripts of a conference and their Google Docs.",
+            "meet_records_transcripts_entries_list": "The spoken text of a transcript, entry by entry with the speaker and time.",
             "meet_conference_records_recordings_list": "The recordings of a conference and their Drive files.",
-            "meet_conference_record_smart_notes_list": "The notes Gemini took in a conference (smart notes) and their Google Docs.",
+            "meet_records_smart_notes_list": "The notes Gemini took in a conference (smart notes) and their Google Docs.",
             "meet_conference_records_smart_notes_get": "One smart notes entry and the Google Doc that holds it."
           }
         }
@@ -2401,7 +2401,7 @@
             ]
           },
           "notes": {
-            "contacts_search_directory": "Sets the readMask (names, email addresses, phone numbers, organizations) and the source (domain profiles) that the generated people_people_search_directory needs from the caller. Carries Google's caution: confirm the person before a result goes into another tool.",
+            "contacts_search_directory": "Sets the readMask (names, email addresses, phone numbers, organizations) and the source (domain profiles) that the generated people_search_directory_people needs from the caller. Carries Google's caution: confirm the person before a result goes into another tool.",
             "contacts_search": "Sends the empty warm-up search Google asks for before each search, then the search, with a default readMask. Carries Google's caution.",
             "profile_me": "From the OAuth2 userinfo endpoint. Every sign-in holds userinfo.email, so the email is always there; the name and picture need userinfo.profile, which every profile of a gcontacts login asks for since 1.35.1 (a view-only scope by Google's description; readwrite and full prefer it)."
           }
@@ -2517,12 +2517,12 @@
             "classroom_create_topic",
             "classroom_list_coursework",
             "classroom_get_coursework",
-            "classroom_cour_cour_list_1590",
-            "classroom_cour_cour_crea_e311",
-            "classroom_cour_cour_crea_3302",
-            "classroom_cour_cour_patc_dea2",
-            "classroom_cours_course_modify",
-            "classroom_cour_cour_patc_480d",
+            "classroom_materials_list",
+            "classroom_courses_work_create",
+            "classroom_materials_create",
+            "classroom_courses_work_patch",
+            "classr_work_modify_assignees",
+            "classroom_materials_patch",
             "classroom_list_submissions",
             "classroom_get_rubric",
             "classroom_create_rubric",
@@ -2549,22 +2549,22 @@
             "classroom_get_coursework": [
               "get_course_work"
             ],
-            "classroom_cour_cour_list_1590": [
+            "classroom_materials_list": [
               "list_course_work_summaries"
             ],
-            "classroom_cour_cour_crea_e311": [
+            "classroom_courses_work_create": [
               "create_course_work"
             ],
-            "classroom_cour_cour_crea_3302": [
+            "classroom_materials_create": [
               "create_course_work"
             ],
-            "classroom_cour_cour_patc_dea2": [
+            "classroom_courses_work_patch": [
               "update_course_work"
             ],
-            "classroom_cours_course_modify": [
+            "classr_work_modify_assignees": [
               "update_course_work"
             ],
-            "classroom_cour_cour_patc_480d": [
+            "classroom_materials_patch": [
               "update_course_work"
             ],
             "classroom_list_submissions": [
@@ -2595,12 +2595,12 @@
           "notes": {
             "classroom_get_course": "One course by id, with its description and links. Google's list_courses returns these fields per course and has no get; kept so a known course id needs no list.",
             "classroom_list_coursework": "Assignments, questions and materials of a course in one list (courseWork.list and courseWorkMaterials.list), published only unless include_drafts; include_submission_overview adds one studentSubmissions.list per item. Materials need a classroom.courseworkmaterials scope; without one the answer lists the coursework and says so.",
-            "classroom_cour_cour_list_1590": "Generated from courseWorkMaterials.list. Kept so a readonly login of this toolset asks for classroom.courseworkmaterials.readonly, which classroom_list_coursework needs for the materials (one tool can declare only one any-of scope list).",
-            "classroom_cour_cour_crea_e311": "Generated from courseWork.create (assignments and questions): a raw CourseWork body. Classroom makes it a DRAFT unless state is set. Not curated in this release.",
-            "classroom_cour_cour_crea_3302": "Generated from courseWorkMaterials.create (materials): a raw CourseWorkMaterial body. Classroom makes it a DRAFT unless state is set.",
-            "classroom_cour_cour_patc_dea2": "Generated from courseWork.patch: updateMask names the fields to change.",
-            "classroom_cours_course_modify": "Generated from courseWork.modifyAssignees: adds or removes the students of a coursework item.",
-            "classroom_cour_cour_patc_480d": "Generated from courseWorkMaterials.patch: updateMask names the fields to change.",
+            "classroom_materials_list": "Generated from courseWorkMaterials.list. Kept so a readonly login of this toolset asks for classroom.courseworkmaterials.readonly, which classroom_list_coursework needs for the materials (one tool can declare only one any-of scope list).",
+            "classroom_courses_work_create": "Generated from courseWork.create (assignments and questions): a raw CourseWork body. Classroom makes it a DRAFT unless state is set. Not curated in this release.",
+            "classroom_materials_create": "Generated from courseWorkMaterials.create (materials): a raw CourseWorkMaterial body. Classroom makes it a DRAFT unless state is set.",
+            "classroom_courses_work_patch": "Generated from courseWork.patch: updateMask names the fields to change.",
+            "classr_work_modify_assignees": "Generated from courseWork.modifyAssignees: adds or removes the students of a coursework item.",
+            "classroom_materials_patch": "Generated from courseWorkMaterials.patch: updateMask names the fields to change.",
             "classroom_create_rubric": "Google's learningGoalId comes from search_course_standards, which has no public REST method (no learning-standards method in Classroom v1 Discovery), so no tool here matches search_course_standards. Google takes rubrics only for coursework of the same Cloud project."
           }
         }
@@ -2868,10 +2868,10 @@
         "google": {
           "source": "https://github.com/googleanalytics/google-analytics-mcp",
           "tools": [
-            "gaadmin_account_summarie_list",
+            "gaadmin_acct_summaries_list",
             "gaadmin_properties_get",
-            "gaadmin_propert_google_a_list",
-            "gadata_properties_get_metadat",
+            "gaadmin_pro_goo_ads_link_list",
+            "gadata_props_get_meta",
             "ga_run_report",
             "ga_run_realtime_report",
             "ga_run_funnel_report",
@@ -2879,16 +2879,16 @@
             "ga_annotation_create"
           ],
           "matches": {
-            "gaadmin_account_summarie_list": [
+            "gaadmin_acct_summaries_list": [
               "get_account_summaries"
             ],
             "gaadmin_properties_get": [
               "get_property_details"
             ],
-            "gaadmin_propert_google_a_list": [
+            "gaadmin_pro_goo_ads_link_list": [
               "list_google_ads_links"
             ],
-            "gadata_properties_get_metadat": [
+            "gadata_props_get_meta": [
               "get_custom_dimensions_and_metrics"
             ],
             "ga_run_report": [
@@ -2909,10 +2909,10 @@
             ]
           },
           "notes": {
-            "gaadmin_account_summarie_list": "The accounts and properties the signed-in user can see (Admin API v1beta accountSummaries.list). Start here for a property id.",
+            "gaadmin_acct_summaries_list": "The accounts and properties the signed-in user can see (Admin API v1beta accountSummaries.list). Start here for a property id.",
             "gaadmin_properties_get": "One property's details: name, time zone, currency, industry, service level (Admin API v1beta).",
-            "gaadmin_propert_google_a_list": "The Google Ads accounts linked to a property (Admin API v1beta).",
-            "gadata_properties_get_metadat": "Every dimension and metric the property can report on, custom ones flagged with customDefinition; Google's tool returns only the custom ones. Pass name properties/<id>/metadata.",
+            "gaadmin_pro_goo_ads_link_list": "The Google Ads accounts linked to a property (Admin API v1beta).",
+            "gadata_props_get_meta": "Every dimension and metric the property can report on, custom ones flagged with customDefinition; Google's tool returns only the custom ones. Pass name properties/<id>/metadata.",
             "ga_run_report": "A report with rows keyed by dimension and metric name, row_count, next_offset and, on request, the property's quota. With conversion_spec it runs Google's conversions report on Data API v1alpha, as run_conversions_report does.",
             "ga_run_realtime_report": "The last 30 minutes. The Data API has no offset for realtime reports, so there is none here (Google's tool lists one).",
             "ga_run_funnel_report": "Data API v1alpha runFunnelReport, which no generated tool or gateway method of this server reaches; steps as event names or filter expressions.",
@@ -2955,45 +2955,45 @@
             "tagmgr_accounts_list",
             "tagmgr_accounts_containers_list",
             "tagmgr_accounts_containers_workspaces_list",
-            "tagmgr_accounts_containe_workspac_tags_list",
-            "tagmgr_accounts_containe_workspace_tags_get",
-            "tagmgr_account_contain_workspa_trigger_list",
-            "tagmgr_account_contain_workspa_triggers_get",
-            "tagmgr_account_contain_workspa_variabl_list",
-            "tagmgr_account_contain_workspa_variable_get",
+            "tagmgr_accts_ctrs_ws_tags_list",
+            "tagmgr_accts_ctrs_ws_tags_get",
+            "tagmgr_accts_ctrs_ws_triggers_list",
+            "tagmgr_accts_ctrs_ws_triggers_get",
+            "tagmgr_accts_ctrs_ws_variables_list",
+            "tagmgr_accts_ctrs_ws_variables_get",
             "tagmgr_accounts_containers_versions_live",
-            "tagmgr_accounts_containers_version_hea_list",
-            "tagmgr_accounts_containe_workspac_create_ve",
+            "tagmgr_accts_ctrs_ver_headers_list",
+            "tagmgr_accts_ctrs_ws_create_ver",
             "tagmgr_accounts_containers_versions_publish"
           ],
           "matches": {
             "tagmgr_accounts_list": [],
             "tagmgr_accounts_containers_list": [],
             "tagmgr_accounts_containers_workspaces_list": [],
-            "tagmgr_accounts_containe_workspac_tags_list": [],
-            "tagmgr_accounts_containe_workspace_tags_get": [],
-            "tagmgr_account_contain_workspa_trigger_list": [],
-            "tagmgr_account_contain_workspa_triggers_get": [],
-            "tagmgr_account_contain_workspa_variabl_list": [],
-            "tagmgr_account_contain_workspa_variable_get": [],
+            "tagmgr_accts_ctrs_ws_tags_list": [],
+            "tagmgr_accts_ctrs_ws_tags_get": [],
+            "tagmgr_accts_ctrs_ws_triggers_list": [],
+            "tagmgr_accts_ctrs_ws_triggers_get": [],
+            "tagmgr_accts_ctrs_ws_variables_list": [],
+            "tagmgr_accts_ctrs_ws_variables_get": [],
             "tagmgr_accounts_containers_versions_live": [],
-            "tagmgr_accounts_containers_version_hea_list": [],
-            "tagmgr_accounts_containe_workspac_create_ve": [],
+            "tagmgr_accts_ctrs_ver_headers_list": [],
+            "tagmgr_accts_ctrs_ws_create_ver": [],
             "tagmgr_accounts_containers_versions_publish": []
           },
           "notes": {
             "tagmgr_accounts_list": "The Tag Manager accounts the signed-in user can see. Start here.",
             "tagmgr_accounts_containers_list": "The containers of an account (web, iOS, Android, AMP, server) with their public ids (GTM-XXXX).",
             "tagmgr_accounts_containers_workspaces_list": "The workspaces of a container. Changes are made in a workspace, saved as a version, then published.",
-            "tagmgr_accounts_containe_workspac_tags_list": "The tags of a workspace.",
-            "tagmgr_accounts_containe_workspace_tags_get": "One tag with its type, parameters and firing and blocking triggers.",
-            "tagmgr_account_contain_workspa_trigger_list": "The triggers of a workspace.",
-            "tagmgr_account_contain_workspa_triggers_get": "One trigger with its type and filters.",
-            "tagmgr_account_contain_workspa_variabl_list": "The user-defined variables of a workspace.",
-            "tagmgr_account_contain_workspa_variable_get": "One variable with its type and parameters.",
+            "tagmgr_accts_ctrs_ws_tags_list": "The tags of a workspace.",
+            "tagmgr_accts_ctrs_ws_tags_get": "One tag with its type, parameters and firing and blocking triggers.",
+            "tagmgr_accts_ctrs_ws_triggers_list": "The triggers of a workspace.",
+            "tagmgr_accts_ctrs_ws_triggers_get": "One trigger with its type and filters.",
+            "tagmgr_accts_ctrs_ws_variables_list": "The user-defined variables of a workspace.",
+            "tagmgr_accts_ctrs_ws_variables_get": "One variable with its type and parameters.",
             "tagmgr_accounts_containers_versions_live": "The version that is live now, with its tags, triggers and variables.",
-            "tagmgr_accounts_containers_version_hea_list": "The versions of a container as headers: name, number and counts.",
-            "tagmgr_accounts_containe_workspac_create_ve": "Saves a workspace as a new container version, and Google deletes the workspace. Destructive since 1.26.3, so it asks twice; nothing goes live.",
+            "tagmgr_accts_ctrs_ver_headers_list": "The versions of a container as headers: name, number and counts.",
+            "tagmgr_accts_ctrs_ws_create_ver": "Saves a workspace as a new container version, and Google deletes the workspace. Destructive since 1.26.3, so it asks twice; nothing goes live.",
             "tagmgr_accounts_containers_versions_publish": "Publishes a version: it goes live on every site or app that loads the container. Destructive since 1.26.3, so it asks twice; check the version before."
           }
         }
@@ -3160,30 +3160,30 @@
             "mbaccount_accounts_list",
             "mbinfo_accounts_locations_list",
             "mbinfo_locations_get",
-            "bpperf_locations_get_daily_metr",
-            "bpperf_locations_fetch_multi_da",
-            "bpperf_loca_sear_impr_mont_list",
-            "mbverify_location_verifica_list",
+            "bpperf_loc_get_dai_met_tim_seri",
+            "bpperf_locations_time_series",
+            "bpperf_impressions_monthly_list",
+            "mbverify_verifications_list",
             "mbinfo_locations_patch"
           ],
           "matches": {
             "mbaccount_accounts_list": [],
             "mbinfo_accounts_locations_list": [],
             "mbinfo_locations_get": [],
-            "bpperf_locations_get_daily_metr": [],
-            "bpperf_locations_fetch_multi_da": [],
-            "bpperf_loca_sear_impr_mont_list": [],
-            "mbverify_location_verifica_list": [],
+            "bpperf_loc_get_dai_met_tim_seri": [],
+            "bpperf_locations_time_series": [],
+            "bpperf_impressions_monthly_list": [],
+            "mbverify_verifications_list": [],
             "mbinfo_locations_patch": []
           },
           "notes": {
             "mbaccount_accounts_list": "The Business Profile accounts the signed-in user can manage. Start here. Google's Business Profile Discovery documents list no OAuth scope; since 1.24.1 the product declares business.manage for them (scopeOverrides), so a readwrite login asks for it. It has no read-only form, so a readonly login covers none of these tools.",
             "mbinfo_accounts_locations_list": "The locations of an account; readMask names the fields to return, such as name,title,storefrontAddress.",
             "mbinfo_locations_get": "One location with the fields readMask names: hours, categories, phone, website and so on.",
-            "bpperf_locations_get_daily_metr": "One daily metric of a location over a date range, such as calls or website clicks.",
-            "bpperf_locations_fetch_multi_da": "Several daily metrics of a location over a date range in one call.",
-            "bpperf_loca_sear_impr_mont_list": "The search keywords that showed the location, with monthly impressions.",
-            "mbverify_location_verifica_list": "The verifications of a location and their state.",
+            "bpperf_loc_get_dai_met_tim_seri": "One daily metric of a location over a date range, such as calls or website clicks.",
+            "bpperf_locations_time_series": "Several daily metrics of a location over a date range in one call.",
+            "bpperf_impressions_monthly_list": "The search keywords that showed the location, with monthly impressions.",
+            "mbverify_verifications_list": "The verifications of a location and their state.",
             "mbinfo_locations_patch": "Changes the fields updateMask names. A write, so it asks first; the change is public on Google Search and Maps."
           }
         }
@@ -3591,17 +3591,17 @@
           "tools": [
             "merchantap_accounts_list",
             "merchantap_accounts_issues_list",
-            "merchantap_account_program_list",
-            "merchantap_accoun_automa_get_au",
-            "merchantap_acco_produ_list_6ad8",
-            "merchantap_account_products_get",
-            "merchantap_account_aggrega_list",
-            "merchantap_accoun_report_search",
-            "merchantap_account_data_so_list",
-            "merchantap_account_data_sou_get",
-            "merchantap_accoun_data_s_create",
-            "merchantap_accoun_data_so_fetch",
-            "merchantap_accou_data_file_get"
+            "merchantap_accts_programs_list",
+            "merc_get_automatic_improvements",
+            "merchantap_accts_products_list",
+            "merchanta_accounts_products_get",
+            "merchantap_accts_statuses_list",
+            "merchantap_accts_reports_search",
+            "merc_accounts_data_sources_list",
+            "merch_accounts_data_sources_get",
+            "merch_accts_data_sources_create",
+            "merchantap_accts_sources_fetch",
+            "merchantap_sources_uploads_get"
           ],
           "matches": {
             "merchantap_accounts_list": [
@@ -3610,54 +3610,54 @@
             "merchantap_accounts_issues_list": [
               "list_account_issues"
             ],
-            "merchantap_account_program_list": [
+            "merchantap_accts_programs_list": [
               "list_programs"
             ],
-            "merchantap_accoun_automa_get_au": [
+            "merc_get_automatic_improvements": [
               "get_automatic_improvements"
             ],
-            "merchantap_acco_produ_list_6ad8": [
+            "merchantap_accts_products_list": [
               "list_products"
             ],
-            "merchantap_account_products_get": [
+            "merchanta_accounts_products_get": [
               "get_product_by_name"
             ],
-            "merchantap_account_aggrega_list": [
+            "merchantap_accts_statuses_list": [
               "list_aggregate_product_statuses"
             ],
-            "merchantap_accoun_report_search": [
+            "merchantap_accts_reports_search": [
               "report_search"
             ],
-            "merchantap_account_data_so_list": [
+            "merc_accounts_data_sources_list": [
               "list_data_sources"
             ],
-            "merchantap_account_data_sou_get": [
+            "merch_accounts_data_sources_get": [
               "get_data_source"
             ],
-            "merchantap_accoun_data_s_create": [
+            "merch_accts_data_sources_create": [
               "create_data_source"
             ],
-            "merchantap_accoun_data_so_fetch": [
+            "merchantap_accts_sources_fetch": [
               "fetch_data_source"
             ],
-            "merchantap_accou_data_file_get": [
+            "merchantap_sources_uploads_get": [
               "get_file_upload"
             ]
           },
           "notes": {
             "merchantap_accounts_list": "The Merchant Center accounts the service account can reach (accounts.list). Start here for an account id.",
             "merchantap_accounts_issues_list": "Account-level issues that affect the whole account.",
-            "merchantap_account_program_list": "Programs, such as free listings and Shopping ads, with their state, regions and unmet requirements.",
-            "merchantap_accoun_automa_get_au": "Automatic improvement settings: item updates, image improvements and shipping improvements.",
-            "merchantap_acco_produ_list_6ad8": "The products of an account, a page at a time (products.list; the name ends in a hash because of the 64-character budget).",
-            "merchantap_account_products_get": "One product by its exact resource name, accounts/{account}/products/{product}.",
-            "merchantap_account_aggrega_list": "Product issues aggregated by reporting context and country, for the health of the product data.",
-            "merchantap_accoun_report_search": "A Merchant reports query (product performance, statuses, price insights, competitive visibility) in the Merchant Center Query Language.",
-            "merchantap_account_data_so_list": "The data sources of an account.",
-            "merchantap_account_data_sou_get": "One data source.",
-            "merchantap_accoun_data_s_create": "Creates a data source. A write, so it asks first.",
-            "merchantap_accoun_data_so_fetch": "Fetches and processes a data source's file now. Google says it triggers processing, so since 1.24.2 (D2) the suite counts it as a write, and it asks first.",
-            "merchantap_accou_data_file_get": "The latest file upload of a data source and its processing state (accounts/{account}/dataSources/{datasource}/fileUploads/latest)."
+            "merchantap_accts_programs_list": "Programs, such as free listings and Shopping ads, with their state, regions and unmet requirements.",
+            "merc_get_automatic_improvements": "Automatic improvement settings: item updates, image improvements and shipping improvements.",
+            "merchantap_accts_products_list": "The products of an account, a page at a time (products.list; the name ends in a hash because of the 64-character budget).",
+            "merchanta_accounts_products_get": "One product by its exact resource name, accounts/{account}/products/{product}.",
+            "merchantap_accts_statuses_list": "Product issues aggregated by reporting context and country, for the health of the product data.",
+            "merchantap_accts_reports_search": "A Merchant reports query (product performance, statuses, price insights, competitive visibility) in the Merchant Center Query Language.",
+            "merc_accounts_data_sources_list": "The data sources of an account.",
+            "merch_accounts_data_sources_get": "One data source.",
+            "merch_accts_data_sources_create": "Creates a data source. A write, so it asks first.",
+            "merchantap_accts_sources_fetch": "Fetches and processes a data source's file now. Google says it triggers processing, so since 1.24.2 (D2) the suite counts it as a write, and it asks first.",
+            "merchantap_sources_uploads_get": "The latest file upload of a data source and its processing state (accounts/{account}/dataSources/{datasource}/fileUploads/latest)."
           }
         }
       },
@@ -3767,10 +3767,10 @@
             "androidmgmt_get_web_app",
             "androidpub_reviews_list",
             "androidpub_reviews_reply",
-            "androidpub_applica_tracks_releases_list",
+            "androidpub_tracks_releases_list",
             "androidpub_edits_tracks_list",
-            "androidpub_purchases_subscriptionsv_get",
-            "androidpub_monetizatio_subscriptio_list",
+            "androidpu_purchases_subscriptionsv2_get",
+            "androidpub_monetization_subs_list",
             "androidpub_orders_get"
           ],
           "matches": {
@@ -3803,20 +3803,20 @@
             ],
             "androidpub_reviews_list": [],
             "androidpub_reviews_reply": [],
-            "androidpub_applica_tracks_releases_list": [],
+            "androidpub_tracks_releases_list": [],
             "androidpub_edits_tracks_list": [],
-            "androidpub_purchases_subscriptionsv_get": [],
-            "androidpub_monetizatio_subscriptio_list": [],
+            "androidpu_purchases_subscriptionsv2_get": [],
+            "androidpub_monetization_subs_list": [],
             "androidpub_orders_get": []
           },
           "notes": {
             "androidmgmt_list_enterprises": "Android Management API, called directly (a gateway API here); the service-account key asks for its scope since 1.23.1. The service account must belong to the project that manages the enterprises.",
             "androidpub_reviews_list": "No official Google MCP server covers Play publishing; kept for the app's recent user reviews (Play Developer API reviews.list).",
             "androidpub_reviews_reply": "Replies to a user review; the reply is public. A write: it asks first.",
-            "androidpub_applica_tracks_releases_list": "The releases of a track (production, beta, ...) without opening an edit (applications.tracks.releases.list).",
+            "androidpub_tracks_releases_list": "The releases of a track (production, beta, ...) without opening an edit (applications.tracks.releases.list).",
             "androidpub_edits_tracks_list": "The tracks of an edit; it needs an edit id, which androidpub_edits_insert (a write) opens.",
-            "androidpub_purchases_subscriptionsv_get": "One subscription purchase by its token (purchases.subscriptionsv2.get).",
-            "androidpub_monetizatio_subscriptio_list": "The app's subscription products (monetization.subscriptions.list).",
+            "androidpu_purchases_subscriptionsv2_get": "One subscription purchase by its token (purchases.subscriptionsv2.get).",
+            "androidpub_monetization_subs_list": "The app's subscription products (monetization.subscriptions.list).",
             "androidpub_orders_get": "One order by its id (orders.get)."
           }
         }
@@ -3950,35 +3950,35 @@
             "firebase_projects_list",
             "firebase_projects_get",
             "firebase_projects_search_apps",
-            "firebase_projec_web_app_get_con",
-            "firebase_projec_android_get_con",
-            "firebase_projec_ios_app_get_con",
+            "firebase_web_apps_get_config",
+            "firebase_apps_get_config",
+            "firebase_ios_apps_get_config",
             "firebase_projects_add_firebase",
-            "firebase_project_web_app_create",
-            "firebase_project_android_create",
-            "firebase_project_ios_app_create",
-            "firebase_proje_andro_sha_create",
-            "firebaseru_project_release_list",
-            "firebaseru_project_rulesets_get",
+            "firebase_web_apps_create",
+            "firebase_android_apps_create",
+            "firebase_ios_apps_create",
+            "firebase_apps_sha_create",
+            "firebaseru_releases_list",
+            "firebaser_projects_rulesets_get",
             "firebaseru_projects_test",
-            "firebaseap_proj_loca_backe_list",
-            "firebaseap_proj_locat_backe_get",
-            "firebasecr_proje_apps_issue_get",
-            "firebasecr_proj_apps_issu_patch",
-            "firebasecr_proj_apps_event_list",
-            "firebasecr_proj_apps_even_batch",
-            "firebasecr_proje_apps_repor_get",
-            "firebasecr_pro_app_iss_not_list",
-            "firebasecr_pro_app_iss_not_crea",
-            "firebasecr_pro_app_iss_not_dele",
-            "firebaseda_project_locatio_list",
-            "firebaseda_proj_loca_servi_list",
-            "firebaseda_pro_loc_ser_sch_list",
-            "firebaseda_pro_loc_ser_con_list",
-            "firebaseda_pro_loc_ser_exe_1fce",
-            "firebaseda_pro_loc_ser_exe_3072",
-            "firebaseda_pro_loc_ser_gen_8f53",
-            "firebaseda_pro_loc_ser_gen_cf40",
+            "firebaseap_backends_list",
+            "firebaseap_backends_get",
+            "firebasecr_apps_issues_get",
+            "firebasecr_apps_issues_patch",
+            "firebasecr_apps_events_list",
+            "firebasec_apps_events_batch_get",
+            "firebasecr_apps_reports_get",
+            "firebasecr_issues_notes_list",
+            "firebasecr_issues_notes_create",
+            "firebasecr_issues_notes_delete",
+            "firebaseda_list",
+            "firebaseda_services_list",
+            "firebased_services_schemas_list",
+            "firebaseda_connectors_list",
+            "firebaseda_execute_graphql",
+            "firebaseda_execute_graphql_read",
+            "firebaseda_generate_query",
+            "firebaseda_generate_schema",
             "fcm_projects_messages_send",
             "firestore_get_document",
             "firestore_list_documents",
@@ -3996,91 +3996,91 @@
             "firebase_projects_search_apps": [
               "firebase_list_apps"
             ],
-            "firebase_projec_web_app_get_con": [
+            "firebase_web_apps_get_config": [
               "firebase_get_sdk_config"
             ],
-            "firebase_projec_android_get_con": [
+            "firebase_apps_get_config": [
               "firebase_get_sdk_config"
             ],
-            "firebase_projec_ios_app_get_con": [
+            "firebase_ios_apps_get_config": [
               "firebase_get_sdk_config"
             ],
             "firebase_projects_add_firebase": [
               "firebase_create_project"
             ],
-            "firebase_project_web_app_create": [
+            "firebase_web_apps_create": [
               "firebase_create_app"
             ],
-            "firebase_project_android_create": [
+            "firebase_android_apps_create": [
               "firebase_create_app"
             ],
-            "firebase_project_ios_app_create": [
+            "firebase_ios_apps_create": [
               "firebase_create_app"
             ],
-            "firebase_proje_andro_sha_create": [
+            "firebase_apps_sha_create": [
               "firebase_create_android_sha"
             ],
-            "firebaseru_project_release_list": [
+            "firebaseru_releases_list": [
               "firebase_get_security_rules"
             ],
-            "firebaseru_project_rulesets_get": [
+            "firebaser_projects_rulesets_get": [
               "firebase_get_security_rules"
             ],
             "firebaseru_projects_test": [
               "firebase_validate_security_rules"
             ],
-            "firebaseap_proj_loca_backe_list": [
+            "firebaseap_backends_list": [
               "apphosting_list_backends"
             ],
-            "firebaseap_proj_locat_backe_get": [
+            "firebaseap_backends_get": [
               "apphosting_fetch_logs"
             ],
-            "firebasecr_proje_apps_issue_get": [
+            "firebasecr_apps_issues_get": [
               "crashlytics_get_issue"
             ],
-            "firebasecr_proj_apps_issu_patch": [
+            "firebasecr_apps_issues_patch": [
               "crashlytics_update_issue"
             ],
-            "firebasecr_proj_apps_event_list": [
+            "firebasecr_apps_events_list": [
               "crashlytics_list_events"
             ],
-            "firebasecr_proj_apps_even_batch": [
+            "firebasec_apps_events_batch_get": [
               "crashlytics_batch_get_events"
             ],
-            "firebasecr_proje_apps_repor_get": [
+            "firebasecr_apps_reports_get": [
               "crashlytics_get_report"
             ],
-            "firebasecr_pro_app_iss_not_list": [
+            "firebasecr_issues_notes_list": [
               "crashlytics_list_notes"
             ],
-            "firebasecr_pro_app_iss_not_crea": [
+            "firebasecr_issues_notes_create": [
               "crashlytics_create_note"
             ],
-            "firebasecr_pro_app_iss_not_dele": [
+            "firebasecr_issues_notes_delete": [
               "crashlytics_delete_note"
             ],
-            "firebaseda_project_locatio_list": [
+            "firebaseda_list": [
               "dataconnect_list_locations"
             ],
-            "firebaseda_proj_loca_servi_list": [
+            "firebaseda_services_list": [
               "dataconnect_list_services"
             ],
-            "firebaseda_pro_loc_ser_sch_list": [
+            "firebased_services_schemas_list": [
               "dataconnect_list_services"
             ],
-            "firebaseda_pro_loc_ser_con_list": [
+            "firebaseda_connectors_list": [
               "dataconnect_list_services"
             ],
-            "firebaseda_pro_loc_ser_exe_1fce": [
+            "firebaseda_execute_graphql": [
               "dataconnect_execute_graphql"
             ],
-            "firebaseda_pro_loc_ser_exe_3072": [
+            "firebaseda_execute_graphql_read": [
               "dataconnect_execute_graphql_read"
             ],
-            "firebaseda_pro_loc_ser_gen_8f53": [
+            "firebaseda_generate_query": [
               "dataconnect_generate_query"
             ],
-            "firebaseda_pro_loc_ser_gen_cf40": [
+            "firebaseda_generate_schema": [
               "dataconnect_generate_schema"
             ],
             "fcm_projects_messages_send": [
@@ -4104,16 +4104,16 @@
           },
           "notes": {
             "firebase_projects_search_apps": "Every app of a project (iOS, Android and web) in one list; Google's tool filters by platform.",
-            "firebase_projec_web_app_get_con": "The web app's SDK configuration; Google's one tool takes the platform, here there is one tool per platform.",
-            "firebaseru_project_release_list": "The rules releases of a project; with firebaseru_project_rulesets_get it gives the rules source, as Google's tool does. Realtime Database rules are not covered (no API here).",
+            "firebase_web_apps_get_config": "The web app's SDK configuration; Google's one tool takes the platform, here there is one tool per platform.",
+            "firebaseru_releases_list": "The rules releases of a project; with firebaser_projects_rulesets_get it gives the rules source, as Google's tool does. Realtime Database rules are not covered (no API here).",
             "firebaseru_projects_test": "Checks a rules source. Google marks it read-only, and since 1.24.2 (D2) the suite counts it as a read too, so it does not ask.",
-            "firebaseap_proj_locat_backe_get": "The backend and its state. Google's tool also reads its build and run logs, which are Cloud Logging: use the gcloud server's logging_entries_list.",
-            "firebaseda_pro_loc_ser_sch_list": "The schemas of a Data Connect service; Google's list_services returns them with the services.",
-            "firebaseda_pro_loc_ser_con_list": "The connectors of a Data Connect service; Google's list_services returns them with the services.",
-            "firebaseda_pro_loc_ser_exe_1fce": "Runs any GraphQL operation, mutations too. A write, so it asks first.",
-            "firebaseda_pro_loc_ser_exe_3072": "Runs a GraphQL query. Google marks it read-only, and since 1.24.2 (D2) the suite counts it as a read too, so it does not ask.",
-            "firebaseda_pro_loc_ser_gen_8f53": "Writes a GraphQL query from a prompt. Google marks it read-only, and since 1.24.2 (D2) the suite counts it as a read too, so it does not ask.",
-            "firebaseda_pro_loc_ser_gen_cf40": "Writes a Data Connect schema from a prompt. Google marks it read-only, and since 1.24.2 (D2) the suite counts it as a read too, so it does not ask.",
+            "firebaseap_backends_get": "The backend and its state. Google's tool also reads its build and run logs, which are Cloud Logging: use the gcloud server's logging_entries_list.",
+            "firebased_services_schemas_list": "The schemas of a Data Connect service; Google's list_services returns them with the services.",
+            "firebaseda_connectors_list": "The connectors of a Data Connect service; Google's list_services returns them with the services.",
+            "firebaseda_execute_graphql": "Runs any GraphQL operation, mutations too. A write, so it asks first.",
+            "firebaseda_execute_graphql_read": "Runs a GraphQL query. Google marks it read-only, and since 1.24.2 (D2) the suite counts it as a read too, so it does not ask.",
+            "firebaseda_generate_query": "Writes a GraphQL query from a prompt. Google marks it read-only, and since 1.24.2 (D2) the suite counts it as a read too, so it does not ask.",
+            "firebaseda_generate_schema": "Writes a Data Connect schema from a prompt. Google marks it read-only, and since 1.24.2 (D2) the suite counts it as a read too, so it does not ask.",
             "fcm_projects_messages_send": "Sends a push message to a device or topic. Destructive here (it cannot be taken back), so it asks twice.",
             "firestore_get_document": "Firestore is a gcloud API in this suite; this curated tool reads one document here. Fields come back as plain JSON.",
             "firestore_query_collection": "Firestore runQuery: field conditions joined with AND, an order and a limit; values as plain JSON. A read, as Google marks it.",
@@ -4448,9 +4448,9 @@
             "vertex_generate_content",
             "vertex_count_tokens",
             "vertex_embed_content",
-            "discoverye_pro_loc_coll_engi_serv_sear_a054",
-            "discoverye_proj_loca_coll_engin_servi_answe",
-            "discoverye_projec_locati_collec_engine_list"
+            "discoverye_engines_serving_configs_search",
+            "discoverye_engines_serving_configs_answer",
+            "discoverye_collections_engines_list"
           ],
           "matches": {
             "vertex_generate_content": [
@@ -4462,13 +4462,13 @@
             "vertex_embed_content": [
               "embed_content"
             ],
-            "discoverye_pro_loc_coll_engi_serv_sear_a054": [
+            "discoverye_engines_serving_configs_search": [
               "search"
             ],
-            "discoverye_proj_loca_coll_engin_servi_answe": [
+            "discoverye_engines_serving_configs_answer": [
               "conversational_search"
             ],
-            "discoverye_projec_locati_collec_engine_list": [
+            "discoverye_collections_engines_list": [
               "list_engines"
             ]
           },
@@ -4476,9 +4476,9 @@
             "vertex_generate_content": "The Vertex basics of Google's Agent Platform MCP server (its generate toolset). Google's other 53 Agent Platform tools (Colab Enterprise, notebook executions, endpoints, models, tuning, RAG, evaluation, prompts, predict and raw_predict) have no tool here and are not in this list; api_call reaches their methods in the all and curated toolsets.",
             "vertex_count_tokens": "countTokens on the model, or on an endpoint. Discovery lists only cloud-platform for it.",
             "vertex_embed_content": "embedContent on a publisher embedding model, such as gemini-embedding-001.",
-            "discoverye_pro_loc_coll_engi_serv_sear_a054": "Agent Search (Vertex AI Search) on an engine's serving config: Discovery Engine v1 servingConfigs.search.",
-            "discoverye_proj_loca_coll_engin_servi_answe": "Discovery Engine v1 servingConfigs.answer. Google marks it read-only, and since 1.24.2 (D2) the suite counts it as a read too, so it does not ask.",
-            "discoverye_projec_locati_collec_engine_list": "The engines (search and chat apps) of a collection."
+            "discoverye_engines_serving_configs_search": "Agent Search (Vertex AI Search) on an engine's serving config: Discovery Engine v1 servingConfigs.search.",
+            "discoverye_engines_serving_configs_answer": "Discovery Engine v1 servingConfigs.answer. Google marks it read-only, and since 1.24.2 (D2) the suite counts it as a read too, so it does not ask.",
+            "discoverye_collections_engines_list": "The engines (search and chat apps) of a collection."
           }
         }
       },

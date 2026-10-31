@@ -1,0 +1,10 @@
+{
+  "note": "Old names of generated tools, accepted until 3.0.0 (renamed in 2.0.0). Each key is an old tool name, each value the name that tool has now. See CHANGELOG.md.",
+  "aliases": {
+    "chat_users_availability_mark_as_do_not": "chat_mark_as_do_not_disturb",
+    "chat_users_spaces_space_notificat_patch": "chat_spaces_space_notif_setting_patch",
+    "chat_users_spaces_space_notificatio_get": "chat_spaces_space_notif_setting_get",
+    "chat_users_spaces_threads_get_thread_re": "chat_threads_get_thread_read_state",
+    "chat_users_spaces_update_space_read_sta": "chat_spaces_update_space_read_state"
+  }
+}

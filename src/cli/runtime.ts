@@ -23,6 +23,7 @@ export const RUNTIME_ITEMS: readonly string[] = [
   'bin',
   'hooks',
   'tool-map.json',
+  'tool-aliases.json',
   'method-kinds.json',
   'catalog.json',
   'discovery',

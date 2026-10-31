@@ -102,7 +102,7 @@
           "sheets_insert_rows",
           "slides_presentations_get",
           "slides_presentations_pages_get",
-          "slides_presentatio_pages_get_thumbnai",
+          "slides_pages_get_thumbnail",
           "slides_presentations_batch_update"
         ]
       },

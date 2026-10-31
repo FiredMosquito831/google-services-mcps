@@ -264,16 +264,6 @@
     "title": "calendar.calendars.patch"
   },
   {
-    "name": "mcp__plugin_gcalendar_gcalendar__calendar_calendars_transfer_own",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/calendar",
-      "https://www.googleapis.com/auth/calendar.calendars"
-    ],
-    "methodId": "calendar.calendars.transferOwnership",
-    "title": "calendar.calendars.transferOwnership"
-  },
-  {
     "name": "mcp__plugin_gcalendar_gcalendar__calendar_calendars_update",
     "kind": "write",
     "scopes": [
@@ -604,6 +594,16 @@
       "https://www.googleapis.com/auth/calendar.readonly"
     ],
     "title": "Suggest meeting times"
+  },
+  {
+    "name": "mcp__plugin_gcalendar_gcalendar__calendar_transfer_ownership",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/calendar",
+      "https://www.googleapis.com/auth/calendar.calendars"
+    ],
+    "methodId": "calendar.calendars.transferOwnership",
+    "title": "calendar.calendars.transferOwnership"
   },
   {
     "name": "mcp__plugin_gcalendar_gcalendar__calendar_update_event",

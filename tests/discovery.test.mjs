@@ -343,7 +343,7 @@ test('generate: every generated tool carries its Discovery method id, which the 
   assert.equal(generated.find((t) => t.title === 'demo.things.delete').methodId, 'demo.things.delete');
 });
 
-test('generate: a generated tool never takes a reserved (curated) name, and gets the hashed form instead', () => {
+test('generate: a generated tool never takes a reserved (curated) name, and takes another readable form', () => {
   const sources = [{ apiName: 'demo', apiVersion: 'v1', doc: demoDoc() }];
   const kinds = { overrides: {}, notes: {} };
   const plain = generateDiscoveryTools('demo-server', 'cloud', sources, kinds, testConfig()).tools.find((t) => t.title === 'demo.things.list');
@@ -351,7 +351,9 @@ test('generate: a generated tool never takes a reserved (curated) name, and gets
 
   const { tools } = generateDiscoveryTools('demo-server', 'cloud', sources, kinds, testConfig(), MAX_TOOL_NAME, ['demo_things_list']);
   const list = tools.find((t) => t.title === 'demo.things.list');
-  assert.match(list.name, /^demo_things_list_[0-9a-f]{4}$/, 'the reserved name is taken, so the method gets its hash');
+  // 2.0.0: the reserved name is not taken, and the method gets another readable form (no hash).
+  assert.notEqual(list.name, 'demo_things_list');
+  assert.match(list.name, /^demo_[a-z0-9_]+$/, 'a readable form, not a hash');
   assert.equal(new Set(tools.map((t) => t.name)).size, tools.length, 'names stay unique');
   // The delete method does not clash, so it keeps its plain name.
   assert.equal(tools.find((t) => t.title === 'demo.things.delete').name, 'demo_things_delete');

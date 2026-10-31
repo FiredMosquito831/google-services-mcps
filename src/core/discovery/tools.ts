@@ -36,6 +36,7 @@ import {
   type DiscoveryResource,
   type MethodRecord,
 } from './methods.js';
+import { assignReadableToolNames, registerRenames, type ToolRename } from './tool-names.js';
 import { clipText, paramToZod, schemaToZod } from './schema.js';
 import { ApiKeyClient } from './apikey-client.js';
 import { adsHeaders, isGoogleAdsUrl, redactedError } from '../ads.js';
@@ -332,6 +333,8 @@ export interface GeneratedTools {
   tools: ToolDef[];
   /** fullIds of media-upload methods, which are not generated. */
   skippedUploads: string[];
+  /** Old tool name -> new tool name, for the tools this generation renamed (empty when none changed). */
+  renames: ToolRename[];
 }
 
 // ---------------------------------------------------------------------------
@@ -755,8 +758,12 @@ function buildListTool(name: string, serverName: string, rows: ListRow[]): ToolD
 /**
  * Pure generation step: no file or network access beyond what the inputs hold.
  * The server's name sets the list tool's name. `reserved` names (the curated tools of
- * the same server) are never given to a generated tool: a generated method that would
- * take one gets its hashed form instead, so the curated name stays the same.
+ * the same server) are never given to a generated tool: a generated method that would take one gets another
+ * readable form, so the curated name stays the same.
+ *
+ * Generated names come from core/discovery/tool-names.ts (readable names, 2.0.0). The name the previous rule gives
+ * each method is computed too, and the differences are returned as `renames` (and recorded per server), so the old
+ * names can stay accepted as aliases for one release.
  */
 export function generateDiscoveryTools(
   serverName: string,
@@ -792,11 +799,29 @@ export function generateDiscoveryTools(
   });
 
   const listName = LIST_METHODS_SUFFIX;
-  const names = assignToolNames(
+  const names = assignReadableToolNames(
     entries.map((e) => e.method),
     [listName, ...reserved],
     maxNameLength,
   );
+  // The name the old rule gives each method: where it differs, the old name stays an alias for one release
+  // (core/tool-aliases.ts). Both rules are deterministic, so this needs no table.
+  const previous = assignToolNames(
+    entries.map((e) => e.method),
+    [listName, ...reserved],
+    maxNameLength,
+  );
+  const renames: ToolRename[] = [];
+  const currentNames = new Set(names);
+  const previousNames = new Set(previous);
+  previous.forEach((from, i) => {
+    // An old name that another tool now answers to is not an alias: the tool that has that name wins, so tools/call
+    // reaches the same handler it reaches through tools/list. The other way round too: an old name that becomes a
+    // tool's name again stays a tool. (This happens when two API versions of one method trade their numeric suffix
+    // between the two naming rules.)
+    if (from !== names[i] && !currentNames.has(from) && !previousNames.has(names[i]!)) renames.push({ from, to: names[i]! });
+  });
+  registerRenames(serverName, renames);
 
   const tools: ToolDef[] = [];
   const rows: ListRow[] = [];
@@ -815,7 +840,7 @@ export function generateDiscoveryTools(
   });
   tools.push(buildListTool(listName, serverName, rows));
 
-  return { tools, skippedUploads };
+  return { tools, skippedUploads, renames };
 }
 
 /**

@@ -22,10 +22,10 @@ The tools that match Google's official MCP server for this product (https://gith
 
 | Tool | Google's tool | Note |
 |---|---|---|
-| `gaadmin_account_summarie_list` | `get_account_summaries` | The accounts and properties the signed-in user can see (Admin API v1beta accountSummaries.list). Start here for a property id. |
+| `gaadmin_acct_summaries_list` | `get_account_summaries` | The accounts and properties the signed-in user can see (Admin API v1beta accountSummaries.list). Start here for a property id. |
 | `gaadmin_properties_get` | `get_property_details` | One property's details: name, time zone, currency, industry, service level (Admin API v1beta). |
-| `gaadmin_propert_google_a_list` | `list_google_ads_links` | The Google Ads accounts linked to a property (Admin API v1beta). |
-| `gadata_properties_get_metadat` | `get_custom_dimensions_and_metrics` | Every dimension and metric the property can report on, custom ones flagged with customDefinition; Google's tool returns only the custom ones. Pass name properties/<id>/metadata. |
+| `gaadmin_pro_goo_ads_link_list` | `list_google_ads_links` | The Google Ads accounts linked to a property (Admin API v1beta). |
+| `gadata_props_get_meta` | `get_custom_dimensions_and_metrics` | Every dimension and metric the property can report on, custom ones flagged with customDefinition; Google's tool returns only the custom ones. Pass name properties/<id>/metadata. |
 | `ga_run_report` | `run_report`, `run_conversions_report` | A report with rows keyed by dimension and metric name, row_count, next_offset and, on request, the property's quota. With conversion_spec it runs Google's conversions report on Data API v1alpha, as run_conversions_report does. |
 | `ga_run_realtime_report` | `run_realtime_report` | The last 30 minutes. The Data API has no offset for realtime reports, so there is none here (Google's tool lists one). |
 | `ga_run_funnel_report` | `run_funnel_report` | Data API v1alpha runFunnelReport, which no generated tool or gateway method of this server reaches; steps as event names or filter expressions. |
@@ -53,72 +53,72 @@ The tools that match Google's official MCP server for this product (https://gith
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
-| `gaadmin_account_summarie_list` | read | analyticsadmin.accountSummaries.list | analytics.edit, analytics.readonly |
+| `gaa_get_data_sharing_settings` | read | analyticsadmin.accounts.getDataSharingSettings | analytics.edit, analytics.readonly |
+| `gaad_properties_access_report` | read | analyticsadmin.properties.runAccessReport | analytics.edit, analytics.readonly |
+| `gaad_props_retention_settings` | read | analyticsadmin.properties.getDataRetentionSettings | analytics.edit, analytics.readonly |
+| `gaadm_accounts_history_events` | read | analyticsadmin.accounts.searchChangeHistoryEvents | analytics.edit |
+| `gaadm_props_key_events_create` | write | analyticsadmin.properties.keyEvents.create | analytics.edit |
+| `gaadm_props_key_events_delete` | destructive | analyticsadmin.properties.keyEvents.delete | analytics.edit |
+| `gaadmi_props_key_events_patch` | write | analyticsadmin.properties.keyEvents.patch | analytics.edit |
+| `gaadmi_streams_secrets_create` | write | analyticsadmin.properties.dataStreams.measurementProtocolSecrets.create | analytics.edit |
+| `gaadmi_streams_secrets_delete` | destructive | analyticsadmin.properties.dataStreams.measurementProtocolSecrets.delete | analytics.edit |
 | `gaadmin_accounts_delete` | destructive | analyticsadmin.accounts.delete | analytics.edit |
 | `gaadmin_accounts_get` | read | analyticsadmin.accounts.get | analytics.edit, analytics.readonly |
-| `gaadmin_accounts_get_data_sha` | read | analyticsadmin.accounts.getDataSharingSettings | analytics.edit, analytics.readonly |
 | `gaadmin_accounts_list` | read | analyticsadmin.accounts.list | analytics.edit, analytics.readonly |
 | `gaadmin_accounts_patch` | write | analyticsadmin.accounts.patch | analytics.edit |
-| `gaadmin_accounts_provision_ac` | write | analyticsadmin.accounts.provisionAccountTicket | analytics.edit |
-| `gaadmin_accounts_run_access_r` | read | analyticsadmin.accounts.runAccessReport | analytics.edit, analytics.readonly |
-| `gaadmin_accounts_search_chang` | read | analyticsadmin.accounts.searchChangeHistoryEvents | analytics.edit |
-| `gaadmin_prop_custo_archi_7523` | destructive | analyticsadmin.properties.customDimensions.archive | analytics.edit |
-| `gaadmin_prop_custo_archi_b061` | destructive | analyticsadmin.properties.customMetrics.archive | analytics.edit |
-| `gaadmin_prop_custo_creat_0335` | write | analyticsadmin.properties.customDimensions.create | analytics.edit |
-| `gaadmin_prop_custo_creat_b4ea` | write | analyticsadmin.properties.customMetrics.create | analytics.edit |
-| `gaadmin_prop_custo_patch_232f` | write | analyticsadmin.properties.customDimensions.patch | analytics.edit |
-| `gaadmin_prop_custo_patch_92c7` | write | analyticsadmin.properties.customMetrics.patch | analytics.edit |
-| `gaadmin_prop_data_measu_creat` | write | analyticsadmin.properties.dataStreams.measurementProtocolSecrets.create | analytics.edit |
-| `gaadmin_prop_data_measu_delet` | destructive | analyticsadmin.properties.dataStreams.measurementProtocolSecrets.delete | analytics.edit |
-| `gaadmin_prop_data_measu_patch` | write | analyticsadmin.properties.dataStreams.measurementProtocolSecrets.patch | analytics.edit |
-| `gaadmin_prope_data_measu_list` | read | analyticsadmin.properties.dataStreams.measurementProtocolSecrets.list | analytics.edit, analytics.readonly |
-| `gaadmin_prope_data_measur_get` | write | analyticsadmin.properties.dataStreams.measurementProtocolSecrets.get | analytics.edit, analytics.readonly |
-| `gaadmin_proper_convers_create` | write | analyticsadmin.properties.conversionEvents.create | analytics.edit |
-| `gaadmin_proper_convers_delete` | destructive | analyticsadmin.properties.conversionEvents.delete | analytics.edit |
-| `gaadmin_proper_data_st_create` | write | analyticsadmin.properties.dataStreams.create | analytics.edit |
-| `gaadmin_proper_data_st_delete` | destructive | analyticsadmin.properties.dataStreams.delete | analytics.edit |
-| `gaadmin_proper_firebas_create` | write | analyticsadmin.properties.firebaseLinks.create | analytics.edit |
-| `gaadmin_proper_firebas_delete` | destructive | analyticsadmin.properties.firebaseLinks.delete | analytics.edit |
-| `gaadmin_proper_key_eve_create` | write | analyticsadmin.properties.keyEvents.create | analytics.edit |
-| `gaadmin_proper_key_eve_delete` | destructive | analyticsadmin.properties.keyEvents.delete | analytics.edit |
-| `gaadmin_propert_convers_patch` | write | analyticsadmin.properties.conversionEvents.patch | analytics.edit |
-| `gaadmin_propert_conversi_list` | read | analyticsadmin.properties.conversionEvents.list | analytics.edit, analytics.readonly |
-| `gaadmin_propert_custom_d_list` | read | analyticsadmin.properties.customDimensions.list | analytics.edit, analytics.readonly |
-| `gaadmin_propert_custom_m_list` | read | analyticsadmin.properties.customMetrics.list | analytics.edit, analytics.readonly |
-| `gaadmin_propert_data_st_patch` | write | analyticsadmin.properties.dataStreams.patch | analytics.edit |
-| `gaadmin_propert_data_str_list` | read | analyticsadmin.properties.dataStreams.list | analytics.edit, analytics.readonly |
-| `gaadmin_propert_firebase_list` | read | analyticsadmin.properties.firebaseLinks.list | analytics.edit, analytics.readonly |
-| `gaadmin_propert_google_a_list` | read | analyticsadmin.properties.googleAdsLinks.list | analytics.edit, analytics.readonly |
-| `gaadmin_propert_google_create` | write | analyticsadmin.properties.googleAdsLinks.create | analytics.edit |
-| `gaadmin_propert_google_delete` | destructive | analyticsadmin.properties.googleAdsLinks.delete | analytics.edit |
-| `gaadmin_propert_google_patch` | write | analyticsadmin.properties.googleAdsLinks.patch | analytics.edit |
-| `gaadmin_propert_key_eve_patch` | write | analyticsadmin.properties.keyEvents.patch | analytics.edit |
-| `gaadmin_propert_key_even_list` | read | analyticsadmin.properties.keyEvents.list | analytics.edit, analytics.readonly |
-| `gaadmin_properti_conversi_get` | read | analyticsadmin.properties.conversionEvents.get | analytics.edit, analytics.readonly |
-| `gaadmin_properti_custom_d_get` | read | analyticsadmin.properties.customDimensions.get | analytics.edit, analytics.readonly |
-| `gaadmin_properti_custom_m_get` | read | analyticsadmin.properties.customMetrics.get | analytics.edit, analytics.readonly |
-| `gaadmin_properti_data_str_get` | read | analyticsadmin.properties.dataStreams.get | analytics.edit, analytics.readonly |
-| `gaadmin_properti_key_even_get` | read | analyticsadmin.properties.keyEvents.get | analytics.edit, analytics.readonly |
-| `gaadmin_properties_acknowledg` | write | analyticsadmin.properties.acknowledgeUserDataCollection | analytics.edit |
+| `gaadmin_acct_summaries_list` | read | analyticsadmin.accountSummaries.list | analytics.edit, analytics.readonly |
+| `gaadmin_pro_goo_ads_link_crea` | write | analyticsadmin.properties.googleAdsLinks.create | analytics.edit |
+| `gaadmin_pro_goo_ads_link_dele` | destructive | analyticsadmin.properties.googleAdsLinks.delete | analytics.edit |
+| `gaadmin_pro_goo_ads_link_list` | read | analyticsadmin.properties.googleAdsLinks.list | analytics.edit, analytics.readonly |
+| `gaadmin_pro_upd_dat_rete_sett` | write | analyticsadmin.properties.updateDataRetentionSettings | analytics.edit |
 | `gaadmin_properties_create` | write | analyticsadmin.properties.create | analytics.edit |
+| `gaadmin_properties_data_coll` | write | analyticsadmin.properties.acknowledgeUserDataCollection | analytics.edit |
 | `gaadmin_properties_delete` | destructive | analyticsadmin.properties.delete | analytics.edit |
 | `gaadmin_properties_get` | read | analyticsadmin.properties.get | analytics.edit, analytics.readonly |
-| `gaadmin_properties_get_data_r` | read | analyticsadmin.properties.getDataRetentionSettings | analytics.edit, analytics.readonly |
 | `gaadmin_properties_list` | read | analyticsadmin.properties.list | analytics.edit, analytics.readonly |
 | `gaadmin_properties_patch` | write | analyticsadmin.properties.patch | analytics.edit |
-| `gaadmin_properties_run_access` | read | analyticsadmin.properties.runAccessReport | analytics.edit, analytics.readonly |
-| `gaadmin_properties_update_dat` | write | analyticsadmin.properties.updateDataRetentionSettings | analytics.edit |
-| `gadata_propert_audienc_create` | write | analyticsdata.properties.audienceExports.create | analytics, analytics.readonly |
-| `gadata_propert_audience_query` | read | analyticsdata.properties.audienceExports.query | analytics, analytics.readonly |
-| `gadata_properti_audience_list` | read | analyticsdata.properties.audienceExports.list | analytics, analytics.readonly |
-| `gadata_propertie_audience_get` | read | analyticsdata.properties.audienceExports.get | analytics, analytics.readonly |
-| `gadata_properties_batch_run_p` | read | analyticsdata.properties.batchRunPivotReports | analytics, analytics.readonly |
-| `gadata_properties_batch_run_r` | read | analyticsdata.properties.batchRunReports | analytics, analytics.readonly |
-| `gadata_properties_check_compa` | read | analyticsdata.properties.checkCompatibility | analytics, analytics.readonly |
-| `gadata_properties_get_metadat` | read | analyticsdata.properties.getMetadata | analytics, analytics.readonly |
-| `gadata_properties_run_pivot_r` | read | analyticsdata.properties.runPivotReport | analytics, analytics.readonly |
-| `gadata_properties_run_realtim` | read | analyticsdata.properties.runRealtimeReport | analytics, analytics.readonly |
+| `gaadmin_props_conv_events_get` | read | analyticsadmin.properties.conversionEvents.get | analytics.edit, analytics.readonly |
+| `gaadmin_props_custom_dims_get` | read | analyticsadmin.properties.customDimensions.get | analytics.edit, analytics.readonly |
+| `gaadmin_props_dims_archive` | destructive | analyticsadmin.properties.customDimensions.archive | analytics.edit |
+| `gaadmin_props_dims_create` | write | analyticsadmin.properties.customDimensions.create | analytics.edit |
+| `gaadmin_props_dims_list` | read | analyticsadmin.properties.customDimensions.list | analytics.edit, analytics.readonly |
+| `gaadmin_props_dims_patch` | write | analyticsadmin.properties.customDimensions.patch | analytics.edit |
+| `gaadmin_props_events_create` | write | analyticsadmin.properties.conversionEvents.create | analytics.edit |
+| `gaadmin_props_events_delete` | destructive | analyticsadmin.properties.conversionEvents.delete | analytics.edit |
+| `gaadmin_props_events_list` | read | analyticsadmin.properties.conversionEvents.list | analytics.edit, analytics.readonly |
+| `gaadmin_props_events_patch` | write | analyticsadmin.properties.conversionEvents.patch | analytics.edit |
+| `gaadmin_props_key_events_get` | read | analyticsadmin.properties.keyEvents.get | analytics.edit, analytics.readonly |
+| `gaadmin_props_key_events_list` | read | analyticsadmin.properties.keyEvents.list | analytics.edit, analytics.readonly |
+| `gaadmin_props_links_create` | write | analyticsadmin.properties.firebaseLinks.create | analytics.edit |
+| `gaadmin_props_links_delete` | destructive | analyticsadmin.properties.firebaseLinks.delete | analytics.edit |
+| `gaadmin_props_links_list` | read | analyticsadmin.properties.firebaseLinks.list | analytics.edit, analytics.readonly |
+| `gaadmin_props_links_patch` | write | analyticsadmin.properties.googleAdsLinks.patch | analytics.edit |
+| `gaadmin_props_metrics_archive` | destructive | analyticsadmin.properties.customMetrics.archive | analytics.edit |
+| `gaadmin_props_metrics_create` | write | analyticsadmin.properties.customMetrics.create | analytics.edit |
+| `gaadmin_props_metrics_get` | read | analyticsadmin.properties.customMetrics.get | analytics.edit, analytics.readonly |
+| `gaadmin_props_metrics_list` | read | analyticsadmin.properties.customMetrics.list | analytics.edit, analytics.readonly |
+| `gaadmin_props_metrics_patch` | write | analyticsadmin.properties.customMetrics.patch | analytics.edit |
+| `gaadmin_props_streams_create` | write | analyticsadmin.properties.dataStreams.create | analytics.edit |
+| `gaadmin_props_streams_delete` | destructive | analyticsadmin.properties.dataStreams.delete | analytics.edit |
+| `gaadmin_props_streams_get` | read | analyticsadmin.properties.dataStreams.get | analytics.edit, analytics.readonly |
+| `gaadmin_props_streams_list` | read | analyticsadmin.properties.dataStreams.list | analytics.edit, analytics.readonly |
+| `gaadmin_props_streams_patch` | write | analyticsadmin.properties.dataStreams.patch | analytics.edit |
+| `gaadmin_provision_acct_ticket` | write | analyticsadmin.accounts.provisionAccountTicket | analytics.edit |
+| `gaadmin_run_access_report` | read | analyticsadmin.accounts.runAccessReport | analytics.edit, analytics.readonly |
+| `gaadmin_streams_secrets_get` | write | analyticsadmin.properties.dataStreams.measurementProtocolSecrets.get | analytics.edit, analytics.readonly |
+| `gaadmin_streams_secrets_list` | read | analyticsadmin.properties.dataStreams.measurementProtocolSecrets.list | analytics.edit, analytics.readonly |
+| `gaadmin_streams_secrets_patch` | write | analyticsadmin.properties.dataStreams.measurementProtocolSecrets.patch | analytics.edit |
+| `gadat_batch_run_pivot_reports` | read | analyticsdata.properties.batchRunPivotReports | analytics, analytics.readonly |
+| `gadata_batch_run_reports` | read | analyticsdata.properties.batchRunReports | analytics, analytics.readonly |
+| `gadata_check_compatibility` | read | analyticsdata.properties.checkCompatibility | analytics, analytics.readonly |
 | `gadata_properties_run_report` | read | analyticsdata.properties.runReport | analytics, analytics.readonly |
+| `gadata_props_aud_exports_get` | read | analyticsdata.properties.audienceExports.get | analytics, analytics.readonly |
+| `gadata_props_aud_exports_list` | read | analyticsdata.properties.audienceExports.list | analytics, analytics.readonly |
+| `gadata_props_exports_create` | write | analyticsdata.properties.audienceExports.create | analytics, analytics.readonly |
+| `gadata_props_exports_query` | read | analyticsdata.properties.audienceExports.query | analytics, analytics.readonly |
+| `gadata_props_get_meta` | read | analyticsdata.properties.getMetadata | analytics, analytics.readonly |
+| `gadata_props_run_pivot_report` | read | analyticsdata.properties.runPivotReport | analytics, analytics.readonly |
+| `gadata_run_realtime_report` | read | analyticsdata.properties.runRealtimeReport | analytics, analytics.readonly |
 
 ## Gateway tools (3)
 

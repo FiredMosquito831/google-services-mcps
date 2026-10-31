@@ -589,7 +589,7 @@ Each example names the tool an agent would call. The tool names are checked. The
 - **Workspace admin (workspace-admin):** "List the users in my domain." The agent calls `admin_users_list`. This needs the `setup-admin` step.
 - **Business (business):** "List my YouTube channels." The agent calls `youtube_channels_list`.
 - **Developer (developer):** "List my Firebase projects." The agent calls `firebase_projects_list`.
-- **API key (apikey):** "Run a PageSpeed test on this site." The agent calls `pagespeedo_pagespeedap_runpagespeed`.
+- **API key (apikey):** "Run a PageSpeed test on this site." The agent calls `pagespee_pagespeedapi_runpagespeed`.
 
 ## 10. Every product
 

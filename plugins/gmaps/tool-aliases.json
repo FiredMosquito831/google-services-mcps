@@ -1,0 +1,12 @@
+{
+  "note": "Old names of generated tools, accepted until 3.0.0 (renamed in 2.0.0). Each key is an old tool name, each value the name that tool has now. See CHANGELOG.md.",
+  "aliases": {
+    "addressval_v1_provide_validation_feedba": "addressval_provide_validation_feedback",
+    "airquality_map_type_heatmap_t_lookup_he": "airquality_tiles_lookup_heatmap_tile",
+    "pollen_map_types_heatmap_ti_lookup_heat": "pollen_tiles_lookup_heatmap_tile",
+    "travelimpa_flights_compute_detailed_fli": "trave_compute_detailed_flight_emissions",
+    "travelimpa_flights_compute_flight_emiss": "travelimpa_compute_flight_emissions",
+    "travelimpa_flights_compute_scope3_fligh": "travel_compute_scope3_flight_emissions",
+    "travelimpa_flights_compute_typical_flig": "travel_compute_typical_flight_emissions"
+  }
+}

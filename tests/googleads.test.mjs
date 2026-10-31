@@ -443,6 +443,7 @@ function fakeHookPlugin() {
   copyFileSync(distPath('core/policy.js'), join(plugin, 'core', 'policy.js'));
   copyFileSync(distPath('core/dynamic.js'), join(plugin, 'core', 'dynamic.js'));
   copyFileSync(distPath('core/plugin-option.js'), join(plugin, 'core', 'plugin-option.js'));
+  copyFileSync(distPath('core/tool-aliases.js'), join(plugin, 'core', 'tool-aliases.js'));
   writeFileSync(
     join(plugin, 'tool-map.json'),
     JSON.stringify([

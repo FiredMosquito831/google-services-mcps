@@ -42,6 +42,38 @@
     "title": "Search API methods"
   },
   {
+    "name": "mcp__plugin_gcloud_gcloud__apikeys_keys_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/apikeys",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "apikeys.projects.locations.keys.create",
+    "title": "apikeys.projects.locations.keys.create"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__apikeys_keys_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/apikeys",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "apikeys.projects.locations.keys.delete",
+    "title": "apikeys.projects.locations.keys.delete"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__apikeys_keys_get_key_string",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/apikeys",
+      "https://www.googleapis.com/auth/apikeys.readonly",
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-platform.read-only"
+    ],
+    "methodId": "apikeys.projects.locations.keys.getKeyString",
+    "title": "apikeys.projects.locations.keys.getKeyString"
+  },
+  {
     "name": "mcp__plugin_gcloud_gcloud__apikeys_keys_lookup_key",
     "kind": "read",
     "scopes": [
@@ -54,6 +86,16 @@
     "title": "apikeys.keys.lookupKey"
   },
   {
+    "name": "mcp__plugin_gcloud_gcloud__apikeys_keys_undelete",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/apikeys",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "apikeys.projects.locations.keys.undelete",
+    "title": "apikeys.projects.locations.keys.undelete"
+  },
+  {
     "name": "mcp__plugin_gcloud_gcloud__apikeys_operations_get",
     "kind": "read",
     "scopes": [
@@ -64,48 +106,6 @@
     ],
     "methodId": "apikeys.operations.get",
     "title": "apikeys.operations.get"
-  },
-  {
-    "name": "mcp__plugin_gcloud_gcloud__apikeys_project_locatio_keys_undelete",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/apikeys",
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "apikeys.projects.locations.keys.undelete",
-    "title": "apikeys.projects.locations.keys.undelete"
-  },
-  {
-    "name": "mcp__plugin_gcloud_gcloud__apikeys_project_location_keys_get_key",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/apikeys",
-      "https://www.googleapis.com/auth/apikeys.readonly",
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/cloud-platform.read-only"
-    ],
-    "methodId": "apikeys.projects.locations.keys.getKeyString",
-    "title": "apikeys.projects.locations.keys.getKeyString"
-  },
-  {
-    "name": "mcp__plugin_gcloud_gcloud__apikeys_projects_location_keys_create",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/apikeys",
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "apikeys.projects.locations.keys.create",
-    "title": "apikeys.projects.locations.keys.create"
-  },
-  {
-    "name": "mcp__plugin_gcloud_gcloud__apikeys_projects_location_keys_delete",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/apikeys",
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "apikeys.projects.locations.keys.delete",
-    "title": "apikeys.projects.locations.keys.delete"
   },
   {
     "name": "mcp__plugin_gcloud_gcloud__apikeys_projects_locations_keys_get",
@@ -142,6 +142,16 @@
     "title": "apikeys.projects.locations.keys.patch"
   },
   {
+    "name": "mcp__plugin_gcloud_gcloud__assets_analyze_iam_policy_longrunning",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloudasset"
+    ],
+    "methodId": "cloudasset.analyzeIamPolicyLongrunning",
+    "title": "cloudasset.analyzeIamPolicyLongrunning"
+  },
+  {
     "name": "mcp__plugin_gcloud_gcloud__assets_assets_list",
     "kind": "read",
     "scopes": [
@@ -150,15 +160,6 @@
     ],
     "methodId": "cloudasset.assets.list",
     "title": "cloudasset.assets.list"
-  },
-  {
-    "name": "mcp__plugin_gcloud_gcloud__assets_effective_iam_polici_batch_get",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "cloudasset.effectiveIamPolicies.batchGet",
-    "title": "cloudasset.effectiveIamPolicies.batchGet"
   },
   {
     "name": "mcp__plugin_gcloud_gcloud__assets_feeds_create",
@@ -216,6 +217,15 @@
     "title": "cloudasset.operations.get"
   },
   {
+    "name": "mcp__plugin_gcloud_gcloud__assets_policies_batch_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "cloudasset.effectiveIamPolicies.batchGet",
+    "title": "cloudasset.effectiveIamPolicies.batchGet"
+  },
+  {
     "name": "mcp__plugin_gcloud_gcloud__assets_saved_queries_create",
     "kind": "write",
     "scopes": [
@@ -271,16 +281,6 @@
     "title": "cloudasset.analyzeIamPolicy"
   },
   {
-    "name": "mcp__plugin_gcloud_gcloud__assets_v1_analyze_iam_policy_longrunn",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/cloudasset"
-    ],
-    "methodId": "cloudasset.analyzeIamPolicyLongrunning",
-    "title": "cloudasset.analyzeIamPolicyLongrunning"
-  },
-  {
     "name": "mcp__plugin_gcloud_gcloud__assets_v1_analyze_move",
     "kind": "read",
     "scopes": [
@@ -299,24 +299,6 @@
     "title": "cloudasset.analyzeOrgPolicies"
   },
   {
-    "name": "mcp__plugin_gcloud_gcloud__assets_v1_analyze_org_policy_gov_0f01",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "cloudasset.analyzeOrgPolicyGovernedAssets",
-    "title": "cloudasset.analyzeOrgPolicyGovernedAssets"
-  },
-  {
-    "name": "mcp__plugin_gcloud_gcloud__assets_v1_analyze_org_policy_gov_37e7",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "cloudasset.analyzeOrgPolicyGovernedContainers",
-    "title": "cloudasset.analyzeOrgPolicyGovernedContainers"
-  },
-  {
     "name": "mcp__plugin_gcloud_gcloud__assets_v1_batch_get_assets_history",
     "kind": "read",
     "scopes": [
@@ -333,6 +315,24 @@
     ],
     "methodId": "cloudasset.exportAssets",
     "title": "cloudasset.exportAssets"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__assets_v1_governed_assets",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "cloudasset.analyzeOrgPolicyGovernedAssets",
+    "title": "cloudasset.analyzeOrgPolicyGovernedAssets"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__assets_v1_governed_ctrs",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "cloudasset.analyzeOrgPolicyGovernedContainers",
+    "title": "cloudasset.analyzeOrgPolicyGovernedContainers"
   },
   {
     "name": "mcp__plugin_gcloud_gcloud__assets_v1_query_assets",
@@ -570,6 +570,38 @@
     "title": "bigquery.models.patch"
   },
   {
+    "name": "mcp__plugin_gcloud_gcloud__bigquery_policies_batch_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/bigquery",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "bigquery.rowAccessPolicies.batchDelete",
+    "title": "bigquery.rowAccessPolicies.batchDelete"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__bigquery_policies_get_iam_policy",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/bigquery",
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-platform.read-only"
+    ],
+    "methodId": "bigquery.rowAccessPolicies.getIamPolicy",
+    "title": "bigquery.rowAccessPolicies.getIamPolicy"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__bigquery_policies_test_iam_perms",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/bigquery",
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-platform.read-only"
+    ],
+    "methodId": "bigquery.rowAccessPolicies.testIamPermissions",
+    "title": "bigquery.rowAccessPolicies.testIamPermissions"
+  },
+  {
     "name": "mcp__plugin_gcloud_gcloud__bigquery_projects_get_service_account",
     "kind": "read",
     "scopes": [
@@ -655,7 +687,7 @@
     "title": "bigquery.routines.setIamPolicy"
   },
   {
-    "name": "mcp__plugin_gcloud_gcloud__bigquery_routines_test_iam_permission",
+    "name": "mcp__plugin_gcloud_gcloud__bigquery_routines_test_iam_perms",
     "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/bigquery",
@@ -674,38 +706,6 @@
     ],
     "methodId": "bigquery.routines.update",
     "title": "bigquery.routines.update"
-  },
-  {
-    "name": "mcp__plugin_gcloud_gcloud__bigquery_row_access_po_get_iam_policy",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/bigquery",
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/cloud-platform.read-only"
-    ],
-    "methodId": "bigquery.rowAccessPolicies.getIamPolicy",
-    "title": "bigquery.rowAccessPolicies.getIamPolicy"
-  },
-  {
-    "name": "mcp__plugin_gcloud_gcloud__bigquery_row_access_po_test_iam_permi",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/bigquery",
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/cloud-platform.read-only"
-    ],
-    "methodId": "bigquery.rowAccessPolicies.testIamPermissions",
-    "title": "bigquery.rowAccessPolicies.testIamPermissions"
-  },
-  {
-    "name": "mcp__plugin_gcloud_gcloud__bigquery_row_access_poli_batch_delete",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/bigquery",
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "bigquery.rowAccessPolicies.batchDelete",
-    "title": "bigquery.rowAccessPolicies.batchDelete"
   },
   {
     "name": "mcp__plugin_gcloud_gcloud__bigquery_row_access_policies_delete",
@@ -876,60 +876,7 @@
     "title": "bigquery.tables.update"
   },
   {
-    "name": "mcp__plugin_gcloud_gcloud__billing_billing_ac_sub_account_create",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-billing",
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "cloudbilling.billingAccounts.subAccounts.create",
-    "title": "cloudbilling.billingAccounts.subAccounts.create"
-  },
-  {
-    "name": "mcp__plugin_gcloud_gcloud__billing_billing_acc_sub_accounts_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-billing",
-      "https://www.googleapis.com/auth/cloud-billing.readonly",
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "cloudbilling.billingAccounts.subAccounts.list",
-    "title": "cloudbilling.billingAccounts.subAccounts.list"
-  },
-  {
-    "name": "mcp__plugin_gcloud_gcloud__billing_billing_accoun_get_iam_policy",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-billing",
-      "https://www.googleapis.com/auth/cloud-billing.readonly",
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "cloudbilling.billingAccounts.getIamPolicy",
-    "title": "cloudbilling.billingAccounts.getIamPolicy"
-  },
-  {
-    "name": "mcp__plugin_gcloud_gcloud__billing_billing_accoun_set_iam_policy",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-billing",
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "cloudbilling.billingAccounts.setIamPolicy",
-    "title": "cloudbilling.billingAccounts.setIamPolicy"
-  },
-  {
-    "name": "mcp__plugin_gcloud_gcloud__billing_billing_accoun_test_iam_permi",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-billing",
-      "https://www.googleapis.com/auth/cloud-billing.readonly",
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "cloudbilling.billingAccounts.testIamPermissions",
-    "title": "cloudbilling.billingAccounts.testIamPermissions"
-  },
-  {
-    "name": "mcp__plugin_gcloud_gcloud__billing_billing_account_projects_list",
+    "name": "mcp__plugin_gcloud_gcloud__billin_billing_accounts_projects_list",
     "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-billing",
@@ -992,6 +939,49 @@
     "title": "cloudbilling.billingAccounts.patch"
   },
   {
+    "name": "mcp__plugin_gcloud_gcloud__billing_billing_accts_get_iam_policy",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-billing",
+      "https://www.googleapis.com/auth/cloud-billing.readonly",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "cloudbilling.billingAccounts.getIamPolicy",
+    "title": "cloudbilling.billingAccounts.getIamPolicy"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__billing_billing_accts_set_iam_policy",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-billing",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "cloudbilling.billingAccounts.setIamPolicy",
+    "title": "cloudbilling.billingAccounts.setIamPolicy"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__billing_billing_accts_sub_accts_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-billing",
+      "https://www.googleapis.com/auth/cloud-billing.readonly",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "cloudbilling.billingAccounts.subAccounts.list",
+    "title": "cloudbilling.billingAccounts.subAccounts.list"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__billing_billing_accts_test_iam_perms",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-billing",
+      "https://www.googleapis.com/auth/cloud-billing.readonly",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "cloudbilling.billingAccounts.testIamPermissions",
+    "title": "cloudbilling.billingAccounts.testIamPermissions"
+  },
+  {
     "name": "mcp__plugin_gcloud_gcloud__billing_message_send",
     "kind": "destructive",
     "scopes": [
@@ -1014,7 +1004,7 @@
     "title": "cloudbilling.message.stream"
   },
   {
-    "name": "mcp__plugin_gcloud_gcloud__billing_organizati_billing_acc_create",
+    "name": "mcp__plugin_gcloud_gcloud__billing_orgs_billing_accts_create",
     "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-billing",
@@ -1024,7 +1014,7 @@
     "title": "cloudbilling.organizations.billingAccounts.create"
   },
   {
-    "name": "mcp__plugin_gcloud_gcloud__billing_organizatio_billing_acco_list",
+    "name": "mcp__plugin_gcloud_gcloud__billing_orgs_billing_accts_list",
     "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-billing",
@@ -1035,7 +1025,7 @@
     "title": "cloudbilling.organizations.billingAccounts.list"
   },
   {
-    "name": "mcp__plugin_gcloud_gcloud__billing_organizatio_billing_acco_move",
+    "name": "mcp__plugin_gcloud_gcloud__billing_orgs_billing_accts_move",
     "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-billing",
@@ -1076,6 +1066,28 @@
     "title": "cloudbilling.projects.updateBillingInfo"
   },
   {
+    "name": "mcp__plugin_gcloud_gcloud__billing_push_notif_configs_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-billing",
+      "https://www.googleapis.com/auth/cloud-billing.readonly",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "cloudbilling.tasks.pushNotificationConfigs.create",
+    "title": "cloudbilling.tasks.pushNotificationConfigs.create"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__billing_push_notif_configs_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-billing",
+      "https://www.googleapis.com/auth/cloud-billing.readonly",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "cloudbilling.tasks.pushNotificationConfigs.delete",
+    "title": "cloudbilling.tasks.pushNotificationConfigs.delete"
+  },
+  {
     "name": "mcp__plugin_gcloud_gcloud__billing_services_list",
     "kind": "read",
     "scopes": [
@@ -1096,6 +1108,16 @@
     ],
     "methodId": "cloudbilling.services.skus.list",
     "title": "cloudbilling.services.skus.list"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__billing_sub_accts_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-billing",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "cloudbilling.billingAccounts.subAccounts.create",
+    "title": "cloudbilling.billingAccounts.subAccounts.create"
   },
   {
     "name": "mcp__plugin_gcloud_gcloud__billing_tasks_cancel",
@@ -1120,29 +1142,7 @@
     "title": "cloudbilling.tasks.get"
   },
   {
-    "name": "mcp__plugin_gcloud_gcloud__billing_tasks_push_notificatio_create",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-billing",
-      "https://www.googleapis.com/auth/cloud-billing.readonly",
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "cloudbilling.tasks.pushNotificationConfigs.create",
-    "title": "cloudbilling.tasks.pushNotificationConfigs.create"
-  },
-  {
-    "name": "mcp__plugin_gcloud_gcloud__billing_tasks_push_notificatio_delete",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-billing",
-      "https://www.googleapis.com/auth/cloud-billing.readonly",
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "cloudbilling.tasks.pushNotificationConfigs.delete",
-    "title": "cloudbilling.tasks.pushNotificationConfigs.delete"
-  },
-  {
-    "name": "mcp__plugin_gcloud_gcloud__billing_tasks_push_notification_c_get",
+    "name": "mcp__plugin_gcloud_gcloud__billing_tasks_push_notif_configs_get",
     "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-billing",
@@ -1153,7 +1153,7 @@
     "title": "cloudbilling.tasks.pushNotificationConfigs.get"
   },
   {
-    "name": "mcp__plugin_gcloud_gcloud__billing_tasks_push_notification_list",
+    "name": "mcp__plugin_gcloud_gcloud__billing_tasks_push_notif_configs_list",
     "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-billing",
@@ -1377,6 +1377,17 @@
     "title": "List APIs on a project"
   },
   {
+    "name": "mcp__plugin_gcloud_gcloud__cloudprofi_profiles_create_offline",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/monitoring",
+      "https://www.googleapis.com/auth/monitoring.write"
+    ],
+    "methodId": "cloudprofiler.projects.profiles.createOffline",
+    "title": "cloudprofiler.projects.profiles.createOffline"
+  },
+  {
     "name": "mcp__plugin_gcloud_gcloud__cloudprofi_projects_profiles_create",
     "kind": "write",
     "scopes": [
@@ -1386,17 +1397,6 @@
     ],
     "methodId": "cloudprofiler.projects.profiles.create",
     "title": "cloudprofiler.projects.profiles.create"
-  },
-  {
-    "name": "mcp__plugin_gcloud_gcloud__cloudprofi_projects_profiles_create_o",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/monitoring",
-      "https://www.googleapis.com/auth/monitoring.write"
-    ],
-    "methodId": "cloudprofiler.projects.profiles.createOffline",
-    "title": "cloudprofiler.projects.profiles.createOffline"
   },
   {
     "name": "mcp__plugin_gcloud_gcloud__cloudprofi_projects_profiles_list",
@@ -1419,6 +1419,34 @@
     ],
     "methodId": "cloudprofiler.projects.profiles.patch",
     "title": "cloudprofiler.projects.profiles.patch"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__crm_capability_configs_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "cloudresourcemanager.projects.capabilityConfigs.create",
+    "title": "cloudresourcemanager.projects.capabilityConfigs.create"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__crm_capability_configs_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "cloudresourcemanager.projects.capabilityConfigs.delete",
+    "title": "cloudresourcemanager.projects.capabilityConfigs.delete"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__crm_effective_tag_binding_colls_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-platform.read-only"
+    ],
+    "methodId": "cloudresourcemanager.locations.effectiveTagBindingCollections.get",
+    "title": "cloudresourcemanager.locations.effectiveTagBindingCollections.get"
   },
   {
     "name": "mcp__plugin_gcloud_gcloud__crm_effective_tags_list",
@@ -1639,35 +1667,6 @@
     "title": "cloudresourcemanager.liens.list"
   },
   {
-    "name": "mcp__plugin_gcloud_gcloud__crm_locations_effective_tag_bindi_get",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/cloud-platform.read-only"
-    ],
-    "methodId": "cloudresourcemanager.locations.effectiveTagBindingCollections.get",
-    "title": "cloudresourcemanager.locations.effectiveTagBindingCollections.get"
-  },
-  {
-    "name": "mcp__plugin_gcloud_gcloud__crm_locations_tag_binding_colle_patch",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "cloudresourcemanager.locations.tagBindingCollections.patch",
-    "title": "cloudresourcemanager.locations.tagBindingCollections.patch"
-  },
-  {
-    "name": "mcp__plugin_gcloud_gcloud__crm_locations_tag_binding_collect_get",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/cloud-platform.read-only"
-    ],
-    "methodId": "cloudresourcemanager.locations.tagBindingCollections.get",
-    "title": "cloudresourcemanager.locations.tagBindingCollections.get"
-  },
-  {
     "name": "mcp__plugin_gcloud_gcloud__crm_operations_get",
     "kind": "read",
     "scopes": [
@@ -1676,53 +1675,6 @@
     ],
     "methodId": "cloudresourcemanager.operations.get",
     "title": "cloudresourcemanager.operations.get"
-  },
-  {
-    "name": "mcp__plugin_gcloud_gcloud__crm_organization_capability_co_create",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "cloudresourcemanager.organizations.capabilityConfigs.create",
-    "title": "cloudresourcemanager.organizations.capabilityConfigs.create"
-  },
-  {
-    "name": "mcp__plugin_gcloud_gcloud__crm_organization_capability_co_delete",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "cloudresourcemanager.organizations.capabilityConfigs.delete",
-    "title": "cloudresourcemanager.organizations.capabilityConfigs.delete"
-  },
-  {
-    "name": "mcp__plugin_gcloud_gcloud__crm_organizations_capability_co_patch",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "cloudresourcemanager.organizations.capabilityConfigs.patch",
-    "title": "cloudresourcemanager.organizations.capabilityConfigs.patch"
-  },
-  {
-    "name": "mcp__plugin_gcloud_gcloud__crm_organizations_capability_con_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/cloud-platform.read-only"
-    ],
-    "methodId": "cloudresourcemanager.organizations.capabilityConfigs.list",
-    "title": "cloudresourcemanager.organizations.capabilityConfigs.list"
-  },
-  {
-    "name": "mcp__plugin_gcloud_gcloud__crm_organizations_capability_conf_get",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/cloud-platform.read-only"
-    ],
-    "methodId": "cloudresourcemanager.organizations.capabilityConfigs.get",
-    "title": "cloudresourcemanager.organizations.capabilityConfigs.get"
   },
   {
     "name": "mcp__plugin_gcloud_gcloud__crm_organizations_get",
@@ -1764,7 +1716,54 @@
     "title": "cloudresourcemanager.organizations.setIamPolicy"
   },
   {
-    "name": "mcp__plugin_gcloud_gcloud__crm_organizations_test_iam_permission",
+    "name": "mcp__plugin_gcloud_gcloud__crm_orgs_capability_configs_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "cloudresourcemanager.organizations.capabilityConfigs.create",
+    "title": "cloudresourcemanager.organizations.capabilityConfigs.create"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__crm_orgs_capability_configs_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "cloudresourcemanager.organizations.capabilityConfigs.delete",
+    "title": "cloudresourcemanager.organizations.capabilityConfigs.delete"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__crm_orgs_capability_configs_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-platform.read-only"
+    ],
+    "methodId": "cloudresourcemanager.organizations.capabilityConfigs.get",
+    "title": "cloudresourcemanager.organizations.capabilityConfigs.get"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__crm_orgs_capability_configs_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-platform.read-only"
+    ],
+    "methodId": "cloudresourcemanager.organizations.capabilityConfigs.list",
+    "title": "cloudresourcemanager.organizations.capabilityConfigs.list"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__crm_orgs_capability_configs_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "cloudresourcemanager.organizations.capabilityConfigs.patch",
+    "title": "cloudresourcemanager.organizations.capabilityConfigs.patch"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__crm_orgs_test_iam_perms",
     "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform",
@@ -1772,24 +1771,6 @@
     ],
     "methodId": "cloudresourcemanager.organizations.testIamPermissions",
     "title": "cloudresourcemanager.organizations.testIamPermissions"
-  },
-  {
-    "name": "mcp__plugin_gcloud_gcloud__crm_projects_capability_config_create",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "cloudresourcemanager.projects.capabilityConfigs.create",
-    "title": "cloudresourcemanager.projects.capabilityConfigs.create"
-  },
-  {
-    "name": "mcp__plugin_gcloud_gcloud__crm_projects_capability_config_delete",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "cloudresourcemanager.projects.capabilityConfigs.delete",
-    "title": "cloudresourcemanager.projects.capabilityConfigs.delete"
   },
   {
     "name": "mcp__plugin_gcloud_gcloud__crm_projects_capability_configs_get",
@@ -1923,6 +1904,25 @@
     ],
     "methodId": "cloudresourcemanager.projects.undelete",
     "title": "cloudresourcemanager.projects.undelete"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__crm_tag_binding_collections_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-platform.read-only"
+    ],
+    "methodId": "cloudresourcemanager.locations.tagBindingCollections.get",
+    "title": "cloudresourcemanager.locations.tagBindingCollections.get"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__crm_tag_binding_collections_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "cloudresourcemanager.locations.tagBindingCollections.patch",
+    "title": "cloudresourcemanager.locations.tagBindingCollections.patch"
   },
   {
     "name": "mcp__plugin_gcloud_gcloud__crm_tag_bindings_create",
@@ -2282,6 +2282,57 @@
     "title": "List log entries"
   },
   {
+    "name": "mcp__plugin_gcloud_gcloud__monitor_alert_policies_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/monitoring"
+    ],
+    "methodId": "monitoring.projects.alertPolicies.create",
+    "title": "monitoring.projects.alertPolicies.create"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__monitor_alert_policies_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/monitoring"
+    ],
+    "methodId": "monitoring.projects.alertPolicies.delete",
+    "title": "monitoring.projects.alertPolicies.delete"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__monitor_chans_get_verification_code",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/monitoring"
+    ],
+    "methodId": "monitoring.projects.notificationChannels.getVerificationCode",
+    "title": "monitoring.projects.notificationChannels.getVerificationCode"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__monitor_chans_send_verification_code",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/monitoring"
+    ],
+    "methodId": "monitoring.projects.notificationChannels.sendVerificationCode",
+    "title": "monitoring.projects.notificationChannels.sendVerificationCode"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__monitor_collectd_time_series_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/monitoring",
+      "https://www.googleapis.com/auth/monitoring.write"
+    ],
+    "methodId": "monitoring.projects.collectdTimeSeries.create",
+    "title": "monitoring.projects.collectdTimeSeries.create"
+  },
+  {
     "name": "mcp__plugin_gcloud_gcloud__monitor_folders_time_series_list",
     "kind": "read",
     "scopes": [
@@ -2293,7 +2344,160 @@
     "title": "monitoring.folders.timeSeries.list"
   },
   {
-    "name": "mcp__plugin_gcloud_gcloud__monitor_organization_time_series_list",
+    "name": "mcp__plugin_gcloud_gcloud__monitor_metric_descriptors_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/monitoring",
+      "https://www.googleapis.com/auth/monitoring.write"
+    ],
+    "methodId": "monitoring.projects.metricDescriptors.create",
+    "title": "monitoring.projects.metricDescriptors.create"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__monitor_metric_descriptors_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/monitoring"
+    ],
+    "methodId": "monitoring.projects.metricDescriptors.delete",
+    "title": "monitoring.projects.metricDescriptors.delete"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__monitor_metric_descriptors_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/monitoring",
+      "https://www.googleapis.com/auth/monitoring.read",
+      "https://www.googleapis.com/auth/monitoring.write"
+    ],
+    "methodId": "monitoring.projects.metricDescriptors.get",
+    "title": "monitoring.projects.metricDescriptors.get"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__monitor_metric_descriptors_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/monitoring",
+      "https://www.googleapis.com/auth/monitoring.read",
+      "https://www.googleapis.com/auth/monitoring.write"
+    ],
+    "methodId": "monitoring.projects.metricDescriptors.list",
+    "title": "monitoring.projects.metricDescriptors.list"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__monitor_monitored_resource_descs_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/monitoring",
+      "https://www.googleapis.com/auth/monitoring.read",
+      "https://www.googleapis.com/auth/monitoring.write"
+    ],
+    "methodId": "monitoring.projects.monitoredResourceDescriptors.get",
+    "title": "monitoring.projects.monitoredResourceDescriptors.get"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__monitor_monitored_resource_descs_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/monitoring",
+      "https://www.googleapis.com/auth/monitoring.read",
+      "https://www.googleapis.com/auth/monitoring.write"
+    ],
+    "methodId": "monitoring.projects.monitoredResourceDescriptors.list",
+    "title": "monitoring.projects.monitoredResourceDescriptors.list"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__monitor_notif_chan_descs_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/monitoring",
+      "https://www.googleapis.com/auth/monitoring.read"
+    ],
+    "methodId": "monitoring.projects.notificationChannelDescriptors.get",
+    "title": "monitoring.projects.notificationChannelDescriptors.get"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__monitor_notif_chan_descs_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/monitoring",
+      "https://www.googleapis.com/auth/monitoring.read"
+    ],
+    "methodId": "monitoring.projects.notificationChannelDescriptors.list",
+    "title": "monitoring.projects.notificationChannelDescriptors.list"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__monitor_notification_channels_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/monitoring"
+    ],
+    "methodId": "monitoring.projects.notificationChannels.create",
+    "title": "monitoring.projects.notificationChannels.create"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__monitor_notification_channels_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/monitoring"
+    ],
+    "methodId": "monitoring.projects.notificationChannels.delete",
+    "title": "monitoring.projects.notificationChannels.delete"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__monitor_notification_channels_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/monitoring",
+      "https://www.googleapis.com/auth/monitoring.read"
+    ],
+    "methodId": "monitoring.projects.notificationChannels.get",
+    "title": "monitoring.projects.notificationChannels.get"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__monitor_notification_channels_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/monitoring",
+      "https://www.googleapis.com/auth/monitoring.read"
+    ],
+    "methodId": "monitoring.projects.notificationChannels.list",
+    "title": "monitoring.projects.notificationChannels.list"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__monitor_notification_channels_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/monitoring"
+    ],
+    "methodId": "monitoring.projects.notificationChannels.patch",
+    "title": "monitoring.projects.notificationChannels.patch"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__monitor_notification_channels_verify",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/monitoring"
+    ],
+    "methodId": "monitoring.projects.notificationChannels.verify",
+    "title": "monitoring.projects.notificationChannels.verify"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__monitor_orgs_time_series_list",
     "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform",
@@ -2302,26 +2506,6 @@
     ],
     "methodId": "monitoring.organizations.timeSeries.list",
     "title": "monitoring.organizations.timeSeries.list"
-  },
-  {
-    "name": "mcp__plugin_gcloud_gcloud__monitor_projects_alert_policie_create",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/monitoring"
-    ],
-    "methodId": "monitoring.projects.alertPolicies.create",
-    "title": "monitoring.projects.alertPolicies.create"
-  },
-  {
-    "name": "mcp__plugin_gcloud_gcloud__monitor_projects_alert_policie_delete",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/monitoring"
-    ],
-    "methodId": "monitoring.projects.alertPolicies.delete",
-    "title": "monitoring.projects.alertPolicies.delete"
   },
   {
     "name": "mcp__plugin_gcloud_gcloud__monitor_projects_alert_policies_get",
@@ -2376,17 +2560,6 @@
     ],
     "methodId": "monitoring.projects.alerts.list",
     "title": "monitoring.projects.alerts.list"
-  },
-  {
-    "name": "mcp__plugin_gcloud_gcloud__monitor_projects_collectd_time_create",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/monitoring",
-      "https://www.googleapis.com/auth/monitoring.write"
-    ],
-    "methodId": "monitoring.projects.collectdTimeSeries.create",
-    "title": "monitoring.projects.collectdTimeSeries.create"
   },
   {
     "name": "mcp__plugin_gcloud_gcloud__monitor_projects_groups_create",
@@ -2452,179 +2625,6 @@
     "title": "monitoring.projects.groups.update"
   },
   {
-    "name": "mcp__plugin_gcloud_gcloud__monitor_projects_metric_descri_create",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/monitoring",
-      "https://www.googleapis.com/auth/monitoring.write"
-    ],
-    "methodId": "monitoring.projects.metricDescriptors.create",
-    "title": "monitoring.projects.metricDescriptors.create"
-  },
-  {
-    "name": "mcp__plugin_gcloud_gcloud__monitor_projects_metric_descri_delete",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/monitoring"
-    ],
-    "methodId": "monitoring.projects.metricDescriptors.delete",
-    "title": "monitoring.projects.metricDescriptors.delete"
-  },
-  {
-    "name": "mcp__plugin_gcloud_gcloud__monitor_projects_metric_descript_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/monitoring",
-      "https://www.googleapis.com/auth/monitoring.read",
-      "https://www.googleapis.com/auth/monitoring.write"
-    ],
-    "methodId": "monitoring.projects.metricDescriptors.list",
-    "title": "monitoring.projects.metricDescriptors.list"
-  },
-  {
-    "name": "mcp__plugin_gcloud_gcloud__monitor_projects_metric_descripto_get",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/monitoring",
-      "https://www.googleapis.com/auth/monitoring.read",
-      "https://www.googleapis.com/auth/monitoring.write"
-    ],
-    "methodId": "monitoring.projects.metricDescriptors.get",
-    "title": "monitoring.projects.metricDescriptors.get"
-  },
-  {
-    "name": "mcp__plugin_gcloud_gcloud__monitor_projects_monitored_resou_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/monitoring",
-      "https://www.googleapis.com/auth/monitoring.read",
-      "https://www.googleapis.com/auth/monitoring.write"
-    ],
-    "methodId": "monitoring.projects.monitoredResourceDescriptors.list",
-    "title": "monitoring.projects.monitoredResourceDescriptors.list"
-  },
-  {
-    "name": "mcp__plugin_gcloud_gcloud__monitor_projects_monitored_resour_get",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/monitoring",
-      "https://www.googleapis.com/auth/monitoring.read",
-      "https://www.googleapis.com/auth/monitoring.write"
-    ],
-    "methodId": "monitoring.projects.monitoredResourceDescriptors.get",
-    "title": "monitoring.projects.monitoredResourceDescriptors.get"
-  },
-  {
-    "name": "mcp__plugin_gcloud_gcloud__monitor_projects_notificat_get_verifi",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/monitoring"
-    ],
-    "methodId": "monitoring.projects.notificationChannels.getVerificationCode",
-    "title": "monitoring.projects.notificationChannels.getVerificationCode"
-  },
-  {
-    "name": "mcp__plugin_gcloud_gcloud__monitor_projects_notificat_send_verif",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/monitoring"
-    ],
-    "methodId": "monitoring.projects.notificationChannels.sendVerificationCode",
-    "title": "monitoring.projects.notificationChannels.sendVerificationCode"
-  },
-  {
-    "name": "mcp__plugin_gcloud_gcloud__monitor_projects_notificati_list_11a2",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/monitoring",
-      "https://www.googleapis.com/auth/monitoring.read"
-    ],
-    "methodId": "monitoring.projects.notificationChannels.list",
-    "title": "monitoring.projects.notificationChannels.list"
-  },
-  {
-    "name": "mcp__plugin_gcloud_gcloud__monitor_projects_notificati_list_7e4a",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/monitoring",
-      "https://www.googleapis.com/auth/monitoring.read"
-    ],
-    "methodId": "monitoring.projects.notificationChannelDescriptors.list",
-    "title": "monitoring.projects.notificationChannelDescriptors.list"
-  },
-  {
-    "name": "mcp__plugin_gcloud_gcloud__monitor_projects_notificatio_get_8dde",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/monitoring",
-      "https://www.googleapis.com/auth/monitoring.read"
-    ],
-    "methodId": "monitoring.projects.notificationChannelDescriptors.get",
-    "title": "monitoring.projects.notificationChannelDescriptors.get"
-  },
-  {
-    "name": "mcp__plugin_gcloud_gcloud__monitor_projects_notificatio_get_a4cc",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/monitoring",
-      "https://www.googleapis.com/auth/monitoring.read"
-    ],
-    "methodId": "monitoring.projects.notificationChannels.get",
-    "title": "monitoring.projects.notificationChannels.get"
-  },
-  {
-    "name": "mcp__plugin_gcloud_gcloud__monitor_projects_notification_c_patch",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/monitoring"
-    ],
-    "methodId": "monitoring.projects.notificationChannels.patch",
-    "title": "monitoring.projects.notificationChannels.patch"
-  },
-  {
-    "name": "mcp__plugin_gcloud_gcloud__monitor_projects_notification_create",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/monitoring"
-    ],
-    "methodId": "monitoring.projects.notificationChannels.create",
-    "title": "monitoring.projects.notificationChannels.create"
-  },
-  {
-    "name": "mcp__plugin_gcloud_gcloud__monitor_projects_notification_delete",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/monitoring"
-    ],
-    "methodId": "monitoring.projects.notificationChannels.delete",
-    "title": "monitoring.projects.notificationChannels.delete"
-  },
-  {
-    "name": "mcp__plugin_gcloud_gcloud__monitor_projects_notification_verify",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/monitoring"
-    ],
-    "methodId": "monitoring.projects.notificationChannels.verify",
-    "title": "monitoring.projects.notificationChannels.verify"
-  },
-  {
     "name": "mcp__plugin_gcloud_gcloud__monitor_projects_snoozes_create",
     "kind": "write",
     "scopes": [
@@ -2667,17 +2667,6 @@
     "title": "monitoring.projects.snoozes.patch"
   },
   {
-    "name": "mcp__plugin_gcloud_gcloud__monitor_projects_time_seri_create_ser",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/monitoring",
-      "https://www.googleapis.com/auth/monitoring.write"
-    ],
-    "methodId": "monitoring.projects.timeSeries.createService",
-    "title": "monitoring.projects.timeSeries.createService"
-  },
-  {
     "name": "mcp__plugin_gcloud_gcloud__monitor_projects_time_series_create",
     "kind": "write",
     "scopes": [
@@ -2709,58 +2698,6 @@
     ],
     "methodId": "monitoring.projects.timeSeries.query",
     "title": "monitoring.projects.timeSeries.query"
-  },
-  {
-    "name": "mcp__plugin_gcloud_gcloud__monitor_projects_uptime_check_c_patch",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/monitoring"
-    ],
-    "methodId": "monitoring.projects.uptimeCheckConfigs.patch",
-    "title": "monitoring.projects.uptimeCheckConfigs.patch"
-  },
-  {
-    "name": "mcp__plugin_gcloud_gcloud__monitor_projects_uptime_check_co_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/monitoring",
-      "https://www.googleapis.com/auth/monitoring.read"
-    ],
-    "methodId": "monitoring.projects.uptimeCheckConfigs.list",
-    "title": "monitoring.projects.uptimeCheckConfigs.list"
-  },
-  {
-    "name": "mcp__plugin_gcloud_gcloud__monitor_projects_uptime_check_con_get",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/monitoring",
-      "https://www.googleapis.com/auth/monitoring.read"
-    ],
-    "methodId": "monitoring.projects.uptimeCheckConfigs.get",
-    "title": "monitoring.projects.uptimeCheckConfigs.get"
-  },
-  {
-    "name": "mcp__plugin_gcloud_gcloud__monitor_projects_uptime_check_create",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/monitoring"
-    ],
-    "methodId": "monitoring.projects.uptimeCheckConfigs.create",
-    "title": "monitoring.projects.uptimeCheckConfigs.create"
-  },
-  {
-    "name": "mcp__plugin_gcloud_gcloud__monitor_projects_uptime_check_delete",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/monitoring"
-    ],
-    "methodId": "monitoring.projects.uptimeCheckConfigs.delete",
-    "title": "monitoring.projects.uptimeCheckConfigs.delete"
   },
   {
     "name": "mcp__plugin_gcloud_gcloud__monitor_services_create",
@@ -2805,17 +2742,7 @@
     "title": "monitoring.services.list"
   },
   {
-    "name": "mcp__plugin_gcloud_gcloud__monitor_services_patch",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/monitoring"
-    ],
-    "methodId": "monitoring.services.patch",
-    "title": "monitoring.services.patch"
-  },
-  {
-    "name": "mcp__plugin_gcloud_gcloud__monitor_services_service_level_create",
+    "name": "mcp__plugin_gcloud_gcloud__monitor_services_objectives_create",
     "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform",
@@ -2825,7 +2752,7 @@
     "title": "monitoring.services.serviceLevelObjectives.create"
   },
   {
-    "name": "mcp__plugin_gcloud_gcloud__monitor_services_service_level_delete",
+    "name": "mcp__plugin_gcloud_gcloud__monitor_services_objectives_delete",
     "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform",
@@ -2835,18 +2762,7 @@
     "title": "monitoring.services.serviceLevelObjectives.delete"
   },
   {
-    "name": "mcp__plugin_gcloud_gcloud__monitor_services_service_level_o_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/monitoring",
-      "https://www.googleapis.com/auth/monitoring.read"
-    ],
-    "methodId": "monitoring.services.serviceLevelObjectives.list",
-    "title": "monitoring.services.serviceLevelObjectives.list"
-  },
-  {
-    "name": "mcp__plugin_gcloud_gcloud__monitor_services_service_level_ob_get",
+    "name": "mcp__plugin_gcloud_gcloud__monitor_services_objectives_get",
     "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform",
@@ -2857,7 +2773,18 @@
     "title": "monitoring.services.serviceLevelObjectives.get"
   },
   {
-    "name": "mcp__plugin_gcloud_gcloud__monitor_services_service_level_patch",
+    "name": "mcp__plugin_gcloud_gcloud__monitor_services_objectives_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/monitoring",
+      "https://www.googleapis.com/auth/monitoring.read"
+    ],
+    "methodId": "monitoring.services.serviceLevelObjectives.list",
+    "title": "monitoring.services.serviceLevelObjectives.list"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__monitor_services_objectives_patch",
     "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform",
@@ -2865,6 +2792,79 @@
     ],
     "methodId": "monitoring.services.serviceLevelObjectives.patch",
     "title": "monitoring.services.serviceLevelObjectives.patch"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__monitor_services_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/monitoring"
+    ],
+    "methodId": "monitoring.services.patch",
+    "title": "monitoring.services.patch"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__monitor_time_series_create_service",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/monitoring",
+      "https://www.googleapis.com/auth/monitoring.write"
+    ],
+    "methodId": "monitoring.projects.timeSeries.createService",
+    "title": "monitoring.projects.timeSeries.createService"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__monitor_uptime_check_configs_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/monitoring"
+    ],
+    "methodId": "monitoring.projects.uptimeCheckConfigs.create",
+    "title": "monitoring.projects.uptimeCheckConfigs.create"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__monitor_uptime_check_configs_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/monitoring"
+    ],
+    "methodId": "monitoring.projects.uptimeCheckConfigs.delete",
+    "title": "monitoring.projects.uptimeCheckConfigs.delete"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__monitor_uptime_check_configs_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/monitoring",
+      "https://www.googleapis.com/auth/monitoring.read"
+    ],
+    "methodId": "monitoring.projects.uptimeCheckConfigs.get",
+    "title": "monitoring.projects.uptimeCheckConfigs.get"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__monitor_uptime_check_configs_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/monitoring",
+      "https://www.googleapis.com/auth/monitoring.read"
+    ],
+    "methodId": "monitoring.projects.uptimeCheckConfigs.list",
+    "title": "monitoring.projects.uptimeCheckConfigs.list"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__monitor_uptime_check_configs_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/monitoring"
+    ],
+    "methodId": "monitoring.projects.uptimeCheckConfigs.patch",
+    "title": "monitoring.projects.uptimeCheckConfigs.patch"
   },
   {
     "name": "mcp__plugin_gcloud_gcloud__monitor_uptime_check_ips_list",
@@ -3323,37 +3323,7 @@
     "title": "storage.buckets.update"
   },
   {
-    "name": "mcp__plugin_gcloud_gcloud__storage_default_object_access_c_patch",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/devstorage.full_control"
-    ],
-    "methodId": "storage.defaultObjectAccessControls.patch",
-    "title": "storage.defaultObjectAccessControls.patch"
-  },
-  {
-    "name": "mcp__plugin_gcloud_gcloud__storage_default_object_access_co_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/devstorage.full_control"
-    ],
-    "methodId": "storage.defaultObjectAccessControls.list",
-    "title": "storage.defaultObjectAccessControls.list"
-  },
-  {
-    "name": "mcp__plugin_gcloud_gcloud__storage_default_object_access_con_get",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/devstorage.full_control"
-    ],
-    "methodId": "storage.defaultObjectAccessControls.get",
-    "title": "storage.defaultObjectAccessControls.get"
-  },
-  {
-    "name": "mcp__plugin_gcloud_gcloud__storage_default_object_access_delete",
+    "name": "mcp__plugin_gcloud_gcloud__storage_controls_delete",
     "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform",
@@ -3363,7 +3333,17 @@
     "title": "storage.defaultObjectAccessControls.delete"
   },
   {
-    "name": "mcp__plugin_gcloud_gcloud__storage_default_object_access_insert",
+    "name": "mcp__plugin_gcloud_gcloud__storage_controls_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/devstorage.full_control"
+    ],
+    "methodId": "storage.defaultObjectAccessControls.get",
+    "title": "storage.defaultObjectAccessControls.get"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__storage_controls_insert",
     "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform",
@@ -3373,7 +3353,27 @@
     "title": "storage.defaultObjectAccessControls.insert"
   },
   {
-    "name": "mcp__plugin_gcloud_gcloud__storage_default_object_access_update",
+    "name": "mcp__plugin_gcloud_gcloud__storage_controls_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/devstorage.full_control"
+    ],
+    "methodId": "storage.defaultObjectAccessControls.list",
+    "title": "storage.defaultObjectAccessControls.list"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__storage_controls_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/devstorage.full_control"
+    ],
+    "methodId": "storage.defaultObjectAccessControls.patch",
+    "title": "storage.defaultObjectAccessControls.patch"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__storage_controls_update",
     "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform",
@@ -3418,6 +3418,19 @@
     "title": "storage.folders.get"
   },
   {
+    "name": "mcp__plugin_gcloud_gcloud__storage_folders_get_iam_policy",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-platform.read-only",
+      "https://www.googleapis.com/auth/devstorage.full_control",
+      "https://www.googleapis.com/auth/devstorage.read_only",
+      "https://www.googleapis.com/auth/devstorage.read_write"
+    ],
+    "methodId": "storage.managedFolders.getIamPolicy",
+    "title": "storage.managedFolders.getIamPolicy"
+  },
+  {
     "name": "mcp__plugin_gcloud_gcloud__storage_folders_insert",
     "kind": "write",
     "scopes": [
@@ -3453,20 +3466,7 @@
     "title": "storage.folders.rename"
   },
   {
-    "name": "mcp__plugin_gcloud_gcloud__storage_managed_folder_get_iam_policy",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/cloud-platform.read-only",
-      "https://www.googleapis.com/auth/devstorage.full_control",
-      "https://www.googleapis.com/auth/devstorage.read_only",
-      "https://www.googleapis.com/auth/devstorage.read_write"
-    ],
-    "methodId": "storage.managedFolders.getIamPolicy",
-    "title": "storage.managedFolders.getIamPolicy"
-  },
-  {
-    "name": "mcp__plugin_gcloud_gcloud__storage_managed_folder_set_iam_policy",
+    "name": "mcp__plugin_gcloud_gcloud__storage_folders_set_iam_policy",
     "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform",
@@ -3476,7 +3476,7 @@
     "title": "storage.managedFolders.setIamPolicy"
   },
   {
-    "name": "mcp__plugin_gcloud_gcloud__storage_managed_folder_test_iam_permi",
+    "name": "mcp__plugin_gcloud_gcloud__storage_folders_test_iam_perms",
     "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform",
@@ -3828,17 +3828,6 @@
     "title": "storage.objects.viewFullContext"
   },
   {
-    "name": "mcp__plugin_gcloud_gcloud__storage_operations_advance_relocate_b",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/devstorage.full_control",
-      "https://www.googleapis.com/auth/devstorage.read_write"
-    ],
-    "methodId": "storage.buckets.operations.advanceRelocateBucket",
-    "title": "storage.buckets.operations.advanceRelocateBucket"
-  },
-  {
     "name": "mcp__plugin_gcloud_gcloud__storage_operations_cancel",
     "kind": "destructive",
     "scopes": [
@@ -3874,6 +3863,17 @@
     ],
     "methodId": "storage.buckets.operations.list",
     "title": "storage.buckets.operations.list"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__storage_ops_advance_relocate_bucket",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/devstorage.full_control",
+      "https://www.googleapis.com/auth/devstorage.read_write"
+    ],
+    "methodId": "storage.buckets.operations.advanceRelocateBucket",
+    "title": "storage.buckets.operations.advanceRelocateBucket"
   },
   {
     "name": "mcp__plugin_gcloud_gcloud__storage_projects_hmac_keys_create",
@@ -4013,7 +4013,7 @@
     "title": "cloudtrace.projects.traces.batchWrite"
   },
   {
-    "name": "mcp__plugin_gcloud_gcloud__trace_projects_traces_spans_create_sp",
+    "name": "mcp__plugin_gcloud_gcloud__trace_traces_spans_create_span",
     "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform",

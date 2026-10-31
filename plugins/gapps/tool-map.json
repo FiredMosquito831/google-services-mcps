@@ -42,6 +42,15 @@
     "title": "appsmarket.userLicense.get"
   },
   {
+    "name": "mcp__plugin_gapps_gapps__appsscript_list_script_processes",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/script.processes"
+    ],
+    "methodId": "script.processes.listScriptProcesses",
+    "title": "script.processes.listScriptProcesses"
+  },
+  {
     "name": "mcp__plugin_gapps_gapps__appsscript_processes_list",
     "kind": "read",
     "scopes": [
@@ -49,15 +58,6 @@
     ],
     "methodId": "script.processes.list",
     "title": "script.processes.list"
-  },
-  {
-    "name": "mcp__plugin_gapps_gapps__appsscript_processes_list_script_proces",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/script.processes"
-    ],
-    "methodId": "script.processes.listScriptProcesses",
-    "title": "script.processes.listScriptProcesses"
   },
   {
     "name": "mcp__plugin_gapps_gapps__appsscript_projects_create",

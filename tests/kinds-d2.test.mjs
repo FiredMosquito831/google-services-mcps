@@ -38,19 +38,19 @@ test.after(() => {
  * so all three are listed.
  */
 const D2 = [
-  { id: 'firebasedataconnect.projects.locations.services.executeGraphqlRead', kind: 'read', rules: 'write', plugin: 'gfirebase', tool: 'firebaseda_pro_loc_ser_exe_3072', gateway: true },
-  { id: 'firebasedataconnect.projects.locations.services.generateQuery', kind: 'read', rules: 'write', plugin: 'gfirebase', tool: 'firebaseda_pro_loc_ser_gen_8f53', gateway: true },
-  { id: 'firebasedataconnect.projects.locations.services.generateSchema', kind: 'read', rules: 'write', plugin: 'gfirebase', tool: 'firebaseda_pro_loc_ser_gen_cf40', gateway: true },
+  { id: 'firebasedataconnect.projects.locations.services.executeGraphqlRead', kind: 'read', rules: 'write', plugin: 'gfirebase', tool: 'firebaseda_execute_graphql_read', gateway: true },
+  { id: 'firebasedataconnect.projects.locations.services.generateQuery', kind: 'read', rules: 'write', plugin: 'gfirebase', tool: 'firebaseda_generate_query', gateway: true },
+  { id: 'firebasedataconnect.projects.locations.services.generateSchema', kind: 'read', rules: 'write', plugin: 'gfirebase', tool: 'firebaseda_generate_schema', gateway: true },
   { id: 'firebaserules.projects.test', kind: 'read', rules: 'write', plugin: 'gfirebase', tool: 'firebaseru_projects_test', gateway: false },
-  { id: 'discoveryengine.projects.locations.collections.engines.servingConfigs.answer', kind: 'read', rules: 'write', plugin: 'gai', tool: 'discoverye_proj_loca_coll_engin_servi_answe', gateway: true },
-  { id: 'discoveryengine.projects.locations.collections.dataStores.servingConfigs.answer', kind: 'read', rules: 'write', plugin: 'gai', tool: 'discoverye_proj_loca_colle_data_servi_answe', gateway: true },
-  { id: 'discoveryengine.projects.locations.dataStores.servingConfigs.answer', kind: 'read', rules: 'write', plugin: 'gai', tool: 'discoverye_proje_locat_data_s_servin_answer', gateway: true },
+  { id: 'discoveryengine.projects.locations.collections.engines.servingConfigs.answer', kind: 'read', rules: 'write', plugin: 'gai', tool: 'discoverye_engines_serving_configs_answer', gateway: true },
+  { id: 'discoveryengine.projects.locations.collections.dataStores.servingConfigs.answer', kind: 'read', rules: 'write', plugin: 'gai', tool: 'discov_colls_stores_serving_configs_answer', gateway: true },
+  { id: 'discoveryengine.projects.locations.dataStores.servingConfigs.answer', kind: 'read', rules: 'write', plugin: 'gai', tool: 'discoverye_stores_serving_configs_answer', gateway: true },
   { id: 'developerknowledge.answerQuery', kind: 'read', rules: 'write', plugin: 'gsearch', tool: 'developerk_v1_answer_query', gateway: true },
   { id: 'places.places.autocomplete', kind: 'read', rules: 'write', plugin: 'gmaps', tool: 'places_places_autocomplete', gateway: false },
-  { id: 'analyticsdata.properties.batchRunPivotReports', kind: 'read', rules: 'write', plugin: 'ganalytics', tool: 'gadata_properties_batch_run_p', gateway: false },
-  { id: 'analyticsdata.properties.audienceExports.query', kind: 'read', rules: 'write', plugin: 'ganalytics', tool: 'gadata_propert_audience_query', gateway: false },
+  { id: 'analyticsdata.properties.batchRunPivotReports', kind: 'read', rules: 'write', plugin: 'ganalytics', tool: 'gadat_batch_run_pivot_reports', gateway: false },
+  { id: 'analyticsdata.properties.audienceExports.query', kind: 'read', rules: 'write', plugin: 'ganalytics', tool: 'gadata_props_exports_query', gateway: false },
   { id: 'calendar.freebusy.query', kind: 'read', rules: 'write', plugin: 'gcalendar', tool: 'calendar_freebusy_query', gateway: false },
-  { id: 'merchantapi.accounts.dataSources.fetch', kind: 'write', rules: 'read', plugin: 'gmerchant', tool: 'merchantap_accoun_data_so_fetch', gateway: true },
+  { id: 'merchantapi.accounts.dataSources.fetch', kind: 'write', rules: 'read', plugin: 'gmerchant', tool: 'merchantap_accts_sources_fetch', gateway: true },
 ];
 
 const kindsFile = readJson('config', 'tool-kinds.json');
@@ -208,22 +208,22 @@ test('runServer: dataSources.fetch is hidden with writes off; with writes on it 
   const entry = generatedEntry(dir, 'gmerchant');
 
   const readOnly = await withClient(entry, childEnv(dir, tokenDir), toolNames);
-  assert.equal(readOnly.includes('merchantap_accoun_data_so_fetch'), false, 'a write is not registered with writes off');
-  assert.ok(readOnly.includes('merchantap_account_data_sou_get'), 'the reads of the same resource are');
+  assert.equal(readOnly.includes('merchantap_accts_sources_fetch'), false, 'a write is not registered with writes off');
+  assert.ok(readOnly.includes('merch_accounts_data_sources_get'), 'the reads of the same resource are');
 
   await withClient(
     entry,
     childEnv(dir, tokenDir, { GSM_ALLOW_WRITES: 'true' }),
     async (client, asked) => {
-      const res = await client.callTool({ name: 'merchantap_accoun_data_so_fetch', arguments: { name: 'accounts/1/dataSources/2' } });
+      const res = await client.callTool({ name: 'merchantap_accts_sources_fetch', arguments: { name: 'accounts/1/dataSources/2' } });
       assert.equal(res.isError, true);
       assert.match(res.content[0].text, /You declined this action\. Nothing was changed\./);
       assert.equal(asked.length, 1, 'the gate asked once');
-      assert.match(asked[0], /About to change Google data: merchantap_accoun_data_so_fetch/);
+      assert.match(asked[0], /About to change Google data: merchantap_accts_sources_fetch/);
       assert.match(asked[0], /merchantapi\.accounts\.dataSources\.fetch/);
     },
     { action: 'decline' },
   );
   const audit = readFileSync(join(tokenDir, 'audit.log'), 'utf8').trim().split('\n').map((line) => JSON.parse(line));
-  assert.deepEqual(audit.map((l) => [l.tool, l.methodId, l.risk, l.outcome]), [['merchantap_accoun_data_so_fetch', 'merchantapi.accounts.dataSources.fetch', 'modify', 'declined']]);
+  assert.deepEqual(audit.map((l) => [l.tool, l.methodId, l.risk, l.outcome]), [['merchantap_accts_sources_fetch', 'merchantapi.accounts.dataSources.fetch', 'modify', 'declined']]);
 });

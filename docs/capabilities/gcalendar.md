@@ -75,7 +75,6 @@ The tools that match Google's official MCP server for this product (https://deve
 | `calendar_calendars_get` | read | calendar.calendars.get | calendar, calendar.app.created |
 | `calendar_calendars_insert` | write | calendar.calendars.insert | calendar, calendar.app.created |
 | `calendar_calendars_patch` | write | calendar.calendars.patch | calendar, calendar.app.created |
-| `calendar_calendars_transfer_own` | destructive | calendar.calendars.transferOwnership | calendar, calendar.calendars |
 | `calendar_calendars_update` | write | calendar.calendars.update | calendar, calendar.app.created |
 | `calendar_channels_stop` | destructive | calendar.channels.stop | calendar, calendar.acls |
 | `calendar_colors_get` | read | calendar.colors.get | calendar, calendar.app.created |
@@ -94,6 +93,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `calendar_settings_get` | read | calendar.settings.get | calendar, calendar.readonly |
 | `calendar_settings_list` | read | calendar.settings.list | calendar, calendar.readonly |
 | `calendar_settings_watch` | write | calendar.settings.watch | calendar, calendar.readonly |
+| `calendar_transfer_ownership` | destructive | calendar.calendars.transferOwnership | calendar, calendar.calendars |
 
 ## Listing tool (1)
 

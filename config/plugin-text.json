@@ -29,8 +29,8 @@
       "description": "Search Google's developer documentation, run PageSpeed Insights, read Chrome UX Report field data (Core Web Vitals), check URLs with Web Risk and Safe Browsing, search the Knowledge Graph and published fact checks, and Custom Search; all with an API key, no sign-in.",
       "whenToUse": "Use for Google developer docs, a page's speed or Core Web Vitals, whether a URL is unsafe, a Knowledge Graph entity, or fact checks of a claim. Examples: \"run PageSpeed on example.com\", \"what are this site's Core Web Vitals\", \"is this link malicious\", \"find Google's docs on OAuth scopes\".",
       "flows": [
-        { "title": "Google developer docs", "steps": ["{tool:developerk_documents_search_documen} with query, then {tool:developerk_documents_batch_get} with the document names it returned for the full text.", "{tool:developerk_v1_answer_query} answers a question from the docs."] },
-        { "title": "Page speed and Core Web Vitals", "steps": ["{tool:pagespeedo_pagespeedap_runpagespeed} with url and strategy (mobile or desktop).", "{tool:chromeuxre_records_query_record} with a body naming url or origin, for real-user data."] },
+        { "title": "Google developer docs", "steps": ["{tool:developerk_docs_search_doc_chunks} with query, then {tool:developerk_documents_batch_get} with the document names it returned for the full text.", "{tool:developerk_v1_answer_query} answers a question from the docs."] },
+        { "title": "Page speed and Core Web Vitals", "steps": ["{tool:pagespeed_pagespeedapi_runpagespeed} with url and strategy (mobile or desktop).", "{tool:chromeuxre_records_query_record} with a body naming url or origin, for real-user data."] },
         { "title": "Is a URL safe", "steps": ["{tool:webrisk_uris_search} with uri and threatTypes (MALWARE, SOCIAL_ENGINEERING, UNWANTED_SOFTWARE)."] },
         { "title": "Entities and fact checks", "steps": ["{tool:kgsearch_entities_search} with query; {tool:factcheckt_claims_search} with query."] }
       ],
@@ -86,8 +86,8 @@
       "whenToUse": "Use for Google Meet: a new meeting link, who joined a past meeting, its recording, transcript or notes. Examples: \"create a Meet link\", \"who attended yesterday's meeting\", \"get the transcript of the last call\".",
       "flows": [
         { "title": "New meeting", "steps": ["{tool:meet_spaces_create} returns the meeting link."] },
-        { "title": "A past meeting", "steps": ["{tool:meet_conference_records_list} (filter by meeting code or time), then {tool:meet_conference_recor_participants_list} with parent conferenceRecords/<id>."] },
-        { "title": "Transcript and recording", "steps": ["{tool:meet_conference_record_transcripts_list} with parent, then {tool:meet_conference_transcript_entries_list}.", "{tool:meet_conference_records_recordings_list}: the recording and transcript files are in Drive; read them with the gdrive plugin and the file id."] }
+        { "title": "A past meeting", "steps": ["{tool:meet_conference_records_list} (filter by meeting code or time), then {tool:meet_records_participants_list} with parent conferenceRecords/<id>."] },
+        { "title": "Transcript and recording", "steps": ["{tool:meet_records_transcripts_list} with parent, then {tool:meet_records_transcripts_entries_list}.", "{tool:meet_conference_records_recordings_list}: the recording and transcript files are in Drive; read them with the gdrive plugin and the file id."] }
       ],
       "notes": ["Google keeps conference records, transcripts and recordings entries for a limited time (30 days per its artifacts guide)."]
     },
@@ -147,8 +147,8 @@
       "description": "Google Analytics 4 reports and setup: run reports, realtime and funnel reports, read property metadata, list accounts and properties, and annotations; plus the Admin API.",
       "whenToUse": "Use for website or app analytics in GA4: users, sessions, conversions, traffic sources, top pages, realtime visitors, funnels. Examples: \"how many users last week\", \"top landing pages this month\", \"realtime visitors now\".",
       "flows": [
-        { "title": "Find the property", "steps": ["{tool:gaadmin_account_summarie_list} gives accounts and their property ids."] },
-        { "title": "Know the fields", "steps": ["{tool:gadata_properties_get_metadat} with name properties/<id>/metadata lists the dimension and metric names, custom ones included."] },
+        { "title": "Find the property", "steps": ["{tool:gaadmin_acct_summaries_list} gives accounts and their property ids."] },
+        { "title": "Know the fields", "steps": ["{tool:gadata_props_get_meta} with name properties/<id>/metadata lists the dimension and metric names, custom ones included."] },
         { "title": "Report", "steps": ["{tool:ga_run_report} with property_id, date_ranges, dimensions and metrics; limit and offset page through rows.", "{tool:ga_run_realtime_report} for the last 30 minutes; {tool:ga_run_funnel_report} for steps."] }
       ],
       "notes": []
@@ -158,8 +158,8 @@
       "whenToUse": "Use for Google Tag Manager (GTM) containers, tags, triggers or variables, or publishing a container. Examples: \"list the tags in my GTM container\", \"what is live in GTM\", \"publish the workspace\".",
       "flows": [
         { "title": "Find the workspace", "steps": ["{tool:tagmgr_accounts_list}, then {tool:tagmgr_accounts_containers_list} with parent accounts/<id>, then {tool:tagmgr_accounts_containers_workspaces_list} with parent accounts/<id>/containers/<id>."] },
-        { "title": "Read the setup", "steps": ["{tool:tagmgr_accounts_containe_workspac_tags_list} with parent accounts/<a>/containers/<c>/workspaces/<w>; triggers and variables the same way.", "{tool:tagmgr_accounts_containers_versions_live} shows what is published now."] },
-        { "title": "Publish", "steps": ["{tool:tagmgr_accounts_containe_workspac_create_ve} makes a version from the workspace (Google then removes that workspace), then {tool:tagmgr_accounts_containers_versions_publish} with the version path. Both ask twice."] }
+        { "title": "Read the setup", "steps": ["{tool:tagmgr_accts_ctrs_ws_tags_list} with parent accounts/<a>/containers/<c>/workspaces/<w>; triggers and variables the same way.", "{tool:tagmgr_accounts_containers_versions_live} shows what is published now."] },
+        { "title": "Publish", "steps": ["{tool:tagmgr_accts_ctrs_ws_create_ver} makes a version from the workspace (Google then removes that workspace), then {tool:tagmgr_accounts_containers_versions_publish} with the version path. Both ask twice."] }
       ],
       "notes": []
     },
@@ -180,7 +180,7 @@
       "flows": [
         { "title": "Locations", "steps": ["{tool:mbaccount_accounts_list}, then {tool:mbinfo_accounts_locations_list} with parent accounts/<id> and readMask (such as name,title,storefrontAddress)."] },
         { "title": "One location", "steps": ["{tool:mbinfo_locations_get} with name locations/<id> and readMask."] },
-        { "title": "Performance", "steps": ["{tool:bpperf_locations_fetch_multi_da} with location, dailyMetrics and the dailyRange dates; {tool:bpperf_loca_sear_impr_mont_list} for search keywords."] },
+        { "title": "Performance", "steps": ["{tool:bpperf_locations_time_series} with location, dailyMetrics and the dailyRange dates; {tool:bpperf_impressions_monthly_list} for search keywords."] },
         { "title": "Update a listing", "steps": ["{tool:mbinfo_locations_patch} with updateMask naming the fields changed (a change: it asks first)."] }
       ],
       "notes": []
@@ -200,9 +200,9 @@
       "whenToUse": "Use for Google Merchant Center and Shopping listings: products, disapprovals and issues, feeds and data sources, performance reports. Examples: \"which products are disapproved\", \"list my Merchant Center data sources\".",
       "flows": [
         { "title": "Accounts", "steps": ["{tool:merchantap_accounts_list} gives accounts/<id>."] },
-        { "title": "Products and issues", "steps": ["{tool:merchantap_acco_produ_list_6ad8} with parent accounts/<id>, then {tool:merchantap_account_products_get}; {tool:merchantap_accounts_issues_list} for account issues."] },
-        { "title": "Reports", "steps": ["{tool:merchantap_accoun_report_search} with parent accounts/<id> and a body with an MCQL query."] },
-        { "title": "Feeds", "steps": ["{tool:merchantap_account_data_so_list}, then {tool:merchantap_accoun_data_so_fetch} to fetch one now."] }
+        { "title": "Products and issues", "steps": ["{tool:merchantap_accts_products_list} with parent accounts/<id>, then {tool:merchanta_accounts_products_get}; {tool:merchantap_accounts_issues_list} for account issues."] },
+        { "title": "Reports", "steps": ["{tool:merchantap_accts_reports_search} with parent accounts/<id> and a body with an MCQL query."] },
+        { "title": "Feeds", "steps": ["{tool:merc_accounts_data_sources_list}, then {tool:merchantap_accts_sources_fetch} to fetch one now."] }
       ],
       "notes": ["The service account must be added as a user in Merchant Center."]
     },
@@ -211,7 +211,7 @@
       "whenToUse": "Use for Android apps on Google Play: reviews, releases and tracks, subscriptions and orders, vitals (crash and ANR rates), or Android Enterprise device management. Examples: \"latest reviews of my app\", \"what is on the production track\", \"list managed devices\".",
       "flows": [
         { "title": "Reviews", "steps": ["{tool:androidpub_reviews_list} with packageName, then {tool:androidpub_reviews_reply} (a change: it asks first)."] },
-        { "title": "Releases", "steps": ["{tool:androidpub_applica_tracks_releases_list} with parent. Changes to tracks go through an edit: insert, change, validate, commit."] },
+        { "title": "Releases", "steps": ["{tool:androidpub_tracks_releases_list} with parent. Changes to tracks go through an edit: insert, change, validate, commit."] },
         { "title": "Android Management", "steps": ["{tool:androidmgmt_list_enterprises} with project_id, then {tool:androidmgmt_list_devices} with enterprise and {tool:androidmgmt_list_policies}."] }
       ],
       "notes": ["The service account must be invited in Play Console (Users and permissions)."]
@@ -220,10 +220,10 @@
       "description": "Firebase: projects and apps (with their SDK config), Firestore documents and queries, Remote Config, Authentication users, Crashlytics, Hosting, App Distribution, Data Connect, security Rules, Test Lab and Cloud Messaging.",
       "whenToUse": "Use for Firebase projects: app config, Firestore data, Remote Config, Auth users, Crashlytics crashes, security rules, or sending a push message. Examples: \"list my Firebase projects\", \"read the users collection\", \"top crashes this week\".",
       "flows": [
-        { "title": "Projects and apps", "steps": ["{tool:firebase_projects_list}, then {tool:firebase_projects_search_apps} with parent projects/<id>; {tool:firebase_projec_web_app_get_con} for a web app's config."] },
+        { "title": "Projects and apps", "steps": ["{tool:firebase_projects_list}, then {tool:firebase_projects_search_apps} with parent projects/<id>; {tool:firebase_web_apps_get_config} for a web app's config."] },
         { "title": "Firestore", "steps": ["{tool:firestore_list_documents} with project_id and collection_path, then {tool:firestore_get_document} with document_path; {tool:firestore_query_collection} with filters."] },
         { "title": "Config and users", "steps": ["{tool:remoteconfig_get_template}; {tool:auth_get_users} by uids or emails (password hashes are never returned)."] },
-        { "title": "Crashes", "steps": ["{tool:firebasecr_proje_apps_repor_get} with the report name."] }
+        { "title": "Crashes", "steps": ["{tool:firebasecr_apps_reports_get} with the report name."] }
       ],
       "notes": []
     },
@@ -243,7 +243,7 @@
       "flows": [
         { "title": "Generate", "steps": ["{tool:vertex_count_tokens} for a long prompt, then {tool:vertex_generate_content} with project_id, model and prompt (billed per token by Google)."] },
         { "title": "Embeddings", "steps": ["{tool:vertex_embed_content} with project_id, model and text."] },
-        { "title": "Vertex AI Search", "steps": ["{tool:discoverye_projec_locati_collec_engine_list} lists the apps (engines); then the engine's search or answer tool."] },
+        { "title": "Vertex AI Search", "steps": ["{tool:discoverye_collections_engines_list} lists the apps (engines); then the engine's search or answer tool."] },
         { "title": "Other AI APIs", "steps": ["{tool:api_search} (\"vision images annotate\", \"translate text\"), then {tool:api_describe} and {tool:api_call}."] }
       ],
       "notes": []

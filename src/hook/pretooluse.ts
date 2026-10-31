@@ -13,7 +13,8 @@ import { existsSync, readFileSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { decide, describeAction, loadPolicyFile, riskFromKind, type Policy } from '../core/policy.js';
+import { decide, describeAction, loadPolicyFile, riskFromKind, setToolAliasLookup, type Policy } from '../core/policy.js';
+import { readToolAliases } from '../core/tool-aliases.js';
 import { curatedMutateBody, GOOGLE_ADS_MUTATE_METHOD, resolveDynamicKind } from '../core/dynamic.js';
 import type { ToolMapEntry, ToolMapKind } from '../core/dump.js';
 import { optionValue } from '../core/plugin-option.js';
@@ -215,11 +216,29 @@ function readToolMap(file: string): Map<string, ToolMapEntry> | null {
   return map;
 }
 
+/**
+ * The prefix Claude Code puts in front of this plugin's tools (mcp__plugin_<plugin>_<server>__), from the tool map. The
+ * alias table holds the short tool names the server uses; a hook event carries the full name.
+ */
+function serverPrefix(map: Map<string, ToolMapEntry> | null): string | null {
+  const first = map?.keys().next().value;
+  if (typeof first !== 'string' || !first.startsWith(PLUGIN_TOOL_PREFIX)) return null;
+  const cut = first.indexOf('__', PLUGIN_TOOL_PREFIX.length);
+  return cut > PLUGIN_TOOL_PREFIX.length ? first.slice(0, cut + 2) : null;
+}
+
 function check(event: HookEvent, root: string): void {
   const toolName = event.tool_name;
   const map = readToolMap(join(root, TOOL_MAP_FILE));
   const policy: Policy = loadPolicyFile(tokenDirectory());
-  const entry = map?.get(toolName);
+  // The old names of renamed tools (2.0.0) reach the same entry of the tool map, and the policy matches both names.
+  // The file holds the server's short tool names; a hook event carries the full name, so the prefix goes back on.
+  const aliases = readToolAliases(root);
+  const prefix = serverPrefix(map);
+  const toFull = (name: string): string => (prefix === null ? name : `${prefix}${name}`);
+  const shortOf = (name: string): string => (prefix !== null && name.startsWith(prefix) ? name.slice(prefix.length) : name);
+  setToolAliasLookup((name) => aliases.namesFor(shortOf(name)).map(toFull));
+  const entry = map?.get(toFull(aliases.canonical(shortOf(toolName))));
 
   if (!entry) {
     // Unknown tool, or no tool map at all. Never auto-allowed: allow rules are ignored,

@@ -71,8 +71,8 @@ const CHAT_GOOGLE = [
   'chat_send_message',
   'chat_mark_read',
   'chat_mark_unread',
-  'chat_users_spaces_space_notificatio_get',
-  'chat_users_spaces_space_notificat_patch',
+  'chat_spaces_space_notif_setting_get',
+  'chat_spaces_space_notif_setting_patch',
 ];
 /** The gcontacts list (1.13.0): Google's 3 People MCP tools. */
 const CONTACTS_GOOGLE = ['contacts_search_directory', 'contacts_search', 'profile_me'];
@@ -84,12 +84,12 @@ const CLASSROOM_GOOGLE = [
   'classroom_create_topic',
   'classroom_list_coursework',
   'classroom_get_coursework',
-  'classroom_cour_cour_list_1590',
-  'classroom_cour_cour_crea_e311',
-  'classroom_cour_cour_crea_3302',
-  'classroom_cour_cour_patc_dea2',
-  'classroom_cours_course_modify',
-  'classroom_cour_cour_patc_480d',
+  'classroom_materials_list',
+  'classroom_courses_work_create',
+  'classroom_materials_create',
+  'classroom_courses_work_patch',
+  'classr_work_modify_assignees',
+  'classroom_materials_patch',
   'classroom_list_submissions',
   'classroom_get_rubric',
   'classroom_create_rubric',
@@ -106,11 +106,11 @@ const LEAN_GOOGLE = {
     'meet_spaces_get',
     'meet_conference_records_list',
     'meet_conference_records_get',
-    'meet_conference_recor_participants_list',
-    'meet_conference_record_transcripts_list',
-    'meet_conference_transcript_entries_list',
+    'meet_records_participants_list',
+    'meet_records_transcripts_list',
+    'meet_records_transcripts_entries_list',
     'meet_conference_records_recordings_list',
-    'meet_conference_record_smart_notes_list',
+    'meet_records_smart_notes_list',
     'meet_conference_records_smart_notes_get',
   ],
   gtasks: ['tasks_tasklists_list', 'tasks_tasks_list', 'tasks_tasks_get', 'tasks_tasks_insert', 'tasks_tasks_patch', 'tasks_tasks_delete', 'keep_notes_list', 'keep_notes_get'],
@@ -129,10 +129,10 @@ const LEAN_GOOGLE = {
 const ADS_GOOGLE = ['ads_list_customers', 'ads_search', 'ads_resource_metadata'];
 /** The ganalytics list (1.17.0): Google's 10 Google Analytics MCP tools, through four generated and five curated tools. */
 const ANALYTICS_GOOGLE = [
-  'gaadmin_account_summarie_list',
+  'gaadmin_acct_summaries_list',
   'gaadmin_properties_get',
-  'gaadmin_propert_google_a_list',
-  'gadata_properties_get_metadat',
+  'gaadmin_pro_goo_ads_link_list',
+  'gadata_props_get_meta',
   'ga_run_report',
   'ga_run_realtime_report',
   'ga_run_funnel_report',
@@ -143,17 +143,17 @@ const ANALYTICS_GOOGLE = [
 const MERCHANT_GOOGLE = [
   'merchantap_accounts_list',
   'merchantap_accounts_issues_list',
-  'merchantap_account_program_list',
-  'merchantap_accoun_automa_get_au',
-  'merchantap_acco_produ_list_6ad8',
-  'merchantap_account_products_get',
-  'merchantap_account_aggrega_list',
-  'merchantap_accoun_report_search',
-  'merchantap_account_data_so_list',
-  'merchantap_account_data_sou_get',
-  'merchantap_accoun_data_s_create',
-  'merchantap_accoun_data_so_fetch',
-  'merchantap_accou_data_file_get',
+  'merchantap_accts_programs_list',
+  'merc_get_automatic_improvements',
+  'merchantap_accts_products_list',
+  'merchanta_accounts_products_get',
+  'merchantap_accts_statuses_list',
+  'merchantap_accts_reports_search',
+  'merc_accounts_data_sources_list',
+  'merch_accounts_data_sources_get',
+  'merch_accts_data_sources_create',
+  'merchantap_accts_sources_fetch',
+  'merchantap_sources_uploads_get',
 ];
 /** The lean lists of the business products with no official Google MCP server (1.19.0). */
 const BUSINESS_LEAN = {
@@ -161,15 +161,15 @@ const BUSINESS_LEAN = {
     'tagmgr_accounts_list',
     'tagmgr_accounts_containers_list',
     'tagmgr_accounts_containers_workspaces_list',
-    'tagmgr_accounts_containe_workspac_tags_list',
-    'tagmgr_accounts_containe_workspace_tags_get',
-    'tagmgr_account_contain_workspa_trigger_list',
-    'tagmgr_account_contain_workspa_triggers_get',
-    'tagmgr_account_contain_workspa_variabl_list',
-    'tagmgr_account_contain_workspa_variable_get',
+    'tagmgr_accts_ctrs_ws_tags_list',
+    'tagmgr_accts_ctrs_ws_tags_get',
+    'tagmgr_accts_ctrs_ws_triggers_list',
+    'tagmgr_accts_ctrs_ws_triggers_get',
+    'tagmgr_accts_ctrs_ws_variables_list',
+    'tagmgr_accts_ctrs_ws_variables_get',
     'tagmgr_accounts_containers_versions_live',
-    'tagmgr_accounts_containers_version_hea_list',
-    'tagmgr_accounts_containe_workspac_create_ve',
+    'tagmgr_accts_ctrs_ver_headers_list',
+    'tagmgr_accts_ctrs_ws_create_ver',
     'tagmgr_accounts_containers_versions_publish',
   ],
   gyoutube: [
@@ -188,10 +188,10 @@ const BUSINESS_LEAN = {
     'mbaccount_accounts_list',
     'mbinfo_accounts_locations_list',
     'mbinfo_locations_get',
-    'bpperf_locations_get_daily_metr',
-    'bpperf_locations_fetch_multi_da',
-    'bpperf_loca_sear_impr_mont_list',
-    'mbverify_location_verifica_list',
+    'bpperf_loc_get_dai_met_tim_seri',
+    'bpperf_locations_time_series',
+    'bpperf_impressions_monthly_list',
+    'mbverify_verifications_list',
     'mbinfo_locations_patch',
   ],
 };
@@ -203,35 +203,35 @@ const FIREBASE_GOOGLE = [
   'firebase_projects_list',
   'firebase_projects_get',
   'firebase_projects_search_apps',
-  'firebase_projec_web_app_get_con',
-  'firebase_projec_android_get_con',
-  'firebase_projec_ios_app_get_con',
+  'firebase_web_apps_get_config',
+  'firebase_apps_get_config',
+  'firebase_ios_apps_get_config',
   'firebase_projects_add_firebase',
-  'firebase_project_web_app_create',
-  'firebase_project_android_create',
-  'firebase_project_ios_app_create',
-  'firebase_proje_andro_sha_create',
-  'firebaseru_project_release_list',
-  'firebaseru_project_rulesets_get',
+  'firebase_web_apps_create',
+  'firebase_android_apps_create',
+  'firebase_ios_apps_create',
+  'firebase_apps_sha_create',
+  'firebaseru_releases_list',
+  'firebaser_projects_rulesets_get',
   'firebaseru_projects_test',
-  'firebaseap_proj_loca_backe_list',
-  'firebaseap_proj_locat_backe_get',
-  'firebasecr_proje_apps_issue_get',
-  'firebasecr_proj_apps_issu_patch',
-  'firebasecr_proj_apps_event_list',
-  'firebasecr_proj_apps_even_batch',
-  'firebasecr_proje_apps_repor_get',
-  'firebasecr_pro_app_iss_not_list',
-  'firebasecr_pro_app_iss_not_crea',
-  'firebasecr_pro_app_iss_not_dele',
-  'firebaseda_project_locatio_list',
-  'firebaseda_proj_loca_servi_list',
-  'firebaseda_pro_loc_ser_sch_list',
-  'firebaseda_pro_loc_ser_con_list',
-  'firebaseda_pro_loc_ser_exe_1fce',
-  'firebaseda_pro_loc_ser_exe_3072',
-  'firebaseda_pro_loc_ser_gen_8f53',
-  'firebaseda_pro_loc_ser_gen_cf40',
+  'firebaseap_backends_list',
+  'firebaseap_backends_get',
+  'firebasecr_apps_issues_get',
+  'firebasecr_apps_issues_patch',
+  'firebasecr_apps_events_list',
+  'firebasec_apps_events_batch_get',
+  'firebasecr_apps_reports_get',
+  'firebasecr_issues_notes_list',
+  'firebasecr_issues_notes_create',
+  'firebasecr_issues_notes_delete',
+  'firebaseda_list',
+  'firebaseda_services_list',
+  'firebased_services_schemas_list',
+  'firebaseda_connectors_list',
+  'firebaseda_execute_graphql',
+  'firebaseda_execute_graphql_read',
+  'firebaseda_generate_query',
+  'firebaseda_generate_schema',
   'fcm_projects_messages_send',
   'firestore_get_document',
   'firestore_list_documents',
@@ -244,18 +244,18 @@ const AI_GOOGLE = [
   'vertex_generate_content',
   'vertex_count_tokens',
   'vertex_embed_content',
-  'discoverye_pro_loc_coll_engi_serv_sear_a054',
-  'discoverye_proj_loca_coll_engin_servi_answe',
-  'discoverye_projec_locati_collec_engine_list',
+  'discoverye_engines_serving_configs_search',
+  'discoverye_engines_serving_configs_answer',
+  'discoverye_collections_engines_list',
 ];
 /** The gmaps list (1.22.0): Google's Maps Grounding Lite tools that have a public API, and place details. */
 const MAPS_GOOGLE = ['places_places_search_text', 'places_places_get', 'maps_compute_routes', 'maps_lookup_weather'];
 /** The gsearch list (1.23.0): Google's 3 Developer Knowledge MCP tools and a lean set of the other APIs (no official server). */
 const SEARCH_GOOGLE = [
-  'developerk_documents_search_documen',
+  'developerk_docs_search_doc_chunks',
   'developerk_documents_batch_get',
   'developerk_v1_answer_query',
-  'pagespeedo_pagespeedap_runpagespeed',
+  'pagespeed_pagespeedapi_runpagespeed',
   'chromeuxre_records_query_record',
   'kgsearch_entities_search',
   'factcheckt_claims_search',
@@ -287,10 +287,10 @@ const PLAY_GOOGLE = [
   'androidmgmt_get_web_app',
   'androidpub_reviews_list',
   'androidpub_reviews_reply',
-  'androidpub_applica_tracks_releases_list',
+  'androidpub_tracks_releases_list',
   'androidpub_edits_tracks_list',
-  'androidpub_purchases_subscriptionsv_get',
-  'androidpub_monetizatio_subscriptio_list',
+  'androidpu_purchases_subscriptionsv2_get',
+  'androidpub_monetization_subs_list',
   'androidpub_orders_get',
 ];
 /** The tools runServer adds for a server of an OAuth group. No toolset removes them. */
@@ -1013,11 +1013,11 @@ test('the gtm, gyoutube and gbusiness google lists are lean sets: no official se
   // The writes of the lists, and every other tool a read; no delete is in any of them. Since 1.26.3 (the destructive
   // rule) publishing, the workspace-consuming version and the whole-video update are destructive: they ask twice.
   const writes = ['youtube_comments_insert', 'mbinfo_locations_patch'];
-  const destructive = ['tagmgr_accounts_containe_workspac_create_ve', 'tagmgr_accounts_containers_versions_publish', 'youtube_videos_update'];
+  const destructive = ['tagmgr_accts_ctrs_ws_create_ver', 'tagmgr_accounts_containers_versions_publish', 'youtube_videos_update'];
   for (const [id, tools] of Object.entries(BUSINESS_LEAN)) {
     for (const tool of tools) assert.equal(kindOf(id, tool), destructive.includes(tool) ? 'destructive' : writes.includes(tool) ? 'write' : 'read', `${id}/${tool}`);
   }
-  for (const name of ['tagmgr_account_contain_workspac_tags_delete', 'youtube_videos_delete', 'mbinfo_locations_delete']) {
+  for (const name of ['tagmgr_accts_ctrs_ws_tags_delete', 'youtube_videos_delete', 'mbinfo_locations_delete']) {
     assert.equal(Object.values(BUSINESS_LEAN).flat().includes(name), false, name);
   }
   assert.match(products.gtm.toolsets.google.notes.tagmgr_accounts_containers_versions_publish, /goes live/);
@@ -1050,12 +1050,12 @@ test("the gmerchant google list covers the 13 tools of Google's Merchant API MCP
   }
   assert.equal(official.size, 13);
   const kindOf = (tool) => readJson('plugins', 'gmerchant', 'tool-map.json').find((t) => t.name === `mcp__plugin_gmerchant_gmerchant__${tool}`).kind;
-  assert.equal(kindOf('merchantap_accoun_data_s_create'), 'write');
+  assert.equal(kindOf('merch_accts_data_sources_create'), 'write');
   // Google says fetch triggers processing, so it is a write here since D2 (1.24.2), and it asks first.
-  assert.equal(kindOf('merchantap_accoun_data_so_fetch'), 'write');
-  assert.match(google.notes.merchantap_accoun_data_so_fetch, /triggers processing/);
-  assert.match(google.notes.merchantap_accoun_data_so_fetch, /D2/);
-  const writes = ['merchantap_accoun_data_s_create', 'merchantap_accoun_data_so_fetch'];
+  assert.equal(kindOf('merchantap_accts_sources_fetch'), 'write');
+  assert.match(google.notes.merchantap_accts_sources_fetch, /triggers processing/);
+  assert.match(google.notes.merchantap_accts_sources_fetch, /D2/);
+  const writes = ['merch_accts_data_sources_create', 'merchantap_accts_sources_fetch'];
   for (const tool of MERCHANT_GOOGLE.filter((t) => !writes.includes(t))) assert.equal(kindOf(tool), 'read', tool);
 });
 

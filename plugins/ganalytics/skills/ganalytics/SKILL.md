@@ -23,11 +23,11 @@ Only if the chat tools fail, the same steps in a terminal: `node "${CLAUDE_PLUGI
 
 ### 1. Find the property
 
-1. `gaadmin_account_summarie_list` gives accounts and their property ids.
+1. `gaadmin_acct_summaries_list` gives accounts and their property ids.
 
 ### 2. Know the fields
 
-1. `gadata_properties_get_metadat` with name properties/<id>/metadata lists the dimension and metric names, custom ones included.
+1. `gadata_props_get_meta` with name properties/<id>/metadata lists the dimension and metric names, custom ones included.
 
 ### 3. Report
 

@@ -1,0 +1,13 @@
+{
+  "note": "Old names of generated tools, accepted until 3.0.0 (renamed in 2.0.0). Each key is an old tool name, each value the name that tool has now. See CHANGELOG.md.",
+  "aliases": {
+    "meet_conferenc_participa_participa_list": "meet_records_participants_sessions_list",
+    "meet_conferenc_participa_participan_get": "meet_records_participants_sessions_get",
+    "meet_conference_recor_participants_list": "meet_records_participants_list",
+    "meet_conference_record_participants_get": "meet_records_participants_get",
+    "meet_conference_record_smart_notes_list": "meet_records_smart_notes_list",
+    "meet_conference_record_transcripts_list": "meet_records_transcripts_list",
+    "meet_conference_transcript_entries_list": "meet_records_transcripts_entries_list",
+    "meet_conference_transcripts_entries_get": "meet_records_transcripts_entries_get"
+  }
+}

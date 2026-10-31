@@ -43,7 +43,7 @@ In the chat: `auth_login` with `"with": ["health"]` (or `["portability"]`, or bo
 |---|---|---|---|
 | People (short answers) | `contacts_search_directory`, `contacts_search`, `profile_me` | read | Search the Workspace directory or your contacts with a ready readMask, read your own name and email |
 | Contacts | `people_people_search_contacts`, `people_people_get`, `people_contact_groups_list` | read | Search contacts, read a contact, list groups |
-| | `people_people_search_directory`, `people_people_list_directory_pe` | read | Search and list people in the directory |
+| | `people_search_directory_people`, `people_list_directory_people` | read | Search and list people in the directory |
 | | `people_people_create_contact`, `people_people_update_contact` | write | Create or change a contact |
 | | `people_contact_groups_create`, `people_contact_groups_update` | write | Create or change a contact group |
 | | `people_people_delete_contact`, `people_contact_groups_delete` | destructive | Delete a contact or a group |

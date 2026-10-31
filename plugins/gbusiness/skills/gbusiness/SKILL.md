@@ -31,7 +31,7 @@ Only if the chat tools fail, the same steps in a terminal: `node "${CLAUDE_PLUGI
 
 ### 3. Performance
 
-1. `bpperf_locations_fetch_multi_da` with location, dailyMetrics and the dailyRange dates; `bpperf_loca_sear_impr_mont_list` for search keywords.
+1. `bpperf_locations_time_series` with location, dailyMetrics and the dailyRange dates; `bpperf_impressions_monthly_list` for search keywords.
 
 ### 4. Update a listing
 

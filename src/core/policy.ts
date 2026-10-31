@@ -127,7 +127,9 @@ function usableOverride(value: string | undefined): ConfirmationMode | undefined
   return isConfirmationMode(normalised) ? normalised : undefined;
 }
 
-/** The result when no rule matches. */
+/**
+ * The result when no rule matches.
+ */
 function defaultDecision(risk: Risk, mode: ConfirmationMode): DecideResult {
   if (risk === 'read') {
     return { decision: 'allow', reason: 'Read-only action, allowed by default.' };
@@ -145,9 +147,34 @@ function defaultDecision(risk: Risk, mode: ConfirmationMode): DecideResult {
 }
 
 /**
+ * Every name a rule may match for a tool call (2.0.0).
+ *
+ * 2.0.0 renamed the generated tools. A policy rule that names an old tool must still apply, and a rule that names the
+ * new one must apply to a call that still arrives under the old name; a deny on either name wins. The alias table is
+ * data (core/tool-aliases.ts, tool-aliases.json in the plugin folder), so this module keeps a lookup that the hook and
+ * the server register once, from that file. Without a registered lookup every name stands for itself, which is the
+ * behaviour before 2.0.0.
+ */
+export type ToolAliasLookup = (toolName: string) => readonly string[];
+
+let aliasLookup: ToolAliasLookup | undefined;
+
+/** Registers the tool alias table of this process (the hook and the server do this at start). */
+export function setToolAliasLookup(lookup: ToolAliasLookup | undefined): void {
+  aliasLookup = lookup;
+}
+
+/** Every name the policy matches for a call under `toolName`: the name itself and its other names, without repeats. */
+export function toolNamesForPolicy(toolName: string): string[] {
+  const names = [toolName, ...(aliasLookup?.(toolName) ?? [])];
+  return names.filter((name, i) => name.length > 0 && names.indexOf(name) === i);
+}
+
+/**
  * Decides whether a tool call may run.
  *
- * 1. Rules that match the tool name or the method id are gathered.
+ * 1. Rules that match any name of the tool (its own, and an alias: see setToolAliasLookup) or the method id are
+ *    gathered.
  * 2. Any matching deny rule: deny. The first one is named in the reason.
  * 3. Else any matching ask rule: ask.
  * 4. Else any matching allow rule: allow, even where the default would ask. The reason says so.
@@ -159,8 +186,10 @@ function defaultDecision(risk: Risk, mode: ConfirmationMode): DecideResult {
  */
 export function decide(input: DecideInput): DecideResult {
   const { toolName, methodId, risk, policy } = input;
+  const names = toolNamesForPolicy(toolName);
   const matching = policy.rules.filter(
-    (rule) => matchesPattern(rule.match, toolName) || (methodId !== undefined && matchesPattern(rule.match, methodId)),
+    (rule) =>
+      names.some((name) => matchesPattern(rule.match, name)) || (methodId !== undefined && matchesPattern(rule.match, methodId)),
   );
 
   const denied = matching.find((rule) => rule.action === 'deny');

@@ -21,6 +21,10 @@ import { accountEmailOf, accountNames, listAccounts, otherGroupsWithAccount, set
 import { withAccount } from './account-context.js';
 import { revokeGrant, withIdentityScope } from './grant-check.js';
 import { createGate, type GateFn } from './approval.js';
+import { setToolAliasLookup } from './policy.js';
+import { aliasTransport } from './alias-transport.js';
+import { toolAliasesFrom, type ToolAliases } from './tool-aliases.js';
+import { renamesForServer } from './discovery/tool-names.js';
 import { toolMapFromDefs } from './dump.js';
 import { serverHealth } from './health.js';
 import { createSignIn, runGsmCommand, type SignInMethod, type SignInProfile } from './inchat-login.js';
@@ -383,7 +387,12 @@ async function dumpTools(buildTools: (cfg: RuntimeConfig) => Promise<ToolDef[]> 
       ...defined.map((tool) => ({ name: tool.name, kind: tool.kind, scopes: tool.scopes, title: tool.title, methodId: tool.methodId })),
       ...runtimeReads,
     ]);
-    text = `${JSON.stringify({ tools: map }, null, 2)}\n`;
+    // The old names of the tools this build renamed (2.0.0): the bundle writes them as the plugin's tool-aliases.json,
+    // and the hook and the server read that file. The map itself lists each tool once, so every count of a product's
+    // tools (tool-map.json) stays what the server registers.
+    const aliases: Record<string, string> = {};
+    for (const rename of renamesForServer(cfg.server ?? '')) aliases[rename.from] = rename.to;
+    text = `${JSON.stringify({ tools: map, aliases }, null, 2)}\n`;
   } catch (err) {
     process.stderr.write(`[dump-tools] ${(err as Error).message}\n`);
     process.exit(1);
@@ -415,6 +424,12 @@ export async function runServer(opts: {
   // Every tool of the server, then the ones of the chosen toolset (GSM_TOOLSET). With all, `defined` is `built` itself.
   // Everything below registers from `defined`; the tool map (dumpTools above) is built from every tool.
   const built = await opts.buildTools(cfg);
+  // The old names of renamed generated tools (2.0.0). Regenerated here from the same rule that wrote the plugin's
+  // tool-aliases.json, and registered with the policy before the gate exists, so a policy rule that names an old tool
+  // matches a call under the new name too (a deny on either name wins). The transport rewrites an old name in
+  // tools/call to the tool's name now; tools/list shows the new names only (core/tool-aliases.ts).
+  const aliases: ToolAliases = toolAliasesFrom(Object.fromEntries(renamesForServer(opts.name).map((r) => [r.from, r.to])));
+  setToolAliasLookup(aliases.namesFor);
   const selection = selectToolset(built, cfg.toolset, cfg.toolset === 'all' ? undefined : toolsetsOf(opts.name));
   const defined = selection.tools;
   const toolsetNote = selection.note !== undefined ? ` Toolset: ${selection.note}.` : '';
@@ -889,7 +904,7 @@ export async function runServer(opts: {
     },
   );
 
-  await server.connect(new StdioServerTransport());
+  await server.connect(aliasTransport(new StdioServerTransport(), aliases.canonical));
   // When the client closes the connection, a sign-in still waiting for the browser is stopped with it.
   process.stdin.once('end', () => signIn?.dispose());
   const hidden = defined.length - registered.size;

@@ -106,10 +106,10 @@
           "androidmgmt_get_web_app",
           "androidpub_reviews_list",
           "androidpub_reviews_reply",
-          "androidpub_applica_tracks_releases_list",
+          "androidpub_tracks_releases_list",
           "androidpub_edits_tracks_list",
-          "androidpub_purchases_subscriptionsv_get",
-          "androidpub_monetizatio_subscriptio_list",
+          "androidpu_purchases_subscriptionsv2_get",
+          "androidpub_monetization_subs_list",
           "androidpub_orders_get"
         ]
       },

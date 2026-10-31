@@ -2,6 +2,34 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 2.0.0 - 2026-11-01
+
+### Changed (breaking): readable names for the generated tools
+- The generated per-method tools no longer get hashed or chopped names. A tool's name is built from its method in a fixed order and the first form that fits the server's budget wins: the API prefix, then the resource chain, then the method name; when that is too long, container words go (`projects`, `locations`, `customers`, `users`, version segments), then common words are shortened (`configurations` to `configs`, `accounts` to `accts`, `permissions` to `perms`, …), then a resource that repeats the API prefix goes, then a resource is reduced to its head word (`managedFolders` to `folders`, but not to a word that says nothing: `smimeInfo` keeps `smime`), then the API prefix is shortened (only when it is longer than 8 characters), then the leading resources go, and the method's words are reduced to their last two (never to one: `asyncBatchAnnotate` must not read like `annotate`). A name that comes out too long is clipped, never hashed. The rule lives in src/core/discovery/tool-names.ts.
+- 1,609 generated tools take a new name. `gcloud` `monitor_projects_metric_descri_list` is `monitor_metric_descriptors_list`; `gmail` `gmail_users_settin_send_as_smime_i_list` is `gmail_send_as_smime_info_list`; `gdrive` `drivelabel_labe_revi_permi_batch_52b2` is `drivelabel_revs_perms_batch_delete`; `gai` `discoverye_projec_locati_collec_engine_list` is `discoverye_collections_engines_list`. A name that already fitted keeps its spelling. No generated name is hashed any more: the 4-character hash is gone (the proposal counted 1,545 hashed or clipped names in the 1.31.1 tree).
+- Every generated name still fits the 64-character Claude Code limit, is unique within its server and matches `^[a-z0-9_]+$`. So do the old names: the old rule is still computed next to the new one, and where they differ the old name becomes an alias.
+
+### Migration: the old names keep working until 3.0.0
+- `tools/call` with an old name runs the same tool: the server rewrites the name before it dispatches, so a script, a prompt or a client that still uses the old name works. `tools/list` lists each tool once, under its new name; the old names are not listed.
+- A `policy.json` rule that names an old tool still applies, and so does one that names the new tool: the decision is made against every name of the tool, and a `deny` on either name wins. Claude Code permission rules that name an old tool keep working for the same reason (they match on the name the call used).
+- The aliases are data: each plugin ships `tool-aliases.json` (old name → new name, one entry per renamed tool), written by the build from the generator's own rename list. The hook and the server read it; the hook resolves an old name to the same tool-map entry, so it decides exactly as it does for the new name.
+- No policy file, no toolset setting and no install needs to change. `toolset` lists (`google`, `curated`, `all`) and the number of tools a product registers are unchanged; only the names in them are new. Docs, the capability pages and the site follow the new names.
+- Those old names go away in 3.0.0. Until then nothing warns; a plugin built by 2.0.0 accepts both.
+- One pair keeps a numeric suffix: two tools of `gai` (`vision.projects.locations.images.annotate` and its neighbour) both read `vision_projects_locations_images_annotate`, so one is `_2`. Two API versions of one method can also carry `_2`. The old rule had the same case and hashed both.
+
+### Naming details that may surprise
+- The API prefix stays whole (up to 8 characters): `monitor`, `monitor.acct`-style cuts no longer happen. A longer prefix (`displayvid`, `discoverye`) is shortened only after the resource chain has given way.
+- `projects` and `locations` are dropped where the budget needs it, so `monitoring.projects.alertPolicies.delete` is `monitor_alert_policies_delete` while `monitoring.projects.groups.delete` keeps its `projects` (it fits).
+- The list tool keeps its name (`api_methods`), and curated tools are never renamed: a generated tool that would take a curated name takes another readable form instead of a hash.
+
+### Compared with the proposal of 2026-10-31
+- The proposal (`names-proposal.md`) named 1,395 tools and left 149 to the owner. This build follows the same rules but orders them by "keep the API prefix whole first", so 741 of the 1,395 match exactly and 654 differ, mostly because the proposal shortened the API prefix (`discl_`, `displ_`) where this build drops or shortens a resource instead, and because the proposal sometimes dropped a method qualifier (`bulk`) that this build keeps. The 149 open ones are chosen by the same rules; the rule above is the one applied.
+
+### Tests
+- tests/tool-aliases.test.mjs: the naming rules (budget, pattern, uniqueness per server, the reduction order, a name that fits is not renamed), every plugin's alias table (each old name points at a tool, no old name is a tool), every old name of all 23 plugins decides exactly as its new name does under eight policies and a deny/allow mix (about 38,000 decisions), a bundled server that answers to an old name with the same answer as the new one while `tools/list` shows only the new name, and the bundled hook deciding the same way for both names.
+- tests/discovery.test.mjs and tests/products-build.test.mjs: a reserved name now yields another readable form, not a hash.
+- The tests that name a generated tool carry the new names (159 references in 12 files).
+
 ## 1.41.4 - 2026-10-31
 
 ### Changed: seven methods that only read are reads now

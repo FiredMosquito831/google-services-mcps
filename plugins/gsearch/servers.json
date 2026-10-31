@@ -111,10 +111,10 @@
       },
       "toolsets": {
         "google": [
-          "developerk_documents_search_documen",
+          "developerk_docs_search_doc_chunks",
           "developerk_documents_batch_get",
           "developerk_v1_answer_query",
-          "pagespeedo_pagespeedap_runpagespeed",
+          "pagespeed_pagespeedapi_runpagespeed",
           "chromeuxre_records_query_record",
           "kgsearch_entities_search",
           "factcheckt_claims_search",

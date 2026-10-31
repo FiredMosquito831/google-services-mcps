@@ -394,6 +394,16 @@
     "title": "youtube.activities.list"
   },
   {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_broadcasts_transition",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl"
+    ],
+    "methodId": "youtube.liveBroadcasts.transition",
+    "title": "youtube.liveBroadcasts.transition"
+  },
+  {
     "name": "mcp__plugin_gyoutube_gyoutube__youtube_captions_delete",
     "kind": "destructive",
     "scopes": [
@@ -547,15 +557,6 @@
     "title": "youtube.comments.markAsSpam"
   },
   {
-    "name": "mcp__plugin_gyoutube_gyoutube__youtube_comments_set_moderation_s",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/youtube.force-ssl"
-    ],
-    "methodId": "youtube.comments.setModerationStatus",
-    "title": "youtube.comments.setModerationStatus"
-  },
-  {
     "name": "mcp__plugin_gyoutube_gyoutube__youtube_comments_update",
     "kind": "write",
     "scopes": [
@@ -589,7 +590,7 @@
     "title": "youtube.i18nRegions.list"
   },
   {
-    "name": "mcp__plugin_gyoutube_gyoutube__youtube_live_broadca_insert_cuepo",
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_insert_cuepoint",
     "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/youtube",
@@ -598,16 +599,6 @@
     ],
     "methodId": "youtube.liveBroadcasts.insertCuepoint",
     "title": "youtube.liveBroadcasts.insertCuepoint"
-  },
-  {
-    "name": "mcp__plugin_gyoutube_gyoutube__youtube_live_broadcast_transition",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/youtube",
-      "https://www.googleapis.com/auth/youtube.force-ssl"
-    ],
-    "methodId": "youtube.liveBroadcasts.transition",
-    "title": "youtube.liveBroadcasts.transition"
   },
   {
     "name": "mcp__plugin_gyoutube_gyoutube__youtube_live_broadcasts_bind",
@@ -681,16 +672,6 @@
     "title": "youtube.liveChatBans.insert"
   },
   {
-    "name": "mcp__plugin_gyoutube_gyoutube__youtube_live_chat_mess_transition",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/youtube",
-      "https://www.googleapis.com/auth/youtube.force-ssl"
-    ],
-    "methodId": "youtube.liveChatMessages.transition",
-    "title": "youtube.liveChatMessages.transition"
-  },
-  {
     "name": "mcp__plugin_gyoutube_gyoutube__youtube_live_chat_messages_delete",
     "kind": "destructive",
     "scopes": [
@@ -722,24 +703,15 @@
     "title": "youtube.liveChatMessages.list"
   },
   {
-    "name": "mcp__plugin_gyoutube_gyoutube__youtube_live_chat_moderato_delete",
-    "kind": "destructive",
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_live_chat_messages_stream",
+    "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/youtube",
-      "https://www.googleapis.com/auth/youtube.force-ssl"
+      "https://www.googleapis.com/auth/youtube.force-ssl",
+      "https://www.googleapis.com/auth/youtube.readonly"
     ],
-    "methodId": "youtube.liveChatModerators.delete",
-    "title": "youtube.liveChatModerators.delete"
-  },
-  {
-    "name": "mcp__plugin_gyoutube_gyoutube__youtube_live_chat_moderato_insert",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/youtube",
-      "https://www.googleapis.com/auth/youtube.force-ssl"
-    ],
-    "methodId": "youtube.liveChatModerators.insert",
-    "title": "youtube.liveChatModerators.insert"
+    "methodId": "youtube.youtube.v3.liveChat.messages.stream",
+    "title": "youtube.youtube.v3.liveChat.messages.stream"
   },
   {
     "name": "mcp__plugin_gyoutube_gyoutube__youtube_live_chat_moderators_list",
@@ -810,6 +782,36 @@
     ],
     "methodId": "youtube.membershipsLevels.list",
     "title": "youtube.membershipsLevels.list"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_messages_transition",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl"
+    ],
+    "methodId": "youtube.liveChatMessages.transition",
+    "title": "youtube.liveChatMessages.transition"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_moderators_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl"
+    ],
+    "methodId": "youtube.liveChatModerators.delete",
+    "title": "youtube.liveChatModerators.delete"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_moderators_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl"
+    ],
+    "methodId": "youtube.liveChatModerators.insert",
+    "title": "youtube.liveChatModerators.insert"
   },
   {
     "name": "mcp__plugin_gyoutube_gyoutube__youtube_playlist_images_delete",
@@ -925,6 +927,17 @@
     "title": "youtube.playlists.update"
   },
   {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_reasons_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube",
+      "https://www.googleapis.com/auth/youtube.force-ssl",
+      "https://www.googleapis.com/auth/youtube.readonly"
+    ],
+    "methodId": "youtube.videoAbuseReportReasons.list",
+    "title": "youtube.videoAbuseReportReasons.list"
+  },
+  {
     "name": "mcp__plugin_gyoutube_gyoutube__youtube_search_list",
     "kind": "read",
     "scopes": [
@@ -935,6 +948,15 @@
     ],
     "methodId": "youtube.search.list",
     "title": "youtube.search.list"
+  },
+  {
+    "name": "mcp__plugin_gyoutube_gyoutube__youtube_set_moderation_status",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/youtube.force-ssl"
+    ],
+    "methodId": "youtube.comments.setModerationStatus",
+    "title": "youtube.comments.setModerationStatus"
   },
   {
     "name": "mcp__plugin_gyoutube_gyoutube__youtube_subscriptions_delete",
@@ -1017,17 +1039,6 @@
     "scopes": [],
     "methodId": "youtube.thirdPartyLinks.update",
     "title": "youtube.thirdPartyLinks.update"
-  },
-  {
-    "name": "mcp__plugin_gyoutube_gyoutube__youtube_video_abuse_report_r_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/youtube",
-      "https://www.googleapis.com/auth/youtube.force-ssl",
-      "https://www.googleapis.com/auth/youtube.readonly"
-    ],
-    "methodId": "youtube.videoAbuseReportReasons.list",
-    "title": "youtube.videoAbuseReportReasons.list"
   },
   {
     "name": "mcp__plugin_gyoutube_gyoutube__youtube_video_categories_list",
@@ -1143,17 +1154,6 @@
     ],
     "methodId": "youtube.watermarks.unset",
     "title": "youtube.watermarks.unset"
-  },
-  {
-    "name": "mcp__plugin_gyoutube_gyoutube__youtube_youtu_v3_live_messa_strea",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/youtube",
-      "https://www.googleapis.com/auth/youtube.force-ssl",
-      "https://www.googleapis.com/auth/youtube.readonly"
-    ],
-    "methodId": "youtube.youtube.v3.liveChat.messages.stream",
-    "title": "youtube.youtube.v3.liveChat.messages.stream"
   },
   {
     "name": "mcp__plugin_gyoutube_gyoutube__youtuberep_jobs_create",

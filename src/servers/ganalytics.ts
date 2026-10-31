@@ -138,13 +138,13 @@ export const GA_REPORT_ROWS_DEFAULT = 100;
 
 const propertyId = z
   .union([z.string(), z.number().int()])
-  .describe('The Google Analytics property id, digits such as 123456789 (or properties/123456789). gaadmin_account_summarie_list lists them.');
+  .describe('The Google Analytics property id, digits such as 123456789 (or properties/123456789). gaadmin_acct_summaries_list lists them.');
 const dateRange = z.object({
   start_date: z.string().regex(REPORT_DATE, 'Use YYYY-MM-DD, today, yesterday or NdaysAgo.').describe('YYYY-MM-DD, today, yesterday or NdaysAgo, such as 30daysAgo.'),
   end_date: z.string().regex(REPORT_DATE, 'Use YYYY-MM-DD, today, yesterday or NdaysAgo.').describe('YYYY-MM-DD, today, yesterday or NdaysAgo.'),
   name: z.string().optional().describe('A name for the range, shown in the dateRange dimension when there are several ranges.'),
 });
-const names = (what: string, example: string) => z.array(z.string().trim().min(1)).describe(`${what} by API name, such as ${example}. gadata_properties_get_metadat lists them for a property.`);
+const names = (what: string, example: string) => z.array(z.string().trim().min(1)).describe(`${what} by API name, such as ${example}. gadata_props_get_meta lists them for a property.`);
 const filter = (what: string) =>
   z
     .record(z.string(), z.unknown())
@@ -314,7 +314,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       name: 'ga_run_report',
       title: 'Run a Google Analytics report',
       description:
-        "Run a Google Analytics report for a property: metrics by dimensions over date ranges, with filters, order and paging (matches run_report in Google's Google Analytics MCP server, and run_conversions_report with conversion_spec). Rows come back as objects keyed by the dimension and metric names, with row_count and next_offset when Google has more rows. gadata_properties_get_metadat lists the dimensions and metrics a property has. A read.",
+        "Run a Google Analytics report for a property: metrics by dimensions over date ranges, with filters, order and paging (matches run_report in Google's Google Analytics MCP server, and run_conversions_report with conversion_spec). Rows come back as objects keyed by the dimension and metric names, with row_count and next_offset when Google has more rows. gadata_props_get_meta lists the dimensions and metrics a property has. A read.",
       kind: 'read',
       scopes: DATA_SCOPES,
       inputSchema: runReportShape,

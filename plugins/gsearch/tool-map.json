@@ -107,7 +107,7 @@
     "title": "Sign-in status"
   },
   {
-    "name": "mcp__plugin_gsearch_gsearch__chromeuxre_records_query_history_re",
+    "name": "mcp__plugin_gsearch_gsearch__chromeuxre_query_history_record",
     "kind": "read",
     "scopes": [],
     "methodId": "chromeuxreport.records.queryHistoryRecord",
@@ -119,13 +119,6 @@
     "scopes": [],
     "methodId": "chromeuxreport.records.queryRecord",
     "title": "chromeuxreport.records.queryRecord"
-  },
-  {
-    "name": "mcp__plugin_gsearch_gsearch__civicinfo_divisions_query_division",
-    "kind": "read",
-    "scopes": [],
-    "methodId": "civicinfo.divisions.queryDivisionByAddress",
-    "title": "civicinfo.divisions.queryDivisionByAddress"
   },
   {
     "name": "mcp__plugin_gsearch_gsearch__civicinfo_divisions_search",
@@ -142,7 +135,14 @@
     "title": "civicinfo.elections.electionQuery"
   },
   {
-    "name": "mcp__plugin_gsearch_gsearch__civicinfo_elections_voter_info_quer",
+    "name": "mcp__plugin_gsearch_gsearch__civicinfo_query_division_by_address",
+    "kind": "read",
+    "scopes": [],
+    "methodId": "civicinfo.divisions.queryDivisionByAddress",
+    "title": "civicinfo.divisions.queryDivisionByAddress"
+  },
+  {
+    "name": "mcp__plugin_gsearch_gsearch__civicinfo_voter_info_query",
     "kind": "read",
     "scopes": [],
     "methodId": "civicinfo.elections.voterInfoQuery",
@@ -163,6 +163,15 @@
     "title": "search.cse.siterestrict.list"
   },
   {
+    "name": "mcp__plugin_gsearch_gsearch__developerk_docs_search_doc_chunks",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "developerknowledge.documents.searchDocumentChunks",
+    "title": "developerknowledge.documents.searchDocumentChunks"
+  },
+  {
     "name": "mcp__plugin_gsearch_gsearch__developerk_documents_batch_get",
     "kind": "read",
     "scopes": [
@@ -179,15 +188,6 @@
     ],
     "methodId": "developerknowledge.documents.get",
     "title": "developerknowledge.documents.get"
-  },
-  {
-    "name": "mcp__plugin_gsearch_gsearch__developerk_documents_search_documen",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "developerknowledge.documents.searchDocumentChunks",
-    "title": "developerknowledge.documents.searchDocumentChunks"
   },
   {
     "name": "mcp__plugin_gsearch_gsearch__developerk_v1_answer_query",
@@ -292,7 +292,7 @@
     "title": "kgsearch.entities.search"
   },
   {
-    "name": "mcp__plugin_gsearch_gsearch__pagespeedo_pagespeedap_runpagespeed",
+    "name": "mcp__plugin_gsearch_gsearch__pagespeed_pagespeedapi_runpagespeed",
     "kind": "read",
     "scopes": [
       "openid"
@@ -336,18 +336,18 @@
     "title": "safebrowsing.urls.search"
   },
   {
-    "name": "mcp__plugin_gsearch_gsearch__versionhis_plat_chan_vers_rele_list",
-    "kind": "read",
-    "scopes": [],
-    "methodId": "versionhistory.platforms.channels.versions.releases.list",
-    "title": "versionhistory.platforms.channels.versions.releases.list"
-  },
-  {
-    "name": "mcp__plugin_gsearch_gsearch__versionhis_platf_channe_versio_list",
+    "name": "mcp__plugin_gsearch_gsearch__versionhi_platforms_chans_vers_list",
     "kind": "read",
     "scopes": [],
     "methodId": "versionhistory.platforms.channels.versions.list",
     "title": "versionhistory.platforms.channels.versions.list"
+  },
+  {
+    "name": "mcp__plugin_gsearch_gsearch__versionhis_chans_vers_releases_list",
+    "kind": "read",
+    "scopes": [],
+    "methodId": "versionhistory.platforms.channels.versions.releases.list",
+    "title": "versionhistory.platforms.channels.versions.releases.list"
   },
   {
     "name": "mcp__plugin_gsearch_gsearch__versionhis_platforms_channels_list",

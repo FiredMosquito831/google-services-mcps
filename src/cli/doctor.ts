@@ -163,6 +163,29 @@ function checkToolNames(tally: Tally, id: string, toolMap: unknown): void {
     : `${id}: ${bad.length} tool name(s) lack the prefix ${prefix} or are longer than ${MAX_TOOL_NAME_LENGTH} characters, for example ${bad.slice(0, 3).join(', ')}`);
 }
 
+/**
+ * The plugin's tool-aliases.json (2.0.0, optional): every old tool name must point at a tool the plugin has, and every
+ * key and value must carry the plugin prefix and fit Claude Code's limit. A folder without the file has no aliases,
+ * which is what a plugin built before 2.0.0 has.
+ */
+function checkToolAliases(tally: Tally, id: string, aliases: unknown, toolMap: unknown): void {
+  if (!isObject(aliases) || !isObject(aliases.aliases)) {
+    tally.check(false, `${id}: tool-aliases.json holds no "aliases" object`);
+    return;
+  }
+  const prefix = `mcp__plugin_${id}_`;
+  const known = new Set(
+    Array.isArray(toolMap) ? toolMap.map((e) => (isObject(e) && typeof e.name === 'string' ? e.name : '')) : [],
+  );
+  const entries = Object.entries(aliases.aliases);
+  const bad = entries.filter(([from, to]) =>
+    typeof to !== 'string' || !to.startsWith(prefix) || to.length > MAX_TOOL_NAME_LENGTH || !known.has(to) ||
+    !from.startsWith(prefix) || from.length > MAX_TOOL_NAME_LENGTH || known.has(from));
+  tally.check(bad.length === 0, bad.length === 0
+    ? `${id}: tool-aliases.json has ${entries.length} old tool name(s), each pointing at a tool of this plugin`
+    : `${id}: ${bad.length} of ${entries.length} old tool name(s) in tool-aliases.json are wrong, for example ${bad.slice(0, 3).map(([f, t]) => `${f} -> ${String(t)}`).join(', ')}`);
+}
+
 /** The required files of one plugin folder, then the content checks that need them. */
 function checkPluginFolder(tally: Tally, id: string, folder: string): void {
   const missing: string[] = [];
@@ -198,6 +221,12 @@ function checkPluginFolder(tally: Tally, id: string, folder: string): void {
   }
   if (parsed.has('.mcp.json')) checkMcpServers(tally, id, folder, parsed.get('.mcp.json'));
   if (parsed.has('tool-map.json')) checkToolNames(tally, id, parsed.get('tool-map.json'));
+  const aliasesFile = join(folder, 'tool-aliases.json');
+  if (existsSync(aliasesFile)) {
+    const read = readJson(aliasesFile);
+    if (read.ok) checkToolAliases(tally, id, read.value, parsed.get('tool-map.json'));
+    else tally.check(false, `${id}: tool-aliases.json is not valid JSON`);
+  }
 }
 
 /** Token directory: it exists, or it does not yet and a folder above it can be written to. Nothing is created. */

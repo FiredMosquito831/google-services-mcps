@@ -26,11 +26,11 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `meet_spaces_get` | (none) | A meeting space by its name (spaces/{space}) or meeting code: its link, code and settings. |
 | `meet_conference_records_list` | (none) | Past and current conferences (one per meeting held in a space), newest first; filter by space or time. Start here for a meeting that took place. |
 | `meet_conference_records_get` | (none) | One conference: its space, start and end time. |
-| `meet_conference_recor_participants_list` | (none) | Who joined a conference, with join and leave times. |
-| `meet_conference_record_transcripts_list` | (none) | The transcripts of a conference and their Google Docs. |
-| `meet_conference_transcript_entries_list` | (none) | The spoken text of a transcript, entry by entry with the speaker and time. |
+| `meet_records_participants_list` | (none) | Who joined a conference, with join and leave times. |
+| `meet_records_transcripts_list` | (none) | The transcripts of a conference and their Google Docs. |
+| `meet_records_transcripts_entries_list` | (none) | The spoken text of a transcript, entry by entry with the speaker and time. |
 | `meet_conference_records_recordings_list` | (none) | The recordings of a conference and their Drive files. |
-| `meet_conference_record_smart_notes_list` | (none) | The notes Gemini took in a conference (smart notes) and their Google Docs. |
+| `meet_records_smart_notes_list` | (none) | The notes Gemini took in a conference (smart notes) and their Google Docs. |
 | `meet_conference_records_smart_notes_get` | (none) | One smart notes entry and the Google Doc that holds it. |
 
 ## Curated tools (7)
@@ -49,20 +49,20 @@ Google has no official MCP server for this product. The google toolset is a lean
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
-| `meet_conferenc_participa_participa_list` | read | meet.conferenceRecords.participants.participantSessions.list | meetings.space.created, meetings.space.readonly |
-| `meet_conferenc_participa_participan_get` | read | meet.conferenceRecords.participants.participantSessions.get | meetings.space.created, meetings.space.readonly |
-| `meet_conference_recor_participants_list` | read | meet.conferenceRecords.participants.list | meetings.space.created, meetings.space.readonly |
-| `meet_conference_record_participants_get` | read | meet.conferenceRecords.participants.get | meetings.space.created, meetings.space.readonly |
-| `meet_conference_record_smart_notes_list` | read | meet.conferenceRecords.smartNotes.list | meetings.space.created, meetings.space.readonly |
-| `meet_conference_record_transcripts_list` | read | meet.conferenceRecords.transcripts.list | meetings.space.created, meetings.space.readonly |
 | `meet_conference_records_get` | read | meet.conferenceRecords.get | meetings.space.created, meetings.space.readonly |
 | `meet_conference_records_list` | read | meet.conferenceRecords.list | meetings.space.created, meetings.space.readonly |
 | `meet_conference_records_recordings_get` | read | meet.conferenceRecords.recordings.get | meetings.space.created, meetings.space.readonly |
 | `meet_conference_records_recordings_list` | read | meet.conferenceRecords.recordings.list | meetings.space.created, meetings.space.readonly |
 | `meet_conference_records_smart_notes_get` | read | meet.conferenceRecords.smartNotes.get | meetings.space.created, meetings.space.readonly |
 | `meet_conference_records_transcripts_get` | read | meet.conferenceRecords.transcripts.get | meetings.space.created, meetings.space.readonly |
-| `meet_conference_transcript_entries_list` | read | meet.conferenceRecords.transcripts.entries.list | meetings.space.created, meetings.space.readonly |
-| `meet_conference_transcripts_entries_get` | read | meet.conferenceRecords.transcripts.entries.get | meetings.space.created, meetings.space.readonly |
+| `meet_records_participants_get` | read | meet.conferenceRecords.participants.get | meetings.space.created, meetings.space.readonly |
+| `meet_records_participants_list` | read | meet.conferenceRecords.participants.list | meetings.space.created, meetings.space.readonly |
+| `meet_records_participants_sessions_get` | read | meet.conferenceRecords.participants.participantSessions.get | meetings.space.created, meetings.space.readonly |
+| `meet_records_participants_sessions_list` | read | meet.conferenceRecords.participants.participantSessions.list | meetings.space.created, meetings.space.readonly |
+| `meet_records_smart_notes_list` | read | meet.conferenceRecords.smartNotes.list | meetings.space.created, meetings.space.readonly |
+| `meet_records_transcripts_entries_get` | read | meet.conferenceRecords.transcripts.entries.get | meetings.space.created, meetings.space.readonly |
+| `meet_records_transcripts_entries_list` | read | meet.conferenceRecords.transcripts.entries.list | meetings.space.created, meetings.space.readonly |
+| `meet_records_transcripts_list` | read | meet.conferenceRecords.transcripts.list | meetings.space.created, meetings.space.readonly |
 | `meet_spaces_create` | write | meet.spaces.create | meetings.space.created |
 | `meet_spaces_end_active_conference` | destructive | meet.spaces.endActiveConference | meetings.space.created |
 | `meet_spaces_get` | read | meet.spaces.get | meetings.space.created, meetings.space.readonly |

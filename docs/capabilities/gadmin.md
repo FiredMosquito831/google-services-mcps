@@ -63,6 +63,10 @@ Google has no official MCP server for this product. The google toolset is a lean
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
+| `adm_list` | read | directory.orgunits.list | admin.directory.orgunit, admin.directory.orgunit.readonly |
+| `admi_chromeos_count_chrome_os_devices` | read | admin.customer.devices.chromeos.countChromeOsDevices | admin.directory.device.chromeos, admin.directory.device.chromeos.readonly |
+| `admi_list` | read | directory.groups.list | admin.directory.group, admin.directory.group.readonly |
+| `admi_users_list` | read | directory.users.list | admin.directory.user, admin.directory.user.readonly |
 | `admin_activities_list` | read | reports.activities.list | admin.reports.audit.readonly |
 | `admin_activities_watch` | write | reports.activities.watch | admin.reports.audit.readonly |
 | `admin_applications_get` | read | datatransfer.applications.get | admin.datatransfer, admin.datatransfer.readonly |
@@ -70,37 +74,32 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `admin_asps_delete` | destructive | directory.asps.delete | admin.directory.user.security |
 | `admin_asps_get` | read | directory.asps.get | admin.directory.user.security |
 | `admin_asps_list` | read | directory.asps.list | admin.directory.user.security |
-| `admin_channels_stop_9bac` | destructive | admin.channels.stop | admin.directory.user, admin.directory.user.alias |
-| `admin_channels_stop_9bac_2` | destructive | admin.channels.stop | admin.reports.audit.readonly |
+| `admin_batch_create_print_servers` | write | admin.customers.chrome.printServers.batchCreatePrintServers | admin.chrome.printers |
+| `admin_batch_delete_print_servers` | write | admin.customers.chrome.printServers.batchDeletePrintServers | admin.chrome.printers |
+| `admin_channels_stop` | destructive | admin.channels.stop | admin.directory.user, admin.directory.user.alias |
+| `admin_channels_stop_2` | destructive | admin.channels.stop | admin.reports.audit.readonly |
+| `admin_chrome_print_servers_create` | write | admin.customers.chrome.printServers.create | admin.chrome.printers |
+| `admin_chrome_print_servers_delete` | destructive | admin.customers.chrome.printServers.delete | admin.chrome.printers |
+| `admin_chrome_print_servers_get` | read | admin.customers.chrome.printServers.get | admin.chrome.printers, admin.chrome.printers.readonly |
+| `admin_chrome_print_servers_list` | read | admin.customers.chrome.printServers.list | admin.chrome.printers, admin.chrome.printers.readonly |
+| `admin_chrome_print_servers_patch` | write | admin.customers.chrome.printServers.patch | admin.chrome.printers |
+| `admin_chrome_printers_create` | write | admin.customers.chrome.printers.create | admin.chrome.printers |
+| `admin_chrome_printers_delete` | destructive | admin.customers.chrome.printers.delete | admin.chrome.printers |
+| `admin_chromeos_batch_change_status` | destructive | admin.customer.devices.chromeos.batchChangeStatus | admin.directory.device.chromeos |
 | `admin_chromeosdevices_action` | destructive | directory.chromeosdevices.action | admin.directory.device.chromeos |
 | `admin_chromeosdevices_get` | read | directory.chromeosdevices.get | admin.directory.device.chromeos, admin.directory.device.chromeos.readonly |
 | `admin_chromeosdevices_list` | read | directory.chromeosdevices.list | admin.directory.device.chromeos, admin.directory.device.chromeos.readonly |
-| `admin_chromeosdevices_move_devices_to` | write | directory.chromeosdevices.moveDevicesToOu | admin.directory.device.chromeos |
 | `admin_chromeosdevices_patch` | write | directory.chromeosdevices.patch | admin.directory.device.chromeos |
 | `admin_chromeosdevices_update` | write | directory.chromeosdevices.update | admin.directory.device.chromeos |
-| `admin_custom_device_chrome_comman_get` | read | admin.customer.devices.chromeos.commands.get | admin.directory.device.chromeos, admin.directory.device.chromeos.readonly |
-| `admin_custome_chrome_print_s_batch_cr` | write | admin.customers.chrome.printServers.batchCreatePrintServers | admin.chrome.printers |
-| `admin_custome_chrome_print_s_batch_de` | write | admin.customers.chrome.printServers.batchDeletePrintServers | admin.chrome.printers |
-| `admin_custome_chrome_printer_batch_cr` | write | admin.customers.chrome.printers.batchCreatePrinters | admin.chrome.printers |
-| `admin_custome_chrome_printer_batch_de` | write | admin.customers.chrome.printers.batchDeletePrinters | admin.chrome.printers |
-| `admin_custome_chrome_printer_list_pri` | read | admin.customers.chrome.printers.listPrinterModels | admin.chrome.printers, admin.chrome.printers.readonly |
-| `admin_custome_devices_chromeo_batch_c` | destructive | admin.customer.devices.chromeos.batchChangeStatus | admin.directory.device.chromeos |
-| `admin_custome_devices_chromeo_count_c` | read | admin.customer.devices.chromeos.countChromeOsDevices | admin.directory.device.chromeos, admin.directory.device.chromeos.readonly |
-| `admin_custome_devices_chromeo_issue_c` | destructive | admin.customer.devices.chromeos.issueCommand | admin.directory.device.chromeos |
-| `admin_customer_chrome_print_se_create` | write | admin.customers.chrome.printServers.create | admin.chrome.printers |
-| `admin_customer_chrome_print_se_delete` | destructive | admin.customers.chrome.printServers.delete | admin.chrome.printers |
-| `admin_customer_chrome_print_ser_patch` | write | admin.customers.chrome.printServers.patch | admin.chrome.printers |
-| `admin_customer_chrome_printers_create` | write | admin.customers.chrome.printers.create | admin.chrome.printers |
-| `admin_customer_chrome_printers_delete` | destructive | admin.customers.chrome.printers.delete | admin.chrome.printers |
 | `admin_customer_usage_reports_get` | read | reports.customerUsageReports.get | admin.reports.usage.readonly |
-| `admin_customers_chrome_print_ser_list` | read | admin.customers.chrome.printServers.list | admin.chrome.printers, admin.chrome.printers.readonly |
-| `admin_customers_chrome_print_serv_get` | read | admin.customers.chrome.printServers.get | admin.chrome.printers, admin.chrome.printers.readonly |
 | `admin_customers_chrome_printers_get` | read | admin.customers.chrome.printers.get | admin.chrome.printers, admin.chrome.printers.readonly |
 | `admin_customers_chrome_printers_list` | read | admin.customers.chrome.printers.list | admin.chrome.printers, admin.chrome.printers.readonly |
 | `admin_customers_chrome_printers_patch` | write | admin.customers.chrome.printers.patch | admin.chrome.printers |
 | `admin_customers_get` | read | directory.customers.get | admin.directory.customer, admin.directory.customer.readonly |
 | `admin_customers_patch` | write | directory.customers.patch | admin.directory.customer |
 | `admin_customers_update` | write | directory.customers.update | admin.directory.customer |
+| `admin_devices_chromeos_commands_get` | read | admin.customer.devices.chromeos.commands.get | admin.directory.device.chromeos, admin.directory.device.chromeos.readonly |
+| `admin_devices_chromeos_issue_command` | destructive | admin.customer.devices.chromeos.issueCommand | admin.directory.device.chromeos |
 | `admin_domain_aliases_delete` | destructive | directory.domainAliases.delete | admin.directory.domain |
 | `admin_domain_aliases_get` | read | directory.domainAliases.get | admin.directory.domain, admin.directory.domain.readonly |
 | `admin_domain_aliases_insert` | write | directory.domainAliases.insert | admin.directory.domain |
@@ -108,7 +107,6 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `admin_domains_delete` | destructive | directory.domains.delete | admin.directory.domain |
 | `admin_domains_get` | read | directory.domains.get | admin.directory.domain, admin.directory.domain.readonly |
 | `admin_domains_insert` | write | directory.domains.insert | admin.directory.domain |
-| `admin_domains_list_5673` | read | directory.domains.list | admin.directory.domain, admin.directory.domain.readonly |
 | `admin_entity_usage_reports_get` | read | reports.entityUsageReports.get | admin.reports.usage.readonly |
 | `admin_groups_aliases_delete` | destructive | directory.groups.aliases.delete | admin.directory.group |
 | `admin_groups_aliases_insert` | write | directory.groups.aliases.insert | admin.directory.group |
@@ -116,9 +114,9 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `admin_groups_delete` | destructive | directory.groups.delete | admin.directory.group |
 | `admin_groups_get` | read | directory.groups.get | admin.directory.group, admin.directory.group.readonly |
 | `admin_groups_insert` | write | directory.groups.insert | admin.directory.group |
-| `admin_groups_list_20ea` | read | directory.groups.list | admin.directory.group, admin.directory.group.readonly |
 | `admin_groups_patch` | write | directory.groups.patch | admin.directory.group |
 | `admin_groups_update` | write | directory.groups.update | admin.directory.group |
+| `admin_list` | read | directory.domains.list | admin.directory.domain, admin.directory.domain.readonly |
 | `admin_members_delete` | destructive | directory.members.delete | admin.directory.group, admin.directory.group.member |
 | `admin_members_get` | read | directory.members.get | admin.directory.group, admin.directory.group.member |
 | `admin_members_has_member` | read | directory.members.hasMember | admin.directory.group, admin.directory.group.member |
@@ -130,12 +128,15 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `admin_mobiledevices_delete` | destructive | directory.mobiledevices.delete | admin.directory.device.mobile |
 | `admin_mobiledevices_get` | read | directory.mobiledevices.get | admin.directory.device.mobile, admin.directory.device.mobile.action |
 | `admin_mobiledevices_list` | read | directory.mobiledevices.list | admin.directory.device.mobile, admin.directory.device.mobile.action |
+| `admin_move_devices_to_ou` | write | directory.chromeosdevices.moveDevicesToOu | admin.directory.device.chromeos |
 | `admin_orgunits_delete` | destructive | directory.orgunits.delete | admin.directory.orgunit |
 | `admin_orgunits_get` | read | directory.orgunits.get | admin.directory.orgunit, admin.directory.orgunit.readonly |
 | `admin_orgunits_insert` | write | directory.orgunits.insert | admin.directory.orgunit |
-| `admin_orgunits_list_dd84` | read | directory.orgunits.list | admin.directory.orgunit, admin.directory.orgunit.readonly |
 | `admin_orgunits_patch` | write | directory.orgunits.patch | admin.directory.orgunit |
 | `admin_orgunits_update` | write | directory.orgunits.update | admin.directory.orgunit |
+| `admin_printers_batch_create_printers` | write | admin.customers.chrome.printers.batchCreatePrinters | admin.chrome.printers |
+| `admin_printers_batch_delete_printers` | write | admin.customers.chrome.printers.batchDeletePrinters | admin.chrome.printers |
+| `admin_printers_list_printer_models` | read | admin.customers.chrome.printers.listPrinterModels | admin.chrome.printers, admin.chrome.printers.readonly |
 | `admin_privileges_list` | read | directory.privileges.list | admin.directory.rolemanagement, admin.directory.rolemanagement.readonly |
 | `admin_resources_buildings_delete` | destructive | directory.resources.buildings.delete | admin.directory.resource.calendar |
 | `admin_resources_buildings_get` | read | directory.resources.buildings.get | admin.directory.resource.calendar, admin.directory.resource.calendar.readonly |
@@ -188,7 +189,6 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `admin_users_delete` | destructive | directory.users.delete | admin.directory.user |
 | `admin_users_get` | read | directory.users.get | admin.directory.user, admin.directory.user.readonly |
 | `admin_users_insert` | write | directory.users.insert | admin.directory.user |
-| `admin_users_list_a3ea` | read | directory.users.list | admin.directory.user, admin.directory.user.readonly |
 | `admin_users_make_admin` | destructive | directory.users.makeAdmin | admin.directory.user |
 | `admin_users_patch` | write | directory.users.patch | admin.directory.user |
 | `admin_users_photos_delete` | destructive | directory.users.photos.delete | admin.directory.user |
@@ -213,35 +213,37 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `alerts_alerts_undelete` | write | alertcenter.alerts.undelete | apps.alerts |
 | `alerts_v1beta1_get_settings` | read | alertcenter.getSettings | apps.alerts |
 | `alerts_v1beta1_update_settings` | write | alertcenter.updateSettings | apps.alerts |
-| `chromepoli_cust_poli_group_batch_862a` | destructive | chromepolicy.customers.policies.groups.batchDelete | chrome.management.policy |
-| `chromepoli_cust_poli_group_batch_c498` | write | chromepolicy.customers.policies.groups.batchModify | chrome.management.policy |
-| `chromepoli_cust_poli_netwo_defin_020b` | write | chromepolicy.customers.policies.networks.defineNetwork | chrome.management.policy |
-| `chromepoli_cust_poli_netwo_defin_84ef` | write | chromepolicy.customers.policies.networks.defineCertificate | chrome.management.policy |
-| `chromepoli_cust_poli_netwo_remov_5af6` | write | chromepolicy.customers.policies.networks.removeNetwork | chrome.management.policy |
-| `chromepoli_cust_poli_netwo_remov_dd3a` | write | chromepolicy.customers.policies.networks.removeCertificate | chrome.management.policy |
-| `chromepoli_cust_poli_orgun_batch_74a0` | write | chromepolicy.customers.policies.orgunits.batchInherit | chrome.management.policy |
-| `chromepoli_cust_poli_orgun_batch_aaa3` | write | chromepolicy.customers.policies.orgunits.batchModify | chrome.management.policy |
-| `chromepoli_custo_polici_groups_list_g` | read | chromepolicy.customers.policies.groups.listGroupPriorityOrdering | chrome.management.policy, chrome.management.policy.readonly |
-| `chromepoli_custo_polici_groups_update` | write | chromepolicy.customers.policies.groups.updateGroupPriorityOrdering | chrome.management.policy |
+| `chrome_update_group_priority_ordering` | write | chromepolicy.customers.policies.groups.updateGroupPriorityOrdering | chrome.management.policy |
+| `chromepo_list_group_priority_ordering` | read | chromepolicy.customers.policies.groups.listGroupPriorityOrdering | chrome.management.policy, chrome.management.policy.readonly |
+| `chromepol_networks_define_certificate` | write | chromepolicy.customers.policies.networks.defineCertificate | chrome.management.policy |
+| `chromepol_networks_remove_certificate` | write | chromepolicy.customers.policies.networks.removeCertificate | chrome.management.policy |
 | `chromepoli_customers_policies_resolve` | write | chromepolicy.customers.policies.resolve | chrome.management.policy, chrome.management.policy.readonly |
-| `chromepoli_customers_policy_sche_list` | read | chromepolicy.customers.policySchemas.list | chrome.management.policy, chrome.management.policy.readonly |
-| `chromepoli_customers_policy_schem_get` | read | chromepolicy.customers.policySchemas.get | chrome.management.policy, chrome.management.policy.readonly |
+| `chromepoli_groups_batch_delete` | destructive | chromepolicy.customers.policies.groups.batchDelete | chrome.management.policy |
+| `chromepoli_groups_batch_modify` | write | chromepolicy.customers.policies.groups.batchModify | chrome.management.policy |
+| `chromepoli_networks_define_network` | write | chromepolicy.customers.policies.networks.defineNetwork | chrome.management.policy |
+| `chromepoli_networks_remove_network` | write | chromepolicy.customers.policies.networks.removeNetwork | chrome.management.policy |
+| `chromepoli_orgunits_batch_inherit` | write | chromepolicy.customers.policies.orgunits.batchInherit | chrome.management.policy |
+| `chromepoli_orgunits_batch_modify` | write | chromepolicy.customers.policies.orgunits.batchModify | chrome.management.policy |
+| `chromepoli_policy_schemas_get` | read | chromepolicy.customers.policySchemas.get | chrome.management.policy, chrome.management.policy.readonly |
+| `chromepoli_policy_schemas_list` | read | chromepolicy.customers.policySchemas.list | chrome.management.policy, chrome.management.policy.readonly |
+| `clou_identitysources_unmappedids_list` | read | cloudsearch.debug.identitysources.unmappedids.list | cloud_search, cloud_search.debug |
+| `clou_inbound_saml_sso_profiles_create` | destructive | cloudidentity.inboundSamlSsoProfiles.create | cloud-identity.inboundsso, cloud-platform |
+| `clou_inbound_saml_sso_profiles_delete` | destructive | cloudidentity.inboundSamlSsoProfiles.delete | cloud-identity.inboundsso, cloud-platform |
+| `clou_memberships_get_membership_graph` | read | cloudidentity.groups.memberships.getMembershipGraph | cloud-identity.groups, cloud-identity.groups.readonly |
+| `clou_memberships_search_direct_groups` | read | cloudidentity.groups.memberships.searchDirectGroups | cloud-identity.groups, cloud-identity.groups.readonly |
+| `cloud_inbound_saml_sso_profiles_patch` | destructive | cloudidentity.inboundSamlSsoProfiles.patch | cloud-identity.inboundsso, cloud-platform |
+| `cloudi_inbound_saml_sso_profiles_list` | read | cloudidentity.inboundSamlSsoProfiles.list | cloud-identity.inboundsso, cloud-identity.inboundsso.readonly |
 | `cloudid_allowlisted_domains_create` | write | cloudidentity.allowlistedDomains.create | cloud-identity.allowlisteddomains |
 | `cloudid_allowlisted_domains_delete` | destructive | cloudidentity.allowlistedDomains.delete | cloud-identity.allowlisteddomains |
 | `cloudid_allowlisted_domains_get` | read | cloudidentity.allowlistedDomains.get | cloud-identity.allowlisteddomains, cloud-identity.allowlisteddomains.readonly |
 | `cloudid_allowlisted_domains_list` | read | cloudidentity.allowlistedDomains.list | cloud-identity.allowlisteddomains, cloud-identity.allowlisteddomains.readonly |
-| `cloudid_customers_userinvit_is_invita` | read | cloudidentity.customers.userinvitations.isInvitableUser | (none) |
-| `cloudid_customers_userinvitati_cancel` | destructive | cloudidentity.customers.userinvitations.cancel | (none) |
-| `cloudid_customers_userinvitation_list` | read | cloudidentity.customers.userinvitations.list | (none) |
-| `cloudid_customers_userinvitation_send` | destructive | cloudidentity.customers.userinvitations.send | (none) |
+| `cloudid_assignments_create` | destructive | cloudidentity.inboundSsoAssignments.create | cloud-identity.inboundsso, cloud-platform |
+| `cloudid_assignments_delete` | destructive | cloudidentity.inboundSsoAssignments.delete | cloud-identity.inboundsso, cloud-platform |
+| `cloudid_check_transitive_membership` | read | cloudidentity.groups.memberships.checkTransitiveMembership | cloud-identity.groups, cloud-identity.groups.readonly |
 | `cloudid_customers_userinvitations_get` | read | cloudidentity.customers.userinvitations.get | (none) |
 | `cloudid_devices_cancel_wipe` | write | cloudidentity.devices.cancelWipe | cloud-identity.devices |
 | `cloudid_devices_create` | write | cloudidentity.devices.create | cloud-identity.devices |
 | `cloudid_devices_delete` | destructive | cloudidentity.devices.delete | cloud-identity.devices |
-| `cloudid_devices_device_client_s_list` | read | cloudidentity.devices.deviceUsers.clientStates.list | cloud-identity.devices, cloud-identity.devices.readonly |
-| `cloudid_devices_device_client_s_patch` | write | cloudidentity.devices.deviceUsers.clientStates.patch | cloud-identity.devices |
-| `cloudid_devices_device_u_client_s_get` | read | cloudidentity.devices.deviceUsers.clientStates.get | cloud-identity.devices, cloud-identity.devices.readonly |
-| `cloudid_devices_device_use_cancel_wip` | write | cloudidentity.devices.deviceUsers.cancelWipe | cloud-identity.devices |
 | `cloudid_devices_device_users_approve` | write | cloudidentity.devices.deviceUsers.approve | cloud-identity.devices |
 | `cloudid_devices_device_users_block` | write | cloudidentity.devices.deviceUsers.block | cloud-identity.devices |
 | `cloudid_devices_device_users_delete` | destructive | cloudidentity.devices.deviceUsers.delete | cloud-identity.devices |
@@ -251,6 +253,10 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `cloudid_devices_device_users_wipe` | destructive | cloudidentity.devices.deviceUsers.wipe | cloud-identity.devices |
 | `cloudid_devices_get` | read | cloudidentity.devices.get | cloud-identity.devices, cloud-identity.devices.readonly |
 | `cloudid_devices_list` | read | cloudidentity.devices.list | cloud-identity.devices, cloud-identity.devices.readonly |
+| `cloudid_devices_users_cancel_wipe` | write | cloudidentity.devices.deviceUsers.cancelWipe | cloud-identity.devices |
+| `cloudid_devices_users_states_get` | read | cloudidentity.devices.deviceUsers.clientStates.get | cloud-identity.devices, cloud-identity.devices.readonly |
+| `cloudid_devices_users_states_list` | read | cloudidentity.devices.deviceUsers.clientStates.list | cloud-identity.devices, cloud-identity.devices.readonly |
+| `cloudid_devices_users_states_patch` | write | cloudidentity.devices.deviceUsers.clientStates.patch | cloud-identity.devices |
 | `cloudid_devices_wipe` | destructive | cloudidentity.devices.wipe | cloud-identity.devices |
 | `cloudid_groups_create` | write | cloudidentity.groups.create | cloud-identity.groups, cloud-platform |
 | `cloudid_groups_delete` | destructive | cloudidentity.groups.delete | cloud-identity.groups, cloud-platform |
@@ -258,12 +264,6 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `cloudid_groups_get_security_settings` | read | cloudidentity.groups.getSecuritySettings | cloud-identity.groups, cloud-identity.groups.readonly |
 | `cloudid_groups_list` | read | cloudidentity.groups.list | cloud-identity.groups, cloud-identity.groups.readonly |
 | `cloudid_groups_lookup` | read | cloudidentity.groups.lookup | cloud-identity.groups, cloud-identity.groups.readonly |
-| `cloudid_groups_membersh_search_t_0765` | read | cloudidentity.groups.memberships.searchTransitiveGroups | cloud-identity.groups, cloud-identity.groups.readonly |
-| `cloudid_groups_membersh_search_t_50d2` | read | cloudidentity.groups.memberships.searchTransitiveMemberships | cloud-identity.groups, cloud-identity.groups.readonly |
-| `cloudid_groups_membership_check_trans` | read | cloudidentity.groups.memberships.checkTransitiveMembership | cloud-identity.groups, cloud-identity.groups.readonly |
-| `cloudid_groups_membership_get_members` | read | cloudidentity.groups.memberships.getMembershipGraph | cloud-identity.groups, cloud-identity.groups.readonly |
-| `cloudid_groups_membership_modify_memb` | write | cloudidentity.groups.memberships.modifyMembershipRoles | cloud-identity.groups, cloud-platform |
-| `cloudid_groups_membership_search_dire` | read | cloudidentity.groups.memberships.searchDirectGroups | cloud-identity.groups, cloud-identity.groups.readonly |
 | `cloudid_groups_memberships_create` | write | cloudidentity.groups.memberships.create | cloud-identity.groups, cloud-platform |
 | `cloudid_groups_memberships_delete` | destructive | cloudidentity.groups.memberships.delete | cloud-identity.groups, cloud-platform |
 | `cloudid_groups_memberships_get` | read | cloudidentity.groups.memberships.get | cloud-identity.groups, cloud-identity.groups.readonly |
@@ -271,105 +271,105 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `cloudid_groups_memberships_lookup` | read | cloudidentity.groups.memberships.lookup | cloud-identity.groups, cloud-identity.groups.readonly |
 | `cloudid_groups_patch` | write | cloudidentity.groups.patch | cloud-identity.groups, cloud-platform |
 | `cloudid_groups_search` | read | cloudidentity.groups.search | cloud-identity.groups, cloud-identity.groups.readonly |
-| `cloudid_groups_update_security_settin` | write | cloudidentity.groups.updateSecuritySettings | cloud-identity.groups, cloud-platform |
-| `cloudid_inbound_oidc_sso_profi_create` | destructive | cloudidentity.inboundOidcSsoProfiles.create | cloud-identity.inboundsso, cloud-platform |
-| `cloudid_inbound_oidc_sso_profi_delete` | destructive | cloudidentity.inboundOidcSsoProfiles.delete | cloud-identity.inboundsso, cloud-platform |
-| `cloudid_inbound_oidc_sso_profil_patch` | destructive | cloudidentity.inboundOidcSsoProfiles.patch | cloud-identity.inboundsso, cloud-platform |
-| `cloudid_inbound_oidc_sso_profile_list` | read | cloudidentity.inboundOidcSsoProfiles.list | cloud-identity.inboundsso, cloud-identity.inboundsso.readonly |
 | `cloudid_inbound_oidc_sso_profiles_get` | read | cloudidentity.inboundOidcSsoProfiles.get | cloud-identity.inboundsso, cloud-identity.inboundsso.readonly |
-| `cloudid_inbound_sa_idp_credent_delete` | destructive | cloudidentity.inboundSamlSsoProfiles.idpCredentials.delete | cloud-identity.inboundsso, cloud-platform |
-| `cloudid_inbound_sam_idp_credenti_list` | read | cloudidentity.inboundSamlSsoProfiles.idpCredentials.list | cloud-identity.inboundsso, cloud-identity.inboundsso.readonly |
-| `cloudid_inbound_saml_idp_credenti_add` | destructive | cloudidentity.inboundSamlSsoProfiles.idpCredentials.add | cloud-identity.inboundsso, cloud-platform |
-| `cloudid_inbound_saml_idp_credenti_get` | read | cloudidentity.inboundSamlSsoProfiles.idpCredentials.get | cloud-identity.inboundsso, cloud-identity.inboundsso.readonly |
-| `cloudid_inbound_saml_sso_profi_create` | destructive | cloudidentity.inboundSamlSsoProfiles.create | cloud-identity.inboundsso, cloud-platform |
-| `cloudid_inbound_saml_sso_profi_delete` | destructive | cloudidentity.inboundSamlSsoProfiles.delete | cloud-identity.inboundsso, cloud-platform |
-| `cloudid_inbound_saml_sso_profil_patch` | destructive | cloudidentity.inboundSamlSsoProfiles.patch | cloud-identity.inboundsso, cloud-platform |
-| `cloudid_inbound_saml_sso_profile_list` | read | cloudidentity.inboundSamlSsoProfiles.list | cloud-identity.inboundsso, cloud-identity.inboundsso.readonly |
 | `cloudid_inbound_saml_sso_profiles_get` | read | cloudidentity.inboundSamlSsoProfiles.get | cloud-identity.inboundsso, cloud-identity.inboundsso.readonly |
-| `cloudid_inbound_sso_assignment_create` | destructive | cloudidentity.inboundSsoAssignments.create | cloud-identity.inboundsso, cloud-platform |
-| `cloudid_inbound_sso_assignment_delete` | destructive | cloudidentity.inboundSsoAssignments.delete | cloud-identity.inboundsso, cloud-platform |
 | `cloudid_inbound_sso_assignments_get` | read | cloudidentity.inboundSsoAssignments.get | cloud-identity.inboundsso, cloud-identity.inboundsso.readonly |
 | `cloudid_inbound_sso_assignments_list` | read | cloudidentity.inboundSsoAssignments.list | cloud-identity.inboundsso, cloud-identity.inboundsso.readonly |
 | `cloudid_inbound_sso_assignments_patch` | destructive | cloudidentity.inboundSsoAssignments.patch | cloud-identity.inboundsso, cloud-platform |
+| `cloudid_is_invitable_user` | read | cloudidentity.customers.userinvitations.isInvitableUser | (none) |
+| `cloudid_modify_membership_roles` | write | cloudidentity.groups.memberships.modifyMembershipRoles | cloud-identity.groups, cloud-platform |
 | `cloudid_policies_create` | write | cloudidentity.policies.create | cloud-identity.policies |
 | `cloudid_policies_delete` | destructive | cloudidentity.policies.delete | cloud-identity.policies |
 | `cloudid_policies_get` | read | cloudidentity.policies.get | cloud-identity.policies, cloud-identity.policies.readonly |
 | `cloudid_policies_list` | read | cloudidentity.policies.list | cloud-identity.policies, cloud-identity.policies.readonly |
 | `cloudid_policies_patch` | write | cloudidentity.policies.patch | cloud-identity.policies |
-| `cloudsearc_debu_data_items_unmap_list` | read | cloudsearch.debug.datasources.items.unmappedids.list | cloud_search, cloud_search.debug |
-| `cloudsearc_debug_dataso_items_check_a` | read | cloudsearch.debug.datasources.items.checkAccess | cloud_search, cloud_search.debug |
-| `cloudsearc_debug_datasou_items_search` | read | cloudsearch.debug.datasources.items.searchByViewUrl | cloud_search, cloud_search.debug |
-| `cloudsearc_debug_identi_items_list_fo` | read | cloudsearch.debug.identitysources.items.listForunmappedidentity | cloud_search, cloud_search.debug |
-| `cloudsearc_debug_identit_unmappe_list` | read | cloudsearch.debug.identitysources.unmappedids.list | cloud_search, cloud_search.debug |
-| `cloudsearc_inde_data_items_delet_3223` | write | cloudsearch.indexing.datasources.items.deleteQueueItems | cloud_search, cloud_search.indexing |
-| `cloudsearc_inde_data_items_delet_8e25` | destructive | cloudsearch.indexing.datasources.items.delete | cloud_search, cloud_search.indexing |
-| `cloudsearc_indexi_dataso_items_unrese` | write | cloudsearch.indexing.datasources.items.unreserve | cloud_search, cloud_search.indexing |
-| `cloudsearc_indexi_dataso_items_upload` | write | cloudsearch.indexing.datasources.items.upload | cloud_search, cloud_search.indexing |
-| `cloudsearc_indexi_datasou_items_index` | write | cloudsearch.indexing.datasources.items.index | cloud_search, cloud_search.indexing |
-| `cloudsearc_indexin_datasou_items_list` | read | cloudsearch.indexing.datasources.items.list | cloud_search, cloud_search.indexing |
-| `cloudsearc_indexin_datasou_items_poll` | write | cloudsearch.indexing.datasources.items.poll | cloud_search, cloud_search.indexing |
-| `cloudsearc_indexin_datasou_items_push` | write | cloudsearch.indexing.datasources.items.push | cloud_search, cloud_search.indexing |
-| `cloudsearc_indexin_datasour_items_get` | read | cloudsearch.indexing.datasources.items.get | cloud_search, cloud_search.indexing |
-| `cloudsearc_indexing_datasour_delete_s` | destructive | cloudsearch.indexing.datasources.deleteSchema | cloud_search, cloud_search.settings |
-| `cloudsearc_indexing_datasour_get_sche` | read | cloudsearch.indexing.datasources.getSchema | cloud_search, cloud_search.settings |
-| `cloudsearc_indexing_datasour_update_s` | write | cloudsearch.indexing.datasources.updateSchema | cloud_search, cloud_search.settings |
+| `cloudid_profiles_create` | destructive | cloudidentity.inboundOidcSsoProfiles.create | cloud-identity.inboundsso, cloud-platform |
+| `cloudid_profiles_credentials_delete` | destructive | cloudidentity.inboundSamlSsoProfiles.idpCredentials.delete | cloud-identity.inboundsso, cloud-platform |
+| `cloudid_profiles_delete` | destructive | cloudidentity.inboundOidcSsoProfiles.delete | cloud-identity.inboundsso, cloud-platform |
+| `cloudid_profiles_idp_credentials_add` | destructive | cloudidentity.inboundSamlSsoProfiles.idpCredentials.add | cloud-identity.inboundsso, cloud-platform |
+| `cloudid_profiles_idp_credentials_get` | read | cloudidentity.inboundSamlSsoProfiles.idpCredentials.get | cloud-identity.inboundsso, cloud-identity.inboundsso.readonly |
+| `cloudid_profiles_idp_credentials_list` | read | cloudidentity.inboundSamlSsoProfiles.idpCredentials.list | cloud-identity.inboundsso, cloud-identity.inboundsso.readonly |
+| `cloudid_profiles_list` | read | cloudidentity.inboundOidcSsoProfiles.list | cloud-identity.inboundsso, cloud-identity.inboundsso.readonly |
+| `cloudid_profiles_patch` | destructive | cloudidentity.inboundOidcSsoProfiles.patch | cloud-identity.inboundsso, cloud-platform |
+| `cloudid_search_transitive_groups` | read | cloudidentity.groups.memberships.searchTransitiveGroups | cloud-identity.groups, cloud-identity.groups.readonly |
+| `cloudid_search_transitive_memberships` | read | cloudidentity.groups.memberships.searchTransitiveMemberships | cloud-identity.groups, cloud-identity.groups.readonly |
+| `cloudid_update_security_settings` | write | cloudidentity.groups.updateSecuritySettings | cloud-identity.groups, cloud-platform |
+| `cloudid_userinvitations_cancel` | destructive | cloudidentity.customers.userinvitations.cancel | (none) |
+| `cloudid_userinvitations_list` | read | cloudidentity.customers.userinvitations.list | (none) |
+| `cloudid_userinvitations_send` | destructive | cloudidentity.customers.userinvitations.send | (none) |
+| `clouds_datasources_items_check_access` | read | cloudsearch.debug.datasources.items.checkAccess | cloud_search, cloud_search.debug |
+| `clouds_items_list_forunmappedidentity` | read | cloudsearch.debug.identitysources.items.listForunmappedidentity | cloud_search, cloud_search.debug |
+| `clouds_session_searchapplications_get` | read | cloudsearch.stats.session.searchapplications.get | cloud_search, cloud_search.stats |
+| `cloudsea_query_searchapplications_get` | read | cloudsearch.stats.query.searchapplications.get | cloud_search, cloud_search.stats |
+| `cloudsear_datasources_items_unreserve` | write | cloudsearch.indexing.datasources.items.unreserve | cloud_search, cloud_search.indexing |
+| `cloudsear_settings_datasources_create` | write | cloudsearch.settings.datasources.create | cloud_search, cloud_search.settings |
+| `cloudsear_settings_datasources_delete` | destructive | cloudsearch.settings.datasources.delete | cloud_search, cloud_search.settings |
+| `cloudsear_settings_datasources_update` | write | cloudsearch.settings.datasources.update | cloud_search, cloud_search.settings |
+| `cloudsear_stats_get_searchapplication` | read | cloudsearch.stats.getSearchapplication | cloud_search, cloud_search.stats |
+| `cloudsear_stats_index_datasources_get` | read | cloudsearch.stats.index.datasources.get | cloud_search, cloud_search.stats |
+| `cloudsear_user_searchapplications_get` | read | cloudsearch.stats.user.searchapplications.get | cloud_search, cloud_search.stats |
+| `cloudsearc_datasources_delete_schema` | destructive | cloudsearch.indexing.datasources.deleteSchema | cloud_search, cloud_search.settings |
+| `cloudsearc_datasources_get_schema` | read | cloudsearch.indexing.datasources.getSchema | cloud_search, cloud_search.settings |
+| `cloudsearc_datasources_items_delete` | destructive | cloudsearch.indexing.datasources.items.delete | cloud_search, cloud_search.indexing |
+| `cloudsearc_datasources_items_get` | read | cloudsearch.indexing.datasources.items.get | cloud_search, cloud_search.indexing |
+| `cloudsearc_datasources_items_index` | write | cloudsearch.indexing.datasources.items.index | cloud_search, cloud_search.indexing |
+| `cloudsearc_datasources_items_list` | read | cloudsearch.indexing.datasources.items.list | cloud_search, cloud_search.indexing |
+| `cloudsearc_datasources_items_poll` | write | cloudsearch.indexing.datasources.items.poll | cloud_search, cloud_search.indexing |
+| `cloudsearc_datasources_items_push` | write | cloudsearch.indexing.datasources.items.push | cloud_search, cloud_search.indexing |
+| `cloudsearc_datasources_items_upload` | write | cloudsearch.indexing.datasources.items.upload | cloud_search, cloud_search.indexing |
+| `cloudsearc_datasources_update_schema` | write | cloudsearch.indexing.datasources.updateSchema | cloud_search, cloud_search.settings |
+| `cloudsearc_items_delete_queue_items` | write | cloudsearch.indexing.datasources.items.deleteQueueItems | cloud_search, cloud_search.indexing |
+| `cloudsearc_items_search_by_view_url` | read | cloudsearch.debug.datasources.items.searchByViewUrl | cloud_search, cloud_search.debug |
+| `cloudsearc_items_unmappedids_list` | read | cloudsearch.debug.datasources.items.unmappedids.list | cloud_search, cloud_search.debug |
 | `cloudsearc_operations_get` | read | cloudsearch.operations.get | cloud_search, cloud_search.debug |
 | `cloudsearc_operations_lro_list` | read | cloudsearch.operations.lro.list | cloud_search, cloud_search.debug |
 | `cloudsearc_query_remove_activity` | write | cloudsearch.query.removeActivity | cloud_search, cloud_search.query |
 | `cloudsearc_query_search` | read | cloudsearch.query.search | cloud_search, cloud_search.query |
 | `cloudsearc_query_sources_list` | read | cloudsearch.query.sources.list | cloud_search, cloud_search.query |
 | `cloudsearc_query_suggest` | write | cloudsearch.query.suggest | cloud_search, cloud_search.query |
-| `cloudsearc_settings_datasource_create` | write | cloudsearch.settings.datasources.create | cloud_search, cloud_search.settings |
-| `cloudsearc_settings_datasource_delete` | destructive | cloudsearch.settings.datasources.delete | cloud_search, cloud_search.settings |
-| `cloudsearc_settings_datasource_update` | write | cloudsearch.settings.datasources.update | cloud_search, cloud_search.settings |
+| `cloudsearc_searchapplications_create` | write | cloudsearch.settings.searchapplications.create | cloud_search, cloud_search.settings |
+| `cloudsearc_searchapplications_delete` | destructive | cloudsearch.settings.searchapplications.delete | cloud_search, cloud_search.settings |
+| `cloudsearc_searchapplications_get` | read | cloudsearch.settings.searchapplications.get | cloud_search, cloud_search.settings |
+| `cloudsearc_searchapplications_list` | read | cloudsearch.settings.searchapplications.list | cloud_search, cloud_search.settings |
+| `cloudsearc_searchapplications_patch` | write | cloudsearch.settings.searchapplications.patch | cloud_search, cloud_search.settings |
+| `cloudsearc_searchapplications_reset` | destructive | cloudsearch.settings.searchapplications.reset | cloud_search, cloud_search.settings |
+| `cloudsearc_searchapplications_update` | write | cloudsearch.settings.searchapplications.update | cloud_search, cloud_search.settings |
 | `cloudsearc_settings_datasources_get` | read | cloudsearch.settings.datasources.get | cloud_search, cloud_search.settings |
 | `cloudsearc_settings_datasources_list` | read | cloudsearch.settings.datasources.list | cloud_search, cloud_search.settings |
 | `cloudsearc_settings_datasources_patch` | write | cloudsearch.settings.datasources.patch | cloud_search, cloud_search.settings |
 | `cloudsearc_settings_get_customer` | read | cloudsearch.settings.getCustomer | cloud_search, cloud_search.settings |
-| `cloudsearc_settings_searchappl_create` | write | cloudsearch.settings.searchapplications.create | cloud_search, cloud_search.settings |
-| `cloudsearc_settings_searchappl_delete` | destructive | cloudsearch.settings.searchapplications.delete | cloud_search, cloud_search.settings |
-| `cloudsearc_settings_searchappl_update` | write | cloudsearch.settings.searchapplications.update | cloud_search, cloud_search.settings |
-| `cloudsearc_settings_searchappli_patch` | write | cloudsearch.settings.searchapplications.patch | cloud_search, cloud_search.settings |
-| `cloudsearc_settings_searchappli_reset` | destructive | cloudsearch.settings.searchapplications.reset | cloud_search, cloud_search.settings |
-| `cloudsearc_settings_searchapplic_list` | read | cloudsearch.settings.searchapplications.list | cloud_search, cloud_search.settings |
-| `cloudsearc_settings_searchapplica_get` | read | cloudsearch.settings.searchapplications.get | cloud_search, cloud_search.settings |
 | `cloudsearc_settings_update_customer` | write | cloudsearch.settings.updateCustomer | cloud_search, cloud_search.settings |
 | `cloudsearc_stats_get_index` | read | cloudsearch.stats.getIndex | cloud_search, cloud_search.stats |
 | `cloudsearc_stats_get_query` | read | cloudsearch.stats.getQuery | cloud_search, cloud_search.stats |
-| `cloudsearc_stats_get_searchapplicatio` | read | cloudsearch.stats.getSearchapplication | cloud_search, cloud_search.stats |
 | `cloudsearc_stats_get_session` | read | cloudsearch.stats.getSession | cloud_search, cloud_search.stats |
 | `cloudsearc_stats_get_user` | read | cloudsearch.stats.getUser | cloud_search, cloud_search.stats |
-| `cloudsearc_stats_index_datasource_get` | read | cloudsearch.stats.index.datasources.get | cloud_search, cloud_search.stats |
-| `cloudsearc_stats_query_searchappl_get` | read | cloudsearch.stats.query.searchapplications.get | cloud_search, cloud_search.stats |
-| `cloudsearc_stats_session_searchap_get` | read | cloudsearch.stats.session.searchapplications.get | cloud_search, cloud_search.stats |
-| `cloudsearc_stats_user_searchappli_get` | read | cloudsearch.stats.user.searchapplications.get | cloud_search, cloud_search.stats |
 | `cloudsearc_v1_initialize_customer` | write | cloudsearch.initializeCustomer | cloud_search, cloud_search.settings |
 | `groupset_groups_get` | read | groupsSettings.groups.get | apps.groups.settings |
 | `groupset_groups_patch` | write | groupsSettings.groups.patch | apps.groups.settings |
 | `groupset_groups_update` | write | groupsSettings.groups.update | apps.groups.settings |
-| `license_license_ass_list_for_pro_17d9` | read | licensing.licenseAssignments.listForProduct | apps.licensing |
-| `license_license_ass_list_for_pro_9489` | read | licensing.licenseAssignments.listForProductAndSku | apps.licensing |
 | `license_license_assignments_delete` | destructive | licensing.licenseAssignments.delete | apps.licensing |
 | `license_license_assignments_get` | read | licensing.licenseAssignments.get | apps.licensing |
 | `license_license_assignments_insert` | write | licensing.licenseAssignments.insert | apps.licensing |
 | `license_license_assignments_patch` | write | licensing.licenseAssignments.patch | apps.licensing |
 | `license_license_assignments_update` | write | licensing.licenseAssignments.update | apps.licensing |
+| `license_list_for_product` | read | licensing.licenseAssignments.listForProduct | apps.licensing |
+| `license_list_for_product_and_sku` | read | licensing.licenseAssignments.listForProductAndSku | apps.licensing |
 | `reseller_customers_get` | read | reseller.customers.get | apps.order, apps.order.readonly |
 | `reseller_customers_insert` | write | reseller.customers.insert | apps.order |
 | `reseller_customers_patch` | write | reseller.customers.patch | apps.order |
 | `reseller_customers_update` | write | reseller.customers.update | apps.order |
-| `reseller_resellernotif_getwatchdetail` | read | reseller.resellernotify.getwatchdetails | apps.order, apps.order.readonly |
+| `reseller_getwatchdetails` | read | reseller.resellernotify.getwatchdetails | apps.order, apps.order.readonly |
 | `reseller_resellernotify_register` | write | reseller.resellernotify.register | apps.order |
 | `reseller_resellernotify_unregister` | write | reseller.resellernotify.unregister | apps.order |
+| `reseller_subs_change_renewal_settings` | write | reseller.subscriptions.changeRenewalSettings | apps.order |
+| `reseller_subs_start_paid_service` | write | reseller.subscriptions.startPaidService | apps.order |
 | `reseller_subscriptions_activate` | write | reseller.subscriptions.activate | apps.order |
 | `reseller_subscriptions_change_plan` | write | reseller.subscriptions.changePlan | apps.order |
-| `reseller_subscriptions_change_renewal` | write | reseller.subscriptions.changeRenewalSettings | apps.order |
 | `reseller_subscriptions_change_seats` | destructive | reseller.subscriptions.changeSeats | apps.order |
 | `reseller_subscriptions_delete` | destructive | reseller.subscriptions.delete | apps.order |
 | `reseller_subscriptions_get` | read | reseller.subscriptions.get | apps.order, apps.order.readonly |
 | `reseller_subscriptions_insert` | destructive | reseller.subscriptions.insert | apps.order |
 | `reseller_subscriptions_list` | read | reseller.subscriptions.list | apps.order, apps.order.readonly |
-| `reseller_subscriptions_start_paid_ser` | write | reseller.subscriptions.startPaidService | apps.order |
 | `reseller_subscriptions_suspend` | destructive | reseller.subscriptions.suspend | apps.order |
 | `vault_matters_add_permissions` | write | vault.matters.addPermissions | ediscovery |
 | `vault_matters_close` | destructive | vault.matters.close | ediscovery |
@@ -389,7 +389,7 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `vault_matters_holds_delete` | destructive | vault.matters.holds.delete | ediscovery |
 | `vault_matters_holds_get` | read | vault.matters.holds.get | ediscovery, ediscovery.readonly |
 | `vault_matters_holds_list` | read | vault.matters.holds.list | ediscovery, ediscovery.readonly |
-| `vault_matters_holds_remove_held_accou` | destructive | vault.matters.holds.removeHeldAccounts | ediscovery |
+| `vault_matters_holds_remove_held_accts` | destructive | vault.matters.holds.removeHeldAccounts | ediscovery |
 | `vault_matters_holds_update` | write | vault.matters.holds.update | ediscovery |
 | `vault_matters_list` | read | vault.matters.list | ediscovery, ediscovery.readonly |
 | `vault_matters_remove_permissions` | destructive | vault.matters.removePermissions | ediscovery |

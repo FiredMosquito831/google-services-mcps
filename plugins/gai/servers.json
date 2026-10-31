@@ -234,9 +234,9 @@
           "vertex_generate_content",
           "vertex_count_tokens",
           "vertex_embed_content",
-          "discoverye_pro_loc_coll_engi_serv_sear_a054",
-          "discoverye_proj_loca_coll_engin_servi_answe",
-          "discoverye_projec_locati_collec_engine_list"
+          "discoverye_engines_serving_configs_search",
+          "discoverye_engines_serving_configs_answer",
+          "discoverye_collections_engines_list"
         ]
       },
       "scopes": [

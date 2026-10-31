@@ -674,14 +674,14 @@ test('files over the API key: a GeoTIFF, a heatmap tile and a photo come back as
 
 test('Merchant reviews: the 8 review tools keep their names and send to reviews/v1alpha, as the reviews_v1alpha snapshot says', async () => {
   const names = {
-    'merchantapi.accounts.productReviews.insert': 'merchantap_acco_prod_inser_0ed9',
-    'merchantapi.accounts.productReviews.get': 'merchantap_accounts_product_get',
-    'merchantapi.accounts.productReviews.delete': 'merchantap_acco_prod_delet_223a',
-    'merchantapi.accounts.productReviews.list': 'merchantap_acco_produ_list_6080',
-    'merchantapi.accounts.merchantReviews.delete': 'merchantap_accoun_mercha_delete',
-    'merchantapi.accounts.merchantReviews.insert': 'merchantap_accoun_mercha_insert',
-    'merchantapi.accounts.merchantReviews.list': 'merchantap_account_merchan_list',
-    'merchantapi.accounts.merchantReviews.get': 'merchantap_account_merchant_get',
+    'merchantapi.accounts.productReviews.insert': 'merchantap_acco_prod_revi_inser',
+    'merchantapi.accounts.productReviews.get': 'merch_accts_product_reviews_get',
+    'merchantapi.accounts.productReviews.delete': 'merchantap_acco_prod_revi_delet',
+    'merchantapi.accounts.productReviews.list': 'merc_accts_product_reviews_list',
+    'merchantapi.accounts.merchantReviews.delete': 'merchantap_accts_reviews_delete',
+    'merchantapi.accounts.merchantReviews.insert': 'merchantap_accts_reviews_insert',
+    'merchantapi.accounts.merchantReviews.list': 'merchantap_accts_reviews_list',
+    'merchantapi.accounts.merchantReviews.get': 'merchantap_accts_reviews_get',
   };
   assert.equal(snapshots['merchantapi.reviews_v1beta'], undefined, 'no v1beta snapshot');
   respond = () => ({});

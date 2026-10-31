@@ -39,7 +39,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `sheets_insert_rows` | `insert_dimension` |  |
 | `slides_presentations_get` | `read_presentation` |  |
 | `slides_presentations_pages_get` | `read_slide_page` |  |
-| `slides_presentatio_pages_get_thumbnai` | `read_slide_page_thumbnail` | The generated name is cut to fit the 64-character tool name budget. |
+| `slides_pages_get_thumbnail` | `read_slide_page_thumbnail` | The generated name is cut to fit the 64-character tool name budget. |
 | `slides_presentations_batch_update` | `update_presentation` |  |
 
 ## Curated tools (19)
@@ -70,13 +70,17 @@ The tools that match Google's official MCP server for this product (https://deve
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
+| `books_bookshelves_add_volume` | write | books.mylibrary.bookshelves.addVolume | books |
+| `books_bookshelves_clear_volumes` | write | books.mylibrary.bookshelves.clearVolumes | books |
 | `books_bookshelves_get` | read | books.bookshelves.get | books |
 | `books_bookshelves_list` | read | books.bookshelves.list | books |
+| `books_bookshelves_move_volume` | write | books.mylibrary.bookshelves.moveVolume | books |
+| `books_bookshelves_remove_volume` | write | books.mylibrary.bookshelves.removeVolume | books |
 | `books_bookshelves_volumes_list` | read | books.bookshelves.volumes.list | books |
 | `books_cloudloading_add_book` | write | books.cloudloading.addBook | books |
 | `books_cloudloading_delete_book` | write | books.cloudloading.deleteBook | books |
 | `books_cloudloading_update_book` | write | books.cloudloading.updateBook | books |
-| `books_dictionary_list_offline_metadat` | read | books.dictionary.listOfflineMetadata | books |
+| `books_dictionary_list_offline_meta` | read | books.dictionary.listOfflineMetadata | books |
 | `books_familysharing_get_family_info` | read | books.familysharing.getFamilyInfo | books |
 | `books_familysharing_share` | write | books.familysharing.share | books |
 | `books_familysharing_unshare` | write | books.familysharing.unshare | books |
@@ -86,8 +90,8 @@ The tools that match Google's official MCP server for this product (https://deve
 | `books_layers_list` | read | books.layers.list | books |
 | `books_layers_volume_annotations_get` | read | books.layers.volumeAnnotations.get | books |
 | `books_layers_volume_annotations_list` | read | books.layers.volumeAnnotations.list | books |
+| `books_list_category_volumes` | read | books.onboarding.listCategoryVolumes | books |
 | `books_myconfig_get_user_settings` | read | books.myconfig.getUserSettings | books |
-| `books_myconfig_release_download_acces` | write | books.myconfig.releaseDownloadAccess | books |
 | `books_myconfig_request_access` | write | books.myconfig.requestAccess | books |
 | `books_myconfig_sync_volume_licenses` | write | books.myconfig.syncVolumeLicenses | books |
 | `books_myconfig_update_user_settings` | write | books.myconfig.updateUserSettings | books |
@@ -97,21 +101,17 @@ The tools that match Google's official MCP server for this product (https://deve
 | `books_mylibrary_annotations_list` | read | books.mylibrary.annotations.list | books |
 | `books_mylibrary_annotations_summary` | write | books.mylibrary.annotations.summary | books |
 | `books_mylibrary_annotations_update` | write | books.mylibrary.annotations.update | books |
-| `books_mylibrary_bookshelve_add_volume` | write | books.mylibrary.bookshelves.addVolume | books |
-| `books_mylibrary_bookshelve_clear_volu` | write | books.mylibrary.bookshelves.clearVolumes | books |
-| `books_mylibrary_bookshelve_move_volum` | write | books.mylibrary.bookshelves.moveVolume | books |
-| `books_mylibrary_bookshelve_remove_vol` | write | books.mylibrary.bookshelves.removeVolume | books |
 | `books_mylibrary_bookshelves_get` | read | books.mylibrary.bookshelves.get | books |
 | `books_mylibrary_bookshelves_list` | read | books.mylibrary.bookshelves.list | books |
-| `books_mylibrary_readingpos_set_positi` | write | books.mylibrary.readingpositions.setPosition | books |
 | `books_mylibrary_readingpositions_get` | read | books.mylibrary.readingpositions.get | books |
 | `books_notification_get` | read | books.notification.get | books |
 | `books_onboarding_list_categories` | read | books.onboarding.listCategories | books |
-| `books_onboarding_list_category_volume` | read | books.onboarding.listCategoryVolumes | books |
 | `books_personalizedstream_get` | read | books.personalizedstream.get | books |
 | `books_promooffer_accept` | write | books.promooffer.accept | books |
 | `books_promooffer_dismiss` | write | books.promooffer.dismiss | books |
 | `books_promooffer_get` | read | books.promooffer.get | books |
+| `books_readingpositions_set_position` | write | books.mylibrary.readingpositions.setPosition | books |
+| `books_release_download_access` | write | books.myconfig.releaseDownloadAccess | books |
 | `books_series_get` | read | books.series.get | books |
 | `books_series_membership_get` | read | books.series.membership.get | books |
 | `books_volumes_associated_list` | read | books.volumes.associated.list | books |
@@ -124,6 +124,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `docs_documents_batch_update` | destructive | docs.documents.batchUpdate | documents, drive |
 | `docs_documents_create` | write | docs.documents.create | documents, drive |
 | `docs_documents_get` | read | docs.documents.get | documents, documents.readonly |
+| `dri_update_label_enabled_app_settings` | write | drivelabels.labels.updateLabelEnabledAppSettings | (none) |
 | `drive_about_get` | read | drive.about.get | drive, drive.appdata |
 | `drive_accessproposals_get` | read | drive.accessproposals.get | drive, drive.file |
 | `drive_accessproposals_list` | read | drive.accessproposals.list | drive, drive.file |
@@ -187,10 +188,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `drive_teamdrives_list` | read | drive.teamdrives.list | drive, drive.readonly |
 | `drive_teamdrives_update` | write | drive.teamdrives.update | drive |
 | `driveactiv_activity_query` | read | driveactivity.activity.query | drive.activity, drive.activity.readonly |
-| `drivelabel_labe_revi_permi_batch_52b2` | destructive | drivelabels.labels.revisions.permissions.batchDelete | drive.admin.labels, drive.labels |
-| `drivelabel_labe_revi_permi_batch_b7ee` | write | drivelabels.labels.revisions.permissions.batchUpdate | drive.admin.labels, drive.labels |
-| `drivelabel_label_revisi_permis_create` | write | drivelabels.labels.revisions.permissions.create | drive.admin.labels, drive.labels |
-| `drivelabel_label_revisi_permis_delete` | destructive | drivelabels.labels.revisions.permissions.delete | drive.admin.labels, drive.labels |
+| `drivelabe_labels_revisions_locks_list` | read | drivelabels.labels.revisions.locks.list | drive.admin.labels, drive.admin.labels.readonly |
 | `drivelabel_labels_create` | write | drivelabels.labels.create | drive.admin.labels, drive.labels |
 | `drivelabel_labels_delete` | destructive | drivelabels.labels.delete | drive.admin.labels, drive.labels |
 | `drivelabel_labels_delta` | write | drivelabels.labels.delta | drive.admin.labels, drive.labels |
@@ -199,19 +197,21 @@ The tools that match Google's official MCP server for this product (https://deve
 | `drivelabel_labels_get` | read | drivelabels.labels.get | drive.admin.labels, drive.admin.labels.readonly |
 | `drivelabel_labels_list` | read | drivelabels.labels.list | drive.admin.labels, drive.admin.labels.readonly |
 | `drivelabel_labels_locks_list` | read | drivelabels.labels.locks.list | drive.admin.labels, drive.admin.labels.readonly |
-| `drivelabel_labels_permissio_batch_del` | destructive | drivelabels.labels.permissions.batchDelete | drive.admin.labels, drive.labels |
-| `drivelabel_labels_permissio_batch_upd` | write | drivelabels.labels.permissions.batchUpdate | drive.admin.labels, drive.labels |
 | `drivelabel_labels_permissions_create` | write | drivelabels.labels.permissions.create | drive.admin.labels, drive.labels |
 | `drivelabel_labels_permissions_delete` | destructive | drivelabels.labels.permissions.delete | drive.admin.labels, drive.labels |
 | `drivelabel_labels_permissions_list` | read | drivelabels.labels.permissions.list | drive.admin.labels, drive.admin.labels.readonly |
+| `drivelabel_labels_perms_batch_delete` | destructive | drivelabels.labels.permissions.batchDelete | drive.admin.labels, drive.labels |
+| `drivelabel_labels_perms_batch_update` | write | drivelabels.labels.permissions.batchUpdate | drive.admin.labels, drive.labels |
 | `drivelabel_labels_publish` | write | drivelabels.labels.publish | drive.admin.labels, drive.labels |
-| `drivelabel_labels_revisi_permiss_list` | read | drivelabels.labels.revisions.permissions.list | drive.admin.labels, drive.admin.labels.readonly |
-| `drivelabel_labels_revision_locks_list` | read | drivelabels.labels.revisions.locks.list | drive.admin.labels, drive.admin.labels.readonly |
-| `drivelabel_labels_revisions_update_pe` | write | drivelabels.labels.revisions.updatePermissions | drive.admin.labels, drive.labels |
-| `drivelabel_labels_update_label_copy_m` | write | drivelabels.labels.updateLabelCopyMode | drive.admin.labels, drive.labels |
-| `drivelabel_labels_update_label_enable` | write | drivelabels.labels.updateLabelEnabledAppSettings | (none) |
+| `drivelabel_labels_revs_perms_create` | write | drivelabels.labels.revisions.permissions.create | drive.admin.labels, drive.labels |
+| `drivelabel_labels_revs_perms_delete` | destructive | drivelabels.labels.revisions.permissions.delete | drive.admin.labels, drive.labels |
+| `drivelabel_labels_revs_perms_list` | read | drivelabels.labels.revisions.permissions.list | drive.admin.labels, drive.admin.labels.readonly |
+| `drivelabel_labels_revs_update_perms` | write | drivelabels.labels.revisions.updatePermissions | drive.admin.labels, drive.labels |
 | `drivelabel_labels_update_permissions` | write | drivelabels.labels.updatePermissions | drive.admin.labels, drive.labels |
 | `drivelabel_limits_get_label` | read | drivelabels.limits.getLabel | drive.admin.labels, drive.admin.labels.readonly |
+| `drivelabel_revs_perms_batch_delete` | destructive | drivelabels.labels.revisions.permissions.batchDelete | drive.admin.labels, drive.labels |
+| `drivelabel_revs_perms_batch_update` | write | drivelabels.labels.revisions.permissions.batchUpdate | drive.admin.labels, drive.labels |
+| `drivelabel_update_label_copy_mode` | write | drivelabels.labels.updateLabelCopyMode | drive.admin.labels, drive.labels |
 | `drivelabel_users_get_capabilities` | read | drivelabels.users.getCapabilities | drive.admin.labels, drive.admin.labels.readonly |
 | `forms_forms_batch_update` | write | forms.forms.batchUpdate | drive, drive.file |
 | `forms_forms_create` | write | forms.forms.create | drive, drive.file |
@@ -223,24 +223,24 @@ The tools that match Google's official MCP server for this product (https://deve
 | `forms_forms_watches_delete` | destructive | forms.forms.watches.delete | drive, drive.file |
 | `forms_forms_watches_list` | read | forms.forms.watches.list | drive, drive.file |
 | `forms_forms_watches_renew` | write | forms.forms.watches.renew | drive, drive.file |
-| `sheets_spreadsh_values_batch_cle_7bcc` | destructive | sheets.spreadsheets.values.batchClear | drive, drive.file |
-| `sheets_spreadsh_values_batch_cle_c5d4` | destructive | sheets.spreadsheets.values.batchClearByDataFilter | drive, drive.file |
-| `sheets_spreadsh_values_batch_upd_91bd` | write | sheets.spreadsheets.values.batchUpdateByDataFilter | drive, drive.file |
-| `sheets_spreadsh_values_batch_upd_d329` | write | sheets.spreadsheets.values.batchUpdate | drive, drive.file |
-| `sheets_spreadsheet_developer_m_search` | read | sheets.spreadsheets.developerMetadata.search | drive, drive.file |
-| `sheets_spreadsheet_values_batch_get_b` | read | sheets.spreadsheets.values.batchGetByDataFilter | drive, drive.file |
+| `she_values_batch_clear_by_data_filter` | destructive | sheets.spreadsheets.values.batchClearByDataFilter | drive, drive.file |
+| `sheet_values_batch_get_by_data_filter` | read | sheets.spreadsheets.values.batchGetByDataFilter | drive, drive.file |
+| `sheets_batch_update_by_data_filter` | write | sheets.spreadsheets.values.batchUpdateByDataFilter | drive, drive.file |
+| `sheets_get_by_data_filter` | read | sheets.spreadsheets.getByDataFilter | drive, drive.file |
 | `sheets_spreadsheets_batch_update` | destructive | sheets.spreadsheets.batchUpdate | drive, drive.file |
 | `sheets_spreadsheets_create` | write | sheets.spreadsheets.create | drive, drive.file |
-| `sheets_spreadsheets_developer_met_get` | read | sheets.spreadsheets.developerMetadata.get | drive, drive.file |
 | `sheets_spreadsheets_get` | read | sheets.spreadsheets.get | drive, drive.file |
-| `sheets_spreadsheets_get_by_data_filte` | read | sheets.spreadsheets.getByDataFilter | drive, drive.file |
+| `sheets_spreadsheets_meta_get` | read | sheets.spreadsheets.developerMetadata.get | drive, drive.file |
+| `sheets_spreadsheets_meta_search` | read | sheets.spreadsheets.developerMetadata.search | drive, drive.file |
 | `sheets_spreadsheets_sheets_copy_to` | write | sheets.spreadsheets.sheets.copyTo | drive, drive.file |
 | `sheets_spreadsheets_values_append` | write | sheets.spreadsheets.values.append | drive, drive.file |
 | `sheets_spreadsheets_values_batch_get` | read | sheets.spreadsheets.values.batchGet | drive, drive.file |
 | `sheets_spreadsheets_values_clear` | destructive | sheets.spreadsheets.values.clear | drive, drive.file |
 | `sheets_spreadsheets_values_get` | read | sheets.spreadsheets.values.get | drive, drive.file |
 | `sheets_spreadsheets_values_update` | write | sheets.spreadsheets.values.update | drive, drive.file |
-| `slides_presentatio_pages_get_thumbnai` | read | slides.presentations.pages.getThumbnail | drive, drive.file |
+| `sheets_values_batch_clear` | destructive | sheets.spreadsheets.values.batchClear | drive, drive.file |
+| `sheets_values_batch_update` | write | sheets.spreadsheets.values.batchUpdate | drive, drive.file |
+| `slides_pages_get_thumbnail` | read | slides.presentations.pages.getThumbnail | drive, drive.file |
 | `slides_presentations_batch_update` | destructive | slides.presentations.batchUpdate | drive, drive.file |
 | `slides_presentations_create` | write | slides.presentations.create | drive, drive.file |
 | `slides_presentations_get` | read | slides.presentations.get | drive, drive.file |

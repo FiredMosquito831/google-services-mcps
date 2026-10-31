@@ -1,0 +1,26 @@
+{
+  "note": "Old names of generated tools, accepted until 3.0.0 (renamed in 2.0.0). Each key is an old tool name, each value the name that tool has now. See CHANGELOG.md.",
+  "aliases": {
+    "gmail_users_settin_send_a_smime_delete": "gmail_send_as_smime_info_delete",
+    "gmail_users_settin_send_a_smime_insert": "gmail_send_as_smime_info_insert",
+    "gmail_users_settin_send_a_smime_set_def": "gmail_send_as_smime_info_set_default",
+    "gmail_users_settin_send_as_smime_i_list": "gmail_settings_send_as_smime_info_list",
+    "gmail_users_setting_cse_identiti_create": "gmail_settings_cse_identities_create",
+    "gmail_users_setting_cse_identiti_delete": "gmail_settings_cse_identities_delete",
+    "gmail_users_setting_cse_keypair_disable": "gmail_settings_cse_keypairs_disable",
+    "gmail_users_setting_cse_keypair_obliter": "gmail_settings_cse_keypairs_obliterate",
+    "gmail_users_setting_cse_keypairs_create": "gmail_settings_cse_keypairs_create",
+    "gmail_users_setting_cse_keypairs_enable": "gmail_settings_cse_keypairs_enable",
+    "gmail_users_setting_send_as_smime_i_get": "gmail_settings_send_as_smime_info_get",
+    "gmail_users_settings_cse_identiti_patch": "gmail_settings_cse_identities_patch",
+    "gmail_users_settings_cse_identitie_list": "gmail_settings_cse_identities_list",
+    "gmail_users_settings_forwarding_ad_list": "gmail_settings_addresses_list",
+    "gmail_users_settings_forwarding_add_get": "gmail_settings_forwarding_addresses_get",
+    "gmail_users_settings_forwarding_create": "gmail_settings_addresses_create",
+    "gmail_users_settings_forwarding_delete": "gmail_settings_addresses_delete",
+    "gmail_users_settings_get_auto_forwardin": "gmail_settings_get_auto_forwarding",
+    "gmail_users_settings_update_auto_forwar": "gmail_settings_update_auto_forwarding",
+    "gmailpostm_domains_get_compliance_statu": "gmailpost_domains_get_compliance_status",
+    "gmailpostm_domains_get_verification_tok": "gmailpostm_get_verification_token"
+  }
+}
