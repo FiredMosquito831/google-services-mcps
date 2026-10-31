@@ -6,6 +6,7 @@
  * string that leaves this module has the key replaced with [redacted].
  */
 import type { RuntimeConfig } from '../config.js';
+import { contentRange, fromBytes, isTextual } from '../media.js';
 
 /** Time allowed for one request, from sending it to reading the whole body. */
 const TIMEOUT_MS = 60_000;
@@ -30,6 +31,12 @@ export interface ApiKeyRequestOptions {
    * and Weather APIs document the header). Unset: the key query parameter, as before.
    */
   keyInHeader?: boolean;
+  /**
+   * 'media': the answer is a file (alt=media), returned as a MediaBody whatever its type (core/media.ts). Otherwise the
+   * answer is read by its content type: JSON parsed, text as text, as before, and anything else (an image, a GeoTIFF, a
+   * photo behind a redirect) a MediaBody instead of the bytes read as text.
+   */
+  read?: 'bytes' | 'media';
 }
 
 export interface ApiKeyResponse {
@@ -108,9 +115,12 @@ export class ApiKeyClient {
     const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
     let res: Response;
     let text: string;
+    let bytes: Buffer;
     try {
       res = await (fetchOverride ?? fetch)(url, { method, headers, body, signal: controller.signal });
-      text = await res.text();
+      // The body as bytes, so a file is not lost by reading it as text; the text is what res.text() gives.
+      bytes = Buffer.from(await res.arrayBuffer());
+      text = new TextDecoder().decode(bytes);
     } catch (err) {
       const why = controller.signal.aborted
         ? `no answer within ${TIMEOUT_MS / 1000} seconds`
@@ -120,6 +130,13 @@ export class ApiKeyClient {
       throw new Error(String(redactKeyIn(`The request ${method} ${options.url} failed: ${why}.`, key)));
     } finally {
       clearTimeout(timer);
+    }
+
+    const type = res.headers.get('content-type') ?? '';
+    // A file: asked for as media, or an answer that is neither text nor JSON. Never shown as text; nothing in it to redact.
+    if (res.ok && (options.read === 'media' || (type !== '' && !isTextual(type)))) {
+      const range = res.status === 206 ? contentRange(res.headers.get('content-range')) : undefined;
+      return { status: res.status, data: fromBytes(bytes, type, { media: true, ...(range ? { range } : {}) }) };
     }
 
     let data: unknown = text;

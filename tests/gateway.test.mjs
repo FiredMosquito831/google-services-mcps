@@ -364,6 +364,69 @@ test('api_call runs a read method with no gate, and a read POST may carry a body
   assert.deepEqual(requests[1].data, { names: ['a'] });
 });
 
+test('api_call: a media download (query alt=media) asks for one part with a Range, and returns it whole, its base64 never redacted', async () => {
+  const { MediaBody } = await import(new URL('../dist/core/media.js', import.meta.url).href);
+  const dataDir = mkdtempSync(join(tmpdir(), 'gsm-gw-media-data-'));
+  const tokenDir = mkdtempSync(join(tmpdir(), 'gsm-gw-media-token-'));
+  const api = { ...catalog.apis[0], methods: [...catalog.apis[0].methods, ['demoapi.files.get', 'GET', 'v1/files/{fileId}', [ITEMS_SCOPE], '']] };
+  writeFileSync(join(dataDir, 'catalog.json'), JSON.stringify({ ...catalog, apis: [api, catalog.apis[1]] }));
+  const doc = JSON.parse(JSON.stringify(discovery));
+  doc.parameters.alt = { type: 'string', location: 'query', enum: ['json', 'media'] };
+  doc.resources.files = {
+    methods: { get: { id: 'demoapi.files.get', path: 'v1/files/{fileId}', httpMethod: 'GET', supportsMediaDownload: true, parameters: { fileId: { type: 'string', location: 'path', required: true } } } },
+  };
+  mkdirSync(join(tokenDir, 'discovery-cache'), { recursive: true });
+  writeFileSync(join(tokenDir, 'discovery-cache', 'demoapi.v1.json'), JSON.stringify(doc));
+  process.env.GSM_DATA_DIR = dataDir;
+  const tools = gateway(loadConfig({ GSM_TOKEN_DIR: tokenDir }));
+  // Base64 that holds "1//" and "AIza..." by chance: the secret-text patterns would match it, so it must not pass them.
+  let b64 = `AAA+1//AAAAAAAAAAAAAAA+AIzaSy${'A'.repeat(40)}`;
+  while (b64.length % 4) b64 += 'A';
+  const bytes = Buffer.from(b64, 'base64');
+  assert.equal(bytes.toString('base64'), b64);
+  fakeRequest({ status: 200, data: { blob: b64 } });
+  const json = await tools.api_call.handler({ method: 'demoapi.items.list', pathParams: { projectId: 'p1' } }, {});
+  assert.match(json.data.blob, /\[redacted\]/, 'in a JSON answer the same text would be redacted, which would corrupt a file');
+  const requests = fakeRequest({ status: 206, data: new MediaBody('application/octet-stream', bytes, 0, bytes.length) });
+  const out = await tools.api_call.handler({ method: 'demoapi.files.get', pathParams: { fileId: 'f1' }, query: { alt: 'media' } }, {});
+  assert.deepEqual(requests[0].headers, { Range: 'bytes=0-17999' });
+  assert.equal(requests[0].read, 'media');
+  assert.deepEqual(requests[0].params, { alt: 'media' });
+  assert.equal(out.status, 206);
+  assert.equal(out.data.data_base64, b64, 'the base64 part is whole');
+  assert.equal(out.data.size_bytes, bytes.length);
+  // A text file passes the secret-text patterns.
+  fakeRequest({ status: 200, data: new MediaBody('text/plain', Buffer.from('token: Bearer abc.def', 'utf8'), 0, 21) });
+  const text = await tools.api_call.handler({ method: 'demoapi.files.get', pathParams: { fileId: 'f1' }, query: { alt: 'media' }, offset: 0 }, {});
+  assert.equal(text.data.text, 'token: [redacted]');
+  // Without alt=media the method is read as bytes (its answer may be a file), with no Range; other methods as before.
+  const plain = fakeRequest({ status: 200, data: { id: 'f1' } });
+  await tools.api_call.handler({ method: 'demoapi.files.get', pathParams: { fileId: 'f1' } }, {});
+  assert.equal(plain[0].read, 'bytes');
+  assert.equal(plain[0].headers, undefined);
+  await tools.api_call.handler({ method: 'demoapi.items.list', pathParams: { projectId: 'p1' } }, {});
+  assert.deepEqual(Object.keys(plain[1]).sort(), ['data', 'method', 'params', 'url']);
+});
+
+test('api_call: a path that names a location the document has a host for goes to that host; a refused host never', async () => {
+  const { cfg, tokenDir } = setup();
+  const doc = JSON.parse(JSON.stringify(discovery));
+  doc.endpoints = [
+    { location: 'us', endpointUrl: 'https://demo-preprod.us.rep.googleapis.com/', description: 'Regional Endpoint' },
+    { location: 'us', endpointUrl: 'https://demo.us.rep.googleapis.com/', description: 'Regional Endpoint' },
+    { location: 'eu', endpointUrl: 'https://evil.example.com/', description: 'Regional Endpoint' },
+  ];
+  writeFileSync(join(tokenDir, 'discovery-cache', 'demoapi.v1.json'), JSON.stringify(doc));
+  const tools = gateway(cfg);
+  const requests = fakeRequest({ status: 200, data: { name: 'x' } });
+  await tools.api_call.handler({ method: 'demoapi.items.get', pathParams: { name: 'projects/p1/locations/us/items/i1' } }, {});
+  assert.equal(requests[0].url, 'https://demo.us.rep.googleapis.com/v1/projects/p1/locations/us/items/i1', 'the first usable host for us');
+  await tools.api_call.handler({ method: 'demoapi.items.get', pathParams: { name: 'projects/p1/locations/eu/items/i1' } }, {});
+  assert.equal(requests[1].url, 'https://demo.example.googleapis.com/v1/projects/p1/locations/eu/items/i1', 'a host outside googleapis.com is never used');
+  await tools.api_call.handler({ method: 'demoapi.items.list', pathParams: { projectId: 'p1' } }, {});
+  assert.equal(requests[2].url, 'https://demo.example.googleapis.com/v1/projects/p1/items', 'no location: the catalog root, as before');
+});
+
 test('api_call refuses a body on a GET, and sends nothing', async () => {
   const tools = gateway(setup().cfg);
   const requests = fakeRequest();

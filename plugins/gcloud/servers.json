@@ -1219,6 +1219,26 @@
           "version": "2026-12-01-preview"
         }
       ],
+      "pageSizeDefaults": {
+        "storage": {
+          "source": "Discovery, storage v1: maxResults \"The service will use this parameter or 1,000 items, whichever is smaller\"",
+          "reason": "Google's default page is far over the 25,000-character result limit, so the answer would be cut and Google's nextPageToken would skip what was cut. Sizes are estimates from Google's resource schemas, not measured on live data.",
+          "methods": {
+            "storage.objects.list": {
+              "parameter": "maxResults",
+              "value": 25,
+              "googleDefault": 1000,
+              "reason": "An object's metadata (links, hashes, size, times, storage class) is about 0.7 KB; 1,000 are about 28 times the limit."
+            },
+            "storage.buckets.list": {
+              "parameter": "maxResults",
+              "value": 25,
+              "googleDefault": 1000,
+              "reason": "A bucket's metadata (location, IAM configuration, lifecycle, soft delete policy) is about 1 KB; 1,000 are about 40 times the limit."
+            }
+          }
+        }
+      },
       "toolsets": {
         "google": [
           "cloud_projects_search",

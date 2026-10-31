@@ -1215,6 +1215,26 @@
           "version": "2026-12-01-preview"
         }
       ],
+      "pageSizeDefaults": {
+        "storage": {
+          "source": "Discovery, storage v1: maxResults \"The service will use this parameter or 1,000 items, whichever is smaller\"",
+          "reason": "Google's default page is far over the 25,000-character result limit, so the answer would be cut and Google's nextPageToken would skip what was cut. Sizes are estimates from Google's resource schemas, not measured on live data.",
+          "methods": {
+            "storage.objects.list": {
+              "parameter": "maxResults",
+              "value": 25,
+              "googleDefault": 1000,
+              "reason": "An object's metadata (links, hashes, size, times, storage class) is about 0.7 KB; 1,000 are about 28 times the limit."
+            },
+            "storage.buckets.list": {
+              "parameter": "maxResults",
+              "value": 25,
+              "googleDefault": 1000,
+              "reason": "A bucket's metadata (location, IAM configuration, lifecycle, soft delete policy) is about 1 KB; 1,000 are about 40 times the limit."
+            }
+          }
+        }
+      },
       "toolsets": {
         "google": {
           "source": [
@@ -1724,6 +1744,32 @@
           "version": "v2beta"
         }
       ],
+      "fieldsDefaults": {
+        "drive": {
+          "value": "*",
+          "source": "https://developers.google.com/workspace/drive/api/guides/fields-parameter",
+          "reason": "Google: \"For all methods of the about, approvals, comments (excluding delete), and replies (excluding delete) resources, you must set the fields parameter. These methods don't return a default set of fields.\" The descriptions of about.get, approvals.list and the comments methods say the same. * returns every field; the fields argument narrows it.",
+          "methods": [
+            "drive.about.get",
+            "drive.approvals.approve",
+            "drive.approvals.cancel",
+            "drive.approvals.comment",
+            "drive.approvals.decline",
+            "drive.approvals.get",
+            "drive.approvals.list",
+            "drive.approvals.reassign",
+            "drive.approvals.start",
+            "drive.comments.create",
+            "drive.comments.get",
+            "drive.comments.list",
+            "drive.comments.update",
+            "drive.replies.create",
+            "drive.replies.get",
+            "drive.replies.list",
+            "drive.replies.update"
+          ]
+        }
+      },
       "toolsets": {
         "google": {
           "source": "https://developers.google.com/workspace/drive/api/reference/mcp/tools_list",
@@ -1946,6 +1992,20 @@
         }
       ],
       "gateway": [],
+      "pageSizeDefaults": {
+        "calendar": {
+          "source": "Discovery, calendar v3: events.list maxResults \"By default the value is 250 events\"",
+          "reason": "Google's default page is far over the 25,000-character result limit. Sizes are estimates from Google's resource schemas, not measured on live data.",
+          "methods": {
+            "calendar.events.list": {
+              "parameter": "maxResults",
+              "value": 25,
+              "googleDefault": 250,
+              "reason": "A full event (attendees, description, conference data, reminders) is about 1 to 2 KB; 250 are 10 to 20 times the limit. calendar_list_events reads 50 events with fewer fields."
+            }
+          }
+        }
+      },
       "toolsets": {
         "google": {
           "source": "https://developers.google.com/workspace/calendar/api/v3/reference/mcp/tools_list",
@@ -2526,6 +2586,44 @@
           "version": "v1"
         }
       ],
+      "pageSizeDefaults": {
+        "admin": {
+          "source": "Discovery, admin reports_v1: maxResults \"Determines how many activity records are shown on each response page\"; default 1000, maximum 1000",
+          "reason": "Google's default page is far over the 25,000-character result limit, so the answer would be cut and Google's nextPageToken would skip what was cut. Sizes are estimates from Google's resource schemas, not measured on live data.",
+          "methods": {
+            "reports.activities.list": {
+              "parameter": "maxResults",
+              "value": 25,
+              "googleDefault": 1000,
+              "reason": "Each record is one event (actor, IP address, the events and their parameters), about 0.5 to 1 KB of compact JSON; 1,000 are 20 to 40 times the limit."
+            },
+            "reports.userUsageReport.get": {
+              "parameter": "maxResults",
+              "value": 10,
+              "googleDefault": 1000,
+              "reason": "One report per user; without the parameters filter a report holds every application's parameters, several KB, so 1,000 are megabytes."
+            },
+            "reports.entityUsageReports.get": {
+              "parameter": "maxResults",
+              "value": 10,
+              "googleDefault": 1000,
+              "reason": "One report per entity; without the parameters filter a report holds every parameter of the entity type, several KB, so 1,000 are megabytes."
+            }
+          }
+        },
+        "cloudsearch": {
+          "source": "Discovery, cloudsearch v1: settings.datasources.list pageSize \"The default value is 1000\"",
+          "reason": "Google's default page is far over the 25,000-character result limit. Sizes are estimates from Google's resource schemas, not measured on live data.",
+          "methods": {
+            "cloudsearch.settings.datasources.list": {
+              "parameter": "pageSize",
+              "value": 25,
+              "googleDefault": 1000,
+              "reason": "A data source with its indexing service accounts, operation ids and item names is about 0.5 to 1 KB; 1,000 are 20 to 40 times the limit."
+            }
+          }
+        }
+      },
       "toolsets": {
         "google": {
           "source": "No official Google MCP server for Google Workspace administration (the Admin SDK, reports and the alert center) was found in Google's Workspace and Cloud MCP lists on 2026-10-29; a lean set chosen here.",
@@ -2764,6 +2862,20 @@
         }
       ],
       "gateway": [],
+      "pageSizeDefaults": {
+        "youtube": {
+          "source": "Discovery, youtube v3: liveChatMessages.list maxResults, default 500, maximum 2000",
+          "reason": "Google's default page is far over the 25,000-character result limit. Sizes are estimates from Google's resource schemas, not measured on live data.",
+          "methods": {
+            "youtube.liveChatMessages.list": {
+              "parameter": "maxResults",
+              "value": 25,
+              "googleDefault": 500,
+              "reason": "A chat message with its author details is about 0.6 to 1 KB; 500 are 12 to 20 times the limit."
+            }
+          }
+        }
+      },
       "toolsets": {
         "google": {
           "source": "No official Google MCP server for YouTube was found (Google's Cloud and Workspace MCP lists and Google's GitHub organisations, 2026-10-29; a negative, not confirmed by Google); a lean set chosen here.",
@@ -3103,6 +3215,26 @@
           "version": "v5"
         }
       ],
+      "pageSizeDefaults": {
+        "displayvideo": {
+          "source": "Discovery, displayvideo v4: bulkListAssignedTargetingOptions pageSize \"If unspecified, the default is `5000`\"",
+          "reason": "Google's default page is far over the 25,000-character result limit. Sizes are estimates from Google's resource schemas, not measured on live data.",
+          "methods": {
+            "displayvideo.advertisers.lineItems.bulkListAssignedTargetingOptions": {
+              "parameter": "pageSize",
+              "value": 50,
+              "googleDefault": 5000,
+              "reason": "An assigned targeting option is about 0.3 to 0.5 KB; 5,000 are 60 to 100 times the limit."
+            },
+            "displayvideo.advertisers.adGroups.bulkListAssignedTargetingOptions": {
+              "parameter": "pageSize",
+              "value": 50,
+              "googleDefault": 5000,
+              "reason": "An assigned targeting option is about 0.3 to 0.5 KB; 5,000 are 60 to 100 times the limit."
+            }
+          }
+        }
+      },
       "toolsets": {
         "google": {
           "source": [
@@ -3261,6 +3393,26 @@
           "version": "reports_v1beta"
         }
       ],
+      "pageSizeDefaults": {
+        "merchantapi": {
+          "source": "Discovery, merchantapi inventories_v1: regionalInventories.list and localInventories.list pageSize, default 25000",
+          "reason": "Google's default page is far over the 25,000-character result limit. Sizes are estimates from Google's resource schemas, not measured on live data.",
+          "methods": {
+            "merchantapi.accounts.products.regionalInventories.list": {
+              "parameter": "pageSize",
+              "value": 50,
+              "googleDefault": 25000,
+              "reason": "A regional inventory entry (region, price, availability) is about 0.3 to 0.5 KB; 25,000 are hundreds of times the limit."
+            },
+            "merchantapi.accounts.products.localInventories.list": {
+              "parameter": "pageSize",
+              "value": 50,
+              "googleDefault": 25000,
+              "reason": "A local inventory entry (store code, price, availability, pickup) is about 0.3 to 0.5 KB; 25,000 are hundreds of times the limit."
+            }
+          }
+        }
+      },
       "toolsets": {
         "google": {
           "source": "https://developers.google.com/merchant/api/guides/agentic-tools/merchant-data-mcp",
@@ -3843,6 +3995,17 @@
         }
       ],
       "gateway": [],
+      "fieldMaskDefaults": {
+        "places": {
+          "source": "https://developers.google.com/maps/documentation/places/web-service/text-search (also nearby-search and place-details)",
+          "reason": "Google: \"If you omit the field mask, the method returns an error.\" There is no default list of fields. These defaults ask only for fields of the Essentials, IDs Only and Pro SKUs, plus nextPageToken for text search paging; Enterprise fields (rating, phone numbers, opening hours, website, price level) cost more and are asked for by name in field_mask.",
+          "methods": {
+            "places.places.searchText": "places.id,places.displayName,places.formattedAddress,places.location,places.types,places.googleMapsUri,nextPageToken",
+            "places.places.searchNearby": "places.id,places.displayName,places.formattedAddress,places.location,places.types,places.googleMapsUri",
+            "places.places.get": "id,displayName,formattedAddress,location,types,googleMapsUri"
+          }
+        }
+      },
       "toolsets": {
         "google": {
           "source": [

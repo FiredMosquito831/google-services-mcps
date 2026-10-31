@@ -43,10 +43,11 @@ import type { RuntimeConfig } from './config.js';
 import { invocation } from './invocation.js';
 import type { AuthGroup } from './registry.js';
 import { classifyMethod } from './discovery/methods.js';
-import { buildUrl, loadToolKinds, sendAuthorized } from './discovery/tools.js';
+import { buildUrl, loadToolKinds, rootForPath, sendAuthorized, type RegionalEndpoint } from './discovery/tools.js';
 import type { GateFn } from './approval.js';
 import { resolveDynamicKind } from './dynamic.js';
 import { redactCredentials } from './credential-fields.js';
+import { MediaBody, mediaPart, rangeHeader } from './media.js';
 import { describeError, scopeHint, type ActionKind, type ToolContext, type ToolDef, type ToolKind } from './tools.js';
 
 // ---------------------------------------------------------------------------
@@ -65,6 +66,8 @@ export type TestRequest = (req: {
   method: HttpVerb;
   params?: Record<string, unknown>;
   data?: unknown;
+  headers?: Record<string, string>;
+  read?: 'bytes' | 'media';
 }) => Promise<{ status: number; data: unknown }>;
 
 // ---------------------------------------------------------------------------
@@ -153,6 +156,12 @@ const callShape = {
     .optional()
     .describe('Query parameters declared by the method, for example {"pageSize": 10}.'),
   body: z.record(z.string(), z.unknown()).optional().describe('JSON request body, for methods that take one.'),
+  offset: z
+    .number()
+    .int()
+    .min(0)
+    .optional()
+    .describe('When the answer is a file (query alt "media" for a media download, an image, a GeoTIFF): the first byte of the part to return, 0 for the first, then next_offset of the previous answer.'),
 };
 
 type SearchArgs = z.infer<z.ZodObject<typeof searchShape>>;
@@ -173,7 +182,7 @@ const TOOL_TEXT = {
   call: {
     title: 'Call an API method',
     description:
-      "Call one method of this product's APIs. Path values go in pathParams, declared query parameters in query, and the JSON body in body. Reads run directly. Writes and deletes ask the user for approval first, and are refused without it. Upload methods are not supported.",
+      "Call one method of this product's APIs. Path values go in pathParams, declared query parameters in query, and the JSON body in body. Reads run directly. Writes and deletes ask the user for approval first, and are refused without it. Upload methods are not supported. A file (query alt \"media\", an image) comes back one part at a time: offset and next_offset.",
   },
 } as const;
 
@@ -381,6 +390,7 @@ interface RawMethod {
   parameters?: Record<string, RawParam> | RawParam[];
   request?: string | { $ref?: string };
   response?: string | { $ref?: string };
+  supportsMediaDownload?: boolean;
 }
 
 interface RawResource {
@@ -391,6 +401,8 @@ interface RawResource {
 interface RawDiscovery {
   name?: string;
   version?: string;
+  /** The document's regional and locational hosts (rootForPath in discovery/tools.ts). */
+  endpoints?: RegionalEndpoint[];
   parameters?: Record<string, RawParam>;
   schemas?: Record<string, RawSchema>;
   resources?: Record<string, RawResource>;
@@ -697,6 +709,8 @@ interface WireRequest {
   method: HttpVerb;
   params?: Record<string, unknown>;
   data?: unknown;
+  headers?: Record<string, string>;
+  read?: 'bytes' | 'media';
 }
 
 /**
@@ -748,8 +762,12 @@ async function runCall(core: Core, args: CallArgs, ctx: ToolContext | undefined)
   const pathParams = validatePathParams(method.path, args.pathParams ?? {}, declaredPath);
   const query = validateQuery(args.query ?? {}, allowedQuery);
 
-  const url = buildUrl(api.rootUrl, api.servicePath, method.path, pathParams);
-  checkUrl(url, api.rootUrl, api.servicePath);
+  // A path that names a location the document has a host for goes to that host (Vertex AI us-central1, Document AI eu,
+  // Discovery Engine us); any other, to the catalog's root as before. The URL is checked against the root it was built on.
+  const onRoot = buildUrl(api.rootUrl, api.servicePath, method.path, pathParams);
+  const root = rootForPath(api.rootUrl, doc.endpoints, new URL(onRoot).pathname);
+  const url = root === api.rootUrl ? onRoot : buildUrl(root, api.servicePath, method.path, pathParams);
+  checkUrl(url, root, api.servicePath);
   const data = method.httpMethod === 'GET' ? undefined : args.body;
 
   const kind = callKindOf(entry, args.body);
@@ -766,13 +784,27 @@ async function runCall(core: Core, args: CallArgs, ctx: ToolContext | undefined)
   // The query holds only the validated parameters. The apikey client adds the key itself, so the gateway never does.
   const params = Object.keys(query).length > 0 ? query : undefined;
   const isApiKey = input.group === API_KEY_GROUP;
+  // A media download (query alt "media") asks for one part with a Range header, and a method whose answer may be a file
+  // (supportsMediaDownload, or a GET answering an HttpBody) is read as bytes (core/media.ts). Other calls are as before.
+  const offset = args.offset ?? 0;
+  const asMedia = String(query.alt ?? '') === 'media';
+  const mayBeFile = raw.supportsMediaDownload === true || (method.httpMethod === 'GET' && /HttpBody$/.test(refOf(raw.response) ?? ''));
+  const read = asMedia ? ('media' as const) : mayBeFile ? ('bytes' as const) : undefined;
+  const extra = { ...(asMedia ? { headers: { Range: rangeHeader(offset, input.cfg.maxResultChars) } } : {}), ...(read ? { read } : {}) };
   let res: { status: number; data: unknown };
   try {
     res = requestOverride
-      ? await requestOverride({ url, method: method.httpMethod, params, data })
-      : await sendRequest(input.cfg, input.group, { url, method: method.httpMethod, params, data });
+      ? await requestOverride({ url, method: method.httpMethod, params, data, ...extra })
+      : await sendRequest(input.cfg, input.group, { url, method: method.httpMethod, params, data, ...extra });
   } catch (err) {
     throw new Error(httpError(err, input.group, isApiKey ? input.cfg.apiKey : undefined));
+  }
+  if (res.data instanceof MediaBody) {
+    // One part of the file. Its base64 is not passed through the secret-text patterns, which match base64 by chance and
+    // would corrupt it; a text part is.
+    const part = mediaPart(res.data, { offset, maxResultChars: input.cfg.maxResultChars, canContinue: true });
+    if (typeof part.text === 'string') part.text = redactText(part.text);
+    return { status: res.status, data: part };
   }
   // A read never asks, so the credential fields it returns are replaced first (core/credential-fields.ts), by the method's
   // response schema. Then the name-based redaction below applies to every result, as before.

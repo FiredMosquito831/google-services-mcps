@@ -19,6 +19,20 @@
           "version": "v3"
         }
       ],
+      "pageSizeDefaults": {
+        "calendar": {
+          "source": "Discovery, calendar v3: events.list maxResults \"By default the value is 250 events\"",
+          "reason": "Google's default page is far over the 25,000-character result limit. Sizes are estimates from Google's resource schemas, not measured on live data.",
+          "methods": {
+            "calendar.events.list": {
+              "parameter": "maxResults",
+              "value": 25,
+              "googleDefault": 250,
+              "reason": "A full event (attendees, description, conference data, reminders) is about 1 to 2 KB; 250 are 10 to 20 times the limit. calendar_list_events reads 50 events with fewer fields."
+            }
+          }
+        }
+      },
       "toolsets": {
         "google": [
           "calendar_list_calendars",

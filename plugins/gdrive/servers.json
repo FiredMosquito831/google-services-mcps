@@ -57,6 +57,32 @@
           "version": "v2beta"
         }
       ],
+      "fieldsDefaults": {
+        "drive": {
+          "value": "*",
+          "source": "https://developers.google.com/workspace/drive/api/guides/fields-parameter",
+          "reason": "Google: \"For all methods of the about, approvals, comments (excluding delete), and replies (excluding delete) resources, you must set the fields parameter. These methods don't return a default set of fields.\" The descriptions of about.get, approvals.list and the comments methods say the same. * returns every field; the fields argument narrows it.",
+          "methods": [
+            "drive.about.get",
+            "drive.approvals.approve",
+            "drive.approvals.cancel",
+            "drive.approvals.comment",
+            "drive.approvals.decline",
+            "drive.approvals.get",
+            "drive.approvals.list",
+            "drive.approvals.reassign",
+            "drive.approvals.start",
+            "drive.comments.create",
+            "drive.comments.get",
+            "drive.comments.list",
+            "drive.comments.update",
+            "drive.replies.create",
+            "drive.replies.get",
+            "drive.replies.list",
+            "drive.replies.update"
+          ]
+        }
+      },
       "toolsets": {
         "google": [
           "drive_search",

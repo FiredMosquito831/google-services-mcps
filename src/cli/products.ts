@@ -10,9 +10,11 @@
  */
 import { existsSync, readFileSync, statSync } from 'node:fs';
 import { dirname, join } from 'node:path';
-import type { AuthGroup, Registry, ScopePolicy, ServerSpec } from '../core/registry.js';
+import type { AuthGroup, FieldMaskDefaults, FieldsDefaults, PageSizeDefaults, Registry, ScopePolicy, ServerSpec } from '../core/registry.js';
 import type { InstallRoots } from './paths.js';
 import { LISTED_TOOLSETS, PREFER_PROFILES, type PreferredScopes, type ServerToolsets, type ServerToolsetScopes } from '../core/toolset.js';
+
+const isPlainObject = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null && !Array.isArray(value);
 
 /** One line per auth group, shown in help-like output and kept in the converted registry. */
 export const GROUP_TEXT: Record<string, string> = {
@@ -67,6 +69,11 @@ export function registryFromProducts(raw: unknown, dataRoot: string): Registry {
       ...(typeof value.scopeOverrides === 'object' && value.scopeOverrides !== null && !Array.isArray(value.scopeOverrides)
         ? { scopeOverrides: value.scopeOverrides as Record<string, string[]> }
         : {}),
+      // The product's request defaults for some methods (checked by scripts/gen-servers.mjs): the fields value and the
+      // response field mask sent when a call gives none.
+      ...(isPlainObject(value.fieldsDefaults) ? { fieldsDefaults: value.fieldsDefaults as Record<string, FieldsDefaults> } : {}),
+      ...(isPlainObject(value.fieldMaskDefaults) ? { fieldMaskDefaults: value.fieldMaskDefaults as Record<string, FieldMaskDefaults> } : {}),
+      ...(isPlainObject(value.pageSizeDefaults) ? { pageSizeDefaults: value.pageSizeDefaults as Record<string, PageSizeDefaults> } : {}),
       // The product's listed toolsets, as tool names (scripts/gen-servers.mjs writes the same into config/servers.json).
       ...toolsetsField(value.toolsets),
       // Their preferred scopes per profile (preferScopes), as gen-servers writes them (toolsetScopes).
@@ -145,7 +152,19 @@ export function loadProductRegistry(roots: InstallRoots): Registry {
 }
 
 /** The fields of a server entry that say what the server is built from, as its plugin's servers.json holds them. */
-const BUILD_FIELDS = ['curated', 'apis', 'gatewayApis', 'scopes', 'scopePolicy', 'scopeOverrides', 'toolsets', 'toolsetScopes'] as const;
+const BUILD_FIELDS = [
+  'curated',
+  'apis',
+  'gatewayApis',
+  'scopes',
+  'scopePolicy',
+  'scopeOverrides',
+  'fieldsDefaults',
+  'fieldMaskDefaults',
+  'pageSizeDefaults',
+  'toolsets',
+  'toolsetScopes',
+] as const;
 
 /**
  * Repo layout (the repository's gsm.mjs, and so the npm package's): each server as its own plugin folder builds it.

@@ -40,7 +40,12 @@ export interface DiscoveryParam {
 export const MAX_REF_DEPTH = 4;
 export const MAX_NODES = 200;
 export const SCHEMA_DESC_MAX = 160;
-export const PARAM_DESC_MAX = 200;
+/**
+ * A parameter's description in its tool argument. The snapshots keep up to 1,000 characters (PARAM_DESC_MAX in
+ * scripts/snapshot-discovery.mjs), so a filter's syntax, an updateMask's field list and a parameter's values stay whole.
+ * Until 1.29.0 it was 200.
+ */
+export const PARAM_DESC_MAX = 1000;
 
 export interface SchemaContext {
   /** Named schemas of one Discovery document, keyed by schema id. */

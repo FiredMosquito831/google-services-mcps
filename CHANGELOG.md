@@ -2,6 +2,75 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.31.1 - 2026-10-31
+
+### Fixed: regional resources go to their region's host
+- The per-method tools and `api_call` always used an API's global host. Some APIs serve a location's resources only, or for data residency, from that location's host: Vertex AI regions, Document AI `us` and `eu`, Discovery Engine `us` (the `us.rep` host), Speech, Cloud Run and more. Their Discovery documents list these hosts (`endpoints`). A call whose path names a location (`.../locations/us-central1/...`) that the document lists now goes to that host. Every other call goes where it went before.
+- Data from the documents, no per-API rule: the snapshots keep each document's hosts (location and URL); `api_call` reads them from the document it already loads. Where a document lists two hosts for one location, the first is used; only `https` hosts under `googleapis.com` are used and never a pre-production host (Vertex AI lists `aiplatform-preprod.us.rep.googleapis.com` beside its `us` host). A location the document does not list stays on the global host: Discovery Engine's document lists `us` but not `eu`.
+- The approval preview of a destructive per-method call and the target read of a write use the same host as the call.
+
+### Not changed
+- tools/list is byte-identical to 1.31.0 for every server. Tool maps and gateway kinds of all 23 plugins (0 kind changes) and `gsm scopes` for every plugin, profile and toolset (207 cases) are the same. Five snapshots gained their hosts (BigQuery, Cloud Trace, Discovery Engine, Speech, Cloud Storage); only Discovery Engine and Speech have paths that name a location. Not checked against live Google.
+
+## 1.31.0 - 2026-10-31
+
+### Added: files from the per-method tools and the gateway
+- The 11 per-method tools whose method Google marks as a media download take `alt` and `offset`. With `alt: "media"` they return the content instead of the metadata: a Keep attachment (`keep_media_download`, which never sent `alt=media` before, so it could only return metadata), a Cloud Storage object, a Drive file, revision or export, a Chat attachment, a YouTube caption track or report, a Play APK, a Health export. The 9 GETs whose answer is a file (Solar GeoTIFF, Air Quality and Pollen heatmap tiles, and others) take `offset`.
+- A file comes back one part at a time, as much as fits the result limit (about 18,000 bytes by default): `{ mime_type, size_bytes, offset, bytes_read, next_offset, note, data_base64 }`. Call again with `offset` set to `next_offset`; the base64 parts join into the base64 of the file. A text file comes back as `text`, cut at a whole character and where its escaped text fits. A media download asks Google for that part only (a `Range` header).
+- `api_call` does the same for the gateway's APIs: query `alt: "media"`, and a new `offset` argument. A file's base64 is not passed through the gateway's secret-text patterns, which can match base64 by chance and would corrupt it; a text file still is.
+
+### Fixed: binary answers are no longer lost
+- An answer that is neither JSON nor text came back as `{}` through an OAuth client (the HTTP library reads it as a Blob) and as its bytes read as text through the API key client (gmaps, gsearch): the Solar GeoTIFF, the heatmap tiles, a Places photo behind its redirect, a Drive export to PDF. They now come back as the parts above. `places_places_photos_get_media` has no `offset`: a photo larger than one part returns its first part and says to ask for a smaller one, or for its link with `skipHttpRedirect`.
+- JSON and text answers are parsed as before, and requests of methods that cannot answer a file are sent exactly as before.
+
+### Changed
+- tools/list: 20 per-method tools gained `alt` and `offset` or `offset` alone, and `api_call` gained `offset` and one sentence of description; nothing else changed (+0.1 % writes on). Tool maps and gateway kinds of all 23 plugins (0 kind changes) and `gsm scopes` for every plugin, profile and toolset (207 cases) are the same as in 1.30.1.
+- Nothing here was checked against live Google: the Range answers, the content types and the redirect follow Google's documentation and the HTTP standard.
+
+## 1.30.1 - 2026-10-31
+
+### Fixed: required parameters are required
+- A query parameter whose Google description starts with "Required." was optional in its per-method tool, because Discovery marks few parameters required; a call without it went to Google and failed there. It is now required in the tool's schema, so the call is refused before any request with the argument named: 270 arguments of 224 tools (284 parameters in the snapshots; the others belong to methods with no tool). The YouTube Analytics document says `required: true` in the text instead; its `ids`, `metrics`, `startDate` and `endDate` count too.
+- Two stay optional, because their own description says what happens without them: `people.people.createContact` `personFields` ("Defaults to all fields if not set") and `streetviewpublish.photo.update` `updateMask` ("If not present, the old Photo metadata is entirely replaced").
+- Request body fields are unchanged.
+
+### Fixed: default pages that cannot fit
+- Twelve list methods whose Google default page is far over the 25,000-character result limit now ask for a smaller page when the call gives no size: Admin Reports `activities.list` 25 (Google 1,000), `userUsageReport.get` and `entityUsageReports.get` 10 (1,000), Cloud Search `settings.datasources.list` 25 (1,000), Calendar `events.list` 25 (250), Cloud Storage `objects.list` and `buckets.list` 25 (1,000), YouTube `liveChatMessages.list` 25 (500), Display & Video 360 `bulkListAssignedTargetingOptions` for line items and ad groups 50 (5,000), Merchant `regionalInventories.list` and `localInventories.list` 50 (25,000). Before, the answer was cut by the runtime and Google's page token skipped what was cut. A size the call gives is sent as it is, and the argument's description now names both defaults.
+- They are data, `pageSizeDefaults` in `config/products.json`, each with Google's default and the reason; the item sizes behind them are estimates from Google's schemas, not measured live. `gen-servers` checks that each names an integer query parameter of a method in the snapshot, below Google's default.
+
+### Not changed
+- No tool's kind, scopes or name: tool maps and gateway kinds of all 23 plugins (0 kind changes) and `gsm scopes` for every plugin, profile and toolset (207 cases) are the same as in 1.30.0. tools/list: 224 tools gained required arguments and 12 tools a page size description (two of them both), nothing else.
+
+## 1.30.0 - 2026-10-31
+
+### Added: `fields` on every per-method read
+- Every generated read tool (1,419 of them) takes an optional `fields`: Google's partial response, such as `id,name` or `files(id,name),nextPageToken`. A smaller answer fits the result limit with more items. Without it, the request is as before.
+- Writes do not take it: on every generated tool it grew tools/list by 5.7 % (writes on), over the 5 % this change allowed itself; on the reads alone it is +2.5 % (writes on) and +8.7 % (writes off, where only reads are listed). A write's answer is the resource it wrote.
+
+### Fixed: methods that cannot work without `fields` or a field mask
+- Drive's about, approvals, comments and replies methods (17 tools, deletes excepted) return no default fields; Google's guide: "For all methods of the about, approvals, comments (excluding delete), and replies (excluding delete) resources, you must set the fields parameter." Their tools now send `fields=*` when the call gives none (the reads take `fields` to narrow it). The read of a comment or approval that an approval form shows sends it too. Not checked live.
+- Places API (New) text search, nearby search and place details fail without a response field mask (Google: "If you omit the field mask, the method returns an error"). `places_places_search_text`, `places_places_search_nearby` and `places_places_get` take `field_mask` instead of `fields` and send it in the `X-Goog-FieldMask` header; by default the id, display name, formatted address, location, types and Google Maps link, fields of the Essentials and Pro SKUs (plus `nextPageToken` for text search, which pages with it). Enterprise fields (rating, phone, opening hours, website) cost more and are asked for by name. Not checked live.
+- Both are data in `config/products.json`, per API, with Google's text as the reason: `fieldsDefaults` (gdrive) and `fieldMaskDefaults` (gmaps). `gen-servers` checks every listed method against the product's snapshot and copies them; a test fails when a refreshed document says another method needs `fields`.
+
+### Changed
+- The snapshots keep the names of their document's system parameters (`systemParameters`); no other part of a snapshot changed.
+- tools/list: 1,422 tools gained `fields` or `field_mask`, and nothing else changed in any tool (eight tools that had no argument now also say `additionalProperties: false`, as every tool with arguments does). Tool maps and gateway kinds of all 23 plugins (0 kind changes) and `gsm scopes` for every plugin, profile and toolset (207 cases) are the same as in 1.29.1.
+
+## 1.29.1 - 2026-10-31
+
+### Fixed: the per-method tools keep Google's whole descriptions
+- The Discovery snapshots cut each method's description at 300 characters and each parameter's at 200, so a tool lost what it needed: a filter's syntax, the fields an `updateMask` takes (`merchantapi.accounts.omnichannelSettings.patch` lost `inventory_verification` and that a full replacement with the wildcard `*` is supported), a parameter's value format (`youtubeAnalytics.reports.query` `ids` lost `channel==CHANNEL_ID`), the `accounts/-` wildcard of a Business Profile location list. They now keep 1,500 and 1,000 characters: 99.4 % of the 3,458 methods and 99.0 % of the 7,891 parameters of the generated APIs fit whole.
+- Every tool description stays within 2,048 characters (Claude Code cut longer ones before 2.1.296): a generated tool's method text is cut to fit, and its note and method line are kept whole. The longest now is 1,888 (`googleads_customers_google_ads_mutate`). A test checks every tool of every bundled server.
+- Size of tools/list, every server with writes on: 10,469,270 to 10,970,986 characters (+4.8 %); with writes off (the default): 2,939,815 to 3,210,407 (+9.2 %). The largest growth is gchat with writes off (+51 %: Chat's filter and update-mask texts are long). 1,371 tools changed, in their description or their parameter descriptions only.
+- `api_methods` rows keep a 200-character description, as before. Body field descriptions (160) are unchanged.
+
+### Changed: scripts
+- `node scripts/snapshot-discovery.mjs --offline` rebuilds the snapshots from the raw documents `scripts/build-catalog.mjs` keeps in `data/cache-discovery` (or `--cache <dir>`), with no request. A cached document with the recorded revision keeps its record; another takes the cache's revision and file time.
+- A refresh keeps the key order of the snapshot it replaces, so its diff shows only what changed. With the old limits, an offline refresh rewrote no snapshot except `analyticsadmin.v1beta`, whose cached revision (20261028) is a day newer than the one recorded and has one shorter schema description (`ProvisionAccountTicketRequest.redirectUri`); that is the one change in a body schema in this release. The records of `cloudidentity.v1`, `drivelabels.v2` and `speech.v1` now name the revision of the cached document they were rebuilt from; their trimmed content was the same.
+
+### Not changed
+- No tool's kind, scopes, name or arguments: the tool maps and gateway kinds of all 23 plugins (3,622 tools, 14,156 gateway methods) and `gsm scopes` for every plugin, profile and toolset (207 cases) are the same as in 1.29.0.
+
 ## 1.29.0 - 2026-10-31
 
 ### Changed: hand-written tools page properly and ask for pages that fit

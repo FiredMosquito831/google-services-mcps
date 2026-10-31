@@ -428,6 +428,95 @@ test('snapshot: records the revision and fetch time, keeps a failed API record a
   }
 });
 
+test('snapshot --offline: reads only the raw cache, keeps the previous key order and a matching revision record, and clips at 1,500 and 1,000 characters', async () => {
+  const getRaw = {
+    // Keys in another order than the snapshot below, as Google may serve them.
+    httpMethod: 'GET',
+    path: 'v1/items/{id}',
+    id: 'alpha.items.get',
+    description: 'd'.repeat(1600),
+    parameters: {
+      zeta: { type: 'string', location: 'query', description: 'z'.repeat(1200) },
+      id: { location: 'path', type: 'string', required: true, description: 'The item.' },
+    },
+  };
+  const rawAlpha = discoveryDoc('alpha', 'v1', '20261020', { items: { methods: { get: getRaw, list: method('alpha.items.list', 'GET', 'v1/items') } } }, {
+    parameters: { fields: { type: 'string', location: 'query' }, alt: { type: 'string', location: 'query', enum: ['json', 'media'] } },
+    endpoints: [{ description: 'Regional Endpoint', location: 'us', endpointUrl: 'https://alpha.us.rep.googleapis.com/' }],
+  });
+  const rawBeta = discoveryDoc('beta', 'v1', '20261021', ALPHA_SNAPSHOT_RESOURCES);
+  const previousAlpha = {
+    ...alphaSnapshot,
+    resources: {
+      items: {
+        methods: {
+          list: { id: 'alpha.items.list', path: 'v1/items', httpMethod: 'GET', parameters: [] },
+          get: {
+            id: 'alpha.items.get',
+            path: 'v1/items/{id}',
+            httpMethod: 'GET',
+            description: 'old',
+            parameters: [
+              { name: 'id', location: 'path', type: 'string', required: true, description: 'The item.' },
+              { name: 'zeta', location: 'query', type: 'string', description: 'old' },
+            ],
+          },
+        },
+      },
+    },
+  };
+  const root = makeRoot({
+    servers: [],
+    catalogApis: [],
+    products: {
+      products: { gtest: { server: { name: 'gtest' }, generated: [{ api: 'alpha', version: 'v1' }, { api: 'beta', version: 'v1' }, { api: 'gamma', version: 'v1' }] } },
+    },
+    revisions: {
+      'alpha.v1': { revision: '20261020', fetchedAt: '2026-10-20T00:00:00.000Z' },
+      'beta.v1': { revision: '20260901', fetchedAt: '2026-09-01T00:00:00.000Z' },
+      'gamma.v1': { revision: '20260902', fetchedAt: '2026-09-02T00:00:00.000Z' },
+    },
+    snapshots: { 'alpha.v1': previousAlpha, 'gamma.v1': { ...alphaSnapshot, name: 'gamma' } },
+  });
+  const cache = join(root, 'raw-cache');
+  writeJson(cache, 'alpha.v1.json', rawAlpha);
+  writeJson(cache, 'beta.v1.json', rawBeta);
+  try {
+    // A closed loopback port as the origin: any request the script made would fail, and show as a failure below.
+    const r = await run(SNAPSHOT, ['--root', root, '--offline', '--cache', cache, '--origin', 'http://127.0.0.1:9']);
+    assert.equal(r.code, 0, r.stdout + r.stderr);
+    const dir = join(root, 'data', 'discovery');
+    const alpha = JSON.parse(readFileSync(join(dir, 'alpha.v1.json'), 'utf8'));
+    assert.deepEqual(Object.keys(alpha.resources.items.methods), ['list', 'get'], 'the previous method order');
+    const get = alpha.resources.items.methods.get;
+    assert.deepEqual(Object.keys(get).slice(0, 4), ['id', 'path', 'httpMethod', 'description'], 'the previous key order');
+    assert.deepEqual(get.parameters.map((p) => p.name), ['id', 'zeta'], 'the previous parameter order');
+    assert.equal(get.description.length, 1500);
+    assert.ok(get.description.endsWith('...'));
+    assert.equal(get.parameters[1].description.length, 1000);
+    assert.ok(get.parameters[1].description.endsWith('...'));
+    // 1.30.0: the document's system parameters by name (the tools offer fields where the document lists it); none, no key.
+    assert.deepEqual(alpha.systemParameters, ['fields', 'alt']);
+    assert.equal('systemParameters' in JSON.parse(readFileSync(join(dir, 'beta.v1.json'), 'utf8')), false);
+    // 1.31.1: the document's regional hosts, location and URL only; none, no key.
+    assert.deepEqual(alpha.endpoints, [{ location: 'us', endpointUrl: 'https://alpha.us.rep.googleapis.com/' }]);
+    assert.equal('endpoints' in JSON.parse(readFileSync(join(dir, 'beta.v1.json'), 'utf8')), false);
+    const record = JSON.parse(readFileSync(join(dir, '_revisions.json'), 'utf8')).snapshots;
+    assert.deepEqual(record['alpha.v1'], { revision: '20261020', fetchedAt: '2026-10-20T00:00:00.000Z' }, 'the same revision keeps its record');
+    assert.deepEqual(record['beta.v1'], { revision: '20261021', fetchedAt: statSync(join(cache, 'beta.v1.json')).mtime.toISOString() }, "another revision: the cache's, at the cache file's time");
+    assert.deepEqual(record['gamma.v1'], { revision: '20260902', fetchedAt: '2026-09-02T00:00:00.000Z' }, 'a document the cache lacks keeps its record');
+    const errors = JSON.parse(readFileSync(join(dir, '_errors.json'), 'utf8'));
+    assert.deepEqual(errors.map((e) => e.api), ['gamma']);
+    assert.match(errors[0].error, /not in the cache/);
+    assert.equal(existsSync(join(dir, 'gamma.v1.json')), true, 'and keeps its snapshot');
+    const usage = await run(SNAPSHOT, ['--root', root, '--cache', cache]);
+    assert.equal(usage.code, 2);
+    assert.match(usage.stderr, /--cache is for --offline/);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
 test('data/discovery/_revisions.json has one record for each snapshot, and nothing else', () => {
   const dir = join(REPO, 'data', 'discovery');
   const snapshots = readdirSync(dir).filter((f) => f.endsWith('.json') && !f.startsWith('_')).map((f) => f.slice(0, -'.json'.length)).sort();

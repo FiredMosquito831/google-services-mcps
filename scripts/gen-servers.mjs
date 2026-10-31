@@ -247,6 +247,116 @@ function scopeOverridesOf(value, id, apiNames) {
   return value;
 }
 
+/** A non-empty string. */
+const isText = (v) => typeof v === 'string' && v.trim() !== '';
+
+/**
+ * The method ids of each generated API of a product, from its snapshot in data/discovery, keyed by API name. An API with
+ * no snapshot yet maps to undefined, and its method ids are then not checked here.
+ */
+function snapshotMethodsOf(apis) {
+  const out = new Map();
+  for (const { api, version } of apis) {
+    const file = join(ROOT, 'data', 'discovery', `${api}.${version}.json`);
+    if (!existsSync(file)) {
+      out.set(api, out.get(api));
+      continue;
+    }
+    const byId = out.get(api) ?? new Map();
+    const walk = (resources) => {
+      for (const r of Object.values(resources ?? {})) {
+        for (const m of Object.values(r.methods ?? {})) byId.set(m.id, m);
+        walk(r.resources);
+      }
+    };
+    walk(readJson(file).resources);
+    out.set(api, byId);
+  }
+  return out;
+}
+
+/** Fails unless method is a method of api's snapshot (when there is one). Returns the snapshot's method, if any. */
+function checkMethodOf(where, api, method, apiMethods) {
+  const byId = apiMethods.get(api);
+  if (!isText(method) || (byId && !byId.has(method))) fail(`${where}: "${method}" is not a method of the ${api} snapshot`);
+  return byId?.get(method);
+}
+
+/** Fails unless value is a non-empty object keyed by generated APIs of the product, each entry with a source and a reason. */
+function checkPerApi(value, where, apiMethods) {
+  if (typeof value !== 'object' || value === null || Array.isArray(value) || Object.keys(value).length === 0) fail(`${where} must be a non-empty object`);
+  for (const [api, entry] of Object.entries(value)) {
+    if (!apiMethods.has(api)) fail(`${where}: "${api}" is not a generated API of the product (${[...apiMethods.keys()].join(', ')})`);
+    if (!isText(entry?.source) || !isText(entry?.reason)) fail(`${where}["${api}"] needs a source and a reason`);
+  }
+}
+
+/**
+ * A product's "fieldsDefaults" (ServerSpec.fieldsDefaults in src/core/registry.ts), checked and copied as is: per generated
+ * API of the product, the methods Google documents as needing the `fields` system parameter, and the value the tools send
+ * when the call gives none ({ value, methods, source, reason }).
+ */
+function fieldsDefaultsOf(value, id, apiMethods) {
+  if (value === undefined) return undefined;
+  const where = `product ${id} fieldsDefaults`;
+  checkPerApi(value, where, apiMethods);
+  for (const [api, entry] of Object.entries(value)) {
+    if (!isText(entry.value) || /\s/.test(entry.value)) fail(`${where}["${api}"].value must be a fields value without spaces, such as "*"`);
+    const methods = entry.methods;
+    if (!Array.isArray(methods) || methods.length === 0) fail(`${where}["${api}"].methods must be a non-empty list of method ids`);
+    for (const method of methods) checkMethodOf(`${where}["${api}"]`, api, method, apiMethods);
+    if (new Set(methods).size !== methods.length) fail(`${where}["${api}"].methods lists a method twice`);
+  }
+  return value;
+}
+
+/**
+ * A product's "fieldMaskDefaults" (ServerSpec.fieldMaskDefaults in src/core/registry.ts), checked and copied as is: per
+ * generated API of the product, the methods that need a response field mask (the X-Goog-FieldMask header) and the mask a
+ * tool sends when the call gives none ({ methods: { id: mask }, source, reason }).
+ */
+function fieldMaskDefaultsOf(value, id, apiMethods) {
+  if (value === undefined) return undefined;
+  const where = `product ${id} fieldMaskDefaults`;
+  checkPerApi(value, where, apiMethods);
+  for (const [api, entry] of Object.entries(value)) {
+    const methods = entry.methods;
+    if (typeof methods !== 'object' || methods === null || Array.isArray(methods) || Object.keys(methods).length === 0) fail(`${where}["${api}"].methods must be a non-empty object`);
+    for (const [method, mask] of Object.entries(methods)) {
+      checkMethodOf(`${where}["${api}"]`, api, method, apiMethods);
+      if (!isText(mask) || /\s/.test(mask)) fail(`${where}["${api}"]["${method}"] must be a comma-separated field list without spaces`);
+    }
+  }
+  return value;
+}
+
+/**
+ * A product's "pageSizeDefaults" (ServerSpec.pageSizeDefaults in src/core/registry.ts), checked and copied as is: per
+ * generated API of the product, the list methods whose Google default page is far over the result limit, and the page
+ * size their tools send when a call gives none ({ methods: { id: { parameter, value, googleDefault, reason } }, source,
+ * reason }). The parameter must be an integer query parameter of the method, and the value smaller than Google's default.
+ */
+function pageSizeDefaultsOf(value, id, apiMethods) {
+  if (value === undefined) return undefined;
+  const where = `product ${id} pageSizeDefaults`;
+  checkPerApi(value, where, apiMethods);
+  for (const [api, entry] of Object.entries(value)) {
+    const methods = entry.methods;
+    if (typeof methods !== 'object' || methods === null || Array.isArray(methods) || Object.keys(methods).length === 0) fail(`${where}["${api}"].methods must be a non-empty object`);
+    for (const [method, size] of Object.entries(methods)) {
+      const at = `${where}["${api}"]["${method}"]`;
+      const found = checkMethodOf(`${where}["${api}"]`, api, method, apiMethods);
+      if (!isText(size?.parameter) || !isText(size?.reason)) fail(`${at} needs a parameter and a reason`);
+      if (!Number.isInteger(size.value) || size.value < 1 || !Number.isInteger(size.googleDefault) || size.value >= size.googleDefault) {
+        fail(`${at}: value must be a whole number from 1 up to below googleDefault`);
+      }
+      const param = found?.parameters?.find((p) => p.name === size.parameter);
+      if (found && (!param || param.location !== 'query' || param.type !== 'integer')) fail(`${at}: "${size.parameter}" is not an integer query parameter of the method`);
+    }
+  }
+  return value;
+}
+
 /**
  * A product's "serviceAccountScopes": required for a product of the service-account group, and only there. "methods"
  * (every scope the product's methods declare) or a non-empty list of scope URLs.
@@ -314,6 +424,14 @@ function main() {
     // Only a product with scope overrides gets the key, so the entries of the others stay as they were.
     const overrides = scopeOverridesOf(p.scopeOverrides, id, new Set(apis.map((a) => a.api)));
     if (overrides) server.scopeOverrides = overrides;
+    // Only a product with request defaults gets the keys, so the entries of the others stay as they were.
+    const apiMethods = snapshotMethodsOf(apis);
+    const fieldsDefaults = fieldsDefaultsOf(p.fieldsDefaults, id, apiMethods);
+    if (fieldsDefaults) server.fieldsDefaults = fieldsDefaults;
+    const fieldMaskDefaults = fieldMaskDefaultsOf(p.fieldMaskDefaults, id, apiMethods);
+    if (fieldMaskDefaults) server.fieldMaskDefaults = fieldMaskDefaults;
+    const pageSizeDefaults = pageSizeDefaultsOf(p.pageSizeDefaults, id, apiMethods);
+    if (pageSizeDefaults) server.pageSizeDefaults = pageSizeDefaults;
     // Only a product that lists a toolset gets the key, so the entries of the others stay as they were.
     const toolsets = toolsetsOf(p.toolsets, id);
     if (toolsets) server.toolsets = toolsets;

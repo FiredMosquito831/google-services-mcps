@@ -1,7 +1,7 @@
 {
   "name": "gtm",
   "displayName": "Tag Manager",
-  "version": "1.29.0",
+  "version": "1.31.1",
   "description": "Google Tag Manager accounts, containers, tags, triggers and variables.",
   "author": {
     "name": "FiredMosquito831"

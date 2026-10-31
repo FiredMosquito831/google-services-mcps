@@ -42,6 +42,8 @@ Start with `--profile readonly`. Writes need a `readwrite` login and the plugin 
 
 The full list is in `docs/capabilities/gdrive.md`.
 
+Every per-method read takes `fields` (Google's partial response, since 1.30.0). Drive's about, approvals, comments and replies methods return no default fields, so their 17 tools send `fields=*` when the call gives none; before 1.30.0 they sent nothing, and Google's guide says such a call must set `fields` (not checked live).
+
 With the plugin option `toolset: google`, the server lists the 19 tools that match Google's Drive, Docs, Sheets and Slides MCP servers (their 20 tools; `sheets_write_values` covers both `update_values` and `update_formulas`), plus `health` and the sign-in tools.
 
 ## Example requests

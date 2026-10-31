@@ -63,7 +63,7 @@ The two hand-written tools match tools of Google's Maps Grounding Lite MCP serve
 
 - Autocomplete (since 1.24.2) and the emissions and insight calculations (since 1.26.3) are reads: they only compute, so Claude runs them without asking. They still use your key's quota.
 - Street View deletes are destructive. They ask twice.
-- Field masks decide which billing SKU a request uses. Ask only for the fields you need.
+- Field masks decide which billing SKU a request uses. Ask only for the fields you need. Since 1.30.0, `places_places_search_text`, `places_places_search_nearby` and `places_places_get` send the field mask Google requires (before, they sent none, and Google's documentation says such a call fails; not checked live): by default the id, display name, address, location, types and Maps link (Essentials and Pro fields, plus `nextPageToken` for text search), or the fields you name in `field_mask`. Rating, phone, opening hours and website are Enterprise fields; ask for them by name.
 - The `confirmation` option defaults to `every-change`. Change it with `printf '%s' '{"confirmation":"destructive-only"}' | claude plugin configure gmaps@google-services-mcps --values-stdin` (JSON on stdin), or `/plugin configure gmaps@google-services-mcps` in Claude Code.
 
 ## Costs and limits
