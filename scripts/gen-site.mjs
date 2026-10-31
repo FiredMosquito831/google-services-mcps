@@ -18,9 +18,17 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+// The tools a server registers (src/core/runtime-tools.ts, compiled): the counts the docs use, and that this script checks.
+const RUNTIME_MODULE = path.join(ROOT, 'dist', 'core', 'runtime-tools.js');
+if (!fs.existsSync(RUNTIME_MODULE)) {
+  console.error('gen-site: dist/core/runtime-tools.js is missing. Run npm run build first.');
+  process.exit(1);
+}
+const { registersEntry } = await import(pathToFileURL(RUNTIME_MODULE).href);
+const { SERVICE_ACCOUNT_SCOPES_BY_SERVER } = await import(pathToFileURL(path.join(ROOT, 'dist', 'core', 'service-account-scopes.js')).href);
 const SITE = path.join(ROOT, 'site');
 const SITE_URL = 'https://google-services-mcps.danubelabs.net/';
 const REPO_URL = 'https://github.com/FiredMosquito831/google-services-mcps';
@@ -121,7 +129,13 @@ const products = ids.map((id) => {
   if (!exists(toolMapPath)) {
     fail(`${toolMapPath} is missing: run npm run build first`);
   } else {
-    const toolMap = readJson(toolMapPath);
+    // Count only the tools the server registers (registersEntry), as docs/CAPABILITIES.md and docs/SURFACES.md do.
+    const server = entry.server?.name ?? id;
+    const keyScopes = entry.group === 'service-account' ? SERVICE_ACCOUNT_SCOPES_BY_SERVER[server] ?? [] : undefined;
+    const prefix = `mcp__plugin_${id}_${server}__`;
+    const toolMap = readJson(toolMapPath).filter((t) =>
+      registersEntry(typeof t.name === 'string' && t.name.startsWith(prefix) ? t.name.slice(prefix.length) : t.name, t.scopes, entry.group, keyScopes),
+    );
     tools = toolMap.length;
     for (const tool of toolMap) {
       if (!(tool.kind in kinds)) fail(`${toolMapPath}: unknown kind "${tool.kind}" on ${tool.name}`);
@@ -139,7 +153,7 @@ const products = ids.map((id) => {
   } else {
     if (row.title !== entry.title) fail(`${id}: title is "${entry.title}" in products.json but "${row.title}" in SURFACES.md`);
     if (row.group !== entry.group) fail(`${id}: group is "${entry.group}" in products.json but "${row.group}" in SURFACES.md`);
-    if (row.tools !== tools) fail(`${id}: SURFACES.md says ${row.tools} tools, tool-map.json has ${tools}`);
+    if (row.tools !== tools) fail(`${id}: SURFACES.md says ${row.tools} tools, the server registers ${tools} (tool-map.json)`);
     if (row.gateway !== gateway) fail(`${id}: SURFACES.md says ${row.gateway} gateway APIs, products.json has ${gateway}`);
   }
 
@@ -147,9 +161,9 @@ const products = ids.map((id) => {
   if (!cap) {
     fail(`docs/CAPABILITIES.md has no product row for ${id}`);
   } else {
-    if (cap.tools !== tools) fail(`${id}: CAPABILITIES.md says ${cap.tools} tools, tool-map.json has ${tools}`);
+    if (cap.tools !== tools) fail(`${id}: CAPABILITIES.md says ${cap.tools} tools, the server registers ${tools} (tool-map.json)`);
     for (const k of KINDS) {
-      if (cap.kinds[k] !== kinds[k]) fail(`${id}: CAPABILITIES.md says ${cap.kinds[k]} ${k} tools, tool-map.json has ${kinds[k]}`);
+      if (cap.kinds[k] !== kinds[k]) fail(`${id}: CAPABILITIES.md says ${cap.kinds[k]} ${k} tools, the server registers ${kinds[k]} (tool-map.json)`);
     }
     if (cap.perMethodApis !== generated) fail(`${id}: CAPABILITIES.md says ${cap.perMethodApis} per-method APIs, products.json has ${generated}`);
     if (cap.gatewayApis !== gateway) fail(`${id}: CAPABILITIES.md says ${cap.gatewayApis} gateway APIs, products.json has ${gateway}`);

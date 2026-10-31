@@ -11,7 +11,7 @@ Each command in this guide is marked with how it was checked:
 ## Before you start
 
 - **Node.js 20 or newer.** `package.json` requires `>=20`. The checks ran on Node v24.6.0.
-- **Claude Code** on your PATH, if you use it. The `claude plugin` commands in this guide were checked against Claude Code 2.1.300.
+- **Claude Code** on your PATH, if you use it: 2.1.271 or later, because the plugins' options offer fixed choices ("If you declare `options` on any field, users on Claude Code versions before v2.1.271 can't load the plugin", https://code.claude.com/docs/en/plugins-reference). The `claude plugin` commands in this guide were checked against Claude Code 2.1.300.
 - **A copy of this repository, or the one-line installer,** which downloads it (see "Without a clone" below). The installer and the marketplace are both in it.
 - **No build step.** `gsm.mjs` in the repository root is the installer, and it runs without `npm install` or `npm run build`. **Checked.**
 
@@ -209,7 +209,9 @@ Every plugin has these options:
 | **Allow write tools** (`allow_writes`) | Off | Lists the tools that change or delete data. Off means only reads are listed. |
 | **Confirm before changes** (`confirmation`) | `every-change` | When to ask: `every-change`, `destructive-only` or `off`. See [USING.md](USING.md). |
 | **Toolset** (`toolset`) | `all` | Which tools the server lists. `all`: every tool. `google`: the tools that match Google's official MCP server for the product (defined for gmail, gcalendar, gdrive, gcloud, gchat, gcontacts, gclassroom, gads, ganalytics, gmerchant, gfirebase, gai, gmaps and gplay), or a small set chosen here where Google has no server (gsc, gmeet, gtasks, gapps, gtm, gyoutube, gbusiness, gadmin, and gsearch beside its Developer Knowledge tools); other products show all tools, and `health` says so. `curated`: the hand-written tools and the gateway tools (`api_search`, `api_describe`, `api_call`); a product with neither shows all tools. The sign-in tools and `health` are always listed. |
-| **Token directory** (`token_dir`) | Empty | Where logins are kept. Empty means `~/.google-services-mcps`. |
+| **Token directory** (`token_dir`) | Empty | Where logins are kept, picked as a folder. Empty means `~/.google-services-mcps`. |
+
+An option left empty is unset, and the server uses its default; so is a value that arrives as the unexpanded `${user_config.<option>}` reference (1.37.1).
 
 `gadmin` also has **Workspace super admin email** (`admin_subject`) and **Service account key file** (`service_account_key_file`). `gads` has **Google Ads developer token** (`ads_developer_token`, optional) and **Manager (login) customer ID** (`ads_login_customer_id`, optional). See [SETUP.md](SETUP.md).
 
@@ -263,6 +265,8 @@ Then, inside Claude Code, run `/mcp`. The `gmail` server should show as connecte
    ```
 
    **Checked.** The plugin is read from its folder in the repository, so an update picks up edits there. `update` reports `nothing to update` when the version is unchanged.
+
+   With the marketplace from GitHub (an install from npm, a one-line installer or `--marketplace FiredMosquito831/google-services-mcps`), Claude Code keeps a copy of each plugin and does not update it on its own: auto-update is "Off by default: every other marketplace, including the community marketplace, third-party marketplaces, and local development marketplaces" (https://code.claude.com/docs/en/plugins/install, "Keep plugins updated"). Run the two commands above after each release, the second once per plugin you use; a marketplace refresh alone does not move installed plugins. The new version loads in the next session, or after `/reload-plugins`. To let Claude Code update by itself, open `/plugin`, the **Marketplaces** tab, select `google-services-mcps` and choose **Enable auto-update**.
 
 3. If the plugin still shows an old state, uninstall it and install it again. Logins are kept, because uninstall does not touch the token directory (see [Remove everything](#remove-everything)).
 

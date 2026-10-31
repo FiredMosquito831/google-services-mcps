@@ -4,11 +4,17 @@ Gmail mailboxes, messages, labels and settings, plus Gmail Postmaster Tools.
 
 - Plugin: `gmail`, MCP server: `gmail`, login: Desktop OAuth client, then `login workspace-user`
 - Install: `claude plugin install gmail@google-services-mcps`
-- Tools: 115 total. Curated 24, per-method 87, gateway 3. Read 51, write 38, destructive 25, dynamic 1.
+- Tools: 113 total. Curated 22, per-method 87, gateway 3. Read 51, write 36, destructive 25, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 115, google 23, curated 27 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 113, google 21, curated 25 tools, each counting the 7 runtime tools this server registers (`account_remove`, `account_set_default`, `accounts_list`, `auth_login`, `auth_setup_client`, `auth_status`, `health`). "(all)" means the product has no such toolset yet, so it lists every tool.
+
+## Not registered by this server (2)
+
+The tool map (`plugins/<id>/tool-map.json`) also lists these, so the consent hook knows every name, but this server never registers them, and the counts above leave them out.
+
+- Sign-in tools of other sign-in kinds: `auth_setup_admin`, `auth_setup_service_account`.
 
 ## Toolset google (14)
 
@@ -31,7 +37,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `gmail_trash` | (none) | Google's label tools send Trash and Spam to tools outside its public list. Kept so mail can still go to Trash; it is destructive, so it asks first and shows what moves. |
 | `gmail_untrash` | (none) | Restores what gmail_trash moved, as removing the Trash label would in Google's server. |
 
-## Curated tools (24)
+## Curated tools (22)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
@@ -39,9 +45,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `account_set_default` | write | Set the default account | (none) |
 | `accounts_list` | read | Signed-in accounts | (none) |
 | `auth_login` | write | Sign in to Google | (none) |
-| `auth_setup_admin` | write | Set up the workspace admin account | (none) |
 | `auth_setup_client` | write | Save the Google OAuth client | (none) |
-| `auth_setup_service_account` | write | Set up the service account key | (none) |
 | `auth_status` | read | Sign-in status | (none) |
 | `gmail_create_draft` | write | Create Gmail draft | https://mail.google.com/, gmail.compose |
 | `gmail_get_attachment` | read | Get Gmail attachment | https://mail.google.com/, gmail.modify |

@@ -442,6 +442,7 @@ function fakeHookPlugin() {
   copyFileSync(distPath('hook/pretooluse.js'), join(plugin, 'bin', 'gsm-hook.mjs'));
   copyFileSync(distPath('core/policy.js'), join(plugin, 'core', 'policy.js'));
   copyFileSync(distPath('core/dynamic.js'), join(plugin, 'core', 'dynamic.js'));
+  copyFileSync(distPath('core/plugin-option.js'), join(plugin, 'core', 'plugin-option.js'));
   writeFileSync(
     join(plugin, 'tool-map.json'),
     JSON.stringify([

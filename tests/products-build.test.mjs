@@ -142,9 +142,9 @@ for (const id of ids) {
     }
     if (product.group === 'workspace-admin') assert.ok('GSM_SERVICE_ACCOUNT_KEY_FILE' in mcp[name].env);
 
-    // Hook: the PreToolUse matcher covers this plugin's tools only.
+    // Hook: the PreToolUse matcher covers this plugin's own server's tools only (anchored to the server since 1.38.2).
     const hooks = load('plugins', id, 'hooks', 'hooks.json');
-    assert.equal(hooks.hooks.PreToolUse[0].matcher, `^mcp__plugin_${id}_`);
+    assert.equal(hooks.hooks.PreToolUse[0].matcher, `^mcp__plugin_${id}_${name}__`);
     assert.deepEqual(hooks.hooks.PreToolUse[0].hooks[0].args, ['${CLAUDE_PLUGIN_ROOT}/bin/gsm-hook.mjs']);
 
     // Tool map: full Claude names with the plugin prefix, unique, within the limit, known kinds.

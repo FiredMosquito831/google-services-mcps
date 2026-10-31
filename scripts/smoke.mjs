@@ -6,7 +6,7 @@
  *   - the generated files exist: .claude-plugin/plugin.json, .mcp.json, servers.json, scopes.json,
  *     tool-map.json, hooks/hooks.json, bin/gsm.mjs, bin/gsm-hook.mjs, skills/<id>/SKILL.md, and
  *     method-kinds.json when the server has gateway APIs
- *   - hooks/hooks.json has the matcher ^mcp__plugin_<id>_ for the PreToolUse hook
+ *   - hooks/hooks.json has the matcher ^mcp__plugin_<id>_<server>__ for the PreToolUse hook (since 1.38.2)
  *   - every full tool name starts with mcp__plugin_<id>_<server>__, is at most 64 characters and is unique
  *
  * Runtime checks: starts every server from plugins/<plugin>/.mcp.json with an empty token directory, so
@@ -95,7 +95,7 @@ function staticChecks(id) {
 
   const hooks = readJson(join(dir, 'hooks', 'hooks.json'));
   const matcher = hooks.hooks?.PreToolUse?.[0]?.matcher;
-  if (matcher !== `^mcp__plugin_${id}_`) fail(`${id}: hook matcher is ${matcher}, expected ^mcp__plugin_${id}_`);
+  if (matcher !== `^mcp__plugin_${id}_${server}__`) fail(`${id}: hook matcher is ${matcher}, expected ^mcp__plugin_${id}_${server}__`);
 
   if (servers.some((s) => s.gatewayApis?.length) && !existsSync(join(dir, 'method-kinds.json'))) {
     fail(`${id}: has gateway APIs but no method-kinds.json`);

@@ -2,7 +2,7 @@
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "^mcp__plugin_gcontacts_",
+        "matcher": "^mcp__plugin_gcontacts_gcontacts__",
         "hooks": [
           {
             "type": "command",

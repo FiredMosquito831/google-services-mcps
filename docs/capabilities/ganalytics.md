@@ -4,11 +4,17 @@ Google Analytics admin and data APIs for GA4 properties, configuration and repor
 
 - Plugin: `ganalytics`, MCP server: `ganalytics`, login: Desktop OAuth client, then `login business`
 - Install: `claude plugin install ganalytics@google-services-mcps`
-- Tools: 84 total. Curated 14, per-method 66, gateway 3. Read 43, write 30, destructive 10, dynamic 1.
+- Tools: 82 total. Curated 12, per-method 66, gateway 3. Read 43, write 28, destructive 10, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 84, google 18, curated 17 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 82, google 16, curated 15 tools, each counting the 7 runtime tools this server registers (`account_remove`, `account_set_default`, `accounts_list`, `auth_login`, `auth_setup_client`, `auth_status`, `health`). "(all)" means the product has no such toolset yet, so it lists every tool.
+
+## Not registered by this server (2)
+
+The tool map (`plugins/<id>/tool-map.json`) also lists these, so the consent hook knows every name, but this server never registers them, and the counts above leave them out.
+
+- Sign-in tools of other sign-in kinds: `auth_setup_admin`, `auth_setup_service_account`.
 
 ## Toolset google (9)
 
@@ -26,7 +32,7 @@ The tools that match Google's official MCP server for this product (https://gith
 | `ga_annotations_list` | `list_property_annotations` | Admin API v1alpha, which the generated tools do not cover (it is a gateway API here). |
 | `ga_annotation_create` | `create_property_annotation` | A write: it asks first, and the approval shows the exact annotation. Needs analytics.edit, which Google's server asks for only with --allow-write. |
 
-## Curated tools (14)
+## Curated tools (12)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
@@ -34,9 +40,7 @@ The tools that match Google's official MCP server for this product (https://gith
 | `account_set_default` | write | Set the default account | (none) |
 | `accounts_list` | read | Signed-in accounts | (none) |
 | `auth_login` | write | Sign in to Google | (none) |
-| `auth_setup_admin` | write | Set up the workspace admin account | (none) |
 | `auth_setup_client` | write | Save the Google OAuth client | (none) |
-| `auth_setup_service_account` | write | Set up the service account key | (none) |
 | `auth_status` | read | Sign-in status | (none) |
 | `ga_annotation_create` | write | Create a Google Analytics annotation | analytics.edit |
 | `ga_annotations_list` | read | List Google Analytics annotations | analytics.edit, analytics.readonly |

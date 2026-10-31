@@ -4,11 +4,17 @@ Google Tasks task lists and tasks, plus Google Keep notes.
 
 - Plugin: `gtasks`, MCP server: `gtasks`, login: Desktop OAuth client, then `login workspace-user`
 - Install: `claude plugin install gtasks@google-services-mcps`
-- Tools: 31 total. Curated 9, per-method 21, gateway 0. Read 11, write 14, destructive 6, dynamic 0.
+- Tools: 29 total. Curated 7, per-method 21, gateway 0. Read 11, write 12, destructive 6, dynamic 0.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 31, google 17, curated 31 (all) tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 29, google 15, curated 29 (all) tools, each counting the 7 runtime tools this server registers (`account_remove`, `account_set_default`, `accounts_list`, `auth_login`, `auth_setup_client`, `auth_status`, `health`). "(all)" means the product has no such toolset yet, so it lists every tool.
+
+## Not registered by this server (2)
+
+The tool map (`plugins/<id>/tool-map.json`) also lists these, so the consent hook knows every name, but this server never registers them, and the counts above leave them out.
+
+- Sign-in tools of other sign-in kinds: `auth_setup_admin`, `auth_setup_service_account`.
 
 ## Toolset google (8)
 
@@ -25,7 +31,7 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `keep_notes_list` | (none) | Google Keep notes, read only here (filter by trashed or create and update time). Google documents the Keep API for Google Workspace; whether a personal account can use it is not verified. |
 | `keep_notes_get` | (none) | One Keep note with its text or list items. |
 
-## Curated tools (9)
+## Curated tools (7)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
@@ -33,9 +39,7 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `account_set_default` | write | Set the default account | (none) |
 | `accounts_list` | read | Signed-in accounts | (none) |
 | `auth_login` | write | Sign in to Google | (none) |
-| `auth_setup_admin` | write | Set up the workspace admin account | (none) |
 | `auth_setup_client` | write | Save the Google OAuth client | (none) |
-| `auth_setup_service_account` | write | Set up the service account key | (none) |
 | `auth_status` | read | Sign-in status | (none) |
 | `health` | read | Server health | (none) |
 

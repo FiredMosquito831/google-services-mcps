@@ -2,7 +2,7 @@
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "^mcp__plugin_gmail_",
+        "matcher": "^mcp__plugin_gmail_gmail__",
         "hooks": [
           {
             "type": "command",

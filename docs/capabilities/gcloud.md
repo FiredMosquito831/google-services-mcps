@@ -4,11 +4,17 @@ Google Cloud console APIs: projects, service enablement, API keys, billing, moni
 
 - Plugin: `gcloud`, MCP server: `gcloud`, login: Desktop OAuth client, then `login cloud`
 - Install: `claude plugin install gcloud@google-services-mcps`
-- Tools: 395 total. Curated 41, per-method 350, gateway 3. Read 197, write 135, destructive 62, dynamic 1.
+- Tools: 393 total. Curated 39, per-method 350, gateway 3. Read 197, write 133, destructive 62, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 395, google 68, curated 44 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 393, google 66, curated 42 tools, each counting the 7 runtime tools this server registers (`account_remove`, `account_set_default`, `accounts_list`, `auth_login`, `auth_setup_client`, `auth_status`, `health`). "(all)" means the product has no such toolset yet, so it lists every tool.
+
+## Not registered by this server (2)
+
+The tool map (`plugins/<id>/tool-map.json`) also lists these, so the consent hook knows every name, but this server never registers them, and the counts above leave them out.
+
+- Sign-in tools of other sign-in kinds: `auth_setup_admin`, `auth_setup_service_account`.
 
 ## Toolset google (59)
 
@@ -76,7 +82,7 @@ The tools that match Google's official MCP server for this product (https://docs
 | `gcs_write_text` | `write_text` | Unlike Google's write_text it does not replace an existing object unless overwrite is true (ifGenerationMatch=0). It also uploads a local file (local_path). |
 | `storage_objects_delete` | `delete_object` |  |
 
-## Curated tools (41)
+## Curated tools (39)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
@@ -84,9 +90,7 @@ The tools that match Google's official MCP server for this product (https://docs
 | `account_set_default` | write | Set the default account | (none) |
 | `accounts_list` | read | Signed-in accounts | (none) |
 | `auth_login` | write | Sign in to Google | (none) |
-| `auth_setup_admin` | write | Set up the workspace admin account | (none) |
 | `auth_setup_client` | write | Save the Google OAuth client | (none) |
-| `auth_setup_service_account` | write | Set up the service account key | (none) |
 | `auth_status` | read | Sign-in status | (none) |
 | `billing_price_lookup` | read | Look up Google Cloud prices | cloud-billing.readonly, cloud-billing |
 | `bq_dataset_list` | read | List BigQuery datasets | bigquery.readonly, cloud-platform.read-only |

@@ -10,7 +10,7 @@
 import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const readJson = (rel) => JSON.parse(readFileSync(join(root, rel), 'utf8'));
@@ -31,10 +31,24 @@ const LOGIN = {
   apikey: { group: 'apikey', setup: 'API key, then `setup-apikey` (no login)' },
 };
 
+// The tools a server registers (src/core/runtime-tools.ts, the rule the skills and docs/CAPABILITIES.md count with).
+const runtimeModule = join(root, 'dist', 'core', 'runtime-tools.js');
+if (!existsSync(runtimeModule)) {
+  console.error('dist/core/runtime-tools.js is missing. Run npm run build (or npx tsc -p tsconfig.json) first.');
+  process.exit(1);
+}
+const { registersEntry } = await import(pathToFileURL(runtimeModule).href);
+const { SERVICE_ACCOUNT_SCOPES_BY_SERVER } = await import(pathToFileURL(join(root, 'dist', 'core', 'service-account-scopes.js')).href);
+
+/** The tools the product's server registers: its tool map without the entries it never registers (registersEntry). */
 function toolCount(id) {
   const file = join(root, 'plugins', id, 'tool-map.json');
   if (!existsSync(file)) return null;
-  return JSON.parse(readFileSync(file, 'utf8')).length;
+  const p = products.products[id];
+  const server = p.server?.name ?? id;
+  const keyScopes = p.group === 'service-account' ? SERVICE_ACCOUNT_SCOPES_BY_SERVER[server] ?? [] : undefined;
+  const prefix = `mcp__plugin_${id}_${server}__`;
+  return JSON.parse(readFileSync(file, 'utf8')).filter((t) => registersEntry(t.name.startsWith(prefix) ? t.name.slice(prefix.length) : t.name, t.scopes, p.group, keyScopes)).length;
 }
 
 const apiTitle = new Map(catalog.apis.map((a) => [`${a.name}/${a.version}`, a]));
@@ -90,7 +104,7 @@ lines.push(
 lines.push('');
 lines.push('## Products');
 lines.push('');
-lines.push('| Product (plugin) | Title | Login group | Per-method tools | Gateway APIs (methods) | Install (Claude Code) |');
+lines.push('| Product (plugin) | Title | Login group | Tools | Gateway APIs (methods) | Install (Claude Code) |');
 lines.push('|---|---|---|---|---|---|');
 for (const r of productRows) {
   lines.push(`| \`${r.id}\` | ${r.title} | ${r.group} | ${r.tools} | ${r.gatewayApis} (${r.gatewayMethods}) | \`${r.install}\` |`);
@@ -125,7 +139,7 @@ lines.push('## Sources');
 lines.push('');
 lines.push('- Products and placement: `config/products.json`');
 lines.push('- Catalog: `data/catalog.json` (Google Discovery directory and direct discovery URLs)');
-lines.push('- Tool counts: `plugins/<id>/tool-map.json` (built)');
+lines.push('- Tool counts: `plugins/<id>/tool-map.json` (built), counting the tools each server registers (`registersEntry` in `src/core/runtime-tools.ts`)');
 lines.push('- Security model: `docs/SECURITY.md`; setup: `docs/SETUP.md`');
 lines.push('');
 

@@ -2,7 +2,7 @@
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "^mcp__plugin_gchat_",
+        "matcher": "^mcp__plugin_gchat_gchat__",
         "hooks": [
           {
             "type": "command",

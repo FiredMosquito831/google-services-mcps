@@ -2,7 +2,7 @@
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "^mcp__plugin_ganalytics_",
+        "matcher": "^mcp__plugin_ganalytics_ganalytics__",
         "hooks": [
           {
             "type": "command",

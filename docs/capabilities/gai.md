@@ -4,11 +4,17 @@ Generative and classic AI APIs: Discovery Engine, Vertex AI, Dialogflow, Vision,
 
 - Plugin: `gai`, MCP server: `gai`, login: Desktop OAuth client, then `login cloud`
 - Install: `claude plugin install gai@google-services-mcps`
-- Tools: 366 total. Curated 12, per-method 350, gateway 3. Read 170, write 134, destructive 61, dynamic 1.
+- Tools: 364 total. Curated 10, per-method 350, gateway 3. Read 170, write 132, destructive 61, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 366, google 15, curated 15 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 364, google 13, curated 13 tools, each counting the 7 runtime tools this server registers (`account_remove`, `account_set_default`, `accounts_list`, `auth_login`, `auth_setup_client`, `auth_status`, `health`). "(all)" means the product has no such toolset yet, so it lists every tool.
+
+## Not registered by this server (2)
+
+The tool map (`plugins/<id>/tool-map.json`) also lists these, so the consent hook knows every name, but this server never registers them, and the counts above leave them out.
+
+- Sign-in tools of other sign-in kinds: `auth_setup_admin`, `auth_setup_service_account`.
 
 ## Toolset google (6)
 
@@ -23,7 +29,7 @@ The tools that match Google's official MCP server for this product (https://docs
 | `discoverye_proj_loca_coll_engin_servi_answe` | `conversational_search` | Discovery Engine v1 servingConfigs.answer. Google marks it read-only, and since 1.24.2 (D2) the suite counts it as a read too, so it does not ask. |
 | `discoverye_projec_locati_collec_engine_list` | `list_engines` | The engines (search and chat apps) of a collection. |
 
-## Curated tools (12)
+## Curated tools (10)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
@@ -31,9 +37,7 @@ The tools that match Google's official MCP server for this product (https://docs
 | `account_set_default` | write | Set the default account | (none) |
 | `accounts_list` | read | Signed-in accounts | (none) |
 | `auth_login` | write | Sign in to Google | (none) |
-| `auth_setup_admin` | write | Set up the workspace admin account | (none) |
 | `auth_setup_client` | write | Save the Google OAuth client | (none) |
-| `auth_setup_service_account` | write | Set up the service account key | (none) |
 | `auth_status` | read | Sign-in status | (none) |
 | `health` | read | Server health | (none) |
 | `vertex_count_tokens` | read | Count the tokens of a Vertex AI prompt | cloud-platform |

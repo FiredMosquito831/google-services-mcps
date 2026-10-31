@@ -46,6 +46,8 @@ function fakePlugin({ toolMap = TOOL_MAP, policy, folder = 'google-cloud', manif
   copyFileSync(dist('core/policy.js'), join(plugin, 'core', 'policy.js'));
   // The hook also imports the dynamic-risk rule (resolveDynamicKind) for dynamic tools.
   copyFileSync(dist('core/dynamic.js'), join(plugin, 'core', 'dynamic.js'));
+  // And the unset-option rule for GSM_TOKEN_DIR (1.37.1).
+  copyFileSync(dist('core/plugin-option.js'), join(plugin, 'core', 'plugin-option.js'));
   if (toolMap !== null) writeFileSync(join(plugin, 'tool-map.json'), JSON.stringify(toolMap, null, 2));
   // manifest: undefined writes no plugin.json; a string is written as-is; anything else as JSON.
   if (manifest !== undefined) {

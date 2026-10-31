@@ -4,11 +4,17 @@ Business Profile accounts, locations, verifications, lodging, place actions, not
 
 - Plugin: `gbusiness`, MCP server: `gbusiness`, login: Desktop OAuth client, then `login business`
 - Install: `claude plugin install gbusiness@google-services-mcps`
-- Tools: 61 total. Curated 9, per-method 51, gateway 0. Read 32, write 20, destructive 9, dynamic 0.
+- Tools: 59 total. Curated 7, per-method 51, gateway 0. Read 32, write 18, destructive 9, dynamic 0.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 61, google 17, curated 61 (all) tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 59, google 15, curated 59 (all) tools, each counting the 7 runtime tools this server registers (`account_remove`, `account_set_default`, `accounts_list`, `auth_login`, `auth_setup_client`, `auth_status`, `health`). "(all)" means the product has no such toolset yet, so it lists every tool.
+
+## Not registered by this server (2)
+
+The tool map (`plugins/<id>/tool-map.json`) also lists these, so the consent hook knows every name, but this server never registers them, and the counts above leave them out.
+
+- Sign-in tools of other sign-in kinds: `auth_setup_admin`, `auth_setup_service_account`.
 
 ## Toolset google (8)
 
@@ -25,7 +31,7 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `mbverify_location_verifica_list` | (none) | The verifications of a location and their state. |
 | `mbinfo_locations_patch` | (none) | Changes the fields updateMask names. A write, so it asks first; the change is public on Google Search and Maps. |
 
-## Curated tools (9)
+## Curated tools (7)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
@@ -33,9 +39,7 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `account_set_default` | write | Set the default account | (none) |
 | `accounts_list` | read | Signed-in accounts | (none) |
 | `auth_login` | write | Sign in to Google | (none) |
-| `auth_setup_admin` | write | Set up the workspace admin account | (none) |
 | `auth_setup_client` | write | Save the Google OAuth client | (none) |
-| `auth_setup_service_account` | write | Set up the service account key | (none) |
 | `auth_status` | read | Sign-in status | (none) |
 | `health` | read | Server health | (none) |
 

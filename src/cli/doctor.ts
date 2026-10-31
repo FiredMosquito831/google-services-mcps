@@ -11,6 +11,7 @@ import { accessSync, constants as fsConstants, existsSync, readFileSync, statSyn
 import { dirname, join } from 'node:path';
 import type { Registry } from '../core/registry.js';
 import { loadConfig } from '../core/config.js';
+import { optionValue } from '../core/plugin-option.js';
 import { aclExtras } from '../core/acl.js';
 import { adminScopeFileFor, serviceAccountSource } from '../core/auth.js';
 import { getSecretSync } from '../core/secret-store.js';
@@ -103,16 +104,23 @@ function readJson(file: string): JsonRead {
   }
 }
 
-/** The plugin's hooks: PreToolUse must have an entry with the matcher ^mcp__plugin_<id>_ that runs bin/gsm-hook.mjs. */
-function checkHooks(tally: Tally, id: string, hooks: unknown): void {
-  const matcher = `^mcp__plugin_${id}_`;
+/**
+ * The plugin's hooks: PreToolUse must have an entry that runs bin/gsm-hook.mjs with the matcher of this plugin's tools:
+ * ^mcp__plugin_<id>_<server>__ for a server of its .mcp.json (the bundle's since 1.38.2), or ^mcp__plugin_<id>_ (the
+ * bundle's before 1.38.2, still accepted, so a plugin built earlier passes as before).
+ */
+function checkHooks(tally: Tally, id: string, hooks: unknown, servers: readonly string[]): void {
+  const legacy = `^mcp__plugin_${id}_`;
+  const anchored = servers.map((server) => `^mcp__plugin_${id}_${server}__`.replace(/[^A-Za-z0-9_^-]/g, '_'));
+  const accepted = [...anchored, legacy];
   const pre = isObject(hooks) && isObject(hooks.hooks) ? hooks.hooks.PreToolUse : undefined;
   const entries: unknown[] = Array.isArray(pre) ? pre : [];
-  const entry = entries.find((e) => isObject(e) && e.matcher === matcher);
+  const entry = entries.find((e) => isObject(e) && typeof e.matcher === 'string' && accepted.includes(e.matcher));
   if (!isObject(entry)) {
-    tally.check(false, `${id}: hooks/hooks.json has no PreToolUse entry with matcher ${matcher}`);
+    tally.check(false, `${id}: hooks/hooks.json has no PreToolUse entry with matcher ${accepted.join(' or ')}`);
     return;
   }
+  const matcher = String(entry.matcher);
   const commands = Array.isArray(entry.hooks) ? entry.hooks : [];
   const runsHook = commands.some(
     (h) =>
@@ -183,7 +191,11 @@ function checkPluginFolder(tally: Tally, id: string, folder: string): void {
     for (const path of invalid) tally.check(false, `${id}: ${path} is not valid JSON`);
   }
 
-  if (parsed.has('hooks/hooks.json')) checkHooks(tally, id, parsed.get('hooks/hooks.json'));
+  if (parsed.has('hooks/hooks.json')) {
+    const mcp = parsed.get('.mcp.json');
+    const servers = isObject(mcp) && isObject(mcp.mcpServers) ? Object.keys(mcp.mcpServers) : [];
+    checkHooks(tally, id, parsed.get('hooks/hooks.json'), servers);
+  }
   if (parsed.has('.mcp.json')) checkMcpServers(tally, id, folder, parsed.get('.mcp.json'));
   if (parsed.has('tool-map.json')) checkToolNames(tally, id, parsed.get('tool-map.json'));
 }
@@ -298,7 +310,7 @@ export function runDoctor(req: DoctorRequest, out: Output): number {
   // Google Ads no longer needs a developer token: access belongs to the Cloud project of the OAuth client, and the
   // header is optional. So this is an information line only. It is never a FAIL, and the value is never printed.
   if (active.includes(ADS_PRODUCT)) {
-    const set = (req.env[ADS_TOKEN_ENV] ?? '').trim() !== '';
+    const set = optionValue(req.env[ADS_TOKEN_ENV]) !== undefined;
     out.log(`INFO ${ADS_TOKEN_ENV} is ${set ? 'set' : 'not set'} (optional for ${ADS_PRODUCT}). Google Ads access is granted to the Cloud project of your OAuth client; the developer token is no longer required.`);
   }
 
@@ -306,7 +318,7 @@ export function runDoctor(req: DoctorRequest, out: Output): number {
   const adminIds = active.filter((id) => groupOf(id) === 'workspace-admin');
   if (adminIds.length > 0) {
     const file = adminScopeFileFor({ tokenDir });
-    const fromEnv = (req.env.GSM_ADMIN_SUBJECT ?? '').trim() !== '' && (req.env.GSM_SERVICE_ACCOUNT_KEY_FILE ?? '').trim() !== '';
+    const fromEnv = optionValue(req.env.GSM_ADMIN_SUBJECT) !== undefined && optionValue(req.env.GSM_SERVICE_ACCOUNT_KEY_FILE) !== undefined;
     const stored = existsSync(file);
     tally.check(stored || fromEnv, stored || fromEnv
       ? `workspace-admin is set up (needed by ${list(adminIds)}): ${stored ? file : 'GSM_ADMIN_SUBJECT and GSM_SERVICE_ACCOUNT_KEY_FILE are set'}`

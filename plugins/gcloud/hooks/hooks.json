@@ -2,7 +2,7 @@
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "^mcp__plugin_gcloud_",
+        "matcher": "^mcp__plugin_gcloud_gcloud__",
         "hooks": [
           {
             "type": "command",

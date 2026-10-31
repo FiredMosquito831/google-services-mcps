@@ -2,7 +2,7 @@
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "^mcp__plugin_gmaps_",
+        "matcher": "^mcp__plugin_gmaps_gmaps__",
         "hooks": [
           {
             "type": "command",

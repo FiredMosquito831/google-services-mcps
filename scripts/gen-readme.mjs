@@ -6,7 +6,8 @@
  * Reads config/products.json (product ids, titles, login groups, generated and gateway API lists) and
  * plugins/<id>/tool-map.json for the tool count. When a plugin folder has no tool-map.json, the count
  * falls back to generatedToolCount in config/products.json. Only the marked block of README.md changes.
- * Uses Node built-ins only. Run it after `npm run build` so that the tool maps exist.
+ * Uses Node built-ins and the compiled dist/core/runtime-tools.js (the rule for which map entries a server registers).
+ * Run it after `npm run build` so that the tool maps and dist/ exist.
  *
  * Usage:
  *   node scripts/gen-readme.mjs          rewrite the marked block
@@ -14,7 +15,7 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const readmePath = path.join(root, 'README.md');
@@ -26,13 +27,31 @@ const checkOnly = process.argv.includes('--check');
 const config = JSON.parse(fs.readFileSync(path.join(root, 'config', 'products.json'), 'utf8'));
 const products = config.products;
 
-/** Count tools from the built tool map, or fall back to the count recorded in config/products.json. */
+// The tools a server registers (src/core/runtime-tools.ts, the rule the skills and docs/CAPABILITIES.md count with).
+const runtimeModule = path.join(root, 'dist', 'core', 'runtime-tools.js');
+if (!fs.existsSync(runtimeModule)) {
+  console.error('dist/core/runtime-tools.js is missing. Run npm run build (or npx tsc -p tsconfig.json) first.');
+  process.exit(1);
+}
+const { registersEntry } = await import(pathToFileURL(runtimeModule).href);
+const { SERVICE_ACCOUNT_SCOPES_BY_SERVER } = await import(pathToFileURL(path.join(root, 'dist', 'core', 'service-account-scopes.js')).href);
+
+/**
+ * Count the tools the server registers, from the built tool map (registersEntry: without the runtime tools of other
+ * sign-in kinds, and for the service-account group without tools its key never covers), or fall back to the count
+ * recorded in config/products.json.
+ */
 function toolCount(id) {
   const mapPath = path.join(root, 'plugins', id, 'tool-map.json');
   if (fs.existsSync(mapPath)) {
     const map = JSON.parse(fs.readFileSync(mapPath, 'utf8'));
     if (!Array.isArray(map)) throw new Error(`${id}: plugins/${id}/tool-map.json is not an array`);
-    return { count: map.length, source: 'tool-map' };
+    const p = products[id];
+    const server = p.server?.name ?? id;
+    const keyScopes = p.group === 'service-account' ? SERVICE_ACCOUNT_SCOPES_BY_SERVER[server] ?? [] : undefined;
+    const prefix = `mcp__plugin_${id}_${server}__`;
+    const count = map.filter((t) => registersEntry(t.name.startsWith(prefix) ? t.name.slice(prefix.length) : t.name, t.scopes, p.group, keyScopes)).length;
+    return { count, source: 'tool-map' };
   }
   return { count: products[id].generatedToolCount, source: 'config' };
 }
@@ -115,7 +134,7 @@ function buildBlock() {
     '',
     `**Totals:** ${Object.keys(products).length} products, ${totalTools} tools, ${totalGateway} gateway APIs.`,
     '',
-    '**Tools** counts every tool in the plugin, including the `api_*` gateway tools. Write and destructive tools are listed only when **Allow write tools** is on. **Gateway APIs** are reached through `api_search`, `api_describe` and `api_call`.',
+    "**Tools** counts the tools the plugin's server registers: every per-method, hand-written and `api_*` gateway tool, and its own runtime tools (`health` and the sign-in tools of its group). Write and destructive tools are listed only when **Allow write tools** is on. **Gateway APIs** are reached through `api_search`, `api_describe` and `api_call`.",
     END,
   ];
   return { block: lines.join('\n'), totalTools, totalGateway, fromConfig };

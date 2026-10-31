@@ -260,3 +260,37 @@ test('every tool description of every bundled server is at most 2,048 characters
   assert.ok(checked > 3000, `${checked} tools checked`);
   assert.ok(longest > 1000, `the longest description (${longest}) shows the longer snapshot texts`);
 });
+
+// 1.38.3: key terms first. Claude Code cuts a description past its limit, and "When tool search matches Claude's query
+// against a tool's description, it reads only the part within the shorter limit, so put the words Claude would search for
+// near the start too" (code.claude.com/docs/en/mcp). Every description is within 2,048 characters (above); here, each one
+// starts with what the tool does: a generated tool with Google's description of its method, before this suite's note and
+// its method line; every other tool (curated, gateway, runtime) with a sentence, not a note.
+test('every tool description starts with what the tool does; a generated tool puts its notes and method line after it', { timeout: 600_000 }, async () => {
+  const servers = await everyServerTools();
+  let generated = 0;
+  let other = 0;
+  for (const { plugin, map, tools } of servers) {
+    const methodOf = new Map(map.map((t) => [t.name.slice(t.name.lastIndexOf('__') + 2), t.methodId]));
+    for (const tool of tools) {
+      // Some Discovery descriptions begin with a space (Business Profile Performance); the words still come first.
+      const text = (tool.description ?? '').trimStart();
+      const at = `${plugin}/${tool.name}`;
+      assert.ok(text.length > 0, `${at}: has a description`);
+      const methodId = methodOf.get(tool.name);
+      if (methodId) {
+        const line = text.lastIndexOf(`Method ${methodId}: `);
+        assert.ok(line > 0, `${at}: Google's description comes before the method line`);
+        const lead = text.slice(0, line);
+        const note = lead.lastIndexOf(' Note: ');
+        assert.ok(lead.slice(0, note >= 0 ? note : undefined).trim().length > 0, `${at}: a description before the note`);
+        generated += 1;
+      } else {
+        assert.match(text, /^[A-Z`"]/, `${at}: starts with a sentence`);
+        assert.ok(!/^(Note|Warning)\b/.test(text), `${at}: not with a note`);
+        other += 1;
+      }
+    }
+  }
+  assert.ok(generated > 2500 && other > 300, `${generated} generated and ${other} other tools checked`);
+});

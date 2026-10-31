@@ -2,7 +2,7 @@
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "^mcp__plugin_gdrive_",
+        "matcher": "^mcp__plugin_gdrive_gdrive__",
         "hooks": [
           {
             "type": "command",

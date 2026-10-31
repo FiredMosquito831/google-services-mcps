@@ -2,7 +2,7 @@
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "^mcp__plugin_gapps_",
+        "matcher": "^mcp__plugin_gapps_gapps__",
         "hooks": [
           {
             "type": "command",

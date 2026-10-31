@@ -1,0 +1,277 @@
+{
+  "$comment": "Per-product text of each plugin's skill (plugins/<id>/skills/<id>/SKILL.md), rendered by scripts/bundle.mjs. description and whenToUse go into the skill's frontmatter: the product's main use cases first; Claude Code shows them together, cut at 1,536 characters. flows are the common tasks, in order; notes are short facts. Write a tool as {tool:<name>}: the build checks that the server has it and renders it as `<name>`. The sign-in, untrusted-content, safety, tool-count and API sections are written by the bundle for every product. listing holds each product's marketplace category and search tags (.claude-plugin/marketplace.json).",
+  "products": {
+    "gcloud": {
+      "description": "Inspect and manage Google Cloud projects: check a project's readiness and enable its APIs, search projects, read IAM policies, manage API keys, run read-only BigQuery SQL, read Cloud Logging entries and Monitoring metrics (PromQL), read and write Cloud Storage objects, and look up SKU prices; about 280 other Cloud APIs through the gateway.",
+      "whenToUse": "Use when the person works with Google Cloud or GCP: a project, enabling an API, IAM roles and policies, API keys, BigQuery datasets and SQL, logs, metrics and dashboards, Cloud Storage buckets and files, billing and prices, or another Cloud API (Compute Engine, Cloud Run, Pub/Sub, Secret Manager, GKE and more). Examples: \"which APIs are enabled in my project\", \"query this BigQuery table\", \"show today's error logs\", \"read gs://bucket/file.txt\", \"what does this SKU cost\".",
+      "flows": [
+        { "title": "Get a project ready", "steps": ["{tool:project_readiness} with project_id: which APIs the suite needs are off, and the console pages for the steps no API can do.", "{tool:project_enable_missing} turns those APIs on (a change: it asks first)."] },
+        { "title": "Explore and query BigQuery", "steps": ["{tool:bq_dataset_list} with project_id, then {tool:bq_table_list}.", "{tool:bq_table_get} for the schema, or {tool:bq_table_preview} for a few rows.", "{tool:bq_query_read} runs one SELECT (dry run first, capped by max_bytes_billed). {tool:bq_job_get} with page_token or start_index reads more rows of the same job."] },
+        { "title": "Read logs and metrics", "steps": ["{tool:logging_entries_list} with project_id and a filter or severity (the default window is the last day).", "{tool:monitoring_query_promql} for a metric; {tool:monitoring_dashboards_list} for the dashboards."] },
+        { "title": "Cloud Storage", "steps": ["{tool:storage_buckets_list} with project, then {tool:storage_objects_list} with bucket and prefix.", "{tool:gcs_read_text} reads an object in parts (read_offset); {tool:gcs_write_text} writes one and never replaces an existing object unless overwrite is set."] },
+        { "title": "Projects, access and keys", "steps": ["{tool:cloud_projects_search} finds a project id; {tool:cloud_project_iam_policy} shows who has which role.", "{tool:cloud_services_list} lists the enabled APIs; {tool:cloud_apikeys_list} lists API keys. {tool:cloud_apikey_reveal} shows a key string, so it asks first."] },
+        { "title": "Any other Cloud API", "steps": ["{tool:api_search} with words such as \"cloud run services list\", then {tool:api_describe} for the parameters, then {tool:api_call}."] }
+      ],
+      "notes": ["Prices: {tool:billing_price_lookup} with a service name or a sku_id.", "This group can also sign in with Application Default Credentials ({tool:auth_login} with method adc), which uses the gcloud CLI."]
+    },
+    "gsc": {
+      "description": "Google Search Console for a website: search performance (clicks, impressions, CTR and position by query, page, country, device or date), URL inspection (index status, last crawl, canonical), sitemaps (list, status, submit) and properties; plus Site Verification and the Indexing API.",
+      "whenToUse": "Use when the person asks how a site does in Google Search or about its indexing: top queries or pages, a traffic change, why a page is not indexed, sitemap status, submitting a sitemap, adding or verifying a property. Examples: \"top queries last month for example.com\", \"is this URL indexed\", \"submit my sitemap\".",
+      "flows": [
+        { "title": "Find the property", "steps": ["{tool:sc_sites_list} first. Copy the property string exactly: https://example.com/ (URL prefix, with the trailing slash) or sc-domain:example.com (a domain property)."] },
+        { "title": "Search performance", "steps": ["{tool:sc_search_analytics_query} with site_url, start_date and end_date (YYYY-MM-DD, Pacific time) and dimensions (query, page, country, device, date).", "Page with row_limit and start_row; a cut result says where to continue. The last two or three days are usually not in the data yet."] },
+        { "title": "Why is a page not indexed", "steps": ["{tool:sc_url_inspect} with site_url and the full inspection_url (the page must belong to the property). It reads Google's index: it cannot run a live test or request indexing, which only the Search Console website does."] },
+        { "title": "Sitemaps", "steps": ["{tool:sc_sitemaps_list}, then {tool:sc_sitemap_get} for status, errors and warnings (its indexed count is deprecated by Google).", "{tool:sc_sitemap_submit} submits or resubmits one (a change: it asks first)."] }
+      ],
+      "notes": ["The Indexing API ({tool:indexing_url_notifications_publish}) is only for pages with JobPosting or BroadcastEvent markup; it is not a general request-indexing tool."]
+    },
+    "gsearch": {
+      "description": "Search Google's developer documentation, run PageSpeed Insights, read Chrome UX Report field data (Core Web Vitals), check URLs with Web Risk and Safe Browsing, search the Knowledge Graph and published fact checks, and Custom Search; all with an API key, no sign-in.",
+      "whenToUse": "Use for Google developer docs, a page's speed or Core Web Vitals, whether a URL is unsafe, a Knowledge Graph entity, or fact checks of a claim. Examples: \"run PageSpeed on example.com\", \"what are this site's Core Web Vitals\", \"is this link malicious\", \"find Google's docs on OAuth scopes\".",
+      "flows": [
+        { "title": "Google developer docs", "steps": ["{tool:developerk_documents_search_documen} with query, then {tool:developerk_documents_batch_get} with the document names it returned for the full text.", "{tool:developerk_v1_answer_query} answers a question from the docs."] },
+        { "title": "Page speed and Core Web Vitals", "steps": ["{tool:pagespeedo_pagespeedap_runpagespeed} with url and strategy (mobile or desktop).", "{tool:chromeuxre_records_query_record} with a body naming url or origin, for real-user data."] },
+        { "title": "Is a URL safe", "steps": ["{tool:webrisk_uris_search} with uri and threatTypes (MALWARE, SOCIAL_ENGINEERING, UNWANTED_SOFTWARE)."] },
+        { "title": "Entities and fact checks", "steps": ["{tool:kgsearch_entities_search} with query; {tool:factcheckt_claims_search} with query."] }
+      ],
+      "notes": ["A few tools need an OAuth sign-in or an allowlisted project and fail with an API key; their descriptions say so.", "The Custom Search JSON API is closed to new customers and scheduled to end on 2027-01-01."]
+    },
+    "gdrive": {
+      "description": "Find, read and create Google Drive files: search with Drive queries, read Google Docs, Sheets and Slides and Office files as text, read and write Sheet ranges, edit Docs and Slides, upload files and folders, see sharing and comments; plus Forms, Drive Labels, Drive Activity and Books.",
+      "whenToUse": "Use when the person mentions Google Drive, a Google Doc, Sheet or Slides deck, a shared file or folder, uploading a file, or a spreadsheet range. Examples: \"find the budget spreadsheet\", \"summarize this Google Doc\", \"add a row to the sheet\", \"upload this file to Drive\".",
+      "flows": [
+        { "title": "Find a file", "steps": ["{tool:drive_search} with Drive's q, such as name contains 'budget' and mimeType = 'application/vnd.google-apps.spreadsheet', or {tool:drive_list_recent}.", "{tool:drive_get_file} for one file's metadata."] },
+        { "title": "Read a file", "steps": ["{tool:drive_read_text} with file_id: Docs and Slides as text, Sheets as CSV, Word, Excel, PowerPoint and OpenDocument files; pass next_offset as offset to read on.", "PDFs and images are not read as text: {tool:drive_download} gives the bytes."] },
+        { "title": "Work in a Sheet", "steps": ["{tool:sheets_get_values} with a range such as Sheet1!A1:D20.", "{tool:sheets_write_values} (value_input data stores the values as given; formulas parses them as if typed) or {tool:sheets_insert_rows}."] },
+        { "title": "Edit a Doc", "steps": ["{tool:docs_documents_get} for its structure, then {tool:docs_documents_batch_update} (it can delete content, so it asks twice). replaceAllText needs no index; inserts need one from the structure."] },
+        { "title": "Create or remove", "steps": ["{tool:drive_create_file} makes a blank Doc, Sheet or Slides deck, or uploads text, base64 or a local file; {tool:drive_create_folder} makes a folder.", "{tool:drive_trash_file} moves a file to the trash (it asks twice; the file can be restored)."] }
+      ],
+      "notes": ["Rename, move and restore from trash go through the gateway (Drive v2): {tool:api_search} \"drive files patch\"."]
+    },
+    "gmail": {
+      "description": "Search, read, draft, send, reply to, label and trash Gmail messages and threads, read attachments, manage labels, filters and mail settings, and read Gmail Postmaster Tools domain stats.",
+      "whenToUse": "Use when the person asks about their email or Gmail: find, read or summarize mail, reply, draft or send, label, archive or trash, attachments, filters or vacation replies, or sender reputation in Postmaster Tools. Examples: \"any email from Anna this week?\", \"summarize my unread mail\", \"draft a reply\", \"label these as Receipts\".",
+      "flows": [
+        { "title": "Find and read mail", "steps": ["{tool:gmail_search_threads} with a Gmail query (from:anna newer_than:7d, is:unread, has:attachment, subject:invoice), then {tool:gmail_get_thread} with thread_id.", "One message: {tool:gmail_get_message}. Each message found costs Gmail quota, so keep page_size small and narrow the query."] },
+        { "title": "Reply or write", "steps": ["{tool:gmail_create_draft} (reply_to_message_id makes it a reply in the thread) for the person to review, then {tool:gmail_send_draft}.", "Or send now with {tool:gmail_reply} or {tool:gmail_send}: both ask first and show the recipients."] },
+        { "title": "Label and clean up", "steps": ["{tool:gmail_list_labels}, then {tool:gmail_label} or {tool:gmail_unlabel} by label name; archiving is removing INBOX.", "{tool:gmail_trash} (it asks twice); {tool:gmail_untrash} brings mail back within 30 days."] },
+        { "title": "Attachments", "steps": ["{tool:gmail_get_message} lists the attachment ids, then {tool:gmail_get_attachment}."] }
+      ],
+      "notes": ["Postmaster Tools is an optional part: sign in with {tool:auth_login} and `with` [\"postmaster\"] to load its tools."]
+    },
+    "gcalendar": {
+      "description": "Read and manage Google Calendar: list calendars and events, find free times across several people, create, move or cancel events with guests and Meet links, and answer invitations; plus calendar sharing and settings.",
+      "whenToUse": "Use for schedules and meetings: what is on a calendar, finding a time that suits everyone, booking or moving a meeting, inviting guests, adding a Google Meet link, accepting or declining an invitation. Examples: \"what do I have tomorrow\", \"find 30 minutes with Ana and Ben next week\", \"move my 3pm to Friday\".",
+      "flows": [
+        { "title": "What is on", "steps": ["{tool:calendar_list_calendars} for calendar ids (primary is the default), then {tool:calendar_list_events} with time_min and time_max.", "{tool:calendar_get_event} for guests, their answers and the Meet link."] },
+        { "title": "Find a time and book it", "steps": ["{tool:calendar_suggest_time} with attendees, start_time, end_time and duration_minutes (working_hours, weekdays_only).", "{tool:calendar_create_event} with summary, start and end (RFC 3339 with an offset, or YYYY-MM-DD for all day), attendees and add_meet."] },
+        { "title": "Change or cancel", "steps": ["{tool:calendar_update_event} changes only the fields given; add_attendees and remove_attendees keep the other guests' answers.", "{tool:calendar_delete_event} asks twice; the id of a recurring series deletes every occurrence."] },
+        { "title": "Answer an invitation", "steps": ["{tool:calendar_respond} with response accepted, declined or tentative."] }
+      ],
+      "notes": ["send_updates is none unless set: guests get no email. With all, the call counts as sending to other people and asks as destructive."]
+    },
+    "gchat": {
+      "description": "Find and read Google Chat conversations, search messages across spaces, list members, send messages and thread replies, and mark conversations read; plus Workspace Events subscriptions.",
+      "whenToUse": "Use when the person mentions Google Chat, a space, a direct message, a thread, or what colleagues said in Chat. Examples: \"what did the team say in Chat today\", \"search Chat for the deploy link\", \"post this in the Marketing space\".",
+      "flows": [
+        { "title": "Find a conversation", "steps": ["{tool:chat_search_conversations} by name or participants gives the conversation_id."] },
+        { "title": "Read", "steps": ["{tool:chat_list_messages} with conversation_id (start_time, end_time, order), or {tool:chat_search_messages} across spaces (query, senders, mentions_me, unread_only)."] },
+        { "title": "Send", "steps": ["{tool:chat_send_message} with conversation_id and text, and thread_id to reply in a thread. It sends to other people, so it asks twice.", "{tool:chat_mark_read} afterwards, if the person wants."] },
+        { "title": "Members", "steps": ["{tool:chat_list_members} with conversation_id."] }
+      ],
+      "notes": ["One message is at most 32,000 bytes."]
+    },
+    "gmeet": {
+      "description": "Create Google Meet meeting spaces and read past meetings: conference records, participants, recordings, transcripts and smart notes.",
+      "whenToUse": "Use for Google Meet: a new meeting link, who joined a past meeting, its recording, transcript or notes. Examples: \"create a Meet link\", \"who attended yesterday's meeting\", \"get the transcript of the last call\".",
+      "flows": [
+        { "title": "New meeting", "steps": ["{tool:meet_spaces_create} returns the meeting link."] },
+        { "title": "A past meeting", "steps": ["{tool:meet_conference_records_list} (filter by meeting code or time), then {tool:meet_conference_recor_participants_list} with parent conferenceRecords/<id>."] },
+        { "title": "Transcript and recording", "steps": ["{tool:meet_conference_record_transcripts_list} with parent, then {tool:meet_conference_transcript_entries_list}.", "{tool:meet_conference_records_recordings_list}: the recording and transcript files are in Drive; read them with the gdrive plugin and the file id."] }
+      ],
+      "notes": ["Google keeps conference records, transcripts and recordings entries for a limited time (30 days per its artifacts guide)."]
+    },
+    "gcontacts": {
+      "description": "Look up people: search your Google contacts and your organization's directory, and read your own profile; plus the People API (contact groups, creating and updating contacts), personal Health metrics and Data Portability.",
+      "whenToUse": "Use to find someone's email address or phone number, look up a coworker in the company directory, or manage Google Contacts. Examples: \"what's Ana's email\", \"find Ben in the directory\", \"add this person to my contacts\".",
+      "flows": [
+        { "title": "Find a person", "steps": ["{tool:contacts_search} searches your contacts; {tool:contacts_search_directory} searches your organization."] },
+        { "title": "Who is signed in", "steps": ["{tool:profile_me}."] },
+        { "title": "Change a contact", "steps": ["Find the People API tool with {tool:api_methods}; read the contact first (its etag), then update with updatePersonFields listing every field you send."] }
+      ],
+      "notes": []
+    },
+    "gtasks": {
+      "description": "Read and manage Google Tasks (task lists, tasks, due dates, completing and moving tasks), plus Google Keep notes on Workspace accounts.",
+      "whenToUse": "Use for to-dos and Google Tasks, or Google Keep notes. Examples: \"what's on my task list\", \"add a task to call the bank on Friday\", \"mark the report task done\", \"find my Keep note about the trip\".",
+      "flows": [
+        { "title": "Read tasks", "steps": ["{tool:tasks_tasklists_list}, then {tool:tasks_tasks_list} with tasklist (showCompleted and showHidden true to include completed tasks)."] },
+        { "title": "Add or complete", "steps": ["{tool:tasks_tasks_insert} with tasklist and a body with title, notes and due (a date, such as 2026-11-06T00:00:00.000Z).", "Complete a task with {tool:tasks_tasks_patch} and the body {\"status\": \"completed\"}."] },
+        { "title": "Keep notes", "steps": ["{tool:keep_notes_list}, then {tool:keep_notes_get}."] }
+      ],
+      "notes": ["The Keep API works for Google Workspace accounts."]
+    },
+    "gclassroom": {
+      "description": "Google Classroom for teachers and students: courses, rosters, coursework and submissions, topics, announcements, rubrics and guardians.",
+      "whenToUse": "Use for Google Classroom: a class or course, its students, assignments, grades or submissions, announcements. Examples: \"list my classes\", \"who has not turned in the essay\", \"post an announcement to Period 3\".",
+      "flows": [
+        { "title": "Courses and students", "steps": ["{tool:classroom_list_courses} (role teacher or student) gives course_id; {tool:classroom_get_roster} lists the students and teachers."] },
+        { "title": "Assignments and submissions", "steps": ["{tool:classroom_list_coursework} with course_id, then {tool:classroom_list_submissions} with course_id and coursework_id (states, late)."] },
+        { "title": "Post to a class", "steps": ["{tool:classroom_create_announcement} with course_id and text (a change: it asks first)."] }
+      ],
+      "notes": ["Google lets only the Cloud project that created a coursework item change or grade it: items made in the Classroom website return PERMISSION_DENIED here."]
+    },
+    "gapps": {
+      "description": "Apps Script: read and update a script project's files, create versions and deployments, run a function through the Apps Script API, and list executions; plus the Workspace Marketplace SDK.",
+      "whenToUse": "Use for Google Apps Script projects: read or change a script's code, deploy it, run a function, or check recent executions and errors. Examples: \"show me the code of my script\", \"run the cleanup function\", \"why did my trigger fail\".",
+      "flows": [
+        { "title": "Read the code", "steps": ["{tool:appsscript_projects_get_content} with scriptId (from the script editor's URL)."] },
+        { "title": "Change and deploy", "steps": ["Read every file first: {tool:appsscript_projects_update_content} replaces the whole project with the files sent (it asks twice).", "{tool:appsscript_projects_versions_create}, then {tool:appsscript_projects_deployments_create}."] },
+        { "title": "Run a function", "steps": ["{tool:appsscript_scripts_run} with scriptId and a body naming function (and parameters). Google requires the script to be deployed as an API executable and to use the same Cloud project as this suite's OAuth client."] },
+        { "title": "Executions", "steps": ["{tool:appsscript_processes_list} for recent runs and their status."] }
+      ],
+      "notes": ["The person must turn on the Apps Script API in their Apps Script settings (https://script.google.com/home/usersettings)."]
+    },
+    "gadmin": {
+      "description": "Administer a Google Workspace domain: users, groups and members, organizational units, domains, audit activity reports and security alerts; plus Cloud Identity, Chrome management, licensing, Vault and reseller APIs.",
+      "whenToUse": "Use for Google Workspace admin tasks: look up or create users, suspend an account, group membership, org units, who signed in or changed a setting (audit reports), security alerts. Examples: \"is ana@example.com suspended\", \"add Ben to the sales group\", \"show admin activity from yesterday\".",
+      "flows": [
+        { "title": "Find a user", "steps": ["{tool:admin_users_list} with query (such as email:ana* or orgUnitPath=/Sales), then {tool:admin_user_get} with user_key (an email or id)."] },
+        { "title": "Groups", "steps": ["{tool:admin_groups_list}, then {tool:admin_group_members_list}; {tool:admin_group_member_add} adds a member."] },
+        { "title": "Audit and alerts", "steps": ["{tool:admin_activities_list} with userKey (all, or an email) and applicationName (login, admin, drive, token and others); {tool:alerts_alerts_list}."] },
+        { "title": "Suspend rather than delete", "steps": ["{tool:admin_user_set_suspended} can be undone; {tool:admin_user_delete} cannot (it asks twice)."] }
+      ],
+      "notes": ["Every call acts as the admin set up with {tool:auth_setup_admin}, through domain-wide delegation; tools whose scopes that setup lacks stay hidden."]
+    },
+    "ganalytics": {
+      "description": "Google Analytics 4 reports and setup: run reports, realtime and funnel reports, read property metadata, list accounts and properties, and annotations; plus the Admin API.",
+      "whenToUse": "Use for website or app analytics in GA4: users, sessions, conversions, traffic sources, top pages, realtime visitors, funnels. Examples: \"how many users last week\", \"top landing pages this month\", \"realtime visitors now\".",
+      "flows": [
+        { "title": "Find the property", "steps": ["{tool:gaadmin_account_summarie_list} gives accounts and their property ids."] },
+        { "title": "Know the fields", "steps": ["{tool:gadata_properties_get_metadat} with name properties/<id>/metadata lists the dimension and metric names, custom ones included."] },
+        { "title": "Report", "steps": ["{tool:ga_run_report} with property_id, date_ranges, dimensions and metrics; limit and offset page through rows.", "{tool:ga_run_realtime_report} for the last 30 minutes; {tool:ga_run_funnel_report} for steps."] }
+      ],
+      "notes": []
+    },
+    "gtm": {
+      "description": "Google Tag Manager: list accounts, containers, workspaces, tags, triggers and variables, read the live version, create versions and publish.",
+      "whenToUse": "Use for Google Tag Manager (GTM) containers, tags, triggers or variables, or publishing a container. Examples: \"list the tags in my GTM container\", \"what is live in GTM\", \"publish the workspace\".",
+      "flows": [
+        { "title": "Find the workspace", "steps": ["{tool:tagmgr_accounts_list}, then {tool:tagmgr_accounts_containers_list} with parent accounts/<id>, then {tool:tagmgr_accounts_containers_workspaces_list} with parent accounts/<id>/containers/<id>."] },
+        { "title": "Read the setup", "steps": ["{tool:tagmgr_accounts_containe_workspac_tags_list} with parent accounts/<a>/containers/<c>/workspaces/<w>; triggers and variables the same way.", "{tool:tagmgr_accounts_containers_versions_live} shows what is published now."] },
+        { "title": "Publish", "steps": ["{tool:tagmgr_accounts_containe_workspac_create_ve} makes a version from the workspace (Google then removes that workspace), then {tool:tagmgr_accounts_containers_versions_publish} with the version path. Both ask twice."] }
+      ],
+      "notes": []
+    },
+    "gyoutube": {
+      "description": "YouTube: search videos and channels, read your channel, videos, playlists, comments and captions, YouTube Analytics and Reporting, reply to comments and update video details; plus Blogger.",
+      "whenToUse": "Use for YouTube channels, videos, playlists, comments, or YouTube Analytics (views, watch time, subscribers), and for Blogger blogs. Examples: \"my channel's views last month\", \"search YouTube for cooking videos\", \"list comments on my latest video\".",
+      "flows": [
+        { "title": "Your channel", "steps": ["{tool:youtube_channels_list} with part snippet,statistics and mine true."] },
+        { "title": "Videos", "steps": ["{tool:youtube_search_list} with part snippet, q and type video, then {tool:youtube_videos_list} with id and part snippet,statistics."] },
+        { "title": "Analytics", "steps": ["{tool:ytanalyt_reports_query} with ids channel==MINE, startDate, endDate and metrics (views,estimatedMinutesWatched)."] },
+        { "title": "Comments", "steps": ["{tool:youtube_comment_threads_list} with videoId; {tool:youtube_comments_insert} replies (a change: it asks first)."] }
+      ],
+      "notes": ["A search costs 100 units of the daily YouTube Data API quota; most reads cost 1.", "{tool:youtube_videos_update} replaces the parts it sends (it asks twice): read the video first and send the whole part back. Video uploads are not available here."]
+    },
+    "gbusiness": {
+      "description": "Google Business Profile: list accounts and locations, read and update a location's details, verifications, performance (calls, website clicks, direction requests, search keywords), place actions and notifications.",
+      "whenToUse": "Use for a business's Google listing (Business Profile on Search and Maps): locations, hours, phone, performance insights, search keywords. Examples: \"how many calls did my shop get last month\", \"update our opening hours\".",
+      "flows": [
+        { "title": "Locations", "steps": ["{tool:mbaccount_accounts_list}, then {tool:mbinfo_accounts_locations_list} with parent accounts/<id> and readMask (such as name,title,storefrontAddress)."] },
+        { "title": "One location", "steps": ["{tool:mbinfo_locations_get} with name locations/<id> and readMask."] },
+        { "title": "Performance", "steps": ["{tool:bpperf_locations_fetch_multi_da} with location, dailyMetrics and the dailyRange dates; {tool:bpperf_loca_sear_impr_mont_list} for search keywords."] },
+        { "title": "Update a listing", "steps": ["{tool:mbinfo_locations_patch} with updateMask naming the fields changed (a change: it asks first)."] }
+      ],
+      "notes": []
+    },
+    "gads": {
+      "description": "Google Ads: list accessible customers, run GAQL reports (campaigns, ad groups, keywords, spend, conversions), look up a resource's fields, and apply mutate operations; plus Search Ads 360, Display & Video 360, Campaign Manager, AdSense, AdMob, Ad Exchange and other advertising APIs.",
+      "whenToUse": "Use for Google Ads accounts and campaigns (spend, clicks, conversions, keywords, budgets) or other Google advertising and publisher products (AdSense, AdMob, DV360, SA360, Campaign Manager). Examples: \"campaign spend for the last 30 days\", \"which keywords convert\", \"pause this campaign\".",
+      "flows": [
+        { "title": "Find the account", "steps": ["{tool:ads_list_customers}. Under a manager account, {tool:ads_search} on customer_client lists the client accounts."] },
+        { "title": "Report", "steps": ["{tool:ads_resource_metadata} with resource (such as campaign) lists the fields you can select.", "{tool:ads_search} with customer_id and a GAQL query, such as SELECT campaign.name, metrics.clicks, metrics.cost_micros FROM campaign WHERE segments.date DURING LAST_30_DAYS. Money is in micros: divide by 1,000,000."] },
+        { "title": "Change", "steps": ["{tool:ads_mutate} with validate_only true first, then the same operations without it (it asks first)."] }
+      ],
+      "notes": ["Reaching client accounts through a manager account needs the manager's id in the plugin option ads_login_customer_id."]
+    },
+    "gmerchant": {
+      "description": "Google Merchant Center through a service account: accounts, products, product issues, programs, data sources, reports (MCQL) and the Comparison Shopping Service.",
+      "whenToUse": "Use for Google Merchant Center and Shopping listings: products, disapprovals and issues, feeds and data sources, performance reports. Examples: \"which products are disapproved\", \"list my Merchant Center data sources\".",
+      "flows": [
+        { "title": "Accounts", "steps": ["{tool:merchantap_accounts_list} gives accounts/<id>."] },
+        { "title": "Products and issues", "steps": ["{tool:merchantap_acco_produ_list_6ad8} with parent accounts/<id>, then {tool:merchantap_account_products_get}; {tool:merchantap_accounts_issues_list} for account issues."] },
+        { "title": "Reports", "steps": ["{tool:merchantap_accoun_report_search} with parent accounts/<id> and a body with an MCQL query."] },
+        { "title": "Feeds", "steps": ["{tool:merchantap_account_data_so_list}, then {tool:merchantap_accoun_data_so_fetch} to fetch one now."] }
+      ],
+      "notes": ["The service account must be added as a user in Merchant Center."]
+    },
+    "gplay": {
+      "description": "Google Play Console through a service account: app reviews and replies, release tracks and edits, orders and subscriptions, Play Developer Reporting (vitals), Play Games Services, Android Management (enterprises, devices, policies) and Play Integrity.",
+      "whenToUse": "Use for Android apps on Google Play: reviews, releases and tracks, subscriptions and orders, vitals (crash and ANR rates), or Android Enterprise device management. Examples: \"latest reviews of my app\", \"what is on the production track\", \"list managed devices\".",
+      "flows": [
+        { "title": "Reviews", "steps": ["{tool:androidpub_reviews_list} with packageName, then {tool:androidpub_reviews_reply} (a change: it asks first)."] },
+        { "title": "Releases", "steps": ["{tool:androidpub_applica_tracks_releases_list} with parent. Changes to tracks go through an edit: insert, change, validate, commit."] },
+        { "title": "Android Management", "steps": ["{tool:androidmgmt_list_enterprises} with project_id, then {tool:androidmgmt_list_devices} with enterprise and {tool:androidmgmt_list_policies}."] }
+      ],
+      "notes": ["The service account must be invited in Play Console (Users and permissions)."]
+    },
+    "gfirebase": {
+      "description": "Firebase: projects and apps (with their SDK config), Firestore documents and queries, Remote Config, Authentication users, Crashlytics, Hosting, App Distribution, Data Connect, security Rules, Test Lab and Cloud Messaging.",
+      "whenToUse": "Use for Firebase projects: app config, Firestore data, Remote Config, Auth users, Crashlytics crashes, security rules, or sending a push message. Examples: \"list my Firebase projects\", \"read the users collection\", \"top crashes this week\".",
+      "flows": [
+        { "title": "Projects and apps", "steps": ["{tool:firebase_projects_list}, then {tool:firebase_projects_search_apps} with parent projects/<id>; {tool:firebase_projec_web_app_get_con} for a web app's config."] },
+        { "title": "Firestore", "steps": ["{tool:firestore_list_documents} with project_id and collection_path, then {tool:firestore_get_document} with document_path; {tool:firestore_query_collection} with filters."] },
+        { "title": "Config and users", "steps": ["{tool:remoteconfig_get_template}; {tool:auth_get_users} by uids or emails (password hashes are never returned)."] },
+        { "title": "Crashes", "steps": ["{tool:firebasecr_proje_apps_repor_get} with the report name."] }
+      ],
+      "notes": []
+    },
+    "gmaps": {
+      "description": "Google Maps Platform with an API key: search places and read place details, compute routes and travel times, weather, plus Address Validation, Solar, Air Quality, Pollen and Street View Publish.",
+      "whenToUse": "Use for places, addresses, routes and travel times, weather, air quality, pollen or solar potential at a location. Examples: \"coffee shops near the Louvre\", \"drive time from Bucharest to Brasov\", \"weather in Cluj tomorrow\".",
+      "flows": [
+        { "title": "Places", "steps": ["{tool:places_places_search_text} with a body {\"textQuery\": \"...\"}, then {tool:places_places_get} with name places/<id>. A field mask is sent by default."] },
+        { "title": "Routes", "steps": ["{tool:maps_compute_routes} with origin and destination (an address or a place) and travel_mode."] },
+        { "title": "Weather", "steps": ["{tool:maps_lookup_weather} with latitude and longitude (forecast, hours or days)."] }
+      ],
+      "notes": ["The API key is shared with gsearch; restrict it to the APIs both use."]
+    },
+    "gai": {
+      "description": "Vertex AI generation, token counting and embeddings with Gemini and other models, Vertex AI Search (Discovery Engine), plus Vision, Speech, Text-to-Speech, Translate, Natural Language, Document AI and Dialogflow.",
+      "whenToUse": "Use to call Google's AI APIs in a Cloud project: generate text with a model on Vertex AI, count tokens, make embeddings, search a Vertex AI Search app, or run Vision, Speech, Translate, Natural Language or Document AI. Examples: \"ask Gemini on Vertex to summarize this\", \"embed these sentences\", \"detect the text in this image\".",
+      "flows": [
+        { "title": "Generate", "steps": ["{tool:vertex_count_tokens} for a long prompt, then {tool:vertex_generate_content} with project_id, model and prompt (billed per token by Google)."] },
+        { "title": "Embeddings", "steps": ["{tool:vertex_embed_content} with project_id, model and text."] },
+        { "title": "Vertex AI Search", "steps": ["{tool:discoverye_projec_locati_collec_engine_list} lists the apps (engines); then the engine's search or answer tool."] },
+        { "title": "Other AI APIs", "steps": ["{tool:api_search} (\"vision images annotate\", \"translate text\"), then {tool:api_describe} and {tool:api_call}."] }
+      ],
+      "notes": []
+    }
+  },
+  "listing": {
+    "gcloud": { "category": "cloud", "tags": ["google", "google-cloud", "gcp", "bigquery", "cloud-storage", "iam", "logging", "monitoring"] },
+    "gsc": { "category": "seo", "tags": ["google", "search-console", "seo", "sitemaps", "indexing"] },
+    "gsearch": { "category": "search", "tags": ["google", "pagespeed", "core-web-vitals", "web-risk", "knowledge-graph", "fact-check", "developer-docs"] },
+    "gdrive": { "category": "productivity", "tags": ["google", "google-workspace", "drive", "docs", "sheets", "slides", "forms"] },
+    "gmail": { "category": "productivity", "tags": ["google", "google-workspace", "gmail", "email"] },
+    "gcalendar": { "category": "productivity", "tags": ["google", "google-workspace", "calendar", "meetings", "scheduling"] },
+    "gchat": { "category": "productivity", "tags": ["google", "google-workspace", "chat", "messaging"] },
+    "gmeet": { "category": "productivity", "tags": ["google", "google-workspace", "meet", "meetings", "transcripts"] },
+    "gcontacts": { "category": "productivity", "tags": ["google", "google-workspace", "contacts", "people", "directory"] },
+    "gtasks": { "category": "productivity", "tags": ["google", "google-workspace", "tasks", "keep", "todo"] },
+    "gclassroom": { "category": "education", "tags": ["google", "google-workspace", "classroom", "education"] },
+    "gapps": { "category": "development", "tags": ["google", "google-workspace", "apps-script", "automation"] },
+    "gadmin": { "category": "administration", "tags": ["google", "google-workspace", "admin", "users", "groups", "audit"] },
+    "ganalytics": { "category": "marketing", "tags": ["google", "google-analytics", "ga4", "analytics", "reports"] },
+    "gtm": { "category": "marketing", "tags": ["google", "tag-manager", "gtm", "tags"] },
+    "gyoutube": { "category": "marketing", "tags": ["google", "youtube", "youtube-analytics", "blogger", "video"] },
+    "gbusiness": { "category": "marketing", "tags": ["google", "business-profile", "local", "maps-listing"] },
+    "gads": { "category": "marketing", "tags": ["google", "google-ads", "advertising", "adsense", "admob", "gaql"] },
+    "gmerchant": { "category": "commerce", "tags": ["google", "merchant-center", "shopping", "products"] },
+    "gplay": { "category": "development", "tags": ["google", "google-play", "android", "play-console", "android-management"] },
+    "gfirebase": { "category": "development", "tags": ["google", "firebase", "firestore", "crashlytics", "remote-config"] },
+    "gmaps": { "category": "location", "tags": ["google", "google-maps", "places", "routes", "weather"] },
+    "gai": { "category": "ai", "tags": ["google", "vertex-ai", "gemini", "embeddings", "vision", "speech", "translate"] }
+  }
+}

@@ -1,11 +1,14 @@
 {
   "name": "gplay",
   "displayName": "Google Play",
-  "version": "1.36.1",
+  "version": "1.38.3",
   "description": "Google Play developer publishing and reporting, Play Games Services, Android Enterprise and Management, Play Integrity and device APIs.",
   "author": {
     "name": "FiredMosquito831"
   },
+  "homepage": "https://github.com/FiredMosquito831/google-services-mcps/blob/main/docs/products/gplay.md",
+  "repository": "https://github.com/FiredMosquito831/google-services-mcps",
+  "license": "Apache-2.0",
   "keywords": [
     "google",
     "mcp",
@@ -22,7 +25,7 @@
     "confirmation": {
       "type": "string",
       "title": "Confirm before changes",
-      "description": "every-change asks before any change or delete (recommended). destructive-only asks only before destructive actions: deleting, sending to other people, sharing or permission changes, security changes, device commands, publishing, refunds and whole-content replacement. off asks for nothing; deny rules still apply. Change it here at any time.",
+      "description": "every-change: ask before any change (recommended). destructive-only: ask only before deleting, sending to other people, sharing or permission changes, security changes, device commands, publishing, refunds and whole-content replacement. off: never ask.",
       "options": [
         "every-change",
         "destructive-only",
@@ -33,7 +36,7 @@
     "toolset": {
       "type": "string",
       "title": "Toolset",
-      "description": "Which tools this server lists. all: every tool (the default). google: the tools that match Google's official MCP server for this product, or a small set chosen here where Google has no server; where that list is not defined yet, all tools, and health says so. curated: the hand-written tools and the gateway tools (api_search, api_describe, api_call); where a product has neither, all tools. It takes effect when the server starts again.",
+      "description": "Which tools this server lists. all: every tool (the default). google: the set that matches Google's own MCP server. curated: hand-written and gateway tools. Applies on restart.",
       "options": [
         "all",
         "google",
@@ -42,7 +45,7 @@
       "default": "all"
     },
     "token_dir": {
-      "type": "string",
+      "type": "directory",
       "title": "Token directory (optional)",
       "description": "Where OAuth tokens are stored. Leave empty for ~/.google-services-mcps.",
       "required": false

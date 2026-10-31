@@ -2,7 +2,7 @@
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "^mcp__plugin_gfirebase_",
+        "matcher": "^mcp__plugin_gfirebase_gfirebase__",
         "hooks": [
           {
             "type": "command",

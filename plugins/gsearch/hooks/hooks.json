@@ -2,7 +2,7 @@
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "^mcp__plugin_gsearch_",
+        "matcher": "^mcp__plugin_gsearch_gsearch__",
         "hooks": [
           {
             "type": "command",

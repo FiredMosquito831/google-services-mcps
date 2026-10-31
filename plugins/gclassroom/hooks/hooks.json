@@ -2,7 +2,7 @@
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "^mcp__plugin_gclassroom_",
+        "matcher": "^mcp__plugin_gclassroom_gclassroom__",
         "hooks": [
           {
             "type": "command",

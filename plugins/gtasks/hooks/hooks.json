@@ -2,7 +2,7 @@
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "^mcp__plugin_gtasks_",
+        "matcher": "^mcp__plugin_gtasks_gtasks__",
         "hooks": [
           {
             "type": "command",

@@ -30,6 +30,7 @@ export const RUNTIME_TOOL_NAMES: readonly string[] = [
 interface MapEntry {
   name: string;
   methodId?: string;
+  scopes?: string[];
 }
 
 /** The short tool names of a tool map (without mcp__plugin_<plugin>_<server>__), with their method ids. */
@@ -40,9 +41,13 @@ function mapEntries(file: string, plugin: string, server: string): MapEntry[] | 
     if (!Array.isArray(parsed)) return undefined;
     const prefix = `mcp__plugin_${plugin}_${server}__`.replace(/[^A-Za-z0-9_-]/g, '_');
     return parsed.map((entry) => {
-      const e = entry as { name?: unknown; methodId?: unknown };
+      const e = entry as { name?: unknown; methodId?: unknown; scopes?: unknown };
       const name = typeof e.name === 'string' ? e.name : '';
-      return { name: name.startsWith(prefix) ? name.slice(prefix.length) : name, ...(typeof e.methodId === 'string' ? { methodId: e.methodId } : {}) };
+      return {
+        name: name.startsWith(prefix) ? name.slice(prefix.length) : name,
+        ...(typeof e.methodId === 'string' ? { methodId: e.methodId } : {}),
+        ...(Array.isArray(e.scopes) ? { scopes: e.scopes.filter((s): s is string => typeof s === 'string') } : {}),
+      };
     });
   } catch {
     return undefined;
@@ -61,10 +66,27 @@ export interface ToolsetCount {
   effective: Toolset;
 }
 
+export interface ToolsetCountOptions {
+  /**
+   * Counts only the map entries this returns true for (registersEntry in core/runtime-tools.ts: the tools the server
+   * registers). Unset, every entry counts: the installer's upper bound, as before.
+   */
+  registers?: (name: string, scopes: readonly string[] | undefined) => boolean;
+}
+
 /** The tool count of one product's server under a toolset. Undefined when its tool map is missing or unreadable. */
-export function toolsetCount(mapFile: string, plugin: string, server: string, toolset: Toolset, lists: ServerToolsets | undefined): ToolsetCount | undefined {
-  const entries = mapEntries(mapFile, plugin, server);
-  if (!entries) return undefined;
+export function toolsetCount(
+  mapFile: string,
+  plugin: string,
+  server: string,
+  toolset: Toolset,
+  lists: ServerToolsets | undefined,
+  options: ToolsetCountOptions = {},
+): ToolsetCount | undefined {
+  const read = mapEntries(mapFile, plugin, server);
+  if (!read) return undefined;
+  const registers = options.registers;
+  const entries = registers ? read.filter((e) => registers(e.name, e.scopes)) : read;
   const runtime = entries.filter((e) => RUNTIME_TOOL_NAMES.includes(e.name)).length;
   const tools = entries
     .filter((e) => !RUNTIME_TOOL_NAMES.includes(e.name))

@@ -4,11 +4,18 @@ Merchant Center: Merchant API and Comparison Shopping Service, through a service
 
 - Plugin: `gmerchant`, MCP server: `gmerchant`, login: Service account key, then `setup-service-account` (no login)
 - Install: `claude plugin install gmerchant@google-services-mcps`
-- Tools: 167 total. Curated 9, per-method 154, gateway 3. Read 77, write 67, destructive 22, dynamic 1.
+- Tools: 153 total. Curated 3, per-method 146, gateway 3. Read 72, write 60, destructive 20, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 167, google 22, curated 12 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 153, google 16, curated 6 tools, each counting the 3 runtime tools this server registers (`auth_setup_service_account`, `auth_status`, `health`). "(all)" means the product has no such toolset yet, so it lists every tool.
+
+## Not registered by this server (14)
+
+The tool map (`plugins/<id>/tool-map.json`) also lists these, so the consent hook knows every name, but this server never registers them, and the counts above leave them out.
+
+- Sign-in tools of other sign-in kinds: `account_remove`, `account_set_default`, `accounts_list`, `auth_login`, `auth_setup_admin`, `auth_setup_client`.
+- Tools the service account key's fixed scopes do not cover (they need manufacturercenter): `manufactur_acco_lang_prod_delet`, `manufactur_acco_lang_prod_patch`, `manufactur_acco_lang_produ_list`, `manufactur_acco_langu_produ_get`, `manufactur_accoun_produc_delete`, `manufactur_accoun_produc_update`, `manufactur_account_product_list`, `manufactur_account_products_get`.
 
 ## Toolset google (13)
 
@@ -30,21 +37,15 @@ The tools that match Google's official MCP server for this product (https://deve
 | `merchantap_accoun_data_so_fetch` | `fetch_data_source` | Fetches and processes a data source's file now. Google says it triggers processing, so since 1.24.2 (D2) the suite counts it as a write, and it asks first. |
 | `merchantap_accou_data_file_get` | `get_file_upload` | The latest file upload of a data source and its processing state (accounts/{account}/dataSources/{datasource}/fileUploads/latest). |
 
-## Curated tools (9)
+## Curated tools (3)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
-| `account_remove` | write | Remove a signed-in account | (none) |
-| `account_set_default` | write | Set the default account | (none) |
-| `accounts_list` | read | Signed-in accounts | (none) |
-| `auth_login` | write | Sign in to Google | (none) |
-| `auth_setup_admin` | write | Set up the workspace admin account | (none) |
-| `auth_setup_client` | write | Save the Google OAuth client | (none) |
 | `auth_setup_service_account` | write | Set up the service account key | (none) |
 | `auth_status` | read | Sign-in status | (none) |
 | `health` | read | Server health | (none) |
 
-## Per-method tools (154)
+## Per-method tools (146)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
@@ -61,14 +62,6 @@ The tools that match Google's official MCP server for this product (https://deve
 | `css_accounts_list_child_account` | read | css.accounts.listChildAccounts | content |
 | `css_accounts_quotas_list` | read | css.accounts.quotas.list | content |
 | `css_accounts_update_labels` | write | css.accounts.updateLabels | content |
-| `manufactur_acco_lang_prod_delet` | destructive | manufacturers.accounts.languages.productCertifications.delete | manufacturercenter |
-| `manufactur_acco_lang_prod_patch` | write | manufacturers.accounts.languages.productCertifications.patch | manufacturercenter |
-| `manufactur_acco_lang_produ_list` | read | manufacturers.accounts.languages.productCertifications.list | manufacturercenter |
-| `manufactur_acco_langu_produ_get` | read | manufacturers.accounts.languages.productCertifications.get | manufacturercenter |
-| `manufactur_accoun_produc_delete` | destructive | manufacturers.accounts.products.delete | manufacturercenter |
-| `manufactur_accoun_produc_update` | write | manufacturers.accounts.products.update | manufacturercenter |
-| `manufactur_account_product_list` | read | manufacturers.accounts.products.list | manufacturercenter |
-| `manufactur_account_products_get` | read | manufacturers.accounts.products.get | manufacturercenter |
 | `merchantap_acco_busi_get_b_4cc3` | read | merchantapi.accounts.businessInfo.getBusinessInfo | content |
 | `merchantap_acco_busi_get_b_be3b` | read | merchantapi.accounts.businessIdentity.getBusinessIdentity | content |
 | `merchantap_acco_busi_updat_0b6b` | write | merchantapi.accounts.businessIdentity.updateBusinessIdentity | content |

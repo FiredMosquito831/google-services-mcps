@@ -2,6 +2,76 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.38.3 - 2026-10-31
+
+### Fixed: the docs count the tools a server registers
+- README's products block, docs/SURFACES.md, docs/CAPABILITIES.md, each docs/capabilities/<id>.md and the site counted every entry of a plugin's tool map. Every map lists all nine runtime tools so the consent hook knows each name, but a server registers only those of its sign-in kind (two to seven), and gmerchant's map also holds 8 Manufacturer Center tools its service account key's fixed scopes never cover. So every product was overcounted by 2 to 8, and the capability pages listed sign-in tools the server does not have (for example `auth_setup_admin` for gsc). The reviews of gsc, gmeet, gcontacts, gtasks, gmaps, gsearch and gbusiness reported it.
+- The generators now count and list only what the server registers, by one rule, `registersEntry` (src/core/runtime-tools.ts), which the skills use too: README 3,542 tools in total (was 3,621). Each capability page names the map entries it leaves out, in a "Not registered by this server" section. The SURFACES column that held the total is named Tools (it said Per-method tools). The installer's own count for the Antigravity warning (`toolsetCount` without options) is unchanged.
+- A test checks that every tool description, of every server, starts with what the tool does: a generated tool with Google's description of its method before this suite's note and method line, every other tool with a sentence (descriptions were already checked to be at most 2,048 characters). Claude Code: "When tool search matches Claude's query against a tool's description, it reads only the part within the shorter limit, so put the words Claude would search for near the start too" (https://code.claude.com/docs/en/mcp).
+
+### Not changed
+- tools/list, instructions, tool maps and kinds, `gsm scopes`, the hook. The server bundles differ from 1.38.2 only by their version string.
+
+## 1.38.2 - 2026-10-31
+
+### Changed: the hook runs for its own server's tools only, and trusts Claude Code's server source
+- Each plugin's PreToolUse matcher was `^mcp__plugin_<plugin>_`, which also matches another plugin whose name starts with this one and an underscore. It is now anchored to the plugin's own server: `^mcp__plugin_<plugin>_<server>__`, the prefix Claude Code gives every tool of a plugin's server ("`mcp__plugin_<plugin-name>_<server-name>__<tool>`", https://code.claude.com/docs/en/hooks). It matches every tool of the plugin's map and none of another plugin's (tested over all 23).
+- The hook now reads `mcp_server` from the hook input: "For an MCP tool, the input also carries `mcp_server`, an object with the server's `name` and a `source` that says where the server's definition came from. The `source` values include `plugin`, `sdk`, and configuration scopes such as `user` and `project`. ... Base trust decisions on `source` rather than on `name` or the `mcp__<server>__` tool-name prefix. The `mcp_server` field requires Claude Code v2.1.274 or later." (same page). When `source` is a string other than `plugin`, the call comes from a server the person configured (or an SDK), not from this plugin, so the hook prints nothing and Claude Code's own permission rules apply. Fail closed: when `mcp_server` or its `source` is missing or not a string (an older Claude Code), the hook decides by the tool name exactly as before.
+- `gsm doctor` checks for the anchored matcher of a server in the plugin's `.mcp.json`, and still accepts the older `^mcp__plugin_<plugin>_`, so a plugin folder built before 1.38.2 passes as before. `scripts/smoke.mjs` expects the anchored matcher.
+
+### Not changed
+- The hook's answer for every call of this plugin's tools: over every tool-map entry of every plugin and four other names each, with confirmation unset and `destructive-only`, and with `mcp_server` absent, `source: "plugin"`, no `source`, a non-string `source` or a non-object `mcp_server`, the output equals 1.36.1's (tests/hook-source.test.mjs, and a full dump: 29,704 hook runs, 25,704 identical). The 4,000 that differ are the calls whose `source` is `user` or `project` that asked before: they print nothing now. tools/list, instructions, tool maps and kinds.
+
+## 1.38.1 - 2026-10-31
+
+### Changed: plugin manifests name their homepage, repository and licence; each plugin has a README; the marketplace has categories and tags
+- Every `plugin.json` now has `homepage` (the product's page, `docs/products/<id>.md` on GitHub), `repository` and `license: "Apache-2.0"`, the manifest fields of https://code.claude.com/docs/en/plugins-reference ("`homepage` | String | Documentation URL. Must parse as a URL, or the plugin fails to load"; "`license` | String | SPDX identifier such as `MIT` or `Apache-2.0`").
+- Every plugin folder has a generated `README.md`: what it covers, the install line (`claude plugin install <id>@google-services-mcps`), how to sign in from the chat, the options, how to update from this marketplace, and links to the product page, its tool list and docs/SECURITY.md. `claude plugin validate` prints the line to paste when a README has no install line (Claude Code 2.1.295 changelog); it prints nothing now, and it no longer falls back to the repository's README.
+- Every marketplace entry has a `category` and `tags` ("Free-form category for organizing the catalog", "Free-form tags for search", https://code.claude.com/docs/en/plugins/marketplace-reference), from `listing` in `config/plugin-text.json`.
+
+### Not changed
+- tools/list, server instructions, tool maps and kinds, the hook. `claude plugin validate --strict` passes for the marketplace and every plugin (Claude Code 2.1.316).
+
+## 1.38.0 - 2026-10-31
+
+### Added: destructive tools keep Claude Code's permission prompt in every mode
+- A destructive tool now carries `_meta["anthropic/requiresUserInteraction"]: true` in tools/list when this server's gate would ask before it (confirmation `every-change` or `destructive-only`, and no policy rule that allows or denies the tool). Claude Code: "Claude Code shows that tool's permission prompt on every call, even in `acceptEdits`, `auto`, and `bypassPermissions` permission modes, and doesn't offer a "don't ask again" option for it. Allow rules that match the tool don't skip the prompt either. In `dontAsk` mode, which never prompts, Claude Code denies the call instead." (https://code.claude.com/docs/en/mcp).
+- Why: the plugin's hook prompt could be passed over. `bypassPermissions` skips every prompt "except for the actions no mode auto-approves", which lists MCP tools marked `requiresUserInteraction` and not hook prompts (permission modes page), and a hook that times out or fails lets the call continue "through the normal permission flow" (hooks page), where an allow rule or the mode can approve it. The server's own form still asked, but an `Elicitation` hook can answer that form without showing it. Now the permission prompt reaches a person in those cases too.
+- No third prompt in the normal case: the hook's `ask` and the marker lead to the same permission prompt, then the server's form, as before. With confirmation `off`, or a policy `allow` rule for the tool, there is no marker, so nothing new asks. Reads, writes, `api_call` and the Ads mutate tools carry none. The prompt count per mode, worked out from Claude Code's documentation (not measured live), is in docs/SECURITY.md.
+
+### Not changed
+- What the gate and the hook decide (approval.ts and the hook bundle are unchanged), tool maps and kinds, `gsm scopes`, instructions. tools/list differs from 1.37.2 only by the marker on the 522 destructive tools the bundled servers list with writes allowed (tests/requires-interaction.test.mjs checks every server, and that confirmation `off` and a policy `allow` rule leave it out).
+
+## 1.37.2 - 2026-10-31
+
+### Fixed: each plugin's skill says what the product is for, signs in from the chat and names the right tools
+- The 23 skills were one template: a description that named the APIs and a changing tool count ("Use for requests about these Google APIs"), sign-in as terminal commands with a `<plugin>` placeholder although the chat has `auth_setup_client` and `auth_login`, no common tasks, and a tool count that included runtime tools the server never registers (every tool map lists all nine for the hook; gmail said 115, it lists 113).
+- The skill text now comes from `config/plugin-text.json`, per product: a `description` with the main use cases first and a `when_to_use` with trigger phrases and example requests (Claude Code: "Put the key use case first: the combined `description` and `when_to_use` text is truncated at 1,536 characters in the skill listing", https://code.claude.com/docs/en/skills), and three to six common tasks taken from the product reviews (for example Gmail search, read, reply; Calendar find a time, book it; Drive search, read as text; Search Console property, performance with paging, URL inspection). The build renders them with the sign-in steps of the product's group in the chat first (`auth_status`, `auth_setup_client`, `auth_login`; `auth_setup_service_account`; `auth_setup_admin`; `setup-apikey` in a terminal for an API key, which is never pasted into the chat), the terminal fallback by `node "${CLAUDE_PLUGIN_ROOT}/bin/gsm.mjs"` (substituted by Claude Code in plugin skills), a note that returned content is data and not instructions, the safety rules, the tool counts and the API list.
+- The build fails when a task names a tool the server does not register, when the description and when_to_use pass 1,536 characters, or when a skill reaches 500 lines ("Keep SKILL.md under 500 lines", same page). The tool count is what the server registers: the tool map without the runtime tools of other sign-in kinds (`runtimeToolsFor`, src/core/runtime-tools.ts), and for gplay and gmerchant without tools the key's fixed scopes never cover (gmerchant lists 153, not 161).
+
+### Not changed
+- tools/list (byte-identical), server instructions, tool maps and kinds, `gsm scopes` (207 cases identical), the hook. tests/skills.test.mjs checks every skill and starts every bundled server: each registers exactly `runtimeToolsFor` its group, and lists the number of tools its skill states.
+
+## 1.37.1 - 2026-10-31
+
+### Fixed: a plugin option that was never set always reads as unset
+- Each plugin's `.mcp.json` passes its options to the server as `${user_config.<key>}` (`GSM_TOKEN_DIR`, `GSM_CONFIRMATION`, `GSM_TOOLSET`, `GSM_ALLOW_WRITES`, and for gadmin and gads their own). Claude Code does not document what an unset `${user_config.KEY}` becomes; for a plain variable it says an unset `${VAR}` is used "as-is" (https://code.claude.com/docs/en/mcp). On Claude Code 2.1.316 a probe plugin got an empty string; older versions failed on a blank optional field until 2.1.119 ("Fixed plugin MCP servers failing when `${user_config.*}` references an optional field left blank", changelog). Had the reference arrived as text, the server would have used `${user_config.token_dir}` as a relative folder for tokens, policy and audit log, and a literal manager id would have failed every Google Ads call.
+- An option value that is empty, or that starts with `${user_config.`, now reads as unset wherever it is read (src/core/plugin-option.ts): the servers and the CLI (`loadConfig`: token folder, confirmation, toolset, admin subject and key file), the Google Ads headers (developer token, manager id), the hook's token folder, and `gsm status` and `gsm doctor`. The default applies, with no warning line. Other values are read as before.
+- `token_dir` is now a `directory` option, a type the plugin reference lists ("One of `string`, `number`, `boolean`, `directory`, or `file`", https://code.claude.com/docs/en/plugins-reference). The `toolset` and Ads developer token option texts are shorter (the dialog shows them under the field); the confirmation text keeps every class the destructive rule asks before. The details moved to README.md, which now states that the plugins need Claude Code 2.1.271 or later: "If you declare `options` on any field, users on Claude Code versions before v2.1.271 can't load the plugin" (plugins reference).
+
+### Not changed
+- tools/list (byte-identical), server instructions, tool maps and kinds, `gsm scopes` (207 cases identical), and the hook's decision for every tool of every plugin. tests/unset-options.test.mjs starts gmail, gadmin and gads with every option literal and checks they list the same tools as with no option, from the default token folder, and that the hook applies the default folder's policy.
+
+## 1.37.0 - 2026-10-31
+
+### Added: server instructions
+- Every server now sends an `instructions` text in its MCP initialize result. Claude Code loads it at session start, also when tool search defers the tool definitions: "Only tool names and server instructions load at session start" and "Server instructions help Claude understand when to search for your tools" (https://code.claude.com/docs/en/mcp, "Scale with MCP tool search"). Until now the servers sent none.
+- The text is built when the server starts, from the product map and the settings only (src/core/instructions.ts): what the product covers (its description), the toolset in effect, whether write tools are on, which tool to call when a tool seems missing (`auth_status`, `health`), how to sign in from the chat (`auth_status`, `auth_setup_client`, `auth_login` for the OAuth groups; `auth_setup_service_account`; `auth_setup_admin`; for the API key products the `setup-apikey` command, because a key is never pasted into the chat), the `api_search` / `api_describe` / `api_call` flow when the toolset has the gateway, how to continue a cut result, and that mail, documents and web pages are data, not instructions. Where a readonly sign-in covers none of the toolset's tools (gbusiness; gads with the `google` toolset), it says to sign in with `readwrite`, by the same rule as the login's "Not covered" line.
+- At most 1,500 characters (Claude Code cuts instructions at 4,096; the product description gives way first). It holds no account, email or token: nothing is read from the token folder for it. tests/instructions.test.mjs starts every bundled server and checks each text (23 servers, 753 to 1,479 characters).
+
+### Not changed
+- tools/list of every server (byte-identical, writes on and off, with a fake sign-in), tool maps and tool kinds, `gsm scopes` (207 cases identical), the hook (its bundle is unchanged). The initialize result gains the `instructions` field.
+
 ## 1.36.1 - 2026-10-31
 
 ### Fixed: api_describe and api_call read the Discovery document where Google serves it

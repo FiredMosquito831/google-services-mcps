@@ -2,7 +2,7 @@
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "^mcp__plugin_gbusiness_",
+        "matcher": "^mcp__plugin_gbusiness_gbusiness__",
         "hooks": [
           {
             "type": "command",

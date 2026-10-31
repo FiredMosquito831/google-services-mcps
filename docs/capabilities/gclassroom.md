@@ -4,11 +4,17 @@ Google Classroom courses, coursework, submissions, students and teachers.
 
 - Plugin: `gclassroom`, MCP server: `gclassroom`, login: Desktop OAuth client, then `login workspace-user`
 - Install: `claude plugin install gclassroom@google-services-mcps`
-- Tools: 129 total. Curated 23, per-method 105, gateway 0. Read 59, write 49, destructive 21, dynamic 0.
+- Tools: 127 total. Curated 21, per-method 105, gateway 0. Read 59, write 47, destructive 21, dynamic 0.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 129, google 29, curated 23 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 127, google 27, curated 21 tools, each counting the 7 runtime tools this server registers (`account_remove`, `account_set_default`, `accounts_list`, `auth_login`, `auth_setup_client`, `auth_status`, `health`). "(all)" means the product has no such toolset yet, so it lists every tool.
+
+## Not registered by this server (2)
+
+The tool map (`plugins/<id>/tool-map.json`) also lists these, so the consent hook knows every name, but this server never registers them, and the counts above leave them out.
+
+- Sign-in tools of other sign-in kinds: `auth_setup_admin`, `auth_setup_service_account`.
 
 ## Toolset google (20)
 
@@ -37,7 +43,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `classroom_create_announcement` | `create_announcement` |  |
 | `classroom_get_guardians` | `get_guardian_info` |  |
 
-## Curated tools (23)
+## Curated tools (21)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
@@ -45,9 +51,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `account_set_default` | write | Set the default account | (none) |
 | `accounts_list` | read | Signed-in accounts | (none) |
 | `auth_login` | write | Sign in to Google | (none) |
-| `auth_setup_admin` | write | Set up the workspace admin account | (none) |
 | `auth_setup_client` | write | Save the Google OAuth client | (none) |
-| `auth_setup_service_account` | write | Set up the service account key | (none) |
 | `auth_status` | read | Sign-in status | (none) |
 | `classroom_create_announcement` | write | Create a Classroom announcement | classroom.announcements |
 | `classroom_create_rubric` | write | Create a Classroom rubric | classroom.coursework.students |

@@ -4,11 +4,17 @@ Firebase management, App Check, App Distribution, Crashlytics, Hosting, Data Con
 
 - Plugin: `gfirebase`, MCP server: `gfirebase`, login: Desktop OAuth client, then `login developer`
 - Install: `claude plugin install gfirebase@google-services-mcps`
-- Tools: 316 total. Curated 14, per-method 298, gateway 3. Read 146, write 125, destructive 44, dynamic 1.
+- Tools: 314 total. Curated 12, per-method 298, gateway 3. Read 146, write 123, destructive 44, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 316, google 47, curated 17 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 314, google 45, curated 15 tools, each counting the 7 runtime tools this server registers (`account_remove`, `account_set_default`, `accounts_list`, `auth_login`, `auth_setup_client`, `auth_status`, `health`). "(all)" means the product has no such toolset yet, so it lists every tool.
+
+## Not registered by this server (2)
+
+The tool map (`plugins/<id>/tool-map.json`) also lists these, so the consent hook knows every name, but this server never registers them, and the counts above leave them out.
+
+- Sign-in tools of other sign-in kinds: `auth_setup_admin`, `auth_setup_service_account`.
 
 ## Toolset google (38)
 
@@ -55,7 +61,7 @@ The tools that match Google's official MCP server for this product (https://gith
 | `remoteconfig_get_template` | `remoteconfig_get_template` | Remote Config is in no API list here; this curated tool reads the active template or a given version. |
 | `auth_get_users` | `auth_get_users` | Identity Toolkit v1 accounts.lookup (by uid, email or phone) or accounts.query (a page). Password hashes and salts are left out. |
 
-## Curated tools (14)
+## Curated tools (12)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
@@ -64,9 +70,7 @@ The tools that match Google's official MCP server for this product (https://gith
 | `accounts_list` | read | Signed-in accounts | (none) |
 | `auth_get_users` | read | Get Firebase Authentication users | cloud-platform |
 | `auth_login` | write | Sign in to Google | (none) |
-| `auth_setup_admin` | write | Set up the workspace admin account | (none) |
 | `auth_setup_client` | write | Save the Google OAuth client | (none) |
-| `auth_setup_service_account` | write | Set up the service account key | (none) |
 | `auth_status` | read | Sign-in status | (none) |
 | `firestore_get_document` | read | Get a Firestore document | cloud-platform, datastore |
 | `firestore_list_documents` | read | List Firestore documents | cloud-platform, datastore |

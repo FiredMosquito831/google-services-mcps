@@ -4,11 +4,17 @@ Google Ads API (accounts, campaigns, ad groups, ads, keywords, budgets, conversi
 
 - Plugin: `gads`, MCP server: `gads`, login: Desktop OAuth client, then `login business`
 - Install: `claude plugin install gads@google-services-mcps`
-- Tools: 340 total. Curated 13, per-method 323, gateway 3. Read 104, write 192, destructive 20, dynamic 24.
+- Tools: 338 total. Curated 11, per-method 323, gateway 3. Read 104, write 190, destructive 20, dynamic 24.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 340, google 12, curated 16 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 338, google 10, curated 14 tools, each counting the 7 runtime tools this server registers (`account_remove`, `account_set_default`, `accounts_list`, `auth_login`, `auth_setup_client`, `auth_status`, `health`). "(all)" means the product has no such toolset yet, so it lists every tool.
+
+## Not registered by this server (2)
+
+The tool map (`plugins/<id>/tool-map.json`) also lists these, so the consent hook knows every name, but this server never registers them, and the counts above leave them out.
+
+- Sign-in tools of other sign-in kinds: `auth_setup_admin`, `auth_setup_service_account`.
 
 ## Toolset google (3)
 
@@ -20,7 +26,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `ads_search` | `search` | One page of GAQL, at most 500 rows, given as text or as fields, resource, conditions, orderings and limit (Google's structured form, with PARAMETERS omit_unselected_resource_names=true). It calls googleAds:search, not searchStream, and never sends pageSize. Google's server is read-only, so ads_mutate (validate first, then gated changes) is not in this list; it stays in the all and curated toolsets. The manager account is GSM_ADS_LOGIN_CUSTOMER_ID, not a per-call login_customer_id. |
 | `ads_resource_metadata` | `get_resource_metadata` | The two field queries Google's get_resource_metadata runs (the resource's attributes, then every field selectable with it), as selectable, filterable and sortable name lists. |
 
-## Curated tools (13)
+## Curated tools (11)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
@@ -32,9 +38,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `ads_resource_metadata` | read | Fields of a Google Ads resource | adwords |
 | `ads_search` | read | Search Google Ads (GAQL) | adwords |
 | `auth_login` | write | Sign in to Google | (none) |
-| `auth_setup_admin` | write | Set up the workspace admin account | (none) |
 | `auth_setup_client` | write | Save the Google OAuth client | (none) |
-| `auth_setup_service_account` | write | Set up the service account key | (none) |
 | `auth_status` | read | Sign-in status | (none) |
 | `health` | read | Server health | (none) |
 
