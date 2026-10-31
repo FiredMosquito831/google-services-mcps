@@ -25,7 +25,7 @@ import { toolMapFromDefs } from './dump.js';
 import { serverHealth } from './health.js';
 import { createSignIn, runGsmCommand, type SignInMethod, type SignInProfile } from './inchat-login.js';
 import { findGcloud } from './adc.js';
-import { apiOfMethod, policyFields, resolveScopes, serverPreferFields, type Requirement } from './scopes.js';
+import { apiOfMethod, notCoveredBy, notCoveredLine, policyFields, resolveScopes, serverPreferFields, type Requirement } from './scopes.js';
 import { fileURLToPath } from 'node:url';
 import { loadRegistry, serverByName, type AuthGroup, type ScopePolicy } from './registry.js';
 import { invocation, invocationFor, setInvocation } from './invocation.js';
@@ -478,18 +478,28 @@ export async function runServer(opts: {
   // The product's scope rules (config/products.json scopePolicy), when it has them. Undefined for most servers.
   const policy = scopePolicyOf(opts.name);
   const optionalParts = Object.keys(policy?.optional ?? {}).sort();
+  // The parts that name a scope rather than APIs (YouTube's monetary analytics): their tools load without them.
+  const scopeParts = optionalParts.filter((part) => (policy?.optional?.[part] ?? []).some((entry) => entry.startsWith('https://')));
   // The scopes an ADC login for this server asks for: the scopes its tools need, resolved as the OAuth login resolves them.
   // Only the tools of the toolset count (`defined`), as for the OAuth sign-in (--toolset in the child's argv).
-  const adcScopesFor = (profile: SignInProfile, include: readonly string[]): string[] => {
+  const adcRequirements = (): Requirement[] => {
     const prefer = serverPreferFields(opts.name, selection.effective); // the toolset's preferred scopes, as the OAuth login takes them
-    const requirements: Requirement[] = defined.map((tool) => ({
+    return defined.map((tool) => ({
       tool: tool.name,
       kind: tool.kind,
       scopes: [...(tool.scopes ?? [])],
       ...policyFields(policy, apiOfMethod(tool.methodId)),
       ...prefer,
     }));
-    return withIdentityScope(resolveScopes(requirements, profile, include).scopes);
+  };
+  const adcScopesFor = (profile: SignInProfile, include: readonly string[]): string[] =>
+    withIdentityScope(resolveScopes(adcRequirements(), profile, include).scopes);
+  // What an ADC login with those scopes would leave out: this product with no tool that calls Google (Business Profile under
+  // readonly, say). The OAuth sign-in prints the same line itself (gsm login), and the chat passes it on.
+  const adcNotesFor = (profile: SignInProfile, include: readonly string[]): string[] => {
+    const requirements = adcRequirements();
+    const n = notCoveredBy(requirements, profile, include, withIdentityScope(resolveScopes(requirements, profile, include).scopes));
+    return n ? [notCoveredLine(opts.name, profile, n)] : [];
   };
 
   // The two ways to sign in, with their costs. auth_login shows them first, so the person chooses before anything starts.
@@ -523,6 +533,7 @@ export async function runServer(opts: {
         server: opts.name,
         cfg,
         adcScopes: adcScopesFor,
+        adcNotes: adcNotesFor,
         onSignedIn: () => {
           // The sign-in ran in another process. Forget the clients built from the old tokens, and what was read from the
           // OS store, so the next call uses the new login without a restart.
@@ -574,7 +585,10 @@ export async function runServer(opts: {
                   .array(z.enum(optionalParts as [string, ...string[]]))
                   .optional()
                   .describe(
-                    `Optional parts of this server to add to the sign-in. They are left out unless named here: ${optionalParts.join(', ')}. Their tools load only when the login holds their scopes.`,
+                    `Optional parts of this server to add to the sign-in. They are left out unless named here: ${optionalParts.join(', ')}. Their tools load only when the login holds their scopes.` +
+                      (scopeParts.length > 0
+                        ? ` ${scopeParts.join(', ')} ${scopeParts.length === 1 ? 'adds a scope' : 'add scopes'} to tools that load without ${scopeParts.length === 1 ? 'it' : 'them'} (more data from the same tools).`
+                        : ''),
                   ),
               }
             : {}),

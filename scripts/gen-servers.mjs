@@ -92,24 +92,56 @@ const PART_PATTERN = /^[a-z][a-z0-9-]*$/;
 
 /**
  * A product's scopePolicy (ScopePolicy in src/core/registry.ts), checked and copied as is. onlyIn maps a scope URL to the
- * profiles that may request it (an empty list: none). optional maps a part name to APIs of the product.
+ * profiles that may request it (an empty list: none). optional maps a part name to APIs of the product, or to scope URLs
+ * a tool of the product accepts. prefer maps a profile to the scopes a login of the product asks for first.
  */
-function scopePolicyOf(policy, id, apiNames) {
+function scopePolicyOf(policy, id, apiNames, serverName) {
   if (policy === undefined) return undefined;
   const where = `product ${id} scopePolicy`;
   if (typeof policy !== 'object' || policy === null || Array.isArray(policy)) fail(`${where} must be an object`);
-  for (const key of Object.keys(policy)) if (key !== 'onlyIn' && key !== 'optional') fail(`${where} has an unknown key "${key}"`);
+  for (const key of Object.keys(policy)) if (key !== 'onlyIn' && key !== 'optional' && key !== 'prefer') fail(`${where} has an unknown key "${key}"`);
+  // prefer: per profile, scope URLs a login of the product asks for first (ScopePolicy.prefer). Each list is non-empty and
+  // holds a scope once; readonly holds only scopes the readonly profile may use; every scope is accepted by a tool of the
+  // product (checked against the plugin's tool map when it is built; scripts/bundle.mjs checks again).
+  if (policy.prefer !== undefined) {
+    const prefer = policy.prefer;
+    if (typeof prefer !== 'object' || prefer === null || Array.isArray(prefer) || Object.keys(prefer).length === 0) {
+      fail(`${where}.prefer must be an object with a scope list per profile (${PROFILE_NAMES.join(', ')})`);
+    }
+    const toolScopes = toolScopesOf(id, serverName);
+    const accepted = toolScopes ? new Set([...toolScopes.values()].flat()) : undefined;
+    for (const [profile, scopes] of Object.entries(prefer)) {
+      if (!PROFILE_NAMES.includes(profile)) fail(`${where}.prefer: "${profile}" is not a profile (${PROFILE_NAMES.join(', ')})`);
+      if (!Array.isArray(scopes) || scopes.length === 0 || !scopes.every((s) => typeof s === 'string' && s.startsWith('https://'))) {
+        fail(`${where}.prefer.${profile} must be a non-empty list of scope URLs`);
+      }
+      if (new Set(scopes).size !== scopes.length) fail(`${where}.prefer.${profile} lists a scope twice`);
+      if (profile === 'readonly') {
+        const notReadonly = scopes.filter((s) => !isReadonlyScope(s));
+        if (notReadonly.length) fail(`${where}.prefer.readonly may hold only read-only or view-only scopes: ${notReadonly.join(', ')}`);
+      }
+      const unused = accepted ? scopes.filter((s) => !accepted.has(s)) : [];
+      if (unused.length) fail(`${where}.prefer.${profile}: no tool of the product accepts ${unused.join(', ')}`);
+    }
+  }
   for (const [scope, profiles] of Object.entries(policy.onlyIn ?? {})) {
     if (!scope.startsWith('https://')) fail(`${where}.onlyIn: "${scope}" is not a scope URL`);
     if (!Array.isArray(profiles) || !profiles.every((p) => PROFILE_NAMES.includes(p))) {
       fail(`${where}.onlyIn["${scope}"] must be a list of profiles (${PROFILE_NAMES.join(', ')})`);
     }
   }
+  // optional: per part, APIs of the product, or scope URLs (since 1.35.0) that a tool of the product accepts (checked against
+  // the plugin's tool map when it is built).
+  const partToolScopes = toolScopesOf(id, serverName);
+  const partAccepted = partToolScopes ? new Set([...partToolScopes.values()].flat()) : undefined;
   for (const [name, apis] of Object.entries(policy.optional ?? {})) {
     if (!PART_PATTERN.test(name)) fail(`${where}.optional: "${name}" must be lowercase letters, digits or dashes`);
-    if (!Array.isArray(apis) || apis.length === 0 || !apis.every((a) => apiNames.has(a))) {
-      fail(`${where}.optional["${name}"] must list APIs of the product (${[...apiNames].join(', ')})`);
+    const isScope = (a) => typeof a === 'string' && a.startsWith('https://');
+    if (!Array.isArray(apis) || apis.length === 0 || !apis.every((a) => apiNames.has(a) || isScope(a))) {
+      fail(`${where}.optional["${name}"] must list APIs of the product (${[...apiNames].join(', ')}) or scope URLs`);
     }
+    const unused = partAccepted ? apis.filter((a) => isScope(a) && !partAccepted.has(a)) : [];
+    if (unused.length) fail(`${where}.optional["${name}"]: no tool of the product accepts ${unused.join(', ')}`);
   }
   return policy;
 }
@@ -171,10 +203,23 @@ function toolsetsOf(value, id) {
 /** The profiles a toolset may prefer scopes for (PREFER_PROFILES in src/core/toolset.ts). full takes no preference. */
 const PREFER_PROFILES = ['readonly', 'readwrite'];
 
-/** A read-only scope by the suite's rule (isReadonlyScope in src/core/scopes.ts): the resolver uses no other for readonly. */
+/**
+ * The scopes Google documents as view-only whose names the name rule misses: a copy of the keys of VIEW_ONLY_SCOPES in
+ * src/core/scopes.ts (tests/view-only-scopes.test.mjs checks the two lists are equal).
+ */
+const VIEW_ONLY_SCOPES = [
+  'https://www.googleapis.com/auth/devstorage.read_only',
+  'https://www.googleapis.com/auth/logging.read',
+  'https://www.googleapis.com/auth/monitoring.read',
+  'https://www.googleapis.com/auth/script.metrics',
+  'https://www.googleapis.com/auth/script.processes',
+  'https://www.googleapis.com/auth/userinfo.profile',
+];
+
+/** A scope the readonly profile may use (isViewOnlyScope in src/core/scopes.ts): the resolver uses no other for readonly. */
 function isReadonlyScope(scope) {
   const last = scope.slice(scope.lastIndexOf('/') + 1);
-  return last === 'readonly' || last === 'read-only' || last.endsWith('.readonly') || last.endsWith('.read-only');
+  return last === 'readonly' || last === 'read-only' || last.endsWith('.readonly') || last.endsWith('.read-only') || VIEW_ONLY_SCOPES.includes(scope);
 }
 
 /**
@@ -419,7 +464,7 @@ function main() {
     };
     if (gatewayApis.length) server.gatewayApis = gatewayApis;
     // Only a product with a scope policy gets the key, so the entries of the others stay as they were.
-    const policy = scopePolicyOf(p.scopePolicy, id, new Set([...apis, ...gatewayApis].map((a) => a.api)));
+    const policy = scopePolicyOf(p.scopePolicy, id, new Set([...apis, ...gatewayApis].map((a) => a.api)), p.server.name);
     if (policy) server.scopePolicy = policy;
     // Only a product with scope overrides gets the key, so the entries of the others stay as they were.
     const overrides = scopeOverridesOf(p.scopeOverrides, id, new Set(apis.map((a) => a.api)));

@@ -1529,6 +1529,13 @@
         }
       ],
       "gateway": [],
+      "scopePolicy": {
+        "optional": {
+          "indexing": [
+            "indexing"
+          ]
+        }
+      },
       "toolsets": {
         "google": {
           "source": "No official Google MCP server for Search Console was found (Google's Cloud and Workspace MCP lists, 2026-10-29; a negative, not confirmed by Google); a lean set chosen here.",
@@ -2159,6 +2166,16 @@
         }
       ],
       "gateway": [],
+      "scopePolicy": {
+        "prefer": {
+          "readwrite": [
+            "https://www.googleapis.com/auth/meetings.space.readonly"
+          ],
+          "full": [
+            "https://www.googleapis.com/auth/meetings.space.readonly"
+          ]
+        }
+      },
       "toolsets": {
         "google": {
           "source": "No official Google MCP server for Google Meet was found (Google's Cloud and Workspace MCP lists, 2026-10-29; a negative, not confirmed by Google); a lean set chosen here.",
@@ -2238,6 +2255,24 @@
           "version": "v4beta"
         }
       ],
+      "scopePolicy": {
+        "optional": {
+          "health": [
+            "health"
+          ],
+          "portability": [
+            "dataportability"
+          ]
+        },
+        "prefer": {
+          "readwrite": [
+            "https://www.googleapis.com/auth/userinfo.profile"
+          ],
+          "full": [
+            "https://www.googleapis.com/auth/userinfo.profile"
+          ]
+        }
+      },
       "toolsets": {
         "google": {
           "source": "https://developers.google.com/people/api/mcp/tools_list",
@@ -2265,7 +2300,7 @@
           "notes": {
             "contacts_search_directory": "Sets the readMask (names, email addresses, phone numbers, organizations) and the source (domain profiles) that the generated people_people_search_directory needs from the caller. Carries Google's caution: confirm the person before a result goes into another tool.",
             "contacts_search": "Sends the empty warm-up search Google asks for before each search, then the search, with a default readMask. Carries Google's caution.",
-            "profile_me": "From the OAuth2 userinfo endpoint. Every sign-in holds userinfo.email, so the email is always there; the name needs userinfo.profile, which a readonly login does not ask for (it is not a read-only scope by name)."
+            "profile_me": "From the OAuth2 userinfo endpoint. Every sign-in holds userinfo.email, so the email is always there; the name and picture need userinfo.profile, which every profile of a gcontacts login asks for since 1.35.1 (a view-only scope by Google's description; readwrite and full prefer it)."
           }
         }
       },
@@ -2290,6 +2325,13 @@
         }
       ],
       "gateway": [],
+      "scopePolicy": {
+        "optional": {
+          "keep": [
+            "keep"
+          ]
+        }
+      },
       "toolsets": {
         "google": {
           "source": "No official Google MCP server for Google Tasks or Google Keep was found (Google's Cloud and Workspace MCP lists, 2026-10-29; a negative, not confirmed by Google); a lean set chosen here.",
@@ -2347,6 +2389,14 @@
         }
       ],
       "gateway": [],
+      "scopePolicy": {
+        "prefer": {
+          "readonly": [
+            "https://www.googleapis.com/auth/classroom.coursework.students.readonly",
+            "https://www.googleapis.com/auth/classroom.coursework.me.readonly"
+          ]
+        }
+      },
       "toolsets": {
         "google": {
           "source": "https://developers.google.com/workspace/classroom/reference/mcp/tools_list",
@@ -2862,6 +2912,13 @@
         }
       ],
       "gateway": [],
+      "scopePolicy": {
+        "optional": {
+          "monetary": [
+            "https://www.googleapis.com/auth/yt-analytics-monetary.readonly"
+          ]
+        }
+      },
       "pageSizeDefaults": {
         "youtube": {
           "source": "Discovery, youtube v3: liveChatMessages.list maxResults, default 500, maximum 2000",

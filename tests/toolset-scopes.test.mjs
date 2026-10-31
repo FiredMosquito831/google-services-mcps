@@ -117,13 +117,13 @@ test('requirements: the gcloud google list (59 tools, no gateway) resolves to Cl
   assert.equal(google.length, 59);
   assert.equal(google.filter((r) => r.gateway).length, 0, 'no api_call in the list, so no gateway method counts');
   const readonly = resolveScopes(google, 'readonly');
-  assert.deepEqual(readonly.scopes, [G('cloud-billing.readonly'), G('cloud-platform.read-only')]);
-  // IAM lists only cloud-platform, and monitoring.read is not taken for a read-only scope by its name, so these reads
-  // stay outside a readonly login, as with the all toolset.
-  for (const tool of ['iam_roles_list', 'iam_role_get', 'iam_policies_get', 'monitoring_query_promql', 'monitoring_dashboards_list']) {
+  // Since 1.32.1 monitoring.read counts as view-only (Google: "View monitoring data ..."), so the Monitoring reads join.
+  assert.deepEqual(readonly.scopes, [G('cloud-billing.readonly'), G('cloud-platform.read-only'), G('monitoring.read')]);
+  // IAM lists only cloud-platform, so these reads stay outside a readonly login, as with the all toolset.
+  for (const tool of ['iam_roles_list', 'iam_role_get', 'iam_policies_get']) {
     assert.ok(readonly.uncovered.includes(`gcloud/${tool}`), tool);
   }
-  for (const tool of ['logging_entries_list', 'gcs_read_text', 'billing_price_lookup', 'bq_query_read', 'cloud_projects_search']) {
+  for (const tool of ['monitoring_query_promql', 'monitoring_dashboards_list', 'monitoring_dashboard_get', 'logging_entries_list', 'gcs_read_text', 'billing_price_lookup', 'bq_query_read', 'cloud_projects_search']) {
     assert.ok(readonly.covered.includes(`gcloud/${tool}`), tool);
   }
   // cloud-platform covers every tool but the curated BigQuery reads, which list bigquery and not cloud-platform.
@@ -228,9 +228,13 @@ test('requirements: the lean gsc google list resolves to webmasters.readonly (re
   assert.deepEqual(readonly.scopes, [G('webmasters.readonly')]);
   // The Indexing API has no read-only scope, so its metadata read stays outside a readonly login.
   assert.ok(readonly.uncovered.includes('gsc/indexing_url_notifications_get_metadata'));
-  assert.deepEqual(resolveScopes(google, 'readwrite').scopes, [G('indexing'), G('webmasters')]);
+  // Since 1.34.0 the Indexing API is an optional part (--with indexing): readwrite asks for indexing only when named.
+  assert.deepEqual(resolveScopes(google, 'readwrite').scopes, [G('webmasters')]);
+  assert.deepEqual(resolveScopes(google, 'readwrite', ['indexing']).scopes, [G('indexing'), G('webmasters')]);
   // The all toolset also asks for siteverification (the Site Verification tools), which the lean list does not hold.
-  assert.deepEqual(resolveScopes(await requirementsFor(['gsc'], cfg, quiet), 'readwrite').scopes, [G('indexing'), G('siteverification'), G('webmasters')]);
+  const all = await requirementsFor(['gsc'], cfg, quiet);
+  assert.deepEqual(resolveScopes(all, 'readwrite').scopes, [G('siteverification'), G('webmasters')]);
+  assert.deepEqual(resolveScopes(all, 'readwrite', ['indexing']).scopes, [G('indexing'), G('siteverification'), G('webmasters')]);
 });
 
 test('requirements: the gchat google list resolves to Chat user scopes only, never the Chat app scopes', async () => {
@@ -265,12 +269,13 @@ test('requirements: the gcontacts google list resolves to contacts and directory
   assert.deepEqual(toolsOf(google), ['contacts_search', 'contacts_search_directory', 'profile_me']);
   assert.equal(google.filter((r) => r.gateway).length, 0, 'the gateway methods (dataportability, health) do not count');
   const readonly = resolveScopes(google, 'readonly');
-  assert.deepEqual(readonly.scopes, [G('contacts.readonly'), G('directory.readonly')]);
-  // userinfo.* are not read-only scopes by name; every sign-in adds userinfo.email, which registers profile_me anyway.
-  assert.deepEqual(readonly.uncovered, ['gcontacts/profile_me']);
+  // Since 1.35.1 userinfo.profile (Google: "See your personal info") is view-only, so profile_me gets the name too.
+  assert.deepEqual(readonly.scopes, [G('contacts.readonly'), G('directory.readonly'), G('userinfo.profile')]);
+  assert.deepEqual(readonly.uncovered, []);
   // contacts_search only searches: its preferred scope is contacts.readonly since 1.25.0, as in Google's People MCP server.
-  assert.deepEqual(resolveScopes(google, 'readwrite').scopes, [G('contacts.readonly'), G('directory.readonly'), EMAIL]);
-  assert.deepEqual(resolveScopes(withoutPrefer(google), 'readwrite').scopes, [G('contacts'), G('directory.readonly'), EMAIL]);
+  // Since 1.35.1 the product prefers userinfo.profile for readwrite (every sign-in adds userinfo.email anyway).
+  assert.deepEqual(resolveScopes(google, 'readwrite').scopes, [G('contacts.readonly'), G('directory.readonly'), G('userinfo.profile')]);
+  assert.deepEqual(resolveScopes(withoutPrefer(google), 'readwrite').scopes, [G('contacts'), G('directory.readonly'), G('userinfo.profile')]);
 });
 
 test('requirements: the gclassroom google list resolves to the Classroom read-only scopes, materials included', async () => {
@@ -278,10 +283,13 @@ test('requirements: the gclassroom google list resolves to the Classroom read-on
   const google = await requirementsFor(['gclassroom'], cfg, { ...quiet, toolset: 'google' });
   assert.equal(google.length, 20);
   const C = (s) => G(`classroom.${s}`);
+  // Since 1.33.0 the product prefers both coursework scopes for readonly (scopePolicy.prefer): a teacher's taught classes
+  // beside a student's own work.
   assert.deepEqual(resolveScopes(google, 'readonly').scopes, [
     C('announcements.readonly'),
     C('courses.readonly'),
     C('coursework.me.readonly'),
+    C('coursework.students.readonly'),
     C('courseworkmaterials.readonly'),
     C('guardianlinks.students.readonly'),
     C('rosters.readonly'),
@@ -313,26 +321,34 @@ test('requirements: the gclassroom google list resolves to the Classroom read-on
 
 test('requirements: the lean gmeet, gtasks and gapps lists resolve to the narrow scopes of their tools', async () => {
   const { cfg } = tempTokens();
-  const resolved = async (id) => {
+  // gtasks' Keep is an optional part since 1.34.0, so its lists are resolved with the part named, as before.
+  const resolved = async (id, include = []) => {
     const reqs = await requirementsFor([id], cfg, { ...quiet, toolset: 'google' });
-    return { n: reqs.length, readonly: resolveScopes(reqs, 'readonly'), readwrite: resolveScopes(reqs, 'readwrite').scopes, full: resolveScopes(reqs, 'full').scopes };
+    return { n: reqs.length, readonly: resolveScopes(reqs, 'readonly', include), readwrite: resolveScopes(reqs, 'readwrite', include).scopes, full: resolveScopes(reqs, 'full', include).scopes };
   };
   const meet = await resolved('gmeet');
   assert.equal(meet.n, 10);
   assert.deepEqual(meet.readonly.scopes, [G('meetings.space.readonly')]);
-  assert.deepEqual(meet.readwrite, [G('meetings.space.created')]);
-  const tasks = await resolved('gtasks');
+  // Since 1.33.0 readwrite keeps the reads' reach over every space the user can see (scopePolicy.prefer).
+  assert.deepEqual(meet.readwrite, [G('meetings.space.created'), G('meetings.space.readonly')]);
+  const tasks = await resolved('gtasks', ['keep']);
   assert.equal(tasks.n, 8);
   assert.deepEqual(tasks.readonly.scopes, [G('keep.readonly'), G('tasks.readonly')]);
   // The Keep reads list keep and keep.readonly; the greedy rule takes the write scope on a tie, as in the all toolset.
   // The list has no Keep write, so since 1.25.0 it prefers keep.readonly.
   assert.deepEqual(tasks.readwrite, [G('keep.readonly'), G('tasks')]);
-  assert.deepEqual(resolveScopes(withoutPrefer(await requirementsFor(['gtasks'], cfg, { ...quiet, toolset: 'google' })), 'readwrite').scopes, [G('keep'), G('tasks')]);
+  assert.deepEqual(resolveScopes(withoutPrefer(await requirementsFor(['gtasks'], cfg, { ...quiet, toolset: 'google' })), 'readwrite', ['keep']).scopes, [G('keep'), G('tasks')]);
+  // Without --with keep, no Keep scope is asked for (1.34.0).
+  const tasksOnly = await resolved('gtasks');
+  assert.deepEqual(tasksOnly.readonly.scopes, [G('tasks.readonly')]);
+  assert.deepEqual(tasksOnly.readwrite, [G('tasks')]);
+  assert.deepEqual(tasksOnly.full, [G('tasks')]);
   const apps = await resolved('gapps');
   assert.equal(apps.n, 8);
-  assert.deepEqual(apps.readonly.scopes, [G('script.deployments.readonly'), G('script.projects.readonly')]);
-  // script.processes has no read-only scope, so the processes list stays outside a readonly login.
-  assert.ok(apps.readonly.uncovered.includes('gapps/appsscript_processes_list'));
+  // script.processes is view-only by Google's description ("View Google Apps Script processes"), so since 1.32.1 the
+  // processes list joins a readonly login.
+  assert.deepEqual(apps.readonly.scopes, [G('script.deployments.readonly'), G('script.processes'), G('script.projects.readonly')]);
+  assert.ok(apps.readonly.covered.includes('gapps/appsscript_processes_list'));
   assert.deepEqual(apps.readwrite, [G('script.deployments'), G('script.processes'), G('script.projects'), EMAIL]);
   // full takes the broadest scope scripts.run lists, the full Gmail scope; readwrite does not.
   assert.ok(apps.full.includes('https://mail.google.com/'));
@@ -382,9 +398,10 @@ test('requirements: the gai google list (6 tools, no gateway) resolves to cloud-
     'gai/vertex_count_tokens',
   ]);
   assert.deepEqual(resolveScopes(google, 'readwrite').scopes, [G('cloud-platform')]);
-  // The all toolset resolves as before 1.21.0.
+  // The all toolset resolves as before 1.21.0, except that since 1.32.1 readonly also takes devstorage.read_only (view-only
+  // by Google's description), the only read scope of the Gemini API's file and cached-content reads (gateway).
   const all = await requirementsFor(['gai'], cfg, quiet);
-  assert.deepEqual(resolveScopes(all, 'readonly').scopes, [G('cloud-platform.read-only')]);
+  assert.deepEqual(resolveScopes(all, 'readonly').scopes, [G('cloud-platform.read-only'), G('devstorage.read_only')]);
   assert.deepEqual(resolveScopes(all, 'readwrite').scopes, [G('cloud-platform'), G('devstorage.read_only')]);
 });
 

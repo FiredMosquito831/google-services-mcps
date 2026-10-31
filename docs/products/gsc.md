@@ -44,7 +44,15 @@ Prerequisite: a Search Console property that the signed-in Google account can ac
 
 The full list is in `docs/capabilities/gsc.md`.
 
-Google has no official MCP server for Search Console (none was found on 2026-10-29). With the plugin option `toolset: google`, the server lists a small set chosen here instead: `sc_sites_list`, `sc_site_get`, `sc_search_analytics_query`, `sc_url_inspect`, `sc_sitemaps_list`, `sc_sitemap_get`, `sc_sitemap_submit` and the two Indexing API tools, plus `health` and the sign-in tools. The deletes, the property add and Site Verification stay in the `all` toolset. A `readonly` login with that toolset asks for `webmasters.readonly`; a `readwrite` login for `webmasters` and `indexing` (no `siteverification`).
+Google has no official MCP server for Search Console (none was found on 2026-10-29). With the plugin option `toolset: google`, the server lists a small set chosen here instead: `sc_sites_list`, `sc_site_get`, `sc_search_analytics_query`, `sc_url_inspect`, `sc_sitemaps_list`, `sc_sitemap_get`, `sc_sitemap_submit` and the two Indexing API tools, plus `health` and the sign-in tools. The deletes, the property add and Site Verification stay in the `all` toolset. A `readonly` login with that toolset asks for `webmasters.readonly`; a `readwrite` login for `webmasters` (no `siteverification`), and `indexing` only with `--with indexing`.
+
+**The Indexing API is an optional part (since 1.34.0).** Google accepts it only for pages with JobPosting or BroadcastEvent markup, and its scope, `indexing` ("Submit data to Google for indexing"), has no read-only form. Until 1.34.0 every `readwrite` login asked for it, also for someone who only submits sitemaps. Now a login leaves it out unless you name it:
+
+```
+node <plugin>/bin/gsm.mjs login searchconsole --profile readwrite --with indexing
+```
+
+In the chat: `auth_login` with `"with": ["indexing"]`. Without it, the two Indexing API tools do not load, and the login says so in a `Held back:` line. A token that already holds `indexing` keeps it when you sign in again naming the account (`--account <email>`).
 
 ## Example requests
 

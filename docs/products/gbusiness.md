@@ -50,7 +50,9 @@ Every Business Profile API uses one OAuth scope, `business.manage`, which has no
 
 The full list is in `docs/capabilities/gbusiness.md`.
 
-Google has no official MCP server for Business Profile. With the plugin option `toolset: google`, the server lists a small set chosen here: accounts, locations list and get, daily metrics, search keyword impressions, verifications and a location update, plus `health` and the sign-in tools. Google's Business Profile Discovery documents list no OAuth scope, so these tools declare none, as in the `all` toolset.
+Google has no official MCP server for Business Profile. With the plugin option `toolset: google`, the server lists a small set chosen here: accounts, locations list and get, daily metrics, search keyword impressions, verifications and a location update, plus `health` and the sign-in tools. They declare `business.manage`, as in the `all` toolset (since 1.24.1), so they need a `readwrite` login too.
+
+A `readonly` login covers no gbusiness tool, with any toolset. Since 1.32.0 the login, `gsm scopes` and `auth_login` say so in a `Not covered:` line before the browser opens, and the plugin's skill names `--profile readwrite`.
 
 ## Example requests
 

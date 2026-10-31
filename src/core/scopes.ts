@@ -51,6 +51,18 @@ export interface Requirement {
    * preferFields). resolveScopes takes them before its greedy rule. Absent for all, curated and a product without them.
    */
   prefer?: Readonly<PreferredScopes>;
+  /**
+   * The product's preferred scopes per profile (ScopePolicy.prefer, see policyFields). resolveScopes asks for each one a
+   * target carrying it accepts, after the toolset's preferred scopes and before its greedy rule. Absent for every product
+   * without them.
+   */
+  policyPrefer?: Readonly<Partial<Record<Profile, readonly string[]>>>;
+  /**
+   * The product's optional parts that name scopes (ScopePolicy.optional entries that are scope URLs), per part. No profile
+   * asks for such a scope unless the part is named; a login that names it asks for it first. Absent for every product
+   * without them.
+   */
+  optionalScopes?: Readonly<Record<string, readonly string[]>>;
 }
 
 /**
@@ -96,13 +108,53 @@ function preferredScopes(requirements: readonly Requirement[], profile: Profile)
  * `api` is the Discovery name of the method's API (the first part of a method id), or undefined for a curated tool.
  * Empty for a product without a policy, so its requirements are the same as before policies existed.
  */
-export function policyFields(policy: ScopePolicy | undefined, api: string | undefined): Pick<Requirement, 'optional' | 'onlyIn'> {
+export function policyFields(
+  policy: ScopePolicy | undefined,
+  api: string | undefined,
+): Pick<Requirement, 'optional' | 'onlyIn' | 'policyPrefer' | 'optionalScopes'> {
   if (!policy) return {};
   const optional = api === undefined ? undefined : Object.keys(policy.optional ?? {}).find((name) => policy.optional?.[name]?.includes(api));
+  const prefer = policy.prefer && Object.values(policy.prefer).some((list) => (list?.length ?? 0) > 0) ? policy.prefer : undefined;
+  const optionalScopes = optionalScopesOf(policy);
   return {
     ...(optional !== undefined ? { optional } : {}),
     ...(policy.onlyIn && Object.keys(policy.onlyIn).length > 0 ? { onlyIn: policy.onlyIn } : {}),
+    ...(prefer ? { policyPrefer: prefer } : {}),
+    ...(optionalScopes ? { optionalScopes } : {}),
   };
+}
+
+/** The optional parts of a policy that name scopes (entries that are scope URLs), per part; undefined when none do. */
+const optionalScopesCache = new WeakMap<ScopePolicy, Readonly<Record<string, readonly string[]>> | undefined>();
+function optionalScopesOf(policy: ScopePolicy): Readonly<Record<string, readonly string[]>> | undefined {
+  if (optionalScopesCache.has(policy)) return optionalScopesCache.get(policy);
+  const out: Record<string, string[]> = {};
+  for (const [part, entries] of Object.entries(policy.optional ?? {})) {
+    const scopes = entries.filter((e) => e.startsWith('https://'));
+    if (scopes.length > 0) out[part] = scopes;
+  }
+  // One object per policy, so every requirement of the product carries the same one.
+  const value = Object.keys(out).length > 0 ? out : undefined;
+  optionalScopesCache.set(policy, value);
+  return value;
+}
+
+/** The optional part that names this scope for this requirement (Requirement.optionalScopes), or undefined. */
+function scopePartOf(r: Requirement, scope: string): string | undefined {
+  if (!r.optionalScopes) return undefined;
+  return Object.keys(r.optionalScopes).find((part) => r.optionalScopes?.[part]?.includes(scope));
+}
+
+/** The products' preferred scopes the requirements carry for a profile (Requirement.policyPrefer), in their order, each once. */
+function policyPreferredScopes(requirements: readonly Requirement[], profile: Profile): string[] {
+  const out: string[] = [];
+  const seen = new Set<object>();
+  for (const r of requirements) {
+    if (!r.policyPrefer || seen.has(r.policyPrefer)) continue;
+    seen.add(r.policyPrefer);
+    for (const scope of r.policyPrefer[profile] ?? []) if (!out.includes(scope)) out.push(scope);
+  }
+  return out;
 }
 
 /** The API of a method id ("gmail.users.messages.list" gives "gmail"), or undefined when there is no method id. */
@@ -136,6 +188,29 @@ export function isReadonlyScope(scope: string): boolean {
 }
 
 /**
+ * Scopes Google documents as view-only whose names the rule above does not catch, with Google's description of each on
+ * https://developers.google.com/identity/protocols/oauth2/scopes (checked 2026-10-31). Data, not a rule per product: a
+ * scope is added here only when Google's table says it lets the app view (or see), and nothing more. userinfo.profile
+ * (1.35.1) is the name and picture profile_me returns.
+ */
+export const VIEW_ONLY_SCOPES: Readonly<Record<string, string>> = {
+  'https://www.googleapis.com/auth/devstorage.read_only': 'View your data in Google Cloud Storage',
+  'https://www.googleapis.com/auth/logging.read': 'View log data for your projects',
+  'https://www.googleapis.com/auth/monitoring.read': 'View monitoring data for all of your Google Cloud and third-party projects',
+  'https://www.googleapis.com/auth/script.metrics': "View Google Apps Script project's metrics",
+  'https://www.googleapis.com/auth/script.processes': 'View Google Apps Script processes',
+  'https://www.googleapis.com/auth/userinfo.profile': "See your personal info, including any personal info you've made publicly available",
+};
+
+/**
+ * A scope the readonly profile may request: read-only by name (isReadonlyScope), or listed in VIEW_ONLY_SCOPES. The
+ * profiles, the held-back lines and the read-only posture use this; isReadonlyScope keeps its name rule.
+ */
+export function isViewOnlyScope(scope: string): boolean {
+  return isReadonlyScope(scope) || Object.prototype.hasOwnProperty.call(VIEW_ONLY_SCOPES, scope);
+}
+
+/**
  * A broad scope with no qualifier after the service name, such as .../auth/drive
  * or .../auth/cloud-platform, or the Gmail full-access scope. Qualified scopes
  * such as .../auth/gmail.modify are narrower.
@@ -162,7 +237,7 @@ interface Candidate {
 function comparePreference(a: Candidate, b: Candidate, profile: Profile): number {
   if (a.covers !== b.covers) return b.covers - a.covers;
   if (profile === 'readwrite') {
-    const byWrite = Number(isReadonlyScope(a.scope)) - Number(isReadonlyScope(b.scope));
+    const byWrite = Number(isViewOnlyScope(a.scope)) - Number(isViewOnlyScope(b.scope));
     if (byWrite !== 0) return byWrite;
   }
   if (profile !== 'full') {
@@ -184,8 +259,8 @@ function comparePreference(a: Candidate, b: Candidate, profile: Profile): number
  * Requirements without policy fields resolve exactly as they did before policies existed.
  */
 export function resolveScopes(requirements: readonly Requirement[], profile: Profile, include: readonly string[] = []): ScopeResolution {
-  const usable = (scope: string): boolean => profile !== 'readonly' || isReadonlyScope(scope);
-  const usableFor = (r: Requirement, scope: string): boolean => usable(scope) && allowedByPolicy(r, scope, profile);
+  const usable = (scope: string): boolean => profile !== 'readonly' || isViewOnlyScope(scope);
+  const usableFor = (r: Requirement, scope: string): boolean => usable(scope) && allowedByPolicy(r, scope, profile, include);
   const targets = requirements.filter((r) => (profile !== 'readonly' || r.kind === 'read') && isIncluded(r, include));
   let open = targets.filter((r) => r.scopes.some((scope) => usableFor(r, scope)));
   const chosen: string[] = [];
@@ -195,6 +270,27 @@ export function resolveScopes(requirements: readonly Requirement[], profile: Pro
   // Without a preference (all, curated, and products that give none) this loop does nothing, so the result is as before.
   for (const scope of preferredScopes(requirements, profile)) {
     if (!open.some((r) => r.scopes.includes(scope) && usableFor(r, scope))) continue;
+    chosen.push(scope);
+    open = open.filter((r) => !r.scopes.includes(scope));
+  }
+
+  // Then a product's preferred scopes (scopePolicy.prefer), in their order: each one is asked for when a target of that
+  // product accepts it and this profile may use it, also when an earlier scope covers that target already, so two scopes of
+  // different reach can both be asked for (Meet's spaces made by the app and every space the user can see). Requirements
+  // without the field (every product that gives none) skip this, so they resolve as before.
+  for (const scope of policyPreferredScopes(requirements, profile)) {
+    if (chosen.includes(scope)) continue;
+    if (!targets.some((r) => r.policyPrefer?.[profile]?.includes(scope) && r.scopes.includes(scope) && usableFor(r, scope))) continue;
+    chosen.push(scope);
+    open = open.filter((r) => !r.scopes.includes(scope));
+  }
+
+  // Then the scopes of the optional parts the login names that are scopes, not APIs (YouTube's monetary analytics): each one
+  // is asked for when a target of that product accepts it, as a product's preferred scope is. Unnamed, no step may pick
+  // them (allowedByPolicy). Requirements without such parts skip this, so they resolve as before.
+  for (const scope of namedPartScopes(requirements, include)) {
+    if (chosen.includes(scope)) continue;
+    if (!targets.some((r) => scopePartOf(r, scope) !== undefined && r.scopes.includes(scope) && usableFor(r, scope))) continue;
     chosen.push(scope);
     open = open.filter((r) => !r.scopes.includes(scope));
   }
@@ -222,10 +318,32 @@ export function resolveScopes(requirements: readonly Requirement[], profile: Pro
   return { scopes, covered, uncovered };
 }
 
-/** True when the product's policy lets this profile request the scope for this requirement. */
-function allowedByPolicy(r: Requirement, scope: string, profile: Profile): boolean {
+/** True when the product's onlyIn lets this profile request the scope for this requirement. */
+function allowedByOnlyIn(r: Requirement, scope: string, profile: Profile): boolean {
   const only = r.onlyIn?.[scope];
   return only === undefined || only.includes(profile);
+}
+
+/**
+ * True when the product's policy lets this profile request the scope for this requirement: onlyIn allows it, and a scope
+ * an optional part names is asked for only when the part is named (`include`).
+ */
+function allowedByPolicy(r: Requirement, scope: string, profile: Profile, include: readonly string[]): boolean {
+  if (!allowedByOnlyIn(r, scope, profile)) return false;
+  const part = scopePartOf(r, scope);
+  return part === undefined || include.includes(part);
+}
+
+/** The scopes of the named optional parts that are scopes (Requirement.optionalScopes), in the requirements' order, each once. */
+function namedPartScopes(requirements: readonly Requirement[], include: readonly string[]): string[] {
+  const out: string[] = [];
+  const seen = new Set<object>();
+  for (const r of requirements) {
+    if (!r.optionalScopes || seen.has(r.optionalScopes)) continue;
+    seen.add(r.optionalScopes);
+    for (const part of include) for (const scope of r.optionalScopes[part] ?? []) if (!out.includes(scope)) out.push(scope);
+  }
+  return out;
 }
 
 /** True when the requirement is not part of an optional part, or its part is named. */
@@ -247,6 +365,11 @@ export interface HeldBack {
   needsProfile: Record<string, HeldBackList>;
   /** Tools whose remaining scopes no profile requests (onlyIn lists none): reachable only with an exact --scopes list. */
   noProfile: HeldBackList;
+  /**
+   * Per optional part that names scopes and was not named: the profile's targets that accept those scopes, and the scopes.
+   * Their tools may still load through another scope. Absent when there is none, so the object is as before for others.
+   */
+  optionalScopes?: Record<string, HeldBackList>;
 }
 
 /**
@@ -266,24 +389,35 @@ export function heldBackBy(
     list.tools.push(tool);
     for (const scope of scopesOf) if (!list.scopes.includes(scope)) list.scopes.push(scope);
   };
+  const profileMayUse = (scope: string): boolean => profile !== 'readonly' || isViewOnlyScope(scope);
   for (const r of requirements) {
     if (covered.has(r.tool)) continue;
     if (profile === 'readonly' && r.kind !== 'read') continue;
-    const profileMayUse = (scope: string): boolean => profile !== 'readonly' || isReadonlyScope(scope);
     if (!isIncluded(r, include)) {
       // Counted only when naming the part would let this profile cover it.
-      const usable = r.scopes.filter((scope) => profileMayUse(scope) && allowedByPolicy(r, scope, profile));
+      const usable = r.scopes.filter((scope) => profileMayUse(scope) && allowedByOnlyIn(r, scope, profile));
       if (usable.length > 0) add((out.optional[r.optional as string] ??= { tools: [], scopes: [] }), r.tool, usable);
       continue;
     }
-    // Scopes this profile could use if the policy did not limit them.
-    const blocked = r.scopes.filter((scope) => profileMayUse(scope) && !allowedByPolicy(r, scope, profile));
+    // Scopes this profile could use if onlyIn did not limit them. A scope an optional part names is not one of them (it is
+    // reported below, by part), because only onlyIn decides this list.
+    const blocked = r.scopes.filter((scope) => profileMayUse(scope) && !allowedByOnlyIn(r, scope, profile));
     if (blocked.length === 0) continue;
     const next = PROFILES.find((p) => p !== profile && blocked.some((scope) => r.onlyIn?.[scope]?.includes(p)));
     if (next === undefined) add(out.noProfile, r.tool, blocked);
     else add((out.needsProfile[next] ??= { tools: [], scopes: [] }), r.tool, blocked.filter((s) => r.onlyIn?.[s]?.includes(next)));
   }
-  for (const list of [...Object.values(out.optional), ...Object.values(out.needsProfile), out.noProfile]) {
+  // An optional part that names scopes and was not named: the targets of this profile that accept them. Their tools may
+  // still load through another scope; the line says what naming the part adds. Only products with such parts get any.
+  for (const r of requirements) {
+    if (!r.optionalScopes || (profile === 'readonly' && r.kind !== 'read') || !isIncluded(r, include)) continue;
+    for (const [part, partScopes] of Object.entries(r.optionalScopes)) {
+      if (include.includes(part)) continue;
+      const accepted = partScopes.filter((scope) => r.scopes.includes(scope) && profileMayUse(scope) && allowedByOnlyIn(r, scope, profile));
+      if (accepted.length > 0) add(((out.optionalScopes ??= {})[part] ??= { tools: [], scopes: [] }), r.tool, accepted);
+    }
+  }
+  for (const list of [...Object.values(out.optional), ...Object.values(out.needsProfile), out.noProfile, ...Object.values(out.optionalScopes ?? {})]) {
     list.tools.sort();
     list.scopes.sort();
   }
@@ -292,7 +426,85 @@ export function heldBackBy(
 
 /** True when nothing is held back. */
 export function nothingHeldBack(h: HeldBack): boolean {
-  return Object.keys(h.optional).length === 0 && Object.keys(h.needsProfile).length === 0 && h.noProfile.tools.length === 0;
+  return (
+    Object.keys(h.optional).length === 0 &&
+    Object.keys(h.needsProfile).length === 0 &&
+    h.noProfile.tools.length === 0 &&
+    Object.keys(h.optionalScopes ?? {}).length === 0
+  );
+}
+
+/**
+ * A scope list that covers none of a product's tools that need a Google scope, so the product loads nothing that calls
+ * Google (tools without a scope, such as api_methods, load anyway). Business Profile under readonly is one: its only scope,
+ * business.manage, has no read-only form.
+ */
+export interface NotCovered {
+  /** The product's per-method and hand-written tools that need a Google scope. Gateway methods are not counted here. */
+  tools: number;
+  /** The product's gateway methods, and how many of them the scopes reach through api_call. */
+  gateway: { reached: number; total: number };
+  /** readonly only: none of the product's read tools lists a scope the readonly profile may request. */
+  noReadOnlyForm: boolean;
+  /** The first broader profile whose own scopes cover some of those tools, and how many. Undefined when none does. */
+  next?: { profile: Profile; covers: number };
+}
+
+/**
+ * Whether a scope list leaves a product with no tool that calls Google. `subset` holds the requirements of one product
+ * (the same ones the login or gsm scopes counts), `scopes` the scopes asked for (merged ones included). Undefined when
+ * at least one of its tools that need a scope is covered, or when none of its tools needs one. The broader profiles are
+ * resolved from the same requirements and optional parts, so `next` names what that profile would really cover.
+ */
+export function notCoveredBy(
+  subset: readonly Requirement[],
+  profile: Profile,
+  include: readonly string[],
+  scopes: readonly string[],
+): NotCovered | undefined {
+  const scoped = subset.filter((r) => !r.gateway && r.scopes.length > 0);
+  if (scoped.length === 0) return undefined;
+  const coveredCount = (granted: ReadonlySet<string>): number => scoped.filter((r) => r.scopes.some((s) => granted.has(s))).length;
+  if (coveredCount(new Set(scopes)) > 0) return undefined;
+  const gatewayAll = subset.filter((r) => r.gateway);
+  const granted = new Set(scopes);
+  const reached = gatewayAll.filter((r) => r.scopes.length === 0 || r.scopes.some((s) => granted.has(s))).length;
+  let next: NotCovered['next'];
+  for (const p of PROFILES.slice(PROFILES.indexOf(profile) + 1)) {
+    const covers = coveredCount(new Set(resolveScopes(subset, p, include).scopes));
+    if (covers > 0) {
+      next = { profile: p, covers };
+      break;
+    }
+  }
+  const reads = scoped.filter((r) => r.kind === 'read');
+  return {
+    tools: scoped.length,
+    gateway: { reached, total: gatewayAll.length },
+    noReadOnlyForm: profile === 'readonly' && reads.every((r) => !r.scopes.some((s) => isViewOnlyScope(s))),
+    ...(next ? { next } : {}),
+  };
+}
+
+/**
+ * The line a login and gsm scopes print for a product the scopes leave with no tool (notCoveredBy). It starts with
+ * "Not covered:", so the sign-in from the chat can pass it on. It names the profile that covers the tools; it never stops
+ * the login.
+ */
+export function notCoveredLine(product: string, profile: Profile, n: NotCovered): string {
+  const parts = [
+    `Not covered: the ${profile} profile covers none of the ${n.tools} tool(s) of ${product} that need a Google scope` +
+      (n.noReadOnlyForm ? ' (none of them offers a read-only scope).' : '.'),
+  ];
+  if (n.gateway.reached > 0) parts.push(`api_call still reaches ${n.gateway.reached} of its ${n.gateway.total} gateway methods.`);
+  if (n.next) {
+    const how = n.next.covers === n.tools ? `all ${n.tools}` : `${n.next.covers} of them`;
+    parts.push(`The ${n.next.profile} profile covers ${how}: --profile ${n.next.profile} (in the chat: auth_login with profile "${n.next.profile}").`);
+    if (profile === 'readonly') parts.push('Its write tools stay hidden until writes are allowed in the plugin settings.');
+  } else {
+    parts.push('No broader profile covers them.');
+  }
+  return parts.join(' ');
 }
 
 /**

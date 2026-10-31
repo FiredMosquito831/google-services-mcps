@@ -42,7 +42,8 @@ const cfgOf = (dir = tempDir('gsm-prefer-cfg-')) => loadConfig({ GSM_TOKEN_DIR: 
 const READWRITE_GOOGLE = {
   gcalendar: [G('calendar.calendarlist.readonly'), G('calendar.events'), G('calendar.events.freebusy')],
   gchat: [G('chat.memberships.readonly'), G('chat.messages.create'), G('chat.messages.readonly'), G('chat.spaces.readonly'), G('chat.users.readstate'), G('chat.users.spacesettings')],
-  gcontacts: [G('contacts.readonly'), G('directory.readonly'), EMAIL],
+  // Since 1.35.1 gcontacts also prefers userinfo.profile (scopePolicy.prefer), the name profile_me returns.
+  gcontacts: [G('contacts.readonly'), G('directory.readonly'), G('userinfo.profile')],
   gtasks: [G('keep.readonly'), G('tasks')],
   gclassroom: [
     G('classroom.announcements'),
@@ -131,19 +132,22 @@ test('the server map carries the preferences of seven products, readwrite only, 
 test('google readwrite logins resolve to the preferred scopes; readonly and full, and all and curated, are unchanged', async () => {
   const cfg = cfgOf();
   const reg = registry();
+  // gtasks' Keep is an optional part since 1.34.0: its preference applies when the part is named.
+  const INCLUDE = { gtasks: ['keep'] };
   for (const [name, expected] of Object.entries(READWRITE_GOOGLE)) {
     const spec = reg.servers.find((s) => s.name === name);
+    const include = INCLUDE[name] ?? [];
     const reqs = await requirementsForSpecs([spec], cfg, { ...quiet, toolset: 'google' });
     assert.ok(reqs.every((r) => r.prefer), `${name}: every requirement of the google toolset carries the preference`);
-    const now = resolveScopes(reqs, 'readwrite').scopes;
+    const now = resolveScopes(reqs, 'readwrite', include).scopes;
     assert.deepEqual(now, expected, `${name} readwrite`);
-    const before = resolveScopes(strip(reqs), 'readwrite').scopes;
+    const before = resolveScopes(strip(reqs), 'readwrite', include).scopes;
     for (const scope of READWRITE_BEFORE_DROPPED[name]) {
       assert.ok(before.includes(scope), `${name}: the greedy rule alone takes ${scope}`);
       assert.ok(!now.includes(scope), `${name}: the preference no longer asks for ${scope}`);
     }
     for (const profile of ['readonly', 'full']) {
-      assert.deepEqual(resolveScopes(reqs, profile).scopes, resolveScopes(strip(reqs), profile).scopes, `${name} ${profile}`);
+      assert.deepEqual(resolveScopes(reqs, profile, include).scopes, resolveScopes(strip(reqs), profile, include).scopes, `${name} ${profile}`);
     }
     for (const toolset of ['all', 'curated']) {
       const other = await requirementsForSpecs([spec], cfg, { ...quiet, toolset });

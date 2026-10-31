@@ -2,6 +2,83 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.35.1 - 2026-10-31
+
+### Fixed: profile_me shows your name
+- `profile_me` (gcontacts, Google's `get_user_profile`) returns the name and picture only when the sign-in holds `userinfo.profile`. No profile asked for it: it is not read-only by name, and the shorter `userinfo.email` (which every sign-in adds) or `openid` covered the tool, so the answer had the email and a note.
+- `userinfo.profile` joins the view-only scopes (Google's description: "See your personal info, including any personal info you've made publicly available", https://developers.google.com/identity/protocols/oauth2/scopes), so a `readonly` login may ask for it, and gcontacts prefers it for `readwrite` and `full` (`scopePolicy.prefer`, 1.33.0). Only tools that accept it bring it in: no product but gcontacts.
+- `gsm scopes` over all 207 cases against 1.35.0: 198 identical; 9 changed, all gcontacts: `readonly` with every toolset adds `userinfo.profile` (`profile_me` and the two OAuth2 userinfo reads now covered); `readwrite` takes it instead of `userinfo.email` (which every sign-in adds anyway, so the login asks for one scope more); `full` takes it instead of `openid`. A token from an earlier sign-in lacks it until the account signs in again (`profile_me` says so).
+- `profile_me`'s description and its note say this; the gcontacts `google` toolset note too.
+
+### Not changed
+- Tool maps and tool kinds. tools/list changes only for `profile_me` (its description). Not checked against live Google.
+
+## 1.35.0 - 2026-10-31
+
+### Added: an optional part can name a scope; YouTube revenue metrics with `--with monetary`
+- YouTube Analytics and Reporting return revenue and ad metrics only with `yt-analytics-monetary.readonly` ("View monetary and non-monetary YouTube Analytics reports for your YouTube content", https://developers.google.com/identity/protocols/oauth2/scopes). Every one of their tools also accepts `yt-analytics.readonly`, which the greedy rule picks, so no profile ever asked for the monetary scope, and there was no way to ask for it but an exact `--scopes` list.
+- An entry of a product's `scopePolicy.optional` may now be a scope URL instead of an API. No profile asks for such a scope unless the part is named; a login that names it (`--with`, in the chat `auth_login` with `"with"`) asks for it first, for the tools that accept it. gyoutube has the part `monetary`. With it, `readonly` asks for `blogger.readonly`, `youtube.readonly` and `yt-analytics-monetary.readonly` (the monetary scope covers the non-monetary reports too, so `yt-analytics.readonly` is not asked for); no tool loses coverage.
+- Without the part nothing changes: `gsm scopes` over all 207 cases against 1.34.0 has the same scopes, coverage and gateway reach everywhere; the 9 gyoutube cases gain one `Held back:` line that names the scope and how to add it (the chat sign-in repeats it).
+- `auth_login` on gyoutube takes `with` (`monetary`), and its description says the part adds a scope to tools that load without it. The `auth_login` text of gmail, gtasks, gcontacts and gsc is unchanged. `gen-servers` and the bundle refuse a part scope no tool of the product accepts.
+
+### Not changed
+- Tool maps and tool kinds. tools/list changes only for `auth_login` on gyoutube. Not checked against live Google.
+
+## 1.34.0 - 2026-10-31
+
+### Changed: Keep, Health, Data Portability and Indexing are optional parts of a login
+- Four parts of three products are now left out of every profile unless the login names them, as Gmail's Postmaster Tools has been since 1.2.0 (`scopePolicy.optional` in `config/products.json`; `--with <part>`, in the chat `auth_login` with `"with"`):
+  - `keep` (gtasks, the Google Keep API). Google's announcement of the Keep API: "Not available to users with personal Google accounts" (https://workspaceupdates.googleblog.com/2021/05/keep-audit-logs-and-api.html), and a sign-in that asks a personal account for a Keep scope may be refused whole (`invalid_scope`, reported by users; not checked here). Every gtasks login asked for a Keep scope, so a personal account's Tasks sign-in could fail with it.
+  - `health` (gcontacts, the Google Health API): a `readonly` contacts login asked for four health read scopes; `readwrite` and `full` for seven health scopes and `cloud-platform`, the only scope Google lists for the health subscriber methods.
+  - `portability` (gcontacts, Data Portability): `readwrite` and `full` asked for one export scope, `dataportability.nest.user`, picked by URL length out of about seventy; Google subjects Data Portability apps to a verification process.
+  - `indexing` (gsc, the Indexing API): `readwrite` and `full` asked for `indexing` ("Submit data to Google for indexing"), which Google accepts only for pages with JobPosting or BroadcastEvent markup, also for someone who only submits sitemaps.
+- Named, a login asks for exactly what it asked for in 1.33.0 (tests compare every profile and toolset). Without the part, its tools and gateway methods do not load, and the login, `gsm scopes` and `auth_login` say so in a `Held back:` line with the flag to add it. `auth_login` on gtasks, gcontacts and gsc takes `with`.
+- Scopes an account already holds are never taken away: they are scopes of the group, so a login that names the account (`--account`, `auth_login` with `account`) merges them, and one that does not name it and would drop them saves nothing (the rule of 1.1.2; tested for Keep and Indexing).
+- `gsm scopes` over all 207 cases against 1.33.0: 188 identical; 19 changed, each one losing the scopes of a part not named: gtasks with every profile and toolset (`keep` or `keep.readonly`); gcontacts `readonly` with `all` and `curated` (the four health read scopes), `readwrite` and `full` with `all` and `curated` (`cloud-platform`, `dataportability.nest.user` and seven health scopes); gsc `readwrite` and `full` with `all` and `google` (`indexing`). The gcontacts `google` toolset and every other product are unchanged.
+- The `--with` help text names the parts.
+
+### Not changed
+- Tool maps and tool kinds. tools/list changes only for `auth_login` on gtasks, gcontacts and gsc (the `with` argument). Not checked against live Google.
+
+## 1.33.0 - 2026-10-31
+
+### Added: a product can prefer scopes for every toolset (`scopePolicy.prefer`)
+- A product's `scopePolicy` in `config/products.json` can now name, per profile (`readonly`, `readwrite`, `full`), scopes a login of that product asks for before the greedy rule. Each one is asked for when a tool of the product that the profile targets accepts it (for `readonly`, when it is read-only or view-only too), even when an earlier scope already covers that tool, so two scopes of different reach can both be asked for. The greedy rule covers the rest. A toolset's own `preferScopes` (1.25.0) still come first and keep their meaning. `gen-servers` and the bundle refuse a preferred scope that no tool of the product accepts, and a `readonly` preference that is not view-only.
+- Data, no product name in the code: a product without `prefer` resolves exactly as before (none of its requirements carries the field).
+
+### Fixed: Meet and Classroom logins that lost reach
+- Google Meet: `meetings.space.created` lets the app "create, modify, and read metadata about meeting spaces created by your app"; `meetings.space.readonly` lets it "read metadata about any meeting space the user has access to" (https://developers.google.com/workspace/meet/api/guides/authenticate-authorize). The greedy rule gave `readwrite` and `full` only `meetings.space.created`, because it covers every tool, so the records, transcripts and recordings of meetings the app did not create were out of reach. gmeet now prefers `meetings.space.readonly` for `readwrite` and `full`: they ask for both, with every toolset. `readonly` is unchanged.
+- Google Classroom: `classroom.coursework.me.readonly` is "View your course work and grades in Google Classroom"; `classroom.coursework.students.readonly` is "View course work and grades for students in the Google Classroom classes you teach or administer" (https://developers.google.com/identity/protocols/oauth2/scopes). Every coursework and submission read accepts both, and `studentSubmissions.list` returns what "the requester is permitted to view, factoring in the OAuth scopes of the request". A `readonly` login took only the shorter, student-own scope, so a teacher saw no student's work. gclassroom now prefers both for `readonly`, with every toolset: one scope added, none removed, so a student keeps their own work. `readwrite` and `full` are unchanged.
+- `gsm scopes` over all 207 cases against 1.32.1: 198 identical; 9 changed, each one scope added and none removed: gmeet `readwrite` and `full` with `all`, `google` and `curated` (+`meetings.space.readonly`), gclassroom `readonly` with the three toolsets (+`classroom.coursework.students.readonly`). No coverage count changed: the tools were covered before, with less reach. A token from an earlier login lacks the new scope until the account signs in again (named with `--account`, so its stored scopes are kept).
+
+### Not changed
+- Tool maps, tool kinds and tools/list of every server. Not checked against live Google.
+
+## 1.32.1 - 2026-10-31
+
+### Fixed: view-only scopes with other names count as read-only
+- The `readonly` profile took a scope only when its name ended in `readonly` or `read-only`. Five scopes that Google documents as view-only have other names, so a `readonly` login left out the reads that need them: `monitoring.read` ("View monitoring data for all of your Google Cloud and third-party projects"), `logging.read` ("View log data for your projects"), `devstorage.read_only` ("View your data in Google Cloud Storage"), `script.processes` ("View Google Apps Script processes") and `script.metrics` ("View Google Apps Script project's metrics"); quoted from Google's scope table, https://developers.google.com/identity/protocols/oauth2/scopes.
+- They are data now, `VIEW_ONLY_SCOPES` in `src/core/scopes.ts` beside the name rule, used by the profiles, the held-back and Not covered lines, the readwrite tie-break and the read-only posture line. The name rule itself (`isReadonlyScope`) is unchanged.
+- What changes, of all 207 plugin, profile and toolset cases of `gsm scopes` (every change is a `readonly` login gaining one of these scopes; nothing else moved): gcloud `readonly` adds `monitoring.read` with every toolset, so the Monitoring reads load (9 more tools with `google`: the PromQL query, dashboards, alert policies, alerts, metric descriptors and time series; 31 more tools and 12 more gateway methods with `all`, 3 more tools with `curated`); gapps `readonly` adds `script.processes` (1 more tool with `google`, the recent runs) and, with `all` and `curated`, `script.metrics` too (3 more tools: the two process lists and the project metrics); gai `readonly` with `all` and `curated` adds `devstorage.read_only`, the only read scope Google lists for the Gemini API's file and cached-content reads (5 gateway reads; the scope was already in `readwrite` and `full`). `logging.read` changes no case: `cloud-platform.read-only` covers the same tools.
+
+### Not changed
+- Tool maps, tool kinds and tools/list of every server, and every `readwrite` and `full` resolution. Not checked against live Google.
+
+## 1.32.0 - 2026-10-31
+
+### Added: a login that covers no tool of a product says so
+- Business Profile's only scope, `business.manage`, has no read-only form, and neither has Google Ads' `adwords`. A `readonly` login, the default, then loaded none of their tools, and nothing said why. Now `gsm login`, `gsm scopes` and the chat sign-in (`auth_login`, oauth and adc) print a `Not covered:` line for each product the scopes leave with no tool that needs a Google scope: how many tools, whether none of them offers a read-only scope, how many gateway methods `api_call` still reaches, and the first broader profile that covers them, with the flag and the chat argument. The terminal login prints it before the browser opens; the chat sign-in returns it with the sign-in address. The login goes on as asked: nothing is blocked and no scope changes.
+- The rule is one check on the requirements the login already counts (`notCoveredBy` in `src/core/scopes.ts`), never a product name. Counted against the scopes the login asks for, merged ones included, so an account that already holds the scope gets no line. A tool that needs no scope (`api_methods`) does not count as covered. The service-account group signs in with a key, not a profile, so `gsm scopes service-account` names none.
+- Where it appears (every plugin, profile and toolset of the login groups): gbusiness `readonly` with every toolset, gads `readonly` with `google` and `curated`, gfirebase `readonly` with `curated` (`api_call` still reaches 33 gateway methods). gads with `all` is not named: a `readonly` login covers 6 AdSense and AdMob reads there, and none of the Google Ads tools.
+- `gsm scopes --json` adds a `notCovered` list to a profile only when it has a line, so every other answer is unchanged.
+
+### Fixed: sign-in text that sent people to a login with no tools
+- The gbusiness skill now says `login business --profile readwrite`, and the gads and gfirebase skills say which toolsets need it. Derived at build time from the same check, so only these three skills changed.
+- `docs/products/gads.md` and `docs/products/gai.md` said to start with `--profile readonly`; they say `readwrite` now, with the reason (gai: a `readonly` login covers two of its tools that call Google). `docs/products/gbusiness.md` no longer says the `google` toolset's tools declare no scope (they declare `business.manage` since 1.24.1). `docs/TUTORIAL.md` section 8 listed gmerchant under `business`, gplay and gmaps under `developer`; they use a service account key and the API key.
+
+### Not changed
+- Tool maps, tool kinds, tools/list of every server and `gsm scopes` scopes for all 207 cases are the same as in 1.31.1. Not checked against live Google.
+
 ## 1.31.1 - 2026-10-31
 
 ### Fixed: regional resources go to their region's host

@@ -144,9 +144,20 @@ export interface ScopePolicy {
   onlyIn?: Record<string, string[]>;
   /**
    * Named optional parts: the APIs (Discovery names) whose methods a login leaves out unless it names the part (gsm login
-   * --with <name>, or auth_login with "with"). Example: { "postmaster": ["gmailpostmastertools"] }.
+   * --with <name>, or auth_login with "with"). Example: { "postmaster": ["gmailpostmastertools"] }. An entry may also be a
+   * scope URL (since 1.35.0): no profile asks for that scope unless the part is named, and a login that names it asks for
+   * it for the tools that accept it. Example: { "monetary": [".../yt-analytics-monetary.readonly"] }.
    */
   optional?: Record<string, string[]>;
+  /**
+   * Scopes a login of this product asks for first, per profile (readonly, readwrite, full), before the greedy rule covers
+   * the rest. Each one is asked for when a tool of the product that the profile targets accepts it (for readonly, when it
+   * is view-only too), even when an earlier scope covers that tool already, so two scopes of different reach can both be
+   * asked for. Example: Meet's { "readwrite": [".../meetings.space.readonly"] } keeps the reads' reach over every space the
+   * user can see, beside meetings.space.created, which the writes need. A preference adds reach; it never replaces a scope
+   * a tool needs (the reach rule). A toolset's preferScopes (ServerSpec.toolsetScopes) come before it.
+   */
+  prefer?: Partial<Record<'readonly' | 'readwrite' | 'full', string[]>>;
 }
 
 export interface Registry {

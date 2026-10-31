@@ -18,7 +18,7 @@ The tools that match Google's official MCP server for this product (https://deve
 |---|---|---|
 | `contacts_search_directory` | `search_directory_people` | Sets the readMask (names, email addresses, phone numbers, organizations) and the source (domain profiles) that the generated people_people_search_directory needs from the caller. Carries Google's caution: confirm the person before a result goes into another tool. |
 | `contacts_search` | `search_contacts` | Sends the empty warm-up search Google asks for before each search, then the search, with a default readMask. Carries Google's caution. |
-| `profile_me` | `get_user_profile` | From the OAuth2 userinfo endpoint. Every sign-in holds userinfo.email, so the email is always there; the name needs userinfo.profile, which a readonly login does not ask for (it is not a read-only scope by name). |
+| `profile_me` | `get_user_profile` | From the OAuth2 userinfo endpoint. Every sign-in holds userinfo.email, so the email is always there; the name and picture need userinfo.profile, which every profile of a gcontacts login asks for since 1.35.1 (a view-only scope by Google's description; readwrite and full prefer it). |
 
 ## Curated tools (12)
 

@@ -29,6 +29,14 @@ node <plugin>/bin/gsm.mjs status
 
 Start with `--profile readonly`. Changes need a `readwrite` login and the plugin option `allow_writes`. To see each profile's scopes, run `node <plugin>/bin/gsm.mjs scopes workspace-user`.
 
+**Health and Data Portability are optional parts (since 1.34.0).** A contacts login no longer asks for them unless you name them: `--with health` adds the Google Health API (its read scopes, `googlehealth.*.readonly`; with `readwrite` also its write scopes and `cloud-platform`, the only scope Google lists for the health subscriber methods), and `--with portability` adds Data Portability (one of its export scopes; Google subjects Data Portability apps to a verification process). Before 1.34.0 every `readonly` login asked for four health read scopes, and every `readwrite` login for `cloud-platform`, a Data Portability scope and seven health scopes, for a contacts sign-in.
+
+```
+node <plugin>/bin/gsm.mjs login workspace-user --profile readonly --with health
+```
+
+In the chat: `auth_login` with `"with": ["health"]` (or `["portability"]`, or both). Without them, those tools and gateway methods do not load, and the login says so in `Held back:` lines. A token that already holds these scopes keeps them when you sign in again naming the account (`--account <email>`).
+
 ## What it can do
 
 | Area | Tools | Safety | What it does |
@@ -49,7 +57,7 @@ Start with `--profile readonly`. Changes need a `readwrite` login and the plugin
 
 The full list is in `docs/capabilities/gcontacts.md`.
 
-The first three tools match the tools of Google's People MCP server (https://developers.google.com/people/api/mcp/tools_list). They set the person fields (names, email addresses, phone numbers, organizations; `fields` picks others), send the warm-up search Google asks for before a contact search, and tell the agent to let you confirm the person before a result goes into another tool. With the plugin option `toolset: google`, the server lists these three, plus `health` and the sign-in tools. A `readonly` login with that toolset asks for `contacts.readonly` and `directory.readonly`; a `readwrite` login for `contacts.readonly` (since 1.25.0; before, `contacts`), `directory.readonly` and `userinfo.email`, since no tool of the three changes a contact. Every sign-in adds `userinfo.email`, so `profile_me` always shows your email; your name needs `userinfo.profile`, which none of the three profiles picks for this toolset (they take `userinfo.email` or `openid`); a login with an explicit scope list that names it gives the name too.
+The first three tools match the tools of Google's People MCP server (https://developers.google.com/people/api/mcp/tools_list). They set the person fields (names, email addresses, phone numbers, organizations; `fields` picks others), send the warm-up search Google asks for before a contact search, and tell the agent to let you confirm the person before a result goes into another tool. With the plugin option `toolset: google`, the server lists these three, plus `health` and the sign-in tools. A `readonly` login with that toolset asks for `contacts.readonly`, `directory.readonly` and (since 1.35.1) `userinfo.profile`; a `readwrite` login for `contacts.readonly` (since 1.25.0; before, `contacts`), `directory.readonly` and `userinfo.profile`, since no tool of the three changes a contact. Every sign-in adds `userinfo.email`, so `profile_me` always shows your email. Your name and picture need `userinfo.profile` ("See your personal info, including any personal info you've made publicly available"): before 1.35.1 no profile asked for it (the shorter `userinfo.email` or `openid` covered `profile_me`), so the name was missing; since 1.35.1 every profile of a gcontacts sign-in asks for it, with every toolset (it counts as view-only, and `readwrite` and `full` prefer it). A token from an earlier sign-in lacks it until you sign in again; `profile_me` says so.
 
 ## Example requests
 

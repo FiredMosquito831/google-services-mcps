@@ -41,6 +41,24 @@
           "version": "v4beta"
         }
       ],
+      "scopePolicy": {
+        "optional": {
+          "health": [
+            "health"
+          ],
+          "portability": [
+            "dataportability"
+          ]
+        },
+        "prefer": {
+          "readwrite": [
+            "https://www.googleapis.com/auth/userinfo.profile"
+          ],
+          "full": [
+            "https://www.googleapis.com/auth/userinfo.profile"
+          ]
+        }
+      },
       "toolsets": {
         "google": [
           "contacts_search_directory",

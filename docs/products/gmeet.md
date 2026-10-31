@@ -46,7 +46,9 @@ Start with `--profile readonly`. Creating or changing spaces needs a `readwrite`
 
 The full list is in `docs/capabilities/gmeet.md`.
 
-Google has no official MCP server for Meet (none was found on 2026-10-29). With the plugin option `toolset: google`, the server lists a small set chosen here instead: `meet_spaces_create`, `meet_spaces_get`, the conference record list and get, participants, transcripts and transcript entries, recordings, and smart notes list and get (10 tools), plus `health` and the sign-in tools. The member changes and ending a conference stay in the `all` toolset. A `readonly` login with that toolset asks for `meetings.space.readonly`; a `readwrite` login for `meetings.space.created`.
+Google has no official MCP server for Meet (none was found on 2026-10-29). With the plugin option `toolset: google`, the server lists a small set chosen here instead: `meet_spaces_create`, `meet_spaces_get`, the conference record list and get, participants, transcripts and transcript entries, recordings, and smart notes list and get (10 tools), plus `health` and the sign-in tools. The member changes and ending a conference stay in the `all` toolset. A `readonly` login with that toolset asks for `meetings.space.readonly`; a `readwrite` login for `meetings.space.created` and, since 1.33.0, `meetings.space.readonly`.
+
+Scopes, with every toolset: `meetings.space.created` lets the app "create, modify, and read metadata about meeting spaces created by your app", and `meetings.space.readonly` lets it "read metadata about any meeting space the user has access to" (Google's Meet scope table). Until 1.33.0 a `readwrite` or `full` login asked only for `meetings.space.created`, which covers every tool, so the records, transcripts and recordings of meetings this app did not create were out of reach. Since 1.33.0 both ask for `meetings.space.readonly` too (`scopePolicy.prefer` in `config/products.json`). A token from an earlier `readwrite` login lacks it: sign in again, naming the account (`--account`, in the chat `auth_login` with `account`), so the stored scopes are kept.
 
 ## Example requests
 

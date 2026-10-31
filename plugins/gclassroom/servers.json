@@ -19,6 +19,14 @@
           "version": "v1"
         }
       ],
+      "scopePolicy": {
+        "prefer": {
+          "readonly": [
+            "https://www.googleapis.com/auth/classroom.coursework.students.readonly",
+            "https://www.googleapis.com/auth/classroom.coursework.me.readonly"
+          ]
+        }
+      },
       "toolsets": {
         "google": [
           "classroom_list_courses",

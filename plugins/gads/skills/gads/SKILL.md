@@ -11,7 +11,7 @@ The `gads` MCP server exposes 340 tools. Per-method tools cover the Discovery AP
 
 ## Log in
 
-Replace `<plugin>` with this plugin's folder, the one that holds `bin/gsm.mjs`. Sign in with the OAuth desktop client, once: `node <plugin>/bin/gsm.mjs setup-client <client_secret.json>`, then `node <plugin>/bin/gsm.mjs login business`.
+Replace `<plugin>` with this plugin's folder, the one that holds `bin/gsm.mjs`. Sign in with the OAuth desktop client, once: `node <plugin>/bin/gsm.mjs setup-client <client_secret.json>`, then `node <plugin>/bin/gsm.mjs login business`. With the `google` or `curated` toolset, the default readonly profile covers none of its tools that need a Google scope: sign in with `--profile readwrite` (write tools stay hidden until writes are allowed in the plugin settings).
 
 ## Safety
 

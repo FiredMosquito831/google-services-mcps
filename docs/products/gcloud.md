@@ -51,7 +51,7 @@ Start with `--profile readonly`. It grants read scopes only. Writes need a `read
 
 The full list is in `docs/capabilities/gcloud.md`.
 
-With the plugin option `toolset: google`, the server lists 59 tools that match Google's Cloud MCP servers for Resource Manager, API Keys, BigQuery, Cloud Billing, IAM, Cloud Logging, Cloud Monitoring and Cloud Storage, plus `health` and the sign-in tools. Google's `run_gcloud_command` is not copied: a shell command would bypass the approval of each change. A `readonly` login with that toolset asks for `cloud-platform.read-only` and `cloud-billing.readonly`; the IAM role and deny-policy reads and the Monitoring reads need a `readwrite` login, because IAM lists only `cloud-platform` and `monitoring.read` is not counted as a read-only scope.
+With the plugin option `toolset: google`, the server lists 59 tools that match Google's Cloud MCP servers for Resource Manager, API Keys, BigQuery, Cloud Billing, IAM, Cloud Logging, Cloud Monitoring and Cloud Storage, plus `health` and the sign-in tools. Google's `run_gcloud_command` is not copied: a shell command would bypass the approval of each change. A `readonly` login with that toolset asks for `cloud-platform.read-only`, `cloud-billing.readonly` and, since 1.32.1, `monitoring.read` (Google: "View monitoring data for all of your Google Cloud and third-party projects"), so the Monitoring reads load too; the IAM role and deny-policy reads still need a `readwrite` login, because IAM lists only `cloud-platform`.
 
 ## Example requests
 

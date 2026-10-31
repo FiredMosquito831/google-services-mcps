@@ -11,7 +11,7 @@ The `gbusiness` MCP server exposes 61 tools. Per-method tools cover the Discover
 
 ## Log in
 
-Replace `<plugin>` with this plugin's folder, the one that holds `bin/gsm.mjs`. Sign in with the OAuth desktop client, once: `node <plugin>/bin/gsm.mjs setup-client <client_secret.json>`, then `node <plugin>/bin/gsm.mjs login business`.
+Replace `<plugin>` with this plugin's folder, the one that holds `bin/gsm.mjs`. Sign in with the OAuth desktop client, once: `node <plugin>/bin/gsm.mjs setup-client <client_secret.json>`, then `node <plugin>/bin/gsm.mjs login business --profile readwrite`. Use `--profile readwrite`: the default readonly profile covers none of this plugin's tools that need a Google scope. Write tools stay hidden until writes are allowed in the plugin settings.
 
 ## Safety
 

@@ -16,7 +16,7 @@ Google Ads API, with accounts, campaigns, ad groups, ads, keywords, budgets, con
 ```
 claude plugin install gads@google-services-mcps --scope user
 node <plugin>/bin/gsm.mjs setup-client <client_secret.json>
-node <plugin>/bin/gsm.mjs login business --profile readonly
+node <plugin>/bin/gsm.mjs login business --profile readwrite
 node <plugin>/bin/gsm.mjs status
 ```
 
@@ -26,7 +26,9 @@ node <plugin>/bin/gsm.mjs status
 2. Set up the OAuth consent screen. Use Internal for a Workspace domain. Create an OAuth client ID of type Desktop app and download the JSON file.
 3. Run `setup-client`, then `login business`. Restart the MCP server (`/mcp`) after login.
 
-Access comes from the Cloud project of the OAuth client. The project needs a Google Ads API access level: Test, Explorer, Basic or Standard. A developer token is optional. The suite sends the header only if you set one. Start with `--profile readonly`. Changes need a `readwrite` login and the plugin option `allow_writes`.
+Access comes from the Cloud project of the OAuth client. The project needs a Google Ads API access level: Test, Explorer, Basic or Standard. A developer token is optional. The suite sends the header only if you set one.
+
+Sign in with `--profile readwrite`. The Google Ads API has one scope, `adwords`, and it has no read-only form, so a `readonly` login covers none of the Google Ads tools: not `ads_search`, `ads_list_customers` or `ads_resource_metadata` (with the `all` toolset it covers only a few AdSense and AdMob reads). The login and `auth_login` say so in a `Not covered:` line. With `readwrite` the reads load; changes still need the plugin option `allow_writes`, so a `readwrite` login with writes off lists the reads only.
 
 ## What it can do
 

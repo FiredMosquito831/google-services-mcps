@@ -439,7 +439,7 @@ Desktop OAuth client, then one login for the products you use:
 npx google-services-mcps login workspace-user --profile readonly --servers gmail,gcalendar
 ```
 
-### 8.5 business: ganalytics, gtm, gyoutube, gbusiness, gads, gmerchant
+### 8.5 business: ganalytics, gtm, gyoutube, gbusiness, gads
 
 Desktop OAuth client, then:
 
@@ -447,15 +447,23 @@ Desktop OAuth client, then:
 npx google-services-mcps login business --profile readonly --servers ganalytics,gtm
 ```
 
+`gbusiness` and `gads` need `--profile readwrite`: their scopes (`business.manage`, `adwords`) have no read-only form, so a `readonly` login covers none of their tools, and the login says so in a `Not covered:` line. With writes off, a `readwrite` login of them lists their reads only.
+
+```
+npx google-services-mcps login business --profile readwrite --servers gbusiness,gads
+```
+
 For `gads`, also read the Google Ads notes in [SETUP.md](SETUP.md). The developer token is an optional plugin option (section 6.1).
 
-### 8.6 developer: gplay, gfirebase, gmaps
+### 8.6 developer: gfirebase
 
 Desktop OAuth client, then:
 
 ```
-npx google-services-mcps login developer --profile readonly --servers gplay,gfirebase,gmaps
+npx google-services-mcps login developer --profile readonly --servers gfirebase
 ```
+
+`gplay` and `gmerchant` use a service account key instead, with `setup-service-account` (see [SETUP.md](SETUP.md#google-play-and-merchant-center-gplay-gmerchant)); `gmaps` uses the API key of section 8.8.
 
 ### 8.7 workspace-admin: gadmin
 
@@ -467,9 +475,9 @@ npx google-services-mcps setup-admin --subject admin@example.com --key-file "C:\
 
 Checked with a test service account file. The command checks that the file has a `client_email`, saves the setup in the token directory, and prints the scopes to authorize for the service account's client ID under **Google Admin console > Security > API controls > Domain-wide delegation**. It does not call Google. The key file is referenced where it is, and it is not copied. Use `--replace` to drop the stored scopes, as for `login`.
 
-### 8.8 apikey: gsearch
+### 8.8 apikey: gsearch, gmaps
 
-`gsearch` uses an API key and has no login.
+`gsearch` and `gmaps` use an API key and have no login.
 
 ```
 npx google-services-mcps setup-apikey
@@ -607,10 +615,10 @@ The 23 products, from `config/products.json`. The descriptions are copied from t
 | `gyoutube` | YouTube Data, YouTube Analytics and YouTube Reporting APIs, plus Blogger. | `business` | `npx google-services-mcps install --agent claude --plugin gyoutube` |
 | `gbusiness` | Business Profile accounts, locations, verifications, lodging, place actions, notifications and performance. | `business` | `npx google-services-mcps install --agent claude --plugin gbusiness` |
 | `gads` | Google Ads API (accounts, campaigns, ad groups, ads, keywords, budgets, conversions, assets and GAQL reporting, with every other method through the gateway), plus advertising and publisher APIs: Search Ads 360, Display & Video 360, Campaign Manager, Ad Exchange, AdSense, AdMob, Real-time Bidding and more. | `business` | `npx google-services-mcps install --agent claude --plugin gads` |
-| `gmerchant` | Merchant Center: Merchant API, Comparison Shopping Service and Manufacturer Center. | `business` | `npx google-services-mcps install --agent claude --plugin gmerchant` |
-| `gplay` | Google Play developer publishing and reporting, Play Games Services, Android Enterprise and Management, Play Integrity and device APIs. | `developer` | `npx google-services-mcps install --agent claude --plugin gplay` |
+| `gmerchant` | Merchant Center: Merchant API and Comparison Shopping Service. Its Manufacturer Center tools never load (the key asks only for `content`). | `service-account` | `npx google-services-mcps install --agent claude --plugin gmerchant` |
+| `gplay` | Google Play developer publishing and reporting, Play Games Services, Android Enterprise and Management, Play Integrity and device APIs. | `service-account` | `npx google-services-mcps install --agent claude --plugin gplay` |
 | `gfirebase` | Firebase management, App Check, App Distribution, Crashlytics, Hosting, Data Connect, Rules, Test Lab, FCM and Identity Toolkit. | `developer` | `npx google-services-mcps install --agent claude --plugin gfirebase` |
-| `gmaps` | Maps Platform and location APIs: Places, Address Validation, Solar, Air Quality, Pollen, Street View Publish and related datasets. | `developer` | `npx google-services-mcps install --agent claude --plugin gmaps` |
+| `gmaps` | Maps Platform and location APIs: Places, Address Validation, Solar, Air Quality, Pollen, Street View Publish and related datasets. | `apikey` | `npx google-services-mcps install --agent claude --plugin gmaps` |
 | `gai` | Generative and classic AI APIs: Discovery Engine, Vertex AI, Dialogflow, Vision, Speech, Translate, Document AI and agent services. | `cloud` | `npx google-services-mcps install --agent claude --plugin gai` |
 
 ## 11. Check and troubleshoot
@@ -770,7 +778,7 @@ Run `npx google-services-mcps --help` for the full text. Each flag in each comma
 | `--no-browser` | off | Prints the sign-in address instead of opening a browser. |
 | `--replace` | off | Drops the stored scopes instead of merging with them. |
 | `--account <email>` | none | The account to sign in. Google preselects it, and the login merges the scopes this account already holds for the group (only the ones a server of the group uses). Without it, nothing is merged. |
-| `--with <part,...>` | none | Adds an optional part of a product, which every profile leaves out otherwise. Gmail has `postmaster` (Gmail Postmaster Tools). `scopes` takes it too. |
+| `--with <part,...>` | none | Adds an optional part of a product, which every profile leaves out otherwise: `postmaster` (gmail), `keep` (gtasks), `health` and `portability` (gcontacts), `indexing` (gsc), `monetary` (gyoutube). `scopes` takes it too. |
 
 ### setup-client
 

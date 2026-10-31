@@ -28,6 +28,14 @@ node <plugin>/bin/gsm.mjs status
 
 Start with `--profile readonly`. Changes need a `readwrite` login and the plugin option `allow_writes`.
 
+**Google Keep is an optional part (since 1.34.0).** Google offers the Keep API to Google Workspace accounts: its announcement says "Not available to users with personal Google accounts" (Workspace Updates, 2021-05, https://workspaceupdates.googleblog.com/2021/05/keep-audit-logs-and-api.html), and a sign-in that asks a personal account for a Keep scope may be refused as a whole (`invalid_scope`; reported by users, not checked here). So a login leaves Keep out unless you name it, and asks only for the Tasks scopes:
+
+```
+node <plugin>/bin/gsm.mjs login workspace-user --profile readonly --with keep
+```
+
+In the chat: `auth_login` with `"with": ["keep"]`. Without it, the Keep tools do not load, and the login says so in a `Held back:` line. A token that already holds a Keep scope keeps it when you sign in again naming the account (`--account <email>`, in the chat `auth_login` with `account`).
+
 ## What it can do
 
 | Area | Tools | Safety | What it does |
@@ -45,7 +53,7 @@ The full list is in `docs/capabilities/gtasks.md`.
 
 `keep_media_download` returns an attachment's metadata by default. With `alt: "media"` and the attachment's `mimeType` it returns the file itself, one part at a time (`offset`, `next_offset`, base64 or text; since 1.31.0, see USING.md "Files"). Before 1.31.0 it could not return the file. Not checked live.
 
-Google has no official MCP server for Tasks or Keep (none was found on 2026-10-29). With the plugin option `toolset: google`, the server lists a small set chosen here instead: `tasks_tasklists_list`, `tasks_tasks_list`, `tasks_tasks_get`, `tasks_tasks_insert`, `tasks_tasks_patch`, `tasks_tasks_delete` (asks twice), `keep_notes_list` and `keep_notes_get` (8 tools), plus `health` and the sign-in tools. List changes, clearing completed tasks and the Keep writes stay in the `all` toolset. A `readonly` login with that toolset asks for `tasks.readonly` and `keep.readonly`; a `readwrite` login for `tasks` and, since 1.25.0, `keep.readonly` (the list only reads Keep; before, `keep`).
+Google has no official MCP server for Tasks or Keep (none was found on 2026-10-29). With the plugin option `toolset: google`, the server lists a small set chosen here instead: `tasks_tasklists_list`, `tasks_tasks_list`, `tasks_tasks_get`, `tasks_tasks_insert`, `tasks_tasks_patch`, `tasks_tasks_delete` (asks twice), `keep_notes_list` and `keep_notes_get` (8 tools), plus `health` and the sign-in tools. List changes, clearing completed tasks and the Keep writes stay in the `all` toolset. A `readonly` login with that toolset asks for `tasks.readonly`, and with `--with keep` also `keep.readonly`; a `readwrite` login for `tasks`, and with `--with keep` also (since 1.25.0, as the list only reads Keep) `keep.readonly`.
 
 ## Example requests
 
@@ -68,6 +76,6 @@ The Tasks API has a courtesy limit of 50,000 queries per day and no per-minute f
 
 ## Caveats
 
-- Keep API quotas, access rules and scope classification are UNVERIFIED. Keep calls to a minimum until they are confirmed.
+- Keep API quotas, access rules and scope classification are UNVERIFIED. Keep calls to a minimum until they are confirmed. Whether a personal account's sign-in fails when it asks for a Keep scope is not checked live; that is why Keep is an optional part.
 - Task list and note size limits are UNVERIFIED.
 - The plugin has 22 tools. There is no gateway, so an API outside the list is not reachable.

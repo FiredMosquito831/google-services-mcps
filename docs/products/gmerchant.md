@@ -2,7 +2,7 @@
 
 Install with the simplest command: `npx google-services-mcps install --agent claude --plugin <id>` (see docs/TUTORIAL.md).
 
-Merchant Center accounts through the Merchant API, the Comparison Shopping Service (CSS) API and the Manufacturer Center API. It reads and changes product data, inventories, promotions, data sources, business information and account settings. It has 158 tools and no hand-written tools.
+Merchant Center accounts through the Merchant API and the Comparison Shopping Service (CSS) API. It reads and changes product data, inventories, promotions, data sources, business information and account settings. It has 158 tools and no hand-written tools. The 8 Manufacturer Center tools are defined but never load: see "Manufacturer Center" below.
 
 ## When to install it
 
@@ -15,18 +15,19 @@ Merchant Center accounts through the Merchant API, the Comparison Shopping Servi
 
 ```
 claude plugin install gmerchant@google-services-mcps --scope user
-node <plugin>/bin/gsm.mjs setup-client <client_secret.json>
-node <plugin>/bin/gsm.mjs login business --profile readonly
+node <plugin>/bin/gsm.mjs setup-service-account --key-file <service account key.json>
 node <plugin>/bin/gsm.mjs status
 ```
 
-`<plugin>` is the plugin folder (in this repo, `plugins/gmerchant`).
+`<plugin>` is the plugin folder (in this repo, `plugins/gmerchant`). In the chat, `auth_setup_service_account` with the key's full path does the same.
 
 1. Create a production Merchant Center account with a verified website. The identity that registers needs ADMIN access on that account. The developer contact must be a Google account email, not a service account.
 2. In a Google Cloud project, enable the Merchant API. Registration is a one-time step per project. The new developer contact must accept the invitation within 14 days.
-3. Set up the OAuth consent screen. Create an OAuth client ID of type Desktop app and download the JSON file. Run `setup-client`, then `login business`. Restart the MCP server (`/mcp`) after login.
+3. Create a service account in that project and a JSON key for it, and add the service account's email as an Admin user of the Merchant Center account. Run `setup-service-account` (see [SETUP.md](../SETUP.md#google-play-and-merchant-center-gplay-gmerchant)). Restart the MCP server (`/mcp`) afterwards.
 
-Start with `--profile readonly`. Changes need a `readwrite` login and the plugin option `allow_writes`.
+gmerchant has no OAuth sign-in and no profile: the key asks for one fixed scope, `content`. Changes need the plugin option `allow_writes`.
+
+**Manufacturer Center.** The 8 Manufacturer Center tools need the `manufacturercenter` scope. The service account key asks only for `content` (`serviceAccountScopes` in `config/products.json`), so these tools never load, whatever the toolset. They are counted in the tool totals, and `docs/capabilities/gmerchant.md` lists them, but they cannot be called.
 
 ## What it can do
 
@@ -40,7 +41,7 @@ Start with `--profile readonly`. Changes need a `readwrite` login and the plugin
 | | local and regional inventory delete, regions batch delete | destructive | Remove inventory or regions |
 | Accounts and business | business information and identity | read, write | Read and update business details |
 | | account, user and label delete | destructive | Remove accounts, users or labels |
-| Per-method (154) | | mixed | Merchant API (accounts 76, products 5, inventories 6, data sources 7, promotions 3, conversions 6, issue resolution 4, Local Finance 7, notifications 5, quota, reports); CSS API (13); Manufacturer Center (8) |
+| Per-method (154) | | mixed | Merchant API (accounts 76, products 5, inventories 6, data sources 7, promotions 3, conversions 6, issue resolution 4, Local Finance 7, notifications 5, quota, reports); CSS API (13); Manufacturer Center (8, never loaded: the key has no `manufacturercenter` scope) |
 | Gateway (12 APIs) | `api_search`, `api_describe`, `api_call` | read, read, dynamic | Beta versions of the Merchant API |
 
 The full list is in `docs/capabilities/gmerchant.md`.
