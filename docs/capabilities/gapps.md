@@ -4,7 +4,7 @@ Apps Script projects and execution, plus the Workspace Marketplace SDK.
 
 - Plugin: `gapps`, MCP server: `gapps`, login: Desktop OAuth client, then `login workspace-user`
 - Install: `claude plugin install gapps@google-services-mcps`
-- Tools: 28 total. Curated 9, per-method 18, gateway 0. Read 15, write 11, destructive 2, dynamic 0.
+- Tools: 28 total. Curated 9, per-method 18, gateway 0. Read 15, write 10, destructive 3, dynamic 0.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
@@ -18,7 +18,7 @@ Google has no official MCP server for this product. The google toolset is a lean
 |---|---|---|
 | `appsscript_projects_get` | (none) | A script project's title, parent file and times, by script id. |
 | `appsscript_projects_get_content` | (none) | The files of a script project: name, type and source. |
-| `appsscript_projects_update_content` | (none) | Replaces every file of a script project with the files given. A write, so it asks first; send the files you keep too. |
+| `appsscript_projects_update_content` | (none) | Replaces every file of a script project with the files given. Destructive since 1.26.3 (Google: it clears all the existing files), so it asks twice; send the files you keep too. |
 | `appsscript_projects_versions_create` | (none) | Saves the current code as a numbered version, for a deployment. A write, so it asks first. |
 | `appsscript_projects_deployments_list` | (none) | The deployments of a script project and their entry points. |
 | `appsscript_projects_deployments_create` | (none) | Deploys a version (as an API executable, web app or add-on, by its manifest). A write, so it asks first. |
@@ -56,7 +56,7 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `appsscript_projects_get` | read | script.projects.get | script.projects, script.projects.readonly |
 | `appsscript_projects_get_content` | read | script.projects.getContent | script.projects, script.projects.readonly |
 | `appsscript_projects_get_metrics` | read | script.projects.getMetrics | script.metrics |
-| `appsscript_projects_update_content` | write | script.projects.updateContent | script.projects |
+| `appsscript_projects_update_content` | destructive | script.projects.updateContent | script.projects |
 | `appsscript_projects_versions_create` | write | script.projects.versions.create | script.projects |
 | `appsscript_projects_versions_get` | read | script.projects.versions.get | script.projects, script.projects.readonly |
 | `appsscript_projects_versions_list` | read | script.projects.versions.list | script.projects, script.projects.readonly |

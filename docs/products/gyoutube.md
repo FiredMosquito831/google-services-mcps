@@ -56,7 +56,7 @@ Google has no official MCP server for YouTube. With the plugin option `toolset: 
 
 ## Safety
 
-- Reads never ask. Writes ask first. Deletes ask twice.
+- Reads never ask. Writes ask first. Deletes ask twice, and since 1.26.3 so do a video update (Google deletes a value the request leaves out) and a live broadcast transition (it can start or end the broadcast).
 - Blogger publish makes a post public.
 - Abuse report submissions are write calls. Check the report before you approve it.
 - The `confirmation` option defaults to `every-change`. Change it with `printf '%s' '{"confirmation":"destructive-only"}' | claude plugin configure gyoutube@google-services-mcps --values-stdin` (JSON on stdin), or `/plugin configure gyoutube@google-services-mcps` in Claude Code.

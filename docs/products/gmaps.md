@@ -34,14 +34,13 @@ There is no scopes profile, because a key is not an OAuth token. Street View upl
 | Area | Tools | Safety | What it does |
 |---|---|---|---|
 | Routes and weather (hand-written) | `maps_compute_routes`, `maps_lookup_weather` | read | A route's distance and duration (with stops, alternatives and the polyline on request); the current weather or an hourly or daily forecast |
-| Places (5 methods) | get, photos get, search nearby, search text | read | Find places and read their details and photos |
-| | autocomplete | write | Suggest places as the user types |
+| Places (5 methods) | get, photos get, search nearby, search text, autocomplete | read | Find places, read their details and photos, and suggest places as the user types |
 | Address Validation (2) | validate address | read | Check an address |
 | | provide validation feedback | write | Send feedback on an address result |
 | Air Quality (4), Pollen (2) | current conditions, forecast, history, heatmap tiles | read | Air quality and pollen for a location |
 | Solar (3) | building insights, data layers, GeoTIFF | read | Solar potential for a building |
-| Places Aggregate (1) | compute insights | write | Compute area insights |
-| Travel Impact Model (4) | flight emissions calculations | write | Compute flight emissions |
+| Places Aggregate (1) | compute insights | read | Compute area insights (a read since 1.26.3) |
+| Travel Impact Model (4) | flight emissions calculations | read | Compute flight emissions (reads since 1.26.3) |
 | Street View Publish (14) | photo and sequence create, update, upload start, get, list | read, write | Upload and manage street-level imagery |
 | | photo and sequence delete, batch delete | destructive | Delete Street View photos |
 | Gateway | none | | No gateway tools. All methods are per-method tools. |
@@ -58,11 +57,11 @@ The two hand-written tools match tools of Google's Maps Grounding Lite MCP serve
 - "Is this address valid: 1600 Amphitheatre Parkway, Mountain View?" Claude runs the address validation read. No prompt.
 - "What is the air quality in Lyon right now?" Claude runs the current conditions read. No prompt.
 - "Estimate the solar output for this roof." Claude runs the building insights read. No prompt.
-- "Suggest places for 'blue bott'." Claude runs the autocomplete tool. It asks first, because autocomplete is classed write.
+- "Suggest places for 'blue bott'." Claude runs the autocomplete tool. No prompt: autocomplete is a read (since 1.24.2).
 
 ## Safety
 
-- Autocomplete and the emissions and insight calculations are classed write, so Claude asks before each call.
+- Autocomplete (since 1.24.2) and the emissions and insight calculations (since 1.26.3) are reads: they only compute, so Claude runs them without asking. They still use your key's quota.
 - Street View deletes are destructive. They ask twice.
 - Field masks decide which billing SKU a request uses. Ask only for the fields you need.
 - The `confirmation` option defaults to `every-change`. Change it with `printf '%s' '{"confirmation":"destructive-only"}' | claude plugin configure gmaps@google-services-mcps --values-stdin` (JSON on stdin), or `/plugin configure gmaps@google-services-mcps` in Claude Code.

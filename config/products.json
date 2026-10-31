@@ -2439,7 +2439,7 @@
           "notes": {
             "appsscript_projects_get": "A script project's title, parent file and times, by script id.",
             "appsscript_projects_get_content": "The files of a script project: name, type and source.",
-            "appsscript_projects_update_content": "Replaces every file of a script project with the files given. A write, so it asks first; send the files you keep too.",
+            "appsscript_projects_update_content": "Replaces every file of a script project with the files given. Destructive since 1.26.3 (Google: it clears all the existing files), so it asks twice; send the files you keep too.",
             "appsscript_projects_versions_create": "Saves the current code as a numbered version, for a deployment. A write, so it asks first.",
             "appsscript_projects_deployments_list": "The deployments of a script project and their entry points.",
             "appsscript_projects_deployments_create": "Deploys a version (as an API executable, web app or add-on, by its manifest). A write, so it asks first.",
@@ -2730,8 +2730,8 @@
             "tagmgr_account_contain_workspa_variable_get": "One variable with its type and parameters.",
             "tagmgr_accounts_containers_versions_live": "The version that is live now, with its tags, triggers and variables.",
             "tagmgr_accounts_containers_version_hea_list": "The versions of a container as headers: name, number and counts.",
-            "tagmgr_accounts_containe_workspac_create_ve": "Saves a workspace as a new container version. A write, so it asks first; nothing goes live.",
-            "tagmgr_accounts_containers_versions_publish": "Publishes a version: it goes live on every site or app that loads the container. A write, so it asks first; check the version before."
+            "tagmgr_accounts_containe_workspac_create_ve": "Saves a workspace as a new container version, and Google deletes the workspace. Destructive since 1.26.3, so it asks twice; nothing goes live.",
+            "tagmgr_accounts_containers_versions_publish": "Publishes a version: it goes live on every site or app that loads the container. Destructive since 1.26.3, so it asks twice; check the version before."
           }
         }
       },
@@ -2800,7 +2800,7 @@
             "youtube_comment_threads_list": "Top-level comments of a video or channel, with replies. Discovery lists only youtube.force-ssl for it, which has no read-only form, so a readonly login does not cover it.",
             "youtube_captions_list": "The caption tracks of a video (not their text). Needs youtube.force-ssl, like the comment threads.",
             "ytanalyt_reports_query": "YouTube Analytics for your channel: views, watch time, subscribers and more, by day, video or country.",
-            "youtube_videos_update": "Changes a video's title, description, tags, category or privacy. A write, so it asks first; the change is public.",
+            "youtube_videos_update": "Changes a video's title, description, tags, category or privacy. Destructive since 1.26.3, so it asks twice: the change is public, and Google deletes a value the request leaves out, so send the whole part.",
             "youtube_comments_insert": "Posts a reply to a comment (parentId); a new top-level comment is commentThreads.insert, in the all toolset. A write, so it asks first; the reply is public."
           }
         }

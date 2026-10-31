@@ -646,7 +646,7 @@
   },
   {
     "name": "mcp__plugin_gcloud_gcloud__bigquery_routines_set_iam_policy",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/bigquery",
       "https://www.googleapis.com/auth/cloud-platform"
@@ -846,7 +846,7 @@
   },
   {
     "name": "mcp__plugin_gcloud_gcloud__bigquery_tables_set_iam_policy",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/bigquery",
       "https://www.googleapis.com/auth/cloud-platform"
@@ -909,7 +909,7 @@
   },
   {
     "name": "mcp__plugin_gcloud_gcloud__billing_billing_accoun_set_iam_policy",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-billing",
       "https://www.googleapis.com/auth/cloud-platform"
@@ -1573,7 +1573,7 @@
   },
   {
     "name": "mcp__plugin_gcloud_gcloud__crm_folders_set_iam_policy",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"
     ],
@@ -1756,7 +1756,7 @@
   },
   {
     "name": "mcp__plugin_gcloud_gcloud__crm_organizations_set_iam_policy",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"
     ],
@@ -1898,7 +1898,7 @@
   },
   {
     "name": "mcp__plugin_gcloud_gcloud__crm_projects_set_iam_policy",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"
     ],
@@ -2021,7 +2021,7 @@
   },
   {
     "name": "mcp__plugin_gcloud_gcloud__crm_tag_keys_set_iam_policy",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"
     ],
@@ -2106,7 +2106,7 @@
   },
   {
     "name": "mcp__plugin_gcloud_gcloud__crm_tag_values_set_iam_policy",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"
     ],
@@ -3291,7 +3291,7 @@
   },
   {
     "name": "mcp__plugin_gcloud_gcloud__storage_buckets_set_iam_policy",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform",
       "https://www.googleapis.com/auth/devstorage.full_control"
@@ -3467,7 +3467,7 @@
   },
   {
     "name": "mcp__plugin_gcloud_gcloud__storage_managed_folder_set_iam_policy",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform",
       "https://www.googleapis.com/auth/devstorage.full_control"
@@ -3782,7 +3782,7 @@
   },
   {
     "name": "mcp__plugin_gcloud_gcloud__storage_objects_set_iam_policy",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform",
       "https://www.googleapis.com/auth/devstorage.full_control",

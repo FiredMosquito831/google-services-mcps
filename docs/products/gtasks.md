@@ -55,7 +55,7 @@ Google has no official MCP server for Tasks or Keep (none was found on 2026-10-2
 
 ## Safety
 
-- Reads never ask. Writes ask first. Deletes, clear and removing Keep sharing ask twice.
+- Reads never ask. Writes ask first. Deletes, clear, and adding (since 1.26.3) or removing Keep sharing ask twice.
 - Deletes and clears are hard to undo.
 - Sharing a Keep note with `keep_notes_permissions_batch_create` gives other people access to it.
 - The `confirmation` option defaults to `every-change`. Change it with `printf '%s' '{"confirmation":"destructive-only"}' | claude plugin configure gtasks@google-services-mcps --values-stdin` (JSON on stdin), or `/plugin configure gtasks@google-services-mcps` in Claude Code.

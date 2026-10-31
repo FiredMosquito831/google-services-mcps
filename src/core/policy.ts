@@ -19,7 +19,9 @@ export type ToolKindName = 'read' | 'write' | 'destructive';
 
 /**
  * every-change     : ask before every change and before every destructive action (default).
- * destructive-only : ask before destructive actions; changes run without asking.
+ * destructive-only : ask before destructive actions; changes run without asking. Destructive is the rule in
+ *                    docs/SECURITY.md: deleting, sending to other people, sharing or permission changes, security
+ *                    controls, device commands, publishing, moving money, whole-content replacement, key destruction.
  * off              : nothing asks. Deny rules still apply.
  */
 export type ConfirmationMode = 'every-change' | 'destructive-only' | 'off';
@@ -137,9 +139,9 @@ function defaultDecision(risk: Risk, mode: ConfirmationMode): DecideResult {
     return { decision: 'allow', reason: `Changes data. Confirmation mode is "${mode}", so it runs without asking.` };
   }
   if (mode === 'off') {
-    return { decision: 'allow', reason: 'Deletes, disables or sends data. Confirmation mode is "off", so it runs without asking.' };
+    return { decision: 'allow', reason: 'A destructive action: it deletes, sends, shares, publishes or replaces data. Confirmation mode is "off", so it runs without asking.' };
   }
-  return { decision: 'ask', reason: `Deletes, disables or sends data. Confirmation mode is "${mode}", so it asks first.` };
+  return { decision: 'ask', reason: `A destructive action: it deletes, sends, shares, publishes or replaces data. Confirmation mode is "${mode}", so it asks first.` };
 }
 
 /**
@@ -333,5 +335,5 @@ export const APPROVAL_STRING_LIMIT = 1500;
  * The setting name matches the plugin option that controls it.
  */
 export function confirmationFooter(): string {
-  return "You can turn these confirmations off or limit them in the plugin settings: set 'confirmation' to 'destructive-only' (ask only before deleting or sending) or 'off' (no prompts; policy rules still apply).";
+  return "You can turn these confirmations off or limit them in the plugin settings: set 'confirmation' to 'destructive-only' (ask only before destructive actions such as deleting, sending, sharing or publishing) or 'off' (no prompts; policy rules still apply).";
 }

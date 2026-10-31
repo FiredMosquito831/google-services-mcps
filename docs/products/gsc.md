@@ -56,7 +56,7 @@ Google has no official MCP server for Search Console (none was found on 2026-10-
 
 ## Safety
 
-- Reads never ask. Submit and add ask first. Delete and remove ask twice.
+- Reads never ask. Submit and add ask first. Delete and remove ask twice, and since 1.26.3 so does a change to a site's owners (Site Verification update and patch).
 - Removing a property takes it out of your Search Console account.
 - The `confirmation` option defaults to `every-change`. Change it with `printf '%s' '{"confirmation":"destructive-only"}' | claude plugin configure gsc@google-services-mcps --values-stdin` (JSON on stdin), or `/plugin configure gsc@google-services-mcps` in Claude Code.
 

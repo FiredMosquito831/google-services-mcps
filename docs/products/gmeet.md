@@ -53,12 +53,12 @@ Google has no official MCP server for Meet (none was found on 2026-10-29). With 
 - "Create a Meet space for the board call and give me the link." Claude runs `meet_spaces_create`. It asks first.
 - "Who attended yesterday's design review?" Claude lists conference records, then participants. No prompt.
 - "Get the transcript of last week's sync." Claude runs the transcript read tools. No prompt.
-- "End the call in the Board space." Claude runs `meet_spaces_end_active_conference`. It asks first.
+- "End the call in the Board space." Claude runs `meet_spaces_end_active_conference`. It asks twice: ending a live session is destructive (since 1.26.3).
 - "Remove Dana from the Board space members." Claude runs `meet_spaces_members_delete`. It asks twice.
 
 ## Safety
 
-- Reads never ask. Creates, changes and ending a conference ask first. Removing a member asks twice.
+- Reads never ask. Creates and changes ask first. Ending a conference and removing a member ask twice.
 - Ending a conference removes everyone from it.
 - Recordings and transcripts hold private meeting content. Fetch them only when you need them.
 - The `confirmation` option defaults to `every-change`. Change it with `printf '%s' '{"confirmation":"destructive-only"}' | claude plugin configure gmeet@google-services-mcps --values-stdin` (JSON on stdin), or `/plugin configure gmeet@google-services-mcps` in Claude Code.

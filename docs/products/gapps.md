@@ -55,7 +55,7 @@ Google has no official MCP server for Apps Script (none was found on 2026-10-29)
 
 ## Safety
 
-- Reads never ask. Writes ask first. Running a script and deleting a deployment ask twice.
+- Reads never ask. Writes ask first. Running a script, replacing a project's files (update content, since 1.26.3: Google clears all the existing files) and deleting a deployment ask twice.
 - Running a script executes code that can change Drive, Gmail, Sheets or other data. Read the code before you run it.
 - Replacing a project's files overwrites them. Keep a copy first.
 - The `confirmation` option defaults to `every-change`. Change it with `printf '%s' '{"confirmation":"destructive-only"}' | claude plugin configure gapps@google-services-mcps --values-stdin` (JSON on stdin), or `/plugin configure gapps@google-services-mcps` in Claude Code.

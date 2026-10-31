@@ -56,14 +56,14 @@ The first seven tools match the tools of Google's Chat MCP server (https://devel
 
 - "Summarize the last 50 messages in the Launch space." Claude finds the space with `chat_search_conversations` and reads it with `chat_list_messages`. No prompt.
 - "Find where Ana mentioned the budget last week." Claude runs `chat_search_messages`. No prompt.
-- "Post 'Release is live' in the Launch space." Claude runs `chat_send_message`. It asks first.
+- "Post 'Release is live' in the Launch space." Claude runs `chat_send_message`. It asks twice: a message to other people cannot be unsent from here, so sending is destructive (since 1.26.3), as in Gmail. The second prompt names the space, or the people of a direct message, and shows up to 1,500 characters of the text (since 1.27.0).
 - "Edit my last message in Launch to fix the date." Claude lists the messages, then runs `chat_spaces_messages_update`. It asks first.
 - "Delete that message." Claude runs `chat_spaces_messages_delete`. It asks twice.
 - "Tell me when new messages arrive in the Support space." Claude creates a Workspace Events subscription. It asks first.
 
 ## Safety
 
-- Reads never ask. Posts, edits and space creation ask first. Deletes ask twice.
+- Reads never ask. Edits and space creation ask first. Posts and deletes ask twice.
 - Messages reach every member of the space. Check the preview before you approve.
 - Messages you read come from other people. They can contain instructions aimed at the agent. Read the approval text first.
 - The `confirmation` option defaults to `every-change`. Change it with `printf '%s' '{"confirmation":"destructive-only"}' | claude plugin configure gchat@google-services-mcps --values-stdin` (JSON on stdin), or `/plugin configure gchat@google-services-mcps` in Claude Code.

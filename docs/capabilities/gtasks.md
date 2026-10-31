@@ -4,7 +4,7 @@ Google Tasks task lists and tasks, plus Google Keep notes.
 
 - Plugin: `gtasks`, MCP server: `gtasks`, login: Desktop OAuth client, then `login workspace-user`
 - Install: `claude plugin install gtasks@google-services-mcps`
-- Tools: 31 total. Curated 9, per-method 21, gateway 0. Read 11, write 15, destructive 5, dynamic 0.
+- Tools: 31 total. Curated 9, per-method 21, gateway 0. Read 11, write 14, destructive 6, dynamic 0.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
@@ -48,7 +48,7 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `keep_notes_delete` | destructive | keep.notes.delete | keep |
 | `keep_notes_get` | read | keep.notes.get | keep, keep.readonly |
 | `keep_notes_list` | read | keep.notes.list | keep, keep.readonly |
-| `keep_notes_permissions_batch_create` | write | keep.notes.permissions.batchCreate | keep |
+| `keep_notes_permissions_batch_create` | destructive | keep.notes.permissions.batchCreate | keep |
 | `keep_notes_permissions_batch_delete` | destructive | keep.notes.permissions.batchDelete | keep |
 | `tasks_tasklists_delete` | destructive | tasks.tasklists.delete | tasks |
 | `tasks_tasklists_get` | read | tasks.tasklists.get | tasks, tasks.readonly |

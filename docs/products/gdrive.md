@@ -57,7 +57,7 @@ With the plugin option `toolset: google`, the server lists the 19 tools that mat
 
 ## Safety
 
-- Reads never ask. Creates ask first. Trash, delete, permission removal and empty-trash ask twice.
+- Reads never ask. Creates ask first. Trash, delete, permission removal and empty-trash ask twice, and since 1.26.3 so do sharing (a permission create or update) and the Docs, Sheets and Slides batch updates, which can delete content.
 - `drive_files_delete` deletes permanently. `drive_files_empty_trash` empties the trash. Both are hard to undo.
 - Files can contain instructions aimed at the agent. Read the approval text before you approve a write.
 - Text you read goes into the conversation. Avoid reading sensitive files you do not need.

@@ -997,10 +997,12 @@ test('the gtm, gyoutube and gbusiness google lists are lean sets: no official se
     }
   }
   const kindOf = (id, tool) => readJson('plugins', id, 'tool-map.json').find((t) => t.name === `mcp__plugin_${id}_${id}__${tool}`).kind;
-  // The writes of the lists, and every other tool a read; no delete is in any of them.
-  const writes = ['tagmgr_accounts_containe_workspac_create_ve', 'tagmgr_accounts_containers_versions_publish', 'youtube_videos_update', 'youtube_comments_insert', 'mbinfo_locations_patch'];
+  // The writes of the lists, and every other tool a read; no delete is in any of them. Since 1.26.3 (the destructive
+  // rule) publishing, the workspace-consuming version and the whole-video update are destructive: they ask twice.
+  const writes = ['youtube_comments_insert', 'mbinfo_locations_patch'];
+  const destructive = ['tagmgr_accounts_containe_workspac_create_ve', 'tagmgr_accounts_containers_versions_publish', 'youtube_videos_update'];
   for (const [id, tools] of Object.entries(BUSINESS_LEAN)) {
-    for (const tool of tools) assert.equal(kindOf(id, tool), writes.includes(tool) ? 'write' : 'read', `${id}/${tool}`);
+    for (const tool of tools) assert.equal(kindOf(id, tool), destructive.includes(tool) ? 'destructive' : writes.includes(tool) ? 'write' : 'read', `${id}/${tool}`);
   }
   for (const name of ['tagmgr_account_contain_workspac_tags_delete', 'youtube_videos_delete', 'mbinfo_locations_delete']) {
     assert.equal(Object.values(BUSINESS_LEAN).flat().includes(name), false, name);

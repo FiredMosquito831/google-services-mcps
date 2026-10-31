@@ -4,7 +4,7 @@ Merchant Center: Merchant API, Comparison Shopping Service and Manufacturer Cent
 
 - Plugin: `gmerchant`, MCP server: `gmerchant`, login: Service account key, then `setup-service-account` (no login)
 - Install: `claude plugin install gmerchant@google-services-mcps`
-- Tools: 167 total. Curated 9, per-method 154, gateway 3. Read 75, write 71, destructive 20, dynamic 1.
+- Tools: 167 total. Curated 9, per-method 154, gateway 3. Read 77, write 67, destructive 22, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
@@ -111,12 +111,12 @@ The tools that match Google's official MCP server for this product (https://deve
 | `merchantap_accoun_develo_get_ac` | read | merchantapi.accounts.developerRegistration.getAccountForGcpRegistration | content |
 | `merchantap_accoun_develo_get_de` | read | merchantapi.accounts.developerRegistration.getDeveloperRegistration | content |
 | `merchantap_accoun_develo_regist` | write | merchantapi.accounts.developerRegistration.registerGcp | content |
-| `merchantap_accoun_develo_unregi` | write | merchantapi.accounts.developerRegistration.unregisterGcp | content |
+| `merchantap_accoun_develo_unregi` | destructive | merchantapi.accounts.developerRegistration.unregisterGcp | content |
 | `merchantap_accoun_email_get_ema` | read | merchantapi.accounts.emailPreferences.getEmailPreferences | content |
 | `merchantap_accoun_email_update` | write | merchantapi.accounts.emailPreferences.updateEmailPreferences | content |
 | `merchantap_accoun_gbp_ac_link_g` | write | merchantapi.accounts.gbpAccounts.linkGbpAccount | content |
 | `merchantap_accoun_homepa_get_ho` | read | merchantapi.accounts.homepage.getHomepage | content |
-| `merchantap_accoun_homepa_unclai` | write | merchantapi.accounts.homepage.unclaim | content |
+| `merchantap_accoun_homepa_unclai` | destructive | merchantapi.accounts.homepage.unclaim | content |
 | `merchantap_accoun_homepa_update` | write | merchantapi.accounts.homepage.updateHomepage | content |
 | `merchantap_accoun_homepag_claim` | write | merchantapi.accounts.homepage.claim | content |
 | `merchantap_accoun_lfp_in_insert` | write | merchantapi.accounts.lfpInventories.insert | content |
@@ -196,8 +196,8 @@ The tools that match Google's official MCP server for this product (https://deve
 | `merchantap_accounts_users_get` | read | merchantapi.accounts.users.get | content |
 | `merchantap_accounts_users_list` | read | merchantapi.accounts.users.list | content |
 | `merchantap_accounts_users_patch` | write | merchantapi.accounts.users.patch | content |
-| `merchantap_issuereso_renderacco` | write | merchantapi.issueresolution.renderaccountissues | content |
-| `merchantap_issuereso_renderprod` | write | merchantapi.issueresolution.renderproductissues | content |
+| `merchantap_issuereso_renderacco` | read | merchantapi.issueresolution.renderaccountissues | content |
+| `merchantap_issuereso_renderprod` | read | merchantapi.issueresolution.renderproductissues | content |
 | `merchantap_issuereso_triggeract` | write | merchantapi.issueresolution.triggeraction | content |
 | `merchantap_terms_of_retrieve_l` | read | merchantapi.termsOfService.retrieveLatest | content |
 | `merchantap_terms_of_serv_accept` | write | merchantapi.termsOfService.accept | content |

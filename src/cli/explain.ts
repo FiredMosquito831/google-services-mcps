@@ -84,7 +84,7 @@ export function describeWrites(allowWrites: boolean, confirmation: string | unde
     mode === 'every-change'
       ? 'gsm asks before every change.'
       : mode === 'destructive-only'
-        ? 'gsm asks only before destructive changes (deleting, for example).'
+        ? 'gsm asks only before destructive changes (deleting, sending, sharing or publishing, for example).'
         : 'gsm does not ask. Your policy rules still apply.';
   return ['Write tools are on. ' + asks];
 }

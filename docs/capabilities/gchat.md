@@ -4,7 +4,7 @@ Google Chat spaces, messages and members, plus Workspace Events subscriptions.
 
 - Plugin: `gchat`, MCP server: `gchat`, login: Desktop OAuth client, then `login workspace-user`
 - Install: `claude plugin install gchat@google-services-mcps`
-- Tools: 78 total. Curated 16, per-method 61, gateway 0. Read 35, write 35, destructive 8, dynamic 0.
+- Tools: 78 total. Curated 16, per-method 61, gateway 0. Read 35, write 33, destructive 10, dynamic 0.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
@@ -44,7 +44,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `chat_mark_unread` | write | Mark a Chat conversation unread | chat.users.readstate |
 | `chat_search_conversations` | read | Find Chat conversations | chat.spaces, chat.spaces.readonly |
 | `chat_search_messages` | read | Search Chat messages | chat.messages, chat.messages.readonly |
-| `chat_send_message` | write | Send a Chat message | chat.messages, chat.messages.create |
+| `chat_send_message` | destructive | Send a Chat message | chat.messages, chat.messages.create |
 | `health` | read | Server health | (none) |
 
 ## Per-method tools (61)
@@ -72,7 +72,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `chat_spaces_message_pins_delete` | destructive | chat.spaces.messagePins.delete | chat.spaces, chat.spaces.pins |
 | `chat_spaces_message_pins_list` | read | chat.spaces.messagePins.list | chat.spaces, chat.spaces.pins |
 | `chat_spaces_messages_attachments_get` | read | chat.spaces.messages.attachments.get | chat.bot |
-| `chat_spaces_messages_create` | write | chat.spaces.messages.create | chat.bot, chat.import |
+| `chat_spaces_messages_create` | destructive | chat.spaces.messages.create | chat.bot, chat.import |
 | `chat_spaces_messages_delete` | destructive | chat.spaces.messages.delete | chat.bot, chat.import |
 | `chat_spaces_messages_get` | read | chat.spaces.messages.get | chat.app.messages.readonly, chat.bot |
 | `chat_spaces_messages_list` | read | chat.spaces.messages.list | chat.app.messages.readonly, chat.import |

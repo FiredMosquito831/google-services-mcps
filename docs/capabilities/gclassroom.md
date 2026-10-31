@@ -4,7 +4,7 @@ Google Classroom courses, coursework, submissions, students and teachers.
 
 - Plugin: `gclassroom`, MCP server: `gclassroom`, login: Desktop OAuth client, then `login workspace-user`
 - Install: `claude plugin install gclassroom@google-services-mcps`
-- Tools: 129 total. Curated 23, per-method 105, gateway 0. Read 59, write 52, destructive 18, dynamic 0.
+- Tools: 129 total. Curated 23, per-method 105, gateway 0. Read 59, write 49, destructive 21, dynamic 0.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
@@ -108,7 +108,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `classroom_cour_cour_stud_modi` | write | classroom.courses.courseWork.studentSubmissions.modifyAttachments | classroom.coursework.me, classroom.coursework.students |
 | `classroom_cour_cour_stud_patc` | write | classroom.courses.courseWork.studentSubmissions.patch | classroom.coursework.me, classroom.coursework.students |
 | `classroom_cour_cour_stud_recl` | write | classroom.courses.courseWork.studentSubmissions.reclaim | classroom.coursework.me |
-| `classroom_cour_cour_stud_retu` | write | classroom.courses.courseWork.studentSubmissions.return | classroom.coursework.students |
+| `classroom_cour_cour_stud_retu` | destructive | classroom.courses.courseWork.studentSubmissions.return | classroom.coursework.students |
 | `classroom_cour_cour_stud_turn` | write | classroom.courses.courseWork.studentSubmissions.turnIn | classroom.coursework.me |
 | `classroom_cour_cour_stude_get` | read | classroom.courses.courseWork.studentSubmissions.get | classroom.coursework.me, classroom.coursework.me.readonly |
 | `classroom_cour_cours_get_17da` | read | classroom.courses.courseWorkMaterials.get | classroom.courseworkmaterials, classroom.courseworkmaterials.readonly |
@@ -160,7 +160,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `classroom_courses_update` | write | classroom.courses.update | classroom.courses |
 | `classroom_courses_update_grad` | write | classroom.courses.updateGradingPeriodSettings | classroom.courses |
 | `classroom_invitations_accept` | write | classroom.invitations.accept | classroom.rosters |
-| `classroom_invitations_create` | write | classroom.invitations.create | classroom.rosters |
+| `classroom_invitations_create` | destructive | classroom.invitations.create | classroom.rosters |
 | `classroom_invitations_delete` | destructive | classroom.invitations.delete | classroom.rosters |
 | `classroom_invitations_get` | read | classroom.invitations.get | classroom.rosters, classroom.rosters.readonly |
 | `classroom_invitations_list` | read | classroom.invitations.list | classroom.rosters, classroom.rosters.readonly |
@@ -170,7 +170,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `classroom_user_guar_list_bc1c` | read | classroom.userProfiles.guardianInvitations.list | classroom.guardianlinks.students, classroom.guardianlinks.students.readonly |
 | `classroom_user_guard_get_8b7f` | read | classroom.userProfiles.guardians.get | classroom.guardianlinks.me.readonly, classroom.guardianlinks.students |
 | `classroom_user_guard_get_ed3d` | read | classroom.userProfiles.guardianInvitations.get | classroom.guardianlinks.students, classroom.guardianlinks.students.readonly |
-| `classroom_user_guardi_create` | write | classroom.userProfiles.guardianInvitations.create | classroom.guardianlinks.students |
+| `classroom_user_guardi_create` | destructive | classroom.userProfiles.guardianInvitations.create | classroom.guardianlinks.students |
 | `classroom_user_guardi_delete` | destructive | classroom.userProfiles.guardians.delete | classroom.guardianlinks.students |
 | `classroom_user_p_guardi_patch` | write | classroom.userProfiles.guardianInvitations.patch | classroom.guardianlinks.students |
 | `classroom_user_profiles_get` | read | classroom.userProfiles.get | classroom.profile.emails, classroom.profile.photos |

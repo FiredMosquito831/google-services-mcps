@@ -39,8 +39,8 @@ Start with `--profile readonly`. Changes need a `readwrite` login and the plugin
 | | `people_people_create_contact`, `people_people_update_contact` | write | Create or change a contact |
 | | `people_contact_groups_create`, `people_contact_groups_update` | write | Create or change a contact group |
 | | `people_people_delete_contact`, `people_contact_groups_delete` | destructive | Delete a contact or a group |
-| Health data | profile, settings, data points, paired devices | read | Read health profile, settings and data points |
-| | data point create, patch, daily roll-up | write | Add or change health data points |
+| Health data | profile, settings, data points, paired devices, roll-up and daily roll-up | read | Read health profile, settings and data points, and roll them up over time (the roll-ups are reads since 1.26.3) |
+| | data point create, patch | write | Add or change health data points |
 | | data point batch delete, subscription delete | destructive | Delete health data points or subscriptions |
 | Data Portability | archive jobs, portability initiate | read, write | Check access, start an export |
 | | archive job cancel, authorization reset | destructive | Cancel an export, reset authorization |

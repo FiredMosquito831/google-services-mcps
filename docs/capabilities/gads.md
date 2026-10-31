@@ -4,7 +4,7 @@ Google Ads API (accounts, campaigns, ad groups, ads, keywords, budgets, conversi
 
 - Plugin: `gads`, MCP server: `gads`, login: Desktop OAuth client, then `login business`
 - Install: `claude plugin install gads@google-services-mcps`
-- Tools: 340 total. Curated 13, per-method 323, gateway 3. Read 100, write 196, destructive 20, dynamic 24.
+- Tools: 340 total. Curated 13, per-method 323, gateway 3. Read 104, write 192, destructive 20, dynamic 24.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
@@ -46,8 +46,8 @@ The tools that match Google's official MCP server for this product (https://deve
 | `admob_accounts_apps_list` | read | admob.accounts.apps.list | admob.readonly |
 | `admob_accounts_get` | read | admob.accounts.get | admob.readonly, admob.report |
 | `admob_accounts_list` | read | admob.accounts.list | admob.readonly, admob.report |
-| `admob_accounts_mediation_report_generate` | write | admob.accounts.mediationReport.generate | admob.readonly, admob.report |
-| `admob_accounts_network_report_generate` | write | admob.accounts.networkReport.generate | admob.readonly, admob.report |
+| `admob_accounts_mediation_report_generate` | read | admob.accounts.mediationReport.generate | admob.readonly, admob.report |
+| `admob_accounts_network_report_generate` | read | admob.accounts.networkReport.generate | admob.readonly, admob.report |
 | `displayvid_adver_ad_gr_targe_assig_create` | write | displayvideo.advertisers.adGroups.targetingTypes.assignedTargetingOptions.create | display-video |
 | `displayvid_adver_ad_gr_targe_assig_delete` | destructive | displayvideo.advertisers.adGroups.targetingTypes.assignedTargetingOptions.delete | display-video |
 | `displayvid_adver_ad_gr_target_assign_list` | read | displayvideo.advertisers.adGroups.targetingTypes.assignedTargetingOptions.list | display-video |
@@ -200,10 +200,10 @@ The tools that match Google's official MCP server for this product (https://deve
 | `googleads_customers_google_ads_search_str` | read | googleads.customers.googleAds.searchStream | adwords |
 | `googleads_customers_list_accessible_custo` | read | googleads.customers.listAccessibleCustomers | adwords |
 | `googleads_customers_mutate` | dynamic | googleads.customers.mutate | adwords |
-| `googleads_geo_target_constants_suggest` | write | googleads.geoTargetConstants.suggest | adwords |
+| `googleads_geo_target_constants_suggest` | read | googleads.geoTargetConstants.suggest | adwords |
 | `googleads_google_ads_fields_get` | read | googleads.googleAdsFields.get | adwords |
 | `googleads_google_ads_fields_search` | read | googleads.googleAdsFields.search | adwords |
-| `googleads_keyword_theme_constants_suggest` | write | googleads.keywordThemeConstants.suggest | adwords |
+| `googleads_keyword_theme_constants_suggest` | read | googleads.keywordThemeConstants.suggest | adwords |
 | `searchads3_audience_insig_list_insights_e` | read | searchads360.audienceInsights.listInsightsEligibleDates | doubleclicksearch |
 | `searchads3_customer_conversio_mutate_0fe7` | write | searchads360.customers.conversionValueRules.mutate | doubleclicksearch |
 | `searchads3_customer_conversio_mutate_8ad7` | write | searchads360.customers.conversionValueRuleSets.mutate | doubleclicksearch |

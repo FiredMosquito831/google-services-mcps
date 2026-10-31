@@ -49,15 +49,15 @@ Google has no official MCP server for Tag Manager. With the plugin option `tools
 
 - "List the tags in container GTM-ABC123 that fire on every page view." Claude lists tags and triggers. No prompt.
 - "Create a GA4 configuration tag with measurement ID G-XYZ in the draft." Claude creates the tag in the workspace. It asks first. The draft is not live yet.
-- "Publish version 12 to the live site." Claude runs `tagmgr_accounts_containers_versions_publish`. It asks first, and the version goes live.
+- "Publish version 12 to the live site." Claude runs `tagmgr_accounts_containers_versions_publish`. It asks twice, and the version goes live.
 - "Delete the unused trigger Old click." Claude runs the trigger delete tool. It asks twice.
 
 ## Safety
 
 - Draft edits do not reach visitors until a version is published.
-- Publishing goes live on the website. The publish tool is classed write, not destructive, so Claude asks once. Read the approval text, and check the container and the version number before you approve.
+- Publishing goes live on the website. Since 1.26.3 the publish tool is destructive, so Claude asks twice. Read the approval text, and check the container and the version number before you approve.
 - Setting the latest version also changes what is live.
-- Deletes ask twice.
+- Deletes ask twice, and since 1.26.3 so do publishing, saving a workspace as a version (Google deletes the workspace) and granting or changing user permissions.
 - The `confirmation` option defaults to `every-change`. Change it with `printf '%s' '{"confirmation":"destructive-only"}' | claude plugin configure gtm@google-services-mcps --values-stdin` (JSON on stdin), or `/plugin configure gtm@google-services-mcps` in Claude Code.
 
 ## Costs and limits

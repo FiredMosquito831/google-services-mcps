@@ -532,7 +532,7 @@
   },
   {
     "name": "mcp__plugin_gdrive_gdrive__docs_documents_batch_update",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/documents",
       "https://www.googleapis.com/auth/drive",
@@ -1138,7 +1138,7 @@
   },
   {
     "name": "mcp__plugin_gdrive_gdrive__drive_permissions_create",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/drive",
       "https://www.googleapis.com/auth/drive.file"
@@ -1188,7 +1188,7 @@
   },
   {
     "name": "mcp__plugin_gdrive_gdrive__drive_permissions_update",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/drive",
       "https://www.googleapis.com/auth/drive.file"
@@ -1383,7 +1383,7 @@
   },
   {
     "name": "mcp__plugin_gdrive_gdrive__driveactiv_activity_query",
-    "kind": "write",
+    "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/drive.activity",
       "https://www.googleapis.com/auth/drive.activity.readonly"
@@ -1884,7 +1884,7 @@
   },
   {
     "name": "mcp__plugin_gdrive_gdrive__sheets_spreadsheets_batch_update",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/drive",
       "https://www.googleapis.com/auth/drive.file",
@@ -2034,7 +2034,7 @@
   },
   {
     "name": "mcp__plugin_gdrive_gdrive__slides_presentations_batch_update",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/drive",
       "https://www.googleapis.com/auth/drive.file",

@@ -5,9 +5,10 @@
  * a conversation read or unread. The generated chat_* tools stay as they are; these take plain arguments and return
  * short answers.
  *
- * Reads never ask. chat_send_message, chat_mark_read and chat_mark_unread are writes, so the gate asks first;
- * chat_send_message's prepare step reads the conversation's name, so the approval shows where the message goes and the
- * start of its text. The Chat API has no client library in this package, so the calls go through the account's auth
+ * Reads never ask. chat_mark_read and chat_mark_unread are writes, so the gate asks first. chat_send_message posts to
+ * other people, so it is destructive like gmail_send (the destructive rule, docs/SECURITY.md): it asks twice, also under
+ * confirmation destructive-only. Its prepare step reads the conversation's name, so the approval shows where the
+ * message goes and the start of its text. The Chat API has no client library in this package, so the calls go through the account's auth
  * client (cloud-http.ts), as the gcloud curated tools do.
  *
  * Auth: OAuth user token from `gsm login workspace-user`.
@@ -16,6 +17,7 @@ import { z } from 'zod';
 import type { RuntimeConfig } from '../core/config.js';
 import { getAuthClient, googleScopes } from '../core/auth.js';
 import { defineTool, type PreparedAction, type ToolDef } from '../core/tools.js';
+import { APPROVAL_STRING_LIMIT } from '../core/policy.js';
 import { makeCloudCall, statusOf, type CloudCall } from './cloud-http.js';
 
 const CHAT = 'https://chat.googleapis.com/v1';
@@ -31,8 +33,15 @@ export const CHAT_TEXT_DEFAULT_CHARS = 2000;
 export const CHAT_TEXT_MAX_CHARS = 20000;
 /** Google's limit for one message: 32,000 bytes of text or cards (Chat API, "Send a message"). */
 export const CHAT_MESSAGE_MAX_BYTES = 32000;
-/** How much of the text the approval of chat_send_message shows. */
+/** How much of the sent message's text the answer of chat_send_message returns. */
 export const CHAT_PREVIEW_CHARS = 500;
+/**
+ * How much of the text the approval of chat_send_message shows (since 1.27.0): the approval's own limit for one string
+ * (APPROVAL_STRING_LIMIT in core/policy.ts), so what it shows is not cut again. text_chars gives the whole length.
+ */
+export const CHAT_APPROVAL_TEXT_CHARS = APPROVAL_STRING_LIMIT;
+/** How many people of a direct message or unnamed group chat the approval names. */
+export const CHAT_APPROVAL_PEOPLE = 10;
 /** Conversations one chat_mark_read call takes, as Google's mark_as_read does. Each is one request. */
 export const CHAT_MARK_READ_MAX = 10;
 /** Google's limit for a message search query (SearchMessagesRequest.filter). */
@@ -238,6 +247,10 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
     } catch {
       space_info = undefined;
     }
+    // A direct message, or a group chat without a name, is named by its people (1.27.0). It needs a memberships scope;
+    // without one the approval says so. The list includes you.
+    const unnamed = space_info?.spaceType === 'DIRECT_MESSAGE' || (space_info?.spaceType === 'GROUP_CHAT' && !space_info.displayName);
+    const people = unnamed ? await peopleOf(space) : undefined;
     const fmt = args.format ?? 'markdown';
     return {
       space,
@@ -246,15 +259,35 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       format: fmt,
       preview: {
         conversation_id: space,
-        conversation: space_info?.displayName ?? (space_info?.spaceType === 'DIRECT_MESSAGE' ? 'a direct message' : '(name not readable with this sign-in)'),
+        conversation: space_info?.displayName ?? (space_info?.spaceType === 'DIRECT_MESSAGE' ? 'a direct message' : space_info?.spaceType === 'GROUP_CHAT' ? 'a group chat' : '(name not readable with this sign-in)'),
         ...(space_info?.spaceType ? { type: space_info.spaceType } : {}),
+        ...(people ? { people } : {}),
         ...(thread ? { thread_id: thread } : { thread: 'a new thread' }),
         format: fmt,
-        text_chars: args.text.length,
-        text: excerpt(args.text, CHAT_PREVIEW_CHARS),
         effect: 'Posts this message in the conversation as you. It cannot be unsent from here.',
+        text_chars: args.text.length,
+        // The text last, so the approval's own limit can only shorten its end.
+        text: excerpt(args.text, CHAT_APPROVAL_TEXT_CHARS),
       },
     };
+  };
+
+  /** The people of a conversation for the approval: up to CHAT_APPROVAL_PEOPLE names (email when Google shows it). */
+  const peopleOf = async (space: string): Promise<string[] | string> => {
+    try {
+      const res = await call<{ memberships?: Array<{ member?: ChatUser }>; nextPageToken?: string }>({
+        url: `${CHAT}/${space}/members`,
+        query: { pageSize: CHAT_APPROVAL_PEOPLE },
+      });
+      const names = (res.data.memberships ?? [])
+        .map((m) => m.member)
+        .filter((u): u is ChatUser => !!u && u.type !== 'BOT')
+        .map((u) => (u.displayName && u.email ? `${u.displayName} <${u.email}>` : u.email ?? u.displayName ?? u.name ?? '(unknown)'));
+      if (res.data.nextPageToken) names.push('and more');
+      return names.length > 0 ? names : '(no members listed)';
+    } catch {
+      return '(the members are not readable with this sign-in)';
+    }
   };
 
   return [
@@ -444,8 +477,9 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       name: 'chat_send_message',
       title: 'Send a Chat message',
       description:
-        "Post a message as you in a Google Chat conversation, in Markdown, as a new thread or as a reply in thread_id (matches send_message in Google's Chat MCP server; cards and citations, which only Chat apps can post, are not offered). Find the conversation id with chat_search_conversations. It asks first; the approval shows the conversation's name and the start of the text. A reply fails rather than starting a new thread when the thread cannot be answered. At most 32,000 bytes.",
-      kind: 'write',
+        "Post a message as you in a Google Chat conversation, in Markdown, as a new thread or as a reply in thread_id (matches send_message in Google's Chat MCP server; cards and citations, which only Chat apps can post, are not offered). Find the conversation id with chat_search_conversations. A message cannot be unsent from here, so it asks first, as a destructive action; the approval shows the conversation's name and the start of the text. A reply fails rather than starting a new thread when the thread cannot be answered. At most 32,000 bytes.",
+      // It sends a message to other people: destructive, like gmail_send (the destructive rule, docs/SECURITY.md).
+      kind: 'destructive',
       scopes: MESSAGES_CREATE,
       inputSchema: {
         conversation_id: conversationId,

@@ -109,7 +109,7 @@
   },
   {
     "name": "mcp__plugin_gtasks_gtasks__keep_notes_permissions_batch_create",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/keep"
     ],

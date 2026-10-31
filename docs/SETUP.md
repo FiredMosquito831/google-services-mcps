@@ -180,7 +180,7 @@ Confirmations are on by default (`every-change`). To change them:
 
 Every approval prompt ends with this footer. It always names the setting:
 
-> You can turn these confirmations off or limit them in the plugin settings: set 'confirmation' to 'destructive-only' (ask only before deleting or sending) or 'off' (no prompts; policy rules still apply).
+> You can turn these confirmations off or limit them in the plugin settings: set 'confirmation' to 'destructive-only' (ask only before destructive actions such as deleting, sending, sharing or publishing) or 'off' (no prompts; policy rules still apply).
 
 `off` means nothing asks. Deny rules in the policy file still apply. Read [SECURITY.md](SECURITY.md) before you turn confirmations off.
 

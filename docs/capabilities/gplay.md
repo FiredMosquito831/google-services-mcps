@@ -4,7 +4,7 @@ Google Play developer publishing and reporting, Play Games Services, Android Ent
 
 - Plugin: `gplay`, MCP server: `gplay`, login: Service account key, then `setup-service-account` (no login)
 - Install: `claude plugin install gplay@google-services-mcps`
-- Tools: 371 total. Curated 18, per-method 349, gateway 3. Read 161, write 167, destructive 42, dynamic 1.
+- Tools: 371 total. Curated 18, per-method 349, gateway 3. Read 171, write 152, destructive 47, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
@@ -185,7 +185,7 @@ The tools that match Google's official MCP server for this product (https://andr
 | `androidpub_edits_apks_addexternallyhost` | write | androidpublisher.edits.apks.addexternallyhosted | androidpublisher |
 | `androidpub_edits_apks_list` | read | androidpublisher.edits.apks.list | androidpublisher |
 | `androidpub_edits_bundles_list` | read | androidpublisher.edits.bundles.list | androidpublisher |
-| `androidpub_edits_commit` | write | androidpublisher.edits.commit | androidpublisher |
+| `androidpub_edits_commit` | destructive | androidpublisher.edits.commit | androidpublisher |
 | `androidpub_edits_countryavailabilit_get` | read | androidpublisher.edits.countryavailability.get | androidpublisher |
 | `androidpub_edits_delete` | destructive | androidpublisher.edits.delete | androidpublisher |
 | `androidpub_edits_details_get` | read | androidpublisher.edits.details.get | androidpublisher |
@@ -216,7 +216,7 @@ The tools that match Google's official MCP server for this product (https://andr
 | `androidpub_edits_validate` | read | androidpublisher.edits.validate | androidpublisher |
 | `androidpub_externaltrans_createexternal` | write | androidpublisher.externaltransactions.createexternaltransaction | androidpublisher |
 | `androidpub_externaltrans_getexternaltra` | read | androidpublisher.externaltransactions.getexternaltransaction | androidpublisher |
-| `androidpub_externaltrans_refundexternal` | write | androidpublisher.externaltransactions.refundexternaltransaction | androidpublisher |
+| `androidpub_externaltrans_refundexternal` | destructive | androidpublisher.externaltransactions.refundexternaltransaction | androidpublisher |
 | `androidpub_generatedapks_download` | read | androidpublisher.generatedapks.download | androidpublisher |
 | `androidpub_generatedapks_list` | read | androidpublisher.generatedapks.list | androidpublisher |
 | `androidpub_grants_create` | write | androidpublisher.grants.create | androidpublisher |
@@ -252,10 +252,10 @@ The tools that match Google's official MCP server for this product (https://andr
 | `androidpub_moneti_onetim_purcha_batch_d` | destructive | androidpublisher.monetization.onetimeproducts.purchaseOptions.batchDelete | androidpublisher |
 | `androidpub_moneti_onetim_purcha_batch_u` | write | androidpublisher.monetization.onetimeproducts.purchaseOptions.batchUpdateStates | androidpublisher |
 | `androidpub_moneti_subscr_base_p_activat` | write | androidpublisher.monetization.subscriptions.basePlans.activate | androidpublisher |
-| `androidpub_moneti_subscr_base_p_batch_m` | write | androidpublisher.monetization.subscriptions.basePlans.batchMigratePrices | androidpublisher |
+| `androidpub_moneti_subscr_base_p_batch_m` | destructive | androidpublisher.monetization.subscriptions.basePlans.batchMigratePrices | androidpublisher |
 | `androidpub_moneti_subscr_base_p_batch_u` | write | androidpublisher.monetization.subscriptions.basePlans.batchUpdateStates | androidpublisher |
 | `androidpub_moneti_subscr_base_p_deactiv` | destructive | androidpublisher.monetization.subscriptions.basePlans.deactivate | androidpublisher |
-| `androidpub_moneti_subscr_base_p_migrate` | write | androidpublisher.monetization.subscriptions.basePlans.migratePrices | androidpublisher |
+| `androidpub_moneti_subscr_base_p_migrate` | destructive | androidpublisher.monetization.subscriptions.basePlans.migratePrices | androidpublisher |
 | `androidpub_moneti_subscr_base_pl_delete` | destructive | androidpublisher.monetization.subscriptions.basePlans.delete | androidpublisher |
 | `androidpub_monetiza_onetimepr_batch_del` | destructive | androidpublisher.monetization.onetimeproducts.batchDelete | androidpublisher |
 | `androidpub_monetiza_onetimepr_batch_get` | read | androidpublisher.monetization.onetimeproducts.batchGet | androidpublisher |
@@ -275,7 +275,7 @@ The tools that match Google's official MCP server for this product (https://andr
 | `androidpub_monetization_convert_region` | write | androidpublisher.monetization.convertRegionPrices | androidpublisher |
 | `androidpub_orders_batchget` | read | androidpublisher.orders.batchget | androidpublisher |
 | `androidpub_orders_get` | read | androidpublisher.orders.get | androidpublisher |
-| `androidpub_orders_refund` | write | androidpublisher.orders.refund | androidpublisher |
+| `androidpub_orders_refund` | destructive | androidpublisher.orders.refund | androidpublisher |
 | `androidpub_orders_reviewrefund` | write | androidpublisher.orders.reviewrefund | androidpublisher |
 | `androidpub_purchas_subscrip_cancel_07cb` | destructive | androidpublisher.purchases.subscriptionsv2.cancel | androidpublisher |
 | `androidpub_purchas_subscrip_cancel_0abf` | destructive | androidpublisher.purchases.subscriptions.cancel | androidpublisher |
@@ -375,27 +375,27 @@ The tools that match Google's official MCP server for this product (https://andr
 | `playdevelo_anomalies_list` | read | playdeveloperreporting.anomalies.list | playdeveloperreporting |
 | `playdevelo_apps_fetch_release_filter_op` | read | playdeveloperreporting.apps.fetchReleaseFilterOptions | playdeveloperreporting |
 | `playdevelo_apps_search` | read | playdeveloperreporting.apps.search | playdeveloperreporting |
-| `playdevelo_vitals_anonrssandswapm_query` | write | playdeveloperreporting.vitals.anonrssandswapmemoryusage.query | playdeveloperreporting |
+| `playdevelo_vitals_anonrssandswapm_query` | read | playdeveloperreporting.vitals.anonrssandswapmemoryusage.query | playdeveloperreporting |
 | `playdevelo_vitals_anonrssandswapmem_get` | read | playdeveloperreporting.vitals.anonrssandswapmemoryusage.get | playdeveloperreporting |
 | `playdevelo_vitals_anrrate_get` | read | playdeveloperreporting.vitals.anrrate.get | playdeveloperreporting |
-| `playdevelo_vitals_anrrate_query` | write | playdeveloperreporting.vitals.anrrate.query | playdeveloperreporting |
-| `playdevelo_vitals_bitmapmemoryusa_query` | write | playdeveloperreporting.vitals.bitmapmemoryusage.query | playdeveloperreporting |
+| `playdevelo_vitals_anrrate_query` | read | playdeveloperreporting.vitals.anrrate.query | playdeveloperreporting |
+| `playdevelo_vitals_bitmapmemoryusa_query` | read | playdeveloperreporting.vitals.bitmapmemoryusage.query | playdeveloperreporting |
 | `playdevelo_vitals_bitmapmemoryusage_get` | read | playdeveloperreporting.vitals.bitmapmemoryusage.get | playdeveloperreporting |
 | `playdevelo_vitals_crashrate_get` | read | playdeveloperreporting.vitals.crashrate.get | playdeveloperreporting |
-| `playdevelo_vitals_crashrate_query` | write | playdeveloperreporting.vitals.crashrate.query | playdeveloperreporting |
+| `playdevelo_vitals_crashrate_query` | read | playdeveloperreporting.vitals.crashrate.query | playdeveloperreporting |
 | `playdevelo_vitals_errors_counts_get` | read | playdeveloperreporting.vitals.errors.counts.get | playdeveloperreporting |
-| `playdevelo_vitals_errors_counts_query` | write | playdeveloperreporting.vitals.errors.counts.query | playdeveloperreporting |
+| `playdevelo_vitals_errors_counts_query` | read | playdeveloperreporting.vitals.errors.counts.query | playdeveloperreporting |
 | `playdevelo_vitals_errors_issues_search` | read | playdeveloperreporting.vitals.errors.issues.search | playdeveloperreporting |
 | `playdevelo_vitals_errors_reports_search` | read | playdeveloperreporting.vitals.errors.reports.search | playdeveloperreporting |
-| `playdevelo_vitals_excessivewakeup_query` | write | playdeveloperreporting.vitals.excessivewakeuprate.query | playdeveloperreporting |
+| `playdevelo_vitals_excessivewakeup_query` | read | playdeveloperreporting.vitals.excessivewakeuprate.query | playdeveloperreporting |
 | `playdevelo_vitals_excessivewakeupra_get` | read | playdeveloperreporting.vitals.excessivewakeuprate.get | playdeveloperreporting |
 | `playdevelo_vitals_lmkrate_get` | read | playdeveloperreporting.vitals.lmkrate.get | playdeveloperreporting |
-| `playdevelo_vitals_lmkrate_query` | write | playdeveloperreporting.vitals.lmkrate.query | playdeveloperreporting |
-| `playdevelo_vitals_slowrenderingra_query` | write | playdeveloperreporting.vitals.slowrenderingrate.query | playdeveloperreporting |
+| `playdevelo_vitals_lmkrate_query` | read | playdeveloperreporting.vitals.lmkrate.query | playdeveloperreporting |
+| `playdevelo_vitals_slowrenderingra_query` | read | playdeveloperreporting.vitals.slowrenderingrate.query | playdeveloperreporting |
 | `playdevelo_vitals_slowrenderingrate_get` | read | playdeveloperreporting.vitals.slowrenderingrate.get | playdeveloperreporting |
 | `playdevelo_vitals_slowstartrate_get` | read | playdeveloperreporting.vitals.slowstartrate.get | playdeveloperreporting |
-| `playdevelo_vitals_slowstartrate_query` | write | playdeveloperreporting.vitals.slowstartrate.query | playdeveloperreporting |
-| `playdevelo_vitals_stuckbackground_query` | write | playdeveloperreporting.vitals.stuckbackgroundwakelockrate.query | playdeveloperreporting |
+| `playdevelo_vitals_slowstartrate_query` | read | playdeveloperreporting.vitals.slowstartrate.query | playdeveloperreporting |
+| `playdevelo_vitals_stuckbackground_query` | read | playdeveloperreporting.vitals.stuckbackgroundwakelockrate.query | playdeveloperreporting |
 | `playdevelo_vitals_stuckbackgroundwa_get` | read | playdeveloperreporting.vitals.stuckbackgroundwakelockrate.get | playdeveloperreporting |
 | `playgroupi_apps_tokens_tags_create_or_u` | write | playgrouping.apps.tokens.tags.createOrUpdate | (none) |
 | `playgroupi_apps_tokens_verify` | write | playgrouping.apps.tokens.verify | (none) |

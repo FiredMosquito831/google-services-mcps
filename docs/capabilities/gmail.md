@@ -4,7 +4,7 @@ Gmail mailboxes, messages, labels and settings, plus Gmail Postmaster Tools.
 
 - Plugin: `gmail`, MCP server: `gmail`, login: Desktop OAuth client, then `login workspace-user`
 - Install: `claude plugin install gmail@google-services-mcps`
-- Tools: 115 total. Curated 24, per-method 87, gateway 3. Read 51, write 42, destructive 21, dynamic 1.
+- Tools: 115 total. Curated 24, per-method 87, gateway 3. Read 51, write 38, destructive 25, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
@@ -91,7 +91,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `gmail_users_setting_cse_identiti_create` | write | gmail.users.settings.cse.identities.create | gmail.settings.basic, gmail.settings.sharing |
 | `gmail_users_setting_cse_identiti_delete` | destructive | gmail.users.settings.cse.identities.delete | gmail.settings.basic, gmail.settings.sharing |
 | `gmail_users_setting_cse_keypair_disable` | destructive | gmail.users.settings.cse.keypairs.disable | gmail.settings.basic, gmail.settings.sharing |
-| `gmail_users_setting_cse_keypair_obliter` | write | gmail.users.settings.cse.keypairs.obliterate | gmail.settings.basic, gmail.settings.sharing |
+| `gmail_users_setting_cse_keypair_obliter` | destructive | gmail.users.settings.cse.keypairs.obliterate | gmail.settings.basic, gmail.settings.sharing |
 | `gmail_users_setting_cse_keypairs_create` | write | gmail.users.settings.cse.keypairs.create | gmail.settings.basic, gmail.settings.sharing |
 | `gmail_users_setting_cse_keypairs_enable` | write | gmail.users.settings.cse.keypairs.enable | gmail.settings.basic, gmail.settings.sharing |
 | `gmail_users_setting_send_as_smime_i_get` | read | gmail.users.settings.sendAs.smimeInfo.get | https://mail.google.com/, gmail.modify |
@@ -100,7 +100,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `gmail_users_settings_cse_identities_get` | read | gmail.users.settings.cse.identities.get | https://mail.google.com/, gmail.modify |
 | `gmail_users_settings_cse_keypairs_get` | read | gmail.users.settings.cse.keypairs.get | https://mail.google.com/, gmail.modify |
 | `gmail_users_settings_cse_keypairs_list` | read | gmail.users.settings.cse.keypairs.list | https://mail.google.com/, gmail.modify |
-| `gmail_users_settings_delegates_create` | write | gmail.users.settings.delegates.create | gmail.settings.sharing |
+| `gmail_users_settings_delegates_create` | destructive | gmail.users.settings.delegates.create | gmail.settings.sharing |
 | `gmail_users_settings_delegates_delete` | destructive | gmail.users.settings.delegates.delete | gmail.settings.sharing |
 | `gmail_users_settings_delegates_get` | read | gmail.users.settings.delegates.get | https://mail.google.com/, gmail.modify |
 | `gmail_users_settings_delegates_list` | read | gmail.users.settings.delegates.list | https://mail.google.com/, gmail.modify |
@@ -110,7 +110,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `gmail_users_settings_filters_list` | read | gmail.users.settings.filters.list | https://mail.google.com/, gmail.modify |
 | `gmail_users_settings_forwarding_ad_list` | read | gmail.users.settings.forwardingAddresses.list | https://mail.google.com/, gmail.modify |
 | `gmail_users_settings_forwarding_add_get` | read | gmail.users.settings.forwardingAddresses.get | https://mail.google.com/, gmail.modify |
-| `gmail_users_settings_forwarding_create` | write | gmail.users.settings.forwardingAddresses.create | gmail.settings.sharing |
+| `gmail_users_settings_forwarding_create` | destructive | gmail.users.settings.forwardingAddresses.create | gmail.settings.sharing |
 | `gmail_users_settings_forwarding_delete` | destructive | gmail.users.settings.forwardingAddresses.delete | gmail.settings.sharing |
 | `gmail_users_settings_get_auto_forwardin` | read | gmail.users.settings.getAutoForwarding | https://mail.google.com/, gmail.modify |
 | `gmail_users_settings_get_imap` | read | gmail.users.settings.getImap | https://mail.google.com/, gmail.modify |
@@ -124,7 +124,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `gmail_users_settings_send_as_patch` | write | gmail.users.settings.sendAs.patch | gmail.settings.basic, gmail.settings.sharing |
 | `gmail_users_settings_send_as_update` | write | gmail.users.settings.sendAs.update | gmail.settings.basic, gmail.settings.sharing |
 | `gmail_users_settings_send_as_verify` | write | gmail.users.settings.sendAs.verify | gmail.settings.sharing |
-| `gmail_users_settings_update_auto_forwar` | write | gmail.users.settings.updateAutoForwarding | gmail.settings.sharing |
+| `gmail_users_settings_update_auto_forwar` | destructive | gmail.users.settings.updateAutoForwarding | gmail.settings.sharing |
 | `gmail_users_settings_update_imap` | write | gmail.users.settings.updateImap | gmail.settings.basic |
 | `gmail_users_settings_update_language` | write | gmail.users.settings.updateLanguage | gmail.settings.basic |
 | `gmail_users_settings_update_pop` | write | gmail.users.settings.updatePop | gmail.settings.basic |

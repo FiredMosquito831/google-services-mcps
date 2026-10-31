@@ -4,7 +4,7 @@ Public search and web-quality APIs (Custom Search, PageSpeed, CrUX, Safe Browsin
 
 - Plugin: `gsearch`, MCP server: `gsearch`, login: API key, then `setup-apikey` (no login)
 - Install: `claude plugin install gsearch@google-services-mcps`
-- Tools: 60 total. Curated 9, per-method 47, gateway 3. Read 46, write 10, destructive 3, dynamic 1.
+- Tools: 60 total. Curated 9, per-method 47, gateway 3. Read 47, write 9, destructive 3, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
@@ -60,7 +60,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `developerk_documents_get` | read | developerknowledge.documents.get | cloud-platform |
 | `developerk_documents_search_documen` | read | developerknowledge.documents.searchDocumentChunks | cloud-platform |
 | `developerk_v1_answer_query` | read | developerknowledge.answerQuery | cloud-platform |
-| `digitalass_assetlinks_bulk_check` | write | digitalassetlinks.assetlinks.bulkCheck | (none) |
+| `digitalass_assetlinks_bulk_check` | read | digitalassetlinks.assetlinks.bulkCheck | (none) |
 | `digitalass_assetlinks_check` | read | digitalassetlinks.assetlinks.check | (none) |
 | `digitalass_statements_list` | read | digitalassetlinks.statements.list | (none) |
 | `factcheckt_claims_image_search` | read | factchecktools.claims.imageSearch | (none) |

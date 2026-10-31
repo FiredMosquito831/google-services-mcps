@@ -4,7 +4,7 @@ Google Contacts and People, personal health metrics, Data Portability, and the O
 
 - Plugin: `gcontacts`, MCP server: `gcontacts`, login: Desktop OAuth client, then `login workspace-user`
 - Install: `claude plugin install gcontacts@google-services-mcps`
-- Tools: 75 total. Curated 12, per-method 59, gateway 3. Read 38, write 27, destructive 9, dynamic 1.
+- Tools: 75 total. Curated 12, per-method 59, gateway 3. Read 40, write 25, destructive 9, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
@@ -59,11 +59,11 @@ The tools that match Google's official MCP server for this product (https://deve
 | `health_shl_r_get` | read | health.shl.r.get | (none) |
 | `health_users_data_data_p_batch` | destructive | health.users.dataTypes.dataPoints.batchDelete | googlehealth.activity_and_fitness.writeonly, googlehealth.health_metrics_and_measurements.writeonly |
 | `health_users_data_data_p_create` | write | health.users.dataTypes.dataPoints.create | googlehealth.activity_and_fitness.writeonly, googlehealth.health_metrics_and_measurements.writeonly |
-| `health_users_data_data_p_daily` | write | health.users.dataTypes.dataPoints.dailyRollUp | googlehealth.activity_and_fitness.readonly, googlehealth.activity_and_fitness.writeonly |
+| `health_users_data_data_p_daily` | read | health.users.dataTypes.dataPoints.dailyRollUp | googlehealth.activity_and_fitness.readonly, googlehealth.activity_and_fitness.writeonly |
 | `health_users_data_data_p_export` | read | health.users.dataTypes.dataPoints.exportExerciseTcx | googlehealth.activity_and_fitness.readonly, googlehealth.location.readonly |
 | `health_users_data_data_p_patch` | write | health.users.dataTypes.dataPoints.patch | googlehealth.activity_and_fitness.writeonly, googlehealth.health_metrics_and_measurements.writeonly |
 | `health_users_data_data_p_reconc` | read | health.users.dataTypes.dataPoints.reconcile | googlehealth.activity_and_fitness.readonly, googlehealth.activity_and_fitness.writeonly |
-| `health_users_data_data_p_roll_u` | write | health.users.dataTypes.dataPoints.rollUp | googlehealth.activity_and_fitness.readonly, googlehealth.activity_and_fitness.writeonly |
+| `health_users_data_data_p_roll_u` | read | health.users.dataTypes.dataPoints.rollUp | googlehealth.activity_and_fitness.readonly, googlehealth.activity_and_fitness.writeonly |
 | `health_users_data_t_data_p_list` | read | health.users.dataTypes.dataPoints.list | googlehealth.activity_and_fitness.readonly, googlehealth.activity_and_fitness.writeonly |
 | `health_users_data_t_data_po_get` | read | health.users.dataTypes.dataPoints.get | googlehealth.activity_and_fitness.readonly, googlehealth.activity_and_fitness.writeonly |
 | `health_users_get_identity` | read | health.users.getIdentity | googlehealth.activity_and_fitness.readonly, googlehealth.ecg.readonly |

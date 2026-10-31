@@ -4,7 +4,7 @@ Google Drive files, labels and activity, plus Docs, Sheets, Slides, Forms and Bo
 
 - Plugin: `gdrive`, MCP server: `gdrive`, login: Desktop OAuth client, then `login workspace-user`
 - Install: `claude plugin install gdrive@google-services-mcps`
-- Tools: 200 total. Curated 21, per-method 175, gateway 3. Read 93, write 84, destructive 22, dynamic 1.
+- Tools: 200 total. Curated 21, per-method 175, gateway 3. Read 94, write 78, destructive 27, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
@@ -117,7 +117,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `books_volumes_recommended_list` | read | books.volumes.recommended.list | books |
 | `books_volumes_recommended_rate` | write | books.volumes.recommended.rate | books |
 | `books_volumes_useruploaded_list` | read | books.volumes.useruploaded.list | books |
-| `docs_documents_batch_update` | write | docs.documents.batchUpdate | documents, drive |
+| `docs_documents_batch_update` | destructive | docs.documents.batchUpdate | documents, drive |
 | `docs_documents_create` | write | docs.documents.create | documents, drive |
 | `docs_documents_get` | read | docs.documents.get | documents, documents.readonly |
 | `drive_about_get` | read | drive.about.get | drive, drive.appdata |
@@ -163,11 +163,11 @@ The tools that match Google's official MCP server for this product (https://deve
 | `drive_files_modify_labels` | write | drive.files.modifyLabels | drive, drive.file |
 | `drive_files_watch` | write | drive.files.watch | drive, drive.appdata |
 | `drive_operations_get` | read | drive.operations.get | drive, drive.file |
-| `drive_permissions_create` | write | drive.permissions.create | drive, drive.file |
+| `drive_permissions_create` | destructive | drive.permissions.create | drive, drive.file |
 | `drive_permissions_delete` | destructive | drive.permissions.delete | drive, drive.file |
 | `drive_permissions_get` | read | drive.permissions.get | drive, drive.file |
 | `drive_permissions_list` | read | drive.permissions.list | drive, drive.file |
-| `drive_permissions_update` | write | drive.permissions.update | drive, drive.file |
+| `drive_permissions_update` | destructive | drive.permissions.update | drive, drive.file |
 | `drive_replies_create` | write | drive.replies.create | drive, drive.file |
 | `drive_replies_delete` | destructive | drive.replies.delete | drive, drive.file |
 | `drive_replies_get` | read | drive.replies.get | drive, drive.file |
@@ -182,7 +182,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `drive_teamdrives_get` | read | drive.teamdrives.get | drive, drive.readonly |
 | `drive_teamdrives_list` | read | drive.teamdrives.list | drive, drive.readonly |
 | `drive_teamdrives_update` | write | drive.teamdrives.update | drive |
-| `driveactiv_activity_query` | write | driveactivity.activity.query | drive.activity, drive.activity.readonly |
+| `driveactiv_activity_query` | read | driveactivity.activity.query | drive.activity, drive.activity.readonly |
 | `drivelabel_labe_revi_permi_batch_52b2` | destructive | drivelabels.labels.revisions.permissions.batchDelete | drive.admin.labels, drive.labels |
 | `drivelabel_labe_revi_permi_batch_b7ee` | write | drivelabels.labels.revisions.permissions.batchUpdate | drive.admin.labels, drive.labels |
 | `drivelabel_label_revisi_permis_create` | write | drivelabels.labels.revisions.permissions.create | drive.admin.labels, drive.labels |
@@ -225,7 +225,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `sheets_spreadsh_values_batch_upd_d329` | write | sheets.spreadsheets.values.batchUpdate | drive, drive.file |
 | `sheets_spreadsheet_developer_m_search` | read | sheets.spreadsheets.developerMetadata.search | drive, drive.file |
 | `sheets_spreadsheet_values_batch_get_b` | read | sheets.spreadsheets.values.batchGetByDataFilter | drive, drive.file |
-| `sheets_spreadsheets_batch_update` | write | sheets.spreadsheets.batchUpdate | drive, drive.file |
+| `sheets_spreadsheets_batch_update` | destructive | sheets.spreadsheets.batchUpdate | drive, drive.file |
 | `sheets_spreadsheets_create` | write | sheets.spreadsheets.create | drive, drive.file |
 | `sheets_spreadsheets_developer_met_get` | read | sheets.spreadsheets.developerMetadata.get | drive, drive.file |
 | `sheets_spreadsheets_get` | read | sheets.spreadsheets.get | drive, drive.file |
@@ -237,7 +237,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `sheets_spreadsheets_values_get` | read | sheets.spreadsheets.values.get | drive, drive.file |
 | `sheets_spreadsheets_values_update` | write | sheets.spreadsheets.values.update | drive, drive.file |
 | `slides_presentatio_pages_get_thumbnai` | read | slides.presentations.pages.getThumbnail | drive, drive.file |
-| `slides_presentations_batch_update` | write | slides.presentations.batchUpdate | drive, drive.file |
+| `slides_presentations_batch_update` | destructive | slides.presentations.batchUpdate | drive, drive.file |
 | `slides_presentations_create` | write | slides.presentations.create | drive, drive.file |
 | `slides_presentations_get` | read | slides.presentations.get | drive, drive.file |
 | `slides_presentations_pages_get` | read | slides.presentations.pages.get | drive, drive.file |

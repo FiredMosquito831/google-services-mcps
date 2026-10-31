@@ -4,7 +4,7 @@ Business Profile accounts, locations, verifications, lodging, place actions, not
 
 - Plugin: `gbusiness`, MCP server: `gbusiness`, login: Desktop OAuth client, then `login business`
 - Install: `claude plugin install gbusiness@google-services-mcps`
-- Tools: 61 total. Curated 9, per-method 51, gateway 0. Read 32, write 25, destructive 4, dynamic 0.
+- Tools: 61 total. Curated 9, per-method 51, gateway 0. Read 32, write 20, destructive 9, dynamic 0.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
@@ -48,20 +48,20 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `bpperf_locations_get_daily_metr` | read | businessprofileperformance.locations.getDailyMetricsTimeSeries | business.manage |
 | `mbaccount_accoun_invita_decline` | write | mybusinessaccountmanagement.accounts.invitations.decline | business.manage |
 | `mbaccount_accoun_invitat_accept` | write | mybusinessaccountmanagement.accounts.invitations.accept | business.manage |
-| `mbaccount_account_admins_create` | write | mybusinessaccountmanagement.accounts.admins.create | business.manage |
+| `mbaccount_account_admins_create` | destructive | mybusinessaccountmanagement.accounts.admins.create | business.manage |
 | `mbaccount_account_admins_delete` | destructive | mybusinessaccountmanagement.accounts.admins.delete | business.manage |
 | `mbaccount_account_invitati_list` | read | mybusinessaccountmanagement.accounts.invitations.list | business.manage |
 | `mbaccount_accounts_admins_list` | read | mybusinessaccountmanagement.accounts.admins.list | business.manage |
-| `mbaccount_accounts_admins_patch` | write | mybusinessaccountmanagement.accounts.admins.patch | business.manage |
+| `mbaccount_accounts_admins_patch` | destructive | mybusinessaccountmanagement.accounts.admins.patch | business.manage |
 | `mbaccount_accounts_create` | write | mybusinessaccountmanagement.accounts.create | business.manage |
 | `mbaccount_accounts_get` | read | mybusinessaccountmanagement.accounts.get | business.manage |
 | `mbaccount_accounts_list` | read | mybusinessaccountmanagement.accounts.list | business.manage |
 | `mbaccount_accounts_patch` | write | mybusinessaccountmanagement.accounts.patch | business.manage |
-| `mbaccount_locatio_admins_create` | write | mybusinessaccountmanagement.locations.admins.create | business.manage |
+| `mbaccount_locatio_admins_create` | destructive | mybusinessaccountmanagement.locations.admins.create | business.manage |
 | `mbaccount_locatio_admins_delete` | destructive | mybusinessaccountmanagement.locations.admins.delete | business.manage |
-| `mbaccount_location_admins_patch` | write | mybusinessaccountmanagement.locations.admins.patch | business.manage |
+| `mbaccount_location_admins_patch` | destructive | mybusinessaccountmanagement.locations.admins.patch | business.manage |
 | `mbaccount_locations_admins_list` | read | mybusinessaccountmanagement.locations.admins.list | business.manage |
-| `mbaccount_locations_transfer` | write | mybusinessaccountmanagement.locations.transfer | business.manage |
+| `mbaccount_locations_transfer` | destructive | mybusinessaccountmanagement.locations.transfer | business.manage |
 | `mbinfo_accounts_location_create` | write | mybusinessbusinessinformation.accounts.locations.create | business.manage |
 | `mbinfo_accounts_locations_list` | read | mybusinessbusinessinformation.accounts.locations.list | business.manage |
 | `mbinfo_attributes_list` | read | mybusinessbusinessinformation.attributes.list | business.manage |

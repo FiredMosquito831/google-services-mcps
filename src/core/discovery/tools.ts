@@ -24,6 +24,7 @@ import { ApiKeyClient } from './apikey-client.js';
 import { adsHeaders, isGoogleAdsUrl, redactedError } from '../ads.js';
 import { resolveDynamicKind } from '../dynamic.js';
 import { redactCredentials } from '../credential-fields.js';
+import { targetFieldsOf, targetGetFor } from '../target-preview.js';
 
 /**
  * Name of the per-server list tool. It is unique within its server, and short,
@@ -305,6 +306,7 @@ function buildMethodTool(
   cfg: RuntimeConfig,
   note: string | undefined,
   scopesWhenNone?: readonly string[],
+  target?: MethodRecord,
 ): ToolDef {
   const shape: ZodRawShape = {};
   const fields: RequestField[] = [];
@@ -383,6 +385,22 @@ function buildMethodTool(
       return { method: m.fullId, url: req.url, query: req.params, body: req.data ?? null };
     };
   }
+  if (target) {
+    // The resource this write acts on, read for the approval only (target-preview.ts). The same path arguments, nothing
+    // else; the result passes the credential list before a field is picked. The request the handler sends is not changed.
+    const targetPlan: RequestPlan = {
+      fullId: target.fullId,
+      httpMethod: 'GET',
+      rootUrl: doc.rootUrl,
+      servicePath: doc.servicePath,
+      path: target.path,
+      fields: target.parameters.filter((p) => p.location === 'path').map((p) => ({ arg: argFor(p.name), api: p.name, location: 'path' as const })),
+    };
+    tool.describeTarget = async (args) => {
+      const res = await sendAuthorized(group, cfg, buildRequest(targetPlan, args as Record<string, unknown>));
+      return targetFieldsOf(redactCredentials(res.data, { api: doc.name, schema: target.responseRef, schemas: doc.schemas }));
+    };
+  }
   return tool;
 }
 
@@ -432,17 +450,20 @@ export function generateDiscoveryTools(
   maxNameLength: number = MAX_TOOL_NAME,
   reserved: readonly string[] = [],
 ): GeneratedTools {
-  const entries: Array<{ method: MethodRecord; doc: DiscoveryDoc; scopesWhenNone?: readonly string[] }> = [];
+  const entries: Array<{ method: MethodRecord; doc: DiscoveryDoc; target?: MethodRecord; scopesWhenNone?: readonly string[] }> = [];
   const skippedUploads: string[] = [];
 
   for (const src of sources) {
-    for (const method of flattenMethods(src.doc, src.apiName, src.apiVersion, kinds.overrides)) {
+    const all = flattenMethods(src.doc, src.apiName, src.apiVersion, kinds.overrides);
+    for (const method of all) {
       if (!methodIncluded(method, src.include)) continue;
       if (method.uploadable) {
         skippedUploads.push(method.fullId);
         continue;
       }
-      entries.push({ method, doc: src.doc, ...(src.scopesWhenNone ? { scopesWhenNone: src.scopesWhenNone } : {}) });
+      // The GET that reads the resource this write acts on, for the approval (target-preview.ts). It need not be a tool.
+      const target = targetGetFor(method, all);
+      entries.push({ method, doc: src.doc, ...(target ? { target } : {}), ...(src.scopesWhenNone ? { scopesWhenNone: src.scopesWhenNone } : {}) });
     }
   }
 
@@ -465,7 +486,7 @@ export function generateDiscoveryTools(
   entries.forEach((entry, i) => {
     const name = names[i]!;
     const m = entry.method;
-    tools.push(buildMethodTool(m, name, entry.doc, group, cfg, kinds.notes[m.apiName], entry.scopesWhenNone));
+    tools.push(buildMethodTool(m, name, entry.doc, group, cfg, kinds.notes[m.apiName], entry.scopesWhenNone, entry.target));
     rows.push({
       method: m.fullId,
       tool: name,

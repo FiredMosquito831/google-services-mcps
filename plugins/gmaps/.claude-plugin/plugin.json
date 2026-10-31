@@ -1,7 +1,7 @@
 {
   "name": "gmaps",
   "displayName": "Maps and Location",
-  "version": "1.26.2",
+  "version": "1.27.0",
   "description": "Maps Platform and location APIs: Places, Address Validation, Solar, Air Quality, Pollen, Street View Publish and related datasets.",
   "author": {
     "name": "FiredMosquito831"
@@ -22,7 +22,7 @@
     "confirmation": {
       "type": "string",
       "title": "Confirm before changes",
-      "description": "every-change asks before any change or delete (recommended). destructive-only asks only before deleting or sending. off asks for nothing; deny rules still apply. Change it here at any time.",
+      "description": "every-change asks before any change or delete (recommended). destructive-only asks only before destructive actions: deleting, sending to other people, sharing or permission changes, security changes, device commands, publishing, refunds and whole-content replacement. off asks for nothing; deny rules still apply. Change it here at any time.",
       "options": [
         "every-change",
         "destructive-only",
