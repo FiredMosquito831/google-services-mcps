@@ -2,6 +2,47 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.41.4 - 2026-10-31
+
+### Changed: seven methods that only read are reads now
+- Google Ads `generateKeywordIdeas`, `generateKeywordHistoricalMetrics` and `suggestKeywordThemes`, and Vertex AI `countTokens` in its four bindings, are reads by exact id in config/tool-kinds.json. This is the outcome Q1 of the 2026-10-30 review names; 1.41.3 fixed the rule, and this is the decision that names them, because a `POST` with no read rule is a write.
+- What the user sees: `googleads_customers_generate_keyword_idea` is listed with writes off (gads lists 133 tools instead of 132), and the six gateway methods no longer prompt through `api_call`. `gsm scopes` asks for the same scopes as before; only its read and write counts move (gads 99/186 → 100/185, gai 1389/1226 → 1393/1222).
+
+### Not changed, on purpose
+- The same RPCs on other APIs still ask: Search Ads 360 `generateKeywordIdeas`, `generateKeywordHistoricalMetrics`, `suggestKeywordThemes` and `generateKeywordForecastMetrics`, Google Ads `generateKeywordForecastMetrics`, Firebase ML `countTokens` and Gemini `generativelanguage.models.countTokens`. They need their own decision; tests/credential-reads.test.mjs pins that they still ask, so the difference stays visible.
+- No other method's kind moves, no scope list changes, and the tool maps and gateway tables differ only in these seven ids.
+
+### Tests
+- tests/credential-reads.test.mjs: the seven entries exist as the catalog spells them; both classifiers give read for every version; the built plugin tables carry read; the generated tool is listed with writes off by a real server with a fake sign-in; the bundled hooks print nothing for the seven and still ask for the seven left out.
+- tests/kinds-postreads.test.mjs: countTokens moved from "stays a write" to "is a read, on the owner's decision of 2026-10-31", in the classifier, the built table, the hook and the server.
+
+## 1.41.3 - 2026-10-31
+
+### Fixed: a credential word is a whole word of the method name
+- The rule that makes a non-`GET` method a write when its name holds a credential word ran one regular expression over the whole name, `/token|credential|secret|password|authoriz|key/i`, so a longer word that merely contains one counted: "Keyword" held "key", and `countTokens` held "token". Google Ads `generateKeywordIdeas` and Vertex AI `countTokens` were writes only through that accident (Q1 of the 2026-10-30 review).
+- `hasCredentialWord` (`methodWords` + `CREDENTIAL_WORDS` in src/core/discovery/methods.ts, and the same in the copy at src/cli/method-kinds.ts) now splits the name at camelCase boundaries, at digits and at separators and tests each word whole: `generateKeywordIdeas` is generate, keyword, ideas and `countTokens` is count, tokens. The words are `token`, `credential`, `secret`, `password` and `key`; `authoriz` stays a prefix, as it was (authorization, authorize). Plurals are not credential words: a list of secrets or of keys returns no credential value.
+
+### Unchanged, on purpose
+- No catalog method's kind moves. Every method the old expression caught and the words rule does not is a `POST` or a `PATCH`, and a `POST` is a write unless a read rule names it, so the kind is the same with or without the rule. The exact list is 49 (API version, method) pairs: Vertex AI `countTokens` and `computeTokens` (16 bindings), Google Ads and Search Ads 360 `generateKeywordIdeas`, `generateKeywordHistoricalMetrics`, `suggestKeywordThemes` and `generateKeywordForecastMetrics`, Identity Toolkit `getPublicKeys` and `getSessionCookiePublicKeys`, Cloud KMS `getAutokeyConfig` and `showEffectiveAutokeyConfig`, Dataproc `injectCredentials`, VMware Engine `resetVcenterCredentials` and `resetNsxCredentials`, Workstations `pushCredentials`, Tag Manager `reauthorize`, Games `retrieveTokens` and `gamesPlayerTokens`, `oauth2.tokeninfo` and `webcontentpublisher.users.generatePlatformSiteTokens`.
+- So no `write` entry was needed in config/tool-kinds.json, and none was added. Making the four methods the decision names `generateKeywordIdeas`, `generateKeywordHistoricalMetrics`, `suggestKeywordThemes` (and the Search Ads 360 copies) and Vertex AI `countTokens` reads needs a further decision: an exact `read` entry in config/tool-kinds.json, or the names in `READ_POST_EXACT`. This release did neither.
+- Tool maps, gateway `method-kinds.json`, `gsm scopes` (207 cases), the requests and the approval text are unchanged. Both classifiers give the same kind for every catalog method, every version.
+
+### Tests
+- tests/credential-words.test.mjs: the split and the words; every method whose name holds a credential word as a whole word is never a read in either classifier; and the old rule and the new one give the same kind for all 31,641 catalog methods, every API version, with both classifiers agreeing.
+
+## 1.41.2 - 2026-10-31
+
+### Fixed: the hook reads the policy file from the plugin's token folder
+- A plugin option reaches the MCP server as `GSM_TOKEN_DIR`, but a hook process gets it as `CLAUDE_PLUGIN_OPTION_TOKEN_DIR` (code.claude.com/docs/en/plugins-reference, "Reference a saved value": `CLAUDE_PLUGIN_OPTION_<KEY>` is "exported to hook processes for every option, with `<KEY>` uppercased"). The hook read `GSM_TOKEN_DIR` only, so with a custom `token_dir` it read `policy.json` from the default folder while the server's gate read the custom one: a `deny` rule written in the configured folder did not stop the call the hook guards, and a rule in the default folder applied although the server no longer used it.
+- `tokenDirectory` (src/hook/pretooluse.ts) now resolves the folder as `loadConfig` does: `GSM_TOKEN_DIR`, else `CLAUDE_PLUGIN_OPTION_TOKEN_DIR`, else `~/.google-services-mcps`. Both values go through `optionValue`, so an empty value and an unexpanded `${user_config.token_dir}` still mean unset (1.37.1), and `GSM_TOKEN_DIR` still wins when both are set. The hook reads nothing else from that folder: `policy.json` is its only file there.
+
+### Verified
+- The hook's decision for every tool of all 23 plugins, with the default folder and with a folder holding no policy file, is byte-identical before and after: 22,284 runs (every tool-map entry, four foreign tool names, the three folder cases and both confirmation modes), the same 7,698,947 bytes of output, 14,601 silent and 7,683 asks.
+- tests/hook.test.mjs runs the bundled hook with a `deny`, an `allow` and an `ask` rule in a folder named only by `CLAUDE_PLUGIN_OPTION_TOKEN_DIR`, with `GSM_TOKEN_DIR` winning when both are set, with the default folder under a redirected home, and with an empty and an unexpanded option value. Reverting the change fails four of them.
+
+### Not changed
+- The gate, `approval.ts`, `policy.ts`, the tool maps, the kinds, `gsm scopes` and every request. A hook with no plugin option set resolves the folder it resolved before.
+
 ## 1.41.1 - 2026-10-31
 
 ### Fixed: the Search Console delete approvals show what the delete does

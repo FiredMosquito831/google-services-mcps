@@ -131,12 +131,37 @@ export const DESTRUCTIVE_NAMES = [
 ];
 
 /**
+ * The words of a method name, lowercased: split at camelCase boundaries, at digits and at separators.
+ * generateKeywordIdeas -> generate, keyword, ideas; countTokens -> count, tokens; move-to-trash -> move, to, trash.
+ */
+export function methodWords(name: string): string[] {
+  return name
+    .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
+    .replace(/([A-Z]+)([A-Z][a-z])/g, '$1 $2')
+    .split(/[^A-Za-z0-9]+/)
+    .filter((word) => word.length > 0)
+    .map((word) => word.toLowerCase());
+}
+
+/** The credential words a method name is tested for, whole: a singular word, never a plural or a longer compound. */
+const CREDENTIAL_WORDS: ReadonlySet<string> = new Set(['token', 'credential', 'secret', 'password', 'key']);
+
+/**
  * Credential words in a method name (the last id segment): a token, a key string, a secret, a password or an
  * authorization. A POST (or any non-GET) with one of them mints, reveals or uses a credential, so it is a write
  * even when its name is read-like: fetchAccessToken, fetchReadToken, getKeyString, getSyncAuthorization.
  * GET methods are not decided by this rule. The GET credential reveals are listed in config/tool-kinds.json.
+ *
+ * True when a word of the method name (methodWords) is one of them, whole. A longer word that merely contains one
+ * does not count: "Keyword" is not a key and "countTokens" counts LLM tokens (1.41.3, owner decision Q1 of
+ * 2026-10-31). "authoriz" stays a prefix, as it was: authorization, authorize and authorized are one word each.
+ * Method names are the words verbs are built from, so tokens, keys and keywords are not credential words. A method
+ * that mints, reveals or uses a credential and the rule would let through is listed as a write in
+ * config/tool-kinds.json instead.
  */
-export const CREDENTIAL_NAME = /token|credential|secret|password|authoriz|key/i;
+export function hasCredentialWord(name: string): boolean {
+  return methodWords(name).some((word) => CREDENTIAL_WORDS.has(word) || word.startsWith('authoriz'));
+}
 
 const normalizeName = (s: string): string => s.replace(/[-_]/g, '').toLowerCase();
 const DESTRUCTIVE_SET = new Set(DESTRUCTIVE_NAMES.map(normalizeName));
@@ -168,7 +193,7 @@ export function overrideKind(overrides: Readonly<Record<string, ToolKind>>, full
 
 /**
  * Safety class of one method. An override (from config/tool-kinds.json, by exact id or by pattern) wins.
- * Then DELETE and the destructive names. Then a non-GET method with a credential word in its name (CREDENTIAL_NAME)
+ * Then DELETE and the destructive names. Then a non-GET method with a credential word in its name (hasCredentialWord)
  * is a write. Then GET, and POST methods with a read-only name. Everything else is a write.
  * A dynamic override means the kind is decided per call (see core/dynamic.ts).
  */
@@ -184,7 +209,7 @@ export function classifyMethod(
   const http = httpMethod.toUpperCase();
   if (http === 'DELETE') return 'destructive';
   if (DESTRUCTIVE_SET.has(normalizeName(methodName))) return 'destructive';
-  if (http !== 'GET' && CREDENTIAL_NAME.test(methodName)) return 'write';
+  if (http !== 'GET' && hasCredentialWord(methodName)) return 'write';
   if (http === 'GET') return 'read';
   if (http === 'POST') {
     if (READ_POST_EXACT.includes(methodName)) return 'read';

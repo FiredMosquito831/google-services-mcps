@@ -207,8 +207,12 @@ const GET_WRITES = [
   { id: 'recommendationengine.projects.locations.catalogs.eventStores.userEvents.collect', plugin: 'gai', tool: null, gateway: true, versions: ['recommendationengine:v1beta1'] },
 ].map((m) => ({ ...m, evidence: 'Writes a single user event from the browser.' }));
 
-/** Approved as POST reads, held back: "Keyword" holds "key", a credential word, and the credential rule is absolute. */
-const HELD_BY_CREDENTIAL_RULE = ['googleads.customers.generateKeywordIdeas', 'googleads.customers.generateKeywordHistoricalMetrics', 'googleads.customers.suggestKeywordThemes'];
+/**
+ * The three Google Ads keyword methods. They were held back as writes because "Keyword" held "key", a credential
+ * word. Since 1.41.3 a credential word is a whole word and "keyword" is not one, and since 1.41.4 they are reads by
+ * the owner's decision of 2026-10-31 (Q1). tests/credential-reads.test.mjs checks them where they are used.
+ */
+const KEYWORD_READS = ['googleads.customers.generateKeywordIdeas', 'googleads.customers.generateKeywordHistoricalMetrics', 'googleads.customers.suggestKeywordThemes'];
 
 const ALL = [...DESTRUCTIVE.map((m) => ({ ...m, kind: 'destructive', before: 'write' })), ...POST_READS.map((m) => ({ ...m, kind: 'read', before: 'write' })), ...GET_WRITES.map((m) => ({ ...m, kind: 'write', before: 'read' }))];
 
@@ -261,22 +265,23 @@ test('both classifiers give the new kind on every catalog version, and the verb 
   for (const id of SET_IAM) assert.ok(seen.get(id).length >= 1, id);
 });
 
-test('the credential rule holds: no new read has a credential word; the three Keyword methods stay writes, with no override', () => {
+test('the credential rule holds: no other new read has a credential word, and the three Keyword methods are reads', () => {
   for (const m of POST_READS) assert.equal(CREDENTIAL.test(nameOf(m.id)), false, m.id);
   const found = new Set();
   for (const api of catalog.apis) {
     for (const [id, verb] of api.methods) {
-      if (!HELD_BY_CREDENTIAL_RULE.includes(id)) continue;
+      if (!KEYWORD_READS.includes(id)) continue;
       found.add(id);
-      assert.equal(kindsFile[id], undefined, `${id}: no override`);
-      assert.equal(CREDENTIAL.test(nameOf(id)), true, `${id}: "Keyword" holds "key"`);
-      assert.equal(classifyMethod(verb, nameOf(id), id, overrides), 'write', `${id} ${api.version}`);
-      assert.equal(fallbackClassify(verb, nameOf(id), id, overrides), 'write', `${id} ${api.version}: the plugin copy`);
+      // The owner's decision of 2026-10-31 (Q1): an exact read entry, and no longer a credential name.
+      assert.equal(kindsFile[id], 'read', `${id}: the exact read entry`);
+      assert.equal(CREDENTIAL.test(nameOf(id)), true, `${id}: the old whole-name regex still matches "Keyword"`);
+      assert.equal(classifyMethod(verb, nameOf(id), id, overrides), 'read', `${id} ${api.version}`);
+      assert.equal(fallbackClassify(verb, nameOf(id), id, overrides), 'read', `${id} ${api.version}: the plugin copy`);
     }
   }
-  assert.deepEqual([...found].sort(), [...HELD_BY_CREDENTIAL_RULE].sort());
+  assert.deepEqual([...found].sort(), [...KEYWORD_READS].sort());
   const gads = readJson('plugins', 'gads', 'method-kinds.json');
-  for (const id of HELD_BY_CREDENTIAL_RULE) assert.equal(gads[id], 'write', `gads gateway ${id}`);
+  for (const id of KEYWORD_READS) assert.equal(gads[id], 'read', `gads gateway ${id}`);
 });
 
 // ---------------------------------------------------------------------------

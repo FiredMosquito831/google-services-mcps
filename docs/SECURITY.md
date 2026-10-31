@@ -28,7 +28,7 @@ This suite lets an AI agent act on real Google accounts. The controls below are 
 
    The plugin option is the setting for Claude Code. The server reads `GSM_CONFIRMATION`. A valid value there takes priority over `confirmation` in `policy.json`. Every prompt ends with a footer that says where to change the setting.
 
-5. **Policy file.** `policy.json` in the token directory holds `allow`, `ask` and `deny` rules. A rule matches a tool name or a method id, by glob (`*`, `?`) or by a regular expression written `re:...`. The order is fixed: a matching `deny` wins, then a matching `ask`, then a matching `allow`. An `allow` rule skips the default question for a change or a delete. It never overrides a `deny`. A broken policy file makes the gate ask, and the error is shown.
+5. **Policy file.** `policy.json` in the token directory holds `allow`, `ask` and `deny` rules. A rule matches a tool name or a method id, by glob (`*`, `?`) or by a regular expression written `re:...`. The order is fixed: a matching `deny` wins, then a matching `ask`, then a matching `allow`. An `allow` rule skips the default question for a change or a delete. It never overrides a `deny`. A broken policy file makes the gate ask, and the error is shown. The token directory is the one the server uses: `GSM_TOKEN_DIR`, else the plugin's `token_dir` option (`CLAUDE_PLUGIN_OPTION_TOKEN_DIR`, the form a hook receives it in), else `~/.google-services-mcps`. The hook and the gate therefore read the same `policy.json`, also when `token_dir` is set (1.42.0).
 
 6. **Audit log.** Each gated action writes one JSON line to `audit.log` in the token directory. The line has the time, tool, method id, risk, decision, outcome and a 16-character hash of the arguments. The arguments themselves are never written. Reads are not logged. See [USING.md](USING.md#8-the-audit-log).
 
@@ -48,7 +48,7 @@ The gate needs to know whether a call changes data. For generated and gateway to
 - Anything else is a write.
 - `config/tool-kinds.json` overrides any method by its full id. A dynamic override is decided per call.
 - Since 1.24.2 it lists as reads twelve `POST` methods that Google marks read-only and that change nothing: Data Connect `executeGraphqlRead`, `generateQuery` and `generateSchema`, Firebase Rules `projects.test`, the three bindings of Discovery Engine `servingConfigs.answer`, Developer Knowledge `answerQuery`, Places `autocomplete`, Analytics Data `batchRunPivotReports` and `audienceExports.query`, and Calendar `freebusy.query`. It lists Merchant API `accounts.dataSources.fetch` as a write, because Google says it starts processing the data source's file. A credential name stays a write.
-- Since 1.24.5 it also lists as reads seventeen `POST` methods that only query: Search Console `searchanalytics.query`; the Monitoring Prometheus queries (`query`, `query_range`, `query_exemplars`, `series`, `labels`) and `timeSeries.query`; Postmaster v2 `domainStats.query` and `batchQuery`; Vertex AI `generateContent` (four bindings) and `embedContent`; Identity Toolkit `accounts.query` (project and tenant); Firestore `documents.runQuery`. BigQuery `jobs.query` stays a write, because it runs any SQL, DML and DDL included. Vertex AI `countTokens` stays a write: its name holds "token", and the credential rule is not overridden.
+- Since 1.24.5 it also lists as reads seventeen `POST` methods that only query: Search Console `searchanalytics.query`; the Monitoring Prometheus queries (`query`, `query_range`, `query_exemplars`, `series`, `labels`) and `timeSeries.query`; Postmaster v2 `domainStats.query` and `batchQuery`; Vertex AI `generateContent` (four bindings) and `embedContent`; Identity Toolkit `accounts.query` (project and tenant); Firestore `documents.runQuery`. BigQuery `jobs.query` stays a write, because it runs any SQL, DML and DDL included. Since 1.41.4 Vertex AI `countTokens` (four bindings) is a read too, by the owner's decision of 2026-10-31 (Q1).
 - Since 1.26.3 it lists the methods of the destructive rule as destructive (next section), 45 more `POST` methods that only read or compute as reads, and four `GET` methods that record an event as writes (see [POST reads and GET writes of 1.26.3](#post-reads-and-get-writes-of-1263)).
 
 The read rule for `POST` is a name prefix. It is not a check of what the method does. See the first known limit below.
@@ -152,7 +152,24 @@ These `POST` methods only read or compute, and change nothing. They are reads, s
 
 These `GET` methods record an event, so they are writes and ask first: `discoveryengine.projects.locations.collections.dataStores.userEvents.collect`, `discoveryengine.projects.locations.dataStores.userEvents.collect`, `discoveryengine.projects.locations.userEvents.collect` and `recommendationengine.projects.locations.catalogs.eventStores.userEvents.collect` ("Writes a single user event from the browser").
 
-Held back by the credential rule: Google Ads `generateKeywordIdeas`, `generateKeywordHistoricalMetrics` and `suggestKeywordThemes` only read, but their names hold "Keyword", and so the credential word "key". A credential name is always a write, and no override passes it, so they stay writes.
+Reads since 1.41.4, by the owner's decision of 2026-10-31 (Q1): Google Ads `generateKeywordIdeas`, `generateKeywordHistoricalMetrics` and `suggestKeywordThemes`, and the four Vertex AI `countTokens` bindings. They are reads by exact id, not by a name rule: a `POST` is a write unless a read rule names it, which is why removing the credential rule alone (1.41.3) left them writes. The same RPCs on other APIs are **not** in the set and still ask: Search Ads 360 `generateKeywordIdeas`, `generateKeywordHistoricalMetrics`, `suggestKeywordThemes` and `generateKeywordForecastMetrics`, Google Ads `generateKeywordForecastMetrics`, Firebase ML `countTokens` and Gemini `generativelanguage.models.countTokens`. Adding them needs its own decision.
+
+### Credential names
+
+A non-`GET` method whose name holds a credential word is a write: it mints, reveals or uses a credential. Since 1.41.3 the words are matched whole (Q1 of the 2026-10-30 review). The name is split at camelCase boundaries, at digits and at separators, and a word counts only when it is `token`, `credential`, `secret`, `password` or `key`, or starts with `authoriz`:
+
+| Name | Words | Credential? |
+| :-- | :-- | :-- |
+| `fetchAccessToken` | fetch, access, token | yes |
+| `getKeyString` | get, key, string | yes |
+| `getSyncAuthorization` | get, sync, authorization | yes |
+| `generateKeywordIdeas` | generate, keyword, ideas | no |
+| `countTokens` | count, tokens | no |
+| `createKeypair` | create, keypair | no |
+
+Before 1.41.3 one regex, `/token|credential|secret|password|authoriz|key/i`, ran over the whole name, so `Keyword` and `Tokens` matched. Plurals are not credential words: a list of secrets or of keys returns no credential value, and the `GET` credential reveals are writes by exact id in config/tool-kinds.json anyway. A method the words rule would let through and that really mints, reveals or uses a credential gets an exact `write` entry in config/tool-kinds.json; today none needs one, because every method the old regex caught and the words rule does not is a `POST` or a `PATCH`, which is a write with or without the rule. tests/credential-words.test.mjs proves that equality over every catalog method, every version, and checks that both classifiers agree.
+
+A read entry wins over this rule, so a name that holds a credential word can still be a read when a decision says so; none of the reads listed above holds one. The credential rule is a backstop for names nobody has decided about, not a veto over a decided method. The seven reads of 1.41.4 do not hold a credential word: `countTokens` is count + tokens, and `generateKeywordIdeas` / `suggestKeywordThemes` are keyword, not key.
 
 ### Credential reveals and credential fields in read results
 

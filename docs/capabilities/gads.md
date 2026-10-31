@@ -4,7 +4,7 @@ Google Ads API (accounts, campaigns, ad groups, ads, keywords, budgets, conversi
 
 - Plugin: `gads`, MCP server: `gads`, login: Desktop OAuth client, then `login business`
 - Install: `claude plugin install gads@google-services-mcps`
-- Tools: 338 total. Curated 11, per-method 323, gateway 3. Read 104, write 190, destructive 20, dynamic 24.
+- Tools: 338 total. Curated 11, per-method 323, gateway 3. Read 105, write 189, destructive 20, dynamic 24.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
@@ -198,7 +198,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `googleads_customers_custom_convers_mutate` | dynamic | googleads.customers.customConversionGoals.mutate | adwords |
 | `googleads_customers_customer_asset_mutate` | dynamic | googleads.customers.customerAssets.mutate | adwords |
 | `googleads_customers_customer_negat_mutate` | dynamic | googleads.customers.customerNegativeCriteria.mutate | adwords |
-| `googleads_customers_generate_keyword_idea` | write | googleads.customers.generateKeywordIdeas | adwords |
+| `googleads_customers_generate_keyword_idea` | read | googleads.customers.generateKeywordIdeas | adwords |
 | `googleads_customers_google_ads_mutate` | dynamic | googleads.customers.googleAds.mutate | adwords |
 | `googleads_customers_google_ads_search` | read | googleads.customers.googleAds.search | adwords |
 | `googleads_customers_google_ads_search_str` | read | googleads.customers.googleAds.searchStream | adwords |

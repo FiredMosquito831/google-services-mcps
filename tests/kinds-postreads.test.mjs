@@ -3,8 +3,11 @@
 // Postmaster v2 domainStats.query and batchQuery, Vertex AI generateContent and embedContent, Identity Toolkit
 // accounts.query and Firestore runQuery. Each one is pinned in config/tool-kinds.json, given by both classifiers for
 // every catalog version, carried by the built plugins (generated tools in tool-map.json, gateway methods in
-// method-kinds.json), decided by the real plugin hook, and seen by a running server. Vertex AI countTokens is not
-// reclassified: its name holds "token", a credential word, so it stays a write (the brief's credential rule).
+// method-kinds.json), decided by the real plugin hook, and seen by a running server. Vertex AI countTokens was held
+// back until 1.41.4: its name held "token", and later its name stopped being a credential name at all but a POST
+// with no read rule is still a write (whole words, tests/credential-words.test.mjs). It is a read now, on the owner's
+// decision of 2026-10-31 (Q1 of specs/2026-10-30-adversarial-review.md), together with the Google Ads keyword methods;
+// tests/credential-reads.test.mjs checks those seven entries on the built plugins and through the hook.
 // Every test works in temp folders. No network call is made: the read tools are listed, never called.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -59,7 +62,7 @@ const POST_READS = [
   { id: 'firestore.projects.databases.documents.runQuery', plugin: 'gcloud', tool: null, versions: ['firestore:v1', 'firestore:v1beta1'] },
 ];
 
-/** Vertex AI countTokens: approved by the owner, held back here by the credential rule ("token" in the name). */
+/** Vertex AI countTokens: a read since 1.41.4, on the owner's decision of 2026-10-31 (Q1). */
 const COUNT_TOKENS = [
   'aiplatform.projects.locations.publishers.models.countTokens',
   'aiplatform.publishers.models.countTokens',
@@ -100,7 +103,7 @@ test('both classifiers read the 17 methods on every catalog version, and the ver
   for (const m of POST_READS) assert.deepEqual(seen.get(m.id).sort(), m.versions, `${m.id}: the catalog versions`);
 });
 
-test('the credential rule holds: no reclassified name has a credential word, and countTokens stays a write', () => {
+test('the credential rule holds: no reclassified name has a credential word, and countTokens is a read', () => {
   for (const m of POST_READS) assert.equal(CREDENTIAL.test(nameOf(m.id)), false, m.id);
   const catalog = readJson('data', 'catalog.json');
   const found = new Set();
@@ -108,14 +111,14 @@ test('the credential rule holds: no reclassified name has a credential word, and
     for (const [id, verb] of api.methods) {
       if (!COUNT_TOKENS.includes(id)) continue;
       found.add(id);
-      assert.equal(kindsFile[id], undefined, `${id}: no override`);
-      assert.equal(classifyMethod(verb, nameOf(id), id, overrides), 'write', `${id} ${api.version}: a credential word keeps it a write`);
-      assert.equal(fallbackClassify(verb, nameOf(id), id, overrides), 'write', `${id} ${api.version}: the plugin copy`);
+      assert.equal(kindsFile[id], 'read', `${id}: the exact read entry`);
+      assert.equal(classifyMethod(verb, nameOf(id), id, overrides), 'read', `${id} ${api.version}: read`);
+      assert.equal(fallbackClassify(verb, nameOf(id), id, overrides), 'read', `${id} ${api.version}: the plugin copy`);
     }
   }
   assert.deepEqual([...found].sort(), [...COUNT_TOKENS].sort());
   const gai = readJson('plugins', 'gai', 'method-kinds.json');
-  for (const id of COUNT_TOKENS) assert.equal(gai[id], 'write', `gai gateway ${id}`);
+  for (const id of COUNT_TOKENS) assert.equal(gai[id], 'read', `gai gateway ${id}`);
   assert.equal(kindsFile['apikeys.projects.locations.keys.getKeyString'], 'write');
 });
 
@@ -160,16 +163,18 @@ function runPluginHook(plugin, toolName, toolInput) {
   return res.stdout;
 }
 
-test("the plugins' own hooks: each read runs without a prompt, as a tool or through api_call; countTokens still asks", () => {
+test("the plugins' own hooks: each read runs without a prompt, as a tool or through api_call", () => {
   for (const m of POST_READS) {
     const out = m.tool
       ? runPluginHook(m.plugin, full(m.plugin, m.tool), { siteUrl: 'x' })
       : runPluginHook(m.plugin, full(m.plugin, 'api_call'), { method: m.id, pathParams: {} });
     assert.equal(out, '', `${m.id}: a read prints nothing, so Claude Code runs its normal flow`);
   }
-  const asked = JSON.parse(runPluginHook('gai', full('gai', 'api_call'), { method: COUNT_TOKENS[0], pathParams: {} })).hookSpecificOutput;
-  assert.equal(asked.permissionDecision, 'ask');
-  assert.match(asked.permissionDecisionReason, /Method: aiplatform\.projects\.locations\.publishers\.models\.countTokens/);
+  // Vertex AI countTokens joined the reads in 1.41.4 (the owner's decision of 2026-10-31, Q1), so the hook says
+  // nothing for it either; before that it asked here.
+  for (const id of COUNT_TOKENS) {
+    assert.equal(runPluginHook('gai', full('gai', 'api_call'), { method: id, pathParams: {} }), '', `${id}: a read prints nothing`);
+  }
 });
 
 /** A server of generated tools only, as scripts/bundle.mjs writes its entry. */
