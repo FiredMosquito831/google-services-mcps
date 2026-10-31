@@ -60,6 +60,18 @@ export interface ServerSpec {
    * keeps its own. Absent for a product that has none.
    */
   scopeOverrides?: Record<string, string[]>;
+  /**
+   * Per generated API of the product, the methods Google documents as needing the `fields` system parameter (they return
+   * no default fields), and the value their tools send when a call gives none (config/products.json fieldsDefaults; Drive's
+   * about, approvals, comments and replies). Absent for a product that has none.
+   */
+  fieldsDefaults?: Record<string, FieldsDefaults>;
+  /**
+   * Per generated API of the product, the methods that need a response field mask (the X-Goog-FieldMask header; Google
+   * returns an error without one) and the mask their tools send when a call gives none (config/products.json
+   * fieldMaskDefaults; Places search and details). Absent for a product that has none.
+   */
+  fieldMaskDefaults?: Record<string, FieldMaskDefaults>;
   label: string;
   /**
    * The plugin folder the server is built from (plugins/<id>), set only by the CLI of the repository layout (the
@@ -69,6 +81,21 @@ export interface ServerSpec {
    * written to a servers.json.
    */
   pluginRoot?: string;
+}
+
+/** One API's entry of ServerSpec.fieldsDefaults. source and reason are the evidence, for people; tools read value and methods. */
+export interface FieldsDefaults {
+  value: string;
+  methods: string[];
+  source?: string;
+  reason?: string;
+}
+
+/** One API's entry of ServerSpec.fieldMaskDefaults: the default mask per method id, with the evidence for people. */
+export interface FieldMaskDefaults {
+  methods: Record<string, string>;
+  source?: string;
+  reason?: string;
 }
 
 /**

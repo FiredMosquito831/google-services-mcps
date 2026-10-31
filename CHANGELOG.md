@@ -2,6 +2,21 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.30.0 - 2026-10-31
+
+### Added: `fields` on every per-method read
+- Every generated read tool (1,419 of them) takes an optional `fields`: Google's partial response, such as `id,name` or `files(id,name),nextPageToken`. A smaller answer fits the result limit with more items. Without it, the request is as before.
+- Writes do not take it: on every generated tool it grew tools/list by 5.7 % (writes on), over the 5 % this change allowed itself; on the reads alone it is +2.5 % (writes on) and +8.7 % (writes off, where only reads are listed). A write's answer is the resource it wrote.
+
+### Fixed: methods that cannot work without `fields` or a field mask
+- Drive's about, approvals, comments and replies methods (17 tools, deletes excepted) return no default fields; Google's guide: "For all methods of the about, approvals, comments (excluding delete), and replies (excluding delete) resources, you must set the fields parameter." Their tools now send `fields=*` when the call gives none (the reads take `fields` to narrow it). The read of a comment or approval that an approval form shows sends it too. Not checked live.
+- Places API (New) text search, nearby search and place details fail without a response field mask (Google: "If you omit the field mask, the method returns an error"). `places_places_search_text`, `places_places_search_nearby` and `places_places_get` take `field_mask` instead of `fields` and send it in the `X-Goog-FieldMask` header; by default the id, display name, formatted address, location, types and Google Maps link, fields of the Essentials and Pro SKUs (plus `nextPageToken` for text search, which pages with it). Enterprise fields (rating, phone, opening hours, website) cost more and are asked for by name. Not checked live.
+- Both are data in `config/products.json`, per API, with Google's text as the reason: `fieldsDefaults` (gdrive) and `fieldMaskDefaults` (gmaps). `gen-servers` checks every listed method against the product's snapshot and copies them; a test fails when a refreshed document says another method needs `fields`.
+
+### Changed
+- The snapshots keep the names of their document's system parameters (`systemParameters`); no other part of a snapshot changed.
+- tools/list: 1,422 tools gained `fields` or `field_mask`, and nothing else changed in any tool (eight tools that had no argument now also say `additionalProperties: false`, as every tool with arguments does). Tool maps and gateway kinds of all 23 plugins (0 kind changes) and `gsm scopes` for every plugin, profile and toolset (207 cases) are the same as in 1.29.1.
+
 ## 1.29.1 - 2026-10-31
 
 ### Fixed: the per-method tools keep Google's whole descriptions

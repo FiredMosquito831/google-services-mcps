@@ -460,6 +460,16 @@ Google's page token continues after the last item Google sent, not after the las
 
 **Large files come in parts.** `gmail_get_attachment` and `drive_download` return a file up to about 18,000 bytes in one answer. For a larger file they return its size and a note; pass `offset: 0`, then each `next_offset`, to read it in parts, and join the `data_base64` parts in order. `gcs_read_object` and `gcs_read_text` always read in parts (`read_offset` and `next_offset`).
 
+## 13. The per-method tools
+
+The per-method tools (one per Google API method, such as `drive_comments_list` or `places_places_search_text`) take the method's own parameters, and a few more:
+
+**`fields` on every read (since 1.30.0).** Google's partial response: the fields to return, for example `id,name` or `files(id,name),nextPageToken`. A smaller answer fits the result limit with more items in it. Without it, the method's default fields come back. Writes do not take it: their answer is the resource they wrote, and on every tool the argument would have grown the tool list by 5.7 %.
+
+**Fields Google requires.** Drive's about, approvals, comments and replies methods (17 tools, deletes excepted) return no default fields: Google says the `fields` parameter must be set. Their tools send `fields=*` (every field) when the call gives none. The list is data, `fieldsDefaults` in `config/products.json`, with Google's text as its reason; a test checks that every method whose description says so is in it.
+
+**The Places response field mask.** Places API (New) text search, nearby search and place details fail without a field mask ("If you omit the field mask, the method returns an error"), and the fields asked for set the price. `places_places_search_text`, `places_places_search_nearby` and `places_places_get` take `field_mask` and send it in the `X-Goog-FieldMask` header. The default asks for the id, display name, formatted address, location, types and Google Maps link (and `nextPageToken` for text search), all fields of the cheaper Essentials and Pro SKUs. Ask for ratings, phone numbers, opening hours or the website by name (`places.rating,places.websiteUri`; place details uses the names without `places.`): they are Enterprise fields and cost more. The defaults are data, `fieldMaskDefaults` in `config/products.json`.
+
 ## Related reading
 
 - [SECURITY.md](SECURITY.md): the controls and their limits.

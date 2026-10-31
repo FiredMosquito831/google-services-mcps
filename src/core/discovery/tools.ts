@@ -66,9 +66,9 @@ export interface ToolKindsFile {
 export interface RequestField {
   /** Name of the tool argument. */
   arg: string;
-  /** Name of the API parameter, or "body" for the request body. */
+  /** Name of the API parameter, "body" for the request body, or the header name for a header. */
   api: string;
-  location: 'path' | 'query' | 'body';
+  location: 'path' | 'query' | 'body' | 'header';
 }
 
 export interface RequestPlan {
@@ -78,6 +78,10 @@ export interface RequestPlan {
   servicePath: string;
   path: string;
   fields: RequestField[];
+  /** Query values sent when the call gives none (config/products.json fieldsDefaults). Absent for most methods. */
+  queryDefaults?: Record<string, string | number>;
+  /** Headers sent when the call gives none (config/products.json fieldMaskDefaults). Absent for most methods. */
+  headerDefaults?: Record<string, string>;
 }
 
 export interface BuiltRequest {
@@ -85,6 +89,37 @@ export interface BuiltRequest {
   url: string;
   params: Record<string, unknown>;
   data?: unknown;
+  /** Present only when the method sends a header (a response field mask). */
+  headers?: Record<string, string>;
+}
+
+/** The header that carries a response field mask (Places API (New), and other APIs that document it). */
+export const FIELD_MASK_HEADER = 'X-Goog-FieldMask';
+
+/** A compacted snapshot (scripts/snapshot-discovery.mjs) also lists the document's system parameters by name. */
+type SnapshotDoc = DiscoveryDoc & { systemParameters?: string[] };
+
+/** The argument for Google's `fields` system parameter (a partial response), and the one for a response field mask. */
+const FIELDS_ARG = 'fields';
+const FIELD_MASK_ARG = 'field_mask';
+
+/**
+ * True when the method's tool takes `fields`: its document lists the fields system parameter (every snapshot does), and
+ * the method does not declare a parameter of that name itself.
+ */
+function takesFields(doc: DiscoveryDoc, m: Pick<MethodRecord, 'parameters'>): boolean {
+  return ((doc as SnapshotDoc).systemParameters ?? []).includes('fields') && !m.parameters.some((p) => p.name === 'fields');
+}
+
+function fieldsText(fallback: string | undefined): string {
+  const lead = 'Partial response: the fields to return, for example "id,name" or "items(id,name),nextPageToken".';
+  return fallback === undefined
+    ? `${lead} Omit for the method's default fields.`
+    : `${lead} This method returns no default fields, so "${fallback}" is sent when it is omitted.`;
+}
+
+function fieldMaskText(fallback: string): string {
+  return `Response field mask, sent as the ${FIELD_MASK_HEADER} header: the fields to return, comma-separated, no spaces. Google answers an error without one, and the fields asked for set the price. Default: ${fallback}`;
 }
 
 export interface DiscoverySource {
@@ -103,6 +138,37 @@ export interface DiscoverySource {
    * config/products.json). A method that lists scopes keeps its own. Absent: a method without scopes declares none.
    */
   scopesWhenNone?: readonly string[];
+  /**
+   * Method id to the `fields` value its tool sends when a call gives none: the methods Google documents as returning no
+   * default fields (ServerSpec.fieldsDefaults, declared in config/products.json). Absent: no default.
+   */
+  fieldsDefaults?: Readonly<Record<string, string>>;
+  /**
+   * Method id to the response field mask its tool sends in X-Goog-FieldMask when a call gives none: the methods that fail
+   * without one (ServerSpec.fieldMaskDefaults). Such a tool takes field_mask, not fields. Absent: no mask.
+   */
+  fieldMasks?: Readonly<Record<string, string>>;
+}
+
+/** The request defaults of one method, from its source (see DiscoverySource). */
+interface MethodDefaults {
+  fields?: string;
+  fieldMask?: string;
+}
+
+function defaultsOf(src: Pick<DiscoverySource, 'fieldsDefaults' | 'fieldMasks'>, id: string): MethodDefaults {
+  return {
+    ...(src.fieldsDefaults?.[id] !== undefined ? { fields: src.fieldsDefaults[id] } : {}),
+    ...(src.fieldMasks?.[id] !== undefined ? { fieldMask: src.fieldMasks[id] } : {}),
+  };
+}
+
+/** The query and header defaults a method's request plan carries, or nothing when it has none. */
+function planDefaults(d: MethodDefaults): Pick<RequestPlan, 'queryDefaults' | 'headerDefaults'> {
+  return {
+    ...(d.fields !== undefined ? { queryDefaults: { fields: d.fields } } : {}),
+    ...(d.fieldMask !== undefined ? { headerDefaults: { [FIELD_MASK_HEADER]: d.fieldMask } } : {}),
+  };
 }
 
 /** True when the method is in the subset (see DiscoverySource.include). */
@@ -196,6 +262,8 @@ export interface AuthorizedRequest {
   method: HttpMethodName;
   params?: Record<string, unknown>;
   data?: unknown;
+  /** Extra request headers, such as a response field mask. Absent for most requests. */
+  headers?: Record<string, string>;
 }
 
 /**
@@ -214,7 +282,9 @@ export async function sendAuthorized(
   cfg: RuntimeConfig,
   req: AuthorizedRequest,
 ): Promise<{ status: number; data: unknown }> {
-  const headers = isGoogleAdsUrl(req.url) ? adsHeaders(cfg) : undefined;
+  const ads = isGoogleAdsUrl(req.url) ? adsHeaders(cfg) : undefined;
+  // The request's own headers (a field mask), then the Google Ads headers, which no request header replaces.
+  const headers = { ...(req.headers ?? {}), ...(ads ?? {}) };
   const client = await authFor(group, cfg);
   // An OAuth or ADC client retries inside its own request method (core/auth.ts), so every request sent through it is covered.
   if (client instanceof ApiKeyClient) {
@@ -228,11 +298,11 @@ export async function sendAuthorized(
       params: hasParams ? req.params : undefined,
       paramsSerializer: serializeQuery,
       data: req.data,
-      ...(headers && Object.keys(headers).length > 0 ? { headers } : {}),
+      ...(Object.keys(headers).length > 0 ? { headers } : {}),
     });
     return { status: res.status, data: res.data };
   } catch (err) {
-    if (headers) throw redactedError(err, headers['developer-token'] ?? '');
+    if (ads) throw redactedError(err, ads['developer-token'] ?? '');
     throw err;
   }
 }
@@ -279,10 +349,14 @@ export function serializeQuery(params: Record<string, unknown>): string {
   return search.toString();
 }
 
-/** Turns tool arguments into the HTTP request. Makes no network call. */
+/**
+ * Turns tool arguments into the HTTP request. Makes no network call. A query or header default of the plan is sent only
+ * when the call gives no value for it.
+ */
 export function buildRequest(plan: RequestPlan, args: Record<string, unknown>): BuiltRequest {
   const pathValues: Record<string, unknown> = {};
   const params: Record<string, unknown> = {};
+  const headers: Record<string, string> = {};
   let data: unknown;
 
   for (const field of plan.fields) {
@@ -293,16 +367,21 @@ export function buildRequest(plan: RequestPlan, args: Record<string, unknown>): 
       continue;
     } else if (field.location === 'query') {
       params[field.api] = value;
+    } else if (field.location === 'header') {
+      headers[field.api] = String(value);
     } else {
       data = value;
     }
   }
+  for (const [name, value] of Object.entries(plan.queryDefaults ?? {})) if (params[name] === undefined) params[name] = value;
+  for (const [name, value] of Object.entries(plan.headerDefaults ?? {})) if (headers[name] === undefined) headers[name] = value;
 
   return {
     method: plan.httpMethod as HttpMethodName,
     url: buildUrl(plan.rootUrl, plan.servicePath, plan.path, pathValues),
     params,
     data,
+    ...(Object.keys(headers).length > 0 ? { headers } : {}),
   };
 }
 
@@ -318,10 +397,12 @@ function buildMethodTool(
   note: string | undefined,
   scopesWhenNone?: readonly string[],
   target?: MethodRecord,
+  src: Pick<DiscoverySource, 'fieldsDefaults' | 'fieldMasks'> = {},
 ): ToolDef {
   const shape: ZodRawShape = {};
   const fields: RequestField[] = [];
   const argFor = (param: string): string => (RESERVED_ARGS.includes(param) ? `${param}Param` : param);
+  const defaults = defaultsOf(src, m.fullId);
 
   for (const p of m.parameters.filter((p) => p.location === 'path')) {
     const arg = argFor(p.name);
@@ -342,6 +423,19 @@ function buildMethodTool(
     fields.push({ arg: bodyArg, api: 'body', location: 'body' });
   }
 
+  // Response fields, after every other argument. A method that needs a field mask takes field_mask (sent as a header);
+  // any other read of a document that lists the fields system parameter takes fields (a partial response). Writes do not:
+  // on every generated tool the argument grew tools/list by 5.7 % (1.30.0), and a write's answer is the resource it wrote.
+  // A write that Google requires fields for still sends its default (fieldsDefaults).
+  const free = (arg: string): boolean => !(arg in shape) && !RESERVED_ARGS.includes(arg);
+  if (defaults.fieldMask !== undefined && free(FIELD_MASK_ARG)) {
+    shape[FIELD_MASK_ARG] = z.string().min(1).optional().describe(fieldMaskText(defaults.fieldMask));
+    fields.push({ arg: FIELD_MASK_ARG, api: FIELD_MASK_HEADER, location: 'header' });
+  } else if (defaults.fieldMask === undefined && m.kind === 'read' && takesFields(doc, m) && free(FIELDS_ARG)) {
+    shape[FIELDS_ARG] = z.string().min(1).optional().describe(fieldsText(defaults.fields));
+    fields.push({ arg: FIELDS_ARG, api: 'fields', location: 'query' });
+  }
+
   const tail = [...(note ? [`Note: ${note}`] : []), `Method ${m.fullId}: ${m.httpMethod} ${m.path}.`].join(' ');
   const lead = m.description || `Calls ${m.fullId}.`;
   const parts = [clipText(lead, TOOL_DESCRIPTION_MAX - tail.length - 1) ?? lead, tail];
@@ -353,6 +447,7 @@ function buildMethodTool(
     servicePath: doc.servicePath,
     path: m.path,
     fields,
+    ...planDefaults(defaults),
   };
 
   const tool: ToolDef = {
@@ -393,12 +488,13 @@ function buildMethodTool(
   if (m.kind === 'destructive') {
     tool.preview = (args) => {
       const req = buildRequest(plan, args as Record<string, unknown>);
-      return { method: m.fullId, url: req.url, query: req.params, body: req.data ?? null };
+      return { method: m.fullId, url: req.url, query: req.params, body: req.data ?? null, ...(req.headers ? { headers: req.headers } : {}) };
     };
   }
   if (target) {
     // The resource this write acts on, read for the approval only (target-preview.ts). The same path arguments, nothing
     // else; the result passes the credential list before a field is picked. The request the handler sends is not changed.
+    // A get that returns no default fields (Drive's comments and approvals) sends its default fields value.
     const targetPlan: RequestPlan = {
       fullId: target.fullId,
       httpMethod: 'GET',
@@ -406,6 +502,7 @@ function buildMethodTool(
       servicePath: doc.servicePath,
       path: target.path,
       fields: target.parameters.filter((p) => p.location === 'path').map((p) => ({ arg: argFor(p.name), api: p.name, location: 'path' as const })),
+      ...planDefaults(defaultsOf(src, target.fullId)),
     };
     tool.describeTarget = async (args) => {
       const res = await sendAuthorized(group, cfg, buildRequest(targetPlan, args as Record<string, unknown>));
@@ -461,7 +558,7 @@ export function generateDiscoveryTools(
   maxNameLength: number = MAX_TOOL_NAME,
   reserved: readonly string[] = [],
 ): GeneratedTools {
-  const entries: Array<{ method: MethodRecord; doc: DiscoveryDoc; target?: MethodRecord; scopesWhenNone?: readonly string[] }> = [];
+  const entries: Array<{ method: MethodRecord; doc: DiscoveryDoc; src: DiscoverySource; target?: MethodRecord; scopesWhenNone?: readonly string[] }> = [];
   const skippedUploads: string[] = [];
 
   for (const src of sources) {
@@ -474,7 +571,7 @@ export function generateDiscoveryTools(
       }
       // The GET that reads the resource this write acts on, for the approval (target-preview.ts). It need not be a tool.
       const target = targetGetFor(method, all);
-      entries.push({ method, doc: src.doc, ...(target ? { target } : {}), ...(src.scopesWhenNone ? { scopesWhenNone: src.scopesWhenNone } : {}) });
+      entries.push({ method, doc: src.doc, src, ...(target ? { target } : {}), ...(src.scopesWhenNone ? { scopesWhenNone: src.scopesWhenNone } : {}) });
     }
   }
 
@@ -497,7 +594,7 @@ export function generateDiscoveryTools(
   entries.forEach((entry, i) => {
     const name = names[i]!;
     const m = entry.method;
-    tools.push(buildMethodTool(m, name, entry.doc, group, cfg, kinds.notes[m.apiName], entry.scopesWhenNone, entry.target));
+    tools.push(buildMethodTool(m, name, entry.doc, group, cfg, kinds.notes[m.apiName], entry.scopesWhenNone, entry.target, entry.src));
     rows.push({
       method: m.fullId,
       tool: name,
@@ -509,6 +606,22 @@ export function generateDiscoveryTools(
   tools.push(buildListTool(listName, serverName, rows));
 
   return { tools, skippedUploads };
+}
+
+/**
+ * The request defaults the product declares for one of its APIs (config/products.json fieldsDefaults and
+ * fieldMaskDefaults), by method id. Nothing for an API without any.
+ */
+export function requestDefaultsFor(
+  server: Pick<ServerSpec, 'fieldsDefaults' | 'fieldMaskDefaults'>,
+  api: string,
+): Pick<DiscoverySource, 'fieldsDefaults' | 'fieldMasks'> {
+  const fields = server.fieldsDefaults?.[api];
+  const masks = server.fieldMaskDefaults?.[api]?.methods;
+  return {
+    ...(fields ? { fieldsDefaults: Object.fromEntries(fields.methods.map((id) => [id, fields.value])) } : {}),
+    ...(masks ? { fieldMasks: { ...masks } } : {}),
+  };
 }
 
 function uniqueApis(apis: ApiRef[]): ApiRef[] {
@@ -564,6 +677,7 @@ export async function discoveryToolsFor(
       doc: JSON.parse(readFileSync(file, 'utf8')) as DiscoveryDoc,
       include: a.include,
       ...(server.scopeOverrides?.[a.api] ? { scopesWhenNone: server.scopeOverrides[a.api] } : {}),
+      ...requestDefaultsFor(server, a.api),
     });
   }
   if (missing.length > 0) {

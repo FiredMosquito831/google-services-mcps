@@ -47,6 +47,17 @@
           "version": "v1"
         }
       ],
+      "fieldMaskDefaults": {
+        "places": {
+          "source": "https://developers.google.com/maps/documentation/places/web-service/text-search (also nearby-search and place-details)",
+          "reason": "Google: \"If you omit the field mask, the method returns an error.\" There is no default list of fields. These defaults ask only for fields of the Essentials, IDs Only and Pro SKUs, plus nextPageToken for text search paging; Enterprise fields (rating, phone numbers, opening hours, website, price level) cost more and are asked for by name in field_mask.",
+          "methods": {
+            "places.places.searchText": "places.id,places.displayName,places.formattedAddress,places.location,places.types,places.googleMapsUri,nextPageToken",
+            "places.places.searchNearby": "places.id,places.displayName,places.formattedAddress,places.location,places.types,places.googleMapsUri",
+            "places.places.get": "id,displayName,formattedAddress,location,types,googleMapsUri"
+          }
+        }
+      },
       "toolsets": {
         "google": [
           "places_places_search_text",

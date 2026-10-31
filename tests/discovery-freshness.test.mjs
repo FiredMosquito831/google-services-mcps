@@ -440,7 +440,9 @@ test('snapshot --offline: reads only the raw cache, keeps the previous key order
       id: { location: 'path', type: 'string', required: true, description: 'The item.' },
     },
   };
-  const rawAlpha = discoveryDoc('alpha', 'v1', '20261020', { items: { methods: { get: getRaw, list: method('alpha.items.list', 'GET', 'v1/items') } } });
+  const rawAlpha = discoveryDoc('alpha', 'v1', '20261020', { items: { methods: { get: getRaw, list: method('alpha.items.list', 'GET', 'v1/items') } } }, {
+    parameters: { fields: { type: 'string', location: 'query' }, alt: { type: 'string', location: 'query', enum: ['json', 'media'] } },
+  });
   const rawBeta = discoveryDoc('beta', 'v1', '20261021', ALPHA_SNAPSHOT_RESOURCES);
   const previousAlpha = {
     ...alphaSnapshot,
@@ -492,6 +494,9 @@ test('snapshot --offline: reads only the raw cache, keeps the previous key order
     assert.ok(get.description.endsWith('...'));
     assert.equal(get.parameters[1].description.length, 1000);
     assert.ok(get.parameters[1].description.endsWith('...'));
+    // 1.30.0: the document's system parameters by name (the tools offer fields where the document lists it); none, no key.
+    assert.deepEqual(alpha.systemParameters, ['fields', 'alt']);
+    assert.equal('systemParameters' in JSON.parse(readFileSync(join(dir, 'beta.v1.json'), 'utf8')), false);
     const record = JSON.parse(readFileSync(join(dir, '_revisions.json'), 'utf8')).snapshots;
     assert.deepEqual(record['alpha.v1'], { revision: '20261020', fetchedAt: '2026-10-20T00:00:00.000Z' }, 'the same revision keeps its record');
     assert.deepEqual(record['beta.v1'], { revision: '20261021', fetchedAt: statSync(join(cache, 'beta.v1.json')).mtime.toISOString() }, "another revision: the cache's, at the cache file's time");

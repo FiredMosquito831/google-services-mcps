@@ -115,6 +115,9 @@ function compactResources(resources = {}) {
 }
 
 function compactDoc(raw) {
+  // The names of the document's system parameters (fields, alt, prettyPrint and so on), which every method takes: the
+  // generated tools offer `fields` where the document lists it (src/core/discovery/tools.ts). Left out when there are none.
+  const systemParameters = Object.keys(raw.parameters ?? {});
   return {
     name: raw.name,
     version: raw.version,
@@ -124,6 +127,7 @@ function compactDoc(raw) {
     baseUrl: raw.baseUrl,
     schemas: raw.schemas ?? {},
     resources: compactResources(raw.resources),
+    ...(systemParameters.length > 0 ? { systemParameters } : {}),
   };
 }
 
