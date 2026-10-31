@@ -150,9 +150,20 @@ function ownToolPrefix(root: string): string | null {
   }
 }
 
-/** The token folder: GSM_TOKEN_DIR, unless it is empty or an unexpanded ${user_config.*} reference (plugin-option.ts). */
+/**
+ * The token folder, resolved as the server resolves it (loadConfig, core/config.ts): GSM_TOKEN_DIR, else the plugin's
+ * token_dir option. Each value reads as unset when empty or an unexpanded ${user_config.*} reference (plugin-option.ts).
+ *
+ * The hook needs this because a plugin option reaches a hook process as CLAUDE_PLUGIN_OPTION_<KEY>, not as the
+ * server's GSM_* variables: '"CLAUDE_PLUGIN_OPTION_<KEY>": exported to hook processes for every option, with <KEY>
+ * uppercased' (code.claude.com/docs/en/plugins-reference, "Reference a saved value"), and the hook environment table
+ * there lists CLAUDE_PLUGIN_OPTION_<KEY> for "Hook commands". Without it a custom token_dir would make the hook read
+ * policy.json from the default folder while the server's gate read the right one.
+ */
 function tokenDirectory(): string {
-  return optionValue(process.env.GSM_TOKEN_DIR) ?? join(homedir(), DEFAULT_TOKEN_DIR_NAME);
+  const fromServer = optionValue(process.env.GSM_TOKEN_DIR);
+  if (fromServer !== undefined) return fromServer;
+  return optionValue(process.env.CLAUDE_PLUGIN_OPTION_TOKEN_DIR) ?? join(homedir(), DEFAULT_TOKEN_DIR_NAME);
 }
 
 async function readStdin(): Promise<string> {

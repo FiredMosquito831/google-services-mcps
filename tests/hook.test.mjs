@@ -2,8 +2,9 @@
 // Each test builds a fake plugin folder "google-cloud" in a temp dir: the compiled hook is
 // copied to <plugin>/bin/gsm-hook.mjs and the policy module to <plugin>/core/, so the
 // hook finds <plugin>/tool-map.json exactly as it will in the bundled plugin.
-// The token dir is always a fresh temp dir, and CLAUDE_PLUGIN_OPTION_CONFIRMATION is
-// cleared unless a test sets it, so the developer's own policy and settings never leak in.
+// The token dir is always a fresh temp dir, and CLAUDE_PLUGIN_OPTION_CONFIRMATION and
+// CLAUDE_PLUGIN_OPTION_TOKEN_DIR are cleared unless a test sets them, so the developer's own
+// policy and settings never leak in.
 import { test, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
@@ -77,6 +78,7 @@ function event(toolName, toolInput = { project: 'my-project', instance: 'vm-1' }
 function runHook(hook, { input, raw, tokenDir, env = {} }) {
   const childEnv = { ...process.env, GSM_TOKEN_DIR: tokenDir };
   delete childEnv.CLAUDE_PLUGIN_OPTION_CONFIRMATION;
+  delete childEnv.CLAUDE_PLUGIN_OPTION_TOKEN_DIR;
   for (const [key, value] of Object.entries(env)) {
     if (value === undefined) delete childEnv[key];
     else childEnv[key] = value;
@@ -254,4 +256,127 @@ test('the folder name does not matter: a versioned cache folder is handled the s
   const { hook, tokenDir } = fakePlugin({ folder: '0.1.0' });
   const out = decisionOf(runHook(hook, { input: event(DESTRUCTIVE), tokenDir }));
   assert.equal(out.permissionDecision, 'ask');
+});
+
+// --- the token folder of the hook: GSM_TOKEN_DIR, else CLAUDE_PLUGIN_OPTION_TOKEN_DIR, else the home default (Q3) ---
+// A plugin option reaches a hook process as CLAUDE_PLUGIN_OPTION_<KEY>, not as the server's GSM_* variables
+// (code.claude.com/docs/en/plugins-reference, "Reference a saved value" and the "Where each variable resolves" table),
+// so the hook used to read policy.json from the default folder while the server's gate read the custom one.
+
+/** A token folder of its own, holding policy.json when one is given. */
+function extraTokenDir(policy) {
+  const dir = mkdtempSync(join(tmpdir(), 'gsm-hook-tokens-'));
+  work.push(dir);
+  if (policy !== undefined) writeFileSync(join(dir, 'policy.json'), typeof policy === 'string' ? policy : JSON.stringify(policy));
+  return dir;
+}
+
+/** A home folder of its own, with the suite's token folder inside it holding policy.json when one is given. */
+function fakeHome(policy) {
+  const home = mkdtempSync(join(tmpdir(), 'gsm-hook-home-'));
+  work.push(home);
+  const dir = join(home, '.google-services-mcps');
+  mkdirSync(dir);
+  if (policy !== undefined) writeFileSync(join(dir, 'policy.json'), typeof policy === 'string' ? policy : JSON.stringify(policy));
+  return home;
+}
+
+/** Env that unsets the server's variable, so only the plugin option can name the folder. */
+const OPTION_ONLY = { GSM_TOKEN_DIR: undefined };
+
+test('a deny rule in the folder named by CLAUDE_PLUGIN_OPTION_TOKEN_DIR is applied', () => {
+  const { hook } = fakePlugin();
+  const custom = extraTokenDir({ confirmation: 'off', rules: [{ match: '*delete*', action: 'deny' }] });
+  const out = decisionOf(
+    runHook(hook, { input: event(DESTRUCTIVE), env: { ...OPTION_ONLY, CLAUDE_PLUGIN_OPTION_TOKEN_DIR: custom } }),
+  );
+  assert.equal(out.permissionDecision, 'deny');
+  assert.match(out.permissionDecisionReason, /Denied by policy rule "\*delete\*"/);
+});
+
+test('an allow rule in the folder named by CLAUDE_PLUGIN_OPTION_TOKEN_DIR is applied', () => {
+  // Without reading that folder the destructive tool would ask, as it does by default.
+  const { hook } = fakePlugin();
+  const custom = extraTokenDir({ rules: [{ match: '*', action: 'allow' }] });
+  assert.equal(
+    runHook(hook, { input: event(DESTRUCTIVE), env: { ...OPTION_ONLY, CLAUDE_PLUGIN_OPTION_TOKEN_DIR: custom } }),
+    '',
+  );
+});
+
+test('an ask rule in the folder named by CLAUDE_PLUGIN_OPTION_TOKEN_DIR asks', () => {
+  // An ask rule asks whatever the confirmation mode says, so the policy's own "off" proves the file was read.
+  const { hook } = fakePlugin();
+  const custom = extraTokenDir({ confirmation: 'off', rules: [{ match: '*delete*', action: 'ask' }] });
+  const out = decisionOf(
+    runHook(hook, { input: event(DESTRUCTIVE), env: { ...OPTION_ONLY, CLAUDE_PLUGIN_OPTION_TOKEN_DIR: custom } }),
+  );
+  assert.equal(out.permissionDecision, 'ask');
+  assert.match(out.permissionDecisionReason, /Policy rule "\*delete\*" asks for confirmation\./);
+});
+
+test('GSM_TOKEN_DIR wins over CLAUDE_PLUGIN_OPTION_TOKEN_DIR', () => {
+  const { hook } = fakePlugin();
+  const fromServer = extraTokenDir({ rules: [{ match: '*', action: 'allow' }] });
+  const fromOption = extraTokenDir({ confirmation: 'off', rules: [{ match: '*delete*', action: 'deny' }] });
+  assert.equal(
+    runHook(hook, {
+      input: event(DESTRUCTIVE),
+      env: { GSM_TOKEN_DIR: fromServer, CLAUDE_PLUGIN_OPTION_TOKEN_DIR: fromOption },
+    }),
+    '',
+  );
+});
+
+test('with neither variable set the default folder under the home is used, exactly as before', () => {
+  const { hook } = fakePlugin();
+  // A policy in the home's .google-services-mcps is read, and one nowhere is the default policy.
+  const home = fakeHome({ confirmation: 'off', rules: [{ match: '*delete*', action: 'deny' }] });
+  const withPolicy = decisionOf(
+    runHook(hook, { input: event(DESTRUCTIVE), env: { ...OPTION_ONLY, HOME: home, USERPROFILE: home } }),
+  );
+  assert.equal(withPolicy.permissionDecision, 'deny');
+
+  const bare = fakeHome();
+  const out = decisionOf(runHook(hook, { input: event(MODIFY), env: { ...OPTION_ONLY, HOME: bare, USERPROFILE: bare } }));
+  assert.equal(out.permissionDecision, 'ask');
+  assert.match(out.permissionDecisionReason, /every-change/);
+});
+
+test('a ${user_config.*} left unexpanded in CLAUDE_PLUGIN_OPTION_TOKEN_DIR reads as unset', () => {
+  // 1.37.1's rule: the literal reference is not a folder name. The default folder is used instead.
+  const { hook } = fakePlugin();
+  const home = fakeHome({ confirmation: 'off', rules: [{ match: '*delete*', action: 'deny' }] });
+  const out = decisionOf(
+    runHook(hook, {
+      input: event(DESTRUCTIVE),
+      env: { ...OPTION_ONLY, CLAUDE_PLUGIN_OPTION_TOKEN_DIR: '${user_config.token_dir}', HOME: home, USERPROFILE: home },
+    }),
+  );
+  assert.equal(out.permissionDecision, 'deny');
+});
+
+test('an empty CLAUDE_PLUGIN_OPTION_TOKEN_DIR reads as unset', () => {
+  const { hook } = fakePlugin();
+  const home = fakeHome({ confirmation: 'off', rules: [{ match: '*delete*', action: 'deny' }] });
+  const out = decisionOf(
+    runHook(hook, {
+      input: event(DESTRUCTIVE),
+      env: { ...OPTION_ONLY, CLAUDE_PLUGIN_OPTION_TOKEN_DIR: '   ', HOME: home, USERPROFILE: home },
+    }),
+  );
+  assert.equal(out.permissionDecision, 'deny');
+});
+
+test('an unexpanded GSM_TOKEN_DIR still lets CLAUDE_PLUGIN_OPTION_TOKEN_DIR name the folder', () => {
+  // The server reads GSM_TOKEN_DIR through the same guard, so a literal reference there means the option decides.
+  const { hook } = fakePlugin();
+  const custom = extraTokenDir({ confirmation: 'off', rules: [{ match: '*delete*', action: 'deny' }] });
+  const out = decisionOf(
+    runHook(hook, {
+      input: event(DESTRUCTIVE),
+      env: { GSM_TOKEN_DIR: '${user_config.token_dir}', CLAUDE_PLUGIN_OPTION_TOKEN_DIR: custom },
+    }),
+  );
+  assert.equal(out.permissionDecision, 'deny');
 });

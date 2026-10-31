@@ -2,6 +2,19 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.41.2 - 2026-10-31
+
+### Fixed: the hook reads the policy file from the plugin's token folder
+- A plugin option reaches the MCP server as `GSM_TOKEN_DIR`, but a hook process gets it as `CLAUDE_PLUGIN_OPTION_TOKEN_DIR` (code.claude.com/docs/en/plugins-reference, "Reference a saved value": `CLAUDE_PLUGIN_OPTION_<KEY>` is "exported to hook processes for every option, with `<KEY>` uppercased"). The hook read `GSM_TOKEN_DIR` only, so with a custom `token_dir` it read `policy.json` from the default folder while the server's gate read the custom one: a `deny` rule written in the configured folder did not stop the call the hook guards, and a rule in the default folder applied although the server no longer used it.
+- `tokenDirectory` (src/hook/pretooluse.ts) now resolves the folder as `loadConfig` does: `GSM_TOKEN_DIR`, else `CLAUDE_PLUGIN_OPTION_TOKEN_DIR`, else `~/.google-services-mcps`. Both values go through `optionValue`, so an empty value and an unexpanded `${user_config.token_dir}` still mean unset (1.37.1), and `GSM_TOKEN_DIR` still wins when both are set. The hook reads nothing else from that folder: `policy.json` is its only file there.
+
+### Verified
+- The hook's decision for every tool of all 23 plugins, with the default folder and with a folder holding no policy file, is byte-identical before and after: 22,284 runs (every tool-map entry, four foreign tool names, the three folder cases and both confirmation modes), the same 7,698,947 bytes of output, 14,601 silent and 7,683 asks.
+- tests/hook.test.mjs runs the bundled hook with a `deny`, an `allow` and an `ask` rule in a folder named only by `CLAUDE_PLUGIN_OPTION_TOKEN_DIR`, with `GSM_TOKEN_DIR` winning when both are set, with the default folder under a redirected home, and with an empty and an unexpanded option value. Reverting the change fails four of them.
+
+### Not changed
+- The gate, `approval.ts`, `policy.ts`, the tool maps, the kinds, `gsm scopes` and every request. A hook with no plugin option set resolves the folder it resolved before.
+
 ## 1.41.1 - 2026-10-31
 
 ### Fixed: the Search Console delete approvals show what the delete does
