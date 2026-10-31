@@ -1366,6 +1366,24 @@
           ]
         }
       },
+      "methodNotes": {
+        "searchconsole": {
+          "source": "The curated Search Console tools (src/servers/searchconsole.ts) that run the same methods",
+          "reason": "Each generated tool a curated tool covers names it: the curated one checks the property string and dates before the request, and fits analytics rows to the result limit with an exact next_start_row (adversarial review of gsc, F7).",
+          "methods": {
+            "webmasters.sites.list": "sc_sites_list lists the same properties.",
+            "webmasters.sites.get": "sc_site_get reads the same property and checks its string first.",
+            "webmasters.sites.add": "sc_site_add adds a property and checks its string first.",
+            "webmasters.sites.delete": "sc_site_delete removes a property and checks its string first.",
+            "webmasters.sitemaps.list": "sc_sitemaps_list lists the same sitemaps.",
+            "webmasters.sitemaps.get": "sc_sitemap_get reads the same sitemap.",
+            "webmasters.sitemaps.submit": "sc_sitemap_submit submits a sitemap and checks the URLs first.",
+            "webmasters.sitemaps.delete": "sc_sitemap_delete removes a sitemap from Search Console and checks the URLs first.",
+            "webmasters.searchanalytics.query": "sc_search_analytics_query runs the same query with typed arguments (dates, dimensions, filters, data state) and fits the rows to the result limit with an exact next_start_row.",
+            "searchconsole.urlInspection.index.inspect": "sc_url_inspect inspects the same page and checks that it belongs to the property first."
+          }
+        }
+      },
       "toolsets": {
         "google": [
           "sc_sites_list",
@@ -1637,9 +1655,60 @@
           ]
         }
       },
+      "methodNotes": {
+        "gmail": {
+          "source": "config/products.json destructiveWhen (gmail); the curated Gmail tools (src/servers/gmail.ts) that run the same methods",
+          "reason": "The description says which calls of these write methods ask as destructive actions, and, for the methods a curated tool runs, which tool returns the same data in a readable form (adversarial review of Gmail, G5).",
+          "methods": {
+            "gmail.users.messages.modify": "A call that adds TRASH or SPAM (addLabelIds) moves the message out of the mailbox, as gmail_trash does, so it asks as a destructive action. gmail_label and gmail_unlabel change labels by name, on a thread or a message.",
+            "gmail.users.threads.modify": "A call that adds TRASH or SPAM (addLabelIds) moves the thread out of the mailbox, as gmail_trash does, so it asks as a destructive action. gmail_label and gmail_unlabel change labels by name, on a thread or a message.",
+            "gmail.users.messages.batchModify": "A call that adds TRASH or SPAM (addLabelIds) moves every listed message out of the mailbox, so it asks as a destructive action.",
+            "gmail.users.messages.get": "gmail_get_message reads the same message decoded (the body as text in its own charset, the attachments listed); this tool gives Gmail's raw parts and formats.",
+            "gmail.users.messages.list": "gmail_search runs the same search and adds each message's From, Subject and Date.",
+            "gmail.users.threads.get": "gmail_get_thread reads the same conversation decoded, and keeps a long thread within the result limit with its newest messages whole.",
+            "gmail.users.threads.list": "gmail_search_threads runs the same search and summarises the messages of each thread.",
+            "gmail.users.labels.list": "gmail_list_labels lists the same labels (id, name, type); gmail_label and gmail_unlabel take their names.",
+            "gmail.users.labels.create": "gmail_create_label creates a label from a name and a colour, as Google's create_label does.",
+            "gmail.users.drafts.list": "gmail_list_drafts lists the same drafts with their To, Subject and Date.",
+            "gmail.users.messages.attachments.get": "gmail_get_attachment downloads the same attachment as base64, in parts when it is larger than the result limit.",
+            "gmail.users.messages.trash": "gmail_trash moves a message or a whole thread to Trash, and its approval shows what moves.",
+            "gmail.users.threads.trash": "gmail_trash moves a message or a whole thread to Trash, and its approval shows what moves.",
+            "gmail.users.messages.untrash": "gmail_untrash takes a message or a whole thread out of Trash.",
+            "gmail.users.threads.untrash": "gmail_untrash takes a message or a whole thread out of Trash."
+          }
+        }
+      },
+      "destructiveWhen": {
+        "gmail": {
+          "source": "https://developers.google.com/workspace/gmail/api/guides/labels (system labels: TRASH and SPAM \"Can be manually applied: yes\"); messages.trash and threads.trash are destructive (classifyMethod), and gmail_label refuses TRASH and SPAM so that such moves go through a tool that asks first",
+          "reason": "Adding the TRASH or SPAM label moves mail out of the mailbox as messages.trash does, and Gmail deletes it after 30 days. As a plain write it ran without a question under confirmation destructive-only; these calls now ask as destructive. Other label changes stay writes.",
+          "methods": {
+            "gmail.users.messages.modify": {
+              "field": "addLabelIds",
+              "values": [
+                "TRASH",
+                "SPAM"
+              ]
+            },
+            "gmail.users.threads.modify": {
+              "field": "addLabelIds",
+              "values": [
+                "TRASH",
+                "SPAM"
+              ]
+            },
+            "gmail.users.messages.batchModify": {
+              "field": "addLabelIds",
+              "values": [
+                "TRASH",
+                "SPAM"
+              ]
+            }
+          }
+        }
+      },
       "toolsets": {
         "google": [
-          "gmail_search",
           "gmail_search_threads",
           "gmail_get_thread",
           "gmail_get_message",
@@ -1648,7 +1717,7 @@
           "gmail_create_draft",
           "gmail_send_draft",
           "gmail_list_labels",
-          "gmail_users_labels_create",
+          "gmail_create_label",
           "gmail_label",
           "gmail_unlabel",
           "gmail_trash",
@@ -1697,6 +1766,11 @@
       },
       "toolsetScopes": {
         "google": {
+          "readonly": [
+            "https://www.googleapis.com/auth/calendar.events.readonly",
+            "https://www.googleapis.com/auth/calendar.calendarlist.readonly",
+            "https://www.googleapis.com/auth/calendar.events.freebusy"
+          ],
           "readwrite": [
             "https://www.googleapis.com/auth/calendar.events",
             "https://www.googleapis.com/auth/calendar.calendarlist.readonly",

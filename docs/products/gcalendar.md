@@ -34,15 +34,17 @@ Start with `--profile readonly`. Event changes need a `readwrite` login and the 
 
 | Area | Tools | Safety | What it does |
 |---|---|---|---|
-| Read | `calendar_list_calendars`, `calendar_list_events`, `calendar_get_event`, `calendar_freebusy`, `calendar_suggest_time` | read | List calendars and events (by type, without a lower time bound with `include_past`), read one event (Meet link, attachments, reminders), check free and busy times, suggest meeting times when everyone is free |
-| Write | `calendar_create_event`, `calendar_update_event`, `calendar_respond` | write | Create or change an event (Meet link, recurrence, reminders, add or remove guests), answer an invitation |
+| Read | `calendar_list_calendars`, `calendar_list_events`, `calendar_get_event`, `calendar_freebusy`, `calendar_suggest_time` | read | List calendars (paged) and events (by type, without a lower time bound with `include_past`; each event with its type, organizer, your answer, the guests' answers, Meet link and series), read one event (Meet link, attachments, reminders, colour), check free and busy times, suggest meeting times when everyone is free |
+| Write | `calendar_create_event`, `calendar_update_event`, `calendar_respond` | write | Create or change an event (Meet link, recurrence, reminders, add or remove guests, visibility, colour, availability, attachments; focus time, out of office and working location events on create; a new start alone keeps the duration), answer an invitation |
 | Delete | `calendar_delete_event` | destructive | Delete an event |
 | Per-method (38) | | mixed | Event moves, imports, quick add and instances; calendar create, patch and clear; sharing (ACL); calendar list; settings; colors; watch channels |
 | Gateway | none | | No gateway tools. All methods are per-method tools. |
 
 The full list is in `docs/capabilities/gcalendar.md`.
 
-With the plugin option `toolset: google`, the server lists the 8 tools that match Google's Calendar MCP server (`list_calendars`, `list_events`, `get_event`, `suggest_time`, `create_event`, `update_event`, `delete_event`, `respond_to_event`; its `search_events` is a semantic search with no public API, so `calendar_list_events` with `q` stands in for it), plus `health` and the sign-in tools. A `readonly` login with that toolset asks for `calendar.readonly`; a `readwrite` login (since 1.25.0) for `calendar.events`, `calendar.calendarlist.readonly` and `calendar.events.freebusy`, the scopes of Google's Calendar MCP server, instead of `calendar`, which also changes calendars and their sharing (no tool of the list does).
+**Times (1.40.0).** Every time can be a local time without an offset, such as `2026-11-02T10:00`, as Google's own Calendar MCP server takes it: it is read in `time_zone`, else in the calendar's own time zone (one read of the calendar's zone first). An RFC 3339 time with an offset (`2026-11-02T10:00:00+01:00`) is used as written; when it disagrees with `time_zone` on that date, the answer has a `time_note`, because Calendar keeps the instant the offset gives. A date (`2026-11-02`) is an all-day event. `calendar_update_event` with a new `start` and no `end` keeps the event's duration, as Google's `update_event` does.
+
+With the plugin option `toolset: google`, the server lists the 8 tools that match Google's Calendar MCP server (`list_calendars`, `list_events`, `get_event`, `suggest_time`, `create_event`, `update_event`, `delete_event`, `respond_to_event`; its `search_events` is a semantic search with no public API, so `calendar_list_events` with `q` stands in for it), plus `health` and the sign-in tools. A `readonly` login with that toolset asks (since 1.40.1) for `calendar.events.readonly`, `calendar.calendarlist.readonly` and `calendar.events.freebusy`, the three scopes Google's Calendar MCP setup guide names, instead of `calendar.readonly`; a `readwrite` login (since 1.25.0) for `calendar.events`, `calendar.calendarlist.readonly` and `calendar.events.freebusy`, the scopes of Google's Calendar MCP server, instead of `calendar`, which also changes calendars and their sharing (no tool of the list does).
 
 ## Example requests
 
@@ -51,7 +53,9 @@ With the plugin option `toolset: google`, the server lists the 8 tools that matc
 - "Add a 3pm call with the design team on Thursday, with a Meet link." Claude runs `calendar_create_event` with `add_meet`. It asks first.
 - "Add Carl to Friday's review." Claude runs `calendar_update_event` with `add_attendees`; the other guests keep their answers. It asks first.
 - "Decline the 4pm sync and say I am travelling." Claude runs `calendar_respond`. It asks first.
-- "Move the 10am standup to 10:30." Claude runs `calendar_update_event`. It asks first.
+- "Move the 10am standup to 10:30." Claude runs `calendar_update_event` with the new start only; the standup keeps its length. It asks first.
+- "Block Thursday afternoon for focus time and decline new invitations." Claude runs `calendar_create_event` with `event_type: focusTime` and `auto_decline`. It asks first.
+- "Which invitations this week have I not answered?" Claude runs `calendar_list_events`; each event says `your_response`. No prompt.
 - "Delete the cancelled Friday workshop." Claude runs `calendar_delete_event`. It asks twice. The second prompt shows the event's title and time, and whether it deletes one event, one occurrence of a recurring event or the whole series (since 1.27.0).
 
 ## Safety

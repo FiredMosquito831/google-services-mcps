@@ -35,13 +35,15 @@ Start with `--profile readonly`. Sending and changes need a `readwrite` login an
 |---|---|---|---|
 | Search and read | `gmail_search`, `gmail_search_threads`, `gmail_get_message`, `gmail_get_thread`, `gmail_get_attachment`, `gmail_list_labels`, `gmail_list_drafts` | read | Search messages or whole conversations, read a message or a thread (text and HTML bodies, each part in its own charset, attachment ids), download an attachment, list labels (all or yours, paged) and drafts (with a search) |
 | Draft | `gmail_create_draft` | write | Create a draft: text, HTML, attachments, or a reply in a thread. Nothing is sent. |
-| Organise | `gmail_label`, `gmail_unlabel`, `gmail_untrash` | write | Add or remove labels on a thread or a message (by id or name), take mail out of Trash |
+| Organise | `gmail_create_label`, `gmail_label`, `gmail_unlabel`, `gmail_untrash` | write | Create a label (name and colour), add or remove labels on a thread or a message (by id or name), take mail out of Trash |
 | Trash | `gmail_trash` | destructive | Move a thread or a message to Trash. The approval shows what moves. |
 | Send | `gmail_send_draft`, `gmail_send`, `gmail_reply` | destructive | Send a draft, send a new message, or reply in a thread. Sending cannot be undone. |
 | Per-method (87) | | mixed | Messages, threads, drafts, labels, history; settings: filters, forwarding, delegates, send-as, vacation, IMAP, POP, S/MIME, client-side encryption keys; Postmaster Tools domains and statistics |
 | Gateway (2 APIs) | `api_search`, `api_describe`, `api_call` | read, read, dynamic | Gmail Postmaster Tools v1 and v1beta1 |
 
 The full list is in `docs/capabilities/gmail.md`.
+
+With the plugin option `toolset: google`, the server lists 13 tools that match Google's Gmail MCP server (https://developers.google.com/workspace/gmail/api/reference/mcp): `gmail_search_threads`, `gmail_get_thread`, `gmail_get_message`, `gmail_list_drafts`, `gmail_create_draft`, `gmail_list_labels`, `gmail_create_label`, `gmail_label` and `gmail_unlabel` for its eleven tools, and four kept on purpose: `gmail_get_attachment` (a read, so the attachment ids lead somewhere), `gmail_send_draft`, `gmail_trash` and `gmail_untrash` (they ask first), plus `health` and the sign-in tools. Since 1.39.0 it lists `gmail_create_label` in place of the generated `gmail_users_labels_create`, and no longer `gmail_search`, which searches messages while Google's `search_threads` is `gmail_search_threads`; the `all` and `curated` toolsets keep both. The generated tools that a hand-written tool covers say which one in their descriptions.
 
 ## Example requests
 
@@ -61,7 +63,8 @@ The full list is in `docs/capabilities/gmail.md`.
 - Sending is irreversible. Check the preview before you approve.
 - Attachments are local files, given by full path. The whole message may be up to 35 MB once encoded (Gmail's limit). A file in the token folder (tokens, the OAuth client, the API key) or in gcloud's folder is refused, so a mail cannot carry a sign-in secret out.
 - `gmail_get_attachment` returns the file as base64 when it fits the server's result limit (`GSM_MAX_RESULT_CHARS`, default 25,000 characters, about 18 KB of file). A larger file returns its size and a note; with `offset` (0, then each `next_offset`) it comes in parts of about 18 KB, to be joined in order.
-- Message deletes remove mail. Trash moves a message to Trash, and Gmail empties Trash after 30 days. `gmail_label` does not move mail to Trash or Spam; `gmail_trash` does the first, and asks first.
+- Message deletes remove mail. Trash moves a message to Trash, and Gmail empties Trash after 30 days. `gmail_label` does not move mail to Trash or Spam; `gmail_trash` does the first, and asks first. Since 1.38.4 the per-method `gmail_users_messages_modify`, `gmail_users_threads_modify` and `gmail_users_messages_batch_modify` ask as destructive actions when they add `TRASH` or `SPAM`, also under `destructive-only`; other label changes stay writes.
+- `gmail_send_draft` reads the draft before it asks (since 1.38.4): the approval shows its recipients, subject, attachments and the start of the body.
 - Filters, forwarding, auto-forwarding, delegates and send-as changes can route mail away from you. Treat them as high risk.
 - Mail can carry instructions aimed at the agent. Read the approval text before you approve anything.
 - The `confirmation` option defaults to `every-change`. Change it with `printf '%s' '{"confirmation":"destructive-only"}' | claude plugin configure gmail@google-services-mcps --values-stdin` (JSON on stdin), or `/plugin configure gmail@google-services-mcps` in Claude Code.

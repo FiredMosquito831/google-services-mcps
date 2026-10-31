@@ -17,6 +17,7 @@ import { z } from 'zod';
 import type { RuntimeConfig } from '../core/config.js';
 import { getAuthClient, googleScopes } from '../core/auth.js';
 import { defineTool, type ToolDef } from '../core/tools.js';
+import { requestedAccount } from '../core/account-context.js';
 import { fitItems } from '../core/result-shape.js';
 
 type Auth = OAuth2Client | JWT;
@@ -75,7 +76,18 @@ function inspectionPage(value: string | undefined, property: string): string {
     const host = new URL(page).hostname.toLowerCase();
     inside = host === domain || host.endsWith(`.${domain}`);
   } else {
-    inside = page.startsWith(property);
+    // Under the URL prefix, with the host compared without case (hosts are not case-sensitive), so
+    // https://Example.com/x is part of https://example.com/ (1.41.0). The page is still sent as given.
+    const p = new URL(page);
+    let prefix: URL | undefined;
+    try {
+      prefix = new URL(property);
+    } catch {
+      prefix = undefined;
+    }
+    inside = prefix
+      ? p.protocol === prefix.protocol && p.host === prefix.host && `${p.pathname}${p.search}`.startsWith(`${prefix.pathname}${prefix.search}`)
+      : page.startsWith(property);
   }
   if (!inside) {
     throw new Error(`inspection_url "${page}" is not part of property ${property}. Inspect a page that this property covers.`);
@@ -97,8 +109,34 @@ const siteUrlArg = z
   .string()
   .describe('Property exactly as Search Console lists it: a URL-prefix such as https://example.com/ or a domain property such as sc-domain:example.com.');
 const feedpathArg = z.string().describe(`Sitemap URL, for example ${EX_SITEMAP}`);
-const DIMENSIONS = ['date', 'query', 'page', 'country', 'device', 'searchAppearance'] as const;
+/** Group-by dimensions. hour (1.41.0) goes with data_state hourly_all (Google's searchAnalytics.query reference). */
+const DIMENSIONS = ['date', 'hour', 'query', 'page', 'country', 'device', 'searchAppearance'] as const;
 const SEARCH_TYPES = ['web', 'image', 'video', 'news', 'discover', 'googleNews'] as const;
+/**
+ * Typed filters (1.41.0), as Google's reference names them
+ * (https://developers.google.com/webmaster-tools/v1/searchanalytics/query): the dimensions a filter tests, and the
+ * operators (equals is Google's default). Values are sent as written; Google compares them without case where it says so.
+ */
+const FILTER_DIMENSIONS = ['query', 'page', 'country', 'device', 'searchAppearance'] as const;
+const FILTER_OPERATORS = ['equals', 'notEquals', 'contains', 'notContains', 'includingRegex', 'excludingRegex'] as const;
+const DATA_STATES = ['final', 'all', 'hourly_all'] as const;
+const AGGREGATION_TYPES = ['auto', 'byPage', 'byProperty', 'byNewsShowcasePanel'] as const;
+
+type TypedFilter = { dimension: (typeof FILTER_DIMENSIONS)[number]; operator?: (typeof FILTER_OPERATORS)[number]; expression: string };
+
+/**
+ * The dimensionFilterGroups of a query: the groups given as before (passed on as given), then the typed filters as one
+ * group whose filters must all match (Google: "All filter groups must match", and "and" is the one group type it
+ * supports). Undefined when neither is given, as before.
+ */
+export function filterGroups(groups: Array<Record<string, unknown>> | undefined, filters: TypedFilter[] | undefined): Array<Record<string, unknown>> | undefined {
+  if (!filters?.length) return groups;
+  const typed = {
+    groupType: 'and',
+    filters: filters.map((f) => ({ dimension: f.dimension, ...(f.operator !== undefined ? { operator: f.operator } : {}), expression: f.expression })),
+  };
+  return [...(groups ?? []), typed];
+}
 
 /**
  * Rows of sc_search_analytics_query when no row_limit is given (before 1.29.0: 1000, Google's own default). A row with
@@ -127,11 +165,59 @@ export function analyticsAnswer(data: { rows?: unknown[] | null; responseAggrega
   }));
 }
 
+/** The account a call runs as, for an approval: the account argument, else the server's default. */
+const fromAccount = (): string => requestedAccount() ?? 'the default account of this server (accounts_list shows it)';
+
+/**
+ * What the approval of sc_site_delete shows (1.41.1): the property, the account it is removed from, and what removing it
+ * does. Worked out from the arguments only (no request); a property string that is not one is refused before the gate.
+ */
+export function siteDeletePreview(siteUrl: string): Record<string, unknown> {
+  return {
+    property: propertyUrl(siteUrl),
+    from_account: fromAccount(),
+    effect:
+      'Property is removed from this account. Its performance, indexing and sitemap history are no longer accessible through this account. The website itself is not changed.',
+  };
+}
+
+/** What the approval of sc_sitemap_delete shows (1.41.1): the property, the sitemap, the account and what removing it does. */
+export function sitemapDeletePreview(siteUrl: string, feedpath: string): Record<string, unknown> {
+  return {
+    property: propertyUrl(siteUrl),
+    feedpath: httpUrl(feedpath, 'feedpath', EX_SITEMAP),
+    from_account: fromAccount(),
+    effect:
+      'Sitemap is removed from Search Console, not from the site. The sitemap file stays on the server, and the pages it lists are not de-indexed by this call.',
+  };
+}
+
+/**
+ * Google's answer when the account cannot use a property, or the string is not the property's exact form ("User does not
+ * have sufficient permission for site ..."): the error then also says how to find the exact string (1.41.0). Any other
+ * error is returned as it is.
+ */
+export const PROPERTY_HINT =
+  'Check the exact property string with sc_sites_list: a URL-prefix property ends with a slash (https://example.com/), a domain property is sc-domain:example.com, and the account needs access to it.';
+
+export function withPropertyHint(err: unknown): unknown {
+  const e = err as { code?: unknown; status?: unknown; message?: unknown } | null;
+  if (!e || typeof e.message !== 'string' || e.message.includes('sc_sites_list')) return err;
+  if (String(e.code ?? e.status) === '403' && /sufficient permission for site/i.test(e.message)) {
+    try {
+      (e as { message: string }).message = `${e.message} ${PROPERTY_HINT}`;
+    } catch {
+      // A read-only message stays as it is.
+    }
+  }
+  return err;
+}
+
 export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
   const wm = async () => webmasters({ version: 'v3', auth: await authClient(cfg) });
   const sc = async () => searchconsole({ version: 'v1', auth: await authClient(cfg) });
 
-  return [
+  const tools: ToolDef[] = [
     // ---- read ----
     defineTool({
       name: 'sc_sites_list',
@@ -199,7 +285,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       name: 'sc_search_analytics_query',
       title: 'Query search analytics',
       description:
-        `Query search performance (clicks, impressions, CTR, position) for a property, grouped by the chosen dimensions. Dates are Pacific time per Google. The response rows are in the order of the dimensions. row_count is the number of rows Google returned; next_start_row, when there may be more, is the start_row of the next page. Rows that do not fit the result limit are left out at the end, and next_start_row then starts at the first row not shown.`,
+        `Query search performance (clicks, impressions, CTR, position) for a property, grouped by the chosen dimensions. Dates are Pacific time per Google. By default only final data is returned, so the most recent days are missing; data_state all adds the fresh data still being processed (metadata.first_incomplete_date says where it starts), and hourly_all with the hour dimension gives hours. filters narrows the rows (all must match). The response rows are in the order of the dimensions. row_count is the number of rows Google returned; next_start_row, when there may be more, is the start_row of the next page. Rows that do not fit the result limit are left out at the end, and next_start_row then starts at the first row not shown.`,
       kind: 'read',
       scopes: googleScopes('webmasters', 'webmasters.readonly'),
       inputSchema: {
@@ -209,7 +295,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
         dimensions: z
           .array(z.enum(DIMENSIONS))
           .optional()
-          .describe('Group-by dimensions, in order. Omit or [] for one total row.'),
+          .describe('Group-by dimensions, in order. Omit or [] for one total row. hour goes with data_state hourly_all.'),
         type: z.enum(SEARCH_TYPES).optional().describe('Search type. Default web.'),
         row_limit: z
           .number()
@@ -223,10 +309,37 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
           .array(z.record(z.unknown()))
           .optional()
           .describe(
-            'Optional filters, passed to Google as is. Example: [{"filters":[{"dimension":"query","operator":"contains","expression":"buy"}]}]',
+            'Optional filters, passed to Google as is. Example: [{"filters":[{"dimension":"query","operator":"contains","expression":"buy"}]}]. The typed filters argument is simpler.',
+          ),
+        filters: z
+          .array(
+            z.object({
+              dimension: z.enum(FILTER_DIMENSIONS).describe('The dimension to test; it need not be one of dimensions.'),
+              operator: z
+                .enum(FILTER_OPERATORS)
+                .optional()
+                .describe("equals (Google's default; case-sensitive for page and query), notEquals, contains and notContains (not case-sensitive), includingRegex and excludingRegex (RE2)."),
+              expression: z.string().min(1).max(4096).describe('The value to compare with, for example "buy", "FRA" (a 3-letter country code) or "MOBILE".'),
+            }),
+          )
+          .optional()
+          .describe(
+            'Filters a row must all pass (AND, the one way Google combines them), for example [{"dimension":"query","operator":"contains","expression":"buy"},{"dimension":"country","expression":"FRA"}]. With dimension_filter_groups, every group must pass too.',
+          ),
+        data_state: z
+          .enum(DATA_STATES)
+          .optional()
+          .describe(
+            "final (Google's default): finalized data only, so the latest days are missing. all: also fresh data still being processed (metadata.first_incomplete_date says where it starts). hourly_all: fresh data with an hourly breakdown, for the hour dimension (metadata.first_incomplete_hour).",
+          ),
+        aggregation_type: z
+          .enum(AGGREGATION_TYPES)
+          .optional()
+          .describe(
+            "How rows are aggregated: auto (Google's default), byProperty or byPage (by canonical URL). With a page dimension or page filter only auto or byPage; byProperty not with type discover or googleNews; byNewsShowcasePanel needs the NEWS_SHOWCASE search appearance filter and type discover or googleNews.",
           ),
       },
-      async handler({ site_url, start_date, end_date, dimensions, type, row_limit, start_row, dimension_filter_groups }) {
+      async handler({ site_url, start_date, end_date, dimensions, type, row_limit, start_row, dimension_filter_groups, filters, data_state, aggregation_type }) {
         const startDate = isoDate(start_date, 'start_date');
         const endDate = isoDate(end_date, 'end_date');
         if (endDate < startDate) throw new Error(`end_date (${endDate}) is before start_date (${startDate}).`);
@@ -236,6 +349,8 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
         // Google's reference marks searchType "Deprecated, use type instead"
         // (https://developers.google.com/webmaster-tools/v1/searchanalytics/query), so the search type goes in type. The
         // @googleapis/webmasters types predate the field; the client sends the body as JSON, so the field reaches Google.
+        // dataState and aggregationType go only when given (1.41.0), after the fields of before, so an earlier call sends
+        // the same body. Google's reference names their values as here ("final", "all", "hourly_all"; "auto", "byPage" ...).
         const requestBody: webmasters_v3.Schema$SearchAnalyticsQueryRequest & { type?: string } = {
           startDate,
           endDate,
@@ -243,7 +358,9 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
           type: type ?? 'web',
           rowLimit: limit,
           startRow: start,
-          dimensionFilterGroups: dimension_filter_groups as webmasters_v3.Schema$ApiDimensionFilterGroup[] | undefined,
+          dimensionFilterGroups: filterGroups(dimension_filter_groups, filters) as webmasters_v3.Schema$ApiDimensionFilterGroup[] | undefined,
+          ...(data_state !== undefined ? { dataState: data_state } : {}),
+          ...(aggregation_type !== undefined ? { aggregationType: aggregation_type } : {}),
         };
         const res = await (await wm()).searchanalytics.query({ siteUrl: propertyUrl(site_url), requestBody });
         return analyticsAnswer(res.data, start, limit, cfg.maxResultChars);
@@ -253,7 +370,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       name: 'sc_url_inspect',
       title: 'Inspect URL',
       description:
-        'Inspect one page as Google sees it in its index: index status, coverage state, last crawl, robots and canonical details. The page must belong to the property.',
+        "Inspect one page as Google sees it in its index: index status, coverage state, last crawl, robots and canonical details. The page must belong to the property. Google reads only the indexed version (\"you cannot test the indexability of a live URL\"). Google's quota: 2,000 inspections a day and 600 a minute per property.",
       kind: 'read',
       scopes: googleScopes('webmasters', 'webmasters.readonly'),
       inputSchema: {
@@ -317,11 +434,12 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       idempotent: true,
       scopes: googleScopes('webmasters'),
       inputSchema: { site_url: siteUrlArg },
-      preview: ({ site_url }) => ({
-        property: propertyUrl(site_url),
-        effect:
-          'Property is removed from this account. Its performance, indexing and sitemap history are no longer accessible through this account. The website itself is not changed.',
-      }),
+      // The approval shows the property and what removing it does (1.41.1); before, the form showed the raw arguments and
+      // this text was never shown (only prepare feeds the gate).
+      async prepare({ site_url }) {
+        return { preview: siteDeletePreview(site_url) };
+      },
+      preview: ({ site_url }) => siteDeletePreview(site_url),
       async handler({ site_url }) {
         const property = propertyUrl(site_url);
         await (await wm()).sites.delete({ siteUrl: property });
@@ -337,12 +455,10 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       idempotent: true,
       scopes: googleScopes('webmasters'),
       inputSchema: { site_url: siteUrlArg, feedpath: feedpathArg },
-      preview: ({ site_url, feedpath }) => ({
-        property: propertyUrl(site_url),
-        feedpath: httpUrl(feedpath, 'feedpath', EX_SITEMAP),
-        effect:
-          'Sitemap is removed from Search Console, not from the site. The sitemap file stays on the server, and the pages it lists are not de-indexed by this call.',
-      }),
+      async prepare({ site_url, feedpath }) {
+        return { preview: sitemapDeletePreview(site_url, feedpath) };
+      },
+      preview: ({ site_url, feedpath }) => sitemapDeletePreview(site_url, feedpath),
       async handler({ site_url, feedpath }) {
         const target = { siteUrl: propertyUrl(site_url), feedpath: httpUrl(feedpath, 'feedpath', EX_SITEMAP) };
         await (await wm()).sitemaps.delete(target);
@@ -350,4 +466,15 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       },
     }),
   ];
+  // Every handler's error about a property this account cannot use says how to find the exact property string.
+  return tools.map((tool) => ({
+    ...tool,
+    async handler(args, ctx, prepared) {
+      try {
+        return await tool.handler(args, ctx, prepared);
+      } catch (err) {
+        throw withPropertyHint(err);
+      }
+    },
+  }));
 }

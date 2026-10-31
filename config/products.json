@@ -1542,6 +1542,24 @@
           ]
         }
       },
+      "methodNotes": {
+        "searchconsole": {
+          "source": "The curated Search Console tools (src/servers/searchconsole.ts) that run the same methods",
+          "reason": "Each generated tool a curated tool covers names it: the curated one checks the property string and dates before the request, and fits analytics rows to the result limit with an exact next_start_row (adversarial review of gsc, F7).",
+          "methods": {
+            "webmasters.sites.list": "sc_sites_list lists the same properties.",
+            "webmasters.sites.get": "sc_site_get reads the same property and checks its string first.",
+            "webmasters.sites.add": "sc_site_add adds a property and checks its string first.",
+            "webmasters.sites.delete": "sc_site_delete removes a property and checks its string first.",
+            "webmasters.sitemaps.list": "sc_sitemaps_list lists the same sitemaps.",
+            "webmasters.sitemaps.get": "sc_sitemap_get reads the same sitemap.",
+            "webmasters.sitemaps.submit": "sc_sitemap_submit submits a sitemap and checks the URLs first.",
+            "webmasters.sitemaps.delete": "sc_sitemap_delete removes a sitemap from Search Console and checks the URLs first.",
+            "webmasters.searchanalytics.query": "sc_search_analytics_query runs the same query with typed arguments (dates, dimensions, filters, data state) and fits the rows to the result limit with an exact next_start_row.",
+            "searchconsole.urlInspection.index.inspect": "sc_url_inspect inspects the same page and checks that it belongs to the property first."
+          }
+        }
+      },
       "toolsets": {
         "google": {
           "source": "No official Google MCP server for Search Console was found (Google's Cloud and Workspace MCP lists, 2026-10-29; a negative, not confirmed by Google); a lean set chosen here.",
@@ -1570,7 +1588,7 @@
           "notes": {
             "sc_sites_list": "The properties the account can see, with its permission level. Start here.",
             "sc_site_get": "One property and the account's permission on it.",
-            "sc_search_analytics_query": "Clicks, impressions, CTR and position by query, page, country, device, date or search appearance. A read, as the generated searchcons_searchanalytics_query is since 1.24.5 (config/tool-kinds.json; before, the POST query was a write by its name).",
+            "sc_search_analytics_query": "Clicks, impressions, CTR and position by query, page, country, device, date, hour or search appearance, with typed filters, the data state (final, all, hourly_all) and the aggregation type since 1.41.0. A read, as the generated searchcons_searchanalytics_query is since 1.24.5 (config/tool-kinds.json; before, the POST query was a write by its name).",
             "sc_url_inspect": "The index status of one URL: coverage, last crawl, canonical and rich results. Google retired mobile usability in December 2023; the result's mobileUsabilityResult is deprecated.",
             "sc_sitemaps_list": "The sitemaps of a property with their status, errors, warnings and submitted URL counts. Google deprecated the indexed count (\"Deprecated; do not use.\"); for whether a page is indexed, use sc_url_inspect.",
             "sc_sitemap_get": "One sitemap: its status, errors, warnings and counts.",
@@ -1944,11 +1962,62 @@
           ]
         }
       },
+      "destructiveWhen": {
+        "gmail": {
+          "source": "https://developers.google.com/workspace/gmail/api/guides/labels (system labels: TRASH and SPAM \"Can be manually applied: yes\"); messages.trash and threads.trash are destructive (classifyMethod), and gmail_label refuses TRASH and SPAM so that such moves go through a tool that asks first",
+          "reason": "Adding the TRASH or SPAM label moves mail out of the mailbox as messages.trash does, and Gmail deletes it after 30 days. As a plain write it ran without a question under confirmation destructive-only; these calls now ask as destructive. Other label changes stay writes.",
+          "methods": {
+            "gmail.users.messages.modify": {
+              "field": "addLabelIds",
+              "values": [
+                "TRASH",
+                "SPAM"
+              ]
+            },
+            "gmail.users.threads.modify": {
+              "field": "addLabelIds",
+              "values": [
+                "TRASH",
+                "SPAM"
+              ]
+            },
+            "gmail.users.messages.batchModify": {
+              "field": "addLabelIds",
+              "values": [
+                "TRASH",
+                "SPAM"
+              ]
+            }
+          }
+        }
+      },
+      "methodNotes": {
+        "gmail": {
+          "source": "config/products.json destructiveWhen (gmail); the curated Gmail tools (src/servers/gmail.ts) that run the same methods",
+          "reason": "The description says which calls of these write methods ask as destructive actions, and, for the methods a curated tool runs, which tool returns the same data in a readable form (adversarial review of Gmail, G5).",
+          "methods": {
+            "gmail.users.messages.modify": "A call that adds TRASH or SPAM (addLabelIds) moves the message out of the mailbox, as gmail_trash does, so it asks as a destructive action. gmail_label and gmail_unlabel change labels by name, on a thread or a message.",
+            "gmail.users.threads.modify": "A call that adds TRASH or SPAM (addLabelIds) moves the thread out of the mailbox, as gmail_trash does, so it asks as a destructive action. gmail_label and gmail_unlabel change labels by name, on a thread or a message.",
+            "gmail.users.messages.batchModify": "A call that adds TRASH or SPAM (addLabelIds) moves every listed message out of the mailbox, so it asks as a destructive action.",
+            "gmail.users.messages.get": "gmail_get_message reads the same message decoded (the body as text in its own charset, the attachments listed); this tool gives Gmail's raw parts and formats.",
+            "gmail.users.messages.list": "gmail_search runs the same search and adds each message's From, Subject and Date.",
+            "gmail.users.threads.get": "gmail_get_thread reads the same conversation decoded, and keeps a long thread within the result limit with its newest messages whole.",
+            "gmail.users.threads.list": "gmail_search_threads runs the same search and summarises the messages of each thread.",
+            "gmail.users.labels.list": "gmail_list_labels lists the same labels (id, name, type); gmail_label and gmail_unlabel take their names.",
+            "gmail.users.labels.create": "gmail_create_label creates a label from a name and a colour, as Google's create_label does.",
+            "gmail.users.drafts.list": "gmail_list_drafts lists the same drafts with their To, Subject and Date.",
+            "gmail.users.messages.attachments.get": "gmail_get_attachment downloads the same attachment as base64, in parts when it is larger than the result limit.",
+            "gmail.users.messages.trash": "gmail_trash moves a message or a whole thread to Trash, and its approval shows what moves.",
+            "gmail.users.threads.trash": "gmail_trash moves a message or a whole thread to Trash, and its approval shows what moves.",
+            "gmail.users.messages.untrash": "gmail_untrash takes a message or a whole thread out of Trash.",
+            "gmail.users.threads.untrash": "gmail_untrash takes a message or a whole thread out of Trash."
+          }
+        }
+      },
       "toolsets": {
         "google": {
-          "source": "https://developers.google.com/workspace/gmail/api/reference/mcp/tools_list",
+          "source": "https://developers.google.com/workspace/gmail/api/reference/mcp",
           "tools": [
-            "gmail_search",
             "gmail_search_threads",
             "gmail_get_thread",
             "gmail_get_message",
@@ -1957,16 +2026,13 @@
             "gmail_create_draft",
             "gmail_send_draft",
             "gmail_list_labels",
-            "gmail_users_labels_create",
+            "gmail_create_label",
             "gmail_label",
             "gmail_unlabel",
             "gmail_trash",
             "gmail_untrash"
           ],
           "matches": {
-            "gmail_search": [
-              "search_threads"
-            ],
             "gmail_search_threads": [
               "search_threads"
             ],
@@ -1987,7 +2053,7 @@
             "gmail_list_labels": [
               "list_labels"
             ],
-            "gmail_users_labels_create": [
+            "gmail_create_label": [
               "create_label"
             ],
             "gmail_label": [
@@ -2002,7 +2068,7 @@
             "gmail_untrash": []
           },
           "notes": {
-            "gmail_search": "Searches messages; Google's search_threads returns threads, as gmail_search_threads does.",
+            "gmail_create_label": "Takes Google's create_label arguments (a display name and an optional text and background colour). Google's reference page lists the tool, though its toolset table there names the other ten (checked 2026-10-31). Before 1.39.0 the list held the generated gmail_users_labels_create, which takes Gmail's raw Label body.",
             "gmail_get_attachment": "Google's get_message lists attachment ids, but no tool of Google's server downloads them. Kept so the ids lead somewhere; it is a read.",
             "gmail_send_draft": "Google's Gmail server has no send tool. Kept so a draft made with gmail_create_draft can be sent; it is destructive, so it asks first.",
             "gmail_label": "One tool for threads and messages (label_thread and label_message in Google's server). Trash and Spam are refused here, as Google's label tools refuse them.",
@@ -2045,8 +2111,13 @@
       },
       "toolsets": {
         "google": {
-          "source": "https://developers.google.com/workspace/calendar/api/v3/reference/mcp/tools_list",
+          "source": "https://developers.google.com/workspace/calendar/api/v3/reference/mcp",
           "preferScopes": {
+            "readonly": [
+              "https://www.googleapis.com/auth/calendar.events.readonly",
+              "https://www.googleapis.com/auth/calendar.calendarlist.readonly",
+              "https://www.googleapis.com/auth/calendar.events.freebusy"
+            ],
             "readwrite": [
               "https://www.googleapis.com/auth/calendar.events",
               "https://www.googleapis.com/auth/calendar.calendarlist.readonly",
@@ -2091,7 +2162,9 @@
             ]
           },
           "notes": {
-            "calendar_list_events": "Google's search_events is a semantic search of the primary calendar with no public API; the keyword search of calendar_list_events (q) stands in for it. Without time_min the list starts now, as before 1.8.0; include_past gives Google's no-lower-bound list.",
+            "calendar_list_events": "Google's search_events is a semantic search of the primary calendar with no public API; the keyword search of calendar_list_events (q) stands in for it. Without time_min the list starts now, as before 1.8.0; include_past gives Google's no-lower-bound list. Since 1.40.0 times without an offset are read in time_zone or the calendar's zone, as Google's are, and each event says its type, organizer, your answer, the guests' answers, Meet link and series. Google's startTimeDesc order has no Calendar API equivalent and is not offered.",
+            "calendar_create_event": "Takes Google's options except guest permissions, optional guests and guest display names, a specific Meet URL, and birthday events (since 1.40.0 it has visibility, color_id, availability, attachments and the focus time, out of office and working location types). Invitations are sent only when send_updates says so; Google's tool sends them by default.",
+            "calendar_update_event": "Keeps the duration when only start moves, as Google's does (since 1.40.0). Not covered: guest permissions, optional guests, a specific Meet URL. send_updates defaults to none; Google's update_event defaults to ALL.",
             "calendar_suggest_time": "Computed here from free/busy (freebusy.query) and the window, duration and working hours given; Google's preferences object is not public, so its exact ranking is not copied.",
             "calendar_delete_event": "Destructive, so it asks first, as in Google's server (destructiveHint)."
           }

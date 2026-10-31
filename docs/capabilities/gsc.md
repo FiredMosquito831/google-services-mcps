@@ -24,7 +24,7 @@ Google has no official MCP server for this product. The google toolset is a lean
 |---|---|---|
 | `sc_sites_list` | (none) | The properties the account can see, with its permission level. Start here. |
 | `sc_site_get` | (none) | One property and the account's permission on it. |
-| `sc_search_analytics_query` | (none) | Clicks, impressions, CTR and position by query, page, country, device, date or search appearance. A read, as the generated searchcons_searchanalytics_query is since 1.24.5 (config/tool-kinds.json; before, the POST query was a write by its name). |
+| `sc_search_analytics_query` | (none) | Clicks, impressions, CTR and position by query, page, country, device, date, hour or search appearance, with typed filters, the data state (final, all, hourly_all) and the aggregation type since 1.41.0. A read, as the generated searchcons_searchanalytics_query is since 1.24.5 (config/tool-kinds.json; before, the POST query was a write by its name). |
 | `sc_url_inspect` | (none) | The index status of one URL: coverage, last crawl, canonical and rich results. Google retired mobile usability in December 2023; the result's mobileUsabilityResult is deprecated. |
 | `sc_sitemaps_list` | (none) | The sitemaps of a property with their status, errors, warnings and submitted URL counts. Google deprecated the indexed count ("Deprecated; do not use."); for whether a page is indexed, use sc_url_inspect. |
 | `sc_sitemap_get` | (none) | One sitemap: its status, errors, warnings and counts. |

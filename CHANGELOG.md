@@ -2,6 +2,107 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.41.1 - 2026-10-31
+
+### Fixed: the Search Console delete approvals show what the delete does
+- `sc_site_delete` and `sc_sitemap_delete` are destructive, and each had a preview with the exact effect ("Property is removed from this account. Its performance, indexing and sitemap history are no longer accessible through this account. The website itself is not changed."; "Sitemap is removed from Search Console, not from the site. The sitemap file stays on the server, and the pages it lists are not de-indexed by this call."). The gate never read it: only a tool's `prepare` reaches the approval, so the form showed the raw arguments (review of gsc, F6). The preview is now worked out in `prepare`, from the arguments alone (no request), and the form shows the property, the sitemap, the account the call runs as and the effect. A property string that is not one is refused before the form, as the handler refused it before.
+- `approval.ts` is unchanged: the same gate path `gmail_send` and `calendar_delete_event` use.
+
+### Not changed
+- Tool maps and kinds, tools/list (the two tools keep their descriptions and arguments), `gsm scopes`, the requests. Policy rules decide as before; the audit line hashes what the form showed.
+
+## 1.41.0 - 2026-10-31
+
+### Added: the search analytics options Google documents
+- `sc_search_analytics_query` takes what Google's `searchAnalytics.query` takes (https://developers.google.com/webmaster-tools/v1/searchanalytics/query) and it lacked (review of gsc, F2):
+  - `data_state`: `final` (Google's default: "the returned data will include only finalized data", so the latest days are missing), `all` ("data will include fresh data"; the answer's `metadata.first_incomplete_date` says where it starts) or `hourly_all` ("hourly breakdown", for the `hour` dimension; `metadata.first_incomplete_hour`).
+  - the `hour` dimension.
+  - `aggregation_type`: `auto`, `byPage`, `byProperty` or `byNewsShowcasePanel`, with Google's limits in its description.
+  - `filters`: a typed list of `{ dimension, operator, expression }` (dimensions `query`, `page`, `country`, `device`, `searchAppearance`; operators `equals`, `notEquals`, `contains`, `notContains`, `includingRegex`, `excludingRegex`; expression up to 4,096 characters), sent as one group whose filters must all match ("All filter groups must match"; "and" is the one group type Google supports). The untyped `dimension_filter_groups` still works and is sent as given; with both, every group must pass.
+- The values go to Google as its reference spells them, and only when given: a call without them sends the same body as before, field for field. Google's `metadata` object comes through in the answer.
+
+### Fixed: smaller Search Console gaps
+- `sc_url_inspect` says what Google's reference says: only the indexed version is read ("you cannot test the indexability of a live URL"), and the quota is 2,000 inspections a day and 600 a minute per property (https://developers.google.com/webmaster-tools/limits). A page under a URL-prefix property is matched with its host compared without case, so `https://Example.com/x` belongs to `https://example.com/`; a page whose host only starts with the property's (`https://example.co` against `https://example.com/x`) is no longer taken as part of it (F11).
+- Google's "User does not have sufficient permission for site" error now ends with how to find the exact property string (`sc_sites_list`; a URL-prefix property ends with a slash, a domain property is `sc-domain:`), for every curated tool (F8).
+- The ten generated Search Console tools that a curated tool covers name it in their descriptions (`methodNotes`, F7), as Gmail's do since 1.39.0.
+
+### Not changed
+- Tool maps and tool kinds, `gsm scopes`, the hook, and the requests of every earlier call. Not checked against live Google.
+
+## 1.40.1 - 2026-10-31
+
+### Fixed: a readonly Calendar login with the google toolset asks for Google's three read scopes
+- Google's Calendar MCP server asks for `calendar.calendarlist.readonly`, `calendar.events.freebusy` and `calendar.events.readonly` (https://developers.google.com/workspace/calendar/api/guides/configure-mcp-server, "paste the scopes for the Google Calendar MCP server"). A `readonly` login with `toolset: google` asked for `calendar.readonly` ("See and download any calendar you can access using your Google Calendar"), the one scope that covers its four read tools (review of Calendar, F10). It now asks for the three, as its `readwrite` login has asked for `calendar.events`, `calendar.calendarlist.readonly` and `calendar.events.freebusy` since 1.25.0, by the same reading of Google's scope descriptions ("View events on all your calendars", "See the list of Google calendars you're subscribed to", "See the availability on Google calendars you have access to"): the same reach for listing calendars, reading events and finding free time.
+- The two Calendar free/busy scopes join the view-only scopes the `readonly` profile may ask for (`VIEW_ONLY_SCOPES`): `calendar.events.freebusy` ("See the availability on Google calendars you have access to") and `calendar.freebusy` ("View your availability in your calendars"), quoted from https://developers.google.com/identity/protocols/oauth2/scopes. Their names do not end in `readonly`, so before, no `readonly` login could take them.
+- A token that holds `calendar.readonly` keeps every tool: each tool still accepts it.
+
+### Not changed
+- `gsm scopes` over all 207 plugin, profile and toolset cases: 206 identical; gcalendar `readonly` `google` asks for `calendar.calendarlist.readonly`, `calendar.events.freebusy` and `calendar.events.readonly` instead of `calendar.readonly`, with the same tools covered. The `all` and `curated` toolsets of gcalendar still ask for `calendar.readonly` (and `calendar.acls.readonly`). Tool maps, tool kinds and tools/list. Not checked against live Google.
+
+## 1.40.0 - 2026-10-31
+
+### Added: Calendar times without an offset
+- Every Calendar tool that takes a time now also takes a local date and time without an offset (`2026-11-02T10:00`), read in `time_zone`, else in the calendar's own time zone, as Google's Calendar MCP server does ("Time zone (IANA ID, for example Europe/Zurich) used to resolve timezone-less dates. Default: calendar's timezone", list_events, https://developers.google.com/workspace/calendar/api/v3/reference/mcp/tools_list/list_events). Before, such a time was refused, and a model had to work out the offset itself, where a wrong one books the wrong hour (review of Calendar, F4).
+  - `calendar_create_event` and `calendar_update_event` send it as Calendar takes it: `dateTime` without an offset and `timeZone` (Discovery, EventDateTime: "A time zone offset is required unless a time zone is explicitly specified in timeZone"). Without `time_zone`, the calendar's zone is read first (one `events.list` request for its `timeZone` field, a read with the scopes the tools already have); `calendar_update_event` takes the event's own zone when it has one.
+  - `calendar_list_events`, `calendar_freebusy` and `calendar_suggest_time` turn it into a UTC instant (Calendar takes `timeMin` and `timeMax` with an offset only). `calendar_freebusy` takes `time_zone` (also the zone of its answer, `FreeBusyRequest.timeZone`); `calendar_suggest_time` answers in the primary calendar's zone for a local window.
+  - A time with an offset is sent as before. When it also has a `time_zone` whose offset at that moment differs, the answer has a `time_note`: Calendar keeps the instant the offset gives, so the event is not at that hour of `time_zone`'s clock. The request is unchanged.
+- A recurring event with a local start no longer needs `time_zone`: it takes the calendar's zone.
+
+### Fixed: calendar_update_event keeps the duration when only the start moves
+- Google's update_event: "New start time (ISO 8601). Preserves duration if updating only start." (https://developers.google.com/workspace/calendar/api/v3/reference/mcp/tools_list/update_event). `calendar_update_event` patched the start alone, so moving an event later gave an empty range (refused by Google) or shortened it (F3). Now a `start` without `end` reads the event first and moves the end with it: a timed event keeps its length (the end written as the start is), an all-day event its number of days; the answer says `duration_kept`. A date for a timed event (or a time for an all-day one) cannot keep a duration, and the error asks for `end` too. With `start` and `end` both, the request is as before (one PATCH, no read).
+- `time_zone` without `start` or `end` was ignored without a word; the answer now says it was not used, and the "nothing to change" error says that it applies to start and end.
+
+### Added: more of Google's create_event and update_event
+- `visibility` (default, public, private, confidential), `color_id` (the event palette, 1 to 11) and `availability` (busy or free, Calendar's transparency) on both; `attachments` on create and `add_attachments` / `remove_attachments` on update: links to files (for Drive, the file's link), at most 25 per event (Discovery, Event.attachments), sent with `supportsAttachments=true` ("In order to modify attachments the supportsAttachments request parameter should be set to true"). The update keeps the other attachments, as it keeps the other guests (F6).
+- `event_type` on create: `focusTime`, `outOfOffice` and `workingLocation`, with `auto_decline`, `decline_message`, `chat_status` and `working_location`, set as Google's guide requires (https://developers.google.com/workspace/calendar/api/guides/calendar-status: focus time and out of office are timed and opaque; a working location is public and transparent, timed or one whole day; "These features are only available on primary calendars, and to some Google Calendar users"). Arguments that do not fit the type are refused before any request. Birthdays and Gmail events are not made here.
+- The answers name what these arguments set, only when they were given, so an earlier call gets the same answer. `calendar_get_event` adds `color_id` when the event has one.
+
+### Added: richer calendar_list_events items
+- Each event now says what it has beyond its time, and only that: `event_type` when it is not a default event (birthdays and working locations were unlabelled), `all_day`, `organizer`, `your_response` (your own answer, when you are a guest), `guests` (the answers counted: total, accepted, tentative, declined, needs_action), `meet_link`, `recurring_event_id` (an occurrence of a series) or `recurring` (a series), `visibility` when not default, and `availability: free` when it does not block time (F5). "Which invitations have I not answered?" no longer needs a read per event. A page that does not fit the result limit is cut at whole events, as since 1.28.0.
+
+### Fixed: calendar_list_calendars pages
+- It asked for 250 calendars and dropped Google's next page (F8). It takes `page_size` and `page_token`, and answers `{ next_page_token, calendars }` when the call pages or Google has another page; otherwise the plain list, as before.
+
+### Fixed: docs and the toolset source
+- `toolsets.google.source` of gcalendar is https://developers.google.com/workspace/calendar/api/v3/reference/mcp; the `tools_list` address answered 404 (F12, checked 2026-10-31). The `google` notes of create and update say what they still lack against Google's tools (guest permissions, optional guests, a given Meet URL) and that `send_updates` defaults to none.
+- docs/USING.md's example of a change used the generated `calendar_events_insert`; it uses `calendar_create_event` (F7).
+
+### Not changed
+- Tool maps and tool kinds, the hook, `gsm scopes`, and the requests of every earlier call: a call without the new arguments and with offsets sends the same requests as 1.39.0, except `calendar_update_event` with a `start` and no `end`, which now reads the event first and sends the kept end. Not checked against live Google.
+
+## 1.39.0 - 2026-10-31
+
+### Added: gmail_create_label, Google's create_label
+- `gmail_create_label` creates a label from a display name (a slash nests it: `Clients/Acme`) and an optional text and background colour, the arguments of Google's `create_label` (https://developers.google.com/workspace/gmail/api/reference/mcp/tools_list/create_label: `displayName`, required; `color` with `textColor` and `backgroundColor`). Colours are checked as `#RRGGBB` before the request; Gmail itself accepts only the values of its label palette (Discovery, `LabelColor`). It returns the new label's id, name, type and colour. A write: it asks first. Its scopes are those of `labels.create` (`https://mail.google.com/`, `gmail.labels`, `gmail.modify`), so no login asks for anything new.
+
+### Changed: the Gmail `google` toolset matches Google's tools more closely
+- `gmail_create_label` replaces the generated `gmail_users_labels_create` (which takes Gmail's raw `Label` body) as the match of `create_label`.
+- `gmail_search` left the list. It searches messages, while its `matches` claimed Google's `search_threads`, which returns threads, as `gmail_search_threads` does; two search tools in a parity set made a model choose between them for no reason. The adversarial review of Gmail reported both (G4, section C). The list has 13 tools (was 14); `gmail_send_draft`, `gmail_trash` and `gmail_untrash` stay until the owner decides on them. The `all` and `curated` toolsets keep `gmail_search` and every generated tool.
+- The list's `source` is Google's server page, https://developers.google.com/workspace/gmail/api/reference/mcp; the `tools_list` address it named answers 404 (checked 2026-10-31).
+
+### Changed: generated Gmail tools name the hand-written tool that does the same
+- Twelve per-method tools that a hand-written tool covers say which one in their descriptions, through `methodNotes` (1.35.5): the message and thread reads and lists, the label list and create, the draft list, the attachment read, and the trash and untrash methods; the two modify tools name `gmail_label` and `gmail_unlabel`. They keep working as before (review G5).
+
+### Fixed: docs/USING.md examples
+- The batch delete example asked for a `readwrite` login, but permanent deletes need the full-mailbox scope that only `full` asks for (review G12); the read example uses `gmail_search` instead of the raw list and get.
+
+### Not changed
+- Tool maps and tool kinds (one new entry, `gmail_create_label`, a write; 0 kind changes), the hook, and the requests of every existing tool. `gsm scopes` over all 207 cases asks for the same scopes; in the 9 gmail cases only the counts of covered tools move (the new tool, and `gmail_search` out of `google`). tools/list changes only on gmail: the new tool, and with writes on 14 descriptions (with writes off 7: the covered reads). Not checked against live Google.
+
+## 1.38.4 - 2026-10-31
+
+### Fixed: Gmail label changes that move mail to Trash or Spam ask as destructive actions
+- The per-method `gmail_users_messages_modify`, `gmail_users_threads_modify` and `gmail_users_messages_batch_modify` (up to 1,000 messages) could add the `TRASH` or `SPAM` label, which moves mail out of the mailbox as `messages.trash` does; Gmail's labels guide lists both as labels that "Can be manually applied" (https://developers.google.com/workspace/gmail/api/guides/labels). They are writes, so under `confirmation: destructive-only` such a call ran with no question, while `gmail_trash` (destructive) asks and the curated `gmail_label` refuses both labels so that these moves go through a tool that asks. The review of Gmail reported it (G3).
+- A call of those three tools whose `addLabelIds` holds `TRASH` or `SPAM` is now gated as destructive: it asks twice under `every-change` and once, in the server's form, under `destructive-only`, as the hand-written writes that are destructive for some arguments do (`destructiveWhen`, 1.26.3). Every other label change stays a write and asks as before. Their descriptions say so.
+- Refusing those labels, as `gmail_label` does, would have taken a capability away from the `all` toolset: `gmail_label`'s own answer points to these tools for marking mail as spam. They keep working and now ask.
+- It is data: `destructiveWhen` in `config/products.json`, per generated API of a product, `{ source, reason, methods: { "<method id>": { field, values } } }`: the request body's list `field` holds one of `values`. `scripts/gen-servers.mjs` checks each entry (a method of the API's snapshot that is not a GET, a list field of its request schema, different non-empty values, a source and a reason) and copies it into `config/servers.json` and the plugin's `servers.json`; both registry loaders carry it, and the generator gives the method's tool a `destructiveWhen`. Only gmail has one.
+
+### Fixed: gmail_send_draft's approval shows the draft
+- `gmail_send_draft` is destructive (sending cannot be undone), but its approval showed the draft id only: the tool's preview of the draft was never passed to the gate (`preview` is not read by the gate; `prepare` is). It now reads the draft first (a read, it changes nothing), and the approval shows the recipients (To, Cc, Bcc), the subject, the thread, the attachment names and sizes and the first 600 characters of the body, as `gmail_send`'s approval does. A draft that cannot be read is shown by its id with the reason; the send then runs as asked. docs/products/gmail.md already promised that the preview shows the recipients and body.
+
+### Not changed
+- Tool maps and tool kinds of all 23 plugins (0 kind changes; the three modify tools stay `write`, so the hook decides as before), `gsm scopes` (207 cases identical), server instructions, the gate (`approval.ts`), and the requests every tool sends. tools/list changes only for the gmail server with writes on: the descriptions of the three modify tools and of `gmail_send_draft` (with writes off, no tool changes). Not checked against live Google.
+
 ## 1.38.3 - 2026-10-31
 
 ### Fixed: the docs count the tools a server registers

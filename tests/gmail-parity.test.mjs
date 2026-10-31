@@ -222,3 +222,29 @@ test('list_drafts: query is passed to Gmail as q', async () => {
   await tools.get('gmail_list_drafts').handler({ query: 'subject:plan' }, ctx);
   assert.equal(calls[0].query.q, 'subject:plan');
 });
+
+test('create_label (1.39.0): Google\'s create_label arguments; a write with the scopes of labels.create; colours checked before any request', async () => {
+  const tool = tools.get('gmail_create_label');
+  assert.equal(tool.kind, classifyMethod('POST', 'create', 'gmail.users.labels.create'));
+  assert.equal(tool.kind, 'write');
+  const G = (s) => `https://www.googleapis.com/auth/${s}`;
+  assert.deepEqual(tool.scopes, ['https://mail.google.com/', G('gmail.labels'), G('gmail.modify')], 'the scopes of labels.create, nothing new');
+  assert.match(tool.description, /matches create_label in Google's Gmail MCP server/);
+  assert.equal(tool.idempotent, undefined, 'Google marks create_label not idempotent');
+  calls = [];
+  respond = (call) => (call.method === 'POST' ? { id: 'Label_9', name: 'Clients/Acme', type: 'user', color: { textColor: '#ffffff', backgroundColor: '#fb4c2f' }, labelListVisibility: 'labelShow' } : {});
+  const made = await tool.handler({ display_name: ' Clients/Acme ', color: { text_color: '#ffffff', background_color: '#fb4c2f' } }, ctx);
+  assert.deepEqual(calls.map((c) => [c.method, c.path]), [['POST', '/gmail/v1/users/me/labels']]);
+  assert.deepEqual(calls[0].body, { name: 'Clients/Acme', color: { textColor: '#ffffff', backgroundColor: '#fb4c2f' } });
+  assert.deepEqual(made, { id: 'Label_9', name: 'Clients/Acme', type: 'user', color: { text_color: '#ffffff', background_color: '#fb4c2f' } });
+  calls = [];
+  respond = () => ({ id: 'Label_10', name: 'Invoices', type: 'user' });
+  assert.deepEqual(await tool.handler({ display_name: 'Invoices' }, ctx), { id: 'Label_10', name: 'Invoices', type: 'user' });
+  assert.deepEqual(calls[0].body, { name: 'Invoices' }, 'no colour, no color field');
+  calls = [];
+  await assert.rejects(tool.handler({ display_name: 'X', color: { text_color: 'white', background_color: '#fb4c2f' } }, ctx), /color\.text_color must be a #RRGGBB colour/);
+  await assert.rejects(tool.handler({ display_name: 'X', color: { text_color: '#ffffff', background_color: '#fb4c2' } }, ctx), /color\.background_color must be a #RRGGBB colour/);
+  await assert.rejects(tool.handler({ display_name: '  ' }, ctx), /needs a display_name/);
+  await assert.rejects(tool.handler({ display_name: 'A\nB' }, ctx), /must not contain line breaks/);
+  assert.equal(calls.length, 0, 'nothing was sent');
+});

@@ -41,6 +41,12 @@ function writeEntry(dir) {
       `  if (url.pathname.endsWith('/profile')) data = { emailAddress: 'me@example.com' };`,
       `  else if (url.pathname.endsWith('/messages/orig-1')) data = original;`,
       `  else if (url.pathname.endsWith('/messages/send')) data = { id: 'sent-1', threadId: opts.data?.threadId ?? 'new', labelIds: ['SENT'] };`,
+      `  else if (url.pathname.endsWith('/drafts/d-1')) data = { id: 'd-1', message: { id: 'msg-d', threadId: 'thr-d', payload: { mimeType: 'multipart/mixed', headers: [`,
+      `    { name: 'To', value: 'Bo <bo@example.com>' }, { name: 'Cc', value: 'cy@example.com' }, { name: 'Subject', value: 'Plan for Monday' } ], parts: [`,
+      `    { mimeType: 'text/plain', headers: [], body: { size: 14, data: Buffer.from('See you at 10.').toString('base64url') } },`,
+      `    { mimeType: 'application/pdf', filename: 'plan.pdf', headers: [], body: { size: 2048, attachmentId: 'att-1' } } ] } } };`,
+      `  else if (url.pathname.endsWith('/drafts/send')) data = { id: 'sent-2', threadId: 'thr-d', labelIds: ['SENT'] };`,
+      `  else if (url.pathname.endsWith('/drafts/gone')) throw Object.assign(new Error('Requested entity was not found.'), { code: 404 });`,
       `  return { data, status: 200, headers: new Headers(), config: opts };`,
       `};`,
       `const { runServer } = await import(${JSON.stringify(dist('core/tools.js'))});`,
@@ -65,7 +71,7 @@ function setup() {
 }
 
 const callsIn = (file) => (existsSync(file) ? readFileSync(file, 'utf8').trim().split('\n').filter(Boolean).map((l) => JSON.parse(l)) : []);
-const sends = (file) => callsIn(file).filter((c) => c.method === 'POST' && c.path.endsWith('/messages/send'));
+const sends = (file) => callsIn(file).filter((c) => c.method === 'POST' && /\/(messages|drafts)\/send$/.test(c.path));
 
 function childEnv(s, extra) {
   const base = Object.fromEntries(
@@ -151,5 +157,43 @@ test('gmail_send: approved, it sends once, after the approval, the exact message
     assert.match(last.raw, /\r\nIn-Reply-To: <m2@mail\.example\.com>\r\nReferences: <m2@mail\.example\.com>\r\n/);
   } finally {
     await client.close();
+  }
+});
+
+test('gmail_send_draft (1.38.4): the approval shows the draft read from Gmail; declined, nothing is sent; approved, it sends once', async () => {
+  const s = setup();
+  const declined = await connect(s, childEnv(s, { GSM_HOOK_ACTIVE: '1' }), { action: 'decline' });
+  try {
+    const res = await declined.client.callTool({ name: 'gmail_send_draft', arguments: { draft_id: 'd-1' } });
+    assert.equal(res.isError, true);
+    assert.equal(declined.asked.length, 1, 'a send asks even when the hook is active (destructive)');
+    const text = declined.asked[0].message;
+    assert.match(text, /^About to permanently change or delete Google data: gmail_send_draft/);
+    assert.match(text, /"action": "Sends this draft now\. Sending cannot be undone\."/);
+    assert.match(text, /"to": "Bo <bo@example\.com>"/);
+    assert.match(text, /"cc": "cy@example\.com"/);
+    assert.match(text, /"subject": "Plan for Monday"/);
+    assert.match(text, /"name": "plan\.pdf"/);
+    assert.match(text, /"size_bytes": 2048/);
+    assert.match(text, /"body_excerpt": "See you at 10\."/);
+    assert.equal(sends(s.callsFile).length, 0, 'declined: no send request');
+  } finally {
+    await declined.client.close();
+  }
+  const approved = await connect(s, childEnv(s, {}), { action: 'accept', content: { approve: true } });
+  try {
+    const res = await approved.client.callTool({ name: 'gmail_send_draft', arguments: { draft_id: 'd-1' } });
+    assert.notEqual(res.isError, true, res.content[0].text);
+    assert.equal(approved.asked.length, 1);
+    assert.equal(approved.asked[0].sendsBefore, 0, 'the approval came before the send');
+    assert.equal(sends(s.callsFile).length, 1);
+    // A draft that cannot be read is shown by its id with the reason, and still asks.
+    const missing = await approved.client.callTool({ name: 'gmail_send_draft', arguments: { draft_id: 'gone' } });
+    assert.notEqual(missing.isError, true, missing.content[0].text);
+    assert.equal(approved.asked.length, 2);
+    assert.match(approved.asked[1].message, /"draft_id": "gone"/);
+    assert.match(approved.asked[1].message, /"note": "The draft could not be read first, so only its id is shown: Requested entity was not found\."/);
+  } finally {
+    await approved.client.close();
   }
 });

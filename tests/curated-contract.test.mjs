@@ -363,6 +363,9 @@ const threaded = (call) => {
 };
 const SITEMAP = 'https://example.com/sitemap.xml';
 
+/** A calendar whose time zone is read first (events.list with fields=timeZone, 1.40.0), then the generic answer. */
+const zoned = (call) => (call.query.fields === 'timeZone' ? { timeZone: 'Europe/Berlin' } : generic());
+
 /**
  * One row per curated tool: the arguments, the Discovery methods its requests must match (in order of first use), and
  * an optional responder. A tool can have several cases (args differ); `preview` also runs the tool's preview.
@@ -401,6 +404,11 @@ const CASES = {
     { args: { thread_id: 'thr-1', labels: ['INBOX'] }, expect: ['gmail.users.labels.list', 'gmail.users.threads.modify'], respond: threaded },
     { args: { message_id: 'm1', labels: ['Invoices'] }, expect: ['gmail.users.labels.list', 'gmail.users.messages.modify'], respond: threaded },
   ],
+  // 1.39.0: Google's create_label (display name and colour).
+  gmail_create_label: [
+    { args: { display_name: 'Clients/Acme', color: { text_color: '#ffffff', background_color: '#fb4c2f' } }, expect: ['gmail.users.labels.create'] },
+    { args: { display_name: 'Invoices' }, expect: ['gmail.users.labels.create'] },
+  ],
   gmail_untrash: [
     { args: { thread_id: 'thr-1' }, expect: ['gmail.users.threads.untrash'] },
     { args: { message_id: 'm1' }, expect: ['gmail.users.messages.untrash'] },
@@ -434,7 +442,11 @@ const CASES = {
   ],
 
   // gcalendar
-  calendar_list_calendars: [{ args: {}, expect: ['calendar.calendarList.list'] }],
+  calendar_list_calendars: [
+    { args: {}, expect: ['calendar.calendarList.list'] },
+    // 1.40.0: paging.
+    { args: { page_size: 50, page_token: 'p1' }, expect: ['calendar.calendarList.list'] },
+  ],
   calendar_list_events: [
     {
       args: { calendar_id: 'primary', time_min: '2026-11-01T00:00:00Z', time_max: '2026-11-08T00:00:00Z', q: 'standup', max_results: 10, single_events: true, page_token: 'p1' },
@@ -445,9 +457,15 @@ const CASES = {
       args: { include_past: true, event_types: ['default', 'outOfOffice'], time_zone: 'Europe/Zurich', order_by: 'updated', q: 'review' },
       expect: ['calendar.events.list'],
     },
+    // 1.40.0: local times without time_zone: the calendar's zone is read first (events.list, fields=timeZone).
+    { args: { time_min: '2026-11-02T00:00', time_max: '2026-11-03T00:00' }, expect: ['calendar.events.list'], respond: zoned },
   ],
   calendar_get_event: [{ args: { calendar_id: 'primary', event_id: 'ev-1' }, expect: ['calendar.events.get'] }],
-  calendar_freebusy: [{ args: { time_min: '2026-11-01T00:00:00Z', time_max: '2026-11-02T00:00:00Z', calendar_ids: ['primary'] }, expect: ['calendar.freebusy.query'] }],
+  calendar_freebusy: [
+    { args: { time_min: '2026-11-01T00:00:00Z', time_max: '2026-11-02T00:00:00Z', calendar_ids: ['primary'] }, expect: ['calendar.freebusy.query'] },
+    // 1.40.0: local times in time_zone, which is also the zone of the answer (FreeBusyRequest.timeZone).
+    { args: { time_min: '2026-11-02T09:00', time_max: '2026-11-02T17:00', time_zone: 'Europe/Berlin' }, expect: ['calendar.freebusy.query'] },
+  ],
   calendar_suggest_time: [
     {
       args: {
@@ -462,6 +480,8 @@ const CASES = {
       },
       expect: ['calendar.freebusy.query'],
     },
+    // 1.40.0: a local window without time_zone: the primary calendar's zone first.
+    { args: { attendees: ['a@example.com'], start_time: '2026-11-02T09:00', end_time: '2026-11-02T17:00' }, expect: ['calendar.events.list', 'calendar.freebusy.query'], respond: zoned },
   ],
   calendar_respond: [
     {
@@ -499,6 +519,32 @@ const CASES = {
       },
       expect: ['calendar.events.insert'],
     },
+    // 1.40.0: visibility, colour, availability and attachments (supportsAttachments).
+    {
+      args: {
+        summary: 'Plan',
+        start: '2026-11-02T10:00:00+01:00',
+        end: '2026-11-02T11:00:00+01:00',
+        visibility: 'private',
+        color_id: '5',
+        availability: 'free',
+        attachments: [{ file_url: 'https://drive.google.com/file/d/f1/view', title: 'Agenda' }],
+      },
+      expect: ['calendar.events.insert'],
+    },
+    // 1.40.0: local times without time_zone (the calendar's zone first), and the three status event types.
+    { args: { summary: 'Sync', start: '2026-11-02T10:00', end: '2026-11-02T10:30' }, expect: ['calendar.events.list', 'calendar.events.insert'], respond: zoned },
+    {
+      args: { summary: 'Focus', start: '2026-11-02T09:00:00Z', end: '2026-11-02T11:00:00Z', event_type: 'focusTime', auto_decline: 'declineOnlyNewConflictingInvitations', decline_message: 'In focus', chat_status: 'doNotDisturb' },
+      expect: ['calendar.events.insert'],
+    },
+    { args: { summary: 'Away', start: '2026-11-02T09:00:00Z', end: '2026-11-06T17:00:00Z', event_type: 'outOfOffice', auto_decline: 'declineAllConflictingInvitations', decline_message: 'Back on Monday' }, expect: ['calendar.events.insert'] },
+    {
+      args: { summary: 'Office', start: '2026-11-02', end: '2026-11-03', event_type: 'workingLocation', working_location: { type: 'officeLocation', label: 'HQ', building_id: 'b1', floor_id: '2', desk_id: 'd7' } },
+      expect: ['calendar.events.insert'],
+    },
+    { args: { summary: 'Home', start: '2026-11-03', end: '2026-11-04', event_type: 'workingLocation', working_location: { type: 'homeOffice' } }, expect: ['calendar.events.insert'] },
+    { args: { summary: 'Café', start: '2026-11-04T09:00:00Z', end: '2026-11-04T12:00:00Z', event_type: 'workingLocation', working_location: { type: 'customLocation', label: 'Café' } }, expect: ['calendar.events.insert'] },
   ],
   calendar_update_event: [
     {
@@ -521,6 +567,15 @@ const CASES = {
       args: { event_id: 'ev-1', add_attendees: ['c@example.com'], remove_attendees: ['b@example.com'], add_meet: true, recurrence: ['RRULE:FREQ=DAILY;COUNT=3'], reminders: [] },
       expect: ['calendar.events.get', 'calendar.events.patch'],
       respond: () => ({ ...generic(), attendees: [{ email: 'a@example.com', responseStatus: 'accepted' }, { email: 'b@example.com' }] }),
+    },
+    // 1.40.0: only start moves (the event is read, its duration kept), and a local start in the event's zone.
+    { args: { event_id: 'ev-1', start: '2026-11-02T12:00:00+01:00' }, expect: ['calendar.events.get', 'calendar.events.patch'] },
+    { args: { event_id: 'ev-1', start: '2026-11-03T09:15' }, expect: ['calendar.events.get', 'calendar.events.patch'], respond: () => ({ ...generic(), start: { dateTime: '2026-11-02T10:00:00+01:00', timeZone: 'Europe/Berlin' } }) },
+    // 1.40.0: visibility, colour, availability, and attachments added and removed (supportsAttachments).
+    {
+      args: { event_id: 'ev-1', visibility: 'public', color_id: '11', availability: 'busy', add_attachments: [{ file_url: 'https://drive.google.com/file/d/c/view' }], remove_attachments: ['https://drive.google.com/file/d/a/view'] },
+      expect: ['calendar.events.get', 'calendar.events.patch'],
+      respond: () => ({ ...generic(), attachments: [{ fileUrl: 'https://drive.google.com/file/d/a/view', title: 'A' }] }),
     },
   ],
   calendar_delete_event: [{ args: { calendar_id: 'primary', event_id: 'ev-1', send_updates: 'none' }, preview: true, expect: ['calendar.events.get', 'calendar.events.delete'] }],
@@ -583,6 +638,24 @@ const CASES = {
       },
       expect: ['webmasters.searchanalytics.query'],
     },
+    // 1.41.0: typed filters (with the old groups), the data state, the aggregation type and the hour dimension.
+    {
+      args: {
+        site_url: SITE,
+        start_date: '2026-10-28',
+        end_date: '2026-10-30',
+        dimensions: ['hour', 'page'],
+        data_state: 'hourly_all',
+        aggregation_type: 'byPage',
+        filters: [
+          { dimension: 'country', expression: 'FRA' },
+          { dimension: 'page', operator: 'includingRegex', expression: '/blog/' },
+        ],
+        dimension_filter_groups: [{ filters: [{ dimension: 'device', operator: 'notEquals', expression: 'TABLET' }] }],
+      },
+      expect: ['webmasters.searchanalytics.query'],
+    },
+    { args: { site_url: SITE, start_date: '2026-10-01', end_date: '2026-10-28', data_state: 'all', aggregation_type: 'byProperty' }, expect: ['webmasters.searchanalytics.query'] },
   ],
   sc_url_inspect: [{ args: { site_url: SITE, inspection_url: 'https://example.com/page', language_code: 'en-US' }, expect: ['searchconsole.urlInspection.index.inspect'] }],
   sc_site_add: [{ args: { site_url: SITE }, expect: ['webmasters.sites.add'] }],
@@ -1015,7 +1088,7 @@ test('every curated tool has a contract row, a skip reason or a known defect, an
   const listed = new Set([...Object.keys(CASES), ...Object.keys(SKIPPED), ...Object.keys(KNOWN_DEFECTS)]);
   assert.deepEqual([...tools.keys()].filter((name) => !listed.has(name)), [], 'curated tools without a row');
   assert.deepEqual([...listed].filter((name) => !tools.has(name)), [], 'rows for tools that do not exist');
-  assert.equal(tools.size, 149, 'the curated tool count; update the table when it changes');
+  assert.equal(tools.size, 150, 'the curated tool count; update the table when it changes');
 });
 
 for (const [name, cases] of Object.entries(CASES)) {

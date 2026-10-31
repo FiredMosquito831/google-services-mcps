@@ -18,16 +18,16 @@ The tool map (`plugins/<id>/tool-map.json`) also lists these, so the consent hoo
 
 ## Toolset google (8)
 
-The tools that match Google's official MCP server for this product (https://developers.google.com/workspace/calendar/api/v3/reference/mcp/tools_list).
+The tools that match Google's official MCP server for this product (https://developers.google.com/workspace/calendar/api/v3/reference/mcp).
 
 | Tool | Google's tool | Note |
 |---|---|---|
 | `calendar_list_calendars` | `list_calendars` |  |
-| `calendar_list_events` | `list_events`, `search_events` | Google's search_events is a semantic search of the primary calendar with no public API; the keyword search of calendar_list_events (q) stands in for it. Without time_min the list starts now, as before 1.8.0; include_past gives Google's no-lower-bound list. |
+| `calendar_list_events` | `list_events`, `search_events` | Google's search_events is a semantic search of the primary calendar with no public API; the keyword search of calendar_list_events (q) stands in for it. Without time_min the list starts now, as before 1.8.0; include_past gives Google's no-lower-bound list. Since 1.40.0 times without an offset are read in time_zone or the calendar's zone, as Google's are, and each event says its type, organizer, your answer, the guests' answers, Meet link and series. Google's startTimeDesc order has no Calendar API equivalent and is not offered. |
 | `calendar_get_event` | `get_event` |  |
 | `calendar_suggest_time` | `suggest_time` | Computed here from free/busy (freebusy.query) and the window, duration and working hours given; Google's preferences object is not public, so its exact ranking is not copied. |
-| `calendar_create_event` | `create_event` |  |
-| `calendar_update_event` | `update_event` |  |
+| `calendar_create_event` | `create_event` | Takes Google's options except guest permissions, optional guests and guest display names, a specific Meet URL, and birthday events (since 1.40.0 it has visibility, color_id, availability, attachments and the focus time, out of office and working location types). Invitations are sent only when send_updates says so; Google's tool sends them by default. |
+| `calendar_update_event` | `update_event` | Keeps the duration when only start moves, as Google's does (since 1.40.0). Not covered: guest permissions, optional guests, a specific Meet URL. send_updates defaults to none; Google's update_event defaults to ALL. |
 | `calendar_delete_event` | `delete_event` | Destructive, so it asks first, as in Google's server (destructiveHint). |
 | `calendar_respond` | `respond_to_event` |  |
 

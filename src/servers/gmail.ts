@@ -1,7 +1,7 @@
 /**
  * Curated Gmail tools (gmail_*), served by the gmail server.
  * Read: search, search threads, get message, get thread, get attachment, labels, list drafts.
- * Write: create draft, label, unlabel, untrash.
+ * Write: create draft, create label, label, unlabel, untrash.
  * Destructive (they ask first): send draft, send, reply (sending cannot be undone), trash.
  *
  * Auth: OAuth user token from `gsm login workspace-user`. The MIME and decoding rules are in gmail-mime.ts.
@@ -204,6 +204,9 @@ const NOT_ADDED: Record<string, string> = {
 const NOT_REMOVED: Record<string, string> = {
   TRASH: 'TRASH is not removed here: use gmail_untrash.',
 };
+
+/** A label colour as Gmail takes it: #RRGGBB. Gmail itself accepts only the values of its label palette (LabelColor). */
+const HEX_COLOR = /^#[0-9a-fA-F]{6}$/;
 
 /** One of thread_id and message_id, never both. */
 function target(args: { thread_id?: string; message_id?: string }, tool: string): { kind: 'thread' | 'message'; id: string } {
@@ -609,6 +612,37 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
     };
   }
 
+  /**
+   * What gmail_send_draft sends, read before the approval (a read, it changes nothing): the draft's recipients, subject,
+   * attachments and the start of its body, as gmail_send's approval shows them. A draft that cannot be read is shown by
+   * its id, with the reason; the send then runs as asked, and Google answers for a draft that does not exist.
+   */
+  async function draftPreview(draftId: string): Promise<Record<string, unknown>> {
+    const action = 'Sends this draft now. Sending cannot be undone.';
+    const from_account = requestedAccount() ?? 'the default account of this server (accounts_list shows it)';
+    let msg: gmail_v1.Schema$Message | undefined;
+    try {
+      const api = await gmailApi();
+      msg = (await api.users.drafts.get({ userId: ME, id: draftId, format: 'full' })).data.message ?? undefined;
+    } catch (err) {
+      return { action, from_account, draft_id: draftId, note: `The draft could not be read first, so only its id is shown: ${(err as Error).message}` };
+    }
+    const walked = walkParts(msg?.payload);
+    const body = pickBody(await decodeBodies(walked.texts)).text;
+    return {
+      action,
+      from_account,
+      draft_id: draftId,
+      to: headerValue(msg, 'To') ?? null,
+      ...(headerValue(msg, 'Cc') ? { cc: headerValue(msg, 'Cc') } : {}),
+      ...(headerValue(msg, 'Bcc') ? { bcc: headerValue(msg, 'Bcc') } : {}),
+      subject: headerValue(msg, 'Subject') ?? '',
+      ...(msg?.threadId ? { thread_id: msg.threadId } : {}),
+      attachments: walked.attachments.map((a) => ({ name: a.filename, size_bytes: a.size, type: a.mime_type })),
+      body_excerpt: body.length > 600 ? `${body.slice(0, 600)}... (${body.length} characters in all)` : body,
+    };
+  }
+
   return [
     // ---- read ----
     defineTool({
@@ -886,6 +920,49 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
     }),
 
     defineTool({
+      name: 'gmail_create_label',
+      title: 'Create Gmail label',
+      description:
+        "Create a label (matches create_label in Google's Gmail MCP server). display_name is the label's name; a slash nests it under another label, for example \"Clients/Acme\". color sets the text and background colour, both #RRGGBB values of Gmail's label palette (Gmail refuses other values). Returns the new label's id, name, type and color; gmail_label then takes the id or the name.",
+      kind: 'write',
+      // Google's create_label is not idempotent: a second call with the same name is refused by Gmail.
+      scopes: googleScopes('https://mail.google.com/', 'gmail.labels', 'gmail.modify'),
+      inputSchema: {
+        display_name: z.string().describe('The label name, for example "Invoices", or "Clients/Acme" to nest it under Clients.'),
+        color: z
+          .object({
+            text_color: z.string().describe("Text colour, #RRGGBB from Gmail's label palette, for example #ffffff."),
+            background_color: z.string().describe("Background colour, #RRGGBB from Gmail's label palette, for example #fb4c2f."),
+          })
+          .optional()
+          .describe('The label colour. Gmail needs both colours, each a value of its palette.'),
+      },
+      async handler({ display_name, color }) {
+        const name = singleLine(display_name, 'display_name');
+        if (!name) throw new Error('gmail_create_label needs a display_name.');
+        if (color) {
+          for (const [field, value] of [
+            ['text_color', color.text_color],
+            ['background_color', color.background_color],
+          ] as const) {
+            if (!HEX_COLOR.test(value)) throw new Error(`color.${field} must be a #RRGGBB colour of Gmail's label palette, for example #fb4c2f, got "${value}". Nothing was created.`);
+          }
+        }
+        const api = await gmailApi();
+        const res = await api.users.labels.create({
+          userId: ME,
+          requestBody: { name, ...(color ? { color: { textColor: color.text_color, backgroundColor: color.background_color } } : {}) },
+        });
+        const made = res.data;
+        return {
+          id: made.id,
+          name: made.name,
+          type: made.type,
+          ...(made.color ? { color: { text_color: made.color.textColor, background_color: made.color.backgroundColor } } : {}),
+        };
+      },
+    }),
+    defineTool({
       name: 'gmail_label',
       title: 'Add Gmail labels',
       description:
@@ -947,24 +1024,17 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
     defineTool({
       name: 'gmail_send_draft',
       title: 'Send Gmail draft',
-      description: 'Send an existing draft to its To, Cc and Bcc recipients. Sending cannot be undone.',
+      description:
+        'Send an existing draft to its To, Cc and Bcc recipients. Sending cannot be undone, so it asks first, and the approval shows the draft read from Gmail: recipients, subject, attachment names and sizes and the start of the body.',
       kind: 'destructive',
       scopes: googleScopes('https://mail.google.com/', 'gmail.compose', 'gmail.modify'),
       inputSchema: { draft_id: z.string() },
+      // The approval shows the draft (1.38.4); before, it showed the draft id only.
+      async prepare({ draft_id }) {
+        return { preview: await draftPreview(draft_id) };
+      },
       async preview({ draft_id }) {
-        const api = await gmailApi();
-        const res = await api.users.drafts.get({ userId: ME, id: draft_id, format: 'full' });
-        const msg = res.data.message;
-        const body = pickBody(await decodeBodies(walkParts(msg?.payload).texts)).text;
-        return {
-          draft_id,
-          to: headerValue(msg, 'To') ?? null,
-          cc: headerValue(msg, 'Cc') ?? null,
-          bcc: headerValue(msg, 'Bcc') ?? null,
-          subject: headerValue(msg, 'Subject') ?? '',
-          body_preview: body.slice(0, 200),
-          effect: 'Sends this draft now. This cannot be undone.',
-        };
+        return draftPreview(draft_id);
       },
       async handler({ draft_id }) {
         if (!draft_id) throw new Error('gmail_send_draft needs a draft_id.');

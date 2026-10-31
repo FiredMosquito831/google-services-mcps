@@ -85,6 +85,13 @@ export interface ServerSpec {
    * has none, so its tools are described as before.
    */
   methodNotes?: Record<string, MethodNotes>;
+  /**
+   * Per generated API of the product, write methods whose call meets the destructive rule for some request bodies only
+   * (config/products.json destructiveWhen; Gmail's modify methods when they add TRASH or SPAM). Such a call is gated as
+   * destructive, as a curated tool's destructiveWhen is (callKind in tools.ts): it asks even under destructive-only. The
+   * tool map keeps the method's own kind. Absent for a product that has none, so its tools are gated as before.
+   */
+  destructiveWhen?: Record<string, DestructiveWhen>;
   label: string;
   /**
    * The plugin folder the server is built from (plugins/<id>), set only by the CLI of the repository layout (the
@@ -130,6 +137,22 @@ export interface PageSizeDefaults {
 /** One API's entry of ServerSpec.methodNotes: the note per method id, with the evidence for people. */
 export interface MethodNotes {
   methods: Record<string, string>;
+  source?: string;
+  reason?: string;
+}
+
+/**
+ * The request bodies that make one write method's call destructive: the body's `field` (a list) holds one of `values`.
+ * Gmail's messages.modify with addLabelIds ["TRASH"] moves mail to Trash, as messages.trash does, which is destructive.
+ */
+export interface DestructiveBodyRule {
+  field: string;
+  values: string[];
+}
+
+/** One API's entry of ServerSpec.destructiveWhen: the rule per method id, with the evidence for people. */
+export interface DestructiveWhen {
+  methods: Record<string, DestructiveBodyRule>;
   source?: string;
   reason?: string;
 }
