@@ -17,15 +17,17 @@ const { loadRegistry } = await import(DIST('core/registry.js'));
 
 const G = (name) => `https://www.googleapis.com/auth/${name}`;
 const FIVE = ['devstorage.read_only', 'logging.read', 'monitoring.read', 'script.metrics', 'script.processes'].map(G);
+// 1.35.1: userinfo.profile ("See your personal info"), the name profile_me returns.
+const LISTED = [...FIVE, G('userinfo.profile')].sort();
 
 const dir = mkdtempSync(join(tmpdir(), 'gsm-view-only-'));
 test.after(() => rmSync(dir, { recursive: true, force: true }));
 const cfg = loadConfig({ GSM_TOKEN_DIR: dir });
 const quiet = { warn: () => undefined };
 
-test('VIEW_ONLY_SCOPES holds the five scopes, each with a Google description that only views', () => {
-  assert.deepEqual(Object.keys(VIEW_ONLY_SCOPES).sort(), FIVE);
-  for (const [scope, description] of Object.entries(VIEW_ONLY_SCOPES)) assert.match(description, /^View /, scope);
+test('VIEW_ONLY_SCOPES holds the listed scopes, each with a Google description that only views or sees', () => {
+  assert.deepEqual(Object.keys(VIEW_ONLY_SCOPES).sort(), LISTED);
+  for (const [scope, description] of Object.entries(VIEW_ONLY_SCOPES)) assert.match(description, /^(View|See) /, scope);
 });
 
 test('isViewOnlyScope: the name rule or the list; isReadonlyScope keeps its name rule', () => {
@@ -40,7 +42,7 @@ test('gen-servers checks preferScopes against the same list', () => {
   const source = readFileSync(join(REPO, 'scripts', 'gen-servers.mjs'), 'utf8');
   const block = source.match(/const VIEW_ONLY_SCOPES = \[([^\]]*)\]/);
   assert.ok(block, 'scripts/gen-servers.mjs has its VIEW_ONLY_SCOPES list');
-  assert.deepEqual([...block[1].matchAll(/'([^']+)'/g)].map((m) => m[1]).sort(), FIVE);
+  assert.deepEqual([...block[1].matchAll(/'([^']+)'/g)].map((m) => m[1]).sort(), LISTED);
 });
 
 test('resolveScopes: readonly may take a view-only scope; readwrite still prefers the write scope on a tie', () => {

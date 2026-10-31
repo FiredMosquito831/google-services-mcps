@@ -190,7 +190,8 @@ export function isReadonlyScope(scope: string): boolean {
 /**
  * Scopes Google documents as view-only whose names the rule above does not catch, with Google's description of each on
  * https://developers.google.com/identity/protocols/oauth2/scopes (checked 2026-10-31). Data, not a rule per product: a
- * scope is added here only when Google's table says it lets the app view, and nothing more.
+ * scope is added here only when Google's table says it lets the app view (or see), and nothing more. userinfo.profile
+ * (1.35.1) is the name and picture profile_me returns.
  */
 export const VIEW_ONLY_SCOPES: Readonly<Record<string, string>> = {
   'https://www.googleapis.com/auth/devstorage.read_only': 'View your data in Google Cloud Storage',
@@ -198,6 +199,7 @@ export const VIEW_ONLY_SCOPES: Readonly<Record<string, string>> = {
   'https://www.googleapis.com/auth/monitoring.read': 'View monitoring data for all of your Google Cloud and third-party projects',
   'https://www.googleapis.com/auth/script.metrics': "View Google Apps Script project's metrics",
   'https://www.googleapis.com/auth/script.processes': 'View Google Apps Script processes',
+  'https://www.googleapis.com/auth/userinfo.profile': "See your personal info, including any personal info you've made publicly available",
 };
 
 /**

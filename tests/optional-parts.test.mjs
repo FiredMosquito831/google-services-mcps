@@ -80,8 +80,9 @@ test('pinned lists: gtasks, gcontacts and gsc with and without their parts', asy
   assert.deepEqual(resolveScopes(gtasks, 'readwrite', ['keep']).scopes, [G('keep'), G('tasks')]);
 
   const gcontacts = await reqsOf('gcontacts', 'all');
-  assert.deepEqual(resolveScopes(gcontacts, 'readonly').scopes, [G('contacts.other.readonly'), G('contacts.readonly'), G('directory.readonly')]);
-  assert.deepEqual(resolveScopes(gcontacts, 'readwrite').scopes, [G('contacts'), G('contacts.other.readonly'), G('directory.readonly'), EMAIL]);
+  // userinfo.profile since 1.35.1 (profile_me's name).
+  assert.deepEqual(resolveScopes(gcontacts, 'readonly').scopes, [G('contacts.other.readonly'), G('contacts.readonly'), G('directory.readonly'), G('userinfo.profile')]);
+  assert.deepEqual(resolveScopes(gcontacts, 'readwrite').scopes, [G('contacts'), G('contacts.other.readonly'), G('directory.readonly'), G('userinfo.profile')]);
   // The Health part brings its own scopes; the subscriber methods list only cloud-platform, so readwrite asks for it there.
   const health = resolveScopes(gcontacts, 'readwrite', ['health']).scopes;
   assert.ok(health.includes(G('cloud-platform')) && health.includes(G('googlehealth.sleep.writeonly')), health.join(' '));

@@ -164,7 +164,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       name: 'profile_me',
       title: 'Your Google profile',
       description:
-        "Your own name and email address, as Google has them for the signed-in account (matches get_user_profile in Google's People MCP server). The email comes with every sign-in; the name and picture need the userinfo.profile scope (sign in with an explicit scope list that names it), and the answer says when the sign-in lacks it.",
+        "Your own name and email address, as Google has them for the signed-in account (matches get_user_profile in Google's People MCP server). The email comes with every sign-in; the name and picture need the userinfo.profile scope, which every profile of a contacts sign-in asks for (since 1.35.1; an older sign-in may lack it), and the answer says when the sign-in lacks it.",
       kind: 'read',
       // The scopes of oauth2.userinfo.get, as Discovery spells them: openid is a bare name, not a URL.
       scopes: ['openid', ...googleScopes('userinfo.email', 'userinfo.profile')],
@@ -176,7 +176,9 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
           ...(u.name !== undefined ? { name: u.name } : {}),
           ...(u.email !== undefined ? { email: u.email } : {}),
           ...(u.picture !== undefined ? { picture: u.picture } : {}),
-          ...(u.name === undefined ? { note: 'Google returned no name: the sign-in lacks the userinfo.profile scope. Sign in again with it to see the name.' } : {}),
+          ...(u.name === undefined
+            ? { note: 'Google returned no name: the sign-in lacks the userinfo.profile scope. Sign in again (auth_login with this account) to see the name.' }
+            : {}),
         };
       },
     }),

@@ -49,6 +49,14 @@
           "portability": [
             "dataportability"
           ]
+        },
+        "prefer": {
+          "readwrite": [
+            "https://www.googleapis.com/auth/userinfo.profile"
+          ],
+          "full": [
+            "https://www.googleapis.com/auth/userinfo.profile"
+          ]
         }
       },
       "toolsets": {

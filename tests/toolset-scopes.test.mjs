@@ -269,12 +269,13 @@ test('requirements: the gcontacts google list resolves to contacts and directory
   assert.deepEqual(toolsOf(google), ['contacts_search', 'contacts_search_directory', 'profile_me']);
   assert.equal(google.filter((r) => r.gateway).length, 0, 'the gateway methods (dataportability, health) do not count');
   const readonly = resolveScopes(google, 'readonly');
-  assert.deepEqual(readonly.scopes, [G('contacts.readonly'), G('directory.readonly')]);
-  // userinfo.* are not read-only scopes by name; every sign-in adds userinfo.email, which registers profile_me anyway.
-  assert.deepEqual(readonly.uncovered, ['gcontacts/profile_me']);
+  // Since 1.35.1 userinfo.profile (Google: "See your personal info") is view-only, so profile_me gets the name too.
+  assert.deepEqual(readonly.scopes, [G('contacts.readonly'), G('directory.readonly'), G('userinfo.profile')]);
+  assert.deepEqual(readonly.uncovered, []);
   // contacts_search only searches: its preferred scope is contacts.readonly since 1.25.0, as in Google's People MCP server.
-  assert.deepEqual(resolveScopes(google, 'readwrite').scopes, [G('contacts.readonly'), G('directory.readonly'), EMAIL]);
-  assert.deepEqual(resolveScopes(withoutPrefer(google), 'readwrite').scopes, [G('contacts'), G('directory.readonly'), EMAIL]);
+  // Since 1.35.1 the product prefers userinfo.profile for readwrite (every sign-in adds userinfo.email anyway).
+  assert.deepEqual(resolveScopes(google, 'readwrite').scopes, [G('contacts.readonly'), G('directory.readonly'), G('userinfo.profile')]);
+  assert.deepEqual(resolveScopes(withoutPrefer(google), 'readwrite').scopes, [G('contacts'), G('directory.readonly'), G('userinfo.profile')]);
 });
 
 test('requirements: the gclassroom google list resolves to the Classroom read-only scopes, materials included', async () => {

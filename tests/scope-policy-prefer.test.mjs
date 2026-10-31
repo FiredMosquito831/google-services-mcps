@@ -93,5 +93,6 @@ test('no other product has a preference, so every other server resolves exactly 
       assert.equal(reqs.some((r) => r.policyPrefer !== undefined), false, `${spec.name} ${toolset}`);
     }
   }
-  assert.deepEqual(withPrefer.sort(), ['gclassroom', 'gmeet']);
+  // gcontacts since 1.35.1 (userinfo.profile for readwrite and full; tests/profile-name.test.mjs).
+  assert.deepEqual(withPrefer.sort(), ['gclassroom', 'gcontacts', 'gmeet']);
 });

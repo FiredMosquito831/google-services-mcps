@@ -2,6 +2,17 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.35.1 - 2026-10-31
+
+### Fixed: profile_me shows your name
+- `profile_me` (gcontacts, Google's `get_user_profile`) returns the name and picture only when the sign-in holds `userinfo.profile`. No profile asked for it: it is not read-only by name, and the shorter `userinfo.email` (which every sign-in adds) or `openid` covered the tool, so the answer had the email and a note.
+- `userinfo.profile` joins the view-only scopes (Google's description: "See your personal info, including any personal info you've made publicly available", https://developers.google.com/identity/protocols/oauth2/scopes), so a `readonly` login may ask for it, and gcontacts prefers it for `readwrite` and `full` (`scopePolicy.prefer`, 1.33.0). Only tools that accept it bring it in: no product but gcontacts.
+- `gsm scopes` over all 207 cases against 1.35.0: 198 identical; 9 changed, all gcontacts: `readonly` with every toolset adds `userinfo.profile` (`profile_me` and the two OAuth2 userinfo reads now covered); `readwrite` takes it instead of `userinfo.email` (which every sign-in adds anyway, so the login asks for one scope more); `full` takes it instead of `openid`. A token from an earlier sign-in lacks it until the account signs in again (`profile_me` says so).
+- `profile_me`'s description and its note say this; the gcontacts `google` toolset note too.
+
+### Not changed
+- Tool maps and tool kinds. tools/list changes only for `profile_me` (its description). Not checked against live Google.
+
 ## 1.35.0 - 2026-10-31
 
 ### Added: an optional part can name a scope; YouTube revenue metrics with `--with monetary`

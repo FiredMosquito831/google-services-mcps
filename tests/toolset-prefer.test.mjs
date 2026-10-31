@@ -42,7 +42,8 @@ const cfgOf = (dir = tempDir('gsm-prefer-cfg-')) => loadConfig({ GSM_TOKEN_DIR: 
 const READWRITE_GOOGLE = {
   gcalendar: [G('calendar.calendarlist.readonly'), G('calendar.events'), G('calendar.events.freebusy')],
   gchat: [G('chat.memberships.readonly'), G('chat.messages.create'), G('chat.messages.readonly'), G('chat.spaces.readonly'), G('chat.users.readstate'), G('chat.users.spacesettings')],
-  gcontacts: [G('contacts.readonly'), G('directory.readonly'), EMAIL],
+  // Since 1.35.1 gcontacts also prefers userinfo.profile (scopePolicy.prefer), the name profile_me returns.
+  gcontacts: [G('contacts.readonly'), G('directory.readonly'), G('userinfo.profile')],
   gtasks: [G('keep.readonly'), G('tasks')],
   gclassroom: [
     G('classroom.announcements'),

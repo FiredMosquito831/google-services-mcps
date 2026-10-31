@@ -213,6 +213,7 @@ const VIEW_ONLY_SCOPES = [
   'https://www.googleapis.com/auth/monitoring.read',
   'https://www.googleapis.com/auth/script.metrics',
   'https://www.googleapis.com/auth/script.processes',
+  'https://www.googleapis.com/auth/userinfo.profile',
 ];
 
 /** A scope the readonly profile may use (isViewOnlyScope in src/core/scopes.ts): the resolver uses no other for readonly. */
