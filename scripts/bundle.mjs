@@ -34,7 +34,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const AUTHOR = { name: 'FiredMosquito831' };
-const MANIFEST_VERSION = '1.38.0';
+const MANIFEST_VERSION = '1.38.1';
 const TOOL_NAME_MAX = 64;
 /** When two API versions give one method two kinds, the riskier one is kept. A dynamic method is kept as dynamic (decided per call). */
 const RANK = { read: 0, write: 1, dynamic: 2, destructive: 3 };
@@ -76,6 +76,7 @@ const GENERATED = [
   'servers.json',
   'scopes.json',
   '.mcp.json',
+  'README.md',
 ];
 
 /** Per-server environment in .mcp.json. Values come from the plugin's user config. */
@@ -312,6 +313,15 @@ async function curatedScopes(curatedFile, dist) {
   return [...new Set(tools.flatMap((t) => t.scopes ?? []))].sort();
 }
 
+/** The repository, the marketplace name users type after @, and each product's documentation page. */
+const REPOSITORY_URL = 'https://github.com/FiredMosquito831/google-services-mcps';
+const MARKETPLACE_NAME = 'google-services-mcps';
+const productDocUrl = (id) => `${REPOSITORY_URL}/blob/main/docs/products/${id}.md`;
+
+/**
+ * plugin.json. homepage ("Documentation URL. Must parse as a URL, or the plugin fails to load"), repository and license
+ * ("SPDX identifier such as MIT or Apache-2.0") are the manifest fields of code.claude.com/docs/en/plugins-reference.
+ */
 function pluginManifest(product, id, group) {
   const userConfig = { ...CONSENT_CONFIG };
   if (group === 'workspace-admin') Object.assign(userConfig, ADMIN_CONFIG);
@@ -322,9 +332,71 @@ function pluginManifest(product, id, group) {
     version: MANIFEST_VERSION,
     description: product.description,
     author: AUTHOR,
+    homepage: productDocUrl(id),
+    repository: REPOSITORY_URL,
+    license: 'Apache-2.0',
     keywords: ['google', 'mcp', id, group],
     userConfig,
   };
+}
+
+/** How a person sets the plugin up after install, per sign-in kind (the skill has the full steps). */
+const README_SIGN_IN = {
+  oauth:
+    "Ask Claude to sign in. It calls `auth_status`, then `auth_setup_client` with the full path of your Desktop OAuth client JSON (Google Cloud console, APIs & Services, Credentials), then `auth_login`, which opens Google's consent page in your browser.",
+  'service-account':
+    'Ask Claude to set the plugin up: it calls `auth_setup_service_account` with the full path of a service account JSON key. Add the service account in Play Console (Users and permissions) or Merchant Center first.',
+  'workspace-admin':
+    'Ask Claude to set the admin tools up: it calls `auth_setup_admin` with the admin email to act as and the full path of a service account key that has domain-wide delegation.',
+  apikey: 'Store an API key once, in a terminal: `npx google-services-mcps setup-apikey` (it reads the key from stdin; never paste a key into the chat).',
+};
+
+/** The plugin's README.md: what it is, the install line, sign-in, options, how to update, and links to the docs. */
+function pluginReadme(product, id, group) {
+  return [
+    `# ${product.title} (\`${id}\`)`,
+    '',
+    product.description,
+    '',
+    `One plugin of [google-services-mcps](${REPOSITORY_URL}): one Claude Code plugin per Google product, each with one MCP server, a consent hook and a skill.`,
+    '',
+    '## Install',
+    '',
+    '```sh',
+    'claude plugin marketplace add FiredMosquito831/google-services-mcps',
+    `claude plugin install ${id}@${MARKETPLACE_NAME}`,
+    '```',
+    '',
+    `In a Claude Code session: \`/plugin install ${id}@${MARKETPLACE_NAME}\`. With the installer, which also covers Codex, OpenCode and Antigravity: \`npx google-services-mcps install --agent claude --plugin ${id}\`. Needs Claude Code 2.1.271 or later.`,
+    '',
+    '## Sign in',
+    '',
+    LOGIN_GROUPS.includes(group) ? README_SIGN_IN.oauth : README_SIGN_IN[group],
+    '',
+    '## Options',
+    '',
+    `\`allow_writes\` (off: only read tools are listed), \`confirmation\` (\`every-change\`, \`destructive-only\` or \`off\`), \`toolset\` (\`all\`, \`google\` or \`curated\`) and \`token_dir\`. See [Plugin options](${REPOSITORY_URL}#plugin-options-claude-code).`,
+    '',
+    '## Update',
+    '',
+    'Claude Code does not update plugins from this marketplace on its own (auto-update is off for third-party marketplaces). To update:',
+    '',
+    '```sh',
+    `claude plugin marketplace update ${MARKETPLACE_NAME}`,
+    `claude plugin update ${id}@${MARKETPLACE_NAME}`,
+    '```',
+    '',
+    'Then start a new session, or run `/reload-plugins`.',
+    '',
+    '## More',
+    '',
+    `- [What this product covers](${productDocUrl(id)})`,
+    `- [Every tool, with its kind and scopes](${REPOSITORY_URL}/blob/main/docs/capabilities/${id}.md)`,
+    `- [Safety: approvals, policy rules, audit log](${REPOSITORY_URL}/blob/main/docs/SECURITY.md)`,
+    '',
+    'License: Apache-2.0.',
+    '',
+  ].join('\n');
 }
 
 function hooksFile(id) {
@@ -647,6 +719,7 @@ async function buildPlugin(id, product, ctx) {
   });
   writeJson(join(pluginDir, 'hooks', 'hooks.json'), hooksFile(id));
   writeJson(join(pluginDir, '.claude-plugin', 'plugin.json'), pluginManifest(product, id, server.group));
+  writeFileSync(join(pluginDir, 'README.md'), pluginReadme(product, id, server.group), 'utf8');
 
   const titles = { generated: [], gateway: [] };
   for (const { api, version } of server.apis ?? []) {
@@ -715,14 +788,21 @@ async function main() {
     rmSync(tokenDir, { recursive: true, force: true });
   }
 
-  // Marketplace: one entry per product.
+  // Marketplace: one entry per product, with the free-form category and search tags of config/plugin-text.json (the
+  // entry fields `category` and `tags`, code.claude.com/docs/en/plugins/marketplace-reference).
   const marketplacePath = join(ROOT, '.claude-plugin', 'marketplace.json');
   const marketplace = readJson(marketplacePath);
   writeJson(marketplacePath, {
     name: marketplace.name,
     owner: marketplace.owner,
     description: 'One plugin per Google product. Install the products you need, then turn each server on or off for a session with /mcp.',
-    plugins: Object.entries(products).map(([id, p]) => ({ name: id, source: `./plugins/${id}`, description: p.description })),
+    plugins: Object.entries(products).map(([id, p]) => {
+      const listing = pluginText.listing?.[id];
+      if (!listing || typeof listing.category !== 'string' || !Array.isArray(listing.tags) || listing.tags.length === 0) {
+        throw new Error(`config/plugin-text.json listing.${id} needs a category and tags`);
+      }
+      return { name: id, source: `./plugins/${id}`, description: p.description, category: listing.category, tags: listing.tags };
+    }),
   });
 
   console.log('\nplugin      tools  gateway methods  generated APIs  gateway APIs');

@@ -1,11 +1,14 @@
 {
   "name": "gtm",
   "displayName": "Tag Manager",
-  "version": "1.38.0",
+  "version": "1.38.1",
   "description": "Google Tag Manager accounts, containers, tags, triggers and variables.",
   "author": {
     "name": "FiredMosquito831"
   },
+  "homepage": "https://github.com/FiredMosquito831/google-services-mcps/blob/main/docs/products/gtm.md",
+  "repository": "https://github.com/FiredMosquito831/google-services-mcps",
+  "license": "Apache-2.0",
   "keywords": [
     "google",
     "mcp",

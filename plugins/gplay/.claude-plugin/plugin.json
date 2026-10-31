@@ -1,11 +1,14 @@
 {
   "name": "gplay",
   "displayName": "Google Play",
-  "version": "1.38.0",
+  "version": "1.38.1",
   "description": "Google Play developer publishing and reporting, Play Games Services, Android Enterprise and Management, Play Integrity and device APIs.",
   "author": {
     "name": "FiredMosquito831"
   },
+  "homepage": "https://github.com/FiredMosquito831/google-services-mcps/blob/main/docs/products/gplay.md",
+  "repository": "https://github.com/FiredMosquito831/google-services-mcps",
+  "license": "Apache-2.0",
   "keywords": [
     "google",
     "mcp",

@@ -1,11 +1,14 @@
 {
   "name": "gchat",
   "displayName": "Google Chat",
-  "version": "1.38.0",
+  "version": "1.38.1",
   "description": "Google Chat spaces, messages and members, plus Workspace Events subscriptions.",
   "author": {
     "name": "FiredMosquito831"
   },
+  "homepage": "https://github.com/FiredMosquito831/google-services-mcps/blob/main/docs/products/gchat.md",
+  "repository": "https://github.com/FiredMosquito831/google-services-mcps",
+  "license": "Apache-2.0",
   "keywords": [
     "google",
     "mcp",

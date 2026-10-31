@@ -1,11 +1,14 @@
 {
   "name": "gfirebase",
   "displayName": "Firebase",
-  "version": "1.38.0",
+  "version": "1.38.1",
   "description": "Firebase management, App Check, App Distribution, Crashlytics, Hosting, Data Connect, Rules, Test Lab, FCM and Identity Toolkit.",
   "author": {
     "name": "FiredMosquito831"
   },
+  "homepage": "https://github.com/FiredMosquito831/google-services-mcps/blob/main/docs/products/gfirebase.md",
+  "repository": "https://github.com/FiredMosquito831/google-services-mcps",
+  "license": "Apache-2.0",
   "keywords": [
     "google",
     "mcp",

@@ -8,117 +8,305 @@
     {
       "name": "gcloud",
       "source": "./plugins/gcloud",
-      "description": "Google Cloud console APIs: projects, service enablement, API keys, billing, monitoring, storage, BigQuery and IAM, plus the rest of the infrastructure, data, devops, networking, security and governance APIs."
+      "description": "Google Cloud console APIs: projects, service enablement, API keys, billing, monitoring, storage, BigQuery and IAM, plus the rest of the infrastructure, data, devops, networking, security and governance APIs.",
+      "category": "cloud",
+      "tags": [
+        "google",
+        "google-cloud",
+        "gcp",
+        "bigquery",
+        "cloud-storage",
+        "iam",
+        "logging",
+        "monitoring"
+      ]
     },
     {
       "name": "gsc",
       "source": "./plugins/gsc",
-      "description": "Search Console sites, sitemaps, search analytics, URL indexing and site verification."
+      "description": "Search Console sites, sitemaps, search analytics, URL indexing and site verification.",
+      "category": "seo",
+      "tags": [
+        "google",
+        "search-console",
+        "seo",
+        "sitemaps",
+        "indexing"
+      ]
     },
     {
       "name": "gsearch",
       "source": "./plugins/gsearch",
-      "description": "Public search and web-quality APIs (Custom Search, PageSpeed, CrUX, Safe Browsing, Web Risk, Fact Check) that take an API key instead of OAuth. The Custom Search JSON API is closed to new customers and is scheduled to be discontinued on 2027-01-01."
+      "description": "Public search and web-quality APIs (Custom Search, PageSpeed, CrUX, Safe Browsing, Web Risk, Fact Check) that take an API key instead of OAuth. The Custom Search JSON API is closed to new customers and is scheduled to be discontinued on 2027-01-01.",
+      "category": "search",
+      "tags": [
+        "google",
+        "pagespeed",
+        "core-web-vitals",
+        "web-risk",
+        "knowledge-graph",
+        "fact-check",
+        "developer-docs"
+      ]
     },
     {
       "name": "gdrive",
       "source": "./plugins/gdrive",
-      "description": "Google Drive files, labels and activity, plus Docs, Sheets, Slides, Forms and Books."
+      "description": "Google Drive files, labels and activity, plus Docs, Sheets, Slides, Forms and Books.",
+      "category": "productivity",
+      "tags": [
+        "google",
+        "google-workspace",
+        "drive",
+        "docs",
+        "sheets",
+        "slides",
+        "forms"
+      ]
     },
     {
       "name": "gmail",
       "source": "./plugins/gmail",
-      "description": "Gmail mailboxes, messages, labels and settings, plus Gmail Postmaster Tools."
+      "description": "Gmail mailboxes, messages, labels and settings, plus Gmail Postmaster Tools.",
+      "category": "productivity",
+      "tags": [
+        "google",
+        "google-workspace",
+        "gmail",
+        "email"
+      ]
     },
     {
       "name": "gcalendar",
       "source": "./plugins/gcalendar",
-      "description": "Google Calendar calendars, events and calendar settings."
+      "description": "Google Calendar calendars, events and calendar settings.",
+      "category": "productivity",
+      "tags": [
+        "google",
+        "google-workspace",
+        "calendar",
+        "meetings",
+        "scheduling"
+      ]
     },
     {
       "name": "gchat",
       "source": "./plugins/gchat",
-      "description": "Google Chat spaces, messages and members, plus Workspace Events subscriptions."
+      "description": "Google Chat spaces, messages and members, plus Workspace Events subscriptions.",
+      "category": "productivity",
+      "tags": [
+        "google",
+        "google-workspace",
+        "chat",
+        "messaging"
+      ]
     },
     {
       "name": "gmeet",
       "source": "./plugins/gmeet",
-      "description": "Google Meet spaces, conference records, participants and recordings."
+      "description": "Google Meet spaces, conference records, participants and recordings.",
+      "category": "productivity",
+      "tags": [
+        "google",
+        "google-workspace",
+        "meet",
+        "meetings",
+        "transcripts"
+      ]
     },
     {
       "name": "gcontacts",
       "source": "./plugins/gcontacts",
-      "description": "Google Contacts and People, personal health metrics, Data Portability, and the OAuth2 userinfo endpoints."
+      "description": "Google Contacts and People, personal health metrics, Data Portability, and the OAuth2 userinfo endpoints.",
+      "category": "productivity",
+      "tags": [
+        "google",
+        "google-workspace",
+        "contacts",
+        "people",
+        "directory"
+      ]
     },
     {
       "name": "gtasks",
       "source": "./plugins/gtasks",
-      "description": "Google Tasks task lists and tasks, plus Google Keep notes."
+      "description": "Google Tasks task lists and tasks, plus Google Keep notes.",
+      "category": "productivity",
+      "tags": [
+        "google",
+        "google-workspace",
+        "tasks",
+        "keep",
+        "todo"
+      ]
     },
     {
       "name": "gclassroom",
       "source": "./plugins/gclassroom",
-      "description": "Google Classroom courses, coursework, submissions, students and teachers."
+      "description": "Google Classroom courses, coursework, submissions, students and teachers.",
+      "category": "education",
+      "tags": [
+        "google",
+        "google-workspace",
+        "classroom",
+        "education"
+      ]
     },
     {
       "name": "gapps",
       "source": "./plugins/gapps",
-      "description": "Apps Script projects and execution, plus the Workspace Marketplace SDK."
+      "description": "Apps Script projects and execution, plus the Workspace Marketplace SDK.",
+      "category": "development",
+      "tags": [
+        "google",
+        "google-workspace",
+        "apps-script",
+        "automation"
+      ]
     },
     {
       "name": "gadmin",
       "source": "./plugins/gadmin",
-      "description": "Google Workspace administration: Cloud Identity, Chrome management and policy, Groups Settings, licensing, reports, alerts, Vault, reseller and Cloud Search admin."
+      "description": "Google Workspace administration: Cloud Identity, Chrome management and policy, Groups Settings, licensing, reports, alerts, Vault, reseller and Cloud Search admin.",
+      "category": "administration",
+      "tags": [
+        "google",
+        "google-workspace",
+        "admin",
+        "users",
+        "groups",
+        "audit"
+      ]
     },
     {
       "name": "ganalytics",
       "source": "./plugins/ganalytics",
-      "description": "Google Analytics admin and data APIs for GA4 properties, configuration and reports."
+      "description": "Google Analytics admin and data APIs for GA4 properties, configuration and reports.",
+      "category": "marketing",
+      "tags": [
+        "google",
+        "google-analytics",
+        "ga4",
+        "analytics",
+        "reports"
+      ]
     },
     {
       "name": "gtm",
       "source": "./plugins/gtm",
-      "description": "Google Tag Manager accounts, containers, tags, triggers and variables."
+      "description": "Google Tag Manager accounts, containers, tags, triggers and variables.",
+      "category": "marketing",
+      "tags": [
+        "google",
+        "tag-manager",
+        "gtm",
+        "tags"
+      ]
     },
     {
       "name": "gyoutube",
       "source": "./plugins/gyoutube",
-      "description": "YouTube Data, YouTube Analytics and YouTube Reporting APIs, plus Blogger."
+      "description": "YouTube Data, YouTube Analytics and YouTube Reporting APIs, plus Blogger.",
+      "category": "marketing",
+      "tags": [
+        "google",
+        "youtube",
+        "youtube-analytics",
+        "blogger",
+        "video"
+      ]
     },
     {
       "name": "gbusiness",
       "source": "./plugins/gbusiness",
-      "description": "Business Profile accounts, locations, verifications, lodging, place actions, notifications and performance."
+      "description": "Business Profile accounts, locations, verifications, lodging, place actions, notifications and performance.",
+      "category": "marketing",
+      "tags": [
+        "google",
+        "business-profile",
+        "local",
+        "maps-listing"
+      ]
     },
     {
       "name": "gads",
       "source": "./plugins/gads",
-      "description": "Google Ads API (accounts, campaigns, ad groups, ads, keywords, budgets, conversions, assets and GAQL reporting, with every other method through the gateway), plus advertising and publisher APIs: Search Ads 360, Display & Video 360, Campaign Manager, Ad Exchange, AdSense, AdMob, Real-time Bidding and more."
+      "description": "Google Ads API (accounts, campaigns, ad groups, ads, keywords, budgets, conversions, assets and GAQL reporting, with every other method through the gateway), plus advertising and publisher APIs: Search Ads 360, Display & Video 360, Campaign Manager, Ad Exchange, AdSense, AdMob, Real-time Bidding and more.",
+      "category": "marketing",
+      "tags": [
+        "google",
+        "google-ads",
+        "advertising",
+        "adsense",
+        "admob",
+        "gaql"
+      ]
     },
     {
       "name": "gmerchant",
       "source": "./plugins/gmerchant",
-      "description": "Merchant Center: Merchant API and Comparison Shopping Service, through a service account key."
+      "description": "Merchant Center: Merchant API and Comparison Shopping Service, through a service account key.",
+      "category": "commerce",
+      "tags": [
+        "google",
+        "merchant-center",
+        "shopping",
+        "products"
+      ]
     },
     {
       "name": "gplay",
       "source": "./plugins/gplay",
-      "description": "Google Play developer publishing and reporting, Play Games Services, Android Enterprise and Management, Play Integrity and device APIs."
+      "description": "Google Play developer publishing and reporting, Play Games Services, Android Enterprise and Management, Play Integrity and device APIs.",
+      "category": "development",
+      "tags": [
+        "google",
+        "google-play",
+        "android",
+        "play-console",
+        "android-management"
+      ]
     },
     {
       "name": "gfirebase",
       "source": "./plugins/gfirebase",
-      "description": "Firebase management, App Check, App Distribution, Crashlytics, Hosting, Data Connect, Rules, Test Lab, FCM and Identity Toolkit."
+      "description": "Firebase management, App Check, App Distribution, Crashlytics, Hosting, Data Connect, Rules, Test Lab, FCM and Identity Toolkit.",
+      "category": "development",
+      "tags": [
+        "google",
+        "firebase",
+        "firestore",
+        "crashlytics",
+        "remote-config"
+      ]
     },
     {
       "name": "gmaps",
       "source": "./plugins/gmaps",
-      "description": "Maps Platform and location APIs: Places, Address Validation, Solar, Air Quality, Pollen, Street View Publish and related datasets."
+      "description": "Maps Platform and location APIs: Places, Address Validation, Solar, Air Quality, Pollen, Street View Publish and related datasets.",
+      "category": "location",
+      "tags": [
+        "google",
+        "google-maps",
+        "places",
+        "routes",
+        "weather"
+      ]
     },
     {
       "name": "gai",
       "source": "./plugins/gai",
-      "description": "Generative and classic AI APIs: Discovery Engine, Vertex AI, Dialogflow, Vision, Speech, Translate, Document AI and agent services."
+      "description": "Generative and classic AI APIs: Discovery Engine, Vertex AI, Dialogflow, Vision, Speech, Translate, Document AI and agent services.",
+      "category": "ai",
+      "tags": [
+        "google",
+        "vertex-ai",
+        "gemini",
+        "embeddings",
+        "vision",
+        "speech",
+        "translate"
+      ]
     }
   ]
 }

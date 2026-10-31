@@ -1,11 +1,14 @@
 {
   "name": "gyoutube",
   "displayName": "YouTube and Blogger",
-  "version": "1.38.0",
+  "version": "1.38.1",
   "description": "YouTube Data, YouTube Analytics and YouTube Reporting APIs, plus Blogger.",
   "author": {
     "name": "FiredMosquito831"
   },
+  "homepage": "https://github.com/FiredMosquito831/google-services-mcps/blob/main/docs/products/gyoutube.md",
+  "repository": "https://github.com/FiredMosquito831/google-services-mcps",
+  "license": "Apache-2.0",
   "keywords": [
     "google",
     "mcp",

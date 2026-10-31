@@ -1,11 +1,14 @@
 {
   "name": "gmerchant",
   "displayName": "Merchant Center",
-  "version": "1.38.0",
+  "version": "1.38.1",
   "description": "Merchant Center: Merchant API and Comparison Shopping Service, through a service account key.",
   "author": {
     "name": "FiredMosquito831"
   },
+  "homepage": "https://github.com/FiredMosquito831/google-services-mcps/blob/main/docs/products/gmerchant.md",
+  "repository": "https://github.com/FiredMosquito831/google-services-mcps",
+  "license": "Apache-2.0",
   "keywords": [
     "google",
     "mcp",

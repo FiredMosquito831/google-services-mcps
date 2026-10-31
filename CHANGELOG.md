@@ -2,6 +2,16 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.38.1 - 2026-10-31
+
+### Changed: plugin manifests name their homepage, repository and licence; each plugin has a README; the marketplace has categories and tags
+- Every `plugin.json` now has `homepage` (the product's page, `docs/products/<id>.md` on GitHub), `repository` and `license: "Apache-2.0"`, the manifest fields of https://code.claude.com/docs/en/plugins-reference ("`homepage` | String | Documentation URL. Must parse as a URL, or the plugin fails to load"; "`license` | String | SPDX identifier such as `MIT` or `Apache-2.0`").
+- Every plugin folder has a generated `README.md`: what it covers, the install line (`claude plugin install <id>@google-services-mcps`), how to sign in from the chat, the options, how to update from this marketplace, and links to the product page, its tool list and docs/SECURITY.md. `claude plugin validate` prints the line to paste when a README has no install line (Claude Code 2.1.295 changelog); it prints nothing now, and it no longer falls back to the repository's README.
+- Every marketplace entry has a `category` and `tags` ("Free-form category for organizing the catalog", "Free-form tags for search", https://code.claude.com/docs/en/plugins/marketplace-reference), from `listing` in `config/plugin-text.json`.
+
+### Not changed
+- tools/list, server instructions, tool maps and kinds, the hook. `claude plugin validate --strict` passes for the marketplace and every plugin (Claude Code 2.1.316).
+
 ## 1.38.0 - 2026-10-31
 
 ### Added: destructive tools keep Claude Code's permission prompt in every mode

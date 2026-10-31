@@ -1,11 +1,14 @@
 {
   "name": "gdrive",
   "displayName": "Google Drive and Docs",
-  "version": "1.38.0",
+  "version": "1.38.1",
   "description": "Google Drive files, labels and activity, plus Docs, Sheets, Slides, Forms and Books.",
   "author": {
     "name": "FiredMosquito831"
   },
+  "homepage": "https://github.com/FiredMosquito831/google-services-mcps/blob/main/docs/products/gdrive.md",
+  "repository": "https://github.com/FiredMosquito831/google-services-mcps",
+  "license": "Apache-2.0",
   "keywords": [
     "google",
     "mcp",

@@ -1,5 +1,5 @@
 {
-  "$comment": "Per-product text of each plugin's skill (plugins/<id>/skills/<id>/SKILL.md), rendered by scripts/bundle.mjs. description and whenToUse go into the skill's frontmatter: the product's main use cases first; Claude Code shows them together, cut at 1,536 characters. flows are the common tasks, in order; notes are short facts. Write a tool as {tool:<name>}: the build checks that the server has it and renders it as `<name>`. The sign-in, untrusted-content, safety, tool-count and API sections are written by the bundle for every product.",
+  "$comment": "Per-product text of each plugin's skill (plugins/<id>/skills/<id>/SKILL.md), rendered by scripts/bundle.mjs. description and whenToUse go into the skill's frontmatter: the product's main use cases first; Claude Code shows them together, cut at 1,536 characters. flows are the common tasks, in order; notes are short facts. Write a tool as {tool:<name>}: the build checks that the server has it and renders it as `<name>`. The sign-in, untrusted-content, safety, tool-count and API sections are written by the bundle for every product. listing holds each product's marketplace category and search tags (.claude-plugin/marketplace.json).",
   "products": {
     "gcloud": {
       "description": "Inspect and manage Google Cloud projects: check a project's readiness and enable its APIs, search projects, read IAM policies, manage API keys, run read-only BigQuery SQL, read Cloud Logging entries and Monitoring metrics (PromQL), read and write Cloud Storage objects, and look up SKU prices; about 280 other Cloud APIs through the gateway.",
@@ -248,5 +248,30 @@
       ],
       "notes": []
     }
+  },
+  "listing": {
+    "gcloud": { "category": "cloud", "tags": ["google", "google-cloud", "gcp", "bigquery", "cloud-storage", "iam", "logging", "monitoring"] },
+    "gsc": { "category": "seo", "tags": ["google", "search-console", "seo", "sitemaps", "indexing"] },
+    "gsearch": { "category": "search", "tags": ["google", "pagespeed", "core-web-vitals", "web-risk", "knowledge-graph", "fact-check", "developer-docs"] },
+    "gdrive": { "category": "productivity", "tags": ["google", "google-workspace", "drive", "docs", "sheets", "slides", "forms"] },
+    "gmail": { "category": "productivity", "tags": ["google", "google-workspace", "gmail", "email"] },
+    "gcalendar": { "category": "productivity", "tags": ["google", "google-workspace", "calendar", "meetings", "scheduling"] },
+    "gchat": { "category": "productivity", "tags": ["google", "google-workspace", "chat", "messaging"] },
+    "gmeet": { "category": "productivity", "tags": ["google", "google-workspace", "meet", "meetings", "transcripts"] },
+    "gcontacts": { "category": "productivity", "tags": ["google", "google-workspace", "contacts", "people", "directory"] },
+    "gtasks": { "category": "productivity", "tags": ["google", "google-workspace", "tasks", "keep", "todo"] },
+    "gclassroom": { "category": "education", "tags": ["google", "google-workspace", "classroom", "education"] },
+    "gapps": { "category": "development", "tags": ["google", "google-workspace", "apps-script", "automation"] },
+    "gadmin": { "category": "administration", "tags": ["google", "google-workspace", "admin", "users", "groups", "audit"] },
+    "ganalytics": { "category": "marketing", "tags": ["google", "google-analytics", "ga4", "analytics", "reports"] },
+    "gtm": { "category": "marketing", "tags": ["google", "tag-manager", "gtm", "tags"] },
+    "gyoutube": { "category": "marketing", "tags": ["google", "youtube", "youtube-analytics", "blogger", "video"] },
+    "gbusiness": { "category": "marketing", "tags": ["google", "business-profile", "local", "maps-listing"] },
+    "gads": { "category": "marketing", "tags": ["google", "google-ads", "advertising", "adsense", "admob", "gaql"] },
+    "gmerchant": { "category": "commerce", "tags": ["google", "merchant-center", "shopping", "products"] },
+    "gplay": { "category": "development", "tags": ["google", "google-play", "android", "play-console", "android-management"] },
+    "gfirebase": { "category": "development", "tags": ["google", "firebase", "firestore", "crashlytics", "remote-config"] },
+    "gmaps": { "category": "location", "tags": ["google", "google-maps", "places", "routes", "weather"] },
+    "gai": { "category": "ai", "tags": ["google", "vertex-ai", "gemini", "embeddings", "vision", "speech", "translate"] }
   }
 }

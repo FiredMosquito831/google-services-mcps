@@ -1,11 +1,14 @@
 {
   "name": "gcontacts",
   "displayName": "Contacts and Profile",
-  "version": "1.38.0",
+  "version": "1.38.1",
   "description": "Google Contacts and People, personal health metrics, Data Portability, and the OAuth2 userinfo endpoints.",
   "author": {
     "name": "FiredMosquito831"
   },
+  "homepage": "https://github.com/FiredMosquito831/google-services-mcps/blob/main/docs/products/gcontacts.md",
+  "repository": "https://github.com/FiredMosquito831/google-services-mcps",
+  "license": "Apache-2.0",
   "keywords": [
     "google",
     "mcp",
