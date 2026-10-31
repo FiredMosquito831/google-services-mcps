@@ -1,7 +1,7 @@
 {
   "name": "gdrive",
   "displayName": "Google Drive and Docs",
-  "version": "1.35.4",
+  "version": "1.35.5",
   "description": "Google Drive files, labels and activity, plus Docs, Sheets, Slides, Forms and Books.",
   "author": {
     "name": "FiredMosquito831"

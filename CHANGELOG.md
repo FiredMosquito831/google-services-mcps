@@ -2,6 +2,17 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.35.5 - 2026-10-31
+
+### Fixed: gsearch says which tools an API key cannot run
+- gsearch signs every call with an API key, and ten of its tools are not expected to work that way. They stay (coverage), and their descriptions now say why:
+  - Fact Check Tools `pages.create`, `.get`, `.list`, `.update` and `.delete`: "Requires the following OAuth scope: https://www.googleapis.com/auth/factchecktools" (https://developers.google.com/fact-check/tools/api/reference/rest/v1alpha1/pages/create and the other method pages).
+  - Web Risk `projects.submissions.create`: "Only allowlisted projects can use this method during Early Access." (https://docs.cloud.google.com/web-risk/docs/reference/rest/v1/projects.submissions/create); "We no longer accept new contracts or expansions for the Web Risk Submission API." (https://docs.cloud.google.com/web-risk/docs/submission-api), whose example sends an OAuth token. The four `projects.operations` tools (get, list, cancel, delete) follow a submission.
+- New data in `config/products.json`: `methodNotes`, per generated API of a product, a note for single methods (`{ source, reason, methods: { "<method id>": "<note>" } }`). Only that method's tool carries it, after the API's note from `config/tool-kinds.json` (which every tool of the API carries): `Note: <API note> <method note>`. `gen-servers` checks each method id against the API's snapshot and copies the notes into `config/servers.json` and the plugin's `servers.json`; both registry loaders carry them. A product without notes is described as before.
+
+### Not changed
+- Tool maps, tool kinds and scopes. tools/list changes only for those 10 gsearch tools (4 of them with writes off: the two Fact Check page reads and the two Web Risk operation reads), in their descriptions. Not checked against live Google.
+
 ## 1.35.4 - 2026-10-31
 
 ### Fixed: chat_list_messages orders messages with the direction Google documents

@@ -241,6 +241,17 @@ export interface DiscoverySource {
    * the result limit (ServerSpec.pageSizeDefaults). Absent: Google's default.
    */
   pageSizes?: Readonly<Record<string, PageSizeDefault>>;
+  /**
+   * Method id to a note its tool's description carries, after the API's note (ServerSpec.methodNotes, declared in
+   * config/products.json). Absent: the tool carries the API's note only, as before.
+   */
+  methodNotes?: Readonly<Record<string, string>>;
+}
+
+/** The note of one method's tool: the API's note (config/tool-kinds.json notes), then the method's own, or neither. */
+export function methodNoteText(apiNote: string | undefined, methodNote: string | undefined): string | undefined {
+  if (methodNote === undefined) return apiNote;
+  return apiNote ? `${apiNote} ${methodNote}` : methodNote;
 }
 
 /** The request defaults of one method, from its source (see DiscoverySource). */
@@ -760,7 +771,8 @@ export function generateDiscoveryTools(
   entries.forEach((entry, i) => {
     const name = names[i]!;
     const m = entry.method;
-    tools.push(buildMethodTool(m, name, entry.doc, group, cfg, kinds.notes[m.apiName], entry.scopesWhenNone, entry.target, entry.src));
+    const note = methodNoteText(kinds.notes[m.apiName], entry.src.methodNotes?.[m.fullId]);
+    tools.push(buildMethodTool(m, name, entry.doc, group, cfg, note, entry.scopesWhenNone, entry.target, entry.src));
     rows.push({
       method: m.fullId,
       tool: name,
@@ -846,6 +858,7 @@ export async function discoveryToolsFor(
       include: a.include,
       ...(server.scopeOverrides?.[a.api] ? { scopesWhenNone: server.scopeOverrides[a.api] } : {}),
       ...requestDefaultsFor(server, a.api),
+      ...(server.methodNotes?.[a.api] ? { methodNotes: server.methodNotes[a.api]!.methods } : {}),
     });
   }
   if (missing.length > 0) {

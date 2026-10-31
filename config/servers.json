@@ -1459,6 +1459,30 @@
           "version": "v4"
         }
       ],
+      "methodNotes": {
+        "factchecktools": {
+          "source": "https://developers.google.com/fact-check/tools/api/reference/rest/v1alpha1/pages/create (Authorization scopes: \"Requires the following OAuth scope: https://www.googleapis.com/auth/factchecktools\"; the same on the get, list, update and delete pages)",
+          "reason": "gsearch sends an API key, never an OAuth token, so the ClaimReview page methods are expected to be refused. Not checked live.",
+          "methods": {
+            "factchecktools.pages.create": "Google requires an OAuth token with the factchecktools scope for this method; this server sends only an API key, so Google is expected to refuse it.",
+            "factchecktools.pages.delete": "Google requires an OAuth token with the factchecktools scope for this method; this server sends only an API key, so Google is expected to refuse it.",
+            "factchecktools.pages.get": "Google requires an OAuth token with the factchecktools scope for this method; this server sends only an API key, so Google is expected to refuse it.",
+            "factchecktools.pages.list": "Google requires an OAuth token with the factchecktools scope for this method; this server sends only an API key, so Google is expected to refuse it.",
+            "factchecktools.pages.update": "Google requires an OAuth token with the factchecktools scope for this method; this server sends only an API key, so Google is expected to refuse it."
+          }
+        },
+        "webrisk": {
+          "source": "https://docs.cloud.google.com/web-risk/docs/reference/rest/v1/projects.submissions/create (\"Only allowlisted projects can use this method during Early Access.\"; Authorization scopes: cloud-platform) and https://docs.cloud.google.com/web-risk/docs/submission-api (\"We no longer accept new contracts or expansions for the Web Risk Submission API.\"; its example sends an OAuth access token)",
+          "reason": "Submissions are for allowlisted projects only and take an OAuth token, and the operations methods follow a submission; gsearch sends an API key only. Not checked live.",
+          "methods": {
+            "webrisk.projects.submissions.create": "Google: \"Only allowlisted projects can use this method during Early Access.\" The Submission API takes no new contracts, and Google's example sends an OAuth token; this server sends only an API key, so expect a refusal.",
+            "webrisk.projects.operations.get": "The operations of Web Risk submissions (projects.submissions.create), which only allowlisted projects can make; Google lists an OAuth scope for this method, and this server sends only an API key.",
+            "webrisk.projects.operations.list": "The operations of Web Risk submissions (projects.submissions.create), which only allowlisted projects can make; this server sends only an API key.",
+            "webrisk.projects.operations.cancel": "The operations of Web Risk submissions (projects.submissions.create), which only allowlisted projects can make; this server sends only an API key.",
+            "webrisk.projects.operations.delete": "The operations of Web Risk submissions (projects.submissions.create), which only allowlisted projects can make; this server sends only an API key."
+          }
+        }
+      },
       "toolsets": {
         "google": [
           "developerk_documents_search_documen",
