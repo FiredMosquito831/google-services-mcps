@@ -1,6 +1,6 @@
 {
   "name": "google-services-mcps",
-  "version": "1.38.2",
+  "version": "1.38.3",
   "description": "MCP servers for Google Workspace (Gmail, Drive, Calendar, Admin), Google Cloud, Search Console, Google Ads and more, as Claude Code plugins, with installers for Codex, OpenCode and Antigravity.",
   "keywords": [
     "mcp",

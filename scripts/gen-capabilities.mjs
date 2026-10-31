@@ -25,7 +25,11 @@ if (!existsSync(countModule)) {
   console.error('dist/cli/toolset-count.js is missing. Run npm run build (or npx tsc -p tsconfig.json) first.');
   process.exit(1);
 }
-const { toolsetCount, RUNTIME_TOOL_NAMES } = await import(pathToFileURL(countModule).href);
+const { toolsetCount } = await import(pathToFileURL(countModule).href);
+// The tools a server registers (src/core/runtime-tools.ts, the rule the skills count with) and the service account key's
+// fixed scopes per server (src/core/service-account-scopes.ts).
+const { registersEntry, runtimeToolsFor, RUNTIME_TOOL_NAMES } = await import(pathToFileURL(join(root, 'dist', 'core', 'runtime-tools.js')).href);
+const { SERVICE_ACCOUNT_SCOPES_BY_SERVER } = await import(pathToFileURL(join(root, 'dist', 'core', 'service-account-scopes.js')).href);
 const checkOnly = process.argv.includes('--check');
 /** Files whose content differs from what this run builds (--check). */
 const stale = [];
@@ -101,9 +105,15 @@ const perProduct = [];
 for (const [id, p] of Object.entries(products.products)) {
   const serverName = p.server?.name ?? id;
   const mapFile = join(root, 'plugins', id, 'tool-map.json');
-  const tools = existsSync(mapFile)
+  const mapped = existsSync(mapFile)
     ? JSON.parse(readFileSync(mapFile, 'utf8')).map((t) => ({ ...t, short: shortName(t.name, id, serverName) }))
     : [];
+  // Only the tools the server registers are listed and counted. The map also holds, for the hook, the runtime tools of
+  // the other sign-in kinds, and for a service-account product the tools its key's fixed scopes never cover.
+  const keyScopes = p.group === 'service-account' ? SERVICE_ACCOUNT_SCOPES_BY_SERVER[serverName] ?? [] : undefined;
+  const registers = (name, scopes) => registersEntry(name, scopes, p.group, keyScopes);
+  const tools = mapped.filter((t) => registers(t.short, t.scopes));
+  const notRegistered = mapped.filter((t) => !registers(t.short, t.scopes));
   const rows = tools.map((t) => ({ ...t, group: classify(t, t.short) }));
   const count = (pred) => rows.filter(pred).length;
   perProduct.push({
@@ -127,10 +137,13 @@ for (const [id, p] of Object.entries(products.products)) {
     generatedApis: (p.generated ?? []).map(apiLine),
     gatewayApis: (p.gateway ?? []).map(apiLine),
     unassigned: [],
-    // Tools per toolset, from the tool map and the toolset rule. effective is all when the product lacks the toolset.
+    // Tools per toolset, from the tool map and the toolset rule, counting the tools the server registers. effective is all
+    // when the product lacks the toolset.
     toolsets: Object.fromEntries(
-      ['all', 'google', 'curated'].map((t) => [t, existsSync(mapFile) ? toolsetCount(mapFile, id, serverName, t, toolsetLists(p)) : undefined]),
+      ['all', 'google', 'curated'].map((t) => [t, existsSync(mapFile) ? toolsetCount(mapFile, id, serverName, t, toolsetLists(p), { registers }) : undefined]),
     ),
+    runtime: runtimeToolsFor(p.group),
+    notRegistered: notRegistered.map((t) => ({ short: t.short, why: RUNTIME_TOOL_NAMES.includes(t.short) ? 'runtime' : 'key', scopes: t.scopes ?? [] })),
     google: p.toolsets?.google,
   });
 }
@@ -176,9 +189,23 @@ for (const p of perProduct) {
   lines.push('');
   const ts = p.toolsets;
   lines.push(
-    `Toolsets (the plugin option \`toolset\`, \`GSM_TOOLSET\`): all ${toolsetCell(ts.all, 'all')}, google ${toolsetCell(ts.google, 'google')}, curated ${toolsetCell(ts.curated, 'curated')} tools, each with the ${RUNTIME_TOOL_NAMES.length} runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.`,
+    `Toolsets (the plugin option \`toolset\`, \`GSM_TOOLSET\`): all ${toolsetCell(ts.all, 'all')}, google ${toolsetCell(ts.google, 'google')}, curated ${toolsetCell(ts.curated, 'curated')} tools, each counting the ${p.runtime.length} runtime tools this server registers (${p.runtime.map((n) => `\`${n}\``).join(', ')}). "(all)" means the product has no such toolset yet, so it lists every tool.`,
   );
   lines.push('');
+  if (p.notRegistered.length > 0) {
+    const runtime = p.notRegistered.filter((t) => t.why === 'runtime').map((t) => `\`${t.short}\``);
+    const key = p.notRegistered.filter((t) => t.why === 'key');
+    lines.push(`## Not registered by this server (${p.notRegistered.length})`);
+    lines.push('');
+    lines.push('The tool map (`plugins/<id>/tool-map.json`) also lists these, so the consent hook knows every name, but this server never registers them, and the counts above leave them out.');
+    lines.push('');
+    if (runtime.length) lines.push(`- Sign-in tools of other sign-in kinds: ${runtime.join(', ')}.`);
+    if (key.length) {
+      const scopes = [...new Set(key.flatMap((t) => t.scopes))].map((s) => s.replace('https://www.googleapis.com/auth/', '')).join(', ');
+      lines.push(`- Tools the service account key's fixed scopes do not cover (they need ${scopes}): ${key.map((t) => `\`${t.short}\``).join(', ')}.`);
+    }
+    lines.push('');
+  }
   if (p.google) {
     lines.push(`## Toolset google (${p.google.tools.length})`);
     lines.push('');
@@ -253,7 +280,7 @@ for (const p of perProduct) {
 }
 out.push('');
 out.push(
-  `Toolsets: the plugin option \`toolset\` (\`GSM_TOOLSET\`, \`gsm install --toolset\`) picks which tools a server lists. all is every tool (the default). google is the tools that match Google's official MCP server for the product, or a small set chosen here where Google has no server (gsc, gmeet, gtasks, gapps, gtm, gyoutube, gbusiness, gadmin, and gsearch beside its Developer Knowledge tools). curated is the hand-written tools and the gateway tools. "(all)" means the product has no such toolset yet, so it lists every tool. Each count includes the ${RUNTIME_TOOL_NAMES.length} runtime tools of the tool map (health, sign-in and account tools); a server lists only those of its sign-in kind, and write tools only when writes are allowed. Antigravity is reported to refuse a server with more than 100 tools (not verified); \`gsm install --agent agy\` warns.`,
+  `Toolsets: the plugin option \`toolset\` (\`GSM_TOOLSET\`, \`gsm install --toolset\`) picks which tools a server lists. all is every tool (the default). google is the tools that match Google's official MCP server for the product, or a small set chosen here where Google has no server (gsc, gmeet, gtasks, gapps, gtm, gyoutube, gbusiness, gadmin, and gsearch beside its Developer Knowledge tools). curated is the hand-written tools and the gateway tools. "(all)" means the product has no such toolset yet, so it lists every tool. Every count is what the server registers: its own runtime tools (health, and the sign-in and account tools of its sign-in kind) and no others, and for gplay and gmerchant only the tools the service account key's fixed scopes cover. Write tools are listed only when writes are allowed, and a tool only when the sign-in holds one of its scopes. Antigravity is reported to refuse a server with more than 100 tools (not verified); \`gsm install --agent agy\` warns.`,
 );
 out.push('');
 out.push('## What the safety classes mean');

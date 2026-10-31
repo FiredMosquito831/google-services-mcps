@@ -4,11 +4,17 @@ Google Contacts and People, personal health metrics, Data Portability, and the O
 
 - Plugin: `gcontacts`, MCP server: `gcontacts`, login: Desktop OAuth client, then `login workspace-user`
 - Install: `claude plugin install gcontacts@google-services-mcps`
-- Tools: 75 total. Curated 12, per-method 59, gateway 3. Read 40, write 25, destructive 9, dynamic 1.
+- Tools: 73 total. Curated 10, per-method 59, gateway 3. Read 40, write 23, destructive 9, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 75, google 12, curated 15 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 73, google 10, curated 13 tools, each counting the 7 runtime tools this server registers (`account_remove`, `account_set_default`, `accounts_list`, `auth_login`, `auth_setup_client`, `auth_status`, `health`). "(all)" means the product has no such toolset yet, so it lists every tool.
+
+## Not registered by this server (2)
+
+The tool map (`plugins/<id>/tool-map.json`) also lists these, so the consent hook knows every name, but this server never registers them, and the counts above leave them out.
+
+- Sign-in tools of other sign-in kinds: `auth_setup_admin`, `auth_setup_service_account`.
 
 ## Toolset google (3)
 
@@ -20,7 +26,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `contacts_search` | `search_contacts` | Sends the empty warm-up search Google asks for before each search, then the search, with a default readMask. Carries Google's caution. |
 | `profile_me` | `get_user_profile` | From the OAuth2 userinfo endpoint. Every sign-in holds userinfo.email, so the email is always there; the name and picture need userinfo.profile, which every profile of a gcontacts login asks for since 1.35.1 (a view-only scope by Google's description; readwrite and full prefer it). |
 
-## Curated tools (12)
+## Curated tools (10)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
@@ -28,9 +34,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `account_set_default` | write | Set the default account | (none) |
 | `accounts_list` | read | Signed-in accounts | (none) |
 | `auth_login` | write | Sign in to Google | (none) |
-| `auth_setup_admin` | write | Set up the workspace admin account | (none) |
 | `auth_setup_client` | write | Save the Google OAuth client | (none) |
-| `auth_setup_service_account` | write | Set up the service account key | (none) |
 | `auth_status` | read | Sign-in status | (none) |
 | `contacts_search` | read | Search your contacts | contacts, contacts.readonly |
 | `contacts_search_directory` | read | Search the Workspace directory | directory.readonly |

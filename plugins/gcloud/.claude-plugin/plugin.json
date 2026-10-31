@@ -1,7 +1,7 @@
 {
   "name": "gcloud",
   "displayName": "Google Cloud",
-  "version": "1.38.2",
+  "version": "1.38.3",
   "description": "Google Cloud console APIs: projects, service enablement, API keys, billing, monitoring, storage, BigQuery and IAM, plus the rest of the infrastructure, data, devops, networking, security and governance APIs.",
   "author": {
     "name": "FiredMosquito831"

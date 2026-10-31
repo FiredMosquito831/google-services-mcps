@@ -4,11 +4,17 @@ Google Calendar calendars, events and calendar settings.
 
 - Plugin: `gcalendar`, MCP server: `gcalendar`, login: Desktop OAuth client, then `login workspace-user`
 - Install: `claude plugin install gcalendar@google-services-mcps`
-- Tools: 57 total. Curated 18, per-method 38, gateway 0. Read 21, write 25, destructive 11, dynamic 0.
+- Tools: 55 total. Curated 16, per-method 38, gateway 0. Read 21, write 23, destructive 11, dynamic 0.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 57, google 17, curated 18 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 55, google 15, curated 16 tools, each counting the 7 runtime tools this server registers (`account_remove`, `account_set_default`, `accounts_list`, `auth_login`, `auth_setup_client`, `auth_status`, `health`). "(all)" means the product has no such toolset yet, so it lists every tool.
+
+## Not registered by this server (2)
+
+The tool map (`plugins/<id>/tool-map.json`) also lists these, so the consent hook knows every name, but this server never registers them, and the counts above leave them out.
+
+- Sign-in tools of other sign-in kinds: `auth_setup_admin`, `auth_setup_service_account`.
 
 ## Toolset google (8)
 
@@ -25,7 +31,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `calendar_delete_event` | `delete_event` | Destructive, so it asks first, as in Google's server (destructiveHint). |
 | `calendar_respond` | `respond_to_event` |  |
 
-## Curated tools (18)
+## Curated tools (16)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
@@ -33,9 +39,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `account_set_default` | write | Set the default account | (none) |
 | `accounts_list` | read | Signed-in accounts | (none) |
 | `auth_login` | write | Sign in to Google | (none) |
-| `auth_setup_admin` | write | Set up the workspace admin account | (none) |
 | `auth_setup_client` | write | Save the Google OAuth client | (none) |
-| `auth_setup_service_account` | write | Set up the service account key | (none) |
 | `auth_status` | read | Sign-in status | (none) |
 | `calendar_create_event` | write | Create calendar event | calendar, calendar.events |
 | `calendar_delete_event` | destructive | Delete calendar event | calendar, calendar.events |

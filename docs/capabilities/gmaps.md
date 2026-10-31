@@ -4,11 +4,17 @@ Maps Platform and location APIs: Places, Address Validation, Solar, Air Quality,
 
 - Plugin: `gmaps`, MCP server: `gmaps`, login: API key, then `setup-apikey` (no login)
 - Install: `claude plugin install gmaps@google-services-mcps`
-- Tools: 47 total. Curated 11, per-method 35, gateway 0. Read 31, write 13, destructive 3, dynamic 0.
+- Tools: 39 total. Curated 3, per-method 35, gateway 0. Read 29, write 7, destructive 3, dynamic 0.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 47, google 13, curated 11 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 39, google 5, curated 3 tools, each counting the 1 runtime tools this server registers (`health`). "(all)" means the product has no such toolset yet, so it lists every tool.
+
+## Not registered by this server (8)
+
+The tool map (`plugins/<id>/tool-map.json`) also lists these, so the consent hook knows every name, but this server never registers them, and the counts above leave them out.
+
+- Sign-in tools of other sign-in kinds: `account_remove`, `account_set_default`, `accounts_list`, `auth_login`, `auth_setup_admin`, `auth_setup_client`, `auth_setup_service_account`, `auth_status`.
 
 ## Toolset google (4)
 
@@ -21,18 +27,10 @@ The tools that match Google's official MCP server for this product (https://deve
 | `maps_compute_routes` | `compute_routes` | Routes API computeRoutes with a response field mask (a short summary by default). Routes API is not in Google's Discovery directory; called directly with the API key. |
 | `maps_lookup_weather` | `lookup_weather` | Weather API current conditions, hourly forecast or daily forecast, by latitude and longitude. Not in Google's Discovery directory; called directly with the API key. |
 
-## Curated tools (11)
+## Curated tools (3)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
-| `account_remove` | write | Remove a signed-in account | (none) |
-| `account_set_default` | write | Set the default account | (none) |
-| `accounts_list` | read | Signed-in accounts | (none) |
-| `auth_login` | write | Sign in to Google | (none) |
-| `auth_setup_admin` | write | Set up the workspace admin account | (none) |
-| `auth_setup_client` | write | Save the Google OAuth client | (none) |
-| `auth_setup_service_account` | write | Set up the service account key | (none) |
-| `auth_status` | read | Sign-in status | (none) |
 | `health` | read | Server health | (none) |
 | `maps_compute_routes` | read | Compute a route | cloud-platform |
 | `maps_lookup_weather` | read | Look up the weather | cloud-platform |

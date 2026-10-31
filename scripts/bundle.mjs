@@ -34,7 +34,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const AUTHOR = { name: 'FiredMosquito831' };
-const MANIFEST_VERSION = '1.38.2';
+const MANIFEST_VERSION = '1.38.3';
 const TOOL_NAME_MAX = 64;
 /** When two API versions give one method two kinds, the riskier one is kept. A dynamic method is kept as dynamic (decided per call). */
 const RANK = { read: 0, write: 1, dynamic: 2, destructive: 3 };
@@ -533,8 +533,8 @@ async function readonlyLeavesNothing(server, dist, tokenDir) {
 function registeredCounts(toolMap, group, runtime, keyScopes) {
   const own = new Set(runtime.runtimeToolsFor(group));
   const shortName = (name) => name.slice(name.indexOf('__', 'mcp__plugin_'.length) + 2);
-  const reachable = (t) => keyScopes === undefined || (t.scopes ?? []).length === 0 || t.scopes.some((s) => keyScopes.includes(s));
-  const tools = toolMap.filter((t) => (runtime.RUNTIME_TOOL_NAMES.includes(shortName(t.name)) ? own.has(shortName(t.name)) : reachable(t)));
+  // The same rule as the generated docs (registersEntry, src/core/runtime-tools.ts).
+  const tools = toolMap.filter((t) => runtime.registersEntry(shortName(t.name), t.scopes, group, keyScopes));
   const kinds = { read: 0, write: 0, destructive: 0, dynamic: 0 };
   for (const t of tools) kinds[t.kind] += 1;
   return { total: tools.length, kinds, runtime: own.size, names: new Set(tools.map((t) => shortName(t.name))) };

@@ -2,6 +2,16 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.38.3 - 2026-10-31
+
+### Fixed: the docs count the tools a server registers
+- README's products block, docs/SURFACES.md, docs/CAPABILITIES.md, each docs/capabilities/<id>.md and the site counted every entry of a plugin's tool map. Every map lists all nine runtime tools so the consent hook knows each name, but a server registers only those of its sign-in kind (two to seven), and gmerchant's map also holds 8 Manufacturer Center tools its service account key's fixed scopes never cover. So every product was overcounted by 2 to 8, and the capability pages listed sign-in tools the server does not have (for example `auth_setup_admin` for gsc). The reviews of gsc, gmeet, gcontacts, gtasks, gmaps, gsearch and gbusiness reported it.
+- The generators now count and list only what the server registers, by one rule, `registersEntry` (src/core/runtime-tools.ts), which the skills use too: README 3,542 tools in total (was 3,621). Each capability page names the map entries it leaves out, in a "Not registered by this server" section. The SURFACES column that held the total is named Tools (it said Per-method tools). The installer's own count for the Antigravity warning (`toolsetCount` without options) is unchanged.
+- A test checks that every tool description, of every server, starts with what the tool does: a generated tool with Google's description of its method before this suite's note and method line, every other tool with a sentence (descriptions were already checked to be at most 2,048 characters). Claude Code: "When tool search matches Claude's query against a tool's description, it reads only the part within the shorter limit, so put the words Claude would search for near the start too" (https://code.claude.com/docs/en/mcp).
+
+### Not changed
+- tools/list, instructions, tool maps and kinds, `gsm scopes`, the hook. The server bundles differ from 1.38.2 only by their version string.
+
 ## 1.38.2 - 2026-10-31
 
 ### Changed: the hook runs for its own server's tools only, and trusts Claude Code's server source

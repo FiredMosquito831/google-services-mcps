@@ -4,11 +4,17 @@ Google Chat spaces, messages and members, plus Workspace Events subscriptions.
 
 - Plugin: `gchat`, MCP server: `gchat`, login: Desktop OAuth client, then `login workspace-user`
 - Install: `claude plugin install gchat@google-services-mcps`
-- Tools: 78 total. Curated 16, per-method 61, gateway 0. Read 35, write 33, destructive 10, dynamic 0.
+- Tools: 76 total. Curated 14, per-method 61, gateway 0. Read 35, write 31, destructive 10, dynamic 0.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 78, google 18, curated 16 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 76, google 16, curated 14 tools, each counting the 7 runtime tools this server registers (`account_remove`, `account_set_default`, `accounts_list`, `auth_login`, `auth_setup_client`, `auth_status`, `health`). "(all)" means the product has no such toolset yet, so it lists every tool.
+
+## Not registered by this server (2)
+
+The tool map (`plugins/<id>/tool-map.json`) also lists these, so the consent hook knows every name, but this server never registers them, and the counts above leave them out.
+
+- Sign-in tools of other sign-in kinds: `auth_setup_admin`, `auth_setup_service_account`.
 
 ## Toolset google (9)
 
@@ -26,7 +32,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `chat_users_spaces_space_notificatio_get` | `get_notification_settings` | Generated from spaceNotificationSetting.get: name is users/me/spaces/{space}/spaceNotificationSetting. |
 | `chat_users_spaces_space_notificat_patch` | `update_notification_settings` | Generated from spaceNotificationSetting.patch: name is users/me/spaces/{space}/spaceNotificationSetting, updateMask notification_setting and/or mute_setting. A write, so it asks first. |
 
-## Curated tools (16)
+## Curated tools (14)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
@@ -34,9 +40,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `account_set_default` | write | Set the default account | (none) |
 | `accounts_list` | read | Signed-in accounts | (none) |
 | `auth_login` | write | Sign in to Google | (none) |
-| `auth_setup_admin` | write | Set up the workspace admin account | (none) |
 | `auth_setup_client` | write | Save the Google OAuth client | (none) |
-| `auth_setup_service_account` | write | Set up the service account key | (none) |
 | `auth_status` | read | Sign-in status | (none) |
 | `chat_list_members` | read | List Chat members | chat.memberships, chat.memberships.readonly |
 | `chat_list_messages` | read | List Chat messages | chat.messages, chat.messages.readonly |

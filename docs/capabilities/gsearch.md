@@ -4,11 +4,17 @@ Public search and web-quality APIs (Custom Search, PageSpeed, CrUX, Safe Browsin
 
 - Plugin: `gsearch`, MCP server: `gsearch`, login: API key, then `setup-apikey` (no login)
 - Install: `claude plugin install gsearch@google-services-mcps`
-- Tools: 60 total. Curated 9, per-method 47, gateway 3. Read 47, write 9, destructive 3, dynamic 1.
+- Tools: 52 total. Curated 1, per-method 47, gateway 3. Read 45, write 3, destructive 3, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 60, google 17, curated 12 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 52, google 9, curated 4 tools, each counting the 1 runtime tools this server registers (`health`). "(all)" means the product has no such toolset yet, so it lists every tool.
+
+## Not registered by this server (8)
+
+The tool map (`plugins/<id>/tool-map.json`) also lists these, so the consent hook knows every name, but this server never registers them, and the counts above leave them out.
+
+- Sign-in tools of other sign-in kinds: `account_remove`, `account_set_default`, `accounts_list`, `auth_login`, `auth_setup_admin`, `auth_setup_client`, `auth_setup_service_account`, `auth_status`.
 
 ## Toolset google (8)
 
@@ -25,18 +31,10 @@ The tools that match Google's official MCP server for this product (https://deve
 | `factcheckt_claims_search` | (none) | No official Google MCP server covers Fact Check Tools; kept to find published fact checks of a claim (Fact Check Tools API claims.search). |
 | `webrisk_uris_search` | (none) | No official Google MCP server covers Web Risk; kept to check a URL against Google's threat lists (Web Risk API uris.search). |
 
-## Curated tools (9)
+## Curated tools (1)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
-| `account_remove` | write | Remove a signed-in account | (none) |
-| `account_set_default` | write | Set the default account | (none) |
-| `accounts_list` | read | Signed-in accounts | (none) |
-| `auth_login` | write | Sign in to Google | (none) |
-| `auth_setup_admin` | write | Set up the workspace admin account | (none) |
-| `auth_setup_client` | write | Save the Google OAuth client | (none) |
-| `auth_setup_service_account` | write | Set up the service account key | (none) |
-| `auth_status` | read | Sign-in status | (none) |
 | `health` | read | Server health | (none) |
 
 ## Per-method tools (47)

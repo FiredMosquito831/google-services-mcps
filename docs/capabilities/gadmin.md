@@ -4,11 +4,17 @@ Google Workspace administration: Cloud Identity, Chrome management and policy, G
 
 - Plugin: `gadmin`, MCP server: `gadmin`, login: Service account with domain-wide delegation, then `setup-admin`
 - Install: `claude plugin install gadmin@google-services-mcps`
-- Tools: 375 total. Curated 28, per-method 343, gateway 3. Read 155, write 138, destructive 81, dynamic 1.
+- Tools: 368 total. Curated 21, per-method 343, gateway 3. Read 153, write 133, destructive 81, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 375, google 19, curated 31 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 368, google 12, curated 24 tools, each counting the 2 runtime tools this server registers (`auth_setup_admin`, `health`). "(all)" means the product has no such toolset yet, so it lists every tool.
+
+## Not registered by this server (7)
+
+The tool map (`plugins/<id>/tool-map.json`) also lists these, so the consent hook knows every name, but this server never registers them, and the counts above leave them out.
+
+- Sign-in tools of other sign-in kinds: `account_remove`, `account_set_default`, `accounts_list`, `auth_login`, `auth_setup_client`, `auth_setup_service_account`, `auth_status`.
 
 ## Toolset google (10)
 
@@ -27,13 +33,10 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `admin_user_set_suspended` | (none) | Suspends or restores a user. A write: it asks first. |
 | `admin_group_member_add` | (none) | Adds a member to a group. A write: it asks first. |
 
-## Curated tools (28)
+## Curated tools (21)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
-| `account_remove` | write | Remove a signed-in account | (none) |
-| `account_set_default` | write | Set the default account | (none) |
-| `accounts_list` | read | Signed-in accounts | (none) |
 | `admin_domains_list` | read | List domains | admin.directory.domain, admin.directory.domain.readonly |
 | `admin_group_create` | write | Create group | admin.directory.group |
 | `admin_group_delete` | destructive | Delete group | admin.directory.group |
@@ -53,11 +56,7 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `admin_user_move_org_unit` | write | Move user to org unit | admin.directory.user |
 | `admin_user_set_suspended` | write | Suspend or restore user | admin.directory.user |
 | `admin_users_list` | read | List users | admin.directory.user, admin.directory.user.readonly |
-| `auth_login` | write | Sign in to Google | (none) |
 | `auth_setup_admin` | write | Set up the workspace admin account | (none) |
-| `auth_setup_client` | write | Save the Google OAuth client | (none) |
-| `auth_setup_service_account` | write | Set up the service account key | (none) |
-| `auth_status` | read | Sign-in status | (none) |
 | `health` | read | Server health | (none) |
 
 ## Per-method tools (343)

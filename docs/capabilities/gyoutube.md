@@ -4,11 +4,17 @@ YouTube Data, YouTube Analytics and YouTube Reporting APIs, plus Blogger.
 
 - Plugin: `gyoutube`, MCP server: `gyoutube`, login: Desktop OAuth client, then `login business`
 - Install: `claude plugin install gyoutube@google-services-mcps`
-- Tools: 134 total. Curated 9, per-method 124, gateway 0. Read 59, write 53, destructive 22, dynamic 0.
+- Tools: 132 total. Curated 7, per-method 124, gateway 0. Read 59, write 51, destructive 22, dynamic 0.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 134, google 19, curated 134 (all) tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 132, google 17, curated 132 (all) tools, each counting the 7 runtime tools this server registers (`account_remove`, `account_set_default`, `accounts_list`, `auth_login`, `auth_setup_client`, `auth_status`, `health`). "(all)" means the product has no such toolset yet, so it lists every tool.
+
+## Not registered by this server (2)
+
+The tool map (`plugins/<id>/tool-map.json`) also lists these, so the consent hook knows every name, but this server never registers them, and the counts above leave them out.
+
+- Sign-in tools of other sign-in kinds: `auth_setup_admin`, `auth_setup_service_account`.
 
 ## Toolset google (10)
 
@@ -27,7 +33,7 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `youtube_videos_update` | (none) | Changes a video's title, description, tags, category or privacy. Destructive since 1.26.3, so it asks twice: the change is public, and Google deletes a value the request leaves out, so send the whole part. |
 | `youtube_comments_insert` | (none) | Posts a reply to a comment (parentId); a new top-level comment is commentThreads.insert, in the all toolset. A write, so it asks first; the reply is public. |
 
-## Curated tools (9)
+## Curated tools (7)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
@@ -35,9 +41,7 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `account_set_default` | write | Set the default account | (none) |
 | `accounts_list` | read | Signed-in accounts | (none) |
 | `auth_login` | write | Sign in to Google | (none) |
-| `auth_setup_admin` | write | Set up the workspace admin account | (none) |
 | `auth_setup_client` | write | Save the Google OAuth client | (none) |
-| `auth_setup_service_account` | write | Set up the service account key | (none) |
 | `auth_status` | read | Sign-in status | (none) |
 | `health` | read | Server health | (none) |
 

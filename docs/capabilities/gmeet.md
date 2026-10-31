@@ -4,11 +4,17 @@ Google Meet spaces, conference records, participants and recordings.
 
 - Plugin: `gmeet`, MCP server: `gmeet`, login: Desktop OAuth client, then `login workspace-user`
 - Install: `claude plugin install gmeet@google-services-mcps`
-- Tools: 34 total. Curated 9, per-method 24, gateway 0. Read 21, write 11, destructive 2, dynamic 0.
+- Tools: 32 total. Curated 7, per-method 24, gateway 0. Read 21, write 9, destructive 2, dynamic 0.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 34, google 19, curated 34 (all) tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 32, google 17, curated 32 (all) tools, each counting the 7 runtime tools this server registers (`account_remove`, `account_set_default`, `accounts_list`, `auth_login`, `auth_setup_client`, `auth_status`, `health`). "(all)" means the product has no such toolset yet, so it lists every tool.
+
+## Not registered by this server (2)
+
+The tool map (`plugins/<id>/tool-map.json`) also lists these, so the consent hook knows every name, but this server never registers them, and the counts above leave them out.
+
+- Sign-in tools of other sign-in kinds: `auth_setup_admin`, `auth_setup_service_account`.
 
 ## Toolset google (10)
 
@@ -27,7 +33,7 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `meet_conference_record_smart_notes_list` | (none) | The notes Gemini took in a conference (smart notes) and their Google Docs. |
 | `meet_conference_records_smart_notes_get` | (none) | One smart notes entry and the Google Doc that holds it. |
 
-## Curated tools (9)
+## Curated tools (7)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
@@ -35,9 +41,7 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `account_set_default` | write | Set the default account | (none) |
 | `accounts_list` | read | Signed-in accounts | (none) |
 | `auth_login` | write | Sign in to Google | (none) |
-| `auth_setup_admin` | write | Set up the workspace admin account | (none) |
 | `auth_setup_client` | write | Save the Google OAuth client | (none) |
-| `auth_setup_service_account` | write | Set up the service account key | (none) |
 | `auth_status` | read | Sign-in status | (none) |
 | `health` | read | Server health | (none) |
 

@@ -4,11 +4,17 @@ Google Play developer publishing and reporting, Play Games Services, Android Ent
 
 - Plugin: `gplay`, MCP server: `gplay`, login: Service account key, then `setup-service-account` (no login)
 - Install: `claude plugin install gplay@google-services-mcps`
-- Tools: 371 total. Curated 18, per-method 349, gateway 3. Read 171, write 152, destructive 47, dynamic 1.
+- Tools: 365 total. Curated 12, per-method 349, gateway 3. Read 170, write 147, destructive 47, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 371, google 25, curated 21 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 365, google 19, curated 15 tools, each counting the 3 runtime tools this server registers (`auth_setup_service_account`, `auth_status`, `health`). "(all)" means the product has no such toolset yet, so it lists every tool.
+
+## Not registered by this server (6)
+
+The tool map (`plugins/<id>/tool-map.json`) also lists these, so the consent hook knows every name, but this server never registers them, and the counts above leave them out.
+
+- Sign-in tools of other sign-in kinds: `account_remove`, `account_set_default`, `accounts_list`, `auth_login`, `auth_setup_admin`, `auth_setup_client`.
 
 ## Toolset google (16)
 
@@ -33,13 +39,10 @@ The tools that match Google's official MCP server for this product (https://andr
 | `androidpub_monetizatio_subscriptio_list` | (none) | The app's subscription products (monetization.subscriptions.list). |
 | `androidpub_orders_get` | (none) | One order by its id (orders.get). |
 
-## Curated tools (18)
+## Curated tools (12)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
-| `account_remove` | write | Remove a signed-in account | (none) |
-| `account_set_default` | write | Set the default account | (none) |
-| `accounts_list` | read | Signed-in accounts | (none) |
 | `androidmgmt_get_application` | read | Get an app for an enterprise | androidmanagement |
 | `androidmgmt_get_device` | read | Get a device of an enterprise | androidmanagement |
 | `androidmgmt_get_enterprise` | read | Get an Android Management enterprise | androidmanagement |
@@ -49,9 +52,6 @@ The tools that match Google's official MCP server for this product (https://andr
 | `androidmgmt_list_enterprises` | read | List Android Management enterprises | androidmanagement |
 | `androidmgmt_list_policies` | read | List the policies of an enterprise | androidmanagement |
 | `androidmgmt_list_web_apps` | read | List the web apps of an enterprise | androidmanagement |
-| `auth_login` | write | Sign in to Google | (none) |
-| `auth_setup_admin` | write | Set up the workspace admin account | (none) |
-| `auth_setup_client` | write | Save the Google OAuth client | (none) |
 | `auth_setup_service_account` | write | Set up the service account key | (none) |
 | `auth_status` | read | Sign-in status | (none) |
 | `health` | read | Server health | (none) |

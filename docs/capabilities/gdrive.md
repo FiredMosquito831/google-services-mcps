@@ -4,11 +4,17 @@ Google Drive files, labels and activity, plus Docs, Sheets, Slides, Forms and Bo
 
 - Plugin: `gdrive`, MCP server: `gdrive`, login: Desktop OAuth client, then `login workspace-user`
 - Install: `claude plugin install gdrive@google-services-mcps`
-- Tools: 200 total. Curated 21, per-method 175, gateway 3. Read 94, write 78, destructive 27, dynamic 1.
+- Tools: 198 total. Curated 19, per-method 175, gateway 3. Read 94, write 76, destructive 27, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 200, google 28, curated 24 tools, each with the 9 runtime tools of the map counted. "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 198, google 26, curated 22 tools, each counting the 7 runtime tools this server registers (`account_remove`, `account_set_default`, `accounts_list`, `auth_login`, `auth_setup_client`, `auth_status`, `health`). "(all)" means the product has no such toolset yet, so it lists every tool.
+
+## Not registered by this server (2)
+
+The tool map (`plugins/<id>/tool-map.json`) also lists these, so the consent hook knows every name, but this server never registers them, and the counts above leave them out.
+
+- Sign-in tools of other sign-in kinds: `auth_setup_admin`, `auth_setup_service_account`.
 
 ## Toolset google (19)
 
@@ -36,7 +42,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `slides_presentatio_pages_get_thumbnai` | `read_slide_page_thumbnail` | The generated name is cut to fit the 64-character tool name budget. |
 | `slides_presentations_batch_update` | `update_presentation` |  |
 
-## Curated tools (21)
+## Curated tools (19)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
@@ -44,9 +50,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `account_set_default` | write | Set the default account | (none) |
 | `accounts_list` | read | Signed-in accounts | (none) |
 | `auth_login` | write | Sign in to Google | (none) |
-| `auth_setup_admin` | write | Set up the workspace admin account | (none) |
 | `auth_setup_client` | write | Save the Google OAuth client | (none) |
-| `auth_setup_service_account` | write | Set up the service account key | (none) |
 | `auth_status` | read | Sign-in status | (none) |
 | `drive_create_file` | write | Create or upload Drive file | drive, drive.file |
 | `drive_create_folder` | write | Create Drive folder | drive, drive.file |
