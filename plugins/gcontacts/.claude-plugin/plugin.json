@@ -1,7 +1,7 @@
 {
   "name": "gcontacts",
   "displayName": "Contacts and Profile",
-  "version": "1.39.0",
+  "version": "1.40.0",
   "description": "Google Contacts and People, personal health metrics, Data Portability, and the OAuth2 userinfo endpoints.",
   "author": {
     "name": "FiredMosquito831"

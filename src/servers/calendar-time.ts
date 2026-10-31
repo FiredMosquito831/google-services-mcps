@@ -1,6 +1,7 @@
 /**
  * Time helpers for the curated Calendar tools: time zones (an IANA name, or the fixed offset of an RFC 3339 time),
- * wall-clock times in a zone, and the free-slot computation of calendar_suggest_time. Pure functions, no network.
+ * wall-clock times in a zone, local times without an offset (1.40.0), and the free-slot computation of
+ * calendar_suggest_time. Pure functions, no network.
  */
 
 /** A time zone: an IANA name (Europe/Berlin), or a fixed offset in minutes east of UTC (from "+02:00" or "Z"). */
@@ -175,4 +176,68 @@ export function freeSlots(o: SlotOptions): { periods: Interval[]; suggestions: I
     if (suggestions.length < o.maxSuggestions) suggestions.push({ start: aligned, end: aligned + duration });
   }
   return { periods, suggestions };
+}
+
+// ---------- local times (1.40.0) ----------
+
+/**
+ * A local date and time without an offset, as Google's Calendar MCP server takes it with a time zone ("used to resolve
+ * timezone-less dates. Default: calendar's timezone", list_events): 2026-11-02T10:00, or with seconds.
+ */
+const LOCAL_RE = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2})(?:\.\d+)?)?$/;
+
+/** True for a local date and time without an offset (2026-11-02T10:00 or 2026-11-02T10:00:30). */
+export function isLocalTime(value: string): boolean {
+  return LOCAL_RE.test(value);
+}
+
+/**
+ * A local date and time normalized to seconds (2026-11-02T10:00 becomes 2026-11-02T10:00:00), as the Calendar API's
+ * EventDateTime.dateTime takes it with a timeZone. Throws for a time that is not on a calendar (2026-02-30T10:00, 25:00).
+ */
+export function localTimeText(value: string, field: string): string {
+  const m = LOCAL_RE.exec(value);
+  if (!m) throw new Error(`${field} must be a local date and time such as 2026-11-02T10:00, got "${value}".`);
+  const [, y, mo, d, h, mi, s] = m as unknown as [string, string, string, string, string, string, string | undefined];
+  const check = new Date(Date.UTC(Number(y), Number(mo) - 1, Number(d), Number(h), Number(mi), Number(s ?? 0)));
+  const real =
+    check.getUTCFullYear() === Number(y) &&
+    check.getUTCMonth() + 1 === Number(mo) &&
+    check.getUTCDate() === Number(d) &&
+    check.getUTCHours() === Number(h) &&
+    check.getUTCMinutes() === Number(mi) &&
+    check.getUTCSeconds() === Number(s ?? 0);
+  if (!real) throw new Error(`${field} "${value}" is not a real date and time.`);
+  return `${y}-${mo}-${d}T${h}:${mi}:${s ?? '00'}`;
+}
+
+/** The UTC instant of a local date and time (no offset) in the zone. */
+export function localToUtc(value: string, zone: Zone, field: string): number {
+  const [date, time] = localTimeText(value, field).split('T') as [string, string];
+  const [y, mo, d] = date.split('-').map(Number) as [number, number, number];
+  const [h, mi, s] = time.split(':').map(Number) as [number, number, number];
+  return zonedToUtc(y, mo, d, h * 60 + mi, zone) + s * 1000;
+}
+
+/** The local date and time of an instant in the zone, without an offset, to the second: 2026-11-02T10:00:00. */
+export function formatLocal(ms: number, zone: Zone): string {
+  const d = new Date(ms + offsetAt(ms, zone) * 60000);
+  return `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())}T${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}:${pad(d.getUTCSeconds())}`;
+}
+
+/** RFC 3339 of an instant in the zone, with its offset, to the second: 2026-11-02T10:00:30+01:00. */
+export function formatWithOffset(ms: number, zone: Zone): string {
+  const off = offsetAt(ms, zone);
+  const abs = Math.abs(off);
+  return `${formatLocal(ms, zone)}${off < 0 ? '-' : '+'}${pad(Math.floor(abs / 60))}:${pad(abs % 60)}`;
+}
+
+/** Whole days from one YYYY-MM-DD date to another (negative when the second is earlier). */
+export function daysBetween(from: string, to: string): number {
+  return Math.round((Date.parse(`${to}T00:00:00Z`) - Date.parse(`${from}T00:00:00Z`)) / 86_400_000);
+}
+
+/** A YYYY-MM-DD date plus whole days. */
+export function addDays(date: string, days: number): string {
+  return new Date(Date.parse(`${date}T00:00:00Z`) + days * 86_400_000).toISOString().slice(0, 10);
 }

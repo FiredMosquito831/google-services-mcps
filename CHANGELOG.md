@@ -2,6 +2,37 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.40.0 - 2026-10-31
+
+### Added: Calendar times without an offset
+- Every Calendar tool that takes a time now also takes a local date and time without an offset (`2026-11-02T10:00`), read in `time_zone`, else in the calendar's own time zone, as Google's Calendar MCP server does ("Time zone (IANA ID, for example Europe/Zurich) used to resolve timezone-less dates. Default: calendar's timezone", list_events, https://developers.google.com/workspace/calendar/api/v3/reference/mcp/tools_list/list_events). Before, such a time was refused, and a model had to work out the offset itself, where a wrong one books the wrong hour (review of Calendar, F4).
+  - `calendar_create_event` and `calendar_update_event` send it as Calendar takes it: `dateTime` without an offset and `timeZone` (Discovery, EventDateTime: "A time zone offset is required unless a time zone is explicitly specified in timeZone"). Without `time_zone`, the calendar's zone is read first (one `events.list` request for its `timeZone` field, a read with the scopes the tools already have); `calendar_update_event` takes the event's own zone when it has one.
+  - `calendar_list_events`, `calendar_freebusy` and `calendar_suggest_time` turn it into a UTC instant (Calendar takes `timeMin` and `timeMax` with an offset only). `calendar_freebusy` takes `time_zone` (also the zone of its answer, `FreeBusyRequest.timeZone`); `calendar_suggest_time` answers in the primary calendar's zone for a local window.
+  - A time with an offset is sent as before. When it also has a `time_zone` whose offset at that moment differs, the answer has a `time_note`: Calendar keeps the instant the offset gives, so the event is not at that hour of `time_zone`'s clock. The request is unchanged.
+- A recurring event with a local start no longer needs `time_zone`: it takes the calendar's zone.
+
+### Fixed: calendar_update_event keeps the duration when only the start moves
+- Google's update_event: "New start time (ISO 8601). Preserves duration if updating only start." (https://developers.google.com/workspace/calendar/api/v3/reference/mcp/tools_list/update_event). `calendar_update_event` patched the start alone, so moving an event later gave an empty range (refused by Google) or shortened it (F3). Now a `start` without `end` reads the event first and moves the end with it: a timed event keeps its length (the end written as the start is), an all-day event its number of days; the answer says `duration_kept`. A date for a timed event (or a time for an all-day one) cannot keep a duration, and the error asks for `end` too. With `start` and `end` both, the request is as before (one PATCH, no read).
+- `time_zone` without `start` or `end` was ignored without a word; the answer now says it was not used, and the "nothing to change" error says that it applies to start and end.
+
+### Added: more of Google's create_event and update_event
+- `visibility` (default, public, private, confidential), `color_id` (the event palette, 1 to 11) and `availability` (busy or free, Calendar's transparency) on both; `attachments` on create and `add_attachments` / `remove_attachments` on update: links to files (for Drive, the file's link), at most 25 per event (Discovery, Event.attachments), sent with `supportsAttachments=true` ("In order to modify attachments the supportsAttachments request parameter should be set to true"). The update keeps the other attachments, as it keeps the other guests (F6).
+- `event_type` on create: `focusTime`, `outOfOffice` and `workingLocation`, with `auto_decline`, `decline_message`, `chat_status` and `working_location`, set as Google's guide requires (https://developers.google.com/workspace/calendar/api/guides/calendar-status: focus time and out of office are timed and opaque; a working location is public and transparent, timed or one whole day; "These features are only available on primary calendars, and to some Google Calendar users"). Arguments that do not fit the type are refused before any request. Birthdays and Gmail events are not made here.
+- The answers name what these arguments set, only when they were given, so an earlier call gets the same answer. `calendar_get_event` adds `color_id` when the event has one.
+
+### Added: richer calendar_list_events items
+- Each event now says what it has beyond its time, and only that: `event_type` when it is not a default event (birthdays and working locations were unlabelled), `all_day`, `organizer`, `your_response` (your own answer, when you are a guest), `guests` (the answers counted: total, accepted, tentative, declined, needs_action), `meet_link`, `recurring_event_id` (an occurrence of a series) or `recurring` (a series), `visibility` when not default, and `availability: free` when it does not block time (F5). "Which invitations have I not answered?" no longer needs a read per event. A page that does not fit the result limit is cut at whole events, as since 1.28.0.
+
+### Fixed: calendar_list_calendars pages
+- It asked for 250 calendars and dropped Google's next page (F8). It takes `page_size` and `page_token`, and answers `{ next_page_token, calendars }` when the call pages or Google has another page; otherwise the plain list, as before.
+
+### Fixed: docs and the toolset source
+- `toolsets.google.source` of gcalendar is https://developers.google.com/workspace/calendar/api/v3/reference/mcp; the `tools_list` address answered 404 (F12, checked 2026-10-31). The `google` notes of create and update say what they still lack against Google's tools (guest permissions, optional guests, a given Meet URL) and that `send_updates` defaults to none.
+- docs/USING.md's example of a change used the generated `calendar_events_insert`; it uses `calendar_create_event` (F7).
+
+### Not changed
+- Tool maps and tool kinds, the hook, `gsm scopes`, and the requests of every earlier call: a call without the new arguments and with offsets sends the same requests as 1.39.0, except `calendar_update_event` with a `start` and no `end`, which now reads the event first and sends the kept end. Not checked against live Google.
+
 ## 1.39.0 - 2026-10-31
 
 ### Added: gmail_create_label, Google's create_label

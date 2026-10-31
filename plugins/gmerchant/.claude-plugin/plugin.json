@@ -1,7 +1,7 @@
 {
   "name": "gmerchant",
   "displayName": "Merchant Center",
-  "version": "1.39.0",
+  "version": "1.40.0",
   "description": "Merchant Center: Merchant API and Comparison Shopping Service, through a service account key.",
   "author": {
     "name": "FiredMosquito831"

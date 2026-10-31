@@ -344,7 +344,8 @@ test('list_events: from now by default (as before), no lower bound with include_
   const plain = await run('calendar_list_events', {});
   assert.ok(Date.parse(calls[0].query.timeMin) >= before - 1000, 'timeMin is now');
   assert.deepEqual(Object.keys(calls[0].query).sort(), ['maxResults', 'orderBy', 'singleEvents', 'timeMin']);
-  assert.equal('event_type' in plain.events[0], false, 'the 1.7.0 answer has no event_type');
+  // Since 1.40.0 an event that is not a default event carries its type without event_types too (calendar-fields.test.mjs).
+  assert.equal(plain.events[0].event_type, 'outOfOffice');
 
   reset(() => ({ items: [{ ...EVENT, eventType: 'outOfOffice' }, { ...EVENT, id: 'ev-2' }] }));
   const typed = await run('calendar_list_events', { include_past: true, event_types: ['outOfOffice', 'default'], time_zone: 'Europe/Zurich', order_by: 'updated' });

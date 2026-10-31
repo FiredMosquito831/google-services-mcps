@@ -440,12 +440,17 @@ test('the gcalendar google list covers the 9 tools of Google\'s Calendar MCP ser
     'calendar_respond',
   ]);
   const official = new Set(Object.values(google.matches).flat());
-  // developers.google.com/workspace/calendar/api/v3/reference/mcp/tools_list
+  // developers.google.com/workspace/calendar/api/v3/reference/mcp (its toolset table; the tools_list address answers 404,
+  // checked 2026-10-31).
+  assert.equal(google.source, 'https://developers.google.com/workspace/calendar/api/v3/reference/mcp');
   for (const name of ['list_events', 'get_event', 'list_calendars', 'suggest_time', 'create_event', 'update_event', 'delete_event', 'respond_to_event', 'search_events']) {
     assert.ok(official.has(name), `no tool of ours matches ${name}`);
   }
   assert.equal(official.size, 9);
   assert.match(google.notes.calendar_list_events, /semantic search of the primary calendar with no public API/);
+  // 1.40.0: the notes say what create and update still lack against Google's tools.
+  assert.match(google.notes.calendar_create_event, /guest permissions/);
+  assert.match(google.notes.calendar_update_event, /Keeps the duration when only start moves/);
 });
 
 test('the gdrive google list covers the 20 tools of Google\'s Drive, Docs, Sheets and Slides MCP servers', () => {

@@ -29,11 +29,11 @@ Only if the chat tools fail, the same steps in a terminal: `node "${CLAUDE_PLUGI
 ### 2. Find a time and book it
 
 1. `calendar_suggest_time` with attendees, start_time, end_time and duration_minutes (working_hours, weekdays_only).
-2. `calendar_create_event` with summary, start and end (RFC 3339 with an offset, or YYYY-MM-DD for all day), attendees and add_meet.
+2. `calendar_create_event` with summary, start and end (a local time such as 2026-11-02T10:00 with time_zone, RFC 3339 with an offset, or YYYY-MM-DD for all day), attendees and add_meet.
 
 ### 3. Change or cancel
 
-1. `calendar_update_event` changes only the fields given; add_attendees and remove_attendees keep the other guests' answers.
+1. `calendar_update_event` changes only the fields given; a new start alone keeps the duration; add_attendees and remove_attendees keep the other guests' answers.
 2. `calendar_delete_event` asks twice; the id of a recurring series deletes every occurrence.
 
 ### 4. Answer an invitation
