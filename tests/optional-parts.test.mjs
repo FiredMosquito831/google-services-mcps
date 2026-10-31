@@ -285,3 +285,12 @@ test('gen-servers copies the parts and the preferences, and refuses a part of an
   assert.notEqual(twice.status, 0);
   assert.match(twice.stderr, /scopePolicy\.prefer\.full lists a scope twice/);
 });
+
+test('gen-servers copies a part that names a scope a tool accepts (1.35.0), and refuses one no tool accepts', () => {
+  const ok = genServersWith('gyoutube', () => undefined);
+  assert.equal(ok.status, 0, ok.stderr);
+  assert.deepEqual(ok.servers.servers.find((s) => s.name === 'gyoutube').scopePolicy, { optional: { monetary: [G('yt-analytics-monetary.readonly')] } });
+  const unused = genServersWith('gyoutube', (p) => p.scopePolicy.optional.monetary.push(G('drive')));
+  assert.notEqual(unused.status, 0);
+  assert.match(unused.stderr, /scopePolicy\.optional\["monetary"\]: no tool of the product accepts https:\/\/www\.googleapis\.com\/auth\/drive/);
+});

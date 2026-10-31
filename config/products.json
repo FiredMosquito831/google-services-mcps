@@ -2904,6 +2904,13 @@
         }
       ],
       "gateway": [],
+      "scopePolicy": {
+        "optional": {
+          "monetary": [
+            "https://www.googleapis.com/auth/yt-analytics-monetary.readonly"
+          ]
+        }
+      },
       "pageSizeDefaults": {
         "youtube": {
           "source": "Discovery, youtube v3: liveChatMessages.list maxResults, default 500, maximum 2000",

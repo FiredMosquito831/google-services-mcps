@@ -92,8 +92,8 @@ const PART_PATTERN = /^[a-z][a-z0-9-]*$/;
 
 /**
  * A product's scopePolicy (ScopePolicy in src/core/registry.ts), checked and copied as is. onlyIn maps a scope URL to the
- * profiles that may request it (an empty list: none). optional maps a part name to APIs of the product. prefer maps a
- * profile to the scopes a login of the product asks for first.
+ * profiles that may request it (an empty list: none). optional maps a part name to APIs of the product, or to scope URLs
+ * a tool of the product accepts. prefer maps a profile to the scopes a login of the product asks for first.
  */
 function scopePolicyOf(policy, id, apiNames, serverName) {
   if (policy === undefined) return undefined;
@@ -130,11 +130,18 @@ function scopePolicyOf(policy, id, apiNames, serverName) {
       fail(`${where}.onlyIn["${scope}"] must be a list of profiles (${PROFILE_NAMES.join(', ')})`);
     }
   }
+  // optional: per part, APIs of the product, or scope URLs (since 1.35.0) that a tool of the product accepts (checked against
+  // the plugin's tool map when it is built).
+  const partToolScopes = toolScopesOf(id, serverName);
+  const partAccepted = partToolScopes ? new Set([...partToolScopes.values()].flat()) : undefined;
   for (const [name, apis] of Object.entries(policy.optional ?? {})) {
     if (!PART_PATTERN.test(name)) fail(`${where}.optional: "${name}" must be lowercase letters, digits or dashes`);
-    if (!Array.isArray(apis) || apis.length === 0 || !apis.every((a) => apiNames.has(a))) {
-      fail(`${where}.optional["${name}"] must list APIs of the product (${[...apiNames].join(', ')})`);
+    const isScope = (a) => typeof a === 'string' && a.startsWith('https://');
+    if (!Array.isArray(apis) || apis.length === 0 || !apis.every((a) => apiNames.has(a) || isScope(a))) {
+      fail(`${where}.optional["${name}"] must list APIs of the product (${[...apiNames].join(', ')}) or scope URLs`);
     }
+    const unused = partAccepted ? apis.filter((a) => isScope(a) && !partAccepted.has(a)) : [];
+    if (unused.length) fail(`${where}.optional["${name}"]: no tool of the product accepts ${unused.join(', ')}`);
   }
   return policy;
 }

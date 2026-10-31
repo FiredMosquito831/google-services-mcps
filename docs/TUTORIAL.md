@@ -778,7 +778,7 @@ Run `npx google-services-mcps --help` for the full text. Each flag in each comma
 | `--no-browser` | off | Prints the sign-in address instead of opening a browser. |
 | `--replace` | off | Drops the stored scopes instead of merging with them. |
 | `--account <email>` | none | The account to sign in. Google preselects it, and the login merges the scopes this account already holds for the group (only the ones a server of the group uses). Without it, nothing is merged. |
-| `--with <part,...>` | none | Adds an optional part of a product, which every profile leaves out otherwise: `postmaster` (gmail), `keep` (gtasks), `health` and `portability` (gcontacts), `indexing` (gsc). `scopes` takes it too. |
+| `--with <part,...>` | none | Adds an optional part of a product, which every profile leaves out otherwise: `postmaster` (gmail), `keep` (gtasks), `health` and `portability` (gcontacts), `indexing` (gsc), `monetary` (gyoutube). `scopes` takes it too. |
 
 ### setup-client
 

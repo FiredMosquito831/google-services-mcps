@@ -29,6 +29,16 @@ node <plugin>/bin/gsm.mjs status
 
 Start with `--profile readonly`. Insert, update and delete always need user authorization. Changes also need a `readwrite` login and the plugin option `allow_writes`.
 
+A `readonly` login asks for `youtube.readonly`, which Google does not list for comment threads or caption tracks (they need `youtube.force-ssl`), so those reads need a `readwrite` login.
+
+**Revenue metrics: the optional part `monetary` (since 1.35.0).** YouTube Analytics and Reporting return revenue and ad metrics only with `yt-analytics-monetary.readonly` ("View monetary and non-monetary YouTube Analytics reports for your YouTube content"); no profile asked for it before, and none does unless you name the part:
+
+```
+node <plugin>/bin/gsm.mjs login business --profile readonly --with monetary
+```
+
+In the chat: `auth_login` with `"with": ["monetary"]`. The analytics and reporting tools load either way (`yt-analytics.readonly` covers them); the part adds the scope that lets them return revenue. The login and `gsm scopes` name the part in a `Held back:` line. A token that already holds the scope keeps it when you sign in again naming the account (`--account <email>`).
+
 ## What it can do
 
 | Area | Tools | Safety | What it does |

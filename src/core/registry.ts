@@ -144,7 +144,9 @@ export interface ScopePolicy {
   onlyIn?: Record<string, string[]>;
   /**
    * Named optional parts: the APIs (Discovery names) whose methods a login leaves out unless it names the part (gsm login
-   * --with <name>, or auth_login with "with"). Example: { "postmaster": ["gmailpostmastertools"] }.
+   * --with <name>, or auth_login with "with"). Example: { "postmaster": ["gmailpostmastertools"] }. An entry may also be a
+   * scope URL (since 1.35.0): no profile asks for that scope unless the part is named, and a login that names it asks for
+   * it for the tools that accept it. Example: { "monetary": [".../yt-analytics-monetary.readonly"] }.
    */
   optional?: Record<string, string[]>;
   /**

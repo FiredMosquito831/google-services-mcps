@@ -150,7 +150,7 @@ Flags:    --no-browser (login) prints the login URL only, and does not open the 
           --account (login): the Google account to sign in. Google is asked to preselect it, and the merge reads that
           account's stored scopes only (scopes no server of the group uses are left out). Without it, nothing is merged.
           --with (login, scopes): add an optional part of a product, left out of every profile otherwise: gmail
-          postmaster, gtasks keep, gcontacts health and portability, gsc indexing (--with keep, for example).
+          postmaster, gtasks keep, gcontacts health and portability, gsc indexing, gyoutube monetary (--with keep).
           gsm scopes lists the optional parts of a group. An account named with --account keeps the parts it holds.
           --toolset (login, scopes, setup-admin): all (default), google or curated. Only the tools of that toolset count
           toward the scopes, and gateway methods count only when the toolset holds api_call. Default: GSM_TOOLSET, else

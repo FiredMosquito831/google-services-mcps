@@ -2,6 +2,17 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.35.0 - 2026-10-31
+
+### Added: an optional part can name a scope; YouTube revenue metrics with `--with monetary`
+- YouTube Analytics and Reporting return revenue and ad metrics only with `yt-analytics-monetary.readonly` ("View monetary and non-monetary YouTube Analytics reports for your YouTube content", https://developers.google.com/identity/protocols/oauth2/scopes). Every one of their tools also accepts `yt-analytics.readonly`, which the greedy rule picks, so no profile ever asked for the monetary scope, and there was no way to ask for it but an exact `--scopes` list.
+- An entry of a product's `scopePolicy.optional` may now be a scope URL instead of an API. No profile asks for such a scope unless the part is named; a login that names it (`--with`, in the chat `auth_login` with `"with"`) asks for it first, for the tools that accept it. gyoutube has the part `monetary`. With it, `readonly` asks for `blogger.readonly`, `youtube.readonly` and `yt-analytics-monetary.readonly` (the monetary scope covers the non-monetary reports too, so `yt-analytics.readonly` is not asked for); no tool loses coverage.
+- Without the part nothing changes: `gsm scopes` over all 207 cases against 1.34.0 has the same scopes, coverage and gateway reach everywhere; the 9 gyoutube cases gain one `Held back:` line that names the scope and how to add it (the chat sign-in repeats it).
+- `auth_login` on gyoutube takes `with` (`monetary`), and its description says the part adds a scope to tools that load without it. The `auth_login` text of gmail, gtasks, gcontacts and gsc is unchanged. `gen-servers` and the bundle refuse a part scope no tool of the product accepts.
+
+### Not changed
+- Tool maps and tool kinds. tools/list changes only for `auth_login` on gyoutube. Not checked against live Google.
+
 ## 1.34.0 - 2026-10-31
 
 ### Changed: Keep, Health, Data Portability and Indexing are optional parts of a login

@@ -34,7 +34,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const AUTHOR = { name: 'FiredMosquito831' };
-const MANIFEST_VERSION = '1.34.0';
+const MANIFEST_VERSION = '1.35.0';
 const TOOL_NAME_MAX = 64;
 /** When two API versions give one method two kinds, the riskier one is kept. A dynamic method is kept as dynamic (decided per call). */
 const RANK = { read: 0, write: 1, dynamic: 2, destructive: 3 };
@@ -515,6 +515,11 @@ async function buildPlugin(id, product, ctx) {
   for (const [profile, scopes] of Object.entries(server.scopePolicy?.prefer ?? {})) {
     const unused = scopes.filter((scope) => !acceptedByServer.has(scope));
     if (unused.length) throw new Error(`scopePolicy.prefer of ${id} names for ${profile} scopes no tool of the server accepts: ${unused.join(', ')}`);
+  }
+  // An optional part that names scopes (scopePolicy.optional entries that are scope URLs): each one accepted by a tool too.
+  for (const [part, entries] of Object.entries(server.scopePolicy?.optional ?? {})) {
+    const unused = entries.filter((entry) => entry.startsWith('https://') && !acceptedByServer.has(entry));
+    if (unused.length) throw new Error(`scopePolicy.optional.${part} of ${id} names scopes no tool of the server accepts: ${unused.join(', ')}`);
   }
 
   // Registry and scope subsets for this plugin. A curated server's scopes come from its curated tools.

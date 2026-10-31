@@ -132,6 +132,12 @@ export function heldBackLines(requirements: readonly Requirement[], profile: Pro
       `Held back: the optional part "${name}" (${countText(list.tools, requirements)}). Add it with --with ${name} (in the chat: auth_login with "with": ["${name}"]).`,
     );
   }
+  // A part that names scopes: its tools may load through another scope, so the line names the scope, not missing tools.
+  for (const [name, list] of Object.entries(held.optionalScopes ?? {})) {
+    lines.push(
+      `Held back: the optional part "${name}" (the scope ${list.scopes.join(' or ')}, which ${countText(list.tools, requirements)} also accept). Add it with --with ${name} (in the chat: auth_login with "with": ["${name}"]).`,
+    );
+  }
   return lines;
 }
 
