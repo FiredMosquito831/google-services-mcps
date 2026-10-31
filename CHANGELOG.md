@@ -2,6 +2,16 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.38.0 - 2026-10-31
+
+### Added: destructive tools keep Claude Code's permission prompt in every mode
+- A destructive tool now carries `_meta["anthropic/requiresUserInteraction"]: true` in tools/list when this server's gate would ask before it (confirmation `every-change` or `destructive-only`, and no policy rule that allows or denies the tool). Claude Code: "Claude Code shows that tool's permission prompt on every call, even in `acceptEdits`, `auto`, and `bypassPermissions` permission modes, and doesn't offer a "don't ask again" option for it. Allow rules that match the tool don't skip the prompt either. In `dontAsk` mode, which never prompts, Claude Code denies the call instead." (https://code.claude.com/docs/en/mcp).
+- Why: the plugin's hook prompt could be passed over. `bypassPermissions` skips every prompt "except for the actions no mode auto-approves", which lists MCP tools marked `requiresUserInteraction` and not hook prompts (permission modes page), and a hook that times out or fails lets the call continue "through the normal permission flow" (hooks page), where an allow rule or the mode can approve it. The server's own form still asked, but an `Elicitation` hook can answer that form without showing it. Now the permission prompt reaches a person in those cases too.
+- No third prompt in the normal case: the hook's `ask` and the marker lead to the same permission prompt, then the server's form, as before. With confirmation `off`, or a policy `allow` rule for the tool, there is no marker, so nothing new asks. Reads, writes, `api_call` and the Ads mutate tools carry none. The prompt count per mode, worked out from Claude Code's documentation (not measured live), is in docs/SECURITY.md.
+
+### Not changed
+- What the gate and the hook decide (approval.ts and the hook bundle are unchanged), tool maps and kinds, `gsm scopes`, instructions. tools/list differs from 1.37.2 only by the marker on the 522 destructive tools the bundled servers list with writes allowed (tests/requires-interaction.test.mjs checks every server, and that confirmation `off` and a policy `allow` rule leave it out).
+
 ## 1.37.2 - 2026-10-31
 
 ### Fixed: each plugin's skill says what the product is for, signs in from the chat and names the right tools

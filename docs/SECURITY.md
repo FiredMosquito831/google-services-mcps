@@ -14,7 +14,7 @@ This suite lets an AI agent act on real Google accounts. The controls below are 
 
    - **Claude Code.** A `PreToolUse` hook returns `ask` for a change or a delete. Claude Code shows its permission prompt, labelled with the plugin (for example `[plugin:gmail]`). The model cannot skip this prompt.
    - **The hook never allows.** It returns only `ask` or `deny`. It never returns `allow`, so your own Claude Code permission rules still apply.
-   - **Destructive calls ask twice.** A destructive call (see [The destructive rule](#the-destructive-rule): a delete, a send to other people, a share, a publish and the others listed there) also shows the exact action through an MCP form, **Approve this action?**. The hook prompt and the form are both needed.
+   - **Destructive calls ask twice.** A destructive call (see [The destructive rule](#the-destructive-rule): a delete, a send to other people, a share, a publish and the others listed there) also shows the exact action through an MCP form, **Approve this action?**. The hook prompt and the form are both needed. Since 1.38.0 a destructive tool is also marked so that Claude Code's own prompt cannot be skipped by a permission mode, an allow rule or a hook that timed out (see [Destructive tools and Claude Code's permission prompt](#destructive-tools-and-claude-codes-permission-prompt)).
    - **Changes ask once in the hook.** A write is approved by the hook prompt only, when the hook is installed.
    - **Other MCP clients.** The server asks through MCP elicitation. A client that cannot elicit gets an error, and the action does not run.
    - **Declined or unanswered prompts** mean nothing changes.
@@ -206,6 +206,28 @@ Since 1.24.3 every tool lists the four MCP annotation hints. They are hints for 
 - `idempotentHint` (a second identical call has no further effect) is true for every read. For a generated tool that is not a read, it follows the HTTP verb: `GET`, `PUT` and `DELETE` yes, `POST` and `PATCH` no. A hand-written tool says it only when it calls one `PUT`, `DELETE` or `GET` method, or when the Google MCP tool it matches is marked idempotent (the Gmail label tools, the Chat read-state tools, the Calendar update and respond tools). Every other change is marked not idempotent.
 - `openWorldHint` is true for every tool that calls a Google API. It is false for `api_methods` and `api_search` (they read the plugin's own data), `auth_status`, `accounts_list`, `account_set_default`, `auth_setup_client`, `auth_setup_admin` and `auth_setup_service_account` (they read or change this machine's sign-in only). `health` (with `live: true`), `auth_login` and `account_remove` contact Google's sign-in service, so they are true.
 
+### Destructive tools and Claude Code's permission prompt
+
+Since 1.38.0, a destructive tool (its kind in the tool map is `destructive`) carries `_meta["anthropic/requiresUserInteraction"]: true` in its `tools/list` entry when this server's gate would ask before it: the confirmation setting is `every-change` or `destructive-only`, and no policy rule allows or denies the tool. With confirmation `off`, or a policy rule that allows the tool, it carries nothing, so nothing new asks. The setting and the policy file are read when the server starts, and again when it registers tools after a sign-in; restart the server after you change them.
+
+What Claude Code does with it (https://code.claude.com/docs/en/mcp, "Require approval for a specific tool"): "Claude Code shows that tool's permission prompt on every call, even in `acceptEdits`, `auto`, and `bypassPermissions` permission modes, and doesn't offer a "don't ask again" option for it. Allow rules that match the tool don't skip the prompt either. In `dontAsk` mode, which never prompts, Claude Code denies the call instead." A hook cannot skip it either: "a hook can't skip its approval prompt with "allow"" (https://code.claude.com/docs/en/hooks). Other clients ignore the field, and the gate and the hook decide exactly as before.
+
+Why: the plugin's hook is the first prompt, and Claude Code can pass over it. A hook that times out or fails "doesn't block the tool call ... The call continues through the normal permission flow, so don't count on a stalled hook to act as a gate" (hooks reference). `bypassPermissions` "Skips permission prompts, except for the actions no mode auto-approves", a list that names "MCP tools marked `requiresUserInteraction`" and not a hook's prompt (https://code.claude.com/docs/en/permission-modes). The server's form is the second prompt, and an `Elicitation` hook can answer it without showing it ("To auto-respond to elicitation requests without showing a dialog, use the Elicitation hook", mcp page).
+
+Prompts for one call of a destructive tool, in an interactive session, with writes allowed and confirmation `every-change` or `destructive-only`. This table is worked out from the documentation quoted above; it was not measured in a live session.
+
+| Case | Before 1.38.0 | Since 1.38.0 |
+|---|---|---|
+| Manual (default), `acceptEdits` or `auto` mode; the hook answers | 2: the hook's permission prompt, then the form | 2: the same permission prompt (the hook's `ask` and the marker lead to one prompt), then the form |
+| `bypassPermissions` | 1: the form (the hook's prompt is skipped) | 2: the permission prompt, then the form |
+| The hook times out or fails, and an allow rule or the mode would approve | 1: the form | 2: the permission prompt, then the form |
+| An `Elicitation` hook answers the form | 1 (Manual) or 0 (bypass) | 1: the permission prompt |
+| `dontAsk` mode | denied | denied |
+| Non-interactive (`-p`) | refused: no one can answer, and the form cannot be shown | refused |
+| Confirmation `off`, or a policy rule allows the tool | nothing from the suite | nothing from the suite (no marker) |
+
+Reads, writes, the gateway's `api_call`, the Google Ads mutate tools and the runtime tools carry no marker. A write whose arguments make one call destructive (`destructiveWhen`, such as a Calendar change that emails guests) keeps its tool-level kind, so it carries none.
+
 ## What Google enforces regardless of this plugin
 
 - Scope checks on every API call. A token without a write scope gets a 403 on writes.
@@ -230,7 +252,7 @@ Since 1.24.3 every tool lists the four MCP annotation hints. They are hints for 
 
 - **Hook and elicitation behaviour.** The hook and the form are taken from Claude Code's documentation. They have not been exercised in a live session yet. In particular, how Claude Code shows the **Approve this action?** form is not verified.
 
-- **Saved "don't ask again" rules.** Claude Code can save an allow rule when you choose "don't ask again". It is **UNVERIFIED** whether such a rule also stops the suite's hook prompt for a change. Until it is tested, do not use that choice for write or delete tools.
+- **Saved "don't ask again" rules.** Claude Code can save an allow rule when you choose "don't ask again". It is **UNVERIFIED** whether such a rule also stops the suite's hook prompt for a change. Until it is tested, do not use that choice for write or delete tools. Destructive tools that carry the `requiresUserInteraction` marker (1.38.0) are not offered that choice, and an allow rule does not skip their prompt (Claude Code's documentation; Claude Code 2.1.246 fixed the option still being shown for such tools).
 
 - **Policy `allow` rules.** An `allow` rule skips the default question. Match narrowly. A rule for a whole product, such as `mcp__plugin_gcloud_gcloud__*` with `allow`, also skips the prompt for every gcloud change and delete.
 

@@ -33,6 +33,7 @@ import { selectToolset, type ServerToolsets, type ToolOrigin, type ToolsetSelect
 import { settleWithin, TARGET_PREVIEW_KEY, TARGET_READ_TIMEOUT_MS } from './target-preview.js';
 import { pageSizeArgOf, shapeResult, type ShapeOptions } from './result-shape.js';
 import { serverInstructions } from './instructions.js';
+import { decide, loadPolicyFile, riskFromKind, type Policy } from './policy.js';
 
 /**
  * read        : safe, always registered and never gated.
@@ -171,6 +172,39 @@ export const RUNTIME_TOOL_HINTS: Readonly<Record<string, ToolHints>> = {
   auth_setup_admin: { readOnlyHint: false, destructiveHint: true, idempotentHint: true, openWorldHint: false },
   auth_setup_service_account: { readOnlyHint: false, destructiveHint: true, idempotentHint: true, openWorldHint: false },
 };
+
+/**
+ * Claude Code's tools/list marker for a tool whose permission prompt must reach a person on every call: "Claude Code
+ * shows that tool's permission prompt on every call, even in acceptEdits, auto, and bypassPermissions permission modes,
+ * and doesn't offer a "don't ask again" option for it. Allow rules that match the tool don't skip the prompt either"
+ * (code.claude.com/docs/en/mcp, "Require approval for a specific tool"). Other clients ignore it.
+ */
+export const REQUIRES_USER_INTERACTION = 'anthropic/requiresUserInteraction';
+
+/**
+ * True for a destructive tool that this server's gate would ask about by default: decide() with the policy file and the
+ * confirmation setting, as createGate decides (approval.ts), says ask. Its tools/list entry then carries
+ * REQUIRES_USER_INTERACTION, so Claude Code's own prompt cannot be skipped by a mode, an allow rule or a hook that timed
+ * out, and the call still reaches the person. Under confirmation off, or with a policy rule that allows (or denies) the
+ * tool, it is false, so nothing new asks. policy undefined: the policy file could not be read, and the gate asks then.
+ * The marker never changes what the gate or the hook decide; it is a hint for the client.
+ */
+export function requiresUserInteraction(
+  tool: Pick<ToolDef, 'name' | 'kind' | 'methodId'>,
+  policy: Policy | undefined,
+  cfg: Pick<RuntimeConfig, 'confirmation' | 'confirmationFromEnv'>,
+): boolean {
+  if (tool.kind !== 'destructive') return false;
+  if (policy === undefined) return true;
+  const verdict = decide({
+    toolName: tool.name,
+    methodId: tool.methodId,
+    risk: riskFromKind('destructive'),
+    policy,
+    confirmationEnvOverride: cfg.confirmationFromEnv ? cfg.confirmation : undefined,
+  });
+  return verdict.decision === 'ask';
+}
 
 /** The hints of one runtime tool. A name missing from the table is a programming error, so it throws at start. */
 function runtimeHints(name: string): ToolHints {
@@ -464,6 +498,14 @@ export async function runServer(opts: {
 
   // Registers tools once each. After the server is connected, the SDK tells the client that the list changed.
   const register = (list: ToolDef[]): void => {
+    // The policy file as the gate reads it now, for the requiresUserInteraction marker of destructive tools. A file that
+    // cannot be read makes the gate ask, so it counts as asking here too.
+    let policyNow: Policy | undefined;
+    try {
+      policyNow = loadPolicyFile(cfg.tokenDir);
+    } catch {
+      policyNow = undefined;
+    }
     for (const tool of list) {
       if (registered.has(tool.name)) continue;
       registered.add(tool.name);
@@ -476,6 +518,8 @@ export async function runServer(opts: {
           description: tool.description,
           inputSchema: withAccountArgument(tool.inputSchema),
           annotations: toolAnnotations(tool),
+          // A destructive tool the gate asks about: Claude Code shows its permission prompt on every call (see above).
+          ...(requiresUserInteraction(tool, policyNow, cfg) ? { _meta: { [REQUIRES_USER_INTERACTION]: true } } : {}),
         },
         async (rawArgs: Record<string, unknown>): Promise<CallToolResult> => {
           try {
