@@ -17,6 +17,7 @@ import { z } from 'zod';
 import type { RuntimeConfig } from '../core/config.js';
 import { getAuthClient, googleScopes } from '../core/auth.js';
 import { defineTool, type ToolDef } from '../core/tools.js';
+import { requestedAccount } from '../core/account-context.js';
 import { fitItems } from '../core/result-shape.js';
 
 type Auth = OAuth2Client | JWT;
@@ -162,6 +163,33 @@ export function analyticsAnswer(data: { rows?: unknown[] | null; responseAggrega
     fields: { next_start_row: start + shown },
     how_to_continue: `Google returned ${rows.length} rows; the first ${shown} fit the result limit (${budget} characters). Call again with start_row=${start + shown} and the same other arguments for the next rows.`,
   }));
+}
+
+/** The account a call runs as, for an approval: the account argument, else the server's default. */
+const fromAccount = (): string => requestedAccount() ?? 'the default account of this server (accounts_list shows it)';
+
+/**
+ * What the approval of sc_site_delete shows (1.41.1): the property, the account it is removed from, and what removing it
+ * does. Worked out from the arguments only (no request); a property string that is not one is refused before the gate.
+ */
+export function siteDeletePreview(siteUrl: string): Record<string, unknown> {
+  return {
+    property: propertyUrl(siteUrl),
+    from_account: fromAccount(),
+    effect:
+      'Property is removed from this account. Its performance, indexing and sitemap history are no longer accessible through this account. The website itself is not changed.',
+  };
+}
+
+/** What the approval of sc_sitemap_delete shows (1.41.1): the property, the sitemap, the account and what removing it does. */
+export function sitemapDeletePreview(siteUrl: string, feedpath: string): Record<string, unknown> {
+  return {
+    property: propertyUrl(siteUrl),
+    feedpath: httpUrl(feedpath, 'feedpath', EX_SITEMAP),
+    from_account: fromAccount(),
+    effect:
+      'Sitemap is removed from Search Console, not from the site. The sitemap file stays on the server, and the pages it lists are not de-indexed by this call.',
+  };
 }
 
 /**
@@ -406,11 +434,12 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       idempotent: true,
       scopes: googleScopes('webmasters'),
       inputSchema: { site_url: siteUrlArg },
-      preview: ({ site_url }) => ({
-        property: propertyUrl(site_url),
-        effect:
-          'Property is removed from this account. Its performance, indexing and sitemap history are no longer accessible through this account. The website itself is not changed.',
-      }),
+      // The approval shows the property and what removing it does (1.41.1); before, the form showed the raw arguments and
+      // this text was never shown (only prepare feeds the gate).
+      async prepare({ site_url }) {
+        return { preview: siteDeletePreview(site_url) };
+      },
+      preview: ({ site_url }) => siteDeletePreview(site_url),
       async handler({ site_url }) {
         const property = propertyUrl(site_url);
         await (await wm()).sites.delete({ siteUrl: property });
@@ -426,12 +455,10 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       idempotent: true,
       scopes: googleScopes('webmasters'),
       inputSchema: { site_url: siteUrlArg, feedpath: feedpathArg },
-      preview: ({ site_url, feedpath }) => ({
-        property: propertyUrl(site_url),
-        feedpath: httpUrl(feedpath, 'feedpath', EX_SITEMAP),
-        effect:
-          'Sitemap is removed from Search Console, not from the site. The sitemap file stays on the server, and the pages it lists are not de-indexed by this call.',
-      }),
+      async prepare({ site_url, feedpath }) {
+        return { preview: sitemapDeletePreview(site_url, feedpath) };
+      },
+      preview: ({ site_url, feedpath }) => sitemapDeletePreview(site_url, feedpath),
       async handler({ site_url, feedpath }) {
         const target = { siteUrl: propertyUrl(site_url), feedpath: httpUrl(feedpath, 'feedpath', EX_SITEMAP) };
         await (await wm()).sitemaps.delete(target);

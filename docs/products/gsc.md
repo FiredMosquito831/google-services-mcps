@@ -68,7 +68,7 @@ In the chat: `auth_login` with `"with": ["indexing"]`. Without it, the two Index
 ## Safety
 
 - Reads never ask. Submit and add ask first. Delete and remove ask twice, and since 1.26.3 so does a change to a site's owners (Site Verification update and patch).
-- Removing a property takes it out of your Search Console account.
+- Removing a property takes it out of your Search Console account. Since 1.41.1 the second prompt of `sc_site_delete` and `sc_sitemap_delete` shows the property (and the sitemap), the account and what the removal does: the website and the sitemap file are not changed.
 - The `confirmation` option defaults to `every-change`. Change it with `printf '%s' '{"confirmation":"destructive-only"}' | claude plugin configure gsc@google-services-mcps --values-stdin` (JSON on stdin), or `/plugin configure gsc@google-services-mcps` in Claude Code.
 
 ## Costs and limits

@@ -2,6 +2,15 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.41.1 - 2026-10-31
+
+### Fixed: the Search Console delete approvals show what the delete does
+- `sc_site_delete` and `sc_sitemap_delete` are destructive, and each had a preview with the exact effect ("Property is removed from this account. Its performance, indexing and sitemap history are no longer accessible through this account. The website itself is not changed."; "Sitemap is removed from Search Console, not from the site. The sitemap file stays on the server, and the pages it lists are not de-indexed by this call."). The gate never read it: only a tool's `prepare` reaches the approval, so the form showed the raw arguments (review of gsc, F6). The preview is now worked out in `prepare`, from the arguments alone (no request), and the form shows the property, the sitemap, the account the call runs as and the effect. A property string that is not one is refused before the form, as the handler refused it before.
+- `approval.ts` is unchanged: the same gate path `gmail_send` and `calendar_delete_event` use.
+
+### Not changed
+- Tool maps and kinds, tools/list (the two tools keep their descriptions and arguments), `gsm scopes`, the requests. Policy rules decide as before; the audit line hashes what the form showed.
+
 ## 1.41.0 - 2026-10-31
 
 ### Added: the search analytics options Google documents

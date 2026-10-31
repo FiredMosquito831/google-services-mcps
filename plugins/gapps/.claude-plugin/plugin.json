@@ -1,7 +1,7 @@
 {
   "name": "gapps",
   "displayName": "Apps Script",
-  "version": "1.41.0",
+  "version": "1.41.1",
   "description": "Apps Script projects and execution, plus the Workspace Marketplace SDK.",
   "author": {
     "name": "FiredMosquito831"
