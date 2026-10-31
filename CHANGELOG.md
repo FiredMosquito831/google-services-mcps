@@ -2,6 +2,24 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.41.0 - 2026-10-31
+
+### Added: the search analytics options Google documents
+- `sc_search_analytics_query` takes what Google's `searchAnalytics.query` takes (https://developers.google.com/webmaster-tools/v1/searchanalytics/query) and it lacked (review of gsc, F2):
+  - `data_state`: `final` (Google's default: "the returned data will include only finalized data", so the latest days are missing), `all` ("data will include fresh data"; the answer's `metadata.first_incomplete_date` says where it starts) or `hourly_all` ("hourly breakdown", for the `hour` dimension; `metadata.first_incomplete_hour`).
+  - the `hour` dimension.
+  - `aggregation_type`: `auto`, `byPage`, `byProperty` or `byNewsShowcasePanel`, with Google's limits in its description.
+  - `filters`: a typed list of `{ dimension, operator, expression }` (dimensions `query`, `page`, `country`, `device`, `searchAppearance`; operators `equals`, `notEquals`, `contains`, `notContains`, `includingRegex`, `excludingRegex`; expression up to 4,096 characters), sent as one group whose filters must all match ("All filter groups must match"; "and" is the one group type Google supports). The untyped `dimension_filter_groups` still works and is sent as given; with both, every group must pass.
+- The values go to Google as its reference spells them, and only when given: a call without them sends the same body as before, field for field. Google's `metadata` object comes through in the answer.
+
+### Fixed: smaller Search Console gaps
+- `sc_url_inspect` says what Google's reference says: only the indexed version is read ("you cannot test the indexability of a live URL"), and the quota is 2,000 inspections a day and 600 a minute per property (https://developers.google.com/webmaster-tools/limits). A page under a URL-prefix property is matched with its host compared without case, so `https://Example.com/x` belongs to `https://example.com/`; a page whose host only starts with the property's (`https://example.co` against `https://example.com/x`) is no longer taken as part of it (F11).
+- Google's "User does not have sufficient permission for site" error now ends with how to find the exact property string (`sc_sites_list`; a URL-prefix property ends with a slash, a domain property is `sc-domain:`), for every curated tool (F8).
+- The ten generated Search Console tools that a curated tool covers name it in their descriptions (`methodNotes`, F7), as Gmail's do since 1.39.0.
+
+### Not changed
+- Tool maps and tool kinds, `gsm scopes`, the hook, and the requests of every earlier call. Not checked against live Google.
+
 ## 1.40.1 - 2026-10-31
 
 ### Fixed: a readonly Calendar login with the google toolset asks for Google's three read scopes

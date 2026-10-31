@@ -638,6 +638,24 @@ const CASES = {
       },
       expect: ['webmasters.searchanalytics.query'],
     },
+    // 1.41.0: typed filters (with the old groups), the data state, the aggregation type and the hour dimension.
+    {
+      args: {
+        site_url: SITE,
+        start_date: '2026-10-28',
+        end_date: '2026-10-30',
+        dimensions: ['hour', 'page'],
+        data_state: 'hourly_all',
+        aggregation_type: 'byPage',
+        filters: [
+          { dimension: 'country', expression: 'FRA' },
+          { dimension: 'page', operator: 'includingRegex', expression: '/blog/' },
+        ],
+        dimension_filter_groups: [{ filters: [{ dimension: 'device', operator: 'notEquals', expression: 'TABLET' }] }],
+      },
+      expect: ['webmasters.searchanalytics.query'],
+    },
+    { args: { site_url: SITE, start_date: '2026-10-01', end_date: '2026-10-28', data_state: 'all', aggregation_type: 'byProperty' }, expect: ['webmasters.searchanalytics.query'] },
   ],
   sc_url_inspect: [{ args: { site_url: SITE, inspection_url: 'https://example.com/page', language_code: 'en-US' }, expect: ['searchconsole.urlInspection.index.inspect'] }],
   sc_site_add: [{ args: { site_url: SITE }, expect: ['webmasters.sites.add'] }],

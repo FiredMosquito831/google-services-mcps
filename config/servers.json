@@ -1366,6 +1366,24 @@
           ]
         }
       },
+      "methodNotes": {
+        "searchconsole": {
+          "source": "The curated Search Console tools (src/servers/searchconsole.ts) that run the same methods",
+          "reason": "Each generated tool a curated tool covers names it: the curated one checks the property string and dates before the request, and fits analytics rows to the result limit with an exact next_start_row (adversarial review of gsc, F7).",
+          "methods": {
+            "webmasters.sites.list": "sc_sites_list lists the same properties.",
+            "webmasters.sites.get": "sc_site_get reads the same property and checks its string first.",
+            "webmasters.sites.add": "sc_site_add adds a property and checks its string first.",
+            "webmasters.sites.delete": "sc_site_delete removes a property and checks its string first.",
+            "webmasters.sitemaps.list": "sc_sitemaps_list lists the same sitemaps.",
+            "webmasters.sitemaps.get": "sc_sitemap_get reads the same sitemap.",
+            "webmasters.sitemaps.submit": "sc_sitemap_submit submits a sitemap and checks the URLs first.",
+            "webmasters.sitemaps.delete": "sc_sitemap_delete removes a sitemap from Search Console and checks the URLs first.",
+            "webmasters.searchanalytics.query": "sc_search_analytics_query runs the same query with typed arguments (dates, dimensions, filters, data state) and fits the rows to the result limit with an exact next_start_row.",
+            "searchconsole.urlInspection.index.inspect": "sc_url_inspect inspects the same page and checks that it belongs to the property first."
+          }
+        }
+      },
       "toolsets": {
         "google": [
           "sc_sites_list",

@@ -27,8 +27,8 @@ Only if the chat tools fail, the same steps in a terminal: `node "${CLAUDE_PLUGI
 
 ### 2. Search performance
 
-1. `sc_search_analytics_query` with site_url, start_date and end_date (YYYY-MM-DD, Pacific time) and dimensions (query, page, country, device, date).
-2. Page with row_limit and start_row; a cut result says where to continue. The last two or three days are usually not in the data yet.
+1. `sc_search_analytics_query` with site_url, start_date and end_date (YYYY-MM-DD, Pacific time), dimensions (query, page, country, device, date, hour) and typed filters.
+2. Page with row_limit and start_row; a cut result says where to continue. The last two or three days are not in the final data: data_state all adds them, hourly_all with the hour dimension gives hours.
 
 ### 3. Why is a page not indexed
 

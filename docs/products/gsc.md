@@ -32,8 +32,8 @@ Prerequisite: a Search Console property that the signed-in Google account can ac
 
 | Area | Tools | Safety | What it does |
 |---|---|---|---|
-| Sites and search data | `sc_sites_list`, `sc_site_get`, `sc_search_analytics_query` | read | List properties, read one, query clicks, impressions and positions |
-| URLs | `sc_url_inspect` | read | Inspect the index status of one URL |
+| Sites and search data | `sc_sites_list`, `sc_site_get`, `sc_search_analytics_query` | read | List properties, read one, query clicks, impressions and positions (by date, hour, query, page, country, device or search appearance; typed filters, fresh or hourly data, aggregation by page or property) |
+| URLs | `sc_url_inspect` | read | Inspect the index status of one URL (the indexed version; Google cannot test the live URL) |
 | Sitemaps | `sc_sitemaps_list`, `sc_sitemap_get` | read | List and read sitemaps |
 | | `sc_sitemap_submit` | write | Submit a sitemap |
 | | `sc_site_add` | write | Add a property |
@@ -43,6 +43,8 @@ Prerequisite: a Search Console property that the signed-in Google account can ac
 | Gateway | none | | This plugin registers no gateway tools. Every API it covers is a per-method tool. |
 
 The full list is in `docs/capabilities/gsc.md`.
+
+**Search analytics (1.41.0).** `sc_search_analytics_query` takes the options of Google's `searchAnalytics.query` (https://developers.google.com/webmaster-tools/v1/searchanalytics/query): `filters`, a typed list of `{ dimension, operator, expression }` that a row must all pass (dimensions `query`, `page`, `country`, `device`, `searchAppearance`; operators `equals`, `notEquals`, `contains`, `notContains`, `includingRegex`, `excludingRegex`); `data_state` (`final` by default, so the latest days are missing; `all` adds the fresh data still being processed, and the answer's `metadata.first_incomplete_date` says where it starts; `hourly_all` with the `hour` dimension gives hours); and `aggregation_type` (`auto`, `byPage`, `byProperty`, `byNewsShowcasePanel`). `dimension_filter_groups` still passes groups to Google as given. A call without the new arguments sends the same request as before. The generated twins of the curated tools (such as `searchcons_searchanalytics_query`) name the curated tool in their descriptions.
 
 Google has no official MCP server for Search Console (none was found on 2026-10-29). With the plugin option `toolset: google`, the server lists a small set chosen here instead: `sc_sites_list`, `sc_site_get`, `sc_search_analytics_query`, `sc_url_inspect`, `sc_sitemaps_list`, `sc_sitemap_get`, `sc_sitemap_submit` and the two Indexing API tools, plus `health` and the sign-in tools. The deletes, the property add and Site Verification stay in the `all` toolset. A `readonly` login with that toolset asks for `webmasters.readonly`; a `readwrite` login for `webmasters` (no `siteverification`), and `indexing` only with `--with indexing`.
 
@@ -57,6 +59,7 @@ In the chat: `auth_login` with `"with": ["indexing"]`. Without it, the two Index
 ## Example requests
 
 - "Which queries brought the most clicks to example.com last month?" Claude runs `sc_search_analytics_query`. No prompt.
+- "How did yesterday go, hour by hour, on mobile in France?" Claude runs `sc_search_analytics_query` with `dimensions: ["hour"]`, `data_state: "hourly_all"` and `filters` on device and country. No prompt.
 - "Why is /pricing not indexed?" Claude runs `sc_url_inspect`. No prompt.
 - "List the sitemaps for example.com and tell me which ones have errors." Claude runs `sc_sitemaps_list`, then `sc_sitemap_get`.
 - "Submit https://example.com/sitemap.xml." Claude runs `sc_sitemap_submit`. It asks first.
@@ -81,3 +84,4 @@ The Search Console API has no stated fee (UNVERIFIED), and the Indexing API is f
 - Google retired the Mobile-Friendly Test tool and API, and the Mobile Usability report, on December 1, 2023 ([Search Central blog](https://developers.google.com/search/blog/2023/04/page-experience-in-search)). Since 1.35.3 there is no tool for the test (it was the generated `searchcons_url_testing_t_mobile_friendl_run`), and URL inspection's `mobileUsabilityResult` is deprecated. Google points to Lighthouse for mobile checks; `gsearch` runs PageSpeed Insights, which uses Lighthouse.
 - A sitemap's `indexed` count is deprecated by Google ("Deprecated; do not use.") and can read 0 while its pages are indexed. Read the submitted count, errors and warnings from the sitemap tools, and whether a page is indexed from `sc_url_inspect`.
 - `sc_search_analytics_query` sends the search type as `type`, the field Google documents; `searchType` is deprecated ("Deprecated, use type instead"). The argument is still `type`.
+- A property string must match Search Console's exactly: a URL-prefix property ends with a slash (`https://example.com/`), a domain property is `sc-domain:example.com`. Since 1.41.0 Google's "does not have sufficient permission for site" error says to check the string with `sc_sites_list`. `sc_url_inspect` compares a page's host with the property's without case.
