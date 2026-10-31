@@ -46,7 +46,6 @@
     "mybusinessverifications.verificationTokens.generate",
     "playgrouping.apps.tokens.tags.createOrUpdate",
     "playgrouping.apps.tokens.verify",
-    "searchconsole.urlTestingTools.mobileFriendlyTest.run",
     "webrisk.projects.operations.cancel",
     "webrisk.projects.operations.delete",
     "youtube.thirdPartyLinks.delete",

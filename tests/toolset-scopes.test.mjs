@@ -350,8 +350,12 @@ test('requirements: the lean gmeet, gtasks and gapps lists resolve to the narrow
   assert.deepEqual(apps.readonly.scopes, [G('script.deployments.readonly'), G('script.processes'), G('script.projects.readonly')]);
   assert.ok(apps.readonly.covered.includes('gapps/appsscript_processes_list'));
   assert.deepEqual(apps.readwrite, [G('script.deployments'), G('script.processes'), G('script.projects'), EMAIL]);
-  // full takes the broadest scope scripts.run lists, the full Gmail scope; readwrite does not.
-  assert.ok(apps.full.includes('https://mail.google.com/'));
+  // Until 1.36.0 full took the broadest scope scripts.run lists, the full Gmail scope. Now that scope is the optional part
+  // mail of gapps and full prefers userinfo.email for scripts.run (scopePolicy), as readwrite picks it: neither asks for
+  // https://mail.google.com/ unless the login names mail.
+  assert.equal(apps.full.includes('https://mail.google.com/'), false);
+  assert.deepEqual(apps.full, apps.readwrite);
+  assert.ok((await resolved('gapps', ['mail'])).full.includes('https://mail.google.com/'));
   assert.equal(apps.readwrite.includes('https://mail.google.com/'), false);
 });
 

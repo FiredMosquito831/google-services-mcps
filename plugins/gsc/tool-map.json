@@ -260,13 +260,6 @@
     "title": "searchconsole.urlInspection.index.inspect"
   },
   {
-    "name": "mcp__plugin_gsc_gsc__searchcons_url_testing_t_mobile_friendl_run",
-    "kind": "write",
-    "scopes": [],
-    "methodId": "searchconsole.urlTestingTools.mobileFriendlyTest.run",
-    "title": "searchconsole.urlTestingTools.mobileFriendlyTest.run"
-  },
-  {
     "name": "mcp__plugin_gsc_gsc__siteverif_web_resource_delete",
     "kind": "destructive",
     "scopes": [

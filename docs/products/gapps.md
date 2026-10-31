@@ -46,6 +46,14 @@ The full list is in `docs/capabilities/gapps.md`.
 
 Google has no official MCP server for Apps Script (none was found on 2026-10-29). With the plugin option `toolset: google`, the server lists a small set chosen here instead: `appsscript_projects_get`, `appsscript_projects_get_content`, `appsscript_projects_update_content`, `appsscript_projects_versions_create`, `appsscript_projects_deployments_list`, `appsscript_projects_deployments_create`, `appsscript_processes_list` and `appsscript_scripts_run` (destructive: it asks twice) (8 tools), plus `health` and the sign-in tools. A `readonly` login with that toolset asks for `script.projects.readonly`, `script.deployments.readonly` and, since 1.32.1, `script.processes` (Google: "View Google Apps Script processes"), so recent runs load too; with the `all` toolset it also asks for `script.metrics` ("View Google Apps Script project's metrics"); a `readwrite` login for `script.projects`, `script.deployments`, `script.processes` and `userinfo.email`. A function run with `appsscript_scripts_run` needs the scopes the script itself uses; sign in with those as an explicit scope list.
 
+**The full Gmail scope is an optional part (since 1.36.0).** `scripts.run` lists twelve scopes Google accepts for it, among them `https://mail.google.com/` (read, send and delete all mail). Until 1.36.0 a `full` login picked that one, the shortest, so every `--profile full` gapps sign-in asked for the whole mailbox only to run scripts. Now `full` asks for `userinfo.email` for `scripts.run`, as `readwrite` does, and the full Gmail scope only when you name the part:
+
+```
+node <plugin>/bin/gsm.mjs login workspace-user --profile full --with mail
+```
+
+In the chat: `auth_login` with `"with": ["mail"]`. Without it, `gsm scopes` and the sign-in say so in a `Held back:` line. A script that sends or reads Gmail needs that scope (or another Gmail scope in an explicit scope list). An account that already holds `https://mail.google.com/` keeps it when you sign in again naming the account (`--account <email>`). `readonly` and `readwrite` ask for the same scopes as before.
+
 ## Example requests
 
 - "Show me the code of my Sheets expense script." Claude runs the project content read tool. No prompt.

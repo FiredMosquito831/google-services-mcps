@@ -78,6 +78,13 @@ export interface ServerSpec {
    * for one). Absent for a product that has none.
    */
   pageSizeDefaults?: Record<string, PageSizeDefaults>;
+  /**
+   * Per generated API of the product, a note for some of its methods (config/products.json methodNotes; gsearch's Fact
+   * Check pages and Web Risk submissions, which an API key cannot run). The note goes into that method's tool description
+   * only, after the API's note from config/tool-kinds.json, which every tool of the API carries. Absent for a product that
+   * has none, so its tools are described as before.
+   */
+  methodNotes?: Record<string, MethodNotes>;
   label: string;
   /**
    * The plugin folder the server is built from (plugins/<id>), set only by the CLI of the repository layout (the
@@ -116,6 +123,13 @@ export interface PageSizeDefault {
 /** One API's entry of ServerSpec.pageSizeDefaults. */
 export interface PageSizeDefaults {
   methods: Record<string, PageSizeDefault>;
+  source?: string;
+  reason?: string;
+}
+
+/** One API's entry of ServerSpec.methodNotes: the note per method id, with the evidence for people. */
+export interface MethodNotes {
+  methods: Record<string, string>;
   source?: string;
   reason?: string;
 }

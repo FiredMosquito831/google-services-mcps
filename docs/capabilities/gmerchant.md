@@ -1,6 +1,6 @@
 # Merchant Center (`gmerchant`)
 
-Merchant Center: Merchant API, Comparison Shopping Service and Manufacturer Center.
+Merchant Center: Merchant API and Comparison Shopping Service, through a service account key.
 
 - Plugin: `gmerchant`, MCP server: `gmerchant`, login: Service account key, then `setup-service-account` (no login)
 - Install: `claude plugin install gmerchant@google-services-mcps`
@@ -221,7 +221,7 @@ The tools that match Google's official MCP server for this product (https://deve
 
 Each API links to Google's documentation for it, as Google's Discovery directory names it (`documentationLink`, kept in `data/catalog.json`). The link is the API's documentation home, not a page per method: the directory gives no link per method, and Google's REST reference pages are laid out differently from product to product.
 
-- Merchant API (`merchantapi/reviews_v1beta`), 8 methods in the catalog. Documentation: <https://developers.google.com/merchant/api>
+- Merchant API (`merchantapi/reviews_v1alpha`), 8 methods in the catalog. Documentation: <https://developers.google.com/merchant/api>
 - CSS API (`css/v1`), 13 methods in the catalog. Documentation: <https://developers.google.com/comparison-shopping-services/api/overview>
 - Manufacturer Center API (`manufacturers/v1`), 8 methods in the catalog. Documentation: <https://developers.google.com/manufacturers/>
 - Merchant API (`merchantapi/accounts_v1`), 76 methods in the catalog. Documentation: <https://developers.google.com/merchant/api>
@@ -240,16 +240,16 @@ Each API links to Google's documentation for it, as Google's Discovery directory
 
 ## Gateway APIs (reached through api_search, api_describe, api_call)
 
-- Merchant API (`merchantapi/accounts_v1beta`), 74 methods. Documentation: <https://developers.google.com/merchant/api>
-- Merchant API (`merchantapi/conversions_v1beta`), 6 methods. Documentation: <https://developers.google.com/merchant/api>
-- Merchant API (`merchantapi/datasources_v1beta`), 7 methods. Documentation: <https://developers.google.com/merchant/api>
-- Merchant API (`merchantapi/inventories_v1beta`), 6 methods. Documentation: <https://developers.google.com/merchant/api>
-- Merchant API (`merchantapi/issueresolution_v1beta`), 4 methods. Documentation: <https://developers.google.com/merchant/api>
-- Merchant API (`merchantapi/lfp_v1beta`), 7 methods. Documentation: <https://developers.google.com/merchant/api>
-- Merchant API (`merchantapi/notifications_v1beta`), 5 methods. Documentation: <https://developers.google.com/merchant/api>
-- Merchant API (`merchantapi/ordertracking_v1beta`), 1 methods. Documentation: <https://developers.google.com/merchant/api>
-- Merchant API (`merchantapi/products_v1beta`), 5 methods. Documentation: <https://developers.google.com/merchant/api>
-- Merchant API (`merchantapi/promotions_v1beta`), 3 methods. Documentation: <https://developers.google.com/merchant/api>
-- Merchant API (`merchantapi/quota_v1beta`), 1 methods. Documentation: <https://developers.google.com/merchant/api>
-- Merchant API (`merchantapi/reports_v1beta`), 1 methods. Documentation: <https://developers.google.com/merchant/api>
+- Merchant API (`merchantapi/accounts_v1`), 76 methods. Documentation: <https://developers.google.com/merchant/api>
+- Merchant API (`merchantapi/conversions_v1`), 6 methods. Documentation: <https://developers.google.com/merchant/api>
+- Merchant API (`merchantapi/datasources_v1`), 7 methods. Documentation: <https://developers.google.com/merchant/api>
+- Merchant API (`merchantapi/inventories_v1`), 6 methods. Documentation: <https://developers.google.com/merchant/api>
+- Merchant API (`merchantapi/issueresolution_v1`), 4 methods. Documentation: <https://developers.google.com/merchant/api>
+- Merchant API (`merchantapi/lfp_v1`), 7 methods. Documentation: <https://developers.google.com/merchant/api>
+- Merchant API (`merchantapi/notifications_v1`), 5 methods. Documentation: <https://developers.google.com/merchant/api>
+- Merchant API (`merchantapi/ordertracking_v1`), 1 methods. Documentation: <https://developers.google.com/merchant/api>
+- Merchant API (`merchantapi/products_v1`), 5 methods. Documentation: <https://developers.google.com/merchant/api>
+- Merchant API (`merchantapi/promotions_v1`), 3 methods. Documentation: <https://developers.google.com/merchant/api>
+- Merchant API (`merchantapi/quota_v1`), 3 methods. Documentation: <https://developers.google.com/merchant/api>
+- Merchant API (`merchantapi/reports_v1`), 1 methods. Documentation: <https://developers.google.com/merchant/api>
 

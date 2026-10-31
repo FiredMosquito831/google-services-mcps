@@ -1,11 +1,11 @@
 ---
 name: gmerchant
-description: Merchant Center: Merchant API, Comparison Shopping Service and Manufacturer Center. Served by the gmerchant MCP server with 167 tools. Use for requests about these Google APIs.
+description: Merchant Center: Merchant API and Comparison Shopping Service, through a service account key. Served by the gmerchant MCP server with 167 tools. Use for requests about these Google APIs.
 ---
 
 # Merchant Center
 
-Merchant Center: Merchant API, Comparison Shopping Service and Manufacturer Center.
+Merchant Center: Merchant API and Comparison Shopping Service, through a service account key.
 
 The `gmerchant` MCP server exposes 167 tools. Per-method tools cover the Discovery APIs listed below. Gateway APIs are reached through three generic tools: api_search finds a method, api_describe shows its parameters, and api_call runs it.
 
@@ -19,7 +19,7 @@ Reads never ask for approval. Changes and deletions ask first, unless the user h
 
 ## APIs
 
-- Merchant API (merchantapi reviews_v1beta)
+- Merchant API (merchantapi reviews_v1alpha)
 - CSS API (css v1)
 - Manufacturer Center API (manufacturers v1)
 - Merchant API (merchantapi accounts_v1)
@@ -35,15 +35,15 @@ Reads never ask for approval. Changes and deletions ask first, unless the user h
 - Merchant API (merchantapi promotions_v1)
 - Merchant API (merchantapi quota_v1)
 - Merchant API (merchantapi reports_v1)
-- Merchant API (merchantapi accounts_v1beta), reached through api_search, api_describe and api_call
-- Merchant API (merchantapi conversions_v1beta), reached through api_search, api_describe and api_call
-- Merchant API (merchantapi datasources_v1beta), reached through api_search, api_describe and api_call
-- Merchant API (merchantapi inventories_v1beta), reached through api_search, api_describe and api_call
-- Merchant API (merchantapi issueresolution_v1beta), reached through api_search, api_describe and api_call
-- Merchant API (merchantapi lfp_v1beta), reached through api_search, api_describe and api_call
-- Merchant API (merchantapi notifications_v1beta), reached through api_search, api_describe and api_call
-- Merchant API (merchantapi ordertracking_v1beta), reached through api_search, api_describe and api_call
-- Merchant API (merchantapi products_v1beta), reached through api_search, api_describe and api_call
-- Merchant API (merchantapi promotions_v1beta), reached through api_search, api_describe and api_call
-- Merchant API (merchantapi quota_v1beta), reached through api_search, api_describe and api_call
-- Merchant API (merchantapi reports_v1beta), reached through api_search, api_describe and api_call
+- Merchant API (merchantapi accounts_v1), reached through api_search, api_describe and api_call
+- Merchant API (merchantapi conversions_v1), reached through api_search, api_describe and api_call
+- Merchant API (merchantapi datasources_v1), reached through api_search, api_describe and api_call
+- Merchant API (merchantapi inventories_v1), reached through api_search, api_describe and api_call
+- Merchant API (merchantapi issueresolution_v1), reached through api_search, api_describe and api_call
+- Merchant API (merchantapi lfp_v1), reached through api_search, api_describe and api_call
+- Merchant API (merchantapi notifications_v1), reached through api_search, api_describe and api_call
+- Merchant API (merchantapi ordertracking_v1), reached through api_search, api_describe and api_call
+- Merchant API (merchantapi products_v1), reached through api_search, api_describe and api_call
+- Merchant API (merchantapi promotions_v1), reached through api_search, api_describe and api_call
+- Merchant API (merchantapi quota_v1), reached through api_search, api_describe and api_call
+- Merchant API (merchantapi reports_v1), reached through api_search, api_describe and api_call

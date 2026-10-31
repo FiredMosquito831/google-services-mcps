@@ -403,6 +403,26 @@ function pageSizeDefaultsOf(value, id, apiMethods) {
 }
 
 /**
+ * A product's "methodNotes" (ServerSpec.methodNotes in src/core/registry.ts), checked and copied as is: per generated API
+ * of the product, a note for some of its methods, which only that method's tool description carries ({ methods: { id:
+ * note }, source, reason }). A note for every tool of an API belongs in config/tool-kinds.json notes instead.
+ */
+function methodNotesOf(value, id, apiMethods) {
+  if (value === undefined) return undefined;
+  const where = `product ${id} methodNotes`;
+  checkPerApi(value, where, apiMethods);
+  for (const [api, entry] of Object.entries(value)) {
+    const methods = entry.methods;
+    if (typeof methods !== 'object' || methods === null || Array.isArray(methods) || Object.keys(methods).length === 0) fail(`${where}["${api}"].methods must be a non-empty object`);
+    for (const [method, note] of Object.entries(methods)) {
+      checkMethodOf(`${where}["${api}"]`, api, method, apiMethods);
+      if (!isText(note)) fail(`${where}["${api}"]["${method}"] must be a non-empty note`);
+    }
+  }
+  return value;
+}
+
+/**
  * A product's "serviceAccountScopes": required for a product of the service-account group, and only there. "methods"
  * (every scope the product's methods declare) or a non-empty list of scope URLs.
  */
@@ -477,6 +497,9 @@ function main() {
     if (fieldMaskDefaults) server.fieldMaskDefaults = fieldMaskDefaults;
     const pageSizeDefaults = pageSizeDefaultsOf(p.pageSizeDefaults, id, apiMethods);
     if (pageSizeDefaults) server.pageSizeDefaults = pageSizeDefaults;
+    // Only a product with method notes gets the key, so the entries of the others stay as they were.
+    const methodNotes = methodNotesOf(p.methodNotes, id, apiMethods);
+    if (methodNotes) server.methodNotes = methodNotes;
     // Only a product that lists a toolset gets the key, so the entries of the others stay as they were.
     const toolsets = toolsetsOf(p.toolsets, id);
     if (toolsets) server.toolsets = toolsets;

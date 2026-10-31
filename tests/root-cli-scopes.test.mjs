@@ -78,7 +78,7 @@ test('repo layout: each server is built from its plugin folder (curated module, 
     const entry = own.servers.find((s) => s.name === spec.name);
     const before = converted.servers.find((s) => s.name === spec.name);
     assert.equal(spec.pluginRoot, join(REPO, 'plugins', spec.plugin), spec.name);
-    for (const key of ['curated', 'apis', 'gatewayApis', 'scopes', 'scopePolicy', 'scopeOverrides', 'fieldsDefaults', 'fieldMaskDefaults', 'pageSizeDefaults', 'toolsets', 'toolsetScopes']) {
+    for (const key of ['curated', 'apis', 'gatewayApis', 'scopes', 'scopePolicy', 'scopeOverrides', 'fieldsDefaults', 'fieldMaskDefaults', 'pageSizeDefaults', 'methodNotes', 'toolsets', 'toolsetScopes']) {
       assert.deepEqual(spec[key], entry[key], `${spec.name}.${key} comes from the plugin's servers.json`);
     }
     // What listings and installs print stays the conversion's.

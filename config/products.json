@@ -1517,7 +1517,13 @@
       "generated": [
         {
           "api": "searchconsole",
-          "version": "v1"
+          "version": "v1",
+          "include": [
+            "sites",
+            "sitemaps",
+            "searchanalytics",
+            "urlInspection.index"
+          ]
         },
         {
           "api": "siteVerification",
@@ -1565,8 +1571,8 @@
             "sc_sites_list": "The properties the account can see, with its permission level. Start here.",
             "sc_site_get": "One property and the account's permission on it.",
             "sc_search_analytics_query": "Clicks, impressions, CTR and position by query, page, country, device, date or search appearance. A read, as the generated searchcons_searchanalytics_query is since 1.24.5 (config/tool-kinds.json; before, the POST query was a write by its name).",
-            "sc_url_inspect": "The index status of one URL: coverage, last crawl, canonical, mobile usability and rich results.",
-            "sc_sitemaps_list": "The sitemaps of a property with their submitted and indexed counts (the indexed count can lag; check a sample with sc_url_inspect).",
+            "sc_url_inspect": "The index status of one URL: coverage, last crawl, canonical and rich results. Google retired mobile usability in December 2023; the result's mobileUsabilityResult is deprecated.",
+            "sc_sitemaps_list": "The sitemaps of a property with their status, errors, warnings and submitted URL counts. Google deprecated the indexed count (\"Deprecated; do not use.\"); for whether a page is indexed, use sc_url_inspect.",
             "sc_sitemap_get": "One sitemap: its status, errors, warnings and counts.",
             "sc_sitemap_submit": "Submits or resubmits a sitemap. A write, so it asks first.",
             "indexing_url_notifications_get_metadata": "When the Indexing API was last told about a URL. Needs the indexing scope, which has no read-only form.",
@@ -1574,7 +1580,7 @@
           }
         }
       },
-      "generatedToolCount": 20
+      "generatedToolCount": 19
     },
     "gsearch": {
       "title": "Search and Web Quality",
@@ -1656,6 +1662,30 @@
           "version": "v4"
         }
       ],
+      "methodNotes": {
+        "factchecktools": {
+          "source": "https://developers.google.com/fact-check/tools/api/reference/rest/v1alpha1/pages/create (Authorization scopes: \"Requires the following OAuth scope: https://www.googleapis.com/auth/factchecktools\"; the same on the get, list, update and delete pages)",
+          "reason": "gsearch sends an API key, never an OAuth token, so the ClaimReview page methods are expected to be refused. Not checked live.",
+          "methods": {
+            "factchecktools.pages.create": "Google requires an OAuth token with the factchecktools scope for this method; this server sends only an API key, so Google is expected to refuse it.",
+            "factchecktools.pages.delete": "Google requires an OAuth token with the factchecktools scope for this method; this server sends only an API key, so Google is expected to refuse it.",
+            "factchecktools.pages.get": "Google requires an OAuth token with the factchecktools scope for this method; this server sends only an API key, so Google is expected to refuse it.",
+            "factchecktools.pages.list": "Google requires an OAuth token with the factchecktools scope for this method; this server sends only an API key, so Google is expected to refuse it.",
+            "factchecktools.pages.update": "Google requires an OAuth token with the factchecktools scope for this method; this server sends only an API key, so Google is expected to refuse it."
+          }
+        },
+        "webrisk": {
+          "source": "https://docs.cloud.google.com/web-risk/docs/reference/rest/v1/projects.submissions/create (\"Only allowlisted projects can use this method during Early Access.\"; Authorization scopes: cloud-platform) and https://docs.cloud.google.com/web-risk/docs/submission-api (\"We no longer accept new contracts or expansions for the Web Risk Submission API.\"; its example sends an OAuth access token)",
+          "reason": "Submissions are for allowlisted projects only and take an OAuth token, and the operations methods follow a submission; gsearch sends an API key only. Not checked live.",
+          "methods": {
+            "webrisk.projects.submissions.create": "Google: \"Only allowlisted projects can use this method during Early Access.\" The Submission API takes no new contracts, and Google's example sends an OAuth token; this server sends only an API key, so expect a refusal.",
+            "webrisk.projects.operations.get": "The operations of Web Risk submissions (projects.submissions.create), which only allowlisted projects can make; Google lists an OAuth scope for this method, and this server sends only an API key.",
+            "webrisk.projects.operations.list": "The operations of Web Risk submissions (projects.submissions.create), which only allowlisted projects can make; this server sends only an API key.",
+            "webrisk.projects.operations.cancel": "The operations of Web Risk submissions (projects.submissions.create), which only allowlisted projects can make; this server sends only an API key.",
+            "webrisk.projects.operations.delete": "The operations of Web Risk submissions (projects.submissions.create), which only allowlisted projects can make; this server sends only an API key."
+          }
+        }
+      },
       "toolsets": {
         "google": {
           "source": "https://developerknowledge.googleapis.com/mcp",
@@ -2523,6 +2553,18 @@
         }
       ],
       "gateway": [],
+      "scopePolicy": {
+        "optional": {
+          "mail": [
+            "https://mail.google.com/"
+          ]
+        },
+        "prefer": {
+          "full": [
+            "https://www.googleapis.com/auth/userinfo.email"
+          ]
+        }
+      },
       "toolsets": {
         "google": {
           "source": "No official Google MCP server for Apps Script was found (Google's Cloud and Workspace MCP lists, 2026-10-29; a negative, not confirmed by Google); a lean set chosen here.",
@@ -3325,7 +3367,7 @@
     },
     "gmerchant": {
       "title": "Merchant Center",
-      "description": "Merchant Center: Merchant API, Comparison Shopping Service and Manufacturer Center.",
+      "description": "Merchant Center: Merchant API and Comparison Shopping Service, through a service account key.",
       "group": "service-account",
       "serviceAccountScopes": [
         "https://www.googleapis.com/auth/content"
@@ -3337,7 +3379,7 @@
       "generated": [
         {
           "api": "merchantapi",
-          "version": "reviews_v1beta"
+          "version": "reviews_v1alpha"
         },
         {
           "api": "css",
@@ -3403,51 +3445,51 @@
       "gateway": [
         {
           "api": "merchantapi",
-          "version": "accounts_v1beta"
+          "version": "accounts_v1"
         },
         {
           "api": "merchantapi",
-          "version": "conversions_v1beta"
+          "version": "conversions_v1"
         },
         {
           "api": "merchantapi",
-          "version": "datasources_v1beta"
+          "version": "datasources_v1"
         },
         {
           "api": "merchantapi",
-          "version": "inventories_v1beta"
+          "version": "inventories_v1"
         },
         {
           "api": "merchantapi",
-          "version": "issueresolution_v1beta"
+          "version": "issueresolution_v1"
         },
         {
           "api": "merchantapi",
-          "version": "lfp_v1beta"
+          "version": "lfp_v1"
         },
         {
           "api": "merchantapi",
-          "version": "notifications_v1beta"
+          "version": "notifications_v1"
         },
         {
           "api": "merchantapi",
-          "version": "ordertracking_v1beta"
+          "version": "ordertracking_v1"
         },
         {
           "api": "merchantapi",
-          "version": "products_v1beta"
+          "version": "products_v1"
         },
         {
           "api": "merchantapi",
-          "version": "promotions_v1beta"
+          "version": "promotions_v1"
         },
         {
           "api": "merchantapi",
-          "version": "quota_v1beta"
+          "version": "quota_v1"
         },
         {
           "api": "merchantapi",
-          "version": "reports_v1beta"
+          "version": "reports_v1"
         }
       ],
       "pageSizeDefaults": {
@@ -4420,6 +4462,71 @@
       "api": "deepreview",
       "version": "v1",
       "reason": "New in Google's Discovery directory (Deep Review API, 11 methods), first seen on 2026-10-30. Not assigned to a product yet: which product it belongs to is the owner's decision."
+    },
+    {
+      "api": "merchantapi",
+      "version": "accounts_v1beta",
+      "reason": "Google discontinued Merchant API v1beta in May 2026 (https://developers.google.com/merchant/api/latest-updates: \"The Merchant API v1beta version discontinued. All API calls must now be directed to the v1 or v1alpha versions.\"). gmerchant uses accounts_v1. onlineReturnPolicies.patch exists only here (v1 and v1alpha have no patch), so it is no longer reachable."
+    },
+    {
+      "api": "merchantapi",
+      "version": "conversions_v1beta",
+      "reason": "Google discontinued Merchant API v1beta in May 2026 (see accounts_v1beta). gmerchant uses conversions_v1."
+    },
+    {
+      "api": "merchantapi",
+      "version": "datasources_v1beta",
+      "reason": "Google discontinued Merchant API v1beta in May 2026 (see accounts_v1beta). gmerchant uses datasources_v1."
+    },
+    {
+      "api": "merchantapi",
+      "version": "inventories_v1beta",
+      "reason": "Google discontinued Merchant API v1beta in May 2026 (see accounts_v1beta). gmerchant uses inventories_v1."
+    },
+    {
+      "api": "merchantapi",
+      "version": "issueresolution_v1beta",
+      "reason": "Google discontinued Merchant API v1beta in May 2026 (see accounts_v1beta). gmerchant uses issueresolution_v1."
+    },
+    {
+      "api": "merchantapi",
+      "version": "lfp_v1beta",
+      "reason": "Google discontinued Merchant API v1beta in May 2026 (see accounts_v1beta). gmerchant uses lfp_v1."
+    },
+    {
+      "api": "merchantapi",
+      "version": "notifications_v1beta",
+      "reason": "Google discontinued Merchant API v1beta in May 2026 (see accounts_v1beta). gmerchant uses notifications_v1."
+    },
+    {
+      "api": "merchantapi",
+      "version": "ordertracking_v1beta",
+      "reason": "Google discontinued Merchant API v1beta in May 2026 (see accounts_v1beta). gmerchant uses ordertracking_v1."
+    },
+    {
+      "api": "merchantapi",
+      "version": "products_v1beta",
+      "reason": "Google discontinued Merchant API v1beta in May 2026 (see accounts_v1beta). gmerchant uses products_v1."
+    },
+    {
+      "api": "merchantapi",
+      "version": "promotions_v1beta",
+      "reason": "Google discontinued Merchant API v1beta in May 2026 (see accounts_v1beta). gmerchant uses promotions_v1."
+    },
+    {
+      "api": "merchantapi",
+      "version": "quota_v1beta",
+      "reason": "Google discontinued Merchant API v1beta in May 2026 (see accounts_v1beta). gmerchant uses quota_v1."
+    },
+    {
+      "api": "merchantapi",
+      "version": "reports_v1beta",
+      "reason": "Google discontinued Merchant API v1beta in May 2026 (see accounts_v1beta). gmerchant uses reports_v1."
+    },
+    {
+      "api": "merchantapi",
+      "version": "reviews_v1beta",
+      "reason": "Google discontinued Merchant API v1beta in May 2026 (see accounts_v1beta) and lists Reviews only as v1alpha. gmerchant uses reviews_v1alpha (the same 8 methods), whose document is not in the directory (SUPPLEMENTAL_ENTRIES in scripts/build-catalog.mjs). The directory still marks reviews_v1beta preferred."
     }
   ],
   "notes": {
@@ -4502,7 +4609,7 @@
     "managedidentities": "Gateway only: 45 per-method tools do not fit under the 350 cap after the higher-priority APIs.",
     "managedkafka": "Gateway only: 89 per-method tools do not fit under the 350 cap after the higher-priority APIs.",
     "manufacturers": "Manufacturer Center sits with Merchant Center; placed in gmerchant.",
-    "merchantapi": "The 13 GA (v1) Merchant API resource APIs are generated (about 125 tools, room available); the _v1beta duplicates are gateway.",
+    "merchantapi": "The 13 GA (v1) Merchant API resource APIs and Reviews (reviews_v1alpha, the only Reviews version Google lists) are generated. 12 of the v1 APIs are also gmerchant's gateway, so api_call (the curated toolset) reaches them. Google discontinued v1beta in May 2026; those entries are unassigned.",
     "metastore": "Gateway only: 48 per-method tools do not fit under the 350 cap after the higher-priority APIs.",
     "migrationcenter": "Gateway only: 67 per-method tools do not fit under the 350 cap after the higher-priority APIs.",
     "ml": "Gateway only: 46 per-method tools do not fit under the 350 cap after the higher-priority APIs.",
@@ -4527,6 +4634,7 @@
     "run": "Gateway only: 58 per-method tools do not fit under the 350 cap after the higher-priority APIs.",
     "saasservicemgmt": "Gateway only: 42 per-method tools do not fit under the 350 cap after the higher-priority APIs.",
     "sasportal": "Partner-only Spectrum Access System API; placed in gcloud and reachable only through the gateway.",
+    "searchconsole": "Generated in gsc with an include list (sites, sitemaps, searchanalytics, urlInspection.index) that leaves out urlTestingTools.mobileFriendlyTest.run: Google retired the Mobile-Friendly Test tool and API on December 1, 2023 (https://developers.google.com/search/blog/2023/04/page-experience-in-search). A resource Google adds later is not generated until it is listed here.",
     "securesourcemanager": "Gateway only: 62 per-method tools do not fit under the 350 cap after the higher-priority APIs.",
     "securitycenter": "Gateway only: 172 per-method tools do not fit under the 350 cap after the higher-priority APIs.",
     "smartdevicemanagement": "Google and Nest device-access API for enterprise partners; placed with the device-platform APIs in gplay.",

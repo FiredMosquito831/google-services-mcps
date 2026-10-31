@@ -22,7 +22,7 @@ Install a product only when you have a use for it. This guide helps you pick pro
 | Audit a Workspace domain (read-only review) | `gadmin`, `gdrive` | `workspace-admin`, `workspace-user` | As above. Use `--profile readonly` for both. | Drive quotas per project and per user. | Low, if you keep the read-only profile. |
 | Analytics and tags: GA4 and Tag Manager | `ganalytics`, `gtm` | `business` | Desktop OAuth client, then `login business` | GA4 quotas are in tokens per property per day. Tag Manager has 10,000 requests per project per day. | High. Tag and property changes can affect a live site. |
 | Advertising: Google Ads, Display & Video 360, AdSense and more | `gads` | `business` | Desktop OAuth client, then `login business`. See [SETUP.md](SETUP.md) for Google Ads. | Google Ads access level sets the daily operations limit. Test accounts come first. | Very high. Budgets, bids and campaigns spend real money. |
-| Shopping: product feeds and Merchant Center | `gmerchant` | `business` | Desktop OAuth client, then `login business` | Quota is per account. Read it with `quotas.list`. | High. Product data changes reach shoppers. |
+| Shopping: product feeds and Merchant Center | `gmerchant` | `service-account` | Service account key, then `setup-service-account` (no login) | Quota is per account. Read it with `quotas.list`. | High. Product data changes reach shoppers. |
 | Business listings (Google Business Profile) | `gbusiness` | `business` | Desktop OAuth client, then `login business` | 300 requests per minute. Listing edits are limited to 10 per minute per profile, and that cannot be raised. | Medium. Edits change a public listing. |
 | Video: YouTube and Blogger | `gyoutube` | `business` | Desktop OAuth client, then `login business` | 10,000 units per day by default, with lower caps on some methods. | High. Uploads, edits and deletes change public content. |
 | Publish an Android app: Play Console | `gplay` | `developer` | Desktop OAuth client, then `login developer` | Publishing APIs: 3,000 queries per minute per bucket. Play Console registration is US$25, once. | Very high. Releases and rollouts reach users. |
@@ -66,7 +66,7 @@ Read counts from [CAPABILITIES.md](CAPABILITIES.md). The four classes are:
 | `gyoutube` | business | 56 | 49 | 20 | 0 |
 | `gbusiness` | business | 29 | 19 | 4 | 0 |
 | `gads` | business | 96 | 190 | 20 | 24 |
-| `gmerchant` | business | 73 | 64 | 20 | 1 |
+| `gmerchant` | service-account | 77 | 67 | 22 | 1 |
 | `gplay` | developer | 150 | 160 | 42 | 1 |
 | `gfirebase` | developer | 135 | 121 | 44 | 1 |
 | `gmaps` | developer | 20 | 13 | 3 | 0 |
@@ -84,7 +84,7 @@ Each row is a set of products to install together. Log in once per group, with t
 | Admin audit | `gadmin`, `gdrive` | Check users, groups and who can see which files. | `readonly` for both. Keep **Allow write tools** off. |
 | SEO | `gsc`, `gsearch` | Search Console for your site. `gsearch` for public PageSpeed and CrUX data. | `gsc` readonly. `gsearch` needs only an API key. |
 | Web app on Google Cloud and Firebase | `gcloud`, `gfirebase` | Infrastructure in `cloud`, Firebase in `developer`. | `gcloud` readonly. Then `gfirebase` readonly. |
-| Shop | `gmerchant`, `gbusiness`, `gads` | Product feeds, business listings and paid ads in one group (`business`). | Readonly. Use a test account before any change. |
+| Shop | `gmerchant`, `gbusiness`, `gads` | Product feeds (`gmerchant`, with a service account key), and business listings and paid ads in one group (`business`). | Readonly. `gmerchant` has no profile (its key's scope is fixed), so keep its **Allow write tools** off at first. Use a test account before any change. |
 | Video channel | `gyoutube`, `ganalytics` | Uploads and reports in `business`. | Readonly. Check the YouTube quota before a large run. |
 | Team meetings | `gmeet`, `gchat`, `gcalendar` | Meetings, messages and calendar in `workspace-user`. | Readonly. Then one message in a test space. |
 | Mobile app | `gplay`, `gfirebase`, `gmaps` | Publishing, crash reports and maps in `developer`. | Readonly for `gplay`. Do not publish until you have tested reads. |

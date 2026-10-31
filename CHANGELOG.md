@@ -2,6 +2,71 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.36.1 - 2026-10-31
+
+### Fixed: api_describe and api_call read the Discovery document where Google serves it
+- `api_describe` and `api_call` read a method's full Discovery document (cached seven days) from `https://www.googleapis.com/discovery/v1/apis/<api>/<version>/rest`. Google serves many documents only on the API's own host: that path answers 404 for them (checked 2026-10-31 with GET: every Merchant API version, Gmail Postmaster Tools v1, Analytics Admin v1alpha, Vertex AI v1, Drive Labels v2beta; Compute v1, Android Management v1 and Drive v3 answer 200 there), and Google's directory lists 387 of the 396 gateway APIs at `https://<api>.googleapis.com/$discovery/rest?version=<version>`. For those, both tools failed before any request with "Could not fetch the Discovery document ... HTTP 404"; the gateway of gmerchant (since 1.35.2 on Merchant API v1) and the worked example in docs/USING.md (Analytics Admin v1alpha) were among them.
+- When the directory path answers 404, the gateway now reads the document from the API's host, built from the catalog's `rootUrl` (plain https under `googleapis.com` only). Any other failure (5xx, 403, a timeout) is reported as before, with the same text, and an entry with its own URL (the supplemental ones, such as Google Ads) is read from that URL only. Checked against Google's public documents (no key, no sign-in): on 1.35.1, `api_describe` of `merchantapi.accounts.products.get` and of `analyticsadmin.accountSummaries.list` failed with HTTP 404; now both read the document from the host (`merchantapi.googleapis.com`, `analyticsadmin.googleapis.com`).
+
+### Not changed
+- Tool maps, tool kinds, tools/list and scopes. No Google API was called.
+
+## 1.36.0 - 2026-10-31
+
+### Changed: a full gapps login no longer asks for the whole mailbox; `--with mail` asks for it
+- `scripts.run` (Apps Script) lists twelve scopes Google accepts for it, `https://mail.google.com/` among them (the whole mailbox, permanent deletes included). The `full` profile takes the broadest, shortest scope, so every `--profile full` gapps login asked for the full Gmail scope only to run scripts; `readwrite` took `userinfo.email` for the same tool.
+- gapps gets a scope policy in `config/products.json`: the optional part `mail` (the full Gmail scope; as gyoutube's `monetary`, 1.35.0) and the preference `full: userinfo.email` (as gmeet's, 1.33.0). Without the preference, `full` would have taken the next-shortest scope of `scripts.run`, the legacy Contacts scope `https://www.google.com/m8/feeds`. Now `full` asks for what `readwrite` asks for; `--with mail` (in the chat: `auth_login` with `"with": ["mail"]`) adds the full Gmail scope, for a script that uses Gmail.
+- `readonly` and `readwrite` ask for the same scopes as before, with every toolset (tests compare them with the requirements without the policy). `readwrite` and `full` gain a `Held back:` line that names the part and how to add it.
+- An account that already holds `https://mail.google.com/` keeps it: the scope stays in the group's scopes (Gmail's tools use it too), so a login that names the account merges it, and one that does not name it and would drop it saves nothing (the rule of 1.1.2; tested).
+
+### Not changed
+- Tool maps and tool kinds. tools/list changes only for `auth_login` on gapps, which takes `with` (`mail`). `gsm scopes` over all 207 cases against 1.35.5: 201 identical; the 3 gapps `full` cases ask for `userinfo.email` instead of `https://mail.google.com/` with the same tools covered, and the 3 gapps `readwrite` cases only gain the `Held back:` line. Not checked against live Google.
+
+## 1.35.5 - 2026-10-31
+
+### Fixed: gsearch says which tools an API key cannot run
+- gsearch signs every call with an API key, and ten of its tools are not expected to work that way. They stay (coverage), and their descriptions now say why:
+  - Fact Check Tools `pages.create`, `.get`, `.list`, `.update` and `.delete`: "Requires the following OAuth scope: https://www.googleapis.com/auth/factchecktools" (https://developers.google.com/fact-check/tools/api/reference/rest/v1alpha1/pages/create and the other method pages).
+  - Web Risk `projects.submissions.create`: "Only allowlisted projects can use this method during Early Access." (https://docs.cloud.google.com/web-risk/docs/reference/rest/v1/projects.submissions/create); "We no longer accept new contracts or expansions for the Web Risk Submission API." (https://docs.cloud.google.com/web-risk/docs/submission-api), whose example sends an OAuth token. The four `projects.operations` tools (get, list, cancel, delete) follow a submission.
+- New data in `config/products.json`: `methodNotes`, per generated API of a product, a note for single methods (`{ source, reason, methods: { "<method id>": "<note>" } }`). Only that method's tool carries it, after the API's note from `config/tool-kinds.json` (which every tool of the API carries): `Note: <API note> <method note>`. `gen-servers` checks each method id against the API's snapshot and copies the notes into `config/servers.json` and the plugin's `servers.json`; both registry loaders carry them. A product without notes is described as before.
+
+### Not changed
+- Tool maps, tool kinds and scopes. tools/list changes only for those 10 gsearch tools (4 of them with writes off: the two Fact Check page reads and the two Web Risk operation reads), in their descriptions. Not checked against live Google.
+
+## 1.35.4 - 2026-10-31
+
+### Fixed: chat_list_messages orders messages with the direction Google documents
+- `chat_list_messages` sent `orderBy` as `create_time desc` (or `create_time asc` with `order: oldest`). Google lists the directions in upper case: "Valid ordering operation values are as follows: - `ASC` for ascending. - `DESC` for descending. The default ordering is `create_time ASC`." (spaces.messages.list, the Discovery document and the proto; https://developers.google.com/workspace/chat/api/reference/rest/v1/spaces.messages/list shows the same text with the field rendered as `createTime`). It now sends `create_time DESC` and `create_time ASC`.
+- The field name stays `create_time`, in `orderBy` and in the time-window `filter`: it is how the proto, the Discovery document and its filter examples (`create_time > "2012-04-21T11:30:00-04:00"`) spell it. The REST reference page shows `createTime` in the same sentences, because that page renders field names in their JSON form; it does not show `create_time` as wrong. `chat_search_messages` is unchanged: its request documents `create_time desc` in lower case ("Only descending order (`desc`) is supported").
+- tests/curated-contract.test.mjs rows can pin the query values a tool sends (`sends`); the two `chat_list_messages` rows do.
+
+### Not changed
+- Tool maps, tool kinds, tools/list and scopes. Whether Google also accepts the lower-case direction was never checked; nothing was checked against live Google.
+
+## 1.35.3 - 2026-10-31
+
+### Fixed: Search Console no longer offers what Google retired or deprecated
+- The Mobile-Friendly Test tool is gone. Google: "Also starting December 1, 2023, we'll be retiring Search Console's "Mobile Usability" report, the Mobile-Friendly Test tool and Mobile-Friendly Test API." (https://developers.google.com/search/blog/2023/04/page-experience-in-search). The generated `searchcons_url_testing_t_mobile_friendl_run` still registered, even before a login (Discovery lists no scope for it), and with writes on it could be called. It is left out by data: gsc's `searchconsole` entry in `config/products.json` now has an include list (`sites`, `sitemaps`, `searchanalytics`, `urlInspection.index`) that covers every other method. gsc has 19 generated tools (was 20). A resource Google adds to the API later is not generated until it is listed.
+- `sc_search_analytics_query` sends the search type as `type`. Google's reference marks `searchType` "Deprecated, use type instead" (https://developers.google.com/webmaster-tools/v1/searchanalytics/query). The argument was already called `type`, and its default is still `web`; the request body keeps its field order.
+- Descriptions stop advertising deprecated fields: `sc_sitemap_get` no longer promises "indexed URL counts" (Google: `WmxSitemapContent.indexed`, "*Deprecated; do not use.*") and points to `sc_url_inspect` for whether a page is indexed; the `google` toolset notes of `sc_sitemaps_list` and `sc_url_inspect` no longer list indexed counts and mobile usability (`mobileUsabilityResult` is marked deprecated in Discovery). docs/products/gsc.md says what Google says now.
+- tests/curated-contract.test.mjs also treats a body field as deprecated when Google's reference page says so and Discovery does not (`DEPRECATED_IN_REFERENCE`, one entry: `SearchAnalyticsQueryRequest.searchType`).
+
+### Not changed
+- Tool kinds. The tool maps lose one entry, the Mobile-Friendly Test tool; nothing else changes. tools/list: gsc with writes on lists 37 tools (was 38); `sc_sitemap_get` and `api_methods` (19 methods) change their descriptions; with writes off only `sc_sitemap_get` and `api_methods` change. `gsm scopes` over all 207 cases: the same scopes everywhere; gsc `all` counts one tool fewer as covered in each profile. Not checked against live Google.
+
+## 1.35.2 - 2026-10-31
+
+### Fixed: gmerchant uses the Merchant API versions Google serves
+- Google discontinued Merchant API v1beta: "The Merchant API v1beta version discontinued. All API calls must now be directed to the `v1` or `v1alpha` versions." (May 2026, https://developers.google.com/merchant/api/latest-updates; the v1beta reference pages were removed in October 2026). gmerchant's gateway still reached 12 `*_v1beta` APIs, and its 8 Reviews tools called Reviews v1beta, so the `curated` toolset (the gateway tools) and every review call went to a discontinued version.
+- The gateway now reaches the same 12 sub-APIs at v1 (accounts, conversions, data sources, inventories, issue resolution, Local Finance, notifications, order tracking, products, promotions, quota, reports), the versions the per-method tools already used. The gateway's methods change by six: `accounts.limits.get` and `.list` and `accounts.regions.batchCreate`, `.batchUpdate` and `.batchDelete` (destructive) are new; `accounts.onlineReturnPolicies.patch` existed only in v1beta (v1 and v1alpha have create, get, list and delete), so it is no longer reachable.
+- The 8 Reviews tools call Reviews v1alpha (`reviews/v1alpha/...`), the only Reviews version Google lists (https://developers.google.com/merchant/api/reference/rest/reviews_v1alpha/accounts.productReviews/list; the v1beta page answers 404). The tools keep their names, arguments and kinds; the v1alpha document has the same 8 methods and the same request fields. Google's Discovery directory does not list Reviews v1alpha, so the catalog takes its document from `https://merchantapi.googleapis.com/$discovery/rest?version=reviews_v1alpha` (SUPPLEMENTAL_ENTRIES in `scripts/build-catalog.mjs`; 542 catalog entries, 31,641 methods).
+- The 13 merchantapi v1beta catalog entries are unassigned, each with Google's discontinuation as the reason.
+- gmerchant's description no longer names Manufacturer Center, whose 8 tools never load with the key's `content` scope, and says it works through a service account key. docs/products/gmerchant.md, docs/CHOOSING.md (group and setup) and docs/USING.md (the data source fetch asks first since 1.24.2) are corrected.
+
+### Not changed
+- Tool maps and tool kinds of all 23 plugins. tools/list changes only for the 8 Reviews tools of gmerchant: the method line in each description names `reviews/v1alpha`, and the two insert tools' body schemas list the same fields in Google's v1alpha order. `gsm scopes` over all 207 cases: the same scopes and coverage everywhere; the 6 gmerchant `all` and `curated` cases count 124 gateway methods instead of 120. Not checked against live Google.
+- `api_describe` and `api_call` read a method's Discovery document from `https://www.googleapis.com/discovery/v1/apis/<api>/<version>/rest`, which answers 404 for every merchantapi version (checked 2026-10-31, v1beta and v1 alike), so on gmerchant they still fail before any request is sent. This release does not change that.
+
 ## 1.35.1 - 2026-10-31
 
 ### Fixed: profile_me shows your name

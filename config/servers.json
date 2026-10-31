@@ -19,7 +19,7 @@
     "gyoutube": "YouTube Data, YouTube Analytics and YouTube Reporting APIs, plus Blogger.",
     "gbusiness": "Business Profile accounts, locations, verifications, lodging, place actions, notifications and performance.",
     "gads": "Google Ads API (accounts, campaigns, ad groups, ads, keywords, budgets, conversions, assets and GAQL reporting, with every other method through the gateway), plus advertising and publisher APIs: Search Ads 360, Display & Video 360, Campaign Manager, Ad Exchange, AdSense, AdMob, Real-time Bidding and more.",
-    "gmerchant": "Merchant Center: Merchant API, Comparison Shopping Service and Manufacturer Center.",
+    "gmerchant": "Merchant Center: Merchant API and Comparison Shopping Service, through a service account key.",
     "gplay": "Google Play developer publishing and reporting, Play Games Services, Android Enterprise and Management, Play Integrity and device APIs.",
     "gfirebase": "Firebase management, App Check, App Distribution, Crashlytics, Hosting, Data Connect, Rules, Test Lab, FCM and Identity Toolkit.",
     "gmaps": "Maps Platform and location APIs: Places, Address Validation, Solar, Air Quality, Pollen, Street View Publish and related datasets.",
@@ -1342,7 +1342,13 @@
       "apis": [
         {
           "api": "searchconsole",
-          "version": "v1"
+          "version": "v1",
+          "include": [
+            "sites",
+            "sitemaps",
+            "searchanalytics",
+            "urlInspection.index"
+          ]
         },
         {
           "api": "siteVerification",
@@ -1453,6 +1459,30 @@
           "version": "v4"
         }
       ],
+      "methodNotes": {
+        "factchecktools": {
+          "source": "https://developers.google.com/fact-check/tools/api/reference/rest/v1alpha1/pages/create (Authorization scopes: \"Requires the following OAuth scope: https://www.googleapis.com/auth/factchecktools\"; the same on the get, list, update and delete pages)",
+          "reason": "gsearch sends an API key, never an OAuth token, so the ClaimReview page methods are expected to be refused. Not checked live.",
+          "methods": {
+            "factchecktools.pages.create": "Google requires an OAuth token with the factchecktools scope for this method; this server sends only an API key, so Google is expected to refuse it.",
+            "factchecktools.pages.delete": "Google requires an OAuth token with the factchecktools scope for this method; this server sends only an API key, so Google is expected to refuse it.",
+            "factchecktools.pages.get": "Google requires an OAuth token with the factchecktools scope for this method; this server sends only an API key, so Google is expected to refuse it.",
+            "factchecktools.pages.list": "Google requires an OAuth token with the factchecktools scope for this method; this server sends only an API key, so Google is expected to refuse it.",
+            "factchecktools.pages.update": "Google requires an OAuth token with the factchecktools scope for this method; this server sends only an API key, so Google is expected to refuse it."
+          }
+        },
+        "webrisk": {
+          "source": "https://docs.cloud.google.com/web-risk/docs/reference/rest/v1/projects.submissions/create (\"Only allowlisted projects can use this method during Early Access.\"; Authorization scopes: cloud-platform) and https://docs.cloud.google.com/web-risk/docs/submission-api (\"We no longer accept new contracts or expansions for the Web Risk Submission API.\"; its example sends an OAuth access token)",
+          "reason": "Submissions are for allowlisted projects only and take an OAuth token, and the operations methods follow a submission; gsearch sends an API key only. Not checked live.",
+          "methods": {
+            "webrisk.projects.submissions.create": "Google: \"Only allowlisted projects can use this method during Early Access.\" The Submission API takes no new contracts, and Google's example sends an OAuth token; this server sends only an API key, so expect a refusal.",
+            "webrisk.projects.operations.get": "The operations of Web Risk submissions (projects.submissions.create), which only allowlisted projects can make; Google lists an OAuth scope for this method, and this server sends only an API key.",
+            "webrisk.projects.operations.list": "The operations of Web Risk submissions (projects.submissions.create), which only allowlisted projects can make; this server sends only an API key.",
+            "webrisk.projects.operations.cancel": "The operations of Web Risk submissions (projects.submissions.create), which only allowlisted projects can make; this server sends only an API key.",
+            "webrisk.projects.operations.delete": "The operations of Web Risk submissions (projects.submissions.create), which only allowlisted projects can make; this server sends only an API key."
+          }
+        }
+      },
       "toolsets": {
         "google": [
           "developerk_documents_search_documen",
@@ -1938,6 +1968,18 @@
           "version": "v2"
         }
       ],
+      "scopePolicy": {
+        "optional": {
+          "mail": [
+            "https://mail.google.com/"
+          ]
+        },
+        "prefer": {
+          "full": [
+            "https://www.googleapis.com/auth/userinfo.email"
+          ]
+        }
+      },
       "toolsets": {
         "google": [
           "appsscript_projects_get",
@@ -2538,7 +2580,7 @@
       "apis": [
         {
           "api": "merchantapi",
-          "version": "reviews_v1beta"
+          "version": "reviews_v1alpha"
         },
         {
           "api": "css",
@@ -2604,51 +2646,51 @@
       "gatewayApis": [
         {
           "api": "merchantapi",
-          "version": "accounts_v1beta"
+          "version": "accounts_v1"
         },
         {
           "api": "merchantapi",
-          "version": "conversions_v1beta"
+          "version": "conversions_v1"
         },
         {
           "api": "merchantapi",
-          "version": "datasources_v1beta"
+          "version": "datasources_v1"
         },
         {
           "api": "merchantapi",
-          "version": "inventories_v1beta"
+          "version": "inventories_v1"
         },
         {
           "api": "merchantapi",
-          "version": "issueresolution_v1beta"
+          "version": "issueresolution_v1"
         },
         {
           "api": "merchantapi",
-          "version": "lfp_v1beta"
+          "version": "lfp_v1"
         },
         {
           "api": "merchantapi",
-          "version": "notifications_v1beta"
+          "version": "notifications_v1"
         },
         {
           "api": "merchantapi",
-          "version": "ordertracking_v1beta"
+          "version": "ordertracking_v1"
         },
         {
           "api": "merchantapi",
-          "version": "products_v1beta"
+          "version": "products_v1"
         },
         {
           "api": "merchantapi",
-          "version": "promotions_v1beta"
+          "version": "promotions_v1"
         },
         {
           "api": "merchantapi",
-          "version": "quota_v1beta"
+          "version": "quota_v1"
         },
         {
           "api": "merchantapi",
-          "version": "reports_v1beta"
+          "version": "reports_v1"
         }
       ],
       "pageSizeDefaults": {
@@ -2688,7 +2730,7 @@
           "merchantap_accou_data_file_get"
         ]
       },
-      "label": "Merchant Center: Merchant Center: Merchant API, Comparison Shopping Service and Manufacturer Center."
+      "label": "Merchant Center: Merchant Center: Merchant API and Comparison Shopping Service, through a service account key."
     },
     {
       "name": "gplay",
