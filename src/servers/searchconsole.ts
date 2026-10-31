@@ -182,7 +182,8 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
     defineTool({
       name: 'sc_sitemap_get',
       title: 'Get sitemap',
-      description: 'Get one submitted sitemap with its status, error and warning counts, and indexed URL counts.',
+      description:
+        'Get one submitted sitemap with its status, error and warning counts, and the number of URLs submitted per content type. Its indexed count is deprecated by Google ("Deprecated; do not use.") and is not a measure of indexing; for whether a page is indexed, use sc_url_inspect.',
       kind: 'read',
       scopes: googleScopes('webmasters', 'webmasters.readonly'),
       inputSchema: { site_url: siteUrlArg, feedpath: feedpathArg },
@@ -232,18 +233,19 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
 
         const limit = row_limit ?? SC_ROWS_DEFAULT;
         const start = start_row ?? 0;
-        const res = await (await wm()).searchanalytics.query({
-          siteUrl: propertyUrl(site_url),
-          requestBody: {
-            startDate,
-            endDate,
-            dimensions: dimensions ?? [],
-            searchType: type ?? 'web',
-            rowLimit: limit,
-            startRow: start,
-            dimensionFilterGroups: dimension_filter_groups as webmasters_v3.Schema$ApiDimensionFilterGroup[] | undefined,
-          },
-        });
+        // Google's reference marks searchType "Deprecated, use type instead"
+        // (https://developers.google.com/webmaster-tools/v1/searchanalytics/query), so the search type goes in type. The
+        // @googleapis/webmasters types predate the field; the client sends the body as JSON, so the field reaches Google.
+        const requestBody: webmasters_v3.Schema$SearchAnalyticsQueryRequest & { type?: string } = {
+          startDate,
+          endDate,
+          dimensions: dimensions ?? [],
+          type: type ?? 'web',
+          rowLimit: limit,
+          startRow: start,
+          dimensionFilterGroups: dimension_filter_groups as webmasters_v3.Schema$ApiDimensionFilterGroup[] | undefined,
+        };
+        const res = await (await wm()).searchanalytics.query({ siteUrl: propertyUrl(site_url), requestBody });
         return analyticsAnswer(res.data, start, limit, cfg.maxResultChars);
       },
     }),

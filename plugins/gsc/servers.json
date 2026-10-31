@@ -16,7 +16,13 @@
       "apis": [
         {
           "api": "searchconsole",
-          "version": "v1"
+          "version": "v1",
+          "include": [
+            "sites",
+            "sitemaps",
+            "searchanalytics",
+            "urlInspection.index"
+          ]
         },
         {
           "api": "siteVerification",

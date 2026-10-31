@@ -39,7 +39,7 @@ Prerequisite: a Search Console property that the signed-in Google account can ac
 | | `sc_site_add` | write | Add a property |
 | | `sc_sitemap_delete` | destructive | Delete a sitemap |
 | | `sc_site_delete` | destructive | Remove a property from your account |
-| Per-method (20) | | mixed | Search Console API, Site Verification API (7 methods), Web Search Indexing API (2 methods) |
+| Per-method (19) | | mixed | Search Console API (10 methods), Site Verification API (7 methods), Web Search Indexing API (2 methods) |
 | Gateway | none | | This plugin registers no gateway tools. Every API it covers is a per-method tool. |
 
 The full list is in `docs/capabilities/gsc.md`.
@@ -78,3 +78,6 @@ The Search Console API has no stated fee (UNVERIFIED), and the Indexing API is f
 - Site Verification works only for the authenticated user.
 - The HTTP status for a Search Console "quota exceeded" error is UNVERIFIED.
 - Only the listed methods are available. Check `docs/capabilities/gsc.md` before you rely on another Search Console feature.
+- Google retired the Mobile-Friendly Test tool and API, and the Mobile Usability report, on December 1, 2023 ([Search Central blog](https://developers.google.com/search/blog/2023/04/page-experience-in-search)). Since 1.35.3 there is no tool for the test (it was the generated `searchcons_url_testing_t_mobile_friendl_run`), and URL inspection's `mobileUsabilityResult` is deprecated. Google points to Lighthouse for mobile checks; `gsearch` runs PageSpeed Insights, which uses Lighthouse.
+- A sitemap's `indexed` count is deprecated by Google ("Deprecated; do not use.") and can read 0 while its pages are indexed. Read the submitted count, errors and warnings from the sitemap tools, and whether a page is indexed from `sc_url_inspect`.
+- `sc_search_analytics_query` sends the search type as `type`, the field Google documents; `searchType` is deprecated ("Deprecated, use type instead"). The argument is still `type`.

@@ -2,6 +2,17 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.35.3 - 2026-10-31
+
+### Fixed: Search Console no longer offers what Google retired or deprecated
+- The Mobile-Friendly Test tool is gone. Google: "Also starting December 1, 2023, we'll be retiring Search Console's "Mobile Usability" report, the Mobile-Friendly Test tool and Mobile-Friendly Test API." (https://developers.google.com/search/blog/2023/04/page-experience-in-search). The generated `searchcons_url_testing_t_mobile_friendl_run` still registered, even before a login (Discovery lists no scope for it), and with writes on it could be called. It is left out by data: gsc's `searchconsole` entry in `config/products.json` now has an include list (`sites`, `sitemaps`, `searchanalytics`, `urlInspection.index`) that covers every other method. gsc has 19 generated tools (was 20). A resource Google adds to the API later is not generated until it is listed.
+- `sc_search_analytics_query` sends the search type as `type`. Google's reference marks `searchType` "Deprecated, use type instead" (https://developers.google.com/webmaster-tools/v1/searchanalytics/query). The argument was already called `type`, and its default is still `web`; the request body keeps its field order.
+- Descriptions stop advertising deprecated fields: `sc_sitemap_get` no longer promises "indexed URL counts" (Google: `WmxSitemapContent.indexed`, "*Deprecated; do not use.*") and points to `sc_url_inspect` for whether a page is indexed; the `google` toolset notes of `sc_sitemaps_list` and `sc_url_inspect` no longer list indexed counts and mobile usability (`mobileUsabilityResult` is marked deprecated in Discovery). docs/products/gsc.md says what Google says now.
+- tests/curated-contract.test.mjs also treats a body field as deprecated when Google's reference page says so and Discovery does not (`DEPRECATED_IN_REFERENCE`, one entry: `SearchAnalyticsQueryRequest.searchType`).
+
+### Not changed
+- Tool kinds. The tool maps lose one entry, the Mobile-Friendly Test tool; nothing else changes. tools/list: gsc with writes on lists 37 tools (was 38); `sc_sitemap_get` and `api_methods` (19 methods) change their descriptions; with writes off only `sc_sitemap_get` and `api_methods` change. `gsm scopes` over all 207 cases: the same scopes everywhere; gsc `all` counts one tool fewer as covered in each profile. Not checked against live Google.
+
 ## 1.35.2 - 2026-10-31
 
 ### Fixed: gmerchant uses the Merchant API versions Google serves
