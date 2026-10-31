@@ -228,9 +228,13 @@ test('requirements: the lean gsc google list resolves to webmasters.readonly (re
   assert.deepEqual(readonly.scopes, [G('webmasters.readonly')]);
   // The Indexing API has no read-only scope, so its metadata read stays outside a readonly login.
   assert.ok(readonly.uncovered.includes('gsc/indexing_url_notifications_get_metadata'));
-  assert.deepEqual(resolveScopes(google, 'readwrite').scopes, [G('indexing'), G('webmasters')]);
+  // Since 1.34.0 the Indexing API is an optional part (--with indexing): readwrite asks for indexing only when named.
+  assert.deepEqual(resolveScopes(google, 'readwrite').scopes, [G('webmasters')]);
+  assert.deepEqual(resolveScopes(google, 'readwrite', ['indexing']).scopes, [G('indexing'), G('webmasters')]);
   // The all toolset also asks for siteverification (the Site Verification tools), which the lean list does not hold.
-  assert.deepEqual(resolveScopes(await requirementsFor(['gsc'], cfg, quiet), 'readwrite').scopes, [G('indexing'), G('siteverification'), G('webmasters')]);
+  const all = await requirementsFor(['gsc'], cfg, quiet);
+  assert.deepEqual(resolveScopes(all, 'readwrite').scopes, [G('siteverification'), G('webmasters')]);
+  assert.deepEqual(resolveScopes(all, 'readwrite', ['indexing']).scopes, [G('indexing'), G('siteverification'), G('webmasters')]);
 });
 
 test('requirements: the gchat google list resolves to Chat user scopes only, never the Chat app scopes', async () => {
@@ -316,22 +320,28 @@ test('requirements: the gclassroom google list resolves to the Classroom read-on
 
 test('requirements: the lean gmeet, gtasks and gapps lists resolve to the narrow scopes of their tools', async () => {
   const { cfg } = tempTokens();
-  const resolved = async (id) => {
+  // gtasks' Keep is an optional part since 1.34.0, so its lists are resolved with the part named, as before.
+  const resolved = async (id, include = []) => {
     const reqs = await requirementsFor([id], cfg, { ...quiet, toolset: 'google' });
-    return { n: reqs.length, readonly: resolveScopes(reqs, 'readonly'), readwrite: resolveScopes(reqs, 'readwrite').scopes, full: resolveScopes(reqs, 'full').scopes };
+    return { n: reqs.length, readonly: resolveScopes(reqs, 'readonly', include), readwrite: resolveScopes(reqs, 'readwrite', include).scopes, full: resolveScopes(reqs, 'full', include).scopes };
   };
   const meet = await resolved('gmeet');
   assert.equal(meet.n, 10);
   assert.deepEqual(meet.readonly.scopes, [G('meetings.space.readonly')]);
   // Since 1.33.0 readwrite keeps the reads' reach over every space the user can see (scopePolicy.prefer).
   assert.deepEqual(meet.readwrite, [G('meetings.space.created'), G('meetings.space.readonly')]);
-  const tasks = await resolved('gtasks');
+  const tasks = await resolved('gtasks', ['keep']);
   assert.equal(tasks.n, 8);
   assert.deepEqual(tasks.readonly.scopes, [G('keep.readonly'), G('tasks.readonly')]);
   // The Keep reads list keep and keep.readonly; the greedy rule takes the write scope on a tie, as in the all toolset.
   // The list has no Keep write, so since 1.25.0 it prefers keep.readonly.
   assert.deepEqual(tasks.readwrite, [G('keep.readonly'), G('tasks')]);
-  assert.deepEqual(resolveScopes(withoutPrefer(await requirementsFor(['gtasks'], cfg, { ...quiet, toolset: 'google' })), 'readwrite').scopes, [G('keep'), G('tasks')]);
+  assert.deepEqual(resolveScopes(withoutPrefer(await requirementsFor(['gtasks'], cfg, { ...quiet, toolset: 'google' })), 'readwrite', ['keep']).scopes, [G('keep'), G('tasks')]);
+  // Without --with keep, no Keep scope is asked for (1.34.0).
+  const tasksOnly = await resolved('gtasks');
+  assert.deepEqual(tasksOnly.readonly.scopes, [G('tasks.readonly')]);
+  assert.deepEqual(tasksOnly.readwrite, [G('tasks')]);
+  assert.deepEqual(tasksOnly.full, [G('tasks')]);
   const apps = await resolved('gapps');
   assert.equal(apps.n, 8);
   // script.processes is view-only by Google's description ("View Google Apps Script processes"), so since 1.32.1 the

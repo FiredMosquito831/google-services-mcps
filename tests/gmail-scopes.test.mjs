@@ -179,10 +179,12 @@ test('an account that already holds https://mail.google.com/ and Postmaster scop
 test('the scope policy marks only gmail requirements; every other server resolves as it did without a policy', async () => {
   const reg = REGISTRIES['config/servers.json']();
   const cfg = tempTokens().cfg;
-  // Since 1.33.0 gmeet and gclassroom have a policy too, with preferred scopes only (tests/scope-policy-prefer.test.mjs).
+  // Since 1.33.0 gmeet and gclassroom have a policy too, with preferred scopes only (tests/scope-policy-prefer.test.mjs);
+  // since 1.34.0 gsc, gcontacts and gtasks have optional parts (tests/optional-parts.test.mjs).
   const withPolicy = reg.servers.filter((s) => s.scopePolicy).map((s) => s.name);
-  assert.deepEqual(withPolicy, ['gmail', 'gmeet', 'gclassroom']);
-  assert.deepEqual(reg.servers.filter((s) => s.scopePolicy?.onlyIn || s.scopePolicy?.optional).map((s) => s.name), ['gmail']);
+  assert.deepEqual(withPolicy, ['gsc', 'gmail', 'gmeet', 'gcontacts', 'gtasks', 'gclassroom']);
+  assert.deepEqual(reg.servers.filter((s) => s.scopePolicy?.onlyIn).map((s) => s.name), ['gmail']);
+  assert.deepEqual(reg.servers.filter((s) => s.scopePolicy?.optional).map((s) => s.name), ['gsc', 'gmail', 'gcontacts', 'gtasks']);
   for (const spec of reg.servers) {
     if (spec.scopePolicy) continue;
     const reqs = await requirementsForSpecs([spec], cfg, { warn: () => undefined });

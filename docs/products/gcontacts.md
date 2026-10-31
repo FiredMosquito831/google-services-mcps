@@ -29,6 +29,14 @@ node <plugin>/bin/gsm.mjs status
 
 Start with `--profile readonly`. Changes need a `readwrite` login and the plugin option `allow_writes`. To see each profile's scopes, run `node <plugin>/bin/gsm.mjs scopes workspace-user`.
 
+**Health and Data Portability are optional parts (since 1.34.0).** A contacts login no longer asks for them unless you name them: `--with health` adds the Google Health API (its read scopes, `googlehealth.*.readonly`; with `readwrite` also its write scopes and `cloud-platform`, the only scope Google lists for the health subscriber methods), and `--with portability` adds Data Portability (one of its export scopes; Google subjects Data Portability apps to a verification process). Before 1.34.0 every `readonly` login asked for four health read scopes, and every `readwrite` login for `cloud-platform`, a Data Portability scope and seven health scopes, for a contacts sign-in.
+
+```
+node <plugin>/bin/gsm.mjs login workspace-user --profile readonly --with health
+```
+
+In the chat: `auth_login` with `"with": ["health"]` (or `["portability"]`, or both). Without them, those tools and gateway methods do not load, and the login says so in `Held back:` lines. A token that already holds these scopes keeps them when you sign in again naming the account (`--account <email>`).
+
 ## What it can do
 
 | Area | Tools | Safety | What it does |

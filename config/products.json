@@ -1529,6 +1529,13 @@
         }
       ],
       "gateway": [],
+      "scopePolicy": {
+        "optional": {
+          "indexing": [
+            "indexing"
+          ]
+        }
+      },
       "toolsets": {
         "google": {
           "source": "No official Google MCP server for Search Console was found (Google's Cloud and Workspace MCP lists, 2026-10-29; a negative, not confirmed by Google); a lean set chosen here.",
@@ -2248,6 +2255,16 @@
           "version": "v4beta"
         }
       ],
+      "scopePolicy": {
+        "optional": {
+          "health": [
+            "health"
+          ],
+          "portability": [
+            "dataportability"
+          ]
+        }
+      },
       "toolsets": {
         "google": {
           "source": "https://developers.google.com/people/api/mcp/tools_list",
@@ -2300,6 +2317,13 @@
         }
       ],
       "gateway": [],
+      "scopePolicy": {
+        "optional": {
+          "keep": [
+            "keep"
+          ]
+        }
+      },
       "toolsets": {
         "google": {
           "source": "No official Google MCP server for Google Tasks or Google Keep was found (Google's Cloud and Workspace MCP lists, 2026-10-29; a negative, not confirmed by Google); a lean set chosen here.",

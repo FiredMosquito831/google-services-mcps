@@ -44,7 +44,7 @@ These options are checked against `npx google-services-mcps --help`:
 | `--servers <a,b>` | The products this login covers. Each name is a product id. |
 | `--client-secret <file>` | Use this client file for this login only. The stored copy is not changed. |
 | `--no-browser` | Print the login URL and do not open the browser. Open the URL in a browser on the same machine. The redirect goes to `127.0.0.1`. |
-| `--with <part,...>` | Add an optional part of a product, which every profile leaves out otherwise. Gmail has `postmaster` (Gmail Postmaster Tools). See [USING.md](USING.md#6-read-only-and-write-profiles). |
+| `--with <part,...>` | Add an optional part of a product, which every profile leaves out otherwise: `postmaster` (gmail, Gmail Postmaster Tools), `keep` (gtasks, Google Keep), `health` and `portability` (gcontacts, the Google Health API and Data Portability), `indexing` (gsc, the Indexing API). See [USING.md](USING.md#6-read-only-and-write-profiles). |
 
 After a login, restart the server so the new scopes apply: run `/mcp` in Claude Code and reconnect, or restart the agent.
 

@@ -140,8 +140,9 @@ test('real servers: readonly covers every read tool and readwrite covers every t
       const all = resolveScopes(reqs, profile, parts);
       assert.deepEqual(all.uncovered, [...heldKeys(heldBackBy(reqs, profile, parts, all.scopes))].sort(), `${group}: ${profile} with ${parts} covers the rest`);
     }
-    if (group !== 'workspace-user') {
-      // No product of the other groups has a scope policy: nothing is held back, and every tool is covered as before.
+    if (group !== 'workspace-user' && group !== 'searchconsole') {
+      // No product of the other groups has optional parts or profile limits (gsc's Indexing API is an optional part since
+      // 1.34.0): nothing is held back, and every tool is covered as before.
       assert.equal(reqs.filter((x) => x.optional !== undefined || x.onlyIn !== undefined).length, 0, `${group}: no scope policy`);
       assert.deepEqual(resolveScopes(reqs, 'readwrite').uncovered, [], `${group}: readwrite covers every tool`);
       assert.deepEqual(resolveScopes(reqs, 'full').uncovered, [], `${group}: full covers every tool`);

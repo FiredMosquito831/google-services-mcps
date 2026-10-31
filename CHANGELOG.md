@@ -2,6 +2,22 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.34.0 - 2026-10-31
+
+### Changed: Keep, Health, Data Portability and Indexing are optional parts of a login
+- Four parts of three products are now left out of every profile unless the login names them, as Gmail's Postmaster Tools has been since 1.2.0 (`scopePolicy.optional` in `config/products.json`; `--with <part>`, in the chat `auth_login` with `"with"`):
+  - `keep` (gtasks, the Google Keep API). Google's announcement of the Keep API: "Not available to users with personal Google accounts" (https://workspaceupdates.googleblog.com/2021/05/keep-audit-logs-and-api.html), and a sign-in that asks a personal account for a Keep scope may be refused whole (`invalid_scope`, reported by users; not checked here). Every gtasks login asked for a Keep scope, so a personal account's Tasks sign-in could fail with it.
+  - `health` (gcontacts, the Google Health API): a `readonly` contacts login asked for four health read scopes; `readwrite` and `full` for seven health scopes and `cloud-platform`, the only scope Google lists for the health subscriber methods.
+  - `portability` (gcontacts, Data Portability): `readwrite` and `full` asked for one export scope, `dataportability.nest.user`, picked by URL length out of about seventy; Google subjects Data Portability apps to a verification process.
+  - `indexing` (gsc, the Indexing API): `readwrite` and `full` asked for `indexing` ("Submit data to Google for indexing"), which Google accepts only for pages with JobPosting or BroadcastEvent markup, also for someone who only submits sitemaps.
+- Named, a login asks for exactly what it asked for in 1.33.0 (tests compare every profile and toolset). Without the part, its tools and gateway methods do not load, and the login, `gsm scopes` and `auth_login` say so in a `Held back:` line with the flag to add it. `auth_login` on gtasks, gcontacts and gsc takes `with`.
+- Scopes an account already holds are never taken away: they are scopes of the group, so a login that names the account (`--account`, `auth_login` with `account`) merges them, and one that does not name it and would drop them saves nothing (the rule of 1.1.2; tested for Keep and Indexing).
+- `gsm scopes` over all 207 cases against 1.33.0: 188 identical; 19 changed, each one losing the scopes of a part not named: gtasks with every profile and toolset (`keep` or `keep.readonly`); gcontacts `readonly` with `all` and `curated` (the four health read scopes), `readwrite` and `full` with `all` and `curated` (`cloud-platform`, `dataportability.nest.user` and seven health scopes); gsc `readwrite` and `full` with `all` and `google` (`indexing`). The gcontacts `google` toolset and every other product are unchanged.
+- The `--with` help text names the parts.
+
+### Not changed
+- Tool maps and tool kinds. tools/list changes only for `auth_login` on gtasks, gcontacts and gsc (the `with` argument). Not checked against live Google.
+
 ## 1.33.0 - 2026-10-31
 
 ### Added: a product can prefer scopes for every toolset (`scopePolicy.prefer`)

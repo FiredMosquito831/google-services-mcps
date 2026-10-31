@@ -27,6 +27,13 @@
           "version": "v3"
         }
       ],
+      "scopePolicy": {
+        "optional": {
+          "indexing": [
+            "indexing"
+          ]
+        }
+      },
       "toolsets": {
         "google": [
           "sc_sites_list",

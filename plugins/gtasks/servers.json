@@ -23,6 +23,13 @@
           "version": "v1"
         }
       ],
+      "scopePolicy": {
+        "optional": {
+          "keep": [
+            "keep"
+          ]
+        }
+      },
       "toolsets": {
         "google": [
           "tasks_tasklists_list",

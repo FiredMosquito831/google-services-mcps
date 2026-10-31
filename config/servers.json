@@ -1353,6 +1353,13 @@
           "version": "v3"
         }
       ],
+      "scopePolicy": {
+        "optional": {
+          "indexing": [
+            "indexing"
+          ]
+        }
+      },
       "toolsets": {
         "google": [
           "sc_sites_list",
@@ -1782,6 +1789,16 @@
           "version": "v4beta"
         }
       ],
+      "scopePolicy": {
+        "optional": {
+          "health": [
+            "health"
+          ],
+          "portability": [
+            "dataportability"
+          ]
+        }
+      },
       "toolsets": {
         "google": [
           "contacts_search_directory",
@@ -1814,6 +1831,13 @@
           "version": "v1"
         }
       ],
+      "scopePolicy": {
+        "optional": {
+          "keep": [
+            "keep"
+          ]
+        }
+      },
       "toolsets": {
         "google": [
           "tasks_tasklists_list",

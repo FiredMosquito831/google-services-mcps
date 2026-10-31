@@ -41,6 +41,16 @@
           "version": "v4beta"
         }
       ],
+      "scopePolicy": {
+        "optional": {
+          "health": [
+            "health"
+          ],
+          "portability": [
+            "dataportability"
+          ]
+        }
+      },
       "toolsets": {
         "google": [
           "contacts_search_directory",
