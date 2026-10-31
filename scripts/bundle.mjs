@@ -34,7 +34,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const AUTHOR = { name: 'FiredMosquito831' };
-const MANIFEST_VERSION = '1.32.1';
+const MANIFEST_VERSION = '1.33.0';
 const TOOL_NAME_MAX = 64;
 /** When two API versions give one method two kinds, the riskier one is kept. A dynamic method is kept as dynamic (decided per call). */
 const RANK = { read: 0, write: 1, dynamic: 2, destructive: 3 };
@@ -509,6 +509,12 @@ async function buildPlugin(id, product, ctx) {
       const unused = scopes.filter((scope) => !accepted.has(scope));
       if (unused.length) throw new Error(`toolset ${toolset} of ${id} prefers for ${profile} scopes no tool of the toolset accepts: ${unused.join(', ')}`);
     }
+  }
+  // A product's preferred scopes (config/products.json scopePolicy.prefer) must each be accepted by a tool of the server.
+  const acceptedByServer = new Set(dumped.flatMap((t) => t.scopes ?? []));
+  for (const [profile, scopes] of Object.entries(server.scopePolicy?.prefer ?? {})) {
+    const unused = scopes.filter((scope) => !acceptedByServer.has(scope));
+    if (unused.length) throw new Error(`scopePolicy.prefer of ${id} names for ${profile} scopes no tool of the server accepts: ${unused.join(', ')}`);
   }
 
   // Registry and scope subsets for this plugin. A curated server's scopes come from its curated tools.

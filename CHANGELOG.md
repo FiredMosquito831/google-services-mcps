@@ -2,6 +2,20 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.33.0 - 2026-10-31
+
+### Added: a product can prefer scopes for every toolset (`scopePolicy.prefer`)
+- A product's `scopePolicy` in `config/products.json` can now name, per profile (`readonly`, `readwrite`, `full`), scopes a login of that product asks for before the greedy rule. Each one is asked for when a tool of the product that the profile targets accepts it (for `readonly`, when it is read-only or view-only too), even when an earlier scope already covers that tool, so two scopes of different reach can both be asked for. The greedy rule covers the rest. A toolset's own `preferScopes` (1.25.0) still come first and keep their meaning. `gen-servers` and the bundle refuse a preferred scope that no tool of the product accepts, and a `readonly` preference that is not view-only.
+- Data, no product name in the code: a product without `prefer` resolves exactly as before (none of its requirements carries the field).
+
+### Fixed: Meet and Classroom logins that lost reach
+- Google Meet: `meetings.space.created` lets the app "create, modify, and read metadata about meeting spaces created by your app"; `meetings.space.readonly` lets it "read metadata about any meeting space the user has access to" (https://developers.google.com/workspace/meet/api/guides/authenticate-authorize). The greedy rule gave `readwrite` and `full` only `meetings.space.created`, because it covers every tool, so the records, transcripts and recordings of meetings the app did not create were out of reach. gmeet now prefers `meetings.space.readonly` for `readwrite` and `full`: they ask for both, with every toolset. `readonly` is unchanged.
+- Google Classroom: `classroom.coursework.me.readonly` is "View your course work and grades in Google Classroom"; `classroom.coursework.students.readonly` is "View course work and grades for students in the Google Classroom classes you teach or administer" (https://developers.google.com/identity/protocols/oauth2/scopes). Every coursework and submission read accepts both, and `studentSubmissions.list` returns what "the requester is permitted to view, factoring in the OAuth scopes of the request". A `readonly` login took only the shorter, student-own scope, so a teacher saw no student's work. gclassroom now prefers both for `readonly`, with every toolset: one scope added, none removed, so a student keeps their own work. `readwrite` and `full` are unchanged.
+- `gsm scopes` over all 207 cases against 1.32.1: 198 identical; 9 changed, each one scope added and none removed: gmeet `readwrite` and `full` with `all`, `google` and `curated` (+`meetings.space.readonly`), gclassroom `readonly` with the three toolsets (+`classroom.coursework.students.readonly`). No coverage count changed: the tools were covered before, with less reach. A token from an earlier login lacks the new scope until the account signs in again (named with `--account`, so its stored scopes are kept).
+
+### Not changed
+- Tool maps, tool kinds and tools/list of every server. Not checked against live Google.
+
 ## 1.32.1 - 2026-10-31
 
 ### Fixed: view-only scopes with other names count as read-only

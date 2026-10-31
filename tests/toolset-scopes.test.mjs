@@ -278,10 +278,13 @@ test('requirements: the gclassroom google list resolves to the Classroom read-on
   const google = await requirementsFor(['gclassroom'], cfg, { ...quiet, toolset: 'google' });
   assert.equal(google.length, 20);
   const C = (s) => G(`classroom.${s}`);
+  // Since 1.33.0 the product prefers both coursework scopes for readonly (scopePolicy.prefer): a teacher's taught classes
+  // beside a student's own work.
   assert.deepEqual(resolveScopes(google, 'readonly').scopes, [
     C('announcements.readonly'),
     C('courses.readonly'),
     C('coursework.me.readonly'),
+    C('coursework.students.readonly'),
     C('courseworkmaterials.readonly'),
     C('guardianlinks.students.readonly'),
     C('rosters.readonly'),
@@ -320,7 +323,8 @@ test('requirements: the lean gmeet, gtasks and gapps lists resolve to the narrow
   const meet = await resolved('gmeet');
   assert.equal(meet.n, 10);
   assert.deepEqual(meet.readonly.scopes, [G('meetings.space.readonly')]);
-  assert.deepEqual(meet.readwrite, [G('meetings.space.created')]);
+  // Since 1.33.0 readwrite keeps the reads' reach over every space the user can see (scopePolicy.prefer).
+  assert.deepEqual(meet.readwrite, [G('meetings.space.created'), G('meetings.space.readonly')]);
   const tasks = await resolved('gtasks');
   assert.equal(tasks.n, 8);
   assert.deepEqual(tasks.readonly.scopes, [G('keep.readonly'), G('tasks.readonly')]);

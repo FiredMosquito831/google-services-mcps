@@ -2159,6 +2159,16 @@
         }
       ],
       "gateway": [],
+      "scopePolicy": {
+        "prefer": {
+          "readwrite": [
+            "https://www.googleapis.com/auth/meetings.space.readonly"
+          ],
+          "full": [
+            "https://www.googleapis.com/auth/meetings.space.readonly"
+          ]
+        }
+      },
       "toolsets": {
         "google": {
           "source": "No official Google MCP server for Google Meet was found (Google's Cloud and Workspace MCP lists, 2026-10-29; a negative, not confirmed by Google); a lean set chosen here.",
@@ -2347,6 +2357,14 @@
         }
       ],
       "gateway": [],
+      "scopePolicy": {
+        "prefer": {
+          "readonly": [
+            "https://www.googleapis.com/auth/classroom.coursework.students.readonly",
+            "https://www.googleapis.com/auth/classroom.coursework.me.readonly"
+          ]
+        }
+      },
       "toolsets": {
         "google": {
           "source": "https://developers.google.com/workspace/classroom/reference/mcp/tools_list",

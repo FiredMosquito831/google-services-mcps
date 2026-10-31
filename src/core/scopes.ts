@@ -51,6 +51,12 @@ export interface Requirement {
    * preferFields). resolveScopes takes them before its greedy rule. Absent for all, curated and a product without them.
    */
   prefer?: Readonly<PreferredScopes>;
+  /**
+   * The product's preferred scopes per profile (ScopePolicy.prefer, see policyFields). resolveScopes asks for each one a
+   * target carrying it accepts, after the toolset's preferred scopes and before its greedy rule. Absent for every product
+   * without them.
+   */
+  policyPrefer?: Readonly<Partial<Record<Profile, readonly string[]>>>;
 }
 
 /**
@@ -96,13 +102,27 @@ function preferredScopes(requirements: readonly Requirement[], profile: Profile)
  * `api` is the Discovery name of the method's API (the first part of a method id), or undefined for a curated tool.
  * Empty for a product without a policy, so its requirements are the same as before policies existed.
  */
-export function policyFields(policy: ScopePolicy | undefined, api: string | undefined): Pick<Requirement, 'optional' | 'onlyIn'> {
+export function policyFields(policy: ScopePolicy | undefined, api: string | undefined): Pick<Requirement, 'optional' | 'onlyIn' | 'policyPrefer'> {
   if (!policy) return {};
   const optional = api === undefined ? undefined : Object.keys(policy.optional ?? {}).find((name) => policy.optional?.[name]?.includes(api));
+  const prefer = policy.prefer && Object.values(policy.prefer).some((list) => (list?.length ?? 0) > 0) ? policy.prefer : undefined;
   return {
     ...(optional !== undefined ? { optional } : {}),
     ...(policy.onlyIn && Object.keys(policy.onlyIn).length > 0 ? { onlyIn: policy.onlyIn } : {}),
+    ...(prefer ? { policyPrefer: prefer } : {}),
   };
+}
+
+/** The products' preferred scopes the requirements carry for a profile (Requirement.policyPrefer), in their order, each once. */
+function policyPreferredScopes(requirements: readonly Requirement[], profile: Profile): string[] {
+  const out: string[] = [];
+  const seen = new Set<object>();
+  for (const r of requirements) {
+    if (!r.policyPrefer || seen.has(r.policyPrefer)) continue;
+    seen.add(r.policyPrefer);
+    for (const scope of r.policyPrefer[profile] ?? []) if (!out.includes(scope)) out.push(scope);
+  }
+  return out;
 }
 
 /** The API of a method id ("gmail.users.messages.list" gives "gmail"), or undefined when there is no method id. */
@@ -216,6 +236,17 @@ export function resolveScopes(requirements: readonly Requirement[], profile: Pro
   // Without a preference (all, curated, and products that give none) this loop does nothing, so the result is as before.
   for (const scope of preferredScopes(requirements, profile)) {
     if (!open.some((r) => r.scopes.includes(scope) && usableFor(r, scope))) continue;
+    chosen.push(scope);
+    open = open.filter((r) => !r.scopes.includes(scope));
+  }
+
+  // Then a product's preferred scopes (scopePolicy.prefer), in their order: each one is asked for when a target of that
+  // product accepts it and this profile may use it, also when an earlier scope covers that target already, so two scopes of
+  // different reach can both be asked for (Meet's spaces made by the app and every space the user can see). Requirements
+  // without the field (every product that gives none) skip this, so they resolve as before.
+  for (const scope of policyPreferredScopes(requirements, profile)) {
+    if (chosen.includes(scope)) continue;
+    if (!targets.some((r) => r.policyPrefer?.[profile]?.includes(scope) && r.scopes.includes(scope) && usableFor(r, scope))) continue;
     chosen.push(scope);
     open = open.filter((r) => !r.scopes.includes(scope));
   }

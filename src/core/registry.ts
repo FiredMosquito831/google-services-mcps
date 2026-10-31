@@ -147,6 +147,15 @@ export interface ScopePolicy {
    * --with <name>, or auth_login with "with"). Example: { "postmaster": ["gmailpostmastertools"] }.
    */
   optional?: Record<string, string[]>;
+  /**
+   * Scopes a login of this product asks for first, per profile (readonly, readwrite, full), before the greedy rule covers
+   * the rest. Each one is asked for when a tool of the product that the profile targets accepts it (for readonly, when it
+   * is view-only too), even when an earlier scope covers that tool already, so two scopes of different reach can both be
+   * asked for. Example: Meet's { "readwrite": [".../meetings.space.readonly"] } keeps the reads' reach over every space the
+   * user can see, beside meetings.space.created, which the writes need. A preference adds reach; it never replaces a scope
+   * a tool needs (the reach rule). A toolset's preferScopes (ServerSpec.toolsetScopes) come before it.
+   */
+  prefer?: Partial<Record<'readonly' | 'readwrite' | 'full', string[]>>;
 }
 
 export interface Registry {

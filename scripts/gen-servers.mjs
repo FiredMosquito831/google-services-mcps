@@ -92,13 +92,38 @@ const PART_PATTERN = /^[a-z][a-z0-9-]*$/;
 
 /**
  * A product's scopePolicy (ScopePolicy in src/core/registry.ts), checked and copied as is. onlyIn maps a scope URL to the
- * profiles that may request it (an empty list: none). optional maps a part name to APIs of the product.
+ * profiles that may request it (an empty list: none). optional maps a part name to APIs of the product. prefer maps a
+ * profile to the scopes a login of the product asks for first.
  */
-function scopePolicyOf(policy, id, apiNames) {
+function scopePolicyOf(policy, id, apiNames, serverName) {
   if (policy === undefined) return undefined;
   const where = `product ${id} scopePolicy`;
   if (typeof policy !== 'object' || policy === null || Array.isArray(policy)) fail(`${where} must be an object`);
-  for (const key of Object.keys(policy)) if (key !== 'onlyIn' && key !== 'optional') fail(`${where} has an unknown key "${key}"`);
+  for (const key of Object.keys(policy)) if (key !== 'onlyIn' && key !== 'optional' && key !== 'prefer') fail(`${where} has an unknown key "${key}"`);
+  // prefer: per profile, scope URLs a login of the product asks for first (ScopePolicy.prefer). Each list is non-empty and
+  // holds a scope once; readonly holds only scopes the readonly profile may use; every scope is accepted by a tool of the
+  // product (checked against the plugin's tool map when it is built; scripts/bundle.mjs checks again).
+  if (policy.prefer !== undefined) {
+    const prefer = policy.prefer;
+    if (typeof prefer !== 'object' || prefer === null || Array.isArray(prefer) || Object.keys(prefer).length === 0) {
+      fail(`${where}.prefer must be an object with a scope list per profile (${PROFILE_NAMES.join(', ')})`);
+    }
+    const toolScopes = toolScopesOf(id, serverName);
+    const accepted = toolScopes ? new Set([...toolScopes.values()].flat()) : undefined;
+    for (const [profile, scopes] of Object.entries(prefer)) {
+      if (!PROFILE_NAMES.includes(profile)) fail(`${where}.prefer: "${profile}" is not a profile (${PROFILE_NAMES.join(', ')})`);
+      if (!Array.isArray(scopes) || scopes.length === 0 || !scopes.every((s) => typeof s === 'string' && s.startsWith('https://'))) {
+        fail(`${where}.prefer.${profile} must be a non-empty list of scope URLs`);
+      }
+      if (new Set(scopes).size !== scopes.length) fail(`${where}.prefer.${profile} lists a scope twice`);
+      if (profile === 'readonly') {
+        const notReadonly = scopes.filter((s) => !isReadonlyScope(s));
+        if (notReadonly.length) fail(`${where}.prefer.readonly may hold only read-only or view-only scopes: ${notReadonly.join(', ')}`);
+      }
+      const unused = accepted ? scopes.filter((s) => !accepted.has(s)) : [];
+      if (unused.length) fail(`${where}.prefer.${profile}: no tool of the product accepts ${unused.join(', ')}`);
+    }
+  }
   for (const [scope, profiles] of Object.entries(policy.onlyIn ?? {})) {
     if (!scope.startsWith('https://')) fail(`${where}.onlyIn: "${scope}" is not a scope URL`);
     if (!Array.isArray(profiles) || !profiles.every((p) => PROFILE_NAMES.includes(p))) {
@@ -431,7 +456,7 @@ function main() {
     };
     if (gatewayApis.length) server.gatewayApis = gatewayApis;
     // Only a product with a scope policy gets the key, so the entries of the others stay as they were.
-    const policy = scopePolicyOf(p.scopePolicy, id, new Set([...apis, ...gatewayApis].map((a) => a.api)));
+    const policy = scopePolicyOf(p.scopePolicy, id, new Set([...apis, ...gatewayApis].map((a) => a.api)), p.server.name);
     if (policy) server.scopePolicy = policy;
     // Only a product with scope overrides gets the key, so the entries of the others stay as they were.
     const overrides = scopeOverridesOf(p.scopeOverrides, id, new Set(apis.map((a) => a.api)));

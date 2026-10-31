@@ -1722,6 +1722,16 @@
           "version": "v2"
         }
       ],
+      "scopePolicy": {
+        "prefer": {
+          "readwrite": [
+            "https://www.googleapis.com/auth/meetings.space.readonly"
+          ],
+          "full": [
+            "https://www.googleapis.com/auth/meetings.space.readonly"
+          ]
+        }
+      },
       "toolsets": {
         "google": [
           "meet_spaces_create",
@@ -1837,6 +1847,14 @@
           "version": "v1"
         }
       ],
+      "scopePolicy": {
+        "prefer": {
+          "readonly": [
+            "https://www.googleapis.com/auth/classroom.coursework.students.readonly",
+            "https://www.googleapis.com/auth/classroom.coursework.me.readonly"
+          ]
+        }
+      },
       "toolsets": {
         "google": [
           "classroom_list_courses",
