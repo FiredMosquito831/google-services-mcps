@@ -88,12 +88,13 @@ test('kinds follow classifyMethod: label and unlabel (modify) write, trash destr
   }
 });
 
-test('search_threads: thread-level results with each message summarised; page size 20 by default, at most 50; trash on request', async () => {
+test('search_threads: thread-level results with each message summarised; page size 10 by default, at most 50; trash on request', async () => {
   calls = [];
   respond = gmailFake;
   const out = await tools.get('gmail_search_threads').handler({ query: 'from:ana' }, ctx);
   assert.equal(calls[0].path, '/gmail/v1/users/me/threads');
-  assert.deepEqual({ q: calls[0].query.q, maxResults: calls[0].query.maxResults, includeSpamTrash: calls[0].query.includeSpamTrash }, { q: 'from:ana', maxResults: '20', includeSpamTrash: 'false' });
+  // 10 since 1.29.0 (GMAIL_PAGE_DEFAULT; before 20): each thread found costs a further threads.get.
+  assert.deepEqual({ q: calls[0].query.q, maxResults: calls[0].query.maxResults, includeSpamTrash: calls[0].query.includeSpamTrash }, { q: 'from:ana', maxResults: '10', includeSpamTrash: 'false' });
   assert.equal(calls[1].query.format, 'metadata');
   assert.equal(out.threads.length, 2);
   assert.equal(out.next_page_token, 'next');

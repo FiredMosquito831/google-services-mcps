@@ -29,6 +29,13 @@ const MESSAGES_CREATE = googleScopes('chat.messages', 'chat.messages.create');
 const READ_STATE = googleScopes('chat.users.readstate');
 
 /** Default and largest number of characters of one message's text in an answer. Longer text is cut and marked. */
+/**
+ * Messages or members read in one call of chat_list_messages and chat_list_members: Google's Chat MCP server caps its
+ * page size at 50 (the Chat API allows 1000). A larger page_size is still accepted and gives 50 and next_page_token,
+ * so a page of messages with their text fits the result limit and nothing is skipped (before 1.29.0: up to 1000 were
+ * read, and a page cut to the result limit lost its page token).
+ */
+export const CHAT_PAGE_MAX = 50;
 export const CHAT_TEXT_DEFAULT_CHARS = 2000;
 export const CHAT_TEXT_MAX_CHARS = 20000;
 /** Google's limit for one message: 32,000 bytes of text or cards (Chat API, "Send a message"). */
@@ -351,7 +358,13 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
         thread_id: z.string().optional().describe('Only this thread, spaces/{space}/threads/{thread} (the thread_id of a message).'),
         start_time: rfc3339('start_time').optional().describe('Only messages created after this time, RFC 3339.'),
         end_time: rfc3339('end_time').optional().describe('Only messages created before this time, RFC 3339.'),
-        page_size: z.number().int().min(1).max(1000).optional().describe('Messages per page, 1 to 1000. Default 20.'),
+        page_size: z
+          .number()
+          .int()
+          .min(1)
+          .max(1000)
+          .optional()
+          .describe(`Messages per page, 1 to 1000. Default 20. At most ${CHAT_PAGE_MAX} are read a call, as in Google's Chat MCP server; next_page_token gives the rest.`),
         page_token: z.string().optional().describe('next_page_token from the previous call, with the same other arguments.'),
         order: z.enum(['newest', 'oldest']).optional().describe('newest first (the default) or oldest first.'),
         format,
@@ -365,7 +378,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
         const res = await call<{ messages?: ChatMessage[]; nextPageToken?: string }>({
           url: `${CHAT}/${space}/messages`,
           query: {
-            pageSize: page_size ?? 20,
+            pageSize: Math.min(page_size ?? 20, CHAT_PAGE_MAX),
             pageToken: page_token,
             filter: listFilter(start_time, end_time, thread),
             orderBy: order === 'oldest' ? 'create_time asc' : 'create_time desc',
@@ -441,7 +454,13 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
         include_invited: z.boolean().optional().describe('Also list people who are invited but have not joined. Default false.'),
         include_groups: z.boolean().optional().describe('Also list Google Groups that are members. Default false.'),
         managers_only: z.boolean().optional().describe('Only the space managers. Default false.'),
-        page_size: z.number().int().min(1).max(1000).optional().describe('Members per page, 1 to 1000. Default 20.'),
+        page_size: z
+          .number()
+          .int()
+          .min(1)
+          .max(1000)
+          .optional()
+          .describe(`Members per page, 1 to 1000. Default 20. At most ${CHAT_PAGE_MAX} are read a call, as in Google's Chat MCP server; next_page_token gives the rest.`),
         page_token: z.string().optional().describe('next_page_token from the previous call, with the same other arguments.'),
       },
       async handler({ conversation_id, include_invited, include_groups, managers_only, page_size, page_token }) {
@@ -452,7 +471,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
         }>({
           url: `${CHAT}/${space}/members`,
           query: {
-            pageSize: page_size ?? 20,
+            pageSize: Math.min(page_size ?? 20, CHAT_PAGE_MAX),
             pageToken: page_token,
             ...(include_invited ? { showInvited: true } : {}),
             ...(include_groups ? { showGroups: true } : {}),

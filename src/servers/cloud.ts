@@ -30,6 +30,7 @@ import {
   serviceIdFromName,
 } from '../core/readiness.js';
 import { defineTool, type ToolDef } from '../core/tools.js';
+import { fitItems } from '../core/result-shape.js';
 import { makeCloudCall } from './cloud-http.js';
 import { opsTools } from './cloud-ops.js';
 import { storageTools } from './cloud-storage.js';
@@ -90,6 +91,27 @@ interface BqQueryResponse extends BqRowSet {
   totalRows?: string;
   totalBytesProcessed?: string;
   cacheHit?: boolean;
+  /** The token of the next page of rows (jobs.query and jobs.getQueryResults). */
+  pageToken?: string;
+}
+
+/**
+ * The rows answer of bq_query_read and bq_job_get within the result limit. Rows that do not fit are left out at the end.
+ * When the page's first row number is known (start_index, or 0 for a new query), next_start_index continues right after
+ * the last row shown; a page read by token alone can only be read again with fewer rows.
+ */
+export function bqRowsAnswer<T extends Record<string, unknown> & { rows: unknown[]; job_id?: string }>(answer: T, start: number, budget: number, byToken = false): T {
+  const got = answer.rows.length;
+  return fitItems(answer, 'rows', budget, (shown) =>
+    byToken
+      ? {
+          how_to_continue: `Google returned ${got} rows; the first ${shown} fit the result limit (${budget} characters). next_page_token continues after all ${got}: to see the others, call bq_job_get again with the same page_token and max_rows=${shown}.`,
+        }
+      : {
+          fields: { next_start_index: start + shown },
+          how_to_continue: `Google returned ${got} rows; the first ${shown} fit the result limit (${budget} characters). Call bq_job_get with job_id ${answer.job_id ?? ''} and start_index=${start + shown} for the next rows (next_page_token would skip the rows left out here).`,
+        },
+  );
 }
 interface BqJob {
   statistics?: { totalBytesProcessed?: string; query?: { statementType?: string } };
@@ -226,12 +248,21 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
     defineTool({
       name: 'cloud_projects_search',
       title: 'Search projects',
-      description: 'Search Cloud projects visible to the logged-in account. Query uses Resource Manager search syntax.',
+      description:
+        'Search Cloud projects visible to the logged-in account. Query uses Resource Manager search syntax. When Google has more projects the answer has nextPageToken; pass it as page_token to read on.',
       kind: 'read',
       scopes: googleScopes('cloud-platform', 'cloud-platform.read-only'),
-      inputSchema: { query: z.string().optional().describe('For example "displayName:Prod" or "parent.type:folder"') },
-      async handler({ query }) {
-        const res = await (await rm()).projects.search({ query: query ?? '' });
+      inputSchema: {
+        query: z.string().optional().describe('For example "displayName:Prod" or "parent.type:folder"'),
+        page_size: z.number().int().min(1).optional().describe("Projects per page. Default: Google's."),
+        page_token: z.string().optional().describe('nextPageToken from the previous call, with the same query.'),
+      },
+      async handler({ query, page_size, page_token }) {
+        const res = await (await rm()).projects.search({
+          query: query ?? '',
+          ...(page_size !== undefined ? { pageSize: page_size } : {}),
+          ...(page_token !== undefined ? { pageToken: page_token } : {}),
+        });
         return res.data;
       },
     }),
@@ -262,20 +293,27 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
     defineTool({
       name: 'cloud_services_list',
       title: 'List APIs on a project',
-      description: 'List Google APIs on a project. By default only enabled ones.',
+      description:
+        'List Google APIs on a project. By default only enabled ones. Up to 200 a page: when Google has more (every available service, with enabled_only false, is several pages), the answer is { next_page_token, services } and page_token reads on; otherwise it is the list itself, as before.',
       kind: 'read',
       scopes: googleScopes('cloud-platform', 'cloud-platform.read-only'),
       inputSchema: {
         project_id: projectId,
         enabled_only: z.boolean().optional().describe('Default true. Set false to list every available service.'),
+        page_size: z.number().int().min(1).optional().describe('Services per page. Default 200, the most Service Usage returns a page.'),
+        page_token: z.string().optional().describe('next_page_token from the previous call, with the same project_id and enabled_only.'),
       },
-      async handler({ project_id, enabled_only }) {
+      async handler({ project_id, enabled_only, page_size, page_token }) {
         const res = await (await su()).services.list({
           parent: `projects/${project_id}`,
           filter: enabled_only === false ? undefined : 'state:ENABLED',
-          pageSize: 200,
+          pageSize: page_size ?? 200,
+          ...(page_token !== undefined ? { pageToken: page_token } : {}),
         });
-        return res.data.services ?? [];
+        const services = res.data.services ?? [];
+        // The plain list, as before, unless there is a page to follow or the call is paging.
+        if (!res.data.nextPageToken && page_token === undefined && page_size === undefined) return services;
+        return { ...(res.data.nextPageToken ? { next_page_token: res.data.nextPageToken } : {}), services };
       },
     }),
     defineTool({
@@ -296,13 +334,22 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
     defineTool({
       name: 'cloud_apikeys_list',
       title: 'List API keys',
-      description: 'List API keys in a project (metadata only, not the secret key string).',
+      description:
+        'List API keys in a project (metadata only, not the secret key string). When Google has more keys the answer has nextPageToken; pass it as page_token to read on.',
       kind: 'read',
       scopes: googleScopes('apikeys', 'apikeys.readonly', 'cloud-platform', 'cloud-platform.read-only'),
-      inputSchema: { project_id: projectId },
-      async handler({ project_id }) {
+      inputSchema: {
+        project_id: projectId,
+        page_size: z.number().int().min(1).optional().describe("Keys per page. Default: Google's."),
+        page_token: z.string().optional().describe('nextPageToken from the previous call, with the same project_id.'),
+      },
+      async handler({ project_id, page_size, page_token }) {
         const num = await projectNumber(cfg, project_id);
-        const res = await (await ak()).projects.locations.keys.list({ parent: `projects/${num}/locations/global` });
+        const res = await (await ak()).projects.locations.keys.list({
+          parent: `projects/${num}/locations/global`,
+          ...(page_size !== undefined ? { pageSize: page_size } : {}),
+          ...(page_token !== undefined ? { pageToken: page_token } : {}),
+        });
         return res.data;
       },
     }),
@@ -337,7 +384,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       name: 'bq_query_read',
       title: 'Run read-only BigQuery query',
       description:
-        'Run one standard SQL SELECT in BigQuery. A dry run first refuses any statement that is not a SELECT, so DDL and DML never run. max_bytes_billed caps the cost. A read-only token also makes Google refuse statements that change data. Returns up to max_rows rows as objects keyed by column. If the job is still running, returns its job_id for bq_job_get.',
+        'Run one standard SQL SELECT in BigQuery. A dry run first refuses any statement that is not a SELECT, so DDL and DML never run. max_bytes_billed caps the cost. A read-only token also makes Google refuse statements that change data. Returns up to max_rows rows as objects keyed by column, and next_page_token when the result has more rows: bq_job_get with the job_id reads on. If the job is still running, returns its job_id for bq_job_get.',
       kind: 'read',
       scopes: BQ_READ_SCOPES,
       inputSchema: {
@@ -386,22 +433,27 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
           };
         }
         const { columns, rows } = rowsFromQueryResponse(res);
-        return {
-          status: 'done',
-          job_id: jobId,
-          total_rows: res.totalRows,
-          columns,
-          rows,
-          bytes_processed: res.totalBytesProcessed,
-          cache_hit: res.cacheHit ?? false,
-        };
+        return bqRowsAnswer(
+          {
+            status: 'done',
+            job_id: jobId,
+            total_rows: res.totalRows,
+            ...(res.pageToken ? { next_page_token: res.pageToken } : {}),
+            columns,
+            rows,
+            bytes_processed: res.totalBytesProcessed,
+            cache_hit: res.cacheHit ?? false,
+          },
+          0,
+          cfg.maxResultChars,
+        );
       },
     }),
     defineTool({
       name: 'bq_job_get',
       title: 'Get BigQuery job rows',
       description:
-        'Check a query job that bq_query_read started and did not finish in time, and return its rows once it is done. Call again while status is running.',
+        'Check a query job that bq_query_read started and did not finish in time, and return its rows once it is done. Call again while status is running. It also pages through the rows of a finished query: page_token (next_page_token of the previous answer) or start_index (a row number, next_start_index when rows were left out to fit the result limit).',
       kind: 'read',
       scopes: BQ_READ_SCOPES,
       inputSchema: {
@@ -409,19 +461,34 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
         job_id: z.string().min(1).max(1024).describe('job_id returned by bq_query_read.'),
         location: bqLocation,
         max_rows: bqMaxResults(1000, 100),
+        page_token: z.string().optional().describe('next_page_token of the previous answer: the rows after that page.'),
+        start_index: z.number().int().min(0).optional().describe('The first row to return, from 0 (next_start_index of the previous answer).'),
       },
-      async handler({ project_id, job_id, location, max_rows }) {
+      async handler({ project_id, job_id, location, max_rows, page_token, start_index }) {
         const res = await bqCall<BqQueryResponse>(
           cfg,
           'GET',
           `projects/${encodeURIComponent(project_id)}/queries/${encodeURIComponent(job_id)}`,
-          { query: { location, maxResults: max_rows ?? 100 } },
+          { query: { location, maxResults: max_rows ?? 100, pageToken: page_token, startIndex: start_index } },
         );
         if (res.jobComplete === false) {
           return { status: 'running', job_id, message: 'Still running. Call bq_job_get again in a little while.' };
         }
         const { columns, rows } = rowsFromQueryResponse(res);
-        return { status: 'done', job_id, total_rows: res.totalRows, columns, rows, bytes_processed: res.totalBytesProcessed };
+        return bqRowsAnswer(
+          {
+            status: 'done',
+            job_id,
+            total_rows: res.totalRows,
+            ...(res.pageToken ? { next_page_token: res.pageToken } : {}),
+            columns,
+            rows,
+            bytes_processed: res.totalBytesProcessed,
+          },
+          start_index ?? 0,
+          cfg.maxResultChars,
+          page_token !== undefined,
+        );
       },
     }),
     defineTool({
@@ -430,12 +497,16 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       description: 'List the datasets in a project with their IDs, locations and friendly names.',
       kind: 'read',
       scopes: BQ_READ_SCOPES,
-      inputSchema: { project_id: projectId, max_results: bqMaxResults(1000, 100) },
-      async handler({ project_id, max_results }) {
+      inputSchema: {
+        project_id: projectId,
+        max_results: bqMaxResults(1000, 100),
+        page_token: z.string().optional().describe('next_page_token from the previous call, with the same project_id.'),
+      },
+      async handler({ project_id, max_results, page_token }) {
         const res = await bqCall<{
           datasets?: Array<{ datasetReference?: { datasetId?: string }; location?: string; friendlyName?: string }>;
           nextPageToken?: string;
-        }>(cfg, 'GET', `projects/${encodeURIComponent(project_id)}/datasets`, { query: { maxResults: max_results ?? 100 } });
+        }>(cfg, 'GET', `projects/${encodeURIComponent(project_id)}/datasets`, { query: { maxResults: max_results ?? 100, pageToken: page_token } });
         return {
           datasets: (res.datasets ?? []).map((d) => ({
             dataset_id: d.datasetReference?.datasetId,
@@ -443,6 +514,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
             friendly_name: d.friendlyName,
           })),
           has_more: Boolean(res.nextPageToken),
+          next_page_token: res.nextPageToken || undefined,
         };
       },
     }),
@@ -452,17 +524,23 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       description: 'List the tables and views in one dataset, with their types (TABLE, VIEW, MATERIALIZED_VIEW, EXTERNAL, SNAPSHOT).',
       kind: 'read',
       scopes: BQ_READ_SCOPES,
-      inputSchema: { project_id: projectId, dataset_id: bqDataset, max_results: bqMaxResults(1000, 100) },
-      async handler({ project_id, dataset_id, max_results }) {
+      inputSchema: {
+        project_id: projectId,
+        dataset_id: bqDataset,
+        max_results: bqMaxResults(1000, 100),
+        page_token: z.string().optional().describe('next_page_token from the previous call, with the same project_id and dataset_id.'),
+      },
+      async handler({ project_id, dataset_id, max_results, page_token }) {
         const res = await bqCall<{
           tables?: Array<{ tableReference?: { tableId?: string }; type?: string; friendlyName?: string }>;
           nextPageToken?: string;
         }>(cfg, 'GET', `projects/${encodeURIComponent(project_id)}/datasets/${encodeURIComponent(dataset_id)}/tables`, {
-          query: { maxResults: max_results ?? 100 },
+          query: { maxResults: max_results ?? 100, pageToken: page_token },
         });
         return {
           tables: (res.tables ?? []).map((t) => ({ table_id: t.tableReference?.tableId, type: t.type, friendly_name: t.friendlyName })),
           has_more: Boolean(res.nextPageToken),
+          next_page_token: res.nextPageToken || undefined,
         };
       },
     }),

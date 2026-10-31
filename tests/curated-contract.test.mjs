@@ -584,20 +584,41 @@ const CASES = {
   sc_sitemap_delete: [{ args: { site_url: SITE, feedpath: SITEMAP }, preview: true, expect: ['webmasters.sitemaps.delete'] }],
 
   // cloud
-  cloud_projects_search: [{ args: { query: 'name:demo*' }, expect: ['cloudresourcemanager.projects.search'] }],
+  cloud_projects_search: [
+    { args: { query: 'name:demo*' }, expect: ['cloudresourcemanager.projects.search'] },
+    // 1.29.0: paging.
+    { args: { query: 'name:demo*', page_size: 50, page_token: 'p1' }, expect: ['cloudresourcemanager.projects.search'] },
+  ],
   cloud_project_get: [{ args: { project_id: 'my-project-123' }, expect: ['cloudresourcemanager.projects.get'] }],
   cloud_project_iam_policy: [{ args: { project_id: 'my-project-123' }, expect: ['cloudresourcemanager.projects.getIamPolicy'] }],
-  cloud_services_list: [{ args: { project_id: 'my-project-123', enabled_only: true }, expect: ['serviceusage.services.list'] }],
+  cloud_services_list: [
+    { args: { project_id: 'my-project-123', enabled_only: true }, expect: ['serviceusage.services.list'] },
+    { args: { project_id: 'my-project-123', enabled_only: false, page_size: 50, page_token: 'p1' }, expect: ['serviceusage.services.list'] },
+  ],
   cloud_operation_get: [{ args: { name: 'operations/op-1' }, expect: ['cloudresourcemanager.operations.get'] }],
-  cloud_apikeys_list: [{ args: { project_id: 'my-project-123' }, expect: ['cloudresourcemanager.projects.get', 'apikeys.projects.locations.keys.list'] }],
+  cloud_apikeys_list: [
+    { args: { project_id: 'my-project-123' }, expect: ['cloudresourcemanager.projects.get', 'apikeys.projects.locations.keys.list'] },
+    // The project number is cached by now, so only the list is sent.
+    { args: { project_id: 'my-project-123', page_size: 20, page_token: 'p1' }, expect: ['apikeys.projects.locations.keys.list'] },
+  ],
   cloud_apikey_get: [{ args: { key_name: 'projects/123456789012/locations/global/keys/key-1' }, expect: ['apikeys.projects.locations.keys.get'] }],
   cloud_apikey_reveal: [{ args: { key_name: 'projects/123456789012/locations/global/keys/key-1' }, expect: ['apikeys.projects.locations.keys.getKeyString'] }],
   bq_query_read: [
     { args: { project_id: 'my-project-123', query: 'SELECT 1', max_bytes_billed: 1000000, max_rows: 10, location: 'EU' }, expect: ['bigquery.jobs.insert', 'bigquery.jobs.query'] },
   ],
-  bq_job_get: [{ args: { project_id: 'my-project-123', job_id: 'job-1', location: 'EU', max_rows: 10 }, expect: ['bigquery.jobs.getQueryResults'] }],
-  bq_dataset_list: [{ args: { project_id: 'my-project-123', max_results: 10 }, expect: ['bigquery.datasets.list'] }],
-  bq_table_list: [{ args: { project_id: 'my-project-123', dataset_id: 'analytics', max_results: 10 }, expect: ['bigquery.tables.list'] }],
+  bq_job_get: [
+    { args: { project_id: 'my-project-123', job_id: 'job-1', location: 'EU', max_rows: 10 }, expect: ['bigquery.jobs.getQueryResults'] },
+    { args: { project_id: 'my-project-123', job_id: 'job-1', page_token: 'p1' }, expect: ['bigquery.jobs.getQueryResults'] },
+    { args: { project_id: 'my-project-123', job_id: 'job-1', start_index: 40 }, expect: ['bigquery.jobs.getQueryResults'] },
+  ],
+  bq_dataset_list: [
+    { args: { project_id: 'my-project-123', max_results: 10 }, expect: ['bigquery.datasets.list'] },
+    { args: { project_id: 'my-project-123', page_token: 'p1' }, expect: ['bigquery.datasets.list'] },
+  ],
+  bq_table_list: [
+    { args: { project_id: 'my-project-123', dataset_id: 'analytics', max_results: 10 }, expect: ['bigquery.tables.list'] },
+    { args: { project_id: 'my-project-123', dataset_id: 'analytics', page_token: 'p1' }, expect: ['bigquery.tables.list'] },
+  ],
   bq_table_get: [{ args: { project_id: 'my-project-123', dataset_id: 'analytics', table_id: 'events' }, expect: ['bigquery.tables.get'] }],
   bq_table_preview: [{ args: { project_id: 'my-project-123', dataset_id: 'analytics', table_id: 'events', max_rows: 5 }, expect: ['bigquery.tables.get', 'bigquery.tabledata.list'] }],
   cloud_project_create: [{ args: { project_id: 'my-project-123', display_name: 'My project', parent: 'organizations/123' }, expect: ['cloudresourcemanager.projects.create'] }],
@@ -680,6 +701,8 @@ const CASES = {
   ads_list_customers: [{ args: {}, expect: ['googleads.customers.listAccessibleCustomers'] }],
   ads_search: [
     { args: { customer_id: '1234567890', query: 'SELECT campaign.id FROM campaign' }, expect: ['googleads.customers.googleAds.search'] },
+    // 1.29.0: the next page.
+    { args: { customer_id: '1234567890', query: 'SELECT campaign.id FROM campaign', page_token: 'p1' }, expect: ['googleads.customers.googleAds.search'] },
     // 1.16.0: the structured form.
     {
       args: { customer_id: '1234567890', fields: ['campaign.id', 'metrics.clicks'], resource: 'campaign', conditions: ["campaign.status = 'ENABLED'"], orderings: ['metrics.clicks DESC'], limit: 10 },
@@ -885,6 +908,8 @@ const CASES = {
       respond: () => [{ document: { name: 'projects/my-app-1234/databases/(default)/documents/users/alice', fields: {} } }],
     },
     { args: { project_id: 'my-app-1234', collection_path: 'users/alice/orders', all_descendants: true }, expect: ['firestore.projects.databases.documents.runQuery'], respond: () => [] },
+    // 1.29.0: the default limit and an offset (StructuredQuery.offset).
+    { args: { project_id: 'my-app-1234', collection_path: 'users', offset: 10 }, expect: ['firestore.projects.databases.documents.runQuery'], respond: () => [] },
   ],
   remoteconfig_get_template: [
     { args: { project_id: 'my-app-1234' }, expect: ['firebaseremoteconfig.projects.getRemoteConfig'] },
@@ -893,6 +918,7 @@ const CASES = {
   auth_get_users: [
     { args: { project_id: 'my-app-1234', uids: ['u1'], emails: ['a@example.com'], phone_numbers: ['+15555550100'] }, expect: ['identitytoolkit.projects.accounts.lookup'] },
     { args: { project_id: 'my-app-1234', limit: 20 }, expect: ['identitytoolkit.projects.accounts.query'] },
+    { args: { project_id: 'my-app-1234', offset: 100 }, expect: ['identitytoolkit.projects.accounts.query'] },
   ],
 
   // gai (1.21.0)

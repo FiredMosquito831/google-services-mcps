@@ -2,6 +2,29 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.29.0 - 2026-10-31
+
+### Changed: hand-written tools page properly and ask for pages that fit
+- Smaller default pages, where the old default cost quota or filled the result limit for nothing (a larger page can still be asked for, and is shown as far as it fits):
+  - `gmail_search` and `gmail_search_threads`: 10 (was 20). Each message or thread found is one more Gmail read, so the default search costs half.
+  - `sc_search_analytics_query`: 100 rows (was 1000, Google's default). About 100 rows with the query and page dimensions fit the limit, so a page is read once; Google's usage guide asks clients not to query the same data again.
+  - `ga_run_report`: 100 rows (was none sent, so Google's 10,000). Google charges more quota tokens for more rows.
+  - `firestore_query_collection`: 10 (was none: every match) and `auth_get_users`: 100 (was Google's 500), as in Google's Firebase MCP server.
+  - `chat_list_messages` and `chat_list_members` read at most 50 a call, as Google's Chat MCP server does. A `page_size` up to 1000 is still accepted; `next_page_token` gives the rest.
+- Rows fitted to the limit, with an exact continuation: `sc_search_analytics_query` returns `row_count` and `next_start_row`; `ga_run_report` keeps `row_count` and `next_offset`, now first; `firestore_query_collection` and `auth_get_users` take `offset` and return `next_offset` on a full page; `bq_query_read` and `bq_job_get` return `next_start_index`. When rows do not fit, the answer keeps the first ones, and the offset counts only the rows shown, so nothing is skipped. Before, a long answer was cut by the runtime and Google's offset skipped the rows that were cut.
+- `gmail_get_thread` keeps the newest messages of a long thread whole: older messages are shown without their bodies (`body_omitted`), then the oldest are left out, with a `truncated` note. Before, the end of the thread, its newest messages, was cut.
+- `drive_read_text` takes `offset` and returns `next_offset`; the text stops where the answer, escapes counted, would pass the limit. `gcs_read_text` sizes each part with its JSON escapes counted, so a part full of quotes or newlines is no longer cut after `next_offset` had counted it.
+
+### Added: page tokens where they were dropped
+- `cloud_services_list` takes `page_size` and `page_token`, and returns `{ next_page_token, services }` when Google has another page (every available service is several pages; before, the list ended at 200 without a word). Without another page it is the plain list, as before.
+- `cloud_projects_search` and `cloud_apikeys_list` take `page_size` and `page_token`; Google's `nextPageToken` was already in their answers.
+- `bq_dataset_list` and `bq_table_list` take `page_token` and return `next_page_token` (with `has_more`, as before); `bq_job_get` takes `page_token` and `start_index`, and `bq_query_read` returns `next_page_token`.
+- `ads_search` takes `page_token` and returns `next_page_token`. Google Ads sets the page size and has no row offset, so rows left out of a page (the 500-row cap or the result limit) are reached by narrowing the query, and the note says so.
+
+### Not changed
+- Every parameter that existed keeps working, with the same range. What each tool sends is the same except the default page sizes above and the new parameters when given.
+- `admin_activities_list` (a generated tool) still asks Google for its default 1000 records; its answer is cut by the runtime at whole records, with the page size to repeat the call with. Changing a generated tool's request is generator work (review item 5).
+
 ## 1.28.0 - 2026-10-31
 
 ### Changed: results are compact, at most 25,000 characters, and cut at whole items

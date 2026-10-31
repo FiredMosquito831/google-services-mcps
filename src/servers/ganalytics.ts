@@ -27,6 +27,7 @@ import { z } from 'zod';
 import type { RuntimeConfig } from '../core/config.js';
 import { getAuthClient, googleScopes } from '../core/auth.js';
 import { defineTool, type PreparedAction, type ToolDef } from '../core/tools.js';
+import { fitItems } from '../core/result-shape.js';
 import { makeCloudCall, type CloudCall } from './cloud-http.js';
 
 const DATA = 'https://analyticsdata.googleapis.com';
@@ -106,18 +107,34 @@ export function shapeReport(report: GaReport) {
   };
 }
 
-/** The answer of a report: the shaped report, the row count, the next offset when Google has more rows, the quota. */
-export function reportAnswer(report: GaReport, offset = 0) {
+/**
+ * The answer of a report: the row count and the next offset when Google has more rows first, then the shaped report and
+ * the quota. With a budget (ga_run_report), rows that do not fit the result limit are left out at the end, and
+ * next_offset counts only the rows shown.
+ */
+export function reportAnswer(report: GaReport, offset = 0, budget?: number) {
   const shaped = shapeReport(report);
   const total = report.rowCount ?? shaped.rows.length;
   const next = offset + shaped.rows.length;
-  return {
-    ...shaped,
+  const answer = {
     row_count: total,
     ...(next < total && shaped.rows.length > 0 ? { next_offset: next } : {}),
+    ...shaped,
     ...(report.propertyQuota ? { property_quota: report.propertyQuota } : {}),
   };
+  if (budget === undefined) return answer;
+  return fitItems(answer, 'rows', budget, (shown) => ({
+    fields: { next_offset: offset + shown },
+    how_to_continue: `Google returned ${shaped.rows.length} of the report's ${total} rows; the first ${shown} fit the result limit (${budget} characters). Call again with offset=${offset + shown} and the same other arguments for the next rows.`,
+  }));
 }
+
+/**
+ * Rows of ga_run_report when no limit is given (before 1.29.0: none was sent, and Google returns 10,000). More rows cost
+ * more quota tokens (Data API quotas page: "Requesting a larger number of rows"), and about 100 to 280 keyed rows fit the
+ * 25,000-character result limit, so the default asks for 100; next_offset pages on.
+ */
+export const GA_REPORT_ROWS_DEFAULT = 100;
 
 const propertyId = z
   .union([z.string(), z.number().int()])
@@ -152,7 +169,14 @@ const runReportShape = {
   dimension_filter: filter('Filter on dimensions'),
   metric_filter: filter('Filter on metrics, applied after aggregation'),
   order_bys: orderBys,
-  limit,
+  limit: z
+    .number()
+    .int()
+    .min(1)
+    .optional()
+    .describe(
+      `Rows to return. Default ${GA_REPORT_ROWS_DEFAULT} here (Google's own default is 10,000, and more rows cost more quota tokens); at most 250,000 a request. Rows that do not fit the result limit are left out at the end, and next_offset continues after the last row shown.`,
+    ),
   offset: z.number().int().min(0).optional().describe('The first row to return, from 0; next_offset of the previous answer pages on.'),
   currency_code: z.string().regex(/^[A-Z]{3}$/, 'Use an ISO 4217 code such as EUR.').optional().describe("An ISO 4217 currency code such as EUR; default the property's currency."),
   return_property_quota: returnQuota,
@@ -305,7 +329,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
           ...(input.dimension_filter ? { dimensionFilter: input.dimension_filter } : {}),
           ...(input.metric_filter ? { metricFilter: input.metric_filter } : {}),
           ...(input.order_bys ? { orderBys: input.order_bys } : {}),
-          ...(input.limit !== undefined ? { limit: String(input.limit) } : {}),
+          limit: String(input.limit ?? GA_REPORT_ROWS_DEFAULT),
           ...(input.offset !== undefined ? { offset: String(input.offset) } : {}),
           ...(input.currency_code ? { currencyCode: input.currency_code } : {}),
           ...(input.return_property_quota ? { returnPropertyQuota: true } : {}),
@@ -319,7 +343,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
             : {}),
         };
         const res = await call<GaReport>({ url: `${DATA}/${version}/${property}:runReport`, method: 'POST', body });
-        return reportAnswer(res.data, input.offset ?? 0);
+        return reportAnswer(res.data, input.offset ?? 0, cfg.maxResultChars);
       },
     }),
     defineTool({

@@ -61,7 +61,7 @@ test('ads_resource_metadata and ads_search are reads with the adwords scope, and
   assert.deepEqual(Object.keys(tools.get('ads_list_customers').inputSchema), []);
   assert.deepEqual(Object.keys(tools.get('ads_mutate').inputSchema), ['customer_id', 'operations', 'validate_only']);
   assert.equal(tools.get('ads_mutate').kind, 'dynamic');
-  assert.deepEqual(Object.keys(tools.get('ads_search').inputSchema), ['customer_id', 'query', 'fields', 'resource', 'conditions', 'orderings', 'limit']);
+  assert.deepEqual(Object.keys(tools.get('ads_search').inputSchema), ['customer_id', 'query', 'fields', 'resource', 'conditions', 'orderings', 'limit', 'page_token']);
 });
 
 // ---- GAQL from parts ----

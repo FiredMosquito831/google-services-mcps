@@ -15,7 +15,7 @@ import { z } from 'zod';
 import type { RuntimeConfig } from '../core/config.js';
 import { getAuthClient, googleScopes } from '../core/auth.js';
 import { defineTool, type ToolDef } from '../core/tools.js';
-import { base64Part, base64PartBytes, base64PartsNote } from '../core/result-shape.js';
+import { base64Part, base64PartBytes, base64PartsNote, fitText } from '../core/result-shape.js';
 import { checkLocalFile, mimeTypeOf, protectedPaths } from './local-files.js';
 import { OFFICE_TYPES, officeText } from './office-text.js';
 
@@ -57,10 +57,6 @@ export const OFFICE_READ_MAX_BYTES = 20 * 1024 * 1024;
 
 /** At most this many pages of 100 comments are read with include_comments. */
 const COMMENT_PAGES = 10;
-
-function clip(text: string, max: number): { text: string; truncated: boolean } {
-  return text.length > max ? { text: text.slice(0, max), truncated: true } : { text, truncated: false };
-}
 
 /** Bytes of a media or export answer, whatever form the HTTP layer gave them in. */
 function bytesOf(data: unknown): Buffer {
@@ -243,15 +239,22 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       name: 'drive_read_text',
       title: 'Read Drive file as text',
       description:
-        `Read the text of a file (matches read_file_content in Google's Drive MCP server): Google Docs and Slides as plain text, Sheets as CSV, text/* files, and Word, Excel and PowerPoint (docx, xlsx, pptx) and OpenDocument (odt, ods, odp) files up to ${OFFICE_READ_MAX_BYTES / 1024 / 1024} MB, whose text is taken from the downloaded file (Drive exports only Google files). PDF and image text is not read: Drive has no public text-extraction call; use drive_download for the bytes. include_comments adds the file's comment threads.`,
+        `Read the text of a file (matches read_file_content in Google's Drive MCP server): Google Docs and Slides as plain text, Sheets as CSV, text/* files, and Word, Excel and PowerPoint (docx, xlsx, pptx) and OpenDocument (odt, ods, odp) files up to ${OFFICE_READ_MAX_BYTES / 1024 / 1024} MB, whose text is taken from the downloaded file (Drive exports only Google files). PDF and image text is not read: Drive has no public text-extraction call; use drive_download for the bytes. include_comments adds the file's comment threads. A longer text comes in parts: next_offset, passed as offset, reads on.`,
       kind: 'read',
       scopes: googleScopes('drive', 'drive.readonly'),
       inputSchema: {
         file_id: z.string(),
-        max_chars: z.number().int().min(100).max(200000).optional().describe('Cap on returned characters. Default 20000.'),
+        max_chars: z
+          .number()
+          .int()
+          .min(100)
+          .max(200000)
+          .optional()
+          .describe('Cap on returned characters. Default 20000. The text also stops where the answer would pass the result limit; next_offset then continues.'),
+        offset: z.number().int().min(0).optional().describe('Start at this character of the text, from 0: next_offset of the previous answer reads on.'),
         include_comments: z.boolean().optional().describe('Also return the comment threads (author, text, quoted text, replies, resolved). Default false.'),
       },
-      async handler({ file_id, max_chars, include_comments }) {
+      async handler({ file_id, max_chars, offset, include_comments }) {
         const api = await driveApi();
         const meta = await api.files.get({ fileId: file_id, fields: 'id, name, mimeType', supportsAllDrives: true });
         const mime = meta.data.mimeType ?? '';
@@ -281,19 +284,30 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
         }
         if (typeof raw !== 'string') throw new Error('Drive returned no text content for this file.');
 
-        const clipped = clip(raw, max_chars ?? 20000);
-        const base = {
-          id: meta.data.id,
-          name: meta.data.name,
-          mime_type: mime,
-          text: clipped.text,
-          text_total_chars: raw.length,
-          truncated: clipped.truncated,
-          ...(source ? { text_source: source } : {}),
+        const start = offset ?? 0;
+        if (start > raw.length) throw new Error(`offset ${start} is past the end of the text (${raw.length} characters).`);
+        const comments = include_comments === true ? await readComments(api, file_id) : undefined;
+        const commentPart = comments ? { comments: comments.comments, ...(comments.more ? { comments_note: `Only the first ${COMMENT_PAGES * 100} comment threads were read.` } : {}) } : {};
+        const answer = (text: string, withComments = true) => {
+          const end = start + text.length;
+          return {
+            id: meta.data.id,
+            name: meta.data.name,
+            mime_type: mime,
+            ...(offset !== undefined ? { offset: start } : {}),
+            ...(end < raw.length ? { next_offset: end } : {}),
+            text,
+            text_total_chars: raw.length,
+            truncated: end < raw.length,
+            ...(source ? { text_source: source } : {}),
+            ...(withComments ? commentPart : {}),
+          };
         };
-        if (include_comments !== true) return base;
-        const read = await readComments(api, file_id);
-        return { ...base, comments: read.comments, ...(read.more ? { comments_note: `Only the first ${COMMENT_PAGES * 100} comment threads were read.` } : {}) };
+        // The text is as long as max_chars allows and as long as the answer (escapes counted) fits the result limit. The
+        // comments take at most half of it: more of them are cut at whole threads by the result limit, not the text.
+        const rest = JSON.stringify(answer('', false)).length + 40;
+        const commentRoom = comments ? Math.min(JSON.stringify(commentPart).length, Math.floor(cfg.maxResultChars / 2)) : 0;
+        return answer(fitText(raw.slice(start), max_chars ?? 20000, Math.max(0, cfg.maxResultChars - rest - commentRoom)));
       },
     }),
     defineTool({
