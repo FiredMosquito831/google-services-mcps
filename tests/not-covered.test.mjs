@@ -287,7 +287,10 @@ test('auth_login on gbusiness (adc, readonly): the ADC route says the same, from
 
 test('the gbusiness skill signs in with readwrite; the gads skill says so for the google and curated toolsets; gmail is unchanged', () => {
   const skill = (id) => readFileSync(join(REPO, 'plugins', id, 'skills', id, 'SKILL.md'), 'utf8');
-  assert.match(skill('gbusiness'), /login business --profile readwrite`\. Use `--profile readwrite`: the default readonly profile covers none of this plugin's tools that need a Google scope\./);
-  assert.match(skill('gads'), /login business`\. With the `google` or `curated` toolset, the default readonly profile covers none of its tools that need a Google scope: sign in with `--profile readwrite`/);
-  assert.equal(/--profile/.test(skill('gmail')), false);
+  // Since 1.37.2 the skill signs in from the chat (auth_login with profile), with the terminal as the fallback.
+  assert.match(skill('gbusiness'), /`profile` readwrite \(the readonly profile covers none of this plugin's tools that need a Google scope;/);
+  assert.match(skill('gbusiness'), /login business --profile readwrite`\.\n/);
+  assert.match(skill('gads'), /With the `google` or `curated` toolset, the readonly profile covers none of its tools that need a Google scope: sign in with readwrite/);
+  assert.match(skill('gads'), /login business`\.\n/);
+  assert.equal(/--profile|profile` readwrite \(/.test(skill('gmail')), false);
 });

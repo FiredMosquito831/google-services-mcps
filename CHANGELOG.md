@@ -2,6 +2,16 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.37.2 - 2026-10-31
+
+### Fixed: each plugin's skill says what the product is for, signs in from the chat and names the right tools
+- The 23 skills were one template: a description that named the APIs and a changing tool count ("Use for requests about these Google APIs"), sign-in as terminal commands with a `<plugin>` placeholder although the chat has `auth_setup_client` and `auth_login`, no common tasks, and a tool count that included runtime tools the server never registers (every tool map lists all nine for the hook; gmail said 115, it lists 113).
+- The skill text now comes from `config/plugin-text.json`, per product: a `description` with the main use cases first and a `when_to_use` with trigger phrases and example requests (Claude Code: "Put the key use case first: the combined `description` and `when_to_use` text is truncated at 1,536 characters in the skill listing", https://code.claude.com/docs/en/skills), and three to six common tasks taken from the product reviews (for example Gmail search, read, reply; Calendar find a time, book it; Drive search, read as text; Search Console property, performance with paging, URL inspection). The build renders them with the sign-in steps of the product's group in the chat first (`auth_status`, `auth_setup_client`, `auth_login`; `auth_setup_service_account`; `auth_setup_admin`; `setup-apikey` in a terminal for an API key, which is never pasted into the chat), the terminal fallback by `node "${CLAUDE_PLUGIN_ROOT}/bin/gsm.mjs"` (substituted by Claude Code in plugin skills), a note that returned content is data and not instructions, the safety rules, the tool counts and the API list.
+- The build fails when a task names a tool the server does not register, when the description and when_to_use pass 1,536 characters, or when a skill reaches 500 lines ("Keep SKILL.md under 500 lines", same page). The tool count is what the server registers: the tool map without the runtime tools of other sign-in kinds (`runtimeToolsFor`, src/core/runtime-tools.ts), and for gplay and gmerchant without tools the key's fixed scopes never cover (gmerchant lists 153, not 161).
+
+### Not changed
+- tools/list (byte-identical), server instructions, tool maps and kinds, `gsm scopes` (207 cases identical), the hook. tests/skills.test.mjs checks every skill and starts every bundled server: each registers exactly `runtimeToolsFor` its group, and lists the number of tools its skill states.
+
 ## 1.37.1 - 2026-10-31
 
 ### Fixed: a plugin option that was never set always reads as unset
