@@ -47,13 +47,15 @@ async function bodyOf(data) {
 
 let calls = [];
 let respond = () => ({});
+// The HTTP status of a reply: 200, unless a test answers a Range request with 206.
+let statusOf = () => 200;
 OAuth2Client.prototype.request = async function fakeRequest(opts) {
   const url = new URL(opts.url);
   const query = Object.fromEntries(url.searchParams);
   for (const [key, value] of Object.entries(opts.params ?? {})) if (value !== undefined) query[key] = String(value);
-  const call = { method: String(opts.method ?? 'GET').toUpperCase(), url: `${url.origin}${url.pathname}`, path: url.pathname, query, body: await bodyOf(opts.data), responseType: opts.responseType };
+  const call = { method: String(opts.method ?? 'GET').toUpperCase(), url: `${url.origin}${url.pathname}`, path: url.pathname, query, body: await bodyOf(opts.data), responseType: opts.responseType, range: opts.headers instanceof Headers ? (opts.headers.get('range') ?? undefined) : opts.headers?.Range };
   calls.push(call);
-  return { data: await respond(call), status: 200, headers: new Headers(), config: opts };
+  return { data: await respond(call), status: statusOf(call), headers: new Headers(), config: opts };
 };
 const reset = (responder = () => ({})) => {
   calls = [];
@@ -223,6 +225,52 @@ test('download: bytes as base64; Google files exported (default text, or the typ
   const exported = await run('drive_download', { file_id: 'g' }, small);
   assert.equal(exported.data_base64, null);
   assert.equal(exported.size_bytes, 3000);
+  assert.match(big.note, /Or read it in parts of 750 bytes: call again with offset 0, then each next_offset \(7 calls\)/);
+});
+
+test('download with offset: a byte Range for a stored file, a part cut from an export; the parts join into the whole file', async () => {
+  const bytes = Buffer.from(Array.from({ length: 2000 }, (_, i) => (i * 13) % 256));
+  const range = (call) => /^bytes=(\d+)-(\d+)$/.exec(call.range ?? '');
+  try {
+    // Drive answers the Range with 206 and only those bytes.
+    statusOf = (call) => (range(call) ? 206 : 200);
+    reset((call) => {
+      if (call.query.alt !== 'media') return { id: 'f1', name: 'big.bin', mimeType: 'application/octet-stream', size: '2000' };
+      const m = range(call);
+      return m ? bytes.subarray(Number(m[1]), Number(m[2]) + 1) : bytes;
+    });
+    const parts = [];
+    let offset = 0;
+    while (offset !== undefined && parts.length < 10) {
+      const part = await run('drive_download', { file_id: 'f1', offset }, small);
+      assert.ok(JSON.stringify(part).length <= 2000, 'each part fits the result limit');
+      parts.push(part);
+      offset = part.next_offset;
+    }
+    assert.deepEqual(parts.map((p) => p.bytes_read), [750, 750, 500]);
+    assert.equal(parts.map((p) => p.data_base64).join(''), bytes.toString('base64'));
+    assert.deepEqual(calls.filter((c) => c.query.alt === 'media').map((c) => c.range), ['bytes=0-749', 'bytes=750-1499', 'bytes=1500-1999'], 'each part asks for its own bytes only');
+    assert.equal(parts[0].size_bytes, 2000);
+
+    // A server that ignores Range sends the whole file: the part is cut from it.
+    statusOf = () => 200;
+    reset((call) => (call.query.alt === 'media' ? bytes : { id: 'f1', name: 'big.bin', mimeType: 'application/octet-stream', size: '2000' }));
+    const middle = await run('drive_download', { file_id: 'f1', offset: 750 }, small);
+    assert.equal(middle.data_base64, bytes.subarray(750, 1500).toString('base64'));
+    assert.equal(middle.next_offset, 1500);
+
+    // An export has no ranges: the part is cut from the whole export.
+    reset((call) => (call.path.endsWith('/export') ? bytes : { id: 'g', name: 'g', mimeType: 'application/vnd.google-apps.document' }));
+    const last = await run('drive_download', { file_id: 'g', export_mime_type: 'application/pdf', offset: 1500 }, small);
+    assert.equal(last.mime_type, 'application/pdf');
+    assert.equal(last.data_base64, bytes.subarray(1500).toString('base64'));
+    assert.equal('next_offset' in last, false);
+
+    reset(() => ({ id: 'f1', name: 'big.bin', mimeType: 'application/octet-stream', size: '2000' }));
+    await assert.rejects(run('drive_download', { file_id: 'f1', offset: 2001 }, small), /offset 2001 is past the end of the file \(2000 bytes\)/);
+  } finally {
+    statusOf = () => 200;
+  }
 });
 
 // ---------------------------------------------------------------------------

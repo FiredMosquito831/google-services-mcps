@@ -31,6 +31,7 @@ import { loadRegistry, serverByName, type AuthGroup, type ScopePolicy } from './
 import { invocation, invocationFor, setInvocation } from './invocation.js';
 import { selectToolset, type ServerToolsets, type ToolOrigin, type ToolsetSelection } from './toolset.js';
 import { settleWithin, TARGET_PREVIEW_KEY, TARGET_READ_TIMEOUT_MS } from './target-preview.js';
+import { pageSizeArgOf, shapeResult, type ShapeOptions } from './result-shape.js';
 
 /**
  * read        : safe, always registered and never gated.
@@ -203,12 +204,12 @@ export function defineTool<A extends ZodRawShape>(def: ToolDef<A>): ToolDef<A> {
   return def;
 }
 
-export function asJson(data: unknown, maxChars: number): CallToolResult {
-  let text = JSON.stringify(data, null, 2) ?? 'null';
-  if (text.length > maxChars) {
-    text = `${text.slice(0, maxChars)}\n\n[truncated: ${text.length - maxChars} more characters. Narrow the query or raise GSM_MAX_RESULT_CHARS.]`;
-  }
-  return { content: [{ type: 'text', text }] };
+/**
+ * A tool result as text: compact JSON within maxChars characters (GSM_MAX_RESULT_CHARS), paging and count fields first,
+ * cut at whole items with a truncated object when it is longer (src/core/result-shape.ts). Always valid JSON.
+ */
+export function asJson(data: unknown, maxChars: number, opts: ShapeOptions = {}): CallToolResult {
+  return { content: [{ type: 'text', text: shapeResult(data, maxChars, opts) }] };
 }
 
 /** The hint added to a missing-scope error. The admin group is set up with gsm setup-admin, not a login. */
@@ -412,6 +413,8 @@ export async function runServer(opts: {
     for (const tool of list) {
       if (registered.has(tool.name)) continue;
       registered.add(tool.name);
+      // The page-size argument of the tool, if it has one: a result cut to the limit names it in how_to_continue.
+      const shape: ShapeOptions = { pageSizeArg: pageSizeArgOf(Object.keys(tool.inputSchema)) };
       server.registerTool(
         tool.name,
         {
@@ -432,7 +435,7 @@ export async function runServer(opts: {
                 await gate({ kind: callKind(tool, args), target: tool.name, methodId: tool.methodId, args: prepared.preview });
                 return tool.handler(args as never, ctx, prepared);
               });
-              return asJson(data, cfg.maxResultChars);
+              return asJson(data, cfg.maxResultChars, shape);
             }
             if (tool.kind === 'write' || tool.kind === 'destructive') {
               // The gate runs before the handler. If it throws, the handler never runs. A write whose arguments meet the
@@ -457,7 +460,7 @@ export async function runServer(opts: {
             const data = await withAccount(typeof account === 'string' ? account : undefined, () =>
               tool.handler(args as never, ctx),
             );
-            return asJson(data, cfg.maxResultChars);
+            return asJson(data, cfg.maxResultChars, shape);
           } catch (err) {
             return { isError: true, content: [{ type: 'text', text: describeError(err, group) }] };
           }
@@ -702,7 +705,7 @@ export async function runServer(opts: {
             addedAt: account.addedAt || null,
           })),
         };
-        return text(JSON.stringify(summary, null, 2));
+        return asJson(summary, cfg.maxResultChars);
       },
     );
     server.registerTool(

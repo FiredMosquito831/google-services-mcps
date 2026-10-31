@@ -15,6 +15,7 @@ import type { RuntimeConfig } from '../core/config.js';
 import { getAuthClient, googleScopes } from '../core/auth.js';
 import { requestedAccount } from '../core/account-context.js';
 import { defineTool, type PreparedAction, type ToolDef } from '../core/tools.js';
+import { base64Part, base64PartBytes, base64PartsNote } from '../core/result-shape.js';
 import { checkLocalFile, mimeTypeOf, protectedPaths } from './local-files.js';
 import {
   GMAIL_JSON_RAW_MAX_BYTES,
@@ -617,17 +618,24 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
     defineTool({
       name: 'gmail_get_attachment',
       title: 'Get Gmail attachment',
-      description: `Download one attachment of a message as base64 (data_base64). Take message_id and attachment_id from gmail_get_message. The base64 text must fit this server's result limit (GSM_MAX_RESULT_CHARS, now ${cfg.maxResultChars} characters, so files up to about ${Math.floor(((cfg.maxResultChars - 1000) * 3) / 4)} bytes); a larger file returns its size and a note instead of the data.`,
+      description: `Download one attachment of a message as base64 (data_base64). Take message_id and attachment_id from gmail_get_message. The base64 text must fit this server's result limit (GSM_MAX_RESULT_CHARS, now ${cfg.maxResultChars} characters, so files up to about ${base64PartBytes(cfg.maxResultChars)} bytes); a larger file returns its size and a note instead of the data, or, with offset, one part of ${base64PartBytes(cfg.maxResultChars)} bytes and next_offset (join the data_base64 parts in order).`,
       kind: 'read',
       scopes: googleScopes('https://mail.google.com/', 'gmail.modify', 'gmail.readonly'),
       inputSchema: {
         message_id: z.string().describe('The message that holds the attachment (gmail_get_message id).'),
         attachment_id: z.string().describe('attachment_id from the attachments list of gmail_get_message.'),
+        offset: z
+          .number()
+          .int()
+          .min(0)
+          .optional()
+          .describe('Read the attachment in parts: the first byte of this part, 0 for the first, then next_offset from the previous answer. Without it, an attachment over the result limit returns its size and a note.'),
       },
-      async handler({ message_id, attachment_id }) {
+      async handler({ message_id, attachment_id, offset }) {
         const api = await gmailApi();
         const res = await api.users.messages.attachments.get({ userId: ME, messageId: message_id, id: attachment_id });
         const bytes = Buffer.from(res.data.data ?? '', 'base64url');
+        if (offset !== undefined) return { message_id, attachment_id, ...base64Part(bytes, offset, base64PartBytes(cfg.maxResultChars)) };
         const data = bytes.toString('base64');
         // Room for the JSON around the data: the whole answer must fit the result limit, or it would be cut.
         const room = cfg.maxResultChars - 1000;
@@ -637,7 +645,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
             attachment_id,
             size_bytes: bytes.length,
             data_base64: null,
-            note: `The attachment is ${bytes.length} bytes, ${data.length} characters as base64, over this server's result limit of ${cfg.maxResultChars} characters (GSM_MAX_RESULT_CHARS). Raise GSM_MAX_RESULT_CHARS to at least ${data.length + 1000} to download it here, or open it in Gmail.`,
+            note: `The attachment is ${bytes.length} bytes, ${data.length} characters as base64, over this server's result limit of ${cfg.maxResultChars} characters (GSM_MAX_RESULT_CHARS). Raise GSM_MAX_RESULT_CHARS to at least ${data.length + 1000} to download it here, or open it in Gmail. ${base64PartsNote(bytes.length, base64PartBytes(cfg.maxResultChars))}`,
           };
         }
         return { message_id, attachment_id, size_bytes: bytes.length, data_base64: data };

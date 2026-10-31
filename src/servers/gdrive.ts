@@ -15,6 +15,7 @@ import { z } from 'zod';
 import type { RuntimeConfig } from '../core/config.js';
 import { getAuthClient, googleScopes } from '../core/auth.js';
 import { defineTool, type ToolDef } from '../core/tools.js';
+import { base64Part, base64PartBytes, base64PartsNote } from '../core/result-shape.js';
 import { checkLocalFile, mimeTypeOf, protectedPaths } from './local-files.js';
 import { OFFICE_TYPES, officeText } from './office-text.js';
 
@@ -113,6 +114,8 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
   };
   // Room for the JSON around base64 data: the whole answer must fit the result limit, or it would be cut.
   const room = cfg.maxResultChars - 1000;
+  // Bytes of one part, when drive_download reads a file in parts (offset).
+  const part = base64PartBytes(cfg.maxResultChars);
 
   /** Comment threads of a file, for drive_read_text with include_comments. Bounded: COMMENT_PAGES pages of 100. */
   async function readComments(api: drive_v3.Drive, fileId: string): Promise<{ comments: Array<Record<string, unknown>>; more: boolean }> {
@@ -296,14 +299,20 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
     defineTool({
       name: 'drive_download',
       title: 'Download Drive file',
-      description: `Download a file's content as base64 (matches download_file_content in Google's Drive MCP server). A Google Docs, Sheets, Slides or Drawings file is exported to export_mime_type (default: text/plain for Docs and Slides, text/csv for Sheets, image/png for Drawings; for example application/pdf or the Office type). The base64 text must fit this server's result limit (GSM_MAX_RESULT_CHARS, now ${cfg.maxResultChars} characters, so files up to about ${Math.floor(((cfg.maxResultChars - 1000) * 3) / 4)} bytes); a larger file returns its size and a note instead, and is not downloaded when Drive reports its size. For readable text, drive_read_text is smaller.`,
+      description: `Download a file's content as base64 (matches download_file_content in Google's Drive MCP server). A Google Docs, Sheets, Slides or Drawings file is exported to export_mime_type (default: text/plain for Docs and Slides, text/csv for Sheets, image/png for Drawings; for example application/pdf or the Office type). The base64 text must fit this server's result limit (GSM_MAX_RESULT_CHARS, now ${cfg.maxResultChars} characters, so files up to about ${part} bytes); a larger file returns its size and a note instead, and is not downloaded when Drive reports its size. With offset, it returns one part of ${part} bytes and next_offset (join the data_base64 parts in order). For readable text, drive_read_text is smaller.`,
       kind: 'read',
       scopes: googleScopes('drive', 'drive.file', 'drive.readonly'),
       inputSchema: {
         file_id: z.string(),
         export_mime_type: z.string().optional().describe('Google files only: the type to export to, for example application/pdf. Ignored for other files.'),
+        offset: z
+          .number()
+          .int()
+          .min(0)
+          .optional()
+          .describe('Read the file in parts: the first byte of this part, 0 for the first, then next_offset from the previous answer. Without it, a file over the result limit returns its size and a note.'),
       },
-      async handler({ file_id, export_mime_type }) {
+      async handler({ file_id, export_mime_type, offset }) {
         const api = await driveApi();
         const meta = await api.files.get({ fileId: file_id, fields: 'id, name, mimeType, size', supportsAllDrives: true });
         const mime = meta.data.mimeType ?? '';
@@ -314,7 +323,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
           mime_type: contentType,
           size_bytes: bytes,
           data_base64: null,
-          note: `The content is ${bytes} bytes, ${Math.ceil(bytes / 3) * 4} characters as base64, over this server's result limit of ${cfg.maxResultChars} characters (GSM_MAX_RESULT_CHARS). Raise GSM_MAX_RESULT_CHARS to at least ${Math.ceil(bytes / 3) * 4 + 1000} to download it here, or open it in Drive.`,
+          note: `The content is ${bytes} bytes, ${Math.ceil(bytes / 3) * 4} characters as base64, over this server's result limit of ${cfg.maxResultChars} characters (GSM_MAX_RESULT_CHARS). Raise GSM_MAX_RESULT_CHARS to at least ${Math.ceil(bytes / 3) * 4 + 1000} to download it here, or open it in Drive. ${base64PartsNote(bytes, part)}`,
         });
         let data: Buffer;
         let contentType: string;
@@ -322,10 +331,39 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
           contentType = export_mime_type ?? EXPORT_DEFAULT[mime] ?? '';
           if (!contentType) throw new Error(`"${name}" is a ${mime} file, which has no default export. Give export_mime_type, for example application/pdf.`);
           if (!MIME_RE.test(contentType)) throw new Error(`export_mime_type "${contentType}" is not a valid content type.`);
+          // An export has no byte ranges: a part is cut from the whole export.
           data = bytesOf((await api.files.export({ fileId: file_id, mimeType: contentType }, { responseType: 'arraybuffer' })).data);
+          if (offset !== undefined) return { id: meta.data.id, name, mime_type: contentType, ...base64Part(data, offset, part) };
         } else {
           contentType = mime || 'application/octet-stream';
           const reported = Number(meta.data.size ?? NaN);
+          if (offset !== undefined) {
+            // One part: a Range request for the bytes of this part only, when Drive reports the size.
+            if (Number.isFinite(reported) && offset > reported) throw new Error(`offset ${offset} is past the end of the file (${reported} bytes).`);
+            const ranged = Number.isFinite(reported) && reported > 0 && offset < reported;
+            const last = ranged ? Math.min(reported, offset + part) - 1 : 0;
+            const res = await api.files.get(
+              { fileId: file_id, alt: 'media', supportsAllDrives: true },
+              { responseType: 'arraybuffer', ...(ranged ? { headers: { Range: `bytes=${offset}-${last}` } } : {}) },
+            );
+            const got = bytesOf(res.data);
+            // A 206 holds the asked range; anything else is the whole file, and the part is cut from it.
+            if (ranged && res.status === 206) {
+              const slice = got.subarray(0, last - offset + 1);
+              const end = offset + slice.length;
+              return {
+                id: meta.data.id,
+                name,
+                mime_type: contentType,
+                size_bytes: reported,
+                offset,
+                bytes_read: slice.length,
+                ...(end < reported ? { next_offset: end } : {}),
+                data_base64: slice.toString('base64'),
+              };
+            }
+            return { id: meta.data.id, name, mime_type: contentType, ...base64Part(got, offset, part) };
+          }
           if (Number.isFinite(reported) && Math.ceil(reported / 3) * 4 > room) return tooLarge(reported, contentType);
           data = bytesOf((await api.files.get({ fileId: file_id, alt: 'media', supportsAllDrives: true }, { responseType: 'arraybuffer' })).data);
         }

@@ -2,6 +2,20 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.28.0 - 2026-10-31
+
+### Changed: results are compact, at most 25,000 characters, and cut at whole items
+- Every tool result is compact JSON (no indentation). Before, results were indented JSON, which cost about a fifth to a third more tokens for the same content (measured on real-shaped results).
+- The result limit (`GSM_MAX_RESULT_CHARS`) is 25,000 characters by default (before: 50,000). Claude Code warns above 10,000 tokens and saves a result over 25,000 tokens or 50,000 characters to a file. Measured with Anthropic's public tokenizer, compact JSON of real-shaped results is 2.7 to 4.9 characters per token (median 3.4), so 25,000 characters stays under the warning for every shape measured; 30,000 would not for id-heavy lists (Drive, Calendar, Admin reports, BigQuery rows). Newer Claude models may count more tokens (UNVERIFIED). `GSM_MAX_RESULT_CHARS` still sets any other limit.
+- Paging and count fields (`nextPageToken`, `next_page_token`, `next_offset`, `row_count`, `totalSize`, `resultSizeEstimate` and the others) come first, in the result and in the `data` of `api_call`, and are never cut.
+- A longer result is no longer cut in the middle of the text. The largest list keeps its first whole items, as many as fit; a long text keeps its start and ends with `[... N more characters cut]`; the result stays valid JSON. A `truncated` object says what was left out and how to read on (`shown`, `omitted`, `items`, `how_to_continue`). When the list came with a Google page token, it says that the token skips the items that were cut, and names the page size that shows them. Before, a long result lost its end, often the page token itself, and was not valid JSON.
+- `gmail_get_attachment` and `drive_download` take `offset`: a file over the result limit comes in parts of about 18,000 bytes (`next_offset`; the `data_base64` parts join in order). Without `offset` they answer as before: the file, or its size and a note, which now also says how to read it in parts. The lower default limit would otherwise have refused files of 18 KB to 36 KB that came in one piece before.
+
+### Not changed
+- A result within the limit has the same content as before: a JSON deep-equal of the old and new text holds for every result the test suite produced (see the commit message). Only the formatting, and the place of the paging fields, differ.
+- What every tool sends to Google, the tool maps, kinds and scopes. Schemas and descriptions are the same except the new `offset` of the two download tools and the limit that their descriptions, and those of `gcs_read_text` and `gcs_read_object`, name (now 25,000 characters).
+- `_meta["anthropic/maxResultSizeChars"]` is not set: it only raises Claude Code's 50,000-character threshold, and the limit is below it.
+
 ## 1.27.0 - 2026-10-31
 
 ### Added: approvals name what they act on
