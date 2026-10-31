@@ -88,6 +88,14 @@ const SUPPLEMENTAL_ENTRIES = [
     preferred: false,
     discoveryRestUrl: 'https://googleads.googleapis.com/$discovery/rest?version=v26',
   },
+  // Merchant API Reviews. Google lists Reviews only as v1alpha (reference pages under reviews_v1alpha, 2026-10-31) and
+  // discontinued v1beta in May 2026 (Merchant API latest updates), while the directory still lists reviews_v1beta only.
+  {
+    name: 'merchantapi',
+    version: 'reviews_v1alpha',
+    preferred: false,
+    discoveryRestUrl: 'https://merchantapi.googleapis.com/$discovery/rest?version=reviews_v1alpha',
+  },
 ];
 
 const stats = { cached: 0, downloaded: 0 };

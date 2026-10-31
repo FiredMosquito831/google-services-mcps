@@ -19,7 +19,7 @@
     "gyoutube": "YouTube Data, YouTube Analytics and YouTube Reporting APIs, plus Blogger.",
     "gbusiness": "Business Profile accounts, locations, verifications, lodging, place actions, notifications and performance.",
     "gads": "Google Ads API (accounts, campaigns, ad groups, ads, keywords, budgets, conversions, assets and GAQL reporting, with every other method through the gateway), plus advertising and publisher APIs: Search Ads 360, Display & Video 360, Campaign Manager, Ad Exchange, AdSense, AdMob, Real-time Bidding and more.",
-    "gmerchant": "Merchant Center: Merchant API, Comparison Shopping Service and Manufacturer Center.",
+    "gmerchant": "Merchant Center: Merchant API and Comparison Shopping Service, through a service account key.",
     "gplay": "Google Play developer publishing and reporting, Play Games Services, Android Enterprise and Management, Play Integrity and device APIs.",
     "gfirebase": "Firebase management, App Check, App Distribution, Crashlytics, Hosting, Data Connect, Rules, Test Lab, FCM and Identity Toolkit.",
     "gmaps": "Maps Platform and location APIs: Places, Address Validation, Solar, Air Quality, Pollen, Street View Publish and related datasets.",
@@ -2538,7 +2538,7 @@
       "apis": [
         {
           "api": "merchantapi",
-          "version": "reviews_v1beta"
+          "version": "reviews_v1alpha"
         },
         {
           "api": "css",
@@ -2604,51 +2604,51 @@
       "gatewayApis": [
         {
           "api": "merchantapi",
-          "version": "accounts_v1beta"
+          "version": "accounts_v1"
         },
         {
           "api": "merchantapi",
-          "version": "conversions_v1beta"
+          "version": "conversions_v1"
         },
         {
           "api": "merchantapi",
-          "version": "datasources_v1beta"
+          "version": "datasources_v1"
         },
         {
           "api": "merchantapi",
-          "version": "inventories_v1beta"
+          "version": "inventories_v1"
         },
         {
           "api": "merchantapi",
-          "version": "issueresolution_v1beta"
+          "version": "issueresolution_v1"
         },
         {
           "api": "merchantapi",
-          "version": "lfp_v1beta"
+          "version": "lfp_v1"
         },
         {
           "api": "merchantapi",
-          "version": "notifications_v1beta"
+          "version": "notifications_v1"
         },
         {
           "api": "merchantapi",
-          "version": "ordertracking_v1beta"
+          "version": "ordertracking_v1"
         },
         {
           "api": "merchantapi",
-          "version": "products_v1beta"
+          "version": "products_v1"
         },
         {
           "api": "merchantapi",
-          "version": "promotions_v1beta"
+          "version": "promotions_v1"
         },
         {
           "api": "merchantapi",
-          "version": "quota_v1beta"
+          "version": "quota_v1"
         },
         {
           "api": "merchantapi",
-          "version": "reports_v1beta"
+          "version": "reports_v1"
         }
       ],
       "pageSizeDefaults": {
@@ -2688,7 +2688,7 @@
           "merchantap_accou_data_file_get"
         ]
       },
-      "label": "Merchant Center: Merchant Center: Merchant API, Comparison Shopping Service and Manufacturer Center."
+      "label": "Merchant Center: Merchant Center: Merchant API and Comparison Shopping Service, through a service account key."
     },
     {
       "name": "gplay",

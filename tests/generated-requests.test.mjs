@@ -668,3 +668,32 @@ test('files over the API key: a GeoTIFF, a heatmap tile and a photo come back as
   respond = () => ({ name: 'places/p/photos/x/media', photoUri: 'https://lh3.example/x' });
   assert.deepEqual(await media.handler({ name: 'places/p/photos/x/media', skipHttpRedirect: true }), { name: 'places/p/photos/x/media', photoUri: 'https://lh3.example/x' });
 });
+
+// ---------------------------------------------------------------------------
+// 1.35.2: Merchant API Reviews on v1alpha. Google discontinued v1beta in May 2026 and lists Reviews only as v1alpha.
+
+test('Merchant reviews: the 8 review tools keep their names and send to reviews/v1alpha, as the reviews_v1alpha snapshot says', async () => {
+  const names = {
+    'merchantapi.accounts.productReviews.insert': 'merchantap_acco_prod_inser_0ed9',
+    'merchantapi.accounts.productReviews.get': 'merchantap_accounts_product_get',
+    'merchantapi.accounts.productReviews.delete': 'merchantap_acco_prod_delet_223a',
+    'merchantapi.accounts.productReviews.list': 'merchantap_acco_produ_list_6080',
+    'merchantapi.accounts.merchantReviews.delete': 'merchantap_accoun_mercha_delete',
+    'merchantapi.accounts.merchantReviews.insert': 'merchantap_accoun_mercha_insert',
+    'merchantapi.accounts.merchantReviews.list': 'merchantap_account_merchan_list',
+    'merchantapi.accounts.merchantReviews.get': 'merchantap_account_merchant_get',
+  };
+  assert.equal(snapshots['merchantapi.reviews_v1beta'], undefined, 'no v1beta snapshot');
+  respond = () => ({});
+  for (const [id, name] of Object.entries(names)) {
+    const tool = await byMethod('gmerchant', id);
+    assert.equal(tool?.name, name, `${id} keeps its tool name`);
+    const resource = id.split('.')[2];
+    const args = { ...requiredArgs(tool), ...(tool.inputSchema.parent ? { parent: 'accounts/123' } : {}), ...(tool.inputSchema.name ? { name: `accounts/123/${resource}/r1` } : {}) };
+    const [call] = await requestsOf(tool, args);
+    assert.match(call.url, /^https:\/\/merchantapi\.googleapis\.com\/reviews\/v1alpha\/accounts\//, `${id}: ${call.url}`);
+    const hit = contract(call, id);
+    assert.deepEqual(hit, { id, problems: [] }, id);
+    assert.equal(index.find((e) => e.method.id === id && e.regex.test(call.url))?.key, 'merchantapi.reviews_v1alpha', `${id} matches the v1alpha document`);
+  }
+});

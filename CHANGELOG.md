@@ -2,6 +2,19 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.35.2 - 2026-10-31
+
+### Fixed: gmerchant uses the Merchant API versions Google serves
+- Google discontinued Merchant API v1beta: "The Merchant API v1beta version discontinued. All API calls must now be directed to the `v1` or `v1alpha` versions." (May 2026, https://developers.google.com/merchant/api/latest-updates; the v1beta reference pages were removed in October 2026). gmerchant's gateway still reached 12 `*_v1beta` APIs, and its 8 Reviews tools called Reviews v1beta, so the `curated` toolset (the gateway tools) and every review call went to a discontinued version.
+- The gateway now reaches the same 12 sub-APIs at v1 (accounts, conversions, data sources, inventories, issue resolution, Local Finance, notifications, order tracking, products, promotions, quota, reports), the versions the per-method tools already used. The gateway's methods change by six: `accounts.limits.get` and `.list` and `accounts.regions.batchCreate`, `.batchUpdate` and `.batchDelete` (destructive) are new; `accounts.onlineReturnPolicies.patch` existed only in v1beta (v1 and v1alpha have create, get, list and delete), so it is no longer reachable.
+- The 8 Reviews tools call Reviews v1alpha (`reviews/v1alpha/...`), the only Reviews version Google lists (https://developers.google.com/merchant/api/reference/rest/reviews_v1alpha/accounts.productReviews/list; the v1beta page answers 404). The tools keep their names, arguments and kinds; the v1alpha document has the same 8 methods and the same request fields. Google's Discovery directory does not list Reviews v1alpha, so the catalog takes its document from `https://merchantapi.googleapis.com/$discovery/rest?version=reviews_v1alpha` (SUPPLEMENTAL_ENTRIES in `scripts/build-catalog.mjs`; 542 catalog entries, 31,641 methods).
+- The 13 merchantapi v1beta catalog entries are unassigned, each with Google's discontinuation as the reason.
+- gmerchant's description no longer names Manufacturer Center, whose 8 tools never load with the key's `content` scope, and says it works through a service account key. docs/products/gmerchant.md, docs/CHOOSING.md (group and setup) and docs/USING.md (the data source fetch asks first since 1.24.2) are corrected.
+
+### Not changed
+- Tool maps and tool kinds of all 23 plugins. tools/list changes only for the 8 Reviews tools of gmerchant: the method line in each description names `reviews/v1alpha`, and the two insert tools' body schemas list the same fields in Google's v1alpha order. `gsm scopes` over all 207 cases: the same scopes and coverage everywhere; the 6 gmerchant `all` and `curated` cases count 124 gateway methods instead of 120. Not checked against live Google.
+- `api_describe` and `api_call` read a method's Discovery document from `https://www.googleapis.com/discovery/v1/apis/<api>/<version>/rest`, which answers 404 for every merchantapi version (checked 2026-10-31, v1beta and v1 alike), so on gmerchant they still fail before any request is sent. This release does not change that.
+
 ## 1.35.1 - 2026-10-31
 
 ### Fixed: profile_me shows your name

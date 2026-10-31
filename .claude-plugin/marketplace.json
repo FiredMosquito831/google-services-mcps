@@ -98,7 +98,7 @@
     {
       "name": "gmerchant",
       "source": "./plugins/gmerchant",
-      "description": "Merchant Center: Merchant API, Comparison Shopping Service and Manufacturer Center."
+      "description": "Merchant Center: Merchant API and Comparison Shopping Service, through a service account key."
     },
     {
       "name": "gplay",

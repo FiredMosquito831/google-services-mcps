@@ -149,6 +149,14 @@ test('every catalog entry appears exactly once across generated, gateway and una
   const subsetKeys = new Set(
     productIds.flatMap((id) => map.products[id].generated.filter((e) => e.include).map((e) => key(e.api, e.version))),
   );
+  // A product's gateway may also list a whole entry the same product generates (gmerchant's Merchant API v1 resource
+  // APIs since Google discontinued v1beta), so its gateway tools (the curated toolset) reach them too. Such an entry
+  // appears once in that product's generated list and once in the same product's gateway, and nowhere else.
+  const sameProductTwice = (places) => {
+    if (places.length !== 2) return false;
+    const owners = places.map((p) => p.slice(0, p.lastIndexOf('.')));
+    return owners[0] === owners[1] && places.some((p) => p.endsWith('.generated')) && places.some((p) => p.endsWith('.gateway'));
+  };
   for (const k of catalogApis.keys()) {
     const places = seen.get(k) ?? [];
     if (subsetKeys.has(k)) {
@@ -157,6 +165,7 @@ test('every catalog entry appears exactly once across generated, gateway and una
       assert.ok(generated === 1 && gateway <= 1 && places.length === generated + gateway, `${k} appears ${places.join(', ') || 'nowhere'}`);
       continue;
     }
+    if (sameProductTwice(places)) continue;
     assert.equal(places.length, 1, `${k} appears ${places.length} times: ${places.join(', ') || 'nowhere'}`);
   }
 });
@@ -172,11 +181,20 @@ test('every discovery error is listed in unassigned with a reason', () => {
 
 test('a non-preferred version is in the product of its API name', () => {
   const preferredByName = new Map(catalog.apis.filter((a) => a.preferred).map((a) => [a.name, a]));
+  const unassignedKeys = new Set(map.unassigned.map((u) => key(u.api, u.version)));
   for (const api of catalog.apis) {
     if (api.preferred) continue;
     const preferred = preferredByName.get(api.name);
     if (!preferred) continue; // no preferred version in the directory (cloudquotas), see the next test
     const own = key(api.name, api.version);
+    if (unassignedKeys.has(key(preferred.name, preferred.version))) {
+      // Google retired the version its directory still marks preferred (merchantapi reviews_v1beta, v1beta discontinued
+      // in May 2026), so it is unassigned with a reason. The versions still assigned share one product.
+      if (productOf(own) === null) continue;
+      const owners = new Set(catalog.apis.filter((a) => a.name === api.name).map((a) => productOf(key(a.name, a.version))).filter((p) => p !== null));
+      assert.equal(owners.size, 1, `${api.name}: its assigned versions are in ${[...owners].join(', ')}`);
+      continue;
+    }
     assert.equal(
       productOf(own),
       productOf(key(preferred.name, preferred.version)),

@@ -381,9 +381,9 @@
       "revision": "20261028",
       "fetchedAt": "2026-10-30T15:04:15.593Z"
     },
-    "merchantapi.reviews_v1beta": {
+    "merchantapi.reviews_v1alpha": {
       "revision": "20261028",
-      "fetchedAt": "2026-10-30T15:04:11.627Z"
+      "fetchedAt": "2026-10-31T06:04:05.448Z"
     },
     "monitoring.v3": {
       "revision": "20261022",
