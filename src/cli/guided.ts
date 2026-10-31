@@ -77,7 +77,7 @@ const SCOPE_CHOICES: Choice<string>[] = [
 
 const CONFIRM_CHOICES: Choice<string>[] = [
   { value: 'every-change', label: 'Before every change', hint: 'the default' },
-  { value: 'destructive-only', label: 'Only before deleting or other destructive changes' },
+  { value: 'destructive-only', label: 'Only before destructive actions', hint: 'deleting, sending, sharing, publishing' },
   { value: 'off', label: 'Never ask', hint: 'policy rules still apply' },
 ];
 

@@ -4,7 +4,7 @@ Google Workspace administration: Cloud Identity, Chrome management and policy, G
 
 - Plugin: `gadmin`, MCP server: `gadmin`, login: Service account with domain-wide delegation, then `setup-admin`
 - Install: `claude plugin install gadmin@google-services-mcps`
-- Tools: 375 total. Curated 28, per-method 343, gateway 3. Read 155, write 159, destructive 60, dynamic 1.
+- Tools: 375 total. Curated 28, per-method 343, gateway 3. Read 155, write 138, destructive 81, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
@@ -73,7 +73,7 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `admin_asps_list` | read | directory.asps.list | admin.directory.user.security |
 | `admin_channels_stop_9bac` | destructive | admin.channels.stop | admin.directory.user, admin.directory.user.alias |
 | `admin_channels_stop_9bac_2` | destructive | admin.channels.stop | admin.reports.audit.readonly |
-| `admin_chromeosdevices_action` | write | directory.chromeosdevices.action | admin.directory.device.chromeos |
+| `admin_chromeosdevices_action` | destructive | directory.chromeosdevices.action | admin.directory.device.chromeos |
 | `admin_chromeosdevices_get` | read | directory.chromeosdevices.get | admin.directory.device.chromeos, admin.directory.device.chromeos.readonly |
 | `admin_chromeosdevices_list` | read | directory.chromeosdevices.list | admin.directory.device.chromeos, admin.directory.device.chromeos.readonly |
 | `admin_chromeosdevices_move_devices_to` | write | directory.chromeosdevices.moveDevicesToOu | admin.directory.device.chromeos |
@@ -85,9 +85,9 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `admin_custome_chrome_printer_batch_cr` | write | admin.customers.chrome.printers.batchCreatePrinters | admin.chrome.printers |
 | `admin_custome_chrome_printer_batch_de` | write | admin.customers.chrome.printers.batchDeletePrinters | admin.chrome.printers |
 | `admin_custome_chrome_printer_list_pri` | read | admin.customers.chrome.printers.listPrinterModels | admin.chrome.printers, admin.chrome.printers.readonly |
-| `admin_custome_devices_chromeo_batch_c` | write | admin.customer.devices.chromeos.batchChangeStatus | admin.directory.device.chromeos |
+| `admin_custome_devices_chromeo_batch_c` | destructive | admin.customer.devices.chromeos.batchChangeStatus | admin.directory.device.chromeos |
 | `admin_custome_devices_chromeo_count_c` | read | admin.customer.devices.chromeos.countChromeOsDevices | admin.directory.device.chromeos, admin.directory.device.chromeos.readonly |
-| `admin_custome_devices_chromeo_issue_c` | write | admin.customer.devices.chromeos.issueCommand | admin.directory.device.chromeos |
+| `admin_custome_devices_chromeo_issue_c` | destructive | admin.customer.devices.chromeos.issueCommand | admin.directory.device.chromeos |
 | `admin_customer_chrome_print_se_create` | write | admin.customers.chrome.printServers.create | admin.chrome.printers |
 | `admin_customer_chrome_print_se_delete` | destructive | admin.customers.chrome.printServers.delete | admin.chrome.printers |
 | `admin_customer_chrome_print_ser_patch` | write | admin.customers.chrome.printServers.patch | admin.chrome.printers |
@@ -127,7 +127,7 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `admin_members_list` | read | directory.members.list | admin.directory.group, admin.directory.group.member |
 | `admin_members_patch` | write | directory.members.patch | admin.directory.group, admin.directory.group.member |
 | `admin_members_update` | write | directory.members.update | admin.directory.group, admin.directory.group.member |
-| `admin_mobiledevices_action` | write | directory.mobiledevices.action | admin.directory.device.mobile, admin.directory.device.mobile.action |
+| `admin_mobiledevices_action` | destructive | directory.mobiledevices.action | admin.directory.device.mobile, admin.directory.device.mobile.action |
 | `admin_mobiledevices_delete` | destructive | directory.mobiledevices.delete | admin.directory.device.mobile |
 | `admin_mobiledevices_get` | read | directory.mobiledevices.get | admin.directory.device.mobile, admin.directory.device.mobile.action |
 | `admin_mobiledevices_list` | read | directory.mobiledevices.list | admin.directory.device.mobile, admin.directory.device.mobile.action |
@@ -159,14 +159,14 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `admin_resources_features_update` | write | directory.resources.features.update | admin.directory.resource.calendar |
 | `admin_role_assignments_delete` | destructive | directory.roleAssignments.delete | admin.directory.rolemanagement |
 | `admin_role_assignments_get` | read | directory.roleAssignments.get | admin.directory.rolemanagement, admin.directory.rolemanagement.readonly |
-| `admin_role_assignments_insert` | write | directory.roleAssignments.insert | admin.directory.rolemanagement |
+| `admin_role_assignments_insert` | destructive | directory.roleAssignments.insert | admin.directory.rolemanagement |
 | `admin_role_assignments_list` | read | directory.roleAssignments.list | admin.directory.rolemanagement, admin.directory.rolemanagement.readonly |
 | `admin_roles_delete` | destructive | directory.roles.delete | admin.directory.rolemanagement |
 | `admin_roles_get` | read | directory.roles.get | admin.directory.rolemanagement, admin.directory.rolemanagement.readonly |
-| `admin_roles_insert` | write | directory.roles.insert | admin.directory.rolemanagement |
+| `admin_roles_insert` | destructive | directory.roles.insert | admin.directory.rolemanagement |
 | `admin_roles_list` | read | directory.roles.list | admin.directory.rolemanagement, admin.directory.rolemanagement.readonly |
-| `admin_roles_patch` | write | directory.roles.patch | admin.directory.rolemanagement |
-| `admin_roles_update` | write | directory.roles.update | admin.directory.rolemanagement |
+| `admin_roles_patch` | destructive | directory.roles.patch | admin.directory.rolemanagement |
+| `admin_roles_update` | destructive | directory.roles.update | admin.directory.rolemanagement |
 | `admin_schemas_delete` | destructive | directory.schemas.delete | admin.directory.userschema |
 | `admin_schemas_get` | read | directory.schemas.get | admin.directory.userschema, admin.directory.userschema.readonly |
 | `admin_schemas_insert` | write | directory.schemas.insert | admin.directory.userschema |
@@ -177,9 +177,9 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `admin_tokens_get` | read | directory.tokens.get | admin.directory.user.security |
 | `admin_tokens_list` | read | directory.tokens.list | admin.directory.user.security |
 | `admin_transfers_get` | read | datatransfer.transfers.get | admin.datatransfer, admin.datatransfer.readonly |
-| `admin_transfers_insert` | write | datatransfer.transfers.insert | admin.datatransfer |
+| `admin_transfers_insert` | destructive | datatransfer.transfers.insert | admin.datatransfer |
 | `admin_transfers_list` | read | datatransfer.transfers.list | admin.datatransfer, admin.datatransfer.readonly |
-| `admin_two_step_verification_turn_off` | write | directory.twoStepVerification.turnOff | admin.directory.user.security |
+| `admin_two_step_verification_turn_off` | destructive | directory.twoStepVerification.turnOff | admin.directory.user.security |
 | `admin_user_usage_report_get` | read | reports.userUsageReport.get | admin.reports.usage.readonly |
 | `admin_users_aliases_delete` | destructive | directory.users.aliases.delete | admin.directory.user, admin.directory.user.alias |
 | `admin_users_aliases_insert` | write | directory.users.aliases.insert | admin.directory.user, admin.directory.user.alias |
@@ -190,7 +190,7 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `admin_users_get` | read | directory.users.get | admin.directory.user, admin.directory.user.readonly |
 | `admin_users_insert` | write | directory.users.insert | admin.directory.user |
 | `admin_users_list_a3ea` | read | directory.users.list | admin.directory.user, admin.directory.user.readonly |
-| `admin_users_make_admin` | write | directory.users.makeAdmin | admin.directory.user |
+| `admin_users_make_admin` | destructive | directory.users.makeAdmin | admin.directory.user |
 | `admin_users_patch` | write | directory.users.patch | admin.directory.user |
 | `admin_users_photos_delete` | destructive | directory.users.photos.delete | admin.directory.user |
 | `admin_users_photos_get` | read | directory.users.photos.get | admin.directory.user, admin.directory.user.readonly |
@@ -273,25 +273,25 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `cloudid_groups_patch` | write | cloudidentity.groups.patch | cloud-identity.groups, cloud-platform |
 | `cloudid_groups_search` | read | cloudidentity.groups.search | cloud-identity.groups, cloud-identity.groups.readonly |
 | `cloudid_groups_update_security_settin` | write | cloudidentity.groups.updateSecuritySettings | cloud-identity.groups, cloud-platform |
-| `cloudid_inbound_oidc_sso_profi_create` | write | cloudidentity.inboundOidcSsoProfiles.create | cloud-identity.inboundsso, cloud-platform |
+| `cloudid_inbound_oidc_sso_profi_create` | destructive | cloudidentity.inboundOidcSsoProfiles.create | cloud-identity.inboundsso, cloud-platform |
 | `cloudid_inbound_oidc_sso_profi_delete` | destructive | cloudidentity.inboundOidcSsoProfiles.delete | cloud-identity.inboundsso, cloud-platform |
-| `cloudid_inbound_oidc_sso_profil_patch` | write | cloudidentity.inboundOidcSsoProfiles.patch | cloud-identity.inboundsso, cloud-platform |
+| `cloudid_inbound_oidc_sso_profil_patch` | destructive | cloudidentity.inboundOidcSsoProfiles.patch | cloud-identity.inboundsso, cloud-platform |
 | `cloudid_inbound_oidc_sso_profile_list` | read | cloudidentity.inboundOidcSsoProfiles.list | cloud-identity.inboundsso, cloud-identity.inboundsso.readonly |
 | `cloudid_inbound_oidc_sso_profiles_get` | read | cloudidentity.inboundOidcSsoProfiles.get | cloud-identity.inboundsso, cloud-identity.inboundsso.readonly |
 | `cloudid_inbound_sa_idp_credent_delete` | destructive | cloudidentity.inboundSamlSsoProfiles.idpCredentials.delete | cloud-identity.inboundsso, cloud-platform |
 | `cloudid_inbound_sam_idp_credenti_list` | read | cloudidentity.inboundSamlSsoProfiles.idpCredentials.list | cloud-identity.inboundsso, cloud-identity.inboundsso.readonly |
-| `cloudid_inbound_saml_idp_credenti_add` | write | cloudidentity.inboundSamlSsoProfiles.idpCredentials.add | cloud-identity.inboundsso, cloud-platform |
+| `cloudid_inbound_saml_idp_credenti_add` | destructive | cloudidentity.inboundSamlSsoProfiles.idpCredentials.add | cloud-identity.inboundsso, cloud-platform |
 | `cloudid_inbound_saml_idp_credenti_get` | read | cloudidentity.inboundSamlSsoProfiles.idpCredentials.get | cloud-identity.inboundsso, cloud-identity.inboundsso.readonly |
-| `cloudid_inbound_saml_sso_profi_create` | write | cloudidentity.inboundSamlSsoProfiles.create | cloud-identity.inboundsso, cloud-platform |
+| `cloudid_inbound_saml_sso_profi_create` | destructive | cloudidentity.inboundSamlSsoProfiles.create | cloud-identity.inboundsso, cloud-platform |
 | `cloudid_inbound_saml_sso_profi_delete` | destructive | cloudidentity.inboundSamlSsoProfiles.delete | cloud-identity.inboundsso, cloud-platform |
-| `cloudid_inbound_saml_sso_profil_patch` | write | cloudidentity.inboundSamlSsoProfiles.patch | cloud-identity.inboundsso, cloud-platform |
+| `cloudid_inbound_saml_sso_profil_patch` | destructive | cloudidentity.inboundSamlSsoProfiles.patch | cloud-identity.inboundsso, cloud-platform |
 | `cloudid_inbound_saml_sso_profile_list` | read | cloudidentity.inboundSamlSsoProfiles.list | cloud-identity.inboundsso, cloud-identity.inboundsso.readonly |
 | `cloudid_inbound_saml_sso_profiles_get` | read | cloudidentity.inboundSamlSsoProfiles.get | cloud-identity.inboundsso, cloud-identity.inboundsso.readonly |
-| `cloudid_inbound_sso_assignment_create` | write | cloudidentity.inboundSsoAssignments.create | cloud-identity.inboundsso, cloud-platform |
+| `cloudid_inbound_sso_assignment_create` | destructive | cloudidentity.inboundSsoAssignments.create | cloud-identity.inboundsso, cloud-platform |
 | `cloudid_inbound_sso_assignment_delete` | destructive | cloudidentity.inboundSsoAssignments.delete | cloud-identity.inboundsso, cloud-platform |
 | `cloudid_inbound_sso_assignments_get` | read | cloudidentity.inboundSsoAssignments.get | cloud-identity.inboundsso, cloud-identity.inboundsso.readonly |
 | `cloudid_inbound_sso_assignments_list` | read | cloudidentity.inboundSsoAssignments.list | cloud-identity.inboundsso, cloud-identity.inboundsso.readonly |
-| `cloudid_inbound_sso_assignments_patch` | write | cloudidentity.inboundSsoAssignments.patch | cloud-identity.inboundsso, cloud-platform |
+| `cloudid_inbound_sso_assignments_patch` | destructive | cloudidentity.inboundSsoAssignments.patch | cloud-identity.inboundsso, cloud-platform |
 | `cloudid_policies_create` | write | cloudidentity.policies.create | cloud-identity.policies |
 | `cloudid_policies_delete` | destructive | cloudidentity.policies.delete | cloud-identity.policies |
 | `cloudid_policies_get` | read | cloudidentity.policies.get | cloud-identity.policies, cloud-identity.policies.readonly |
@@ -365,10 +365,10 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `reseller_subscriptions_activate` | write | reseller.subscriptions.activate | apps.order |
 | `reseller_subscriptions_change_plan` | write | reseller.subscriptions.changePlan | apps.order |
 | `reseller_subscriptions_change_renewal` | write | reseller.subscriptions.changeRenewalSettings | apps.order |
-| `reseller_subscriptions_change_seats` | write | reseller.subscriptions.changeSeats | apps.order |
+| `reseller_subscriptions_change_seats` | destructive | reseller.subscriptions.changeSeats | apps.order |
 | `reseller_subscriptions_delete` | destructive | reseller.subscriptions.delete | apps.order |
 | `reseller_subscriptions_get` | read | reseller.subscriptions.get | apps.order, apps.order.readonly |
-| `reseller_subscriptions_insert` | write | reseller.subscriptions.insert | apps.order |
+| `reseller_subscriptions_insert` | destructive | reseller.subscriptions.insert | apps.order |
 | `reseller_subscriptions_list` | read | reseller.subscriptions.list | apps.order, apps.order.readonly |
 | `reseller_subscriptions_start_paid_ser` | write | reseller.subscriptions.startPaidService | apps.order |
 | `reseller_subscriptions_suspend` | destructive | reseller.subscriptions.suspend | apps.order |
@@ -390,7 +390,7 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `vault_matters_holds_delete` | destructive | vault.matters.holds.delete | ediscovery |
 | `vault_matters_holds_get` | read | vault.matters.holds.get | ediscovery, ediscovery.readonly |
 | `vault_matters_holds_list` | read | vault.matters.holds.list | ediscovery, ediscovery.readonly |
-| `vault_matters_holds_remove_held_accou` | write | vault.matters.holds.removeHeldAccounts | ediscovery |
+| `vault_matters_holds_remove_held_accou` | destructive | vault.matters.holds.removeHeldAccounts | ediscovery |
 | `vault_matters_holds_update` | write | vault.matters.holds.update | ediscovery |
 | `vault_matters_list` | read | vault.matters.list | ediscovery, ediscovery.readonly |
 | `vault_matters_remove_permissions` | destructive | vault.matters.removePermissions | ediscovery |

@@ -6,6 +6,8 @@
  *
  * gcs_write_text is a write: the gate asks first, and its prepare step shows the bucket, object, size and whether an
  * existing object may be replaced. It never replaces an object unless overwrite is true (ifGenerationMatch=0 otherwise).
+ * A call with overwrite true may replace a whole object, so it is gated as destructive (destructiveWhen; the destructive
+ * rule, docs/SECURITY.md).
  * A local file goes through the shared guard (local-files.ts), so files of the Google sign-in data are refused.
  */
 import { createReadStream } from 'node:fs';
@@ -240,8 +242,10 @@ export function storageTools(cfg: RuntimeConfig, call: CloudCall): ToolDef[] {
       name: 'gcs_write_text',
       title: 'Write a Cloud Storage object',
       description:
-        "Write a Cloud Storage object from text or a local file (matches write_text in Google's Cloud Storage MCP server). Unlike Google's write_text it does not replace an existing object unless overwrite is true: by default the write is made only if no object of that name exists (ifGenerationMatch=0), and an existing one is reported, not changed. local_path is a full path; files in the folder that holds the Google sign-in data are refused. content_type defaults to text/plain; charset=utf-8 for text, by extension for a file. It asks first, and the approval shows the destination, the size and whether an object may be replaced. One request (uploadType=media).",
+        "Write a Cloud Storage object from text or a local file (matches write_text in Google's Cloud Storage MCP server). Unlike Google's write_text it does not replace an existing object unless overwrite is true: by default the write is made only if no object of that name exists (ifGenerationMatch=0), and an existing one is reported, not changed. local_path is a full path; files in the folder that holds the Google sign-in data are refused. content_type defaults to text/plain; charset=utf-8 for text, by extension for a file. It asks first, and the approval shows the destination, the size and whether an object may be replaced; with overwrite true it asks as a destructive action. One request (uploadType=media).",
       kind: 'write',
+      // overwrite true may replace a whole object: whole-content replacement (the destructive rule).
+      destructiveWhen: ({ overwrite }) => overwrite === true,
       scopes: WRITE_SCOPES,
       inputSchema: {
         bucket,

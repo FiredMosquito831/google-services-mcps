@@ -57,7 +57,7 @@
   },
   {
     "name": "mcp__plugin_gads_gads__admob_accounts_mediation_report_generate",
-    "kind": "write",
+    "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/admob.readonly",
       "https://www.googleapis.com/auth/admob.report"
@@ -67,7 +67,7 @@
   },
   {
     "name": "mcp__plugin_gads_gads__admob_accounts_network_report_generate",
-    "kind": "write",
+    "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/admob.readonly",
       "https://www.googleapis.com/auth/admob.report"
@@ -1539,7 +1539,7 @@
   },
   {
     "name": "mcp__plugin_gads_gads__googleads_geo_target_constants_suggest",
-    "kind": "write",
+    "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/adwords"
     ],
@@ -1566,7 +1566,7 @@
   },
   {
     "name": "mcp__plugin_gads_gads__googleads_keyword_theme_constants_suggest",
-    "kind": "write",
+    "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/adwords"
     ],

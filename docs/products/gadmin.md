@@ -61,7 +61,7 @@ Google has no official MCP server for Workspace administration (none was found o
 ## Safety
 
 - This product can change every user in the domain. Use `readonly` until you need changes.
-- Reads never ask. Writes ask first. Deletes ask twice. There are 60 destructive tools.
+- Reads never ask. Writes ask first. Deletes ask twice, and since 1.26.3 so do admin and role grants, turning off 2-Step Verification, SSO profile and assignment changes, device actions and commands, data transfers, reseller seat changes and new subscriptions, and removing accounts from a Vault hold. There are 81 destructive tools.
 - A token without a write scope gets HTTP 403 on writes. Check the scopes before you test a write.
 - The `confirmation` option defaults to `every-change`. Change it with `printf '%s' '{"confirmation":"destructive-only"}' | claude plugin configure gadmin@google-services-mcps --values-stdin` (JSON on stdin), or `/plugin configure gadmin@google-services-mcps` in Claude Code.
 

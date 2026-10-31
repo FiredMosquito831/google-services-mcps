@@ -4,7 +4,7 @@ Generative and classic AI APIs: Discovery Engine, Vertex AI, Dialogflow, Vision,
 
 - Plugin: `gai`, MCP server: `gai`, login: Desktop OAuth client, then `login cloud`
 - Install: `claude plugin install gai@google-services-mcps`
-- Tools: 366 total. Curated 12, per-method 350, gateway 3. Read 162, write 146, destructive 57, dynamic 1.
+- Tools: 366 total. Curated 12, per-method 350, gateway 3. Read 170, write 134, destructive 61, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
@@ -166,7 +166,7 @@ The tools that match Google's official MCP server for this product (https://docs
 | `discoverye_proj_locat_colle_data_site_enabl` | write | discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.enableAdvancedSiteSearch | cloud-platform, discoveryengine.readwrite |
 | `discoverye_proj_locat_colle_data_site_fetch` | read | discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.fetchDomainVerificationStatus | cloud-platform, discoveryengine.readwrite |
 | `discoverye_proj_locat_colle_data_site_recra` | write | discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.recrawlUris | cloud-platform, discoveryengine.readwrite |
-| `discoverye_proj_locat_colle_data_user_colle` | read | discoveryengine.projects.locations.collections.dataStores.userEvents.collect | cloud-platform, discoveryengine.assist.readwrite |
+| `discoverye_proj_locat_colle_data_user_colle` | write | discoveryengine.projects.locations.collections.dataStores.userEvents.collect | cloud-platform, discoveryengine.assist.readwrite |
 | `discoverye_proj_locat_colle_data_user_impor` | write | discoveryengine.projects.locations.collections.dataStores.userEvents.import | cloud-platform, discoveryengine.assist.readwrite |
 | `discoverye_proj_locat_colle_data_user_purge` | destructive | discoveryengine.projects.locations.collections.dataStores.userEvents.purge | cloud-platform, discoveryengine.assist.readwrite |
 | `discoverye_proj_locat_colle_data_user_write` | write | discoveryengine.projects.locations.collections.dataStores.userEvents.write | cloud-platform, discoveryengine.assist.readwrite |
@@ -200,11 +200,11 @@ The tools that match Google's official MCP server for this product (https://docs
 | `discoverye_proje_locat_collec_data_s_delete` | destructive | discoveryengine.projects.locations.collections.dataStores.delete | cloud-platform, discoveryengine.readwrite |
 | `discoverye_proje_locat_collec_data_s_get_ia` | read | discoveryengine.projects.locations.collections.dataStores.getIamPolicy | cloud-platform, discoveryengine.readwrite |
 | `discoverye_proje_locat_collec_data_s_get_si` | read | discoveryengine.projects.locations.collections.dataStores.getSiteSearchEngine | cloud-platform, discoveryengine.readwrite |
-| `discoverye_proje_locat_collec_data_s_set_ia` | write | discoveryengine.projects.locations.collections.dataStores.setIamPolicy | cloud-platform, discoveryengine.readwrite |
+| `discoverye_proje_locat_collec_data_s_set_ia` | destructive | discoveryengine.projects.locations.collections.dataStores.setIamPolicy | cloud-platform, discoveryengine.readwrite |
 | `discoverye_proje_locat_collec_engine_create` | write | discoveryengine.projects.locations.collections.engines.create | cloud-platform, discoveryengine.readwrite |
 | `discoverye_proje_locat_collec_engine_delete` | destructive | discoveryengine.projects.locations.collections.engines.delete | cloud-platform, discoveryengine.readwrite |
 | `discoverye_proje_locat_collec_engine_get_ia` | read | discoveryengine.projects.locations.collections.engines.getIamPolicy | cloud-platform, discoveryengine.readwrite |
-| `discoverye_proje_locat_collec_engine_set_ia` | write | discoveryengine.projects.locations.collections.engines.setIamPolicy | cloud-platform, discoveryengine.readwrite |
+| `discoverye_proje_locat_collec_engine_set_ia` | destructive | discoveryengine.projects.locations.collections.engines.setIamPolicy | cloud-platform, discoveryengine.readwrite |
 | `discoverye_proje_locat_data_branc_docum_get` | read | discoveryengine.projects.locations.dataStores.branches.documents.get | cloud-platform, discoveryengine.readwrite |
 | `discoverye_proje_locat_data_branc_opera_get` | read | discoveryengine.projects.locations.dataStores.branches.operations.get | cloud-platform, discoveryengine.readwrite |
 | `discoverye_proje_locat_data_model_opera_get` | read | discoveryengine.projects.locations.dataStores.models.operations.get | cloud-platform, discoveryengine.readwrite |
@@ -228,7 +228,7 @@ The tools that match Google's official MCP server for this product (https://docs
 | `discoverye_proje_locat_data_s_site_s_enable` | write | discoveryengine.projects.locations.dataStores.siteSearchEngine.enableAdvancedSiteSearch | cloud-platform, discoveryengine.readwrite |
 | `discoverye_proje_locat_data_s_site_s_recraw` | write | discoveryengine.projects.locations.dataStores.siteSearchEngine.recrawlUris | cloud-platform, discoveryengine.readwrite |
 | `discoverye_proje_locat_data_s_sugges_import` | write | discoveryengine.projects.locations.dataStores.suggestionDenyListEntries.import | cloud-platform, discoveryengine.assist.readwrite |
-| `discoverye_proje_locat_data_s_user_e_collec` | read | discoveryengine.projects.locations.dataStores.userEvents.collect | cloud-platform, discoveryengine.assist.readwrite |
+| `discoverye_proje_locat_data_s_user_e_collec` | write | discoveryengine.projects.locations.dataStores.userEvents.collect | cloud-platform, discoveryengine.assist.readwrite |
 | `discoverye_proje_locat_data_s_user_e_import` | write | discoveryengine.projects.locations.dataStores.userEvents.import | cloud-platform, discoveryengine.assist.readwrite |
 | `discoverye_proje_locat_data_sessi_answe_get` | read | discoveryengine.projects.locations.dataStores.sessions.answers.get | cloud-platform, discoveryengine.readwrite |
 | `discoverye_proje_locat_data_site_targe_list` | read | discoveryengine.projects.locations.dataStores.siteSearchEngine.targetSites.list | cloud-platform, discoveryengine.readwrite |
@@ -275,15 +275,15 @@ The tools that match Google's official MCP server for this product (https://docs
 | `discoverye_project_locatio_collect_get_data` | read | discoveryengine.projects.locations.collections.getDataConnector | cloud-platform, discoveryengine.assist.readwrite |
 | `discoverye_project_locatio_collect_update_d` | write | discoveryengine.projects.locations.collections.updateDataConnector | cloud-platform, discoveryengine.assist.readwrite |
 | `discoverye_project_locatio_collecti_get_iam` | read | discoveryengine.projects.locations.collections.getIamPolicy | cloud-platform, discoveryengine.readwrite |
-| `discoverye_project_locatio_collecti_set_iam` | write | discoveryengine.projects.locations.collections.setIamPolicy | cloud-platform, discoveryengine.readwrite |
+| `discoverye_project_locatio_collecti_set_iam` | destructive | discoveryengine.projects.locations.collections.setIamPolicy | cloud-platform, discoveryengine.readwrite |
 | `discoverye_project_locatio_data_st_complete` | read | discoveryengine.projects.locations.dataStores.completeQuery | cloud-platform, discoveryengine.assist.readwrite |
 | `discoverye_project_locatio_data_st_get_site` | read | discoveryengine.projects.locations.dataStores.getSiteSearchEngine | cloud-platform, discoveryengine.readwrite |
 | `discoverye_project_locatio_data_sto_get_iam` | read | discoveryengine.projects.locations.dataStores.getIamPolicy | cloud-platform, discoveryengine.readwrite |
-| `discoverye_project_locatio_data_sto_set_iam` | write | discoveryengine.projects.locations.dataStores.setIamPolicy | cloud-platform, discoveryengine.readwrite |
+| `discoverye_project_locatio_data_sto_set_iam` | destructive | discoveryengine.projects.locations.dataStores.setIamPolicy | cloud-platform, discoveryengine.readwrite |
 | `discoverye_project_locatio_identit_import_i` | write | discoveryengine.projects.locations.identityMappingStores.importIdentityMappings | cloud-platform, discoveryengine.readwrite |
 | `discoverye_project_locatio_identit_list_ide` | read | discoveryengine.projects.locations.identityMappingStores.listIdentityMappings | cloud-platform, discoveryengine.readwrite |
 | `discoverye_project_locatio_identit_purge_id` | write | discoveryengine.projects.locations.identityMappingStores.purgeIdentityMappings | cloud-platform, discoveryengine.readwrite |
-| `discoverye_project_locatio_user_eve_collect` | read | discoveryengine.projects.locations.userEvents.collect | cloud-platform, discoveryengine.assist.readwrite |
+| `discoverye_project_locatio_user_eve_collect` | write | discoveryengine.projects.locations.userEvents.collect | cloud-platform, discoveryengine.assist.readwrite |
 | `discoverye_project_locatio_user_st_batch_up` | write | discoveryengine.projects.locations.userStores.batchUpdateUserLicenses | cloud-platform, discoveryengine.readwrite |
 | `discoverye_project_location_cmek_con_delete` | destructive | discoveryengine.projects.locations.cmekConfigs.delete | cloud-platform, discoveryengine.readwrite |
 | `discoverye_project_location_collecti_delete` | destructive | discoveryengine.projects.locations.collections.delete | cloud-platform, discoveryengine.readwrite |
@@ -324,9 +324,9 @@ The tools that match Google's official MCP server for this product (https://docs
 | `discoverye_projects_provision` | write | discoveryengine.projects.provision | cloud-platform, discoveryengine.readwrite |
 | `language_documents_analyze_entities` | read | language.documents.analyzeEntities | cloud-language, cloud-platform |
 | `language_documents_analyze_sentiment` | read | language.documents.analyzeSentiment | cloud-language, cloud-platform |
-| `language_documents_annotate_text` | write | language.documents.annotateText | cloud-language, cloud-platform |
-| `language_documents_classify_text` | write | language.documents.classifyText | cloud-language, cloud-platform |
-| `language_documents_moderate_text` | write | language.documents.moderateText | cloud-language, cloud-platform |
+| `language_documents_annotate_text` | read | language.documents.annotateText | cloud-language, cloud-platform |
+| `language_documents_classify_text` | read | language.documents.classifyText | cloud-language, cloud-platform |
+| `language_documents_moderate_text` | read | language.documents.moderateText | cloud-language, cloud-platform |
 | `speech_operations_get` | read | speech.operations.get | cloud-platform |
 | `speech_operations_list` | read | speech.operations.list | cloud-platform |
 | `speech_projects_locations_custom_cla_create` | write | speech.projects.locations.customClasses.create | cloud-platform |
@@ -340,13 +340,13 @@ The tools that match Google's official MCP server for this product (https://docs
 | `speech_projects_locations_phrase_sets_list` | read | speech.projects.locations.phraseSets.list | cloud-platform |
 | `speech_projects_locations_phrase_sets_patch` | write | speech.projects.locations.phraseSets.patch | cloud-platform |
 | `speech_speech_longrunningrecognize` | write | speech.speech.longrunningrecognize | cloud-platform |
-| `speech_speech_recognize` | write | speech.speech.recognize | cloud-platform |
+| `speech_speech_recognize` | read | speech.speech.recognize | cloud-platform |
 | `texttospee_operations_cancel` | destructive | texttospeech.operations.cancel | cloud-platform |
 | `texttospee_operations_delete` | destructive | texttospeech.operations.delete | cloud-platform |
 | `texttospee_projects_location_operation_list` | read | texttospeech.projects.locations.operations.list | cloud-platform |
 | `texttospee_projects_locations_operation_get` | read | texttospeech.projects.locations.operations.get | cloud-platform |
 | `texttospee_projects_locations_synthesize_lo` | write | texttospeech.projects.locations.synthesizeLongAudio | cloud-platform |
-| `texttospee_text_synthesize` | write | texttospeech.text.synthesize | cloud-platform |
+| `texttospee_text_synthesize` | read | texttospeech.text.synthesize | cloud-platform |
 | `texttospee_voices_list` | read | texttospeech.voices.list | cloud-platform |
 | `videointel_opera_proje_locati_operat_cancel` | destructive | videointelligence.operations.projects.locations.operations.cancel | cloud-platform |
 | `videointel_opera_proje_locati_operat_delete` | destructive | videointelligence.operations.projects.locations.operations.delete | cloud-platform |
@@ -356,9 +356,9 @@ The tools that match Google's official MCP server for this product (https://docs
 | `videointel_projects_location_operation_list` | read | videointelligence.projects.locations.operations.list | cloud-platform |
 | `videointel_projects_locations_operation_get` | read | videointelligence.projects.locations.operations.get | cloud-platform |
 | `videointel_videos_annotate` | write | videointelligence.videos.annotate | cloud-platform |
-| `vision_files_annotate` | write | vision.files.annotate | cloud-platform, cloud-vision |
+| `vision_files_annotate` | read | vision.files.annotate | cloud-platform, cloud-vision |
 | `vision_files_async_batch_annotate` | write | vision.files.asyncBatchAnnotate | cloud-platform, cloud-vision |
-| `vision_images_annotate` | write | vision.images.annotate | cloud-platform, cloud-vision |
+| `vision_images_annotate` | read | vision.images.annotate | cloud-platform, cloud-vision |
 | `vision_images_async_batch_annotate` | write | vision.images.asyncBatchAnnotate | cloud-platform, cloud-vision |
 | `vision_locations_operations_get` | read | vision.locations.operations.get | cloud-platform, cloud-vision |
 | `vision_operations_cancel` | destructive | vision.operations.cancel | cloud-platform, cloud-vision |
@@ -370,15 +370,15 @@ The tools that match Google's official MCP server for this product (https://docs
 | `vision_project_locatio_product_product_list` | read | vision.projects.locations.productSets.products.list | cloud-platform, cloud-vision |
 | `vision_project_locatio_product_referen_list` | read | vision.projects.locations.products.referenceImages.list | cloud-platform, cloud-vision |
 | `vision_project_locatio_product_referenc_get` | read | vision.projects.locations.products.referenceImages.get | cloud-platform, cloud-vision |
-| `vision_projects_files_annotate` | write | vision.projects.files.annotate | cloud-platform, cloud-vision |
+| `vision_projects_files_annotate` | read | vision.projects.files.annotate | cloud-platform, cloud-vision |
 | `vision_projects_files_async_batch_annotate` | write | vision.projects.files.asyncBatchAnnotate | cloud-platform, cloud-vision |
-| `vision_projects_images_annotate` | write | vision.projects.images.annotate | cloud-platform, cloud-vision |
+| `vision_projects_images_annotate` | read | vision.projects.images.annotate | cloud-platform, cloud-vision |
 | `vision_projects_images_async_batch_annotate` | write | vision.projects.images.asyncBatchAnnotate | cloud-platform, cloud-vision |
 | `vision_projects_location_product_add_produ` | write | vision.projects.locations.productSets.addProduct | cloud-platform, cloud-vision |
 | `vision_projects_location_product_remove_pr` | write | vision.projects.locations.productSets.removeProduct | cloud-platform, cloud-vision |
-| `vision_projects_locations_files_annotate` | write | vision.projects.locations.files.annotate | cloud-platform, cloud-vision |
+| `vision_projects_locations_files_annotate` | read | vision.projects.locations.files.annotate | cloud-platform, cloud-vision |
 | `vision_projects_locations_files_async_batch` | write | vision.projects.locations.files.asyncBatchAnnotate | cloud-platform, cloud-vision |
-| `vision_projects_locations_images_annotate` | write | vision.projects.locations.images.annotate | cloud-platform, cloud-vision |
+| `vision_projects_locations_images_annotate` | read | vision.projects.locations.images.annotate | cloud-platform, cloud-vision |
 | `vision_projects_locations_images_async_batc` | write | vision.projects.locations.images.asyncBatchAnnotate | cloud-platform, cloud-vision |
 | `vision_projects_locations_operations_get` | read | vision.projects.locations.operations.get | cloud-platform, cloud-vision |
 | `vision_projects_locations_product_se_create` | write | vision.projects.locations.productSets.create | cloud-platform, cloud-vision |

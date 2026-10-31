@@ -52,13 +52,13 @@ The nine hand-written tools match the tools of Google's Android Device Managemen
 
 - "Show the crash rate for my app this month." Claude runs a Reporting read. No prompt.
 - "List my release tracks and the version on each." Claude runs the tracks list. No prompt.
-- "Commit my staged edit to the production track." Claude runs `androidpub_edits_commit`. It asks first, and the change publishes.
+- "Commit my staged edit to the production track." Claude runs `androidpub_edits_commit`. It asks twice, and the change publishes.
 - "Reply to Kim's one-star review." Claude runs the review reply tool. It asks first, and the reply is public.
 - "Revoke a device's access to the enterprise account." Claude runs the revoke tool. It asks twice.
 
 ## Safety
 
-- Committing an edit publishes store changes. It is classed write, so Claude asks once. Check the track and the edit before you approve.
+- Committing an edit publishes store changes. Since 1.26.3 it is destructive, so Claude asks twice; so do refunds, price migrations and device commands. Check the track and the edit before you approve.
 - Review replies are public.
 - Android Enterprise deletes and device access revocation are destructive.
 - The `confirmation` option defaults to `every-change`. Change it with `printf '%s' '{"confirmation":"destructive-only"}' | claude plugin configure gplay@google-services-mcps --values-stdin` (JSON on stdin), or `/plugin configure gplay@google-services-mcps` in Claude Code.

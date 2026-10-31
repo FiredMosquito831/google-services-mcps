@@ -698,7 +698,7 @@
   },
   {
     "name": "mcp__plugin_gcontacts_gcontacts__health_users_data_data_p_daily",
-    "kind": "write",
+    "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/googlehealth.activity_and_fitness.readonly",
       "https://www.googleapis.com/auth/googlehealth.activity_and_fitness.writeonly",
@@ -771,7 +771,7 @@
   },
   {
     "name": "mcp__plugin_gcontacts_gcontacts__health_users_data_data_p_roll_u",
-    "kind": "write",
+    "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/googlehealth.activity_and_fitness.readonly",
       "https://www.googleapis.com/auth/googlehealth.activity_and_fitness.writeonly",

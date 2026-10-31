@@ -601,7 +601,7 @@
   },
   {
     "name": "mcp__plugin_gyoutube_gyoutube__youtube_live_broadcast_transition",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/youtube",
       "https://www.googleapis.com/auth/youtube.force-ssl"
@@ -1124,7 +1124,7 @@
   },
   {
     "name": "mcp__plugin_gyoutube_gyoutube__youtube_videos_update",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/youtube",
       "https://www.googleapis.com/auth/youtube.force-ssl",

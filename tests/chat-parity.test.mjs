@@ -3,7 +3,7 @@
 // (OAuth2Client.prototype.request), so nothing leaves the machine. Fake tokens in a temp folder only.
 import { test, after } from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -60,10 +60,13 @@ const msg = (id, text, extra = {}) => ({
 // ---------------------------------------------------------------------------
 // Kinds and scopes
 
-test('kinds follow classifyMethod: four reads; send and the read-state changes are writes; no confirm argument', () => {
+test('kinds follow classifyMethod: four reads; send is destructive; the read-state changes are writes; no confirm argument', () => {
   for (const name of ['chat_search_conversations', 'chat_list_messages', 'chat_search_messages', 'chat_list_members']) assert.equal(tools.get(name).kind, 'read', name);
-  assert.equal(tools.get('chat_send_message').kind, classifyMethod('POST', 'create', 'chat.spaces.messages.create'));
-  assert.equal(tools.get('chat_send_message').kind, 'write');
+  // Sending to other people is destructive since 1.26.3 (the destructive rule): the curated tool and the generated
+  // messages.create, through its entry in config/tool-kinds.json.
+  const kinds = Object.fromEntries(Object.entries(JSON.parse(readFileSync(join(REPO, 'config', 'tool-kinds.json'), 'utf8'))).filter(([k]) => k !== 'notes'));
+  assert.equal(tools.get('chat_send_message').kind, classifyMethod('POST', 'create', 'chat.spaces.messages.create', kinds));
+  assert.equal(tools.get('chat_send_message').kind, 'destructive');
   assert.equal(tools.get('chat_mark_read').kind, classifyMethod('PATCH', 'updateSpaceReadState', 'chat.users.spaces.updateSpaceReadState'));
   assert.equal(tools.get('chat_mark_unread').kind, 'write');
   // POST messages:search is a read for classifyMethod too (the generated chat_spaces_messages_search is a read).

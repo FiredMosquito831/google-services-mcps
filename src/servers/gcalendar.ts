@@ -1,7 +1,9 @@
 /**
  * Curated Calendar tools (calendar_*), served by the workspace-user server (MCP name "gws-user").
  * Read: list calendars, list events, get event, free/busy, suggest times. Write: create event, update event, respond.
- * Destructive: delete event (asks for approval first).
+ * Destructive: delete event (asks for approval first). A create, update or respond call that emails guests or the
+ * organizer (send_updates all or externalOnly) sends to other people, so that call is gated as destructive
+ * (destructiveWhen; the destructive rule, docs/SECURITY.md).
  *
  * Auth: OAuth user token from `gsm login workspace-user`. Time zone and free-slot rules are in calendar-time.ts.
  */
@@ -129,6 +131,9 @@ const reminders = z
   .optional()
   .describe("Reminders in place of the calendar's defaults, at most 5, minutes before the start (0 to 40320). An empty list: no reminders.");
 const EVENT_TYPES = ['default', 'outOfOffice', 'focusTime', 'workingLocation', 'fromGmail', 'birthday'] as const;
+
+/** True when send_updates makes Google email guests or the organizer: such a call sends to other people. */
+export const emailsPeople = (sendUpdates: string | undefined): boolean => sendUpdates === 'all' || sendUpdates === 'externalOnly';
 
 export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
   const calendarApi = async () => calendar({ version: 'v3', auth: await authFor(cfg) });
@@ -334,8 +339,10 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       name: 'calendar_create_event',
       title: 'Create calendar event',
       description:
-        "Create an event (matches create_event in Google's Calendar MCP server). start and end are RFC 3339 date-times with an offset, or YYYY-MM-DD for an all-day event. add_meet adds a Google Meet link; recurrence makes it repeat (RRULE lines); reminders replace the calendar's defaults. Invitations go out only if send_updates says so.",
+        "Create an event (matches create_event in Google's Calendar MCP server). start and end are RFC 3339 date-times with an offset, or YYYY-MM-DD for an all-day event. add_meet adds a Google Meet link; recurrence makes it repeat (RRULE lines); reminders replace the calendar's defaults. Invitations go out only if send_updates says so; a call that emails invitations to attendees asks as a destructive action.",
       kind: 'write',
+      // Invitations emailed to the attendees are a send to other people (the destructive rule).
+      destructiveWhen: ({ send_updates, attendees }) => emailsPeople(send_updates) && (attendees?.length ?? 0) > 0,
       scopes: googleScopes('calendar', 'calendar.events'),
       inputSchema: {
         calendar_id: calendarId,
@@ -382,10 +389,12 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       name: 'calendar_update_event',
       title: 'Update calendar event',
       description:
-        "Change only the fields given (events.patch; matches update_event in Google's Calendar MCP server). add_attendees and remove_attendees change the guest list and keep the other guests and their responses; attendees, if given, replaces the whole guest list instead. add_meet adds a Google Meet link when the event has none. recurrence and reminders replace the old ones. Invitations go out only if send_updates says so.",
+        "Change only the fields given (events.patch; matches update_event in Google's Calendar MCP server). add_attendees and remove_attendees change the guest list and keep the other guests and their responses; attendees, if given, replaces the whole guest list instead. add_meet adds a Google Meet link when the event has none. recurrence and reminders replace the old ones. Invitations go out only if send_updates says so; a call that emails the guests asks as a destructive action.",
       kind: 'write',
       // Google's update_event is marked idempotent.
       idempotent: true,
+      // Change emails to the guests are a send to other people (the destructive rule).
+      destructiveWhen: ({ send_updates }) => emailsPeople(send_updates),
       scopes: googleScopes('calendar', 'calendar.events'),
       inputSchema: {
         calendar_id: calendarId,
@@ -483,10 +492,12 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       name: 'calendar_respond',
       title: 'Respond to an invitation',
       description:
-        "Answer an invitation as the signed-in guest: accepted, declined or tentative, with an optional comment (matches respond_to_event in Google's Calendar MCP server). Only your own response changes; the other guests are not sent back. The organizer is emailed only if send_updates says so.",
+        "Answer an invitation as the signed-in guest: accepted, declined or tentative, with an optional comment (matches respond_to_event in Google's Calendar MCP server). Only your own response changes; the other guests are not sent back. The organizer is emailed only if send_updates says so; a call that emails asks as a destructive action.",
       kind: 'write',
       // Google's respond_to_event is marked idempotent.
       idempotent: true,
+      // An answer emailed to the organizer is a send to another person (the destructive rule).
+      destructiveWhen: ({ send_updates }) => emailsPeople(send_updates),
       scopes: googleScopes('calendar', 'calendar.events'),
       inputSchema: {
         calendar_id: calendarId,

@@ -79,7 +79,7 @@
   },
   {
     "name": "mcp__plugin_gtm_gtm__tagmgr_accoun_contai_worksp_folders_entitie",
-    "kind": "write",
+    "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/tagmanager.edit.containers",
       "https://www.googleapis.com/auth/tagmanager.readonly"
@@ -636,7 +636,7 @@
   },
   {
     "name": "mcp__plugin_gtm_gtm__tagmgr_accounts_containe_workspac_create_ve",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/tagmanager.edit.containerversions"
     ],
@@ -951,7 +951,7 @@
   },
   {
     "name": "mcp__plugin_gtm_gtm__tagmgr_accounts_containers_versions_publish",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/tagmanager.publish"
     ],
@@ -1029,7 +1029,7 @@
   },
   {
     "name": "mcp__plugin_gtm_gtm__tagmgr_accounts_user_permissions_create",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/tagmanager.manage.users"
     ],
@@ -1065,7 +1065,7 @@
   },
   {
     "name": "mcp__plugin_gtm_gtm__tagmgr_accounts_user_permissions_update",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/tagmanager.manage.users"
     ],

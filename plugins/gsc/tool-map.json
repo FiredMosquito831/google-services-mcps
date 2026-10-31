@@ -315,7 +315,7 @@
   },
   {
     "name": "mcp__plugin_gsc_gsc__siteverif_web_resource_patch",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/siteverification"
     ],
@@ -324,7 +324,7 @@
   },
   {
     "name": "mcp__plugin_gsc_gsc__siteverif_web_resource_update",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/siteverification"
     ],

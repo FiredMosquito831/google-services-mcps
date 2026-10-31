@@ -34,7 +34,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const AUTHOR = { name: 'FiredMosquito831' };
-const MANIFEST_VERSION = '1.26.2';
+const MANIFEST_VERSION = '1.26.3';
 const TOOL_NAME_MAX = 64;
 /** When two API versions give one method two kinds, the riskier one is kept. A dynamic method is kept as dynamic (decided per call). */
 const RANK = { read: 0, write: 1, dynamic: 2, destructive: 3 };
@@ -109,7 +109,7 @@ const CONSENT_CONFIG = {
     type: 'string',
     title: 'Confirm before changes',
     description:
-      'every-change asks before any change or delete (recommended). destructive-only asks only before deleting or sending. off asks for nothing; deny rules still apply. Change it here at any time.',
+      'every-change asks before any change or delete (recommended). destructive-only asks only before destructive actions: deleting, sending to other people, sharing or permission changes, security changes, device commands, publishing, refunds and whole-content replacement. off asks for nothing; deny rules still apply. Change it here at any time.',
     options: ['every-change', 'destructive-only', 'off'],
     default: 'every-change',
   },

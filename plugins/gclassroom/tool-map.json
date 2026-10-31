@@ -452,7 +452,7 @@
   },
   {
     "name": "mcp__plugin_gclassroom_gclassroom__classroom_cour_cour_stud_retu",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/classroom.coursework.students"
     ],
@@ -1043,7 +1043,7 @@
   },
   {
     "name": "mcp__plugin_gclassroom_gclassroom__classroom_invitations_create",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/classroom.rosters"
     ],
@@ -1192,7 +1192,7 @@
   },
   {
     "name": "mcp__plugin_gclassroom_gclassroom__classroom_user_guardi_create",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/classroom.guardianlinks.students"
     ],

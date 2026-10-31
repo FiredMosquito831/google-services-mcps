@@ -59,7 +59,7 @@ With the plugin option `toolset: google`, the server lists 59 tools that match G
 - "What is the request rate per Cloud Run service over the last hour?" Claude runs `monitoring_query_promql` with a range query. No prompt.
 - "What does an N2 core cost per hour in us-central1?" Claude runs `billing_price_lookup` with `service: Compute Engine`, `query: N2 core` and `region: us-central1`. No prompt.
 - "Read gs://shop-exports/2026/10/orders.csv." Claude runs `gcs_read_text`. No prompt.
-- "Save this summary to gs://shop-reports/weekly.md." Claude runs `gcs_write_text`. It asks first, and does not replace an existing file unless you say so.
+- "Save this summary to gs://shop-reports/weekly.md." Claude runs `gcs_write_text`. It asks first, and does not replace an existing file unless you say so; a replace asks twice.
 - "How many rows are in the orders table in project shop-prod? Show a sample." Claude runs `bq_table_get` and `bq_table_preview`. No prompt.
 - "Which APIs are enabled on project shop-prod?" Claude runs `cloud_services_list`. No prompt.
 - "Enable the Cloud Run API on project shop-dev." Claude runs `cloud_service_enable`. It asks first.
@@ -68,7 +68,7 @@ With the plugin option `toolset: google`, the server lists 59 tools that match G
 
 ## Safety
 
-- Reads never ask. Writes ask first. Deletes and disables ask twice: a hook prompt and an exact preview.
+- Reads never ask. Writes ask first. Deletes, disables and, since 1.26.3, IAM policy changes (`setIamPolicy`) ask twice: a hook prompt and an exact preview.
 - The `confirmation` option defaults to `every-change`. Change it with `printf '%s' '{"confirmation":"destructive-only"}' | claude plugin configure gcloud@google-services-mcps --values-stdin` (JSON on stdin), or `/plugin configure gcloud@google-services-mcps` in Claude Code.
 - Destructive tools include `cloud_project_delete`, `cloud_service_disable` (stops an API that running services may use) and `cloud_apikey_delete`. There are 51 destructive tools in total, including BigQuery dataset and job deletes.
 - `cloud_apikey_reveal` is classed write, because it returns a credential: it is listed only when writes are allowed, and it asks first.

@@ -200,7 +200,7 @@
   },
   {
     "name": "mcp__plugin_gsearch_gsearch__digitalass_assetlinks_bulk_check",
-    "kind": "write",
+    "kind": "read",
     "scopes": [],
     "methodId": "digitalassetlinks.assetlinks.bulkCheck",
     "title": "digitalassetlinks.assetlinks.bulkCheck"

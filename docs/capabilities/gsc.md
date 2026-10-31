@@ -4,7 +4,7 @@ Search Console sites, sitemaps, search analytics, URL indexing and site verifica
 
 - Plugin: `gsc`, MCP server: `gsc`, login: Desktop OAuth client, then `login searchconsole`
 - Install: `claude plugin install gsc@google-services-mcps`
-- Tools: 40 total. Curated 19, per-method 20, gateway 0. Read 19, write 16, destructive 5, dynamic 0.
+- Tools: 40 total. Curated 19, per-method 20, gateway 0. Read 19, write 14, destructive 7, dynamic 0.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
@@ -72,8 +72,8 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `siteverif_web_resource_get_token` | write | siteVerification.webResource.getToken | siteverification, siteverification.verify_only |
 | `siteverif_web_resource_insert` | write | siteVerification.webResource.insert | siteverification, siteverification.verify_only |
 | `siteverif_web_resource_list` | read | siteVerification.webResource.list | siteverification |
-| `siteverif_web_resource_patch` | write | siteVerification.webResource.patch | siteverification |
-| `siteverif_web_resource_update` | write | siteVerification.webResource.update | siteverification |
+| `siteverif_web_resource_patch` | destructive | siteVerification.webResource.patch | siteverification |
+| `siteverif_web_resource_update` | destructive | siteVerification.webResource.update | siteverification |
 
 ## Listing tool (1)
 

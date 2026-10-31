@@ -7,7 +7,9 @@
  * method, so it has no tool here. Answers carry the Classroom web links Google documents.
  *
  * Reads never ask. classroom_create_topic, classroom_create_announcement (a draft unless publish is true) and
- * classroom_create_rubric are writes, so the gate asks first. The Classroom API has no client library in this package,
+ * classroom_create_rubric are writes, so the gate asks first. An announcement that is published (publish, or
+ * scheduled_time) posts to the students, so that call is gated as destructive (destructiveWhen; the destructive rule,
+ * docs/SECURITY.md). The Classroom API has no client library in this package,
  * so the calls go through the account's auth client (cloud-http.ts).
  *
  * Auth: OAuth user token from `gsm login workspace-user`.
@@ -721,8 +723,10 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       name: 'classroom_create_announcement',
       title: 'Create a Classroom announcement',
       description:
-        "Create an announcement in a course stream (matches create_announcement in Google's Classroom MCP server). It is a draft that students cannot see unless publish is true, or until scheduled_time when that is set; a draft has no link of its own, so find it under Drafts on the stream page (https://classroom.google.com/c/{course_id}). Teachers only. Attach links and Drive files; at most 20 materials. assignee_ids limits it to some students. It asks first.",
+        "Create an announcement in a course stream (matches create_announcement in Google's Classroom MCP server). It is a draft that students cannot see unless publish is true, or until scheduled_time when that is set; a draft has no link of its own, so find it under Drafts on the stream page (https://classroom.google.com/c/{course_id}). Teachers only. Attach links and Drive files; at most 20 materials. assignee_ids limits it to some students. It asks first; with publish or scheduled_time it posts to the students, so it asks as a destructive action.",
       kind: 'write',
+      // Publishing, now or at scheduled_time, posts the text to the students: a send to other people (the destructive rule).
+      destructiveWhen: ({ publish, scheduled_time }) => publish === true || scheduled_time !== undefined,
       scopes: ANNOUNCEMENTS_WRITE,
       inputSchema: {
         course_id: courseId,

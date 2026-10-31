@@ -4,7 +4,7 @@ Maps Platform and location APIs: Places, Address Validation, Solar, Air Quality,
 
 - Plugin: `gmaps`, MCP server: `gmaps`, login: API key, then `setup-apikey` (no login)
 - Install: `claude plugin install gmaps@google-services-mcps`
-- Tools: 47 total. Curated 11, per-method 35, gateway 0. Read 26, write 18, destructive 3, dynamic 0.
+- Tools: 47 total. Curated 11, per-method 35, gateway 0. Read 31, write 13, destructive 3, dynamic 0.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
@@ -47,7 +47,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `airquality_forecast_lookup` | read | airquality.forecast.lookup | cloud-platform |
 | `airquality_history_lookup` | read | airquality.history.lookup | cloud-platform |
 | `airquality_map_type_heatmap_t_lookup_he` | read | airquality.mapTypes.heatmapTiles.lookupHeatmapTile | cloud-platform |
-| `areainsigh_v1_compute_insights` | write | areainsights.computeInsights | cloud-platform |
+| `areainsigh_v1_compute_insights` | read | areainsights.computeInsights | cloud-platform |
 | `places_places_autocomplete` | read | places.places.autocomplete | cloud-platform, maps-platform.places |
 | `places_places_get` | read | places.places.get | cloud-platform, maps-platform.places |
 | `places_places_photos_get_media` | read | places.places.photos.getMedia | cloud-platform, maps-platform.places |
@@ -72,10 +72,10 @@ The tools that match Google's official MCP server for this product (https://deve
 | `streetview_photos_batch_get` | read | streetviewpublish.photos.batchGet | streetviewpublish |
 | `streetview_photos_batch_update` | write | streetviewpublish.photos.batchUpdate | streetviewpublish |
 | `streetview_photos_list` | read | streetviewpublish.photos.list | streetviewpublish |
-| `travelimpa_flights_compute_detailed_fli` | write | travelimpactmodel.flights.computeDetailedFlightEmissions | (none) |
-| `travelimpa_flights_compute_flight_emiss` | write | travelimpactmodel.flights.computeFlightEmissions | (none) |
-| `travelimpa_flights_compute_scope3_fligh` | write | travelimpactmodel.flights.computeScope3FlightEmissions | (none) |
-| `travelimpa_flights_compute_typical_flig` | write | travelimpactmodel.flights.computeTypicalFlightEmissions | (none) |
+| `travelimpa_flights_compute_detailed_fli` | read | travelimpactmodel.flights.computeDetailedFlightEmissions | (none) |
+| `travelimpa_flights_compute_flight_emiss` | read | travelimpactmodel.flights.computeFlightEmissions | (none) |
+| `travelimpa_flights_compute_scope3_fligh` | read | travelimpactmodel.flights.computeScope3FlightEmissions | (none) |
+| `travelimpa_flights_compute_typical_flig` | read | travelimpactmodel.flights.computeTypicalFlightEmissions | (none) |
 
 ## Listing tool (1)
 

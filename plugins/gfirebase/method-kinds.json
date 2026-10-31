@@ -317,7 +317,7 @@
   "identitytoolkit.projects.tenants.oauthIdpConfigs.list": "read",
   "identitytoolkit.projects.tenants.oauthIdpConfigs.patch": "write",
   "identitytoolkit.projects.tenants.patch": "write",
-  "identitytoolkit.projects.tenants.setIamPolicy": "write",
+  "identitytoolkit.projects.tenants.setIamPolicy": "destructive",
   "identitytoolkit.projects.tenants.testIamPermissions": "read",
   "identitytoolkit.projects.updateConfig": "write"
 }

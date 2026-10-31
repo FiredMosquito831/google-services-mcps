@@ -4,7 +4,7 @@ YouTube Data, YouTube Analytics and YouTube Reporting APIs, plus Blogger.
 
 - Plugin: `gyoutube`, MCP server: `gyoutube`, login: Desktop OAuth client, then `login business`
 - Install: `claude plugin install gyoutube@google-services-mcps`
-- Tools: 134 total. Curated 9, per-method 124, gateway 0. Read 59, write 55, destructive 20, dynamic 0.
+- Tools: 134 total. Curated 9, per-method 124, gateway 0. Read 59, write 53, destructive 22, dynamic 0.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
@@ -24,7 +24,7 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `youtube_comment_threads_list` | (none) | Top-level comments of a video or channel, with replies. Discovery lists only youtube.force-ssl for it, which has no read-only form, so a readonly login does not cover it. |
 | `youtube_captions_list` | (none) | The caption tracks of a video (not their text). Needs youtube.force-ssl, like the comment threads. |
 | `ytanalyt_reports_query` | (none) | YouTube Analytics for your channel: views, watch time, subscribers and more, by day, video or country. |
-| `youtube_videos_update` | (none) | Changes a video's title, description, tags, category or privacy. A write, so it asks first; the change is public. |
+| `youtube_videos_update` | (none) | Changes a video's title, description, tags, category or privacy. Destructive since 1.26.3, so it asks twice: the change is public, and Google deletes a value the request leaves out, so send the whole part. |
 | `youtube_comments_insert` | (none) | Posts a reply to a comment (parentId); a new top-level comment is commentThreads.insert, in the all toolset. A write, so it asks first; the reply is public. |
 
 ## Curated tools (9)
@@ -100,7 +100,7 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `youtube_i18n_languages_list` | read | youtube.i18nLanguages.list | youtube, youtube.force-ssl |
 | `youtube_i18n_regions_list` | read | youtube.i18nRegions.list | youtube, youtube.force-ssl |
 | `youtube_live_broadca_insert_cuepo` | write | youtube.liveBroadcasts.insertCuepoint | youtube, youtube.force-ssl |
-| `youtube_live_broadcast_transition` | write | youtube.liveBroadcasts.transition | youtube, youtube.force-ssl |
+| `youtube_live_broadcast_transition` | destructive | youtube.liveBroadcasts.transition | youtube, youtube.force-ssl |
 | `youtube_live_broadcasts_bind` | write | youtube.liveBroadcasts.bind | youtube, youtube.force-ssl |
 | `youtube_live_broadcasts_delete` | destructive | youtube.liveBroadcasts.delete | youtube, youtube.force-ssl |
 | `youtube_live_broadcasts_insert` | write | youtube.liveBroadcasts.insert | youtube, youtube.force-ssl |
@@ -150,7 +150,7 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `youtube_videos_list` | read | youtube.videos.list | youtube, youtube.force-ssl |
 | `youtube_videos_rate` | write | youtube.videos.rate | youtube, youtube.force-ssl |
 | `youtube_videos_report_abuse` | write | youtube.videos.reportAbuse | youtube, youtube.force-ssl |
-| `youtube_videos_update` | write | youtube.videos.update | youtube, youtube.force-ssl |
+| `youtube_videos_update` | destructive | youtube.videos.update | youtube, youtube.force-ssl |
 | `youtube_watermarks_unset` | write | youtube.watermarks.unset | youtube, youtube.force-ssl |
 | `youtube_youtu_v3_live_messa_strea` | read | youtube.youtube.v3.liveChat.messages.stream | youtube, youtube.force-ssl |
 | `youtuberep_jobs_create` | write | youtubereporting.jobs.create | yt-analytics-monetary.readonly, yt-analytics.readonly |

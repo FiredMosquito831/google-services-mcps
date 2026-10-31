@@ -156,7 +156,7 @@
   },
   {
     "name": "mcp__plugin_gchat_gchat__chat_send_message",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/chat.messages",
       "https://www.googleapis.com/auth/chat.messages.create"
@@ -353,7 +353,7 @@
   },
   {
     "name": "mcp__plugin_gchat_gchat__chat_spaces_messages_create",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/chat.bot",
       "https://www.googleapis.com/auth/chat.import",

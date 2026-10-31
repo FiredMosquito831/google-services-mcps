@@ -525,8 +525,8 @@ The **Confirm before changes** option (`confirmation`), or `--confirmation` for 
 
 | Mode | Asks before |
 |---|---|
-| `every-change` (the default) | Every change, and every delete or send. |
-| `destructive-only` | Deletes and sends only. Changes run without asking. |
+| `every-change` (the default) | Every change, and every destructive action. |
+| `destructive-only` | Destructive actions only: deleting, sending to other people, sharing or permission changes, security changes, device commands, publishing, moving money, whole-content replacement (the rule in [SECURITY.md](SECURITY.md#the-destructive-rule)). Changes run without asking. |
 | `off` | Nothing. Deny rules in `policy.json` still apply. |
 
 Use `off` only on an account you fully control. See [SECURITY.md](SECURITY.md).

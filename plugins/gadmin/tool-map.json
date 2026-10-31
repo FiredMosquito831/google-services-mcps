@@ -106,7 +106,7 @@
   },
   {
     "name": "mcp__plugin_gadmin_gadmin__admin_chromeosdevices_action",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/admin.directory.device.chromeos"
     ],
@@ -218,7 +218,7 @@
   },
   {
     "name": "mcp__plugin_gadmin_gadmin__admin_custome_devices_chromeo_batch_c",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/admin.directory.device.chromeos"
     ],
@@ -237,7 +237,7 @@
   },
   {
     "name": "mcp__plugin_gadmin_gadmin__admin_custome_devices_chromeo_issue_c",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/admin.directory.device.chromeos"
     ],
@@ -694,7 +694,7 @@
   },
   {
     "name": "mcp__plugin_gadmin_gadmin__admin_mobiledevices_action",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/admin.directory.device.mobile",
       "https://www.googleapis.com/auth/admin.directory.device.mobile.action"
@@ -1039,7 +1039,7 @@
   },
   {
     "name": "mcp__plugin_gadmin_gadmin__admin_role_assignments_insert",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/admin.directory.rolemanagement"
     ],
@@ -1077,7 +1077,7 @@
   },
   {
     "name": "mcp__plugin_gadmin_gadmin__admin_roles_insert",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/admin.directory.rolemanagement"
     ],
@@ -1096,7 +1096,7 @@
   },
   {
     "name": "mcp__plugin_gadmin_gadmin__admin_roles_patch",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/admin.directory.rolemanagement"
     ],
@@ -1105,7 +1105,7 @@
   },
   {
     "name": "mcp__plugin_gadmin_gadmin__admin_roles_update",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/admin.directory.rolemanagement"
     ],
@@ -1207,7 +1207,7 @@
   },
   {
     "name": "mcp__plugin_gadmin_gadmin__admin_transfers_insert",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/admin.datatransfer"
     ],
@@ -1226,7 +1226,7 @@
   },
   {
     "name": "mcp__plugin_gadmin_gadmin__admin_two_step_verification_turn_off",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/admin.directory.user.security"
     ],
@@ -1386,7 +1386,7 @@
   },
   {
     "name": "mcp__plugin_gadmin_gadmin__admin_users_make_admin",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/admin.directory.user"
     ],
@@ -2225,7 +2225,7 @@
   },
   {
     "name": "mcp__plugin_gadmin_gadmin__cloudid_inbound_oidc_sso_profi_create",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-identity.inboundsso",
       "https://www.googleapis.com/auth/cloud-platform"
@@ -2245,7 +2245,7 @@
   },
   {
     "name": "mcp__plugin_gadmin_gadmin__cloudid_inbound_oidc_sso_profil_patch",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-identity.inboundsso",
       "https://www.googleapis.com/auth/cloud-platform"
@@ -2298,7 +2298,7 @@
   },
   {
     "name": "mcp__plugin_gadmin_gadmin__cloudid_inbound_saml_idp_credenti_add",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-identity.inboundsso",
       "https://www.googleapis.com/auth/cloud-platform"
@@ -2319,7 +2319,7 @@
   },
   {
     "name": "mcp__plugin_gadmin_gadmin__cloudid_inbound_saml_sso_profi_create",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-identity.inboundsso",
       "https://www.googleapis.com/auth/cloud-platform"
@@ -2339,7 +2339,7 @@
   },
   {
     "name": "mcp__plugin_gadmin_gadmin__cloudid_inbound_saml_sso_profil_patch",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-identity.inboundsso",
       "https://www.googleapis.com/auth/cloud-platform"
@@ -2371,7 +2371,7 @@
   },
   {
     "name": "mcp__plugin_gadmin_gadmin__cloudid_inbound_sso_assignment_create",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-identity.inboundsso",
       "https://www.googleapis.com/auth/cloud-platform"
@@ -2413,7 +2413,7 @@
   },
   {
     "name": "mcp__plugin_gadmin_gadmin__cloudid_inbound_sso_assignments_patch",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-identity.inboundsso",
       "https://www.googleapis.com/auth/cloud-platform"
@@ -3174,7 +3174,7 @@
   },
   {
     "name": "mcp__plugin_gadmin_gadmin__reseller_subscriptions_change_seats",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/apps.order"
     ],
@@ -3202,7 +3202,7 @@
   },
   {
     "name": "mcp__plugin_gadmin_gadmin__reseller_subscriptions_insert",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/apps.order"
     ],
@@ -3407,7 +3407,7 @@
   },
   {
     "name": "mcp__plugin_gadmin_gadmin__vault_matters_holds_remove_held_accou",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/ediscovery"
     ],

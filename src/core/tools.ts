@@ -94,6 +94,13 @@ export interface ToolDef<A extends ZodRawShape = ZodRawShape> {
    * that was approved. It must change nothing. It never replaces the gate: the gate still runs before the handler.
    */
   prepare?(args: z.infer<z.ZodObject<A>>, ctx: ToolContext): Promise<PreparedAction>;
+  /**
+   * Optional, for a write tool whose arguments decide whether one call meets the destructive rule (docs/SECURITY.md): it
+   * sends a message, invitation or notification to other people, or replaces a whole object. True for such a call, and
+   * runServer gates that call as destructive, so it asks even under confirmation destructive-only. It only raises a write
+   * to destructive and never lowers a kind. The tool map, the hook and the annotations keep the tool's own kind.
+   */
+  destructiveWhen?(args: z.infer<z.ZodObject<A>>): boolean;
   /** Optional metadata: what a destructive action would do, for describe output. The gate does not use it. */
   preview?(args: z.infer<z.ZodObject<A>>): Promise<unknown> | unknown;
   /**
@@ -159,6 +166,15 @@ function runtimeHints(name: string): ToolHints {
   const hints = RUNTIME_TOOL_HINTS[name];
   if (!hints) throw new Error(`No annotation hints for the runtime tool ${name}`);
   return { ...hints };
+}
+
+/**
+ * The kind the gate uses for one call of a write or destructive tool: destructive when the tool is a write whose
+ * destructiveWhen says so for these arguments (the account argument already taken out), else the tool's own kind.
+ */
+export function callKind(tool: Pick<ToolDef, 'kind' | 'destructiveWhen'>, args: Record<string, unknown>): ActionKind {
+  if (tool.kind === 'write' && tool.destructiveWhen?.(args as never) === true) return 'destructive';
+  return tool.kind as ActionKind;
 }
 
 /** Wraps a tool definition as the model should see it: a typed schema and the same descriptions. */
@@ -392,14 +408,16 @@ export async function runServer(opts: {
               const { account, ...args } = rawArgs;
               const data = await withAccount(typeof account === 'string' ? account : undefined, async () => {
                 const prepared = await prepare(args as never, ctx);
-                await gate({ kind: tool.kind as ActionKind, target: tool.name, methodId: tool.methodId, args: prepared.preview });
+                await gate({ kind: callKind(tool, args), target: tool.name, methodId: tool.methodId, args: prepared.preview });
                 return tool.handler(args as never, ctx, prepared);
               });
               return asJson(data, cfg.maxResultChars);
             }
             if (tool.kind === 'write' || tool.kind === 'destructive') {
-              // The gate runs before the handler. If it throws, the handler never runs.
-              await gate({ kind: tool.kind, target: tool.name, methodId: tool.methodId, args: rawArgs });
+              // The gate runs before the handler. If it throws, the handler never runs. A write whose arguments meet the
+              // destructive rule (destructiveWhen) is gated as destructive.
+              const { account: _account, ...callArgs } = rawArgs;
+              await gate({ kind: callKind(tool, callArgs), target: tool.name, methodId: tool.methodId, args: rawArgs });
             }
             // The account argument picks the account for this call. It is not passed to the handler, so it never reaches Google.
             const { account, ...args } = rawArgs;

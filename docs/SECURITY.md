@@ -14,7 +14,7 @@ This suite lets an AI agent act on real Google accounts. The controls below are 
 
    - **Claude Code.** A `PreToolUse` hook returns `ask` for a change or a delete. Claude Code shows its permission prompt, labelled with the plugin (for example `[plugin:gmail]`). The model cannot skip this prompt.
    - **The hook never allows.** It returns only `ask` or `deny`. It never returns `allow`, so your own Claude Code permission rules still apply.
-   - **Destructive calls ask twice.** A delete, send or disable also shows the exact action through an MCP form, **Approve this action?**. The hook prompt and the form are both needed.
+   - **Destructive calls ask twice.** A destructive call (see [The destructive rule](#the-destructive-rule): a delete, a send to other people, a share, a publish and the others listed there) also shows the exact action through an MCP form, **Approve this action?**. The hook prompt and the form are both needed.
    - **Changes ask once in the hook.** A write is approved by the hook prompt only, when the hook is installed.
    - **Other MCP clients.** The server asks through MCP elicitation. A client that cannot elicit gets an error, and the action does not run.
    - **Declined or unanswered prompts** mean nothing changes.
@@ -22,7 +22,7 @@ This suite lets an AI agent act on real Google accounts. The controls below are 
 4. **Confirmation setting.** `confirmation` is one of three modes:
 
    - `every-change` (default): asks before any change or deletion.
-   - `destructive-only`: asks only before deleting or sending. Changes run.
+   - `destructive-only`: asks only before destructive actions, as [The destructive rule](#the-destructive-rule) defines them: deleting, sending to other people, sharing or permission changes, security changes, device commands, publishing, moving money, whole-content replacement and key destruction. Other changes run.
    - `off`: nothing asks. Deny rules still apply.
 
    The plugin option is the setting for Claude Code. The server reads `GSM_CONFIRMATION`. A valid value there takes priority over `confirmation` in `policy.json`. Every prompt ends with a footer that says where to change the setting.
@@ -48,8 +48,101 @@ The gate needs to know whether a call changes data. For generated and gateway to
 - `config/tool-kinds.json` overrides any method by its full id. A dynamic override is decided per call.
 - Since 1.24.2 it lists as reads twelve `POST` methods that Google marks read-only and that change nothing: Data Connect `executeGraphqlRead`, `generateQuery` and `generateSchema`, Firebase Rules `projects.test`, the three bindings of Discovery Engine `servingConfigs.answer`, Developer Knowledge `answerQuery`, Places `autocomplete`, Analytics Data `batchRunPivotReports` and `audienceExports.query`, and Calendar `freebusy.query`. It lists Merchant API `accounts.dataSources.fetch` as a write, because Google says it starts processing the data source's file. A credential name stays a write.
 - Since 1.24.5 it also lists as reads seventeen `POST` methods that only query: Search Console `searchanalytics.query`; the Monitoring Prometheus queries (`query`, `query_range`, `query_exemplars`, `series`, `labels`) and `timeSeries.query`; Postmaster v2 `domainStats.query` and `batchQuery`; Vertex AI `generateContent` (four bindings) and `embedContent`; Identity Toolkit `accounts.query` (project and tenant); Firestore `documents.runQuery`. BigQuery `jobs.query` stays a write, because it runs any SQL, DML and DDL included. Vertex AI `countTokens` stays a write: its name holds "token", and the credential rule is not overridden.
+- Since 1.26.3 it lists the methods of the destructive rule as destructive (next section), 45 more `POST` methods that only read or compute as reads, and four `GET` methods that record an event as writes (see [POST reads and GET writes of 1.26.3](#post-reads-and-get-writes-of-1263)).
 
 The read rule for `POST` is a name prefix. It is not a check of what the method does. See the first known limit below.
+
+### The destructive rule
+
+A method or tool is destructive when it does one of these. A destructive call asks twice, and it asks even under `confirmation: destructive-only`.
+
+- (a) sends a message, invitation or notification to other people;
+- (b) grants or changes sharing, permissions, roles, ownership or admin privilege;
+- (c) disables a security control (2-step verification, SSO, keys);
+- (d) wipes, resets or issues a command to a device;
+- (e) publishes, deploys, commits a release or ends a live session;
+- (f) moves money (refunds, price migrations);
+- (g) replaces or deletes whole content (whole-file replacement, batch edits that can delete content, an update that clears omitted fields, workspace-consuming version creation);
+- (h) permanently destroys key material or held data.
+
+Everything else keeps its kind. A plain edit, such as a patch of one field, stays a write. The verb and name rules above already make deletes, removals, sends (`send`), disables and the other destructive names destructive; the rule adds the methods those names miss.
+
+**How it is applied (since 1.26.3).** A generated or gateway method gets it by its exact id in `config/tool-kinds.json`, and one id covers every catalog version of the method. A hand-written tool gets it through its kind: `chat_send_message` posts to other people, so it is destructive, like `gmail_send`. Some hand-written writes meet the rule only with some arguments; that call is gated as destructive and the tool stays a write in the plugin's tool map: `calendar_create_event` with attendees, `calendar_update_event` and `calendar_respond` when `send_updates` is `all` or `externalOnly` (Google emails the guests or the organizer), `classroom_create_announcement` with `publish` or `scheduled_time` (it posts to the students), and `gcs_write_text` with `overwrite: true` (it can replace a whole object). In Claude Code the hook asks about such a call once as a change (`every-change`) and not at all under `destructive-only`; the server's **Approve this action?** form asks in both modes.
+
+| Rule | Method | What Google says |
+|---|---|---|
+| (a) | `chat.spaces.messages.create` | "Creates a message in a Google Chat space." |
+| (a) | `gmail.users.settings.forwardingAddresses.create` | "If ownership verification is required, a message will be sent to the recipient" |
+| (a) | `classroom.userProfiles.guardianInvitations.create` | "Creates a guardian invitation, and sends an email to the guardian" |
+| (a) | `classroom.invitations.create` | "An invitation to join a course", as a student, teacher or owner |
+| (b) | `drive.permissions.create`, `drive.permissions.update` (v3, and v2 in the gateway), `drive.permissions.insert`, `drive.permissions.patch` (v2) | "Creates a permission for a file or shared drive."; "Updates a permission." |
+| (b) | `calendar.acl.insert`, `calendar.acl.patch`, `calendar.acl.update` | "Creates an access control rule."; "Updates an access control rule." |
+| (b) | `calendar.calendars.transferOwnership` | "Transfers a secondary calendar between users" |
+| (b) | `keep.notes.permissions.batchCreate` | "Creates one or more permissions on the note." |
+| (b) | `tagmanager.accounts.user_permissions.create`, `tagmanager.accounts.user_permissions.update` (v2), `tagmanager.accounts.permissions.create`, `tagmanager.accounts.permissions.update` (v1, gateway) | "Creates a user's Account & Container access." |
+| (b) | `mybusinessaccountmanagement.accounts.admins.create`, `mybusinessaccountmanagement.locations.admins.create` | "Invites the specified user to become an administrator" |
+| (b) | `mybusinessaccountmanagement.accounts.admins.patch`, `mybusinessaccountmanagement.locations.admins.patch` | "Only the AdminRole of the Admin can be updated." |
+| (b) | `mybusinessaccountmanagement.locations.transfer` | "Moves a location from an account that the user owns to another account" |
+| (b) | `datatransfer.transfers.insert` | "the transfer of the ownership of user data between users" |
+| (b) | `directory.users.makeAdmin` | "Makes a user a super administrator." |
+| (b) | `directory.roleAssignments.insert`, `directory.roles.insert`, `directory.roles.patch`, `directory.roles.update` | "Creates a role assignment."; "Creates a role." |
+| (b) | `gmail.users.settings.delegates.create` | "Delegates can read, send, and delete messages ... for the delegator's account." |
+| (b) | `gmail.users.settings.updateAutoForwarding` | "Whether all incoming mail is automatically forwarded to another address." |
+| (b) | `merchantapi.accounts.developerRegistration.unregisterGcp` | "Unregister the calling GCP from the calling shopping account." |
+| (b) | `merchantapi.accounts.homepage.unclaim` | "Unclaims a store's homepage." |
+| (b) | `siteVerification.webResource.patch`, `siteVerification.webResource.update` | "Modify the list of owners for your website or domain." |
+| (b) | `classroom.courses.courseWork.studentSubmissions.return` | "Returning a student submission transfers ownership of attached Drive files to the student" |
+| (b) | every `setIamPolicy` method of an API a plugin reaches (275 ids, listed one by one, such as `cloudresourcemanager.projects.setIamPolicy` and `storage.buckets.setIamPolicy`) | "Sets the access control policy on the specified resource. Replaces any existing policy." |
+| (c) | `directory.twoStepVerification.turnOff` | "Turns off 2-Step Verification for user." |
+| (c) | `cloudidentity.inboundSamlSsoProfiles.create`, `cloudidentity.inboundSamlSsoProfiles.patch`, `cloudidentity.inboundSamlSsoProfiles.idpCredentials.add`, `cloudidentity.inboundOidcSsoProfiles.create`, `cloudidentity.inboundOidcSsoProfiles.patch` | the single sign-on profiles and their signing credentials |
+| (c) | `cloudidentity.inboundSsoAssignments.create`, `cloudidentity.inboundSsoAssignments.patch` | "To disable SSO, Create (or Update) an assignment that has `sso_mode` == `SSO_OFF`." |
+| (d) | `directory.mobiledevices.action` | "Takes an action that affects a mobile device. For example, remotely wiping a device." |
+| (d) | `directory.chromeosdevices.action`, `admin.customer.devices.chromeos.batchChangeStatus` | "deprovisioning, disabling, and re-enabling devices" |
+| (d) | `admin.customer.devices.chromeos.issueCommand` | "Issues a command for the device to execute." (`REMOTE_POWERWASH`: "Wipes the device") |
+| (d) | `androidmanagement.enterprises.devices.issueCommand` | "Issues a command to a device." |
+| (e) | `tagmanager.accounts.containers.versions.publish` | "Publishes a Container Version." |
+| (e) | `androidpublisher.edits.commit` | "Commits an app edit." |
+| (e) | `youtube.liveBroadcasts.transition` | "Transition a broadcast to a given status." (`complete`: "The broadcast is finished.") |
+| (e) | `meet.spaces.endActiveConference` | "Ends an active conference" |
+| (f) | `androidpublisher.orders.refund` | "Refunds a user's subscription or in-app purchase order." |
+| (f) | `androidpublisher.externaltransactions.refundexternaltransaction` | "Refunds or partially refunds an existing external transaction." |
+| (f) | `androidpublisher.monetization.subscriptions.basePlans.migratePrices`, `androidpublisher.monetization.subscriptions.basePlans.batchMigratePrices` | "Requests result in Google Play notifying affected subscribers." |
+| (f) | `reseller.subscriptions.changeSeats`, `reseller.subscriptions.insert` | "Updates a subscription's user license settings."; "Creates or transfer a subscription." |
+| (g) | `script.projects.updateContent` | "This clears all the existing files in the project." |
+| (g) | `docs.documents.batchUpdate`, `sheets.spreadsheets.batchUpdate`, `slides.presentations.batchUpdate` | "Applies one or more updates", including delete requests |
+| (g) | `youtube.videos.update` | a property the request leaves out: "the property's existing value will be deleted" |
+| (g) | `tagmanager.accounts.containers.workspaces.create_version` | "Creates a Container Version from the entities present in the workspace, deletes the workspace" |
+| (h) | `gmail.users.settings.cse.keypairs.obliterate` | "Deletes a client-side encryption key pair permanently and immediately." |
+| (h) | `vault.matters.holds.removeHeldAccounts` | "Removes the specified accounts from a hold."; the data is then no longer preserved |
+
+`tests/kinds-destructive.test.mjs` pins each entry: both classifiers on every catalog version, the built tool maps and gateway tables, each plugin's own hook, and running servers.
+
+### POST reads and GET writes of 1.26.3
+
+These `POST` methods only read or compute, and change nothing. They are reads, so they run without a question and are listed while writes are off:
+
+| Method | What Google says |
+|---|---|
+| `playdeveloperreporting.vitals.anonrssandswapmemoryusage.query`, `playdeveloperreporting.vitals.anrrate.query`, `playdeveloperreporting.vitals.bitmapmemoryusage.query`, `playdeveloperreporting.vitals.crashrate.query`, `playdeveloperreporting.vitals.errors.counts.query`, `playdeveloperreporting.vitals.excessivewakeuprate.query`, `playdeveloperreporting.vitals.lmkrate.query`, `playdeveloperreporting.vitals.slowrenderingrate.query`, `playdeveloperreporting.vitals.slowstartrate.query`, `playdeveloperreporting.vitals.stuckbackgroundwakelockrate.query` | "Queries the metrics in the metric set." |
+| `googleads.customers.generateReachForecast` | "Generates a reach forecast for a given targeting / product mix." |
+| `googleads.customers.suggestBrands`, `googleads.customers.suggestSmartCampaignAd`, `googleads.customers.suggestSmartCampaignBudgetOptions`, `googleads.customers.suggestTravelAssets`, `googleads.geoTargetConstants.suggest`, `googleads.keywordThemeConstants.suggest` | suggestions ("Returns BudgetOption suggestions.") |
+| `admob.accounts.networkReport.generate`, `admob.accounts.mediationReport.generate`, `admob.accounts.campaignReport.generate` | "Generates an AdMob Network report based on the provided report specification." |
+| `driveactivity.activity.query` | "Query past activity in Google Drive." |
+| `areainsights.computeInsights` | "lets you retrieve insights about areas" |
+| `travelimpactmodel.flights.computeFlightEmissions`, `travelimpactmodel.flights.computeTypicalFlightEmissions`, `travelimpactmodel.flights.computeScope3FlightEmissions`, `travelimpactmodel.flights.computeDetailedFlightEmissions` | "Retrieves emission estimates." |
+| `health.users.dataTypes.dataPoints.rollUp`, `health.users.dataTypes.dataPoints.dailyRollUp` | "Roll up data points over physical time intervals" |
+| `safebrowsing.threatMatches.find`, `safebrowsing.fullHashes.find` | "Finds the threat entries that match the Safe Browsing lists." |
+| `digitalassetlinks.assetlinks.bulkCheck` | "Send a bundle of statement checks in a single RPC" (the batch of the read `check`) |
+| `tagmanager.accounts.containers.workspaces.folders.entities` | "List all entities in a GTM Folder." |
+| `merchantapi.issueresolution.renderaccountissues`, `merchantapi.issueresolution.renderproductissues` | issues and actions "meant to be rendered and shown in third-party applications" |
+| `language.documents.annotateText`, `language.documents.classifyText`, `language.documents.moderateText` | annotateText "provides all the features that analyzeSentiment, analyzeEntities, and analyzeSyntax provide in one call" (those three were reads already) |
+| `vision.images.annotate`, `vision.projects.images.annotate`, `vision.projects.locations.images.annotate`, `vision.files.annotate`, `vision.projects.files.annotate`, `vision.projects.locations.files.annotate` | "Run image detection and annotation for a batch of images." The `asyncBatchAnnotate` methods, which write their output to Cloud Storage, stay writes. |
+| `speech.speech.recognize` | "Performs synchronous speech recognition: receive results after all audio has been sent and processed." `longrunningrecognize` stays a write. |
+| `texttospeech.text.synthesize` | "Synthesizes speech synchronously" (`synthesizeLongAudio`, which writes to Cloud Storage, stays a write) |
+
+These `GET` methods record an event, so they are writes and ask first: `discoveryengine.projects.locations.collections.dataStores.userEvents.collect`, `discoveryengine.projects.locations.dataStores.userEvents.collect`, `discoveryengine.projects.locations.userEvents.collect` and `recommendationengine.projects.locations.catalogs.eventStores.userEvents.collect` ("Writes a single user event from the browser").
+
+Held back by the credential rule: Google Ads `generateKeywordIdeas`, `generateKeywordHistoricalMetrics` and `suggestKeywordThemes` only read, but their names hold "Keyword", and so the credential word "key". A credential name is always a write, and no override passes it, so they stay writes.
 
 ### Credential reveals and credential fields in read results
 
@@ -122,6 +215,8 @@ Since 1.24.3 every tool lists the four MCP annotation hints. They are hints for 
 
   Until this is fixed in the code, you can close the gap yourself. Add an `ask` rule for these method ids in `policy.json`. The hook applies policy rules to reads too. See [USING.md](USING.md#5-the-policy-file).
 
+- **The destructive rule is applied by method id.** Only the methods listed in [The destructive rule](#the-destructive-rule) were raised in 1.26.3. Methods the rule may also cover keep their kind until they are decided, for example: other sharing calls (Cloud Storage access controls, `vault.matters.addPermissions`, Chat and Classroom member adds, Analytics access bindings), body-dependent sends and publishes (Calendar event methods with `sendUpdates`, Classroom posts created as published, Gmail filters that forward, YouTube comment replies), deployments (Apps Script, Cloud Run, Firebase Hosting and Rules releases), more money moves (reseller plan changes), BigQuery `jobs.query` with DML or DDL, and IAM role changes (`iam.*.roles.*`). Add an `ask` rule in `policy.json` for any of them that you want asked under `destructive-only`.
+
 - **Unscoped methods.** About 54 write and delete methods declare no OAuth scope in their discovery documents. They are listed without a login. They are still gated per call. Google still rejects them without a write scope. This figure is from an earlier review and was not re-checked for this version of the page.
 
 - **Hook and elicitation behaviour.** The hook and the form are taken from Claude Code's documentation. They have not been exercised in a live session yet. In particular, how Claude Code shows the **Approve this action?** form is not verified.
@@ -133,6 +228,8 @@ Since 1.24.3 every tool lists the four MCP annotation hints. They are hints for 
 - **Windows file modes.** Mode 0600 is not enforced on Windows, so the token folder's access list is limited instead (see Controls, item 7). `gsm doctor` fails when another account can read that folder. Other products that run on the same machine as your user account still can read files under your profile; the access list does not stop them.
 
 - **Confirmation off.** Only deny rules protect you then. Use `off` only for accounts you fully control.
+
+- **Calls raised by their arguments.** A hand-written write that is destructive only with some arguments (a Calendar call that emails guests, a published Classroom announcement, a Cloud Storage overwrite) stays a write in the plugin's tool map, and the hook decides from that kind. Under `destructive-only` such a call asks once, in the server's form, not twice.
 
 - **Long content.** Strings in the approval text are cut at 1,500 characters and end with `...`. The arguments are cut at 2,000 characters, and the text says how many characters were left out.
 

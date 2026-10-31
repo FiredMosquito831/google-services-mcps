@@ -210,7 +210,7 @@
   },
   {
     "name": "mcp__plugin_gmeet_gmeet__meet_spaces_end_active_conference",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/meetings.space.created"
     ],

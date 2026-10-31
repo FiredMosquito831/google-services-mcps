@@ -14,7 +14,7 @@
 ## At a glance
 
 - **One plugin per product.** 23 products and 3,334 tools in all. Install only the products you use.
-- **Safe by default.** Reads never ask. Write tools stay off until you turn on **Allow write tools**. Changes ask first, and deletions and sends ask twice.
+- **Safe by default.** Reads never ask. Write tools stay off until you turn on **Allow write tools**. Changes ask first, and destructive actions (deleting, sending, sharing, publishing and the others in [SECURITY.md](docs/SECURITY.md#the-destructive-rule)) ask twice.
 - **Your own credentials.** Sign in with your own OAuth client, API key or service account. The servers call Google directly, and tokens stay in a folder on your machine.
 
 ### Quick start
@@ -329,7 +329,7 @@ The controls apply in order, and one failing layer does not let a change through
 
 1. **Token scopes.** A login asks only for the scopes of its profile. Google rejects any call outside them, whatever the plugin shows.
 2. **Tool registration.** A write or destructive tool is listed only when **Allow write tools** is on. It is off by default.
-3. **Approval gate.** Every change and deletion passes one gate before it runs. In Claude Code, a `PreToolUse` hook asks first. The hook never allows a call, so your own permission rules still apply. Deletions, sends and disables ask twice: once in the hook, and once with the exact action in an **Approve this action?** form.
+3. **Approval gate.** Every change and deletion passes one gate before it runs. In Claude Code, a `PreToolUse` hook asks first. The hook never allows a call, so your own permission rules still apply. Destructive actions ask twice: once in the hook, and once with the exact action in an **Approve this action?** form. Destructive means deleting, sending to other people, sharing or permission changes, security changes, device commands, publishing, moving money, whole-content replacement and key destruction ([the destructive rule](docs/SECURITY.md#the-destructive-rule)).
 4. **Confirmation setting.** You choose how often to ask. The options are in the table below.
 5. **Policy file.** `policy.json` in the token directory holds `allow`, `ask` and `deny` rules. A matching `deny` always wins, then a matching `ask`, then a matching `allow`.
 6. **Audit log.** Each gated action writes one JSON line to `audit.log`. The line holds the time, tool, method, decision and outcome. It holds a 16-character hash of the arguments, never the values. Reads are not logged.
@@ -338,7 +338,7 @@ The controls apply in order, and one failing layer does not let a change through
 
 ### Confirmation options
 
-| Mode | Reads | Changes | Deletions and sends |
+| Mode | Reads | Changes | Destructive actions |
 |---|---|---|---|
 | `every-change` (default) | No prompt | Prompt | Prompt, then the second approval |
 | `destructive-only` | No prompt | No prompt | Prompt, then the second approval |
@@ -602,7 +602,7 @@ As far as the source shows, the servers call only Google's API and OAuth endpoin
 Yes. Run `npx google-services-mcps install --agent codex --plugin <id>`. Codex has no approval hook in this suite, and a client that cannot ask for approval is refused every change. How Codex handles approvals is UNVERIFIED in a live session.
 
 **Why do I see approval prompts?**
-Changes and deletions ask by default (`every-change`). Deletions and sends also ask a second time. To ask less, set **Confirm before changes** to `destructive-only` or `off`. Deny rules in `policy.json` still apply.
+Changes and deletions ask by default (`every-change`). Destructive actions (deletions, sends, shares, publishing and the rest of [the destructive rule](docs/SECURITY.md#the-destructive-rule)) also ask a second time. To ask less, set **Confirm before changes** to `destructive-only` or `off`. Deny rules in `policy.json` still apply.
 
 **Why is a tool missing?**
 Usually one of these: **Allow write tools** is off, so write and destructive tools are hidden. The login uses the `readonly` profile, so the token lacks the write scopes and the tool is not registered. The server is switched off in `/mcp`, or the plugin is disabled. If the group is not logged in, the tool is listed but each call fails with a login message. After a login, restart the server. `npx google-services-mcps doctor --plugin <id>` checks the install.

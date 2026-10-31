@@ -4,7 +4,7 @@ Google Calendar calendars, events and calendar settings.
 
 - Plugin: `gcalendar`, MCP server: `gcalendar`, login: Desktop OAuth client, then `login workspace-user`
 - Install: `claude plugin install gcalendar@google-services-mcps`
-- Tools: 57 total. Curated 18, per-method 38, gateway 0. Read 21, write 29, destructive 7, dynamic 0.
+- Tools: 57 total. Curated 18, per-method 38, gateway 0. Read 21, write 25, destructive 11, dynamic 0.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
@@ -54,10 +54,10 @@ The tools that match Google's official MCP server for this product (https://deve
 |---|---|---|---|
 | `calendar_acl_delete` | destructive | calendar.acl.delete | calendar, calendar.acls |
 | `calendar_acl_get` | read | calendar.acl.get | calendar, calendar.acls |
-| `calendar_acl_insert` | write | calendar.acl.insert | calendar, calendar.acls |
+| `calendar_acl_insert` | destructive | calendar.acl.insert | calendar, calendar.acls |
 | `calendar_acl_list` | read | calendar.acl.list | calendar, calendar.acls |
-| `calendar_acl_patch` | write | calendar.acl.patch | calendar, calendar.acls |
-| `calendar_acl_update` | write | calendar.acl.update | calendar, calendar.acls |
+| `calendar_acl_patch` | destructive | calendar.acl.patch | calendar, calendar.acls |
+| `calendar_acl_update` | destructive | calendar.acl.update | calendar, calendar.acls |
 | `calendar_acl_watch` | write | calendar.acl.watch | calendar, calendar.acls |
 | `calendar_calendar_list_delete` | destructive | calendar.calendarList.delete | calendar, calendar.app.created |
 | `calendar_calendar_list_get` | read | calendar.calendarList.get | calendar, calendar.app.created |
@@ -71,7 +71,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `calendar_calendars_get` | read | calendar.calendars.get | calendar, calendar.app.created |
 | `calendar_calendars_insert` | write | calendar.calendars.insert | calendar, calendar.app.created |
 | `calendar_calendars_patch` | write | calendar.calendars.patch | calendar, calendar.app.created |
-| `calendar_calendars_transfer_own` | write | calendar.calendars.transferOwnership | calendar, calendar.calendars |
+| `calendar_calendars_transfer_own` | destructive | calendar.calendars.transferOwnership | calendar, calendar.calendars |
 | `calendar_calendars_update` | write | calendar.calendars.update | calendar, calendar.app.created |
 | `calendar_channels_stop` | destructive | calendar.channels.stop | calendar, calendar.acls |
 | `calendar_colors_get` | read | calendar.colors.get | calendar, calendar.app.created |

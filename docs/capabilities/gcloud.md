@@ -4,7 +4,7 @@ Google Cloud console APIs: projects, service enablement, API keys, billing, moni
 
 - Plugin: `gcloud`, MCP server: `gcloud`, login: Desktop OAuth client, then `login cloud`
 - Install: `claude plugin install gcloud@google-services-mcps`
-- Tools: 395 total. Curated 41, per-method 350, gateway 3. Read 197, write 146, destructive 51, dynamic 1.
+- Tools: 395 total. Curated 41, per-method 350, gateway 3. Read 197, write 135, destructive 62, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
@@ -183,7 +183,7 @@ The tools that match Google's official MCP server for this product (https://docs
 | `bigquery_routines_get_iam_policy` | read | bigquery.routines.getIamPolicy | bigquery, cloud-platform |
 | `bigquery_routines_insert` | write | bigquery.routines.insert | bigquery, cloud-platform |
 | `bigquery_routines_list` | read | bigquery.routines.list | bigquery, cloud-platform |
-| `bigquery_routines_set_iam_policy` | write | bigquery.routines.setIamPolicy | bigquery, cloud-platform |
+| `bigquery_routines_set_iam_policy` | destructive | bigquery.routines.setIamPolicy | bigquery, cloud-platform |
 | `bigquery_routines_test_iam_permission` | read | bigquery.routines.testIamPermissions | bigquery, cloud-platform |
 | `bigquery_routines_update` | write | bigquery.routines.update | bigquery, cloud-platform |
 | `bigquery_row_access_po_get_iam_policy` | read | bigquery.rowAccessPolicies.getIamPolicy | bigquery, cloud-platform |
@@ -202,13 +202,13 @@ The tools that match Google's official MCP server for this product (https://docs
 | `bigquery_tables_insert` | write | bigquery.tables.insert | bigquery, cloud-platform |
 | `bigquery_tables_list` | read | bigquery.tables.list | bigquery, cloud-platform |
 | `bigquery_tables_patch` | write | bigquery.tables.patch | bigquery, cloud-platform |
-| `bigquery_tables_set_iam_policy` | write | bigquery.tables.setIamPolicy | bigquery, cloud-platform |
+| `bigquery_tables_set_iam_policy` | destructive | bigquery.tables.setIamPolicy | bigquery, cloud-platform |
 | `bigquery_tables_test_iam_permissions` | read | bigquery.tables.testIamPermissions | bigquery, cloud-platform |
 | `bigquery_tables_update` | write | bigquery.tables.update | bigquery, cloud-platform |
 | `billing_billing_ac_sub_account_create` | write | cloudbilling.billingAccounts.subAccounts.create | cloud-billing, cloud-platform |
 | `billing_billing_acc_sub_accounts_list` | read | cloudbilling.billingAccounts.subAccounts.list | cloud-billing, cloud-billing.readonly |
 | `billing_billing_accoun_get_iam_policy` | read | cloudbilling.billingAccounts.getIamPolicy | cloud-billing, cloud-billing.readonly |
-| `billing_billing_accoun_set_iam_policy` | write | cloudbilling.billingAccounts.setIamPolicy | cloud-billing, cloud-platform |
+| `billing_billing_accoun_set_iam_policy` | destructive | cloudbilling.billingAccounts.setIamPolicy | cloud-billing, cloud-platform |
 | `billing_billing_accoun_test_iam_permi` | read | cloudbilling.billingAccounts.testIamPermissions | cloud-billing, cloud-billing.readonly |
 | `billing_billing_account_projects_list` | read | cloudbilling.billingAccounts.projects.list | cloud-billing, cloud-billing.readonly |
 | `billing_billing_accounts_create` | write | cloudbilling.billingAccounts.create | cloud-billing, cloud-platform |
@@ -253,7 +253,7 @@ The tools that match Google's official MCP server for this product (https://docs
 | `crm_folders_move` | write | cloudresourcemanager.folders.move | cloud-platform |
 | `crm_folders_patch` | write | cloudresourcemanager.folders.patch | cloud-platform |
 | `crm_folders_search` | read | cloudresourcemanager.folders.search | cloud-platform, cloud-platform.read-only |
-| `crm_folders_set_iam_policy` | write | cloudresourcemanager.folders.setIamPolicy | cloud-platform |
+| `crm_folders_set_iam_policy` | destructive | cloudresourcemanager.folders.setIamPolicy | cloud-platform |
 | `crm_folders_test_iam_permissions` | read | cloudresourcemanager.folders.testIamPermissions | cloud-platform |
 | `crm_folders_undelete` | write | cloudresourcemanager.folders.undelete | cloud-platform |
 | `crm_liens_create` | write | cloudresourcemanager.liens.create | cloud-platform, cloud-platform.read-only |
@@ -272,7 +272,7 @@ The tools that match Google's official MCP server for this product (https://docs
 | `crm_organizations_get` | read | cloudresourcemanager.organizations.get | cloud-platform, cloud-platform.read-only |
 | `crm_organizations_get_iam_policy` | read | cloudresourcemanager.organizations.getIamPolicy | cloud-platform, cloud-platform.read-only |
 | `crm_organizations_search` | read | cloudresourcemanager.organizations.search | cloud-platform, cloud-platform.read-only |
-| `crm_organizations_set_iam_policy` | write | cloudresourcemanager.organizations.setIamPolicy | cloud-platform |
+| `crm_organizations_set_iam_policy` | destructive | cloudresourcemanager.organizations.setIamPolicy | cloud-platform |
 | `crm_organizations_test_iam_permission` | read | cloudresourcemanager.organizations.testIamPermissions | cloud-platform, cloud-platform.read-only |
 | `crm_projects_capability_config_create` | write | cloudresourcemanager.projects.capabilityConfigs.create | cloud-platform |
 | `crm_projects_capability_config_delete` | destructive | cloudresourcemanager.projects.capabilityConfigs.delete | cloud-platform |
@@ -287,7 +287,7 @@ The tools that match Google's official MCP server for this product (https://docs
 | `crm_projects_move` | write | cloudresourcemanager.projects.move | cloud-platform |
 | `crm_projects_patch` | write | cloudresourcemanager.projects.patch | cloud-platform |
 | `crm_projects_search` | read | cloudresourcemanager.projects.search | cloud-platform, cloud-platform.read-only |
-| `crm_projects_set_iam_policy` | write | cloudresourcemanager.projects.setIamPolicy | cloud-platform |
+| `crm_projects_set_iam_policy` | destructive | cloudresourcemanager.projects.setIamPolicy | cloud-platform |
 | `crm_projects_test_iam_permissions` | read | cloudresourcemanager.projects.testIamPermissions | cloud-platform, cloud-platform.read-only |
 | `crm_projects_undelete` | write | cloudresourcemanager.projects.undelete | cloud-platform |
 | `crm_tag_bindings_create` | write | cloudresourcemanager.tagBindings.create | cloud-platform |
@@ -300,7 +300,7 @@ The tools that match Google's official MCP server for this product (https://docs
 | `crm_tag_keys_get_namespaced` | read | cloudresourcemanager.tagKeys.getNamespaced | cloud-platform, cloud-platform.read-only |
 | `crm_tag_keys_list` | read | cloudresourcemanager.tagKeys.list | cloud-platform, cloud-platform.read-only |
 | `crm_tag_keys_patch` | write | cloudresourcemanager.tagKeys.patch | cloud-platform |
-| `crm_tag_keys_set_iam_policy` | write | cloudresourcemanager.tagKeys.setIamPolicy | cloud-platform |
+| `crm_tag_keys_set_iam_policy` | destructive | cloudresourcemanager.tagKeys.setIamPolicy | cloud-platform |
 | `crm_tag_keys_test_iam_permissions` | read | cloudresourcemanager.tagKeys.testIamPermissions | cloud-platform |
 | `crm_tag_values_create` | write | cloudresourcemanager.tagValues.create | cloud-platform |
 | `crm_tag_values_delete` | destructive | cloudresourcemanager.tagValues.delete | cloud-platform |
@@ -309,7 +309,7 @@ The tools that match Google's official MCP server for this product (https://docs
 | `crm_tag_values_get_namespaced` | read | cloudresourcemanager.tagValues.getNamespaced | cloud-platform, cloud-platform.read-only |
 | `crm_tag_values_list` | read | cloudresourcemanager.tagValues.list | cloud-platform, cloud-platform.read-only |
 | `crm_tag_values_patch` | write | cloudresourcemanager.tagValues.patch | cloud-platform |
-| `crm_tag_values_set_iam_policy` | write | cloudresourcemanager.tagValues.setIamPolicy | cloud-platform |
+| `crm_tag_values_set_iam_policy` | destructive | cloudresourcemanager.tagValues.setIamPolicy | cloud-platform |
 | `crm_tag_values_tag_holds_create` | write | cloudresourcemanager.tagValues.tagHolds.create | cloud-platform |
 | `crm_tag_values_tag_holds_delete` | destructive | cloudresourcemanager.tagValues.tagHolds.delete | cloud-platform |
 | `crm_tag_values_tag_holds_list` | read | cloudresourcemanager.tagValues.tagHolds.list | cloud-platform, cloud-platform.read-only |
@@ -411,7 +411,7 @@ The tools that match Google's official MCP server for this product (https://docs
 | `storage_buckets_patch` | write | storage.buckets.patch | cloud-platform, devstorage.full_control |
 | `storage_buckets_relocate` | write | storage.buckets.relocate | cloud-platform, devstorage.full_control |
 | `storage_buckets_restore` | write | storage.buckets.restore | cloud-platform, devstorage.full_control |
-| `storage_buckets_set_iam_policy` | write | storage.buckets.setIamPolicy | cloud-platform, devstorage.full_control |
+| `storage_buckets_set_iam_policy` | destructive | storage.buckets.setIamPolicy | cloud-platform, devstorage.full_control |
 | `storage_buckets_test_iam_permissions` | read | storage.buckets.testIamPermissions | cloud-platform, cloud-platform.read-only |
 | `storage_buckets_update` | write | storage.buckets.update | cloud-platform, devstorage.full_control |
 | `storage_default_object_access_c_patch` | write | storage.defaultObjectAccessControls.patch | cloud-platform, devstorage.full_control |
@@ -427,7 +427,7 @@ The tools that match Google's official MCP server for this product (https://docs
 | `storage_folders_list` | read | storage.folders.list | cloud-platform, cloud-platform.read-only |
 | `storage_folders_rename` | write | storage.folders.rename | cloud-platform, devstorage.full_control |
 | `storage_managed_folder_get_iam_policy` | read | storage.managedFolders.getIamPolicy | cloud-platform, cloud-platform.read-only |
-| `storage_managed_folder_set_iam_policy` | write | storage.managedFolders.setIamPolicy | cloud-platform, devstorage.full_control |
+| `storage_managed_folder_set_iam_policy` | destructive | storage.managedFolders.setIamPolicy | cloud-platform, devstorage.full_control |
 | `storage_managed_folder_test_iam_permi` | read | storage.managedFolders.testIamPermissions | cloud-platform, cloud-platform.read-only |
 | `storage_managed_folders_delete` | destructive | storage.managedFolders.delete | cloud-platform, devstorage.full_control |
 | `storage_managed_folders_get` | read | storage.managedFolders.get | cloud-platform, cloud-platform.read-only |
@@ -455,7 +455,7 @@ The tools that match Google's official MCP server for this product (https://docs
 | `storage_objects_patch` | write | storage.objects.patch | cloud-platform, devstorage.full_control |
 | `storage_objects_restore` | write | storage.objects.restore | cloud-platform, devstorage.full_control |
 | `storage_objects_rewrite` | write | storage.objects.rewrite | cloud-platform, devstorage.full_control |
-| `storage_objects_set_iam_policy` | write | storage.objects.setIamPolicy | cloud-platform, devstorage.full_control |
+| `storage_objects_set_iam_policy` | destructive | storage.objects.setIamPolicy | cloud-platform, devstorage.full_control |
 | `storage_objects_test_iam_permissions` | read | storage.objects.testIamPermissions | cloud-platform, cloud-platform.read-only |
 | `storage_objects_update` | write | storage.objects.update | cloud-platform, devstorage.full_control |
 | `storage_objects_view_full_context` | read | storage.objects.viewFullContext | cloud-platform, cloud-platform.read-only |

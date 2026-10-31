@@ -4,7 +4,7 @@ Google Tag Manager accounts, containers, tags, triggers and variables.
 
 - Plugin: `gtm`, MCP server: `gtm`, login: Desktop OAuth client, then `login business`
 - Install: `claude plugin install gtm@google-services-mcps`
-- Tools: 119 total. Curated 9, per-method 106, gateway 3. Read 44, write 59, destructive 15, dynamic 1.
+- Tools: 119 total. Curated 9, per-method 106, gateway 3. Read 45, write 54, destructive 19, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
@@ -27,8 +27,8 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `tagmgr_account_contain_workspa_variable_get` | (none) | One variable with its type and parameters. |
 | `tagmgr_accounts_containers_versions_live` | (none) | The version that is live now, with its tags, triggers and variables. |
 | `tagmgr_accounts_containers_version_hea_list` | (none) | The versions of a container as headers: name, number and counts. |
-| `tagmgr_accounts_containe_workspac_create_ve` | (none) | Saves a workspace as a new container version. A write, so it asks first; nothing goes live. |
-| `tagmgr_accounts_containers_versions_publish` | (none) | Publishes a version: it goes live on every site or app that loads the container. A write, so it asks first; check the version before. |
+| `tagmgr_accounts_containe_workspac_create_ve` | (none) | Saves a workspace as a new container version, and Google deletes the workspace. Destructive since 1.26.3, so it asks twice; nothing goes live. |
+| `tagmgr_accounts_containers_versions_publish` | (none) | Publishes a version: it goes live on every site or app that loads the container. Destructive since 1.26.3, so it asks twice; check the version before. |
 
 ## Curated tools (9)
 
@@ -48,7 +48,7 @@ Google has no official MCP server for this product. The google toolset is a lean
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
-| `tagmgr_accoun_contai_worksp_folders_entitie` | write | tagmanager.accounts.containers.workspaces.folders.entities | tagmanager.edit.containers, tagmanager.readonly |
+| `tagmgr_accoun_contai_worksp_folders_entitie` | read | tagmanager.accounts.containers.workspaces.folders.entities | tagmanager.edit.containers, tagmanager.readonly |
 | `tagmgr_accoun_contai_worksp_folders_move_en` | write | tagmanager.accounts.containers.workspaces.folders.move_entities_to_folder | tagmanager.edit.containers |
 | `tagmgr_accoun_contai_workspa_built_i_create` | write | tagmanager.accounts.containers.workspaces.built_in_variables.create | tagmanager.edit.containers |
 | `tagmgr_accoun_contai_workspa_built_i_delete` | destructive | tagmanager.accounts.containers.workspaces.built_in_variables.delete | tagmanager.edit.containers |
@@ -108,7 +108,7 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `tagmgr_accounts_containe_environm_reauthori` | write | tagmanager.accounts.containers.environments.reauthorize | tagmanager.publish |
 | `tagmgr_accounts_containe_versions_set_lates` | write | tagmanager.accounts.containers.versions.set_latest | tagmanager.edit.containers |
 | `tagmgr_accounts_containe_workspac_bulk_upda` | write | tagmanager.accounts.containers.workspaces.bulk_update | tagmanager.edit.containers |
-| `tagmgr_accounts_containe_workspac_create_ve` | write | tagmanager.accounts.containers.workspaces.create_version | tagmanager.edit.containerversions |
+| `tagmgr_accounts_containe_workspac_create_ve` | destructive | tagmanager.accounts.containers.workspaces.create_version | tagmanager.edit.containerversions |
 | `tagmgr_accounts_containe_workspac_get_statu` | read | tagmanager.accounts.containers.workspaces.getStatus | tagmanager.edit.containers, tagmanager.readonly |
 | `tagmgr_accounts_containe_workspac_quick_pre` | write | tagmanager.accounts.containers.workspaces.quick_preview | tagmanager.edit.containerversions |
 | `tagmgr_accounts_containe_workspac_resolve_c` | write | tagmanager.accounts.containers.workspaces.resolve_conflict | tagmanager.edit.containers |
@@ -141,7 +141,7 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `tagmgr_accounts_containers_versions_delete` | destructive | tagmanager.accounts.containers.versions.delete | tagmanager.edit.containerversions |
 | `tagmgr_accounts_containers_versions_get` | read | tagmanager.accounts.containers.versions.get | tagmanager.edit.containers, tagmanager.edit.containerversions |
 | `tagmgr_accounts_containers_versions_live` | read | tagmanager.accounts.containers.versions.live | tagmanager.edit.containers, tagmanager.readonly |
-| `tagmgr_accounts_containers_versions_publish` | write | tagmanager.accounts.containers.versions.publish | tagmanager.publish |
+| `tagmgr_accounts_containers_versions_publish` | destructive | tagmanager.accounts.containers.versions.publish | tagmanager.publish |
 | `tagmgr_accounts_containers_versions_update` | write | tagmanager.accounts.containers.versions.update | tagmanager.edit.containerversions |
 | `tagmgr_accounts_containers_workspaces_get` | read | tagmanager.accounts.containers.workspaces.get | tagmanager.edit.containers, tagmanager.readonly |
 | `tagmgr_accounts_containers_workspaces_list` | read | tagmanager.accounts.containers.workspaces.list | tagmanager.edit.containers, tagmanager.readonly |
@@ -149,11 +149,11 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `tagmgr_accounts_get` | read | tagmanager.accounts.get | tagmanager.edit.containers, tagmanager.manage.accounts |
 | `tagmgr_accounts_list` | read | tagmanager.accounts.list | tagmanager.edit.containers, tagmanager.manage.accounts |
 | `tagmgr_accounts_update` | write | tagmanager.accounts.update | tagmanager.manage.accounts |
-| `tagmgr_accounts_user_permissions_create` | write | tagmanager.accounts.user_permissions.create | tagmanager.manage.users |
+| `tagmgr_accounts_user_permissions_create` | destructive | tagmanager.accounts.user_permissions.create | tagmanager.manage.users |
 | `tagmgr_accounts_user_permissions_delete` | destructive | tagmanager.accounts.user_permissions.delete | tagmanager.manage.users |
 | `tagmgr_accounts_user_permissions_get` | read | tagmanager.accounts.user_permissions.get | tagmanager.manage.users |
 | `tagmgr_accounts_user_permissions_list` | read | tagmanager.accounts.user_permissions.list | tagmanager.manage.users |
-| `tagmgr_accounts_user_permissions_update` | write | tagmanager.accounts.user_permissions.update | tagmanager.manage.users |
+| `tagmgr_accounts_user_permissions_update` | destructive | tagmanager.accounts.user_permissions.update | tagmanager.manage.users |
 
 ## Gateway tools (3)
 

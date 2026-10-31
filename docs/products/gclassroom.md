@@ -57,13 +57,13 @@ The readable task tools match 15 of the 16 tools of Google's Classroom MCP serve
 ## Example requests
 
 - "Which students have not turned in the Chapter 4 quiz?" Claude finds the course with `classroom_list_courses`, the quiz with `classroom_list_coursework`, then runs `classroom_list_submissions`. No prompt.
-- "Post an announcement in Biology 101: the lab moved to room 12." Claude runs `classroom_create_announcement`, which makes a draft unless you say to publish it. It asks first.
+- "Post an announcement in Biology 101: the lab moved to room 12." Claude runs `classroom_create_announcement`, which makes a draft unless you say to publish it. It asks first; publishing it (now or at a set time) asks twice.
 - "Add Ms. Ortiz as a teacher in the Spanish course." Claude adds a teacher. It asks first.
 - "Delete the old draft assignment." Claude runs a coursework delete. It asks twice.
 
 ## Safety
 
-- Reads never ask. Writes ask first. Deletes ask twice.
+- Reads never ask. Writes ask first. Deletes ask twice, and since 1.26.3 so do course and guardian invitations, returning student work (it hands the Drive files to the student) and a published announcement.
 - Announcements and coursework reach students when they are published. Check the course before you approve.
 - Removing students, teachers or groups changes who can see the course.
 - Student records are personal data. Keep results out of shared notes unless you need them there.

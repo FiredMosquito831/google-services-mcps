@@ -134,7 +134,8 @@ test('chat_send_message approved: one POST, after the approval, with the text th
     const calls = callsIn(s.callsFile);
     assert.deepEqual(calls.map((c) => [c.method, c.path]), [['GET', '/v1/spaces/AAA'], ['POST', '/v1/spaces/AAA/messages']]);
     assert.deepEqual(calls[1].body, { text: '**Done**', markupSyntax: 'MARKUP_SYNTAX_MARKDOWN', thread: { name: 'spaces/AAA/threads/t1' } });
-    assert.deepEqual(auditOf(s.tokens).map((l) => [l.tool, l.risk, l.outcome]), [['chat_send_message', 'modify', 'approved']]);
+    // Sending to other people is destructive since 1.26.3 (the destructive rule), like gmail_send.
+    assert.deepEqual(auditOf(s.tokens).map((l) => [l.tool, l.risk, l.outcome]), [['chat_send_message', 'destructive', 'approved']]);
   } finally {
     await client.close();
   }

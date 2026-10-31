@@ -1,7 +1,7 @@
 {
   "name": "gsc",
   "displayName": "Search Console",
-  "version": "1.26.2",
+  "version": "1.26.3",
   "description": "Search Console sites, sitemaps, search analytics, URL indexing and site verification.",
   "author": {
     "name": "FiredMosquito831"
@@ -22,7 +22,7 @@
     "confirmation": {
       "type": "string",
       "title": "Confirm before changes",
-      "description": "every-change asks before any change or delete (recommended). destructive-only asks only before deleting or sending. off asks for nothing; deny rules still apply. Change it here at any time.",
+      "description": "every-change asks before any change or delete (recommended). destructive-only asks only before destructive actions: deleting, sending to other people, sharing or permission changes, security changes, device commands, publishing, refunds and whole-content replacement. off asks for nothing; deny rules still apply. Change it here at any time.",
       "options": [
         "every-change",
         "destructive-only",

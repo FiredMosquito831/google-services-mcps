@@ -35,7 +35,7 @@ The `cloud` login is shared with `gcloud`. Start with `--profile readonly`. Writ
 | Vertex AI (hand-written) | `vertex_generate_content`, `vertex_count_tokens`, `vertex_embed_content` | read | Send a prompt to a Gemini or other Vertex AI model, count a prompt's tokens, or embed a text. Billed per use by Google, but they change nothing, so they do not ask |
 | Gemini API and Vertex AI | `api_search`, `api_describe`, `api_call` | read, read, dynamic | Find and call Gemini (86 and 47 methods) and Vertex AI methods. These have no per-method tools. |
 | Discovery Engine (278 per-method) | search, answer, data stores, documents, engines | read, write, destructive | Search and answer over your own data. Documents can be created or purged. |
-| Vision (38), Speech (14), Text-to-Speech (7), Language (5), Video Intelligence (8) | annotate, recognize, synthesize, analyze | read, write | Analyze images, transcribe audio, synthesize speech. Annotate and recognize calls are classed write. |
+| Vision (38), Speech (14), Text-to-Speech (7), Language (5), Video Intelligence (8) | annotate, recognize, synthesize, analyze | read, write | Analyze images, transcribe audio, synthesize speech. Since 1.26.3 the synchronous calls (Vision `annotate`, Speech `recognize`, Text-to-Speech `synthesize`, Language `annotateText`, `classifyText`, `moderateText`) are reads; the asynchronous ones, which write to Cloud Storage or start an operation, are writes. |
 | Gateway (47 APIs) | `api_search`, `api_describe`, `api_call` | mixed | Dialogflow v3 (158 methods), Translate v3 (51), Document AI (42), Contact Center AI Insights (192), AI Commerce Search (71), Gemini Enterprise for Customer Experience (73), Agent Registry, Agent Identity, Notebooks and others |
 
 The full list is in `docs/capabilities/gai.md`.
@@ -49,8 +49,8 @@ The three hand-written tools match the generative tools of Google's Agent Platfo
 - "Embed these three sentences for a similarity search." Claude runs `vertex_embed_content` for each, with `task_type: SEMANTIC_SIMILARITY`. No prompt.
 - "Call an older Gemini method through the gateway." Claude finds it with `api_search`, checks it with `api_describe`, then calls it with `api_call`. Gateway model calls run work, so Claude asks first.
 - "Search our product manuals for the warranty period." Claude runs a Discovery Engine search. No prompt.
-- "Transcribe this 30-second voice note." Claude runs the speech recognize tool. It asks first.
-- "Read the text in this photo of a receipt." Claude runs a Vision annotate tool. It asks first.
+- "Transcribe this 30-second voice note." Claude runs the speech recognize tool. No prompt: it only computes (a read since 1.26.3).
+- "Read the text in this photo of a receipt." Claude runs a Vision annotate tool. No prompt: it only computes (a read since 1.26.3).
 
 ## Safety
 

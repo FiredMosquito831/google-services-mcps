@@ -58,7 +58,7 @@ Google's Merchant API MCP server (alpha, https://developers.google.com/merchant/
 ## Safety
 
 - Product, inventory, promotion and business information writes change live data in the account.
-- Deletes ask twice. There are 20 destructive tools.
+- Deletes ask twice, and since 1.26.3 so do unregistering the Cloud project and unclaiming the homepage. There are 22 destructive tools.
 - The `confirmation` option defaults to `every-change`. Change it with `printf '%s' '{"confirmation":"destructive-only"}' | claude plugin configure gmerchant@google-services-mcps --values-stdin` (JSON on stdin), or `/plugin configure gmerchant@google-services-mcps` in Claude Code.
 
 ## Costs and limits

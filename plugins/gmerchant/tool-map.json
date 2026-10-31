@@ -646,7 +646,7 @@
   },
   {
     "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_develo_unregi",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/content"
     ],
@@ -691,7 +691,7 @@
   },
   {
     "name": "mcp__plugin_gmerchant_gmerchant__merchantap_accoun_homepa_unclai",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/content"
     ],
@@ -1411,7 +1411,7 @@
   },
   {
     "name": "mcp__plugin_gmerchant_gmerchant__merchantap_issuereso_renderacco",
-    "kind": "write",
+    "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/content"
     ],
@@ -1420,7 +1420,7 @@
   },
   {
     "name": "mcp__plugin_gmerchant_gmerchant__merchantap_issuereso_renderprod",
-    "kind": "write",
+    "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/content"
     ],

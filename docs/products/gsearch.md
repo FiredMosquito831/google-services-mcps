@@ -33,7 +33,7 @@ There is no scopes profile, because a key is not an OAuth token. The write and d
 |---|---|---|---|
 | Hand-written | none | | This plugin has no hand-written tools. |
 | Per-method (47) | | mostly read | Safe Browsing and Web Risk lookups, PageSpeed Insights, Chrome UX Report, Fact Check Tools, Knowledge Graph, Civic Information, Digital Asset Links, Version History, Developer Knowledge |
-| Per-method writes | | write | Fact-check page create and update, Digital Asset Links bulk check, Developer Knowledge answer query |
+| Per-method writes | | write | Fact-check page create and update, Web Risk submissions. Digital Asset Links bulk check (since 1.26.3), Developer Knowledge answer query (since 1.24.2) and the Safe Browsing v4 finds in the gateway (since 1.26.3) are reads. |
 | Per-method deletes | | destructive | Fact-check page delete, Web Risk operation cancel and delete |
 | Gateway (2 APIs) | `api_search`, `api_describe`, `api_call` | read, read, dynamic | Developer Knowledge v1alpha and Safe Browsing v4 |
 

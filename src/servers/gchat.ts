@@ -5,9 +5,10 @@
  * a conversation read or unread. The generated chat_* tools stay as they are; these take plain arguments and return
  * short answers.
  *
- * Reads never ask. chat_send_message, chat_mark_read and chat_mark_unread are writes, so the gate asks first;
- * chat_send_message's prepare step reads the conversation's name, so the approval shows where the message goes and the
- * start of its text. The Chat API has no client library in this package, so the calls go through the account's auth
+ * Reads never ask. chat_mark_read and chat_mark_unread are writes, so the gate asks first. chat_send_message posts to
+ * other people, so it is destructive like gmail_send (the destructive rule, docs/SECURITY.md): it asks twice, also under
+ * confirmation destructive-only. Its prepare step reads the conversation's name, so the approval shows where the
+ * message goes and the start of its text. The Chat API has no client library in this package, so the calls go through the account's auth
  * client (cloud-http.ts), as the gcloud curated tools do.
  *
  * Auth: OAuth user token from `gsm login workspace-user`.
@@ -444,8 +445,9 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       name: 'chat_send_message',
       title: 'Send a Chat message',
       description:
-        "Post a message as you in a Google Chat conversation, in Markdown, as a new thread or as a reply in thread_id (matches send_message in Google's Chat MCP server; cards and citations, which only Chat apps can post, are not offered). Find the conversation id with chat_search_conversations. It asks first; the approval shows the conversation's name and the start of the text. A reply fails rather than starting a new thread when the thread cannot be answered. At most 32,000 bytes.",
-      kind: 'write',
+        "Post a message as you in a Google Chat conversation, in Markdown, as a new thread or as a reply in thread_id (matches send_message in Google's Chat MCP server; cards and citations, which only Chat apps can post, are not offered). Find the conversation id with chat_search_conversations. A message cannot be unsent from here, so it asks first, as a destructive action; the approval shows the conversation's name and the start of the text. A reply fails rather than starting a new thread when the thread cannot be answered. At most 32,000 bytes.",
+      // It sends a message to other people: destructive, like gmail_send (the destructive rule, docs/SECURITY.md).
+      kind: 'destructive',
       scopes: MESSAGES_CREATE,
       inputSchema: {
         conversation_id: conversationId,

@@ -56,7 +56,7 @@ With the plugin option `toolset: google`, the server lists the 8 tools that matc
 
 ## Safety
 
-- Reads never ask. Creates and updates ask first. Deletes ask twice.
+- Reads never ask. Creates and updates ask first. Deletes ask twice, and so does a create, update or answer that emails guests or the organizer (`send_updates` `all` or `externalOnly`, since 1.26.3). Sharing a calendar (ACL changes) and transferring one ask twice too.
 - Event writes can notify attendees. The preview shows who is invited, so check it.
 - Sharing changes (ACL tools) decide who can see or edit a calendar. Some of them are destructive.
 - The `confirmation` option defaults to `every-change`. Change it with `printf '%s' '{"confirmation":"destructive-only"}' | claude plugin configure gcalendar@google-services-mcps --values-stdin` (JSON on stdin), or `/plugin configure gcalendar@google-services-mcps` in Claude Code.
