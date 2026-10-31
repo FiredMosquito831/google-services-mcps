@@ -615,10 +615,10 @@ The 23 products, from `config/products.json`. The descriptions are copied from t
 | `gyoutube` | YouTube Data, YouTube Analytics and YouTube Reporting APIs, plus Blogger. | `business` | `npx google-services-mcps install --agent claude --plugin gyoutube` |
 | `gbusiness` | Business Profile accounts, locations, verifications, lodging, place actions, notifications and performance. | `business` | `npx google-services-mcps install --agent claude --plugin gbusiness` |
 | `gads` | Google Ads API (accounts, campaigns, ad groups, ads, keywords, budgets, conversions, assets and GAQL reporting, with every other method through the gateway), plus advertising and publisher APIs: Search Ads 360, Display & Video 360, Campaign Manager, Ad Exchange, AdSense, AdMob, Real-time Bidding and more. | `business` | `npx google-services-mcps install --agent claude --plugin gads` |
-| `gmerchant` | Merchant Center: Merchant API, Comparison Shopping Service and Manufacturer Center. | `business` | `npx google-services-mcps install --agent claude --plugin gmerchant` |
-| `gplay` | Google Play developer publishing and reporting, Play Games Services, Android Enterprise and Management, Play Integrity and device APIs. | `developer` | `npx google-services-mcps install --agent claude --plugin gplay` |
+| `gmerchant` | Merchant Center: Merchant API and Comparison Shopping Service. Its Manufacturer Center tools never load (the key asks only for `content`). | `service-account` | `npx google-services-mcps install --agent claude --plugin gmerchant` |
+| `gplay` | Google Play developer publishing and reporting, Play Games Services, Android Enterprise and Management, Play Integrity and device APIs. | `service-account` | `npx google-services-mcps install --agent claude --plugin gplay` |
 | `gfirebase` | Firebase management, App Check, App Distribution, Crashlytics, Hosting, Data Connect, Rules, Test Lab, FCM and Identity Toolkit. | `developer` | `npx google-services-mcps install --agent claude --plugin gfirebase` |
-| `gmaps` | Maps Platform and location APIs: Places, Address Validation, Solar, Air Quality, Pollen, Street View Publish and related datasets. | `developer` | `npx google-services-mcps install --agent claude --plugin gmaps` |
+| `gmaps` | Maps Platform and location APIs: Places, Address Validation, Solar, Air Quality, Pollen, Street View Publish and related datasets. | `apikey` | `npx google-services-mcps install --agent claude --plugin gmaps` |
 | `gai` | Generative and classic AI APIs: Discovery Engine, Vertex AI, Dialogflow, Vision, Speech, Translate, Document AI and agent services. | `cloud` | `npx google-services-mcps install --agent claude --plugin gai` |
 
 ## 11. Check and troubleshoot
