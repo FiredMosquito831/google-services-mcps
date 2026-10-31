@@ -2,6 +2,16 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.35.4 - 2026-10-31
+
+### Fixed: chat_list_messages orders messages with the direction Google documents
+- `chat_list_messages` sent `orderBy` as `create_time desc` (or `create_time asc` with `order: oldest`). Google lists the directions in upper case: "Valid ordering operation values are as follows: - `ASC` for ascending. - `DESC` for descending. The default ordering is `create_time ASC`." (spaces.messages.list, the Discovery document and the proto; https://developers.google.com/workspace/chat/api/reference/rest/v1/spaces.messages/list shows the same text with the field rendered as `createTime`). It now sends `create_time DESC` and `create_time ASC`.
+- The field name stays `create_time`, in `orderBy` and in the time-window `filter`: it is how the proto, the Discovery document and its filter examples (`create_time > "2012-04-21T11:30:00-04:00"`) spell it. The REST reference page shows `createTime` in the same sentences, because that page renders field names in their JSON form; it does not show `create_time` as wrong. `chat_search_messages` is unchanged: its request documents `create_time desc` in lower case ("Only descending order (`desc`) is supported").
+- tests/curated-contract.test.mjs rows can pin the query values a tool sends (`sends`); the two `chat_list_messages` rows do.
+
+### Not changed
+- Tool maps, tool kinds, tools/list and scopes. Whether Google also accepts the lower-case direction was never checked; nothing was checked against live Google.
+
 ## 1.35.3 - 2026-10-31
 
 ### Fixed: Search Console no longer offers what Google retired or deprecated

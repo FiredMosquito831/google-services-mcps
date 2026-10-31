@@ -381,7 +381,10 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
             pageSize: Math.min(page_size ?? 20, CHAT_PAGE_MAX),
             pageToken: page_token,
             filter: listFilter(start_time, end_time, thread),
-            orderBy: order === 'oldest' ? 'create_time asc' : 'create_time desc',
+            // Google's text for spaces.messages.list orderBy: "Valid ordering operation values are as follows: - `ASC` for
+            // ascending. - `DESC` for descending. The default ordering is `create_time ASC`." (Discovery and the proto;
+            // the REST page renders the field as createTime). The direction is upper case, as Google writes it (1.35.4).
+            orderBy: order === 'oldest' ? 'create_time ASC' : 'create_time DESC',
             ...(textFormat === 'markdown' ? { markupSyntax: 'MARKUP_SYNTAX_MARKDOWN' } : {}),
           },
         });

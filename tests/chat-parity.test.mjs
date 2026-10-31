@@ -141,7 +141,8 @@ test('list_messages: newest first in Markdown, a time window and a thread as the
   assert.deepEqual(calls[0].query, {
     pageSize: '20',
     filter: 'create_time > "2026-10-29T00:00:00Z" AND create_time < "2026-10-30T00:00:00+01:00" AND thread.name = spaces/AAA/threads/t1',
-    orderBy: 'create_time desc',
+    // Upper-case direction since 1.35.4: Google lists `ASC` and `DESC` as the valid values (see the next test).
+    orderBy: 'create_time DESC',
     markupSyntax: 'MARKUP_SYNTAX_MARKDOWN',
   });
   assert.equal(res.conversation_id, 'spaces/AAA');
@@ -161,8 +162,27 @@ test('list_messages: newest first in Markdown, a time window and a thread as the
   reset(() => ({ messages: [msg('m1', 'hello')] }));
   const plain = await run('chat_list_messages', { conversation_id: 'spaces/AAA', order: 'oldest', format: 'chat', page_size: 1000 });
   // page_size 1000 is still accepted; at most 50 are read a call (CHAT_PAGE_MAX, as Google's Chat MCP server), next_page_token gives the rest.
-  assert.deepEqual(calls[0].query, { pageSize: '50', orderBy: 'create_time asc' }, 'no filter and no markup without them');
+  assert.deepEqual(calls[0].query, { pageSize: '50', orderBy: 'create_time ASC' }, 'no filter and no markup without them');
   assert.equal(plain.messages[0].text, 'hello');
+});
+
+test("list_messages: orderBy and filter use Google's spelling: the field create_time, the direction ASC or DESC", async () => {
+  // Google's own text for spaces.messages.list, from the Discovery snapshot (the same words as the proto; the REST page
+  // at developers.google.com renders the field as createTime): the valid directions and the default ordering.
+  const doc = JSON.parse(readFileSync(new URL('../data/discovery/chat.v1.json', import.meta.url), 'utf8'));
+  const list = doc.resources.spaces.resources.messages.methods.list;
+  const param = (name) => list.parameters.find((p) => p.name === name).description;
+  assert.match(param('orderBy'), /`ASC` for ascending\. - `DESC` for descending\. The default ordering is `create_time ASC`\./);
+  assert.match(param('filter'), /You can filter messages by date \(`create_time`\) and thread \(`thread\.name`\)/);
+  const sent = [];
+  for (const order of ['newest', 'oldest']) {
+    reset(() => ({ messages: [] }));
+    await run('chat_list_messages', { conversation_id: 'AAA', order, start_time: '2026-10-29T00:00:00Z' });
+    sent.push(calls[0].query.orderBy);
+    assert.match(calls[0].query.filter, /^create_time > "/);
+  }
+  assert.deepEqual(sent, ['create_time DESC', 'create_time ASC']);
+  for (const value of sent) assert.match(value, /^create_time (ASC|DESC)$/, 'a field and one of the directions Google lists');
 });
 
 test('list_messages: the text is cut at max_chars (default 2000) and marked; bad ids and windows are refused before any request', async () => {

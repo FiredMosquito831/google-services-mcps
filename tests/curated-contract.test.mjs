@@ -763,12 +763,15 @@ const CASES = {
     { args: { participants: ['bo@example.com'] }, expect: ['chat.spaces.findDirectMessage'] },
     { args: { participants: ['a@example.com', 'b@example.com'], page_size: 10, page_token: 'p1' }, expect: ['chat.spaces.findGroupChats'] },
   ],
+  // 1.35.4: orderBy in Google's spelling ("Valid ordering operation values are as follows: - `ASC` for ascending. -
+  // `DESC` for descending. The default ordering is `create_time ASC`.", spaces.messages.list).
   chat_list_messages: [
     {
       args: { conversation_id: 'spaces/AAA', thread_id: 'spaces/AAA/threads/t1', start_time: '2026-10-29T00:00:00Z', end_time: '2026-10-30T00:00:00Z', page_size: 10, page_token: 'p1' },
       expect: ['chat.spaces.messages.list'],
+      sends: { orderBy: 'create_time DESC', filter: 'create_time > "2026-10-29T00:00:00Z" AND create_time < "2026-10-30T00:00:00Z" AND thread.name = spaces/AAA/threads/t1' },
     },
-    { args: { conversation_id: 'spaces/AAA', order: 'oldest', format: 'chat' }, expect: ['chat.spaces.messages.list'] },
+    { args: { conversation_id: 'spaces/AAA', order: 'oldest', format: 'chat' }, expect: ['chat.spaces.messages.list'], sends: { orderBy: 'create_time ASC' } },
   ],
   chat_search_messages: [
     {
@@ -1031,6 +1034,8 @@ for (const [name, cases] of Object.entries(CASES)) {
         if (!seen.includes(id)) seen.push(id);
       }
       assert.deepEqual(seen, c.expect, `${name}: the Discovery methods it calls`);
+      // A row may pin query values Google's text spells out (sends): each is checked on the first request.
+      for (const [key, value] of Object.entries(c.sends ?? {})) assert.equal(calls[0].query[key], value, `${name}: ${key}`);
     }
   });
 }
