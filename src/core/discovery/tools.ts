@@ -93,6 +93,8 @@ export interface RequestPlan {
   queryDefaults?: Record<string, string | number>;
   /** Headers sent when the call gives none (config/products.json fieldMaskDefaults). Absent for most methods. */
   headerDefaults?: Record<string, string>;
+  /** The document's regional hosts (rootForPath). Absent for a document that lists none. */
+  endpoints?: readonly RegionalEndpoint[];
 }
 
 export interface BuiltRequest {
@@ -107,8 +109,53 @@ export interface BuiltRequest {
 /** The header that carries a response field mask (Places API (New), and other APIs that document it). */
 export const FIELD_MASK_HEADER = 'X-Goog-FieldMask';
 
-/** A compacted snapshot (scripts/snapshot-discovery.mjs) also lists the document's system parameters by name. */
-type SnapshotDoc = DiscoveryDoc & { systemParameters?: string[] };
+/** One of a Discovery document's `endpoints`: a host that serves the API's paths for one location. */
+export interface RegionalEndpoint {
+  location?: string;
+  endpointUrl?: string;
+}
+
+/**
+ * A compacted snapshot (scripts/snapshot-discovery.mjs) also lists the document's system parameters by name, and its
+ * regional and locational hosts.
+ */
+type SnapshotDoc = DiscoveryDoc & { systemParameters?: string[]; endpoints?: RegionalEndpoint[] };
+
+/** The plan field for a document's regional hosts, or nothing when it lists none (the plan is then as before). */
+function endpointsOf(doc: DiscoveryDoc): Pick<RequestPlan, 'endpoints'> {
+  const endpoints = (doc as SnapshotDoc).endpoints;
+  return endpoints?.length ? { endpoints } : {};
+}
+
+/** An endpoint host the suite sends to: https, under googleapis.com, and not a pre-production host. */
+function usableEndpoint(url: string | undefined): url is string {
+  if (!url) return false;
+  try {
+    const u = new URL(url);
+    return u.protocol === 'https:' && u.hostname.endsWith('.googleapis.com') && !/(^|[.-])preprod([.-]|$)/.test(u.hostname) && u.pathname === '/';
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * The root URL for a request: when the document lists endpoints and the request path names a location
+ * (".../locations/<id>/...") that one of them serves, the first such endpoint in the document's order (only https hosts
+ * under googleapis.com, never a pre-production host); otherwise the document's root, exactly as before. Data from the
+ * documents: Discovery Engine lists "us" (us.rep), Speech its regions, Vertex AI, Document AI and Cloud Run theirs.
+ */
+export function rootForPath(rootUrl: string, endpoints: readonly RegionalEndpoint[] | undefined, path: string): string {
+  if (!endpoints?.length) return rootUrl;
+  const found = /(?:^|\/)locations\/([^/:?#]+)/.exec(path)?.[1];
+  if (!found) return rootUrl;
+  let location: string;
+  try {
+    location = decodeURIComponent(found);
+  } catch {
+    return rootUrl;
+  }
+  return endpoints.find((e) => e.location === location && usableEndpoint(e.endpointUrl))?.endpointUrl ?? rootUrl;
+}
 
 /** The argument for Google's `fields` system parameter (a partial response), and the one for a response field mask. */
 const FIELDS_ARG = 'fields';
@@ -464,9 +511,14 @@ export function buildRequest(plan: RequestPlan, args: Record<string, unknown>): 
   for (const [name, value] of Object.entries(plan.queryDefaults ?? {})) if (params[name] === undefined) params[name] = value;
   for (const [name, value] of Object.entries(plan.headerDefaults ?? {})) if (headers[name] === undefined) headers[name] = value;
 
+  // A path that names a location the document has a host for goes to that host (rootForPath); any other, as before.
+  let url = buildUrl(plan.rootUrl, plan.servicePath, plan.path, pathValues);
+  const root = rootForPath(plan.rootUrl, plan.endpoints, new URL(url).pathname);
+  if (root !== plan.rootUrl) url = buildUrl(root, plan.servicePath, plan.path, pathValues);
+
   return {
     method: plan.httpMethod as HttpMethodName,
-    url: buildUrl(plan.rootUrl, plan.servicePath, plan.path, pathValues),
+    url,
     params,
     data,
     ...(Object.keys(headers).length > 0 ? { headers } : {}),
@@ -552,6 +604,7 @@ function buildMethodTool(
     path: m.path,
     fields,
     ...planDefaults(defaults),
+    ...endpointsOf(doc),
   };
 
   const tool: ToolDef = {
@@ -615,6 +668,7 @@ function buildMethodTool(
       path: target.path,
       fields: target.parameters.filter((p) => p.location === 'path').map((p) => ({ arg: argFor(p.name), api: p.name, location: 'path' as const })),
       ...planDefaults(defaultsOf(src, target.fullId)),
+      ...endpointsOf(doc),
     };
     tool.describeTarget = async (args) => {
       const res = await sendAuthorized(group, cfg, buildRequest(targetPlan, args as Record<string, unknown>));

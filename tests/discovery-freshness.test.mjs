@@ -442,6 +442,7 @@ test('snapshot --offline: reads only the raw cache, keeps the previous key order
   };
   const rawAlpha = discoveryDoc('alpha', 'v1', '20261020', { items: { methods: { get: getRaw, list: method('alpha.items.list', 'GET', 'v1/items') } } }, {
     parameters: { fields: { type: 'string', location: 'query' }, alt: { type: 'string', location: 'query', enum: ['json', 'media'] } },
+    endpoints: [{ description: 'Regional Endpoint', location: 'us', endpointUrl: 'https://alpha.us.rep.googleapis.com/' }],
   });
   const rawBeta = discoveryDoc('beta', 'v1', '20261021', ALPHA_SNAPSHOT_RESOURCES);
   const previousAlpha = {
@@ -497,6 +498,9 @@ test('snapshot --offline: reads only the raw cache, keeps the previous key order
     // 1.30.0: the document's system parameters by name (the tools offer fields where the document lists it); none, no key.
     assert.deepEqual(alpha.systemParameters, ['fields', 'alt']);
     assert.equal('systemParameters' in JSON.parse(readFileSync(join(dir, 'beta.v1.json'), 'utf8')), false);
+    // 1.31.1: the document's regional hosts, location and URL only; none, no key.
+    assert.deepEqual(alpha.endpoints, [{ location: 'us', endpointUrl: 'https://alpha.us.rep.googleapis.com/' }]);
+    assert.equal('endpoints' in JSON.parse(readFileSync(join(dir, 'beta.v1.json'), 'utf8')), false);
     const record = JSON.parse(readFileSync(join(dir, '_revisions.json'), 'utf8')).snapshots;
     assert.deepEqual(record['alpha.v1'], { revision: '20261020', fetchedAt: '2026-10-20T00:00:00.000Z' }, 'the same revision keeps its record');
     assert.deepEqual(record['beta.v1'], { revision: '20261021', fetchedAt: statSync(join(cache, 'beta.v1.json')).mtime.toISOString() }, "another revision: the cache's, at the cache file's time");

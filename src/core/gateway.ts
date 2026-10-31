@@ -43,7 +43,7 @@ import type { RuntimeConfig } from './config.js';
 import { invocation } from './invocation.js';
 import type { AuthGroup } from './registry.js';
 import { classifyMethod } from './discovery/methods.js';
-import { buildUrl, loadToolKinds, sendAuthorized } from './discovery/tools.js';
+import { buildUrl, loadToolKinds, rootForPath, sendAuthorized, type RegionalEndpoint } from './discovery/tools.js';
 import type { GateFn } from './approval.js';
 import { resolveDynamicKind } from './dynamic.js';
 import { redactCredentials } from './credential-fields.js';
@@ -401,6 +401,8 @@ interface RawResource {
 interface RawDiscovery {
   name?: string;
   version?: string;
+  /** The document's regional and locational hosts (rootForPath in discovery/tools.ts). */
+  endpoints?: RegionalEndpoint[];
   parameters?: Record<string, RawParam>;
   schemas?: Record<string, RawSchema>;
   resources?: Record<string, RawResource>;
@@ -760,8 +762,12 @@ async function runCall(core: Core, args: CallArgs, ctx: ToolContext | undefined)
   const pathParams = validatePathParams(method.path, args.pathParams ?? {}, declaredPath);
   const query = validateQuery(args.query ?? {}, allowedQuery);
 
-  const url = buildUrl(api.rootUrl, api.servicePath, method.path, pathParams);
-  checkUrl(url, api.rootUrl, api.servicePath);
+  // A path that names a location the document has a host for goes to that host (Vertex AI us-central1, Document AI eu,
+  // Discovery Engine us); any other, to the catalog's root as before. The URL is checked against the root it was built on.
+  const onRoot = buildUrl(api.rootUrl, api.servicePath, method.path, pathParams);
+  const root = rootForPath(api.rootUrl, doc.endpoints, new URL(onRoot).pathname);
+  const url = root === api.rootUrl ? onRoot : buildUrl(root, api.servicePath, method.path, pathParams);
+  checkUrl(url, root, api.servicePath);
   const data = method.httpMethod === 'GET' ? undefined : args.body;
 
   const kind = callKindOf(entry, args.body);

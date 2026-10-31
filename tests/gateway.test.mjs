@@ -408,6 +408,25 @@ test('api_call: a media download (query alt=media) asks for one part with a Rang
   assert.deepEqual(Object.keys(plain[1]).sort(), ['data', 'method', 'params', 'url']);
 });
 
+test('api_call: a path that names a location the document has a host for goes to that host; a refused host never', async () => {
+  const { cfg, tokenDir } = setup();
+  const doc = JSON.parse(JSON.stringify(discovery));
+  doc.endpoints = [
+    { location: 'us', endpointUrl: 'https://demo-preprod.us.rep.googleapis.com/', description: 'Regional Endpoint' },
+    { location: 'us', endpointUrl: 'https://demo.us.rep.googleapis.com/', description: 'Regional Endpoint' },
+    { location: 'eu', endpointUrl: 'https://evil.example.com/', description: 'Regional Endpoint' },
+  ];
+  writeFileSync(join(tokenDir, 'discovery-cache', 'demoapi.v1.json'), JSON.stringify(doc));
+  const tools = gateway(cfg);
+  const requests = fakeRequest({ status: 200, data: { name: 'x' } });
+  await tools.api_call.handler({ method: 'demoapi.items.get', pathParams: { name: 'projects/p1/locations/us/items/i1' } }, {});
+  assert.equal(requests[0].url, 'https://demo.us.rep.googleapis.com/v1/projects/p1/locations/us/items/i1', 'the first usable host for us');
+  await tools.api_call.handler({ method: 'demoapi.items.get', pathParams: { name: 'projects/p1/locations/eu/items/i1' } }, {});
+  assert.equal(requests[1].url, 'https://demo.example.googleapis.com/v1/projects/p1/locations/eu/items/i1', 'a host outside googleapis.com is never used');
+  await tools.api_call.handler({ method: 'demoapi.items.list', pathParams: { projectId: 'p1' } }, {});
+  assert.equal(requests[2].url, 'https://demo.example.googleapis.com/v1/projects/p1/items', 'no location: the catalog root, as before');
+});
+
 test('api_call refuses a body on a GET, and sends nothing', async () => {
   const tools = gateway(setup().cfg);
   const requests = fakeRequest();

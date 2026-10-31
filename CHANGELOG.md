@@ -2,6 +2,16 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.31.1 - 2026-10-31
+
+### Fixed: regional resources go to their region's host
+- The per-method tools and `api_call` always used an API's global host. Some APIs serve a location's resources only, or for data residency, from that location's host: Vertex AI regions, Document AI `us` and `eu`, Discovery Engine `us` (the `us.rep` host), Speech, Cloud Run and more. Their Discovery documents list these hosts (`endpoints`). A call whose path names a location (`.../locations/us-central1/...`) that the document lists now goes to that host. Every other call goes where it went before.
+- Data from the documents, no per-API rule: the snapshots keep each document's hosts (location and URL); `api_call` reads them from the document it already loads. Where a document lists two hosts for one location, the first is used; only `https` hosts under `googleapis.com` are used and never a pre-production host (Vertex AI lists `aiplatform-preprod.us.rep.googleapis.com` beside its `us` host). A location the document does not list stays on the global host: Discovery Engine's document lists `us` but not `eu`.
+- The approval preview of a destructive per-method call and the target read of a write use the same host as the call.
+
+### Not changed
+- tools/list is byte-identical to 1.31.0 for every server. Tool maps and gateway kinds of all 23 plugins (0 kind changes) and `gsm scopes` for every plugin, profile and toolset (207 cases) are the same. Five snapshots gained their hosts (BigQuery, Cloud Trace, Discovery Engine, Speech, Cloud Storage); only Discovery Engine and Speech have paths that name a location. Not checked against live Google.
+
 ## 1.31.0 - 2026-10-31
 
 ### Added: files from the per-method tools and the gateway

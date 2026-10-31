@@ -570,6 +570,58 @@ test('media: a text file comes back as text, cut at a character; without alt=med
   assert.equal(calls[0].responseType, undefined);
 });
 
+// ---------------------------------------------------------------------------
+// 1.31.1: regional hosts
+
+test('rootForPath: the first endpoint of the location the path names, only https hosts under googleapis.com, never pre-production', async () => {
+  const { rootForPath } = await import(DIST('core/discovery/tools.js'));
+  const root = 'https://demo.googleapis.com/';
+  const endpoints = [
+    { location: 'us', endpointUrl: 'https://demo-preprod.us.rep.googleapis.com/' },
+    { location: 'us', endpointUrl: 'https://demo.us.rep.googleapis.com/' },
+    { location: 'us', endpointUrl: 'https://us-demo.googleapis.com/' },
+    { location: 'eu', endpointUrl: 'https://evil.example.com/' },
+    { location: 'asia1', endpointUrl: 'http://asia1-demo.googleapis.com/' },
+    { location: 'me1', endpointUrl: 'https://me1-demo.googleapis.com/extra/' },
+  ];
+  assert.equal(rootForPath(root, endpoints, '/v1/projects/p/locations/us/things/t1'), 'https://demo.us.rep.googleapis.com/');
+  assert.equal(rootForPath(root, endpoints, '/v1/projects/p/locations/us:search'), 'https://demo.us.rep.googleapis.com/');
+  for (const path of ['/v1/projects/p/locations/eu/x', '/v1/projects/p/locations/asia1/x', '/v1/projects/p/locations/me1/x', '/v1/projects/p/locations/global/x', '/v1/projects/p/things', '/v1/projects/p/locationsx/us', '/v1/projects/p/sublocations/us/x']) {
+    assert.equal(rootForPath(root, endpoints, path), root, path);
+  }
+  assert.equal(rootForPath(root, undefined, '/v1/projects/p/locations/us/x'), root);
+});
+
+test('regional hosts: a per-method tool whose path names a location its document serves goes to that host; any other, as before', async () => {
+  respond = () => ({});
+  const list = await byMethod('gai', 'speech.projects.locations.customClasses.list');
+  const [regional] = await requestsOf(list, { parent: 'projects/p1/locations/us-central1' });
+  assert.equal(regional.url, 'https://speech.us-central1.rep.googleapis.com/v1/projects/p1/locations/us-central1/customClasses');
+  assert.deepEqual(contract(regional, 'speech.projects.locations.customClasses.list'), { id: 'speech.projects.locations.customClasses.list', problems: [] });
+  const [globalCall] = await requestsOf(list, { parent: 'projects/p1/locations/global' });
+  assert.equal(new URL(globalCall.url).host, 'speech.googleapis.com', 'no endpoint for global: the document root');
+  // Discovery Engine: the document lists "us" only; "eu" stays on the global host.
+  const search = await byMethod('gai', 'discoveryengine.projects.locations.collections.dataStores.servingConfigs.search');
+  const config = (loc) => `projects/p1/locations/${loc}/collections/default_collection/dataStores/d1/servingConfigs/default_search`;
+  const [us] = await requestsOf(search, { servingConfig: config('us'), body: { query: 'q' } });
+  assert.equal(new URL(us.url).host, 'discoveryengine.us.rep.googleapis.com');
+  assert.deepEqual(contract(us, 'discoveryengine.projects.locations.collections.dataStores.servingConfigs.search').problems, []);
+  const [eu] = await requestsOf(search, { servingConfig: config('eu'), body: { query: 'q' } });
+  assert.equal(new URL(eu.url).host, 'discoveryengine.googleapis.com');
+  // Cloud Storage lists regional hosts, but its paths name no location: as before.
+  const [object] = await requestsOf(await byMethod('gcloud', 'storage.objects.get'), { bucket: 'b1', object: 'o1' });
+  assert.equal(object.url, 'https://storage.googleapis.com/storage/v1/b/b1/o/o1');
+  // The approval preview of a destructive call and the target read of a write show and use the same host.
+  const del = await byMethod('gai', 'speech.projects.locations.customClasses.delete');
+  const preview = await del.preview({ name: 'projects/p1/locations/us-west1/customClasses/c1' });
+  assert.equal(new URL(preview.url).host, 'speech.us-west1.rep.googleapis.com');
+  const patch = await byMethod('gai', 'speech.projects.locations.customClasses.patch');
+  assert.equal(typeof patch.describeTarget, 'function');
+  calls = [];
+  await patch.describeTarget({ name: 'projects/p1/locations/us-west1/customClasses/c1' });
+  assert.equal(new URL(calls[0].url).host, 'speech.us-west1.rep.googleapis.com');
+});
+
 test('fromBytes reads an answer as the HTTP library would, and a file as a MediaBody; contentRange and isTextual', async () => {
   const { fromBytes, MediaBody, contentRange, isTextual } = await import(DIST('core/media.js'));
   const b = (s) => Buffer.from(s, 'utf8');
