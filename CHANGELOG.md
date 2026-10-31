@@ -2,6 +2,18 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.27.0 - 2026-10-31
+
+### Added: approvals name what they act on
+- `calendar_delete_event` reads the event before it asks. The approval shows its title, start and end, organizer, number of guests, whether the ID deletes one event, one occurrence of a recurring event or the whole series, and whether guests are emailed a cancellation. An event that cannot be read is shown by its ids, with the reason.
+- `chat_send_message` names the people of a direct message or an unnamed group chat, and shows up to 1,500 characters of the text (before: 500) with its full length. The text comes last, so a long message cannot hide the other lines.
+- Per-method tools: a write or destructive tool whose method acts on one resource, where the same API has a `get` for it, reads that resource first and shows up to four fields that name it (title, display name, summary, subject, name or email, each cut at 200 characters) under `target (read from Google now, not sent)`. 777 of the 1,756 generated write and destructive tools have such a read, among them the Tasks, Keep, Meet, Drive permission, Calendar, Classroom, Admin and Cloud deletes. The `get` must be a read, so a credential reveal is never used, and its result passes the credential list first.
+- These reads change nothing and never ask. They change only the approval text: the request each tool sends is the same, and a declined approval sends nothing.
+
+### Not changed
+- A tool without such a read, a read that fails or takes more than 5 seconds: the approval text is exactly as before. No read is made when the server's form is not shown for the call (a change while the plugin's hook asks, in Claude Code; changes under `destructive-only`; anything under `off`).
+- Policy rules and the confirmation setting decide as before; they never read argument values. The tool maps and the tools' kinds, names, schemas and descriptions (except `calendar_delete_event`'s) are the same as 1.26.3.
+
 ## 1.26.3 - 2026-10-31
 
 ### Fixed: sends, shares, publishes and the other irreversible actions ask twice, also under `destructive-only`

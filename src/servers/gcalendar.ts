@@ -135,6 +135,45 @@ const EVENT_TYPES = ['default', 'outOfOffice', 'focusTime', 'workingLocation', '
 /** True when send_updates makes Google email guests or the organizer: such a call sends to other people. */
 export const emailsPeople = (sendUpdates: string | undefined): boolean => sendUpdates === 'all' || sendUpdates === 'externalOnly';
 
+/**
+ * What the approval of calendar_delete_event shows (1.27.0): the event read first (a read, it changes nothing), with its
+ * title, time, organizer and number of guests, and whether the ID is a single event, one occurrence of a recurring
+ * event, or the whole series. When the event cannot be read, the ids and the reason; the delete then runs as asked.
+ */
+export async function deletePreview(
+  api: calendar_v3.Calendar,
+  calendarId: string,
+  eventId: string,
+  sendUpdates: string | undefined,
+): Promise<Record<string, unknown>> {
+  const base = { calendar_id: calendarId, event_id: eventId, send_updates: sendUpdates ?? 'none' };
+  let e: calendar_v3.Schema$Event;
+  try {
+    e = (await api.events.get({ calendarId, eventId })).data;
+  } catch (err) {
+    return { ...base, note: `The event could not be read first, so only its ids are shown: ${(err as Error).message}` };
+  }
+  const guests = (e.attendees ?? []).filter((a) => !a.self && !a.resource).length;
+  const scope = e.recurrence?.length
+    ? 'the whole recurring series: every occurrence'
+    : e.recurringEventId
+      ? `one occurrence of a recurring event (series ${e.recurringEventId}); the other occurrences stay`
+      : 'one event';
+  return {
+    ...base,
+    title: e.summary ?? '(no title)',
+    start: e.start?.dateTime ?? e.start?.date,
+    end: e.end?.dateTime ?? e.end?.date,
+    deletes: scope,
+    ...(e.organizer?.email ? { organizer: e.organizer.email } : {}),
+    guests,
+    effect:
+      emailsPeople(sendUpdates) && guests > 0
+        ? `Deletes it, and Google emails a cancellation to ${sendUpdates === 'externalOnly' ? 'the guests outside your organization' : `the ${guests} guest(s)`}.`
+        : 'Deletes it. Nobody is emailed.',
+  };
+}
+
 export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
   const calendarApi = async () => calendar({ version: 'v3', auth: await authFor(cfg) });
 
@@ -537,12 +576,15 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       name: 'calendar_delete_event',
       title: 'Delete calendar event',
       description:
-        "Delete an event from a calendar (matches delete_event in Google's Calendar MCP server). It asks first. Guests are notified only if send_updates says so.",
+        "Delete an event from a calendar (matches delete_event in Google's Calendar MCP server). The event ID of one occurrence deletes that occurrence; the ID of a recurring event deletes the whole series. It asks first, and the approval shows the event's title and time and whether it is one event, one occurrence or a whole series. Guests are notified only if send_updates says so.",
       kind: 'destructive',
       // One DELETE (events.delete); Google's delete_event is marked idempotent too.
       idempotent: true,
       scopes: googleScopes('calendar', 'calendar.events'),
       inputSchema: { calendar_id: calendarId, event_id: eventId, send_updates: sendUpdates },
+      async prepare({ calendar_id, event_id, send_updates }) {
+        return { preview: await deletePreview(await calendarApi(), calendar_id ?? PRIMARY, event_id, send_updates) };
+      },
       async preview({ calendar_id, event_id, send_updates }) {
         const api = await calendarApi();
         const res = await api.events.get({ calendarId: calendar_id ?? PRIMARY, eventId: event_id });

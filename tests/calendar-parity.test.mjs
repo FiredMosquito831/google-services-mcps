@@ -71,7 +71,8 @@ test('kinds: suggest_time a read (as calendar_freebusy), respond a write (events
   const G = (s) => `https://www.googleapis.com/auth/${s}`;
   assert.deepEqual(tools.get('calendar_suggest_time').scopes, tools.get('calendar_freebusy').scopes, 'the scopes of free/busy, nothing new');
   assert.deepEqual(tools.get('calendar_respond').scopes, [G('calendar'), G('calendar.events')]);
-  assert.equal([...tools.values()].some((t) => t.prepare), false, 'no Calendar tool needs a prepare step');
+  // Since 1.27.0 only calendar_delete_event has a prepare step: it reads the event, so the approval names it.
+  assert.deepEqual([...tools.values()].filter((t) => t.prepare).map((t) => t.name), ['calendar_delete_event']);
   for (const t of tools.values()) assert.equal(t.inputSchema.confirm, undefined, `${t.name}: no model-controlled confirm`);
 });
 

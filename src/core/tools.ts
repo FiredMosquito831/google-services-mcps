@@ -30,6 +30,7 @@ import { fileURLToPath } from 'node:url';
 import { loadRegistry, serverByName, type AuthGroup, type ScopePolicy } from './registry.js';
 import { invocation, invocationFor, setInvocation } from './invocation.js';
 import { selectToolset, type ServerToolsets, type ToolOrigin, type ToolsetSelection } from './toolset.js';
+import { settleWithin, TARGET_PREVIEW_KEY, TARGET_READ_TIMEOUT_MS } from './target-preview.js';
 
 /**
  * read        : safe, always registered and never gated.
@@ -101,6 +102,14 @@ export interface ToolDef<A extends ZodRawShape = ZodRawShape> {
    * to destructive and never lowers a kind. The tool map, the hook and the annotations keep the tool's own kind.
    */
   destructiveWhen?(args: z.infer<z.ZodObject<A>>): boolean;
+  /**
+   * Optional, for a generated write or destructive tool whose method names one resource that a GET of the same API reads
+   * (src/core/target-preview.ts): reads that resource with the call's account and returns a few fields that name it.
+   * runServer adds them to the approval's arguments under TARGET_PREVIEW_KEY, when the server's form may be shown for the
+   * call. It is a read and changes nothing; the handler and what it sends are not changed. When it returns nothing, fails
+   * or is slow, the approval shows the raw arguments, as before.
+   */
+  describeTarget?(args: z.infer<z.ZodObject<A>>, ctx: ToolContext): Promise<Record<string, string> | undefined>;
   /** Optional metadata: what a destructive action would do, for describe output. The gate does not use it. */
   preview?(args: z.infer<z.ZodObject<A>>): Promise<unknown> | unknown;
   /**
@@ -175,6 +184,18 @@ function runtimeHints(name: string): ToolHints {
 export function callKind(tool: Pick<ToolDef, 'kind' | 'destructiveWhen'>, args: Record<string, unknown>): ActionKind {
   if (tool.kind === 'write' && tool.destructiveWhen?.(args as never) === true) return 'destructive';
   return tool.kind as ActionKind;
+}
+
+/**
+ * False when the server's approval form cannot be shown for a call of this kind: a change while the plugin's hook is
+ * active (the hook asks about changes), and the settings that never ask (confirmation off; a change under
+ * destructive-only). Used only to skip a target preview read that nobody would see. The gate decides as before.
+ */
+export function formMayShow(kind: ActionKind, cfg: Pick<RuntimeConfig, 'hookActive' | 'confirmation' | 'confirmationFromEnv'>): boolean {
+  if (kind === 'write' && cfg.hookActive) return false;
+  if (cfg.confirmationFromEnv && cfg.confirmation === 'off') return false;
+  if (cfg.confirmationFromEnv && cfg.confirmation === 'destructive-only' && kind === 'write') return false;
+  return true;
 }
 
 /** Wraps a tool definition as the model should see it: a typed schema and the same descriptions. */
@@ -416,8 +437,20 @@ export async function runServer(opts: {
             if (tool.kind === 'write' || tool.kind === 'destructive') {
               // The gate runs before the handler. If it throws, the handler never runs. A write whose arguments meet the
               // destructive rule (destructiveWhen) is gated as destructive.
-              const { account: _account, ...callArgs } = rawArgs;
-              await gate({ kind: callKind(tool, callArgs), target: tool.name, methodId: tool.methodId, args: rawArgs });
+              const { account: callAccount, ...callArgs } = rawArgs;
+              const kind = callKind(tool, callArgs);
+              // A generated tool may read the resource it acts on first, so the approval names it (target-preview.ts).
+              // Only when the form may be shown; without a result the approval shows the raw arguments, as before.
+              const describeTarget = tool.describeTarget;
+              const fields =
+                describeTarget && formMayShow(kind, cfg)
+                  ? await settleWithin(
+                      withAccount(typeof callAccount === 'string' ? callAccount : undefined, () => describeTarget(callArgs as never, ctx)),
+                      TARGET_READ_TIMEOUT_MS,
+                    )
+                  : undefined;
+              const shown = fields ? { [TARGET_PREVIEW_KEY]: fields, ...rawArgs } : rawArgs;
+              await gate({ kind, target: tool.name, methodId: tool.methodId, args: shown });
             }
             // The account argument picks the account for this call. It is not passed to the handler, so it never reaches Google.
             const { account, ...args } = rawArgs;

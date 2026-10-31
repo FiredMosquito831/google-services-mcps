@@ -256,7 +256,8 @@ test('send_message: prepare reads the conversation name; the approval shows it a
   assert.deepEqual(calls.map((c) => [c.method, c.path]), [['GET', '/v1/spaces/AAA']], 'prepare only reads');
   assert.equal(prepared.preview.conversation, 'Team');
   assert.equal(prepared.preview.thread, 'a new thread');
-  assert.equal(prepared.preview.text, `${text.slice(0, chat.CHAT_PREVIEW_CHARS)}...`);
+  // Since 1.27.0 the approval shows up to CHAT_APPROVAL_TEXT_CHARS (1,500), so these 715 characters are shown whole.
+  assert.equal(prepared.preview.text, text);
   assert.equal(prepared.preview.text_chars, text.length);
   const res = await tool.handler({ conversation_id: 'spaces/AAA', text }, ctx, prepared);
   assert.deepEqual(calls.slice(1).map((c) => [c.method, c.path, c.query]), [['POST', '/v1/spaces/AAA/messages', {}]]);

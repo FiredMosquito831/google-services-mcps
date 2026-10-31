@@ -117,6 +117,15 @@ Everything else keeps its kind. A plain edit, such as a patch of one field, stay
 
 `tests/kinds-destructive.test.mjs` pins each entry: both classifiers on every catalog version, the built tool maps and gateway tables, each plugin's own hook, and running servers.
 
+### Approval previews
+
+The server's form (**Approve this action?**) shows what the call will do. Some tools read first, with the same account, so the form can name what the call acts on. These reads are reads: they never ask, and they change nothing. They change only the text of the approval; the request the tool then sends is the same. A declined approval sends nothing.
+
+- **Hand-written tools** work the action out in a `prepare` step before the gate: `gmail_send` and `gmail_reply` (recipients, subject, thread, attachments), `gcs_write_text` (destination, size, whether an object may be replaced), `chat_send_message` (the conversation's name; since 1.27.0 the people of a direct message or an unnamed group chat, and up to 1,500 characters of the text with its full length), and since 1.27.0 `calendar_delete_event` (the event's title, start and end, organizer and number of guests, whether the ID deletes one event, one occurrence of a recurring event, or the whole series, and whether guests are emailed). When the event cannot be read, the form shows its ids and the reason.
+- **Per-method tools (since 1.27.0).** A write or destructive tool whose method names one resource by its path, where the same API has a `GET` method named `get` for that resource (same resource, the same path parameters, no other required parameter, and a read: never a credential reveal), reads that resource first. The form then shows up to four of its top-level fields `title`, `displayName`, `summary`, `subject`, `name`, `primaryEmail`, `emailAddress` and `email`, each cut at 200 characters, under `target (read from Google now, not sent)`, before the arguments. The read result passes the credential list (see Credential fields) before a field is picked. 777 of the 1,756 generated write and destructive tools have such a read, for example `tasks_tasks_delete`, `meet_spaces_end_active_conference` and `drive_permissions_update`. A create has none: it names its parent, not the new resource.
+- **When nothing is read.** A tool without such a `GET`, a read that fails, or one that takes longer than 5 seconds: the form shows the arguments exactly as before. The read is also skipped when the form will not be shown for the call: a change while the plugin's hook is active (the hook asks about changes in Claude Code, and its prompt shows the arguments only), and a change under `confirmation: destructive-only` or any call under `off` set through the plugin option or `GSM_CONFIRMATION`.
+- **Decisions do not change.** Policy rules and the confirmation setting decide from the tool, the method and the kind, never from argument values or the preview. The audit line hashes what the form showed.
+
 ### POST reads and GET writes of 1.26.3
 
 These `POST` methods only read or compute, and change nothing. They are reads, so they run without a question and are listed while writes are off:

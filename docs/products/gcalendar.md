@@ -52,7 +52,7 @@ With the plugin option `toolset: google`, the server lists the 8 tools that matc
 - "Add Carl to Friday's review." Claude runs `calendar_update_event` with `add_attendees`; the other guests keep their answers. It asks first.
 - "Decline the 4pm sync and say I am travelling." Claude runs `calendar_respond`. It asks first.
 - "Move the 10am standup to 10:30." Claude runs `calendar_update_event`. It asks first.
-- "Delete the cancelled Friday workshop." Claude runs `calendar_delete_event`. It asks twice.
+- "Delete the cancelled Friday workshop." Claude runs `calendar_delete_event`. It asks twice. The second prompt shows the event's title and time, and whether it deletes one event, one occurrence of a recurring event or the whole series (since 1.27.0).
 
 ## Safety
 
