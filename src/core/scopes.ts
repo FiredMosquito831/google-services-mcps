@@ -194,6 +194,10 @@ export function isReadonlyScope(scope: string): boolean {
  * (1.35.1) is the name and picture profile_me returns.
  */
 export const VIEW_ONLY_SCOPES: Readonly<Record<string, string>> = {
+  // 1.40.1: the free/busy scopes, so the readonly profile may take them (Google's Calendar MCP server asks for
+  // calendar.events.freebusy beside calendar.events.readonly and calendar.calendarlist.readonly).
+  'https://www.googleapis.com/auth/calendar.events.freebusy': 'See the availability on Google calendars you have access to',
+  'https://www.googleapis.com/auth/calendar.freebusy': 'View your availability in your calendars',
   'https://www.googleapis.com/auth/devstorage.read_only': 'View your data in Google Cloud Storage',
   'https://www.googleapis.com/auth/logging.read': 'View log data for your projects',
   'https://www.googleapis.com/auth/monitoring.read': 'View monitoring data for all of your Google Cloud and third-party projects',

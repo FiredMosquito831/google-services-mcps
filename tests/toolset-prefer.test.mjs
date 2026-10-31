@@ -66,6 +66,15 @@ const READWRITE_GOOGLE = {
   gtm: [G('tagmanager.edit.containerversions'), G('tagmanager.publish'), G('tagmanager.readonly')],
 };
 
+/**
+ * What a readonly login of a google toolset asks for when it prefers scopes (1.40.1): gcalendar takes the three read
+ * scopes Google's Calendar MCP server names (developers.google.com/workspace/calendar/api/guides/configure-mcp-server)
+ * instead of calendar.readonly, the same reach for its four read tools as the readwrite preference of 1.25.0.
+ */
+const READONLY_GOOGLE = {
+  gcalendar: [G('calendar.calendarlist.readonly'), G('calendar.events.freebusy'), G('calendar.events.readonly')],
+};
+
 /** The broader scopes the greedy rule took instead, before 1.25.0. */
 const READWRITE_BEFORE_DROPPED = {
   gcalendar: [G('calendar')],
@@ -111,25 +120,27 @@ test('preferFields gives the preference only for a listed toolset that has one',
 // ---------------------------------------------------------------------------
 // The data and the resolved lists
 
-test('the server map carries the preferences of seven products, readwrite only, each scope accepted by a listed tool', () => {
+test('the server map carries the preferences of seven products, readwrite (and gcalendar readonly), each scope accepted by a listed tool', () => {
   const reg = registry();
   const withPrefs = reg.servers.filter((s) => s.toolsetScopes).map((s) => s.name).sort();
   assert.deepEqual(withPrefs, Object.keys(READWRITE_GOOGLE).sort());
   for (const spec of reg.servers.filter((s) => s.toolsetScopes)) {
     assert.deepEqual(Object.keys(spec.toolsetScopes), ['google'], spec.name);
-    assert.deepEqual(Object.keys(spec.toolsetScopes.google), ['readwrite'], spec.name);
+    assert.deepEqual(Object.keys(spec.toolsetScopes.google).sort(), READONLY_GOOGLE[spec.name] ? ['readonly', 'readwrite'] : ['readwrite'], spec.name);
     const prefix = `mcp__plugin_${spec.plugin}_${spec.name}__`;
     const map = JSON.parse(readFileSync(join(REPO, 'plugins', spec.plugin, 'tool-map.json'), 'utf8'));
     const listed = new Set(spec.toolsets.google);
     const accepted = new Set(map.filter((t) => listed.has(t.name.slice(prefix.length))).flatMap((t) => t.scopes));
-    for (const scope of spec.toolsetScopes.google.readwrite) assert.ok(accepted.has(scope), `${spec.name}: ${scope} is accepted by a listed tool`);
+    for (const scope of [...spec.toolsetScopes.google.readwrite, ...(spec.toolsetScopes.google.readonly ?? [])]) {
+      assert.ok(accepted.has(scope), `${spec.name}: ${scope} is accepted by a listed tool`);
+    }
     // The plugin's own server map carries the same preference.
     const own = JSON.parse(readFileSync(join(REPO, 'plugins', spec.plugin, 'servers.json'), 'utf8')).servers[0];
     assert.deepEqual(own.toolsetScopes, spec.toolsetScopes, `${spec.plugin}/servers.json`);
   }
 });
 
-test('google readwrite logins resolve to the preferred scopes; readonly and full, and all and curated, are unchanged', async () => {
+test('google readwrite logins resolve to the preferred scopes; readonly (but gcalendar) and full, and all and curated, are unchanged', async () => {
   const cfg = cfgOf();
   const reg = registry();
   // gtasks' Keep is an optional part since 1.34.0: its preference applies when the part is named.
@@ -147,6 +158,12 @@ test('google readwrite logins resolve to the preferred scopes; readonly and full
       assert.ok(!now.includes(scope), `${name}: the preference no longer asks for ${scope}`);
     }
     for (const profile of ['readonly', 'full']) {
+      // 1.40.1: gcalendar prefers Google's three read scopes for readonly too.
+      if (profile === 'readonly' && READONLY_GOOGLE[name]) {
+        assert.deepEqual(resolveScopes(reqs, profile, include).scopes, READONLY_GOOGLE[name], `${name} readonly`);
+        assert.deepEqual(resolveScopes(strip(reqs), profile, include).scopes, [G('calendar.readonly')], `${name}: the greedy rule alone takes calendar.readonly`);
+        continue;
+      }
       assert.deepEqual(resolveScopes(reqs, profile, include).scopes, resolveScopes(strip(reqs), profile, include).scopes, `${name} ${profile}`);
     }
     for (const toolset of ['all', 'curated']) {
@@ -219,6 +236,7 @@ test('gen-servers copies a valid preference and rejects one no listed tool accep
   const data = JSON.parse(readFileSync(join(REPO, 'config', 'products.json'), 'utf8')).products.gcalendar.toolsets.google.preferScopes;
   assert.deepEqual(ok.servers.servers.find((s) => s.name === 'gcalendar').toolsetScopes, { google: data });
   assert.deepEqual(data.readwrite, [G('calendar.events'), G('calendar.calendarlist.readonly'), G('calendar.events.freebusy')]);
+  assert.deepEqual(data.readonly, [G('calendar.events.readonly'), G('calendar.calendarlist.readonly'), G('calendar.events.freebusy')]);
 
   const unused = genServersWith((google) => google.preferScopes.readwrite.push(G('drive')));
   assert.notEqual(unused.status, 0);

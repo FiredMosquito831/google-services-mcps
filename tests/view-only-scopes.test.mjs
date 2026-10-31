@@ -17,8 +17,9 @@ const { loadRegistry } = await import(DIST('core/registry.js'));
 
 const G = (name) => `https://www.googleapis.com/auth/${name}`;
 const FIVE = ['devstorage.read_only', 'logging.read', 'monitoring.read', 'script.metrics', 'script.processes'].map(G);
-// 1.35.1: userinfo.profile ("See your personal info"), the name profile_me returns.
-const LISTED = [...FIVE, G('userinfo.profile')].sort();
+// 1.35.1: userinfo.profile ("See your personal info"), the name profile_me returns. 1.40.1: the Calendar free/busy
+// scopes ("See the availability on Google calendars you have access to", "View your availability in your calendars").
+const LISTED = [...FIVE, G('userinfo.profile'), G('calendar.events.freebusy'), G('calendar.freebusy')].sort();
 
 const dir = mkdtempSync(join(tmpdir(), 'gsm-view-only-'));
 test.after(() => rmSync(dir, { recursive: true, force: true }));

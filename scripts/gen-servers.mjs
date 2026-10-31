@@ -208,6 +208,8 @@ const PREFER_PROFILES = ['readonly', 'readwrite'];
  * src/core/scopes.ts (tests/view-only-scopes.test.mjs checks the two lists are equal).
  */
 const VIEW_ONLY_SCOPES = [
+  'https://www.googleapis.com/auth/calendar.events.freebusy',
+  'https://www.googleapis.com/auth/calendar.freebusy',
   'https://www.googleapis.com/auth/devstorage.read_only',
   'https://www.googleapis.com/auth/logging.read',
   'https://www.googleapis.com/auth/monitoring.read',

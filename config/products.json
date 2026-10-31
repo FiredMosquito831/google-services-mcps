@@ -2095,6 +2095,11 @@
         "google": {
           "source": "https://developers.google.com/workspace/calendar/api/v3/reference/mcp",
           "preferScopes": {
+            "readonly": [
+              "https://www.googleapis.com/auth/calendar.events.readonly",
+              "https://www.googleapis.com/auth/calendar.calendarlist.readonly",
+              "https://www.googleapis.com/auth/calendar.events.freebusy"
+            ],
             "readwrite": [
               "https://www.googleapis.com/auth/calendar.events",
               "https://www.googleapis.com/auth/calendar.calendarlist.readonly",

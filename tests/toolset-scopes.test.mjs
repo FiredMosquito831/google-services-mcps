@@ -87,11 +87,14 @@ test('requirements: no toolset and all are the same list; google keeps the gmail
   assert.deepEqual(resolveScopes(google, 'readwrite').scopes, [G('gmail.modify')]);
 });
 
-test('requirements: the gcalendar google list resolves to calendar.readonly (readonly) and its preferred event, list and free/busy scopes (readwrite)', async () => {
+test('requirements: the gcalendar google list resolves to its preferred event, list and free/busy scopes (readonly since 1.40.1, readwrite since 1.25.0)', async () => {
   const { cfg } = tempTokens();
   const google = await requirementsFor(['gcalendar'], cfg, { ...quiet, toolset: 'google' });
   assert.equal(google.length, 8);
-  assert.deepEqual(resolveScopes(google, 'readonly').scopes, [G('calendar.readonly')]);
+  // The three read scopes Google's Calendar MCP server names, in place of calendar.readonly (the greedy rule's one scope).
+  assert.deepEqual(resolveScopes(google, 'readonly').scopes, [G('calendar.calendarlist.readonly'), G('calendar.events.freebusy'), G('calendar.events.readonly')]);
+  assert.deepEqual(resolveScopes(withoutPrefer(google), 'readonly').scopes, [G('calendar.readonly')]);
+  assert.deepEqual(resolveScopes(await requirementsFor(['gcalendar'], cfg, quiet), 'readonly').scopes, [G('calendar.acls.readonly'), G('calendar.readonly')], 'the all toolset is unchanged');
   // Since 1.25.0 the list prefers calendar.events, calendar.calendarlist.readonly and calendar.events.freebusy, the
   // scopes Google's Calendar MCP server uses for the same tasks (no tool of the list manages calendars or sharing).
   assert.deepEqual(resolveScopes(google, 'readwrite').scopes, [G('calendar.calendarlist.readonly'), G('calendar.events'), G('calendar.events.freebusy')]);

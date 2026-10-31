@@ -2,6 +2,16 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.40.1 - 2026-10-31
+
+### Fixed: a readonly Calendar login with the google toolset asks for Google's three read scopes
+- Google's Calendar MCP server asks for `calendar.calendarlist.readonly`, `calendar.events.freebusy` and `calendar.events.readonly` (https://developers.google.com/workspace/calendar/api/guides/configure-mcp-server, "paste the scopes for the Google Calendar MCP server"). A `readonly` login with `toolset: google` asked for `calendar.readonly` ("See and download any calendar you can access using your Google Calendar"), the one scope that covers its four read tools (review of Calendar, F10). It now asks for the three, as its `readwrite` login has asked for `calendar.events`, `calendar.calendarlist.readonly` and `calendar.events.freebusy` since 1.25.0, by the same reading of Google's scope descriptions ("View events on all your calendars", "See the list of Google calendars you're subscribed to", "See the availability on Google calendars you have access to"): the same reach for listing calendars, reading events and finding free time.
+- The two Calendar free/busy scopes join the view-only scopes the `readonly` profile may ask for (`VIEW_ONLY_SCOPES`): `calendar.events.freebusy` ("See the availability on Google calendars you have access to") and `calendar.freebusy` ("View your availability in your calendars"), quoted from https://developers.google.com/identity/protocols/oauth2/scopes. Their names do not end in `readonly`, so before, no `readonly` login could take them.
+- A token that holds `calendar.readonly` keeps every tool: each tool still accepts it.
+
+### Not changed
+- `gsm scopes` over all 207 plugin, profile and toolset cases: 206 identical; gcalendar `readonly` `google` asks for `calendar.calendarlist.readonly`, `calendar.events.freebusy` and `calendar.events.readonly` instead of `calendar.readonly`, with the same tools covered. The `all` and `curated` toolsets of gcalendar still ask for `calendar.readonly` (and `calendar.acls.readonly`). Tool maps, tool kinds and tools/list. Not checked against live Google.
+
 ## 1.40.0 - 2026-10-31
 
 ### Added: Calendar times without an offset
