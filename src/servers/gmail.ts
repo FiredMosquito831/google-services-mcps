@@ -1,7 +1,7 @@
 /**
  * Curated Gmail tools (gmail_*), served by the gmail server.
  * Read: search, search threads, get message, get thread, get attachment, labels, list drafts.
- * Write: create draft, label, unlabel, untrash.
+ * Write: create draft, create label, label, unlabel, untrash.
  * Destructive (they ask first): send draft, send, reply (sending cannot be undone), trash.
  *
  * Auth: OAuth user token from `gsm login workspace-user`. The MIME and decoding rules are in gmail-mime.ts.
@@ -204,6 +204,9 @@ const NOT_ADDED: Record<string, string> = {
 const NOT_REMOVED: Record<string, string> = {
   TRASH: 'TRASH is not removed here: use gmail_untrash.',
 };
+
+/** A label colour as Gmail takes it: #RRGGBB. Gmail itself accepts only the values of its label palette (LabelColor). */
+const HEX_COLOR = /^#[0-9a-fA-F]{6}$/;
 
 /** One of thread_id and message_id, never both. */
 function target(args: { thread_id?: string; message_id?: string }, tool: string): { kind: 'thread' | 'message'; id: string } {
@@ -916,6 +919,49 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       },
     }),
 
+    defineTool({
+      name: 'gmail_create_label',
+      title: 'Create Gmail label',
+      description:
+        "Create a label (matches create_label in Google's Gmail MCP server). display_name is the label's name; a slash nests it under another label, for example \"Clients/Acme\". color sets the text and background colour, both #RRGGBB values of Gmail's label palette (Gmail refuses other values). Returns the new label's id, name, type and color; gmail_label then takes the id or the name.",
+      kind: 'write',
+      // Google's create_label is not idempotent: a second call with the same name is refused by Gmail.
+      scopes: googleScopes('https://mail.google.com/', 'gmail.labels', 'gmail.modify'),
+      inputSchema: {
+        display_name: z.string().describe('The label name, for example "Invoices", or "Clients/Acme" to nest it under Clients.'),
+        color: z
+          .object({
+            text_color: z.string().describe("Text colour, #RRGGBB from Gmail's label palette, for example #ffffff."),
+            background_color: z.string().describe("Background colour, #RRGGBB from Gmail's label palette, for example #fb4c2f."),
+          })
+          .optional()
+          .describe('The label colour. Gmail needs both colours, each a value of its palette.'),
+      },
+      async handler({ display_name, color }) {
+        const name = singleLine(display_name, 'display_name');
+        if (!name) throw new Error('gmail_create_label needs a display_name.');
+        if (color) {
+          for (const [field, value] of [
+            ['text_color', color.text_color],
+            ['background_color', color.background_color],
+          ] as const) {
+            if (!HEX_COLOR.test(value)) throw new Error(`color.${field} must be a #RRGGBB colour of Gmail's label palette, for example #fb4c2f, got "${value}". Nothing was created.`);
+          }
+        }
+        const api = await gmailApi();
+        const res = await api.users.labels.create({
+          userId: ME,
+          requestBody: { name, ...(color ? { color: { textColor: color.text_color, backgroundColor: color.background_color } } : {}) },
+        });
+        const made = res.data;
+        return {
+          id: made.id,
+          name: made.name,
+          type: made.type,
+          ...(made.color ? { color: { text_color: made.color.textColor, background_color: made.color.backgroundColor } } : {}),
+        };
+      },
+    }),
     defineTool({
       name: 'gmail_label',
       title: 'Add Gmail labels',

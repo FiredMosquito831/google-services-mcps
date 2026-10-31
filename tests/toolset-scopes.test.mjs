@@ -30,21 +30,21 @@ const EMAIL = G('userinfo.email');
 const sorted = (list) => [...list].sort();
 const registry = () => loadRegistry(DIST('core/registry.js'));
 
+// 1.39.0: gmail_create_label in place of gmail_users_labels_create, and no gmail_search.
 const GMAIL_GOOGLE = [
   'gmail_create_draft',
+  'gmail_create_label',
   'gmail_get_attachment',
   'gmail_get_message',
   'gmail_get_thread',
   'gmail_label',
   'gmail_list_drafts',
   'gmail_list_labels',
-  'gmail_search',
   'gmail_search_threads',
   'gmail_send_draft',
   'gmail_trash',
   'gmail_unlabel',
   'gmail_untrash',
-  'gmail_users_labels_create',
 ];
 
 const temps = [];
@@ -136,6 +136,7 @@ test('requirements: curated keeps the curated tools and, with api_call, the gate
   const curated = await requirementsFor(['gmail'], cfg, { ...quiet, toolset: 'curated' });
   assert.deepEqual(toolsOf(curated), [
     'gmail_create_draft',
+    'gmail_create_label',
     'gmail_get_attachment',
     'gmail_get_message',
     'gmail_get_thread',

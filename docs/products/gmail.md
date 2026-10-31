@@ -35,13 +35,15 @@ Start with `--profile readonly`. Sending and changes need a `readwrite` login an
 |---|---|---|---|
 | Search and read | `gmail_search`, `gmail_search_threads`, `gmail_get_message`, `gmail_get_thread`, `gmail_get_attachment`, `gmail_list_labels`, `gmail_list_drafts` | read | Search messages or whole conversations, read a message or a thread (text and HTML bodies, each part in its own charset, attachment ids), download an attachment, list labels (all or yours, paged) and drafts (with a search) |
 | Draft | `gmail_create_draft` | write | Create a draft: text, HTML, attachments, or a reply in a thread. Nothing is sent. |
-| Organise | `gmail_label`, `gmail_unlabel`, `gmail_untrash` | write | Add or remove labels on a thread or a message (by id or name), take mail out of Trash |
+| Organise | `gmail_create_label`, `gmail_label`, `gmail_unlabel`, `gmail_untrash` | write | Create a label (name and colour), add or remove labels on a thread or a message (by id or name), take mail out of Trash |
 | Trash | `gmail_trash` | destructive | Move a thread or a message to Trash. The approval shows what moves. |
 | Send | `gmail_send_draft`, `gmail_send`, `gmail_reply` | destructive | Send a draft, send a new message, or reply in a thread. Sending cannot be undone. |
 | Per-method (87) | | mixed | Messages, threads, drafts, labels, history; settings: filters, forwarding, delegates, send-as, vacation, IMAP, POP, S/MIME, client-side encryption keys; Postmaster Tools domains and statistics |
 | Gateway (2 APIs) | `api_search`, `api_describe`, `api_call` | read, read, dynamic | Gmail Postmaster Tools v1 and v1beta1 |
 
 The full list is in `docs/capabilities/gmail.md`.
+
+With the plugin option `toolset: google`, the server lists 13 tools that match Google's Gmail MCP server (https://developers.google.com/workspace/gmail/api/reference/mcp): `gmail_search_threads`, `gmail_get_thread`, `gmail_get_message`, `gmail_list_drafts`, `gmail_create_draft`, `gmail_list_labels`, `gmail_create_label`, `gmail_label` and `gmail_unlabel` for its eleven tools, and four kept on purpose: `gmail_get_attachment` (a read, so the attachment ids lead somewhere), `gmail_send_draft`, `gmail_trash` and `gmail_untrash` (they ask first), plus `health` and the sign-in tools. Since 1.39.0 it lists `gmail_create_label` in place of the generated `gmail_users_labels_create`, and no longer `gmail_search`, which searches messages while Google's `search_threads` is `gmail_search_threads`; the `all` and `curated` toolsets keep both. The generated tools that a hand-written tool covers say which one in their descriptions.
 
 ## Example requests
 

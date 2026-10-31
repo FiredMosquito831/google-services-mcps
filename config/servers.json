@@ -1639,12 +1639,24 @@
       },
       "methodNotes": {
         "gmail": {
-          "source": "config/products.json destructiveWhen (gmail)",
-          "reason": "The description says which calls of these write methods ask as destructive actions.",
+          "source": "config/products.json destructiveWhen (gmail); the curated Gmail tools (src/servers/gmail.ts) that run the same methods",
+          "reason": "The description says which calls of these write methods ask as destructive actions, and, for the methods a curated tool runs, which tool returns the same data in a readable form (adversarial review of Gmail, G5).",
           "methods": {
-            "gmail.users.messages.modify": "A call that adds TRASH or SPAM (addLabelIds) moves the message out of the mailbox, as gmail_trash does, so it asks as a destructive action.",
-            "gmail.users.threads.modify": "A call that adds TRASH or SPAM (addLabelIds) moves the thread out of the mailbox, as gmail_trash does, so it asks as a destructive action.",
-            "gmail.users.messages.batchModify": "A call that adds TRASH or SPAM (addLabelIds) moves every listed message out of the mailbox, so it asks as a destructive action."
+            "gmail.users.messages.modify": "A call that adds TRASH or SPAM (addLabelIds) moves the message out of the mailbox, as gmail_trash does, so it asks as a destructive action. gmail_label and gmail_unlabel change labels by name, on a thread or a message.",
+            "gmail.users.threads.modify": "A call that adds TRASH or SPAM (addLabelIds) moves the thread out of the mailbox, as gmail_trash does, so it asks as a destructive action. gmail_label and gmail_unlabel change labels by name, on a thread or a message.",
+            "gmail.users.messages.batchModify": "A call that adds TRASH or SPAM (addLabelIds) moves every listed message out of the mailbox, so it asks as a destructive action.",
+            "gmail.users.messages.get": "gmail_get_message reads the same message decoded (the body as text in its own charset, the attachments listed); this tool gives Gmail's raw parts and formats.",
+            "gmail.users.messages.list": "gmail_search runs the same search and adds each message's From, Subject and Date.",
+            "gmail.users.threads.get": "gmail_get_thread reads the same conversation decoded, and keeps a long thread within the result limit with its newest messages whole.",
+            "gmail.users.threads.list": "gmail_search_threads runs the same search and summarises the messages of each thread.",
+            "gmail.users.labels.list": "gmail_list_labels lists the same labels (id, name, type); gmail_label and gmail_unlabel take their names.",
+            "gmail.users.labels.create": "gmail_create_label creates a label from a name and a colour, as Google's create_label does.",
+            "gmail.users.drafts.list": "gmail_list_drafts lists the same drafts with their To, Subject and Date.",
+            "gmail.users.messages.attachments.get": "gmail_get_attachment downloads the same attachment as base64, in parts when it is larger than the result limit.",
+            "gmail.users.messages.trash": "gmail_trash moves a message or a whole thread to Trash, and its approval shows what moves.",
+            "gmail.users.threads.trash": "gmail_trash moves a message or a whole thread to Trash, and its approval shows what moves.",
+            "gmail.users.messages.untrash": "gmail_untrash takes a message or a whole thread out of Trash.",
+            "gmail.users.threads.untrash": "gmail_untrash takes a message or a whole thread out of Trash."
           }
         }
       },
@@ -1679,7 +1691,6 @@
       },
       "toolsets": {
         "google": [
-          "gmail_search",
           "gmail_search_threads",
           "gmail_get_thread",
           "gmail_get_message",
@@ -1688,7 +1699,7 @@
           "gmail_create_draft",
           "gmail_send_draft",
           "gmail_list_labels",
-          "gmail_users_labels_create",
+          "gmail_create_label",
           "gmail_label",
           "gmail_unlabel",
           "gmail_trash",

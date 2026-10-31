@@ -401,6 +401,11 @@ const CASES = {
     { args: { thread_id: 'thr-1', labels: ['INBOX'] }, expect: ['gmail.users.labels.list', 'gmail.users.threads.modify'], respond: threaded },
     { args: { message_id: 'm1', labels: ['Invoices'] }, expect: ['gmail.users.labels.list', 'gmail.users.messages.modify'], respond: threaded },
   ],
+  // 1.39.0: Google's create_label (display name and colour).
+  gmail_create_label: [
+    { args: { display_name: 'Clients/Acme', color: { text_color: '#ffffff', background_color: '#fb4c2f' } }, expect: ['gmail.users.labels.create'] },
+    { args: { display_name: 'Invoices' }, expect: ['gmail.users.labels.create'] },
+  ],
   gmail_untrash: [
     { args: { thread_id: 'thr-1' }, expect: ['gmail.users.threads.untrash'] },
     { args: { message_id: 'm1' }, expect: ['gmail.users.messages.untrash'] },
@@ -1015,7 +1020,7 @@ test('every curated tool has a contract row, a skip reason or a known defect, an
   const listed = new Set([...Object.keys(CASES), ...Object.keys(SKIPPED), ...Object.keys(KNOWN_DEFECTS)]);
   assert.deepEqual([...tools.keys()].filter((name) => !listed.has(name)), [], 'curated tools without a row');
   assert.deepEqual([...listed].filter((name) => !tools.has(name)), [], 'rows for tools that do not exist');
-  assert.equal(tools.size, 149, 'the curated tool count; update the table when it changes');
+  assert.equal(tools.size, 150, 'the curated tool count; update the table when it changes');
 });
 
 for (const [name, cases] of Object.entries(CASES)) {

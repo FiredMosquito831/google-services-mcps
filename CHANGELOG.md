@@ -2,6 +2,25 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.39.0 - 2026-10-31
+
+### Added: gmail_create_label, Google's create_label
+- `gmail_create_label` creates a label from a display name (a slash nests it: `Clients/Acme`) and an optional text and background colour, the arguments of Google's `create_label` (https://developers.google.com/workspace/gmail/api/reference/mcp/tools_list/create_label: `displayName`, required; `color` with `textColor` and `backgroundColor`). Colours are checked as `#RRGGBB` before the request; Gmail itself accepts only the values of its label palette (Discovery, `LabelColor`). It returns the new label's id, name, type and colour. A write: it asks first. Its scopes are those of `labels.create` (`https://mail.google.com/`, `gmail.labels`, `gmail.modify`), so no login asks for anything new.
+
+### Changed: the Gmail `google` toolset matches Google's tools more closely
+- `gmail_create_label` replaces the generated `gmail_users_labels_create` (which takes Gmail's raw `Label` body) as the match of `create_label`.
+- `gmail_search` left the list. It searches messages, while its `matches` claimed Google's `search_threads`, which returns threads, as `gmail_search_threads` does; two search tools in a parity set made a model choose between them for no reason. The adversarial review of Gmail reported both (G4, section C). The list has 13 tools (was 14); `gmail_send_draft`, `gmail_trash` and `gmail_untrash` stay until the owner decides on them. The `all` and `curated` toolsets keep `gmail_search` and every generated tool.
+- The list's `source` is Google's server page, https://developers.google.com/workspace/gmail/api/reference/mcp; the `tools_list` address it named answers 404 (checked 2026-10-31).
+
+### Changed: generated Gmail tools name the hand-written tool that does the same
+- Twelve per-method tools that a hand-written tool covers say which one in their descriptions, through `methodNotes` (1.35.5): the message and thread reads and lists, the label list and create, the draft list, the attachment read, and the trash and untrash methods; the two modify tools name `gmail_label` and `gmail_unlabel`. They keep working as before (review G5).
+
+### Fixed: docs/USING.md examples
+- The batch delete example asked for a `readwrite` login, but permanent deletes need the full-mailbox scope that only `full` asks for (review G12); the read example uses `gmail_search` instead of the raw list and get.
+
+### Not changed
+- Tool maps and tool kinds (one new entry, `gmail_create_label`, a write; 0 kind changes), the hook, and the requests of every existing tool. `gsm scopes` over all 207 cases asks for the same scopes; in the 9 gmail cases only the counts of covered tools move (the new tool, and `gmail_search` out of `google`). tools/list changes only on gmail: the new tool, and with writes on 14 descriptions (with writes off 7: the covered reads). Not checked against live Google.
+
 ## 1.38.4 - 2026-10-31
 
 ### Fixed: Gmail label changes that move mail to Trash or Spam ask as destructive actions

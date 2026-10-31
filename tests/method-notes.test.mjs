@@ -102,3 +102,34 @@ test('gen-servers: methodNotes name methods of a generated API snapshot, with a 
     assert.match(res.stderr, message);
   }
 });
+
+test('gmail (1.39.0): each generated tool a hand-written tool covers names it; every named tool exists in the server', async () => {
+  const notes = readJson('config', 'products.json').products.gmail.methodNotes.gmail.methods;
+  const generated = await discoveryToolsFor('gmail', cfg);
+  const { buildTools } = await import(DIST('servers/gmail.js'));
+  const curated = new Set((await buildTools(cfg)).map((t) => t.name));
+  const twins = {
+    'gmail.users.messages.get': 'gmail_get_message',
+    'gmail.users.messages.list': 'gmail_search',
+    'gmail.users.threads.get': 'gmail_get_thread',
+    'gmail.users.threads.list': 'gmail_search_threads',
+    'gmail.users.labels.list': 'gmail_list_labels',
+    'gmail.users.labels.create': 'gmail_create_label',
+    'gmail.users.drafts.list': 'gmail_list_drafts',
+    'gmail.users.messages.attachments.get': 'gmail_get_attachment',
+    'gmail.users.messages.trash': 'gmail_trash',
+    'gmail.users.threads.trash': 'gmail_trash',
+    'gmail.users.messages.untrash': 'gmail_untrash',
+    'gmail.users.threads.untrash': 'gmail_untrash',
+    'gmail.users.messages.modify': 'gmail_label',
+    'gmail.users.threads.modify': 'gmail_unlabel',
+  };
+  for (const [id, name] of Object.entries(twins)) {
+    assert.ok(curated.has(name), `${name} is a hand-written gmail tool`);
+    assert.ok(notes[id]?.startsWith(name) || notes[id]?.includes(` ${name} `), `${id}'s note names ${name}`);
+    const tool = generated.find((t) => t.methodId === id);
+    assert.ok(tool.description.includes(` Note: ${notes[id]} Method ${id}: `), `${id}: ${tool.description}`);
+  }
+  // Every gmail_* name a note mentions is a tool of the server.
+  for (const note of Object.values(notes)) for (const name of note.match(/\bgmail_[a-z_]+/g) ?? []) assert.ok(curated.has(name), `${name} in "${note}"`);
+});

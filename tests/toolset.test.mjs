@@ -33,8 +33,9 @@ test.after(() => {
 /** A tool definition for the selection tests. */
 const tool = (name, origin, extra = {}) => ({ name, title: name, description: `${name}.`, kind: 'read', inputSchema: {}, handler: async () => name, ...(origin ? { origin } : {}), ...extra });
 
+// 1.39.0: gmail_create_label in place of the generated gmail_users_labels_create, and no gmail_search (a message search;
+// Google's search_threads is gmail_search_threads).
 const GMAIL_GOOGLE = [
-  'gmail_search',
   'gmail_search_threads',
   'gmail_get_thread',
   'gmail_get_message',
@@ -43,7 +44,7 @@ const GMAIL_GOOGLE = [
   'gmail_create_draft',
   'gmail_send_draft',
   'gmail_list_labels',
-  'gmail_users_labels_create',
+  'gmail_create_label',
   'gmail_label',
   'gmail_unlabel',
   'gmail_trash',
@@ -411,12 +412,19 @@ test('every tool a listed toolset names exists in the plugin tool map, and the t
 test('the gmail google list names the official Google tool each one matches (or says why it is kept)', () => {
   const google = readJson('config', 'products.json').products.gmail.toolsets.google;
   const official = new Set(Object.values(google.matches).flat());
-  // The 11 tools of Google's Gmail MCP server (developers.google.com/workspace/gmail/api/reference/mcp/tools_list).
+  // The 11 tools of Google's Gmail MCP server (developers.google.com/workspace/gmail/api/reference/mcp: ten in its
+  // toolset table, and the create_label tool page).
   for (const name of ['search_threads', 'get_thread', 'get_message', 'list_drafts', 'create_draft', 'list_labels', 'create_label', 'label_thread', 'unlabel_thread', 'label_message', 'unlabel_message']) {
     assert.ok(official.has(name), `no tool of ours matches ${name}`);
   }
+  assert.equal(google.source, 'https://developers.google.com/workspace/gmail/api/reference/mcp', 'the tools_list address answers 404 (checked 2026-10-31)');
   assert.deepEqual(google.matches.gmail_send_draft, []);
   assert.match(google.notes.gmail_send_draft, /no send tool/);
+  // 1.39.0: create_label is the curated gmail_create_label; search_threads only gmail_search_threads (gmail_search searches
+  // messages, so it is no longer in the list; the all and curated toolsets keep it).
+  assert.deepEqual(google.matches.gmail_create_label, ['create_label']);
+  assert.deepEqual(Object.entries(google.matches).filter(([, m]) => m.includes('search_threads')).map(([t]) => t), ['gmail_search_threads']);
+  assert.ok(!google.tools.includes('gmail_search') && !google.tools.includes('gmail_users_labels_create'));
 });
 
 test('the gcalendar google list covers the 9 tools of Google\'s Calendar MCP server, and search_events says why it is a keyword search', () => {

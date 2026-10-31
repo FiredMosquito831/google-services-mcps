@@ -82,6 +82,16 @@
     "title": "Create Gmail draft"
   },
   {
+    "name": "mcp__plugin_gmail_gmail__gmail_create_label",
+    "kind": "write",
+    "scopes": [
+      "https://mail.google.com/",
+      "https://www.googleapis.com/auth/gmail.labels",
+      "https://www.googleapis.com/auth/gmail.modify"
+    ],
+    "title": "Create Gmail label"
+  },
+  {
     "name": "mcp__plugin_gmail_gmail__gmail_get_attachment",
     "kind": "read",
     "scopes": [

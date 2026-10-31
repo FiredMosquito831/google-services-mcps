@@ -132,9 +132,9 @@ test('tool counts per toolset from the tool map: gmail all, google and curated',
   const runtime = entries.filter((e) => RUNTIME_TOOL_NAMES.some((n) => e.name.endsWith(`__${n}`))).length;
   assert.equal(runtime, RUNTIME_TOOL_NAMES.length, 'every runtime tool is in the map');
   assert.deepEqual(toolsetCount(map, 'gmail', 'gmail', 'all', gmail.toolsets), { count: entries.length, effective: 'all' });
-  assert.deepEqual(toolsetCount(map, 'gmail', 'gmail', 'google', gmail.toolsets), { count: 14 + runtime, effective: 'google' });
-  // curated: the 15 hand-written Gmail tools and the 3 gateway tools.
-  assert.deepEqual(toolsetCount(map, 'gmail', 'gmail', 'curated', gmail.toolsets), { count: 18 + runtime, effective: 'curated' });
+  assert.deepEqual(toolsetCount(map, 'gmail', 'gmail', 'google', gmail.toolsets), { count: 13 + runtime, effective: 'google' });
+  // curated: the 16 hand-written Gmail tools (gmail_create_label since 1.39.0) and the 3 gateway tools.
+  assert.deepEqual(toolsetCount(map, 'gmail', 'gmail', 'curated', gmail.toolsets), { count: 19 + runtime, effective: 'curated' });
   // A product without a google list counts every tool for google (gfirebase's map, its list left out; it has one since
   // 1.20.0, gsc since 1.11.0, gtasks since 1.15.0, gyoutube since 1.19.0).
   const firebaseMap = join(REPO, 'plugins', 'gfirebase', 'tool-map.json');
@@ -157,7 +157,8 @@ test('agy warnings: a product over the limit is named with the counts of the oth
   assert.equal(lines.length, 2, lines.join('\n'));
   // gcloud has a google list since 1.10.0 (59 tools and the runtime tools).
   assert.match(lines[0], /^\[agy\] warning: gcloud can list up to \d+ tools with toolset all\. Antigravity is reported to refuse a server with more than 100 tools \(not verified by gsm\)\. Fewer tools: --toolset google: up to 68, --toolset curated: up to \d+\.$/);
-  assert.match(lines[1], /^\[agy\] warning: gmail can list up to 115 tools with toolset all\. .* Fewer tools: --toolset google: up to 23, --toolset curated: up to 27\.$/);
+  // 1.39.0: gmail_create_label is new (all and curated one more); google lists 13 (was 14).
+  assert.match(lines[1], /^\[agy\] warning: gmail can list up to 116 tools with toolset all\. .* Fewer tools: --toolset google: up to 22, --toolset curated: up to 28\.$/);
   // With google, gcloud, gmail and gai are under the limit (gai has a google list of 6 since 1.21.0).
   assert.deepEqual(agyToolWarnings({ toolset: 'google' }, env, ['gcloud', 'gmail', 'gai']), []);
   // A product over the limit without a google list lists all its tools: gai's server entry with its list left out.
