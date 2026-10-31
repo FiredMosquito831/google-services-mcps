@@ -1,0 +1,58 @@
+name: plugin manifests
+
+# Checks the Claude Code marketplace and every plugin with `claude plugin validate --strict` (warnings fail the job:
+# "Pass --strict to turn warnings into failures in CI", https://code.claude.com/docs/en/plugins-reference). It runs on a
+# push or pull request that touches the marketplace, the plugins or this file. It needs no secret and no sign-in:
+# validation reads the files only, in a fresh CLAUDE_CONFIG_DIR. The Claude Code version is pinned, so a new release
+# cannot fail the job by itself; move the pin on purpose.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".claude-plugin/**"
+      - "plugins/**"
+      - ".github/workflows/plugins.yml"
+  pull_request:
+    paths:
+      - ".claude-plugin/**"
+      - "plugins/**"
+      - ".github/workflows/plugins.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: claude plugin validate --strict
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      CLAUDE_CODE_VERSION: "2.1.316"
+    steps:
+      # The same commit-hash pins as npm.yml.
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "24"
+
+      - name: Install Claude Code
+        run: |
+          set -euo pipefail
+          npm install -g "@anthropic-ai/claude-code@${CLAUDE_CODE_VERSION}"
+          claude --version
+
+      - name: Validate the marketplace and every plugin
+        run: |
+          set -euo pipefail
+          export CLAUDE_CONFIG_DIR="$(mktemp -d)"
+          claude plugin validate --strict .
+          for dir in plugins/*/; do
+            echo "::group::${dir}"
+            claude plugin validate --strict "${dir}"
+            echo "::endgroup::"
+          done

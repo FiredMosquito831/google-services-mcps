@@ -220,6 +220,17 @@ gadmin adds `admin_subject` and `service_account_key_file` (or use `auth_setup_a
 
 An option left empty is treated as unset: the server uses its default, also when the value arrives as an unexpanded `${user_config.<option>}` reference. Options that are not given keep their values. To see them, run `claude plugin configure gmail@google-services-mcps`. To change one later, pipe JSON to `claude plugin configure gmail@google-services-mcps --values-stdin` (the values are strings, for example `{"confirmation":"destructive-only"}`), or use `/plugin configure` in Claude Code.
 
+### Update the plugins (Claude Code)
+
+Claude Code does not update plugins from this marketplace on its own. Its auto-update is "Off by default: every other marketplace, including the community marketplace, third-party marketplaces, and local development marketplaces" (https://code.claude.com/docs/en/plugins/install, "Keep plugins updated"). After a new release, refresh the marketplace and update each plugin you use:
+
+```sh
+claude plugin marketplace update google-services-mcps
+claude plugin update gmail@google-services-mcps
+```
+
+Run the second line once per plugin (`gcalendar@google-services-mcps`, `gdrive@google-services-mcps` and so on): a marketplace refresh alone does not move installed plugins. The new version loads in the next session, or after `/reload-plugins`. To let Claude Code update by itself, open `/plugin`, the **Marketplaces** tab, select `google-services-mcps` and choose **Enable auto-update**.
+
 ### The one-line installers
 
 Each line downloads the repository into `google-services-mcps` in your home folder, and runs `node gsm.mjs` there with your arguments. They need Node.js 20 or newer and nothing else. The download folder is replaced on each run, and logins are not affected. `--dry-run` still writes that folder, but changes no agent configuration.

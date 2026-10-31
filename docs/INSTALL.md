@@ -266,6 +266,8 @@ Then, inside Claude Code, run `/mcp`. The `gmail` server should show as connecte
 
    **Checked.** The plugin is read from its folder in the repository, so an update picks up edits there. `update` reports `nothing to update` when the version is unchanged.
 
+   With the marketplace from GitHub (an install from npm, a one-line installer or `--marketplace FiredMosquito831/google-services-mcps`), Claude Code keeps a copy of each plugin and does not update it on its own: auto-update is "Off by default: every other marketplace, including the community marketplace, third-party marketplaces, and local development marketplaces" (https://code.claude.com/docs/en/plugins/install, "Keep plugins updated"). Run the two commands above after each release, the second once per plugin you use; a marketplace refresh alone does not move installed plugins. The new version loads in the next session, or after `/reload-plugins`. To let Claude Code update by itself, open `/plugin`, the **Marketplaces** tab, select `google-services-mcps` and choose **Enable auto-update**.
+
 3. If the plugin still shows an old state, uninstall it and install it again. Logins are kept, because uninstall does not touch the token directory (see [Remove everything](#remove-everything)).
 
 ### 6. Turn a plugin off without removing it
