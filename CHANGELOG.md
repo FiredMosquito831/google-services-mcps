@@ -2,6 +2,16 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.32.1 - 2026-10-31
+
+### Fixed: view-only scopes with other names count as read-only
+- The `readonly` profile took a scope only when its name ended in `readonly` or `read-only`. Five scopes that Google documents as view-only have other names, so a `readonly` login left out the reads that need them: `monitoring.read` ("View monitoring data for all of your Google Cloud and third-party projects"), `logging.read` ("View log data for your projects"), `devstorage.read_only` ("View your data in Google Cloud Storage"), `script.processes` ("View Google Apps Script processes") and `script.metrics` ("View Google Apps Script project's metrics"); quoted from Google's scope table, https://developers.google.com/identity/protocols/oauth2/scopes.
+- They are data now, `VIEW_ONLY_SCOPES` in `src/core/scopes.ts` beside the name rule, used by the profiles, the held-back and Not covered lines, the readwrite tie-break and the read-only posture line. The name rule itself (`isReadonlyScope`) is unchanged.
+- What changes, of all 207 plugin, profile and toolset cases of `gsm scopes` (every change is a `readonly` login gaining one of these scopes; nothing else moved): gcloud `readonly` adds `monitoring.read` with every toolset, so the Monitoring reads load (9 more tools with `google`: the PromQL query, dashboards, alert policies, alerts, metric descriptors and time series; 31 more tools and 12 more gateway methods with `all`, 3 more tools with `curated`); gapps `readonly` adds `script.processes` (1 more tool with `google`, the recent runs) and, with `all` and `curated`, `script.metrics` too (3 more tools: the two process lists and the project metrics); gai `readonly` with `all` and `curated` adds `devstorage.read_only`, the only read scope Google lists for the Gemini API's file and cached-content reads (5 gateway reads; the scope was already in `readwrite` and `full`). `logging.read` changes no case: `cloud-platform.read-only` covers the same tools.
+
+### Not changed
+- Tool maps, tool kinds and tools/list of every server, and every `readwrite` and `full` resolution. Not checked against live Google.
+
 ## 1.32.0 - 2026-10-31
 
 ### Added: a login that covers no tool of a product says so

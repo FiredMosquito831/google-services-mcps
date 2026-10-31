@@ -171,10 +171,22 @@ function toolsetsOf(value, id) {
 /** The profiles a toolset may prefer scopes for (PREFER_PROFILES in src/core/toolset.ts). full takes no preference. */
 const PREFER_PROFILES = ['readonly', 'readwrite'];
 
-/** A read-only scope by the suite's rule (isReadonlyScope in src/core/scopes.ts): the resolver uses no other for readonly. */
+/**
+ * The scopes Google documents as view-only whose names the name rule misses: a copy of the keys of VIEW_ONLY_SCOPES in
+ * src/core/scopes.ts (tests/view-only-scopes.test.mjs checks the two lists are equal).
+ */
+const VIEW_ONLY_SCOPES = [
+  'https://www.googleapis.com/auth/devstorage.read_only',
+  'https://www.googleapis.com/auth/logging.read',
+  'https://www.googleapis.com/auth/monitoring.read',
+  'https://www.googleapis.com/auth/script.metrics',
+  'https://www.googleapis.com/auth/script.processes',
+];
+
+/** A scope the readonly profile may use (isViewOnlyScope in src/core/scopes.ts): the resolver uses no other for readonly. */
 function isReadonlyScope(scope) {
   const last = scope.slice(scope.lastIndexOf('/') + 1);
-  return last === 'readonly' || last === 'read-only' || last.endsWith('.readonly') || last.endsWith('.read-only');
+  return last === 'readonly' || last === 'read-only' || last.endsWith('.readonly') || last.endsWith('.read-only') || VIEW_ONLY_SCOPES.includes(scope);
 }
 
 /**

@@ -11,7 +11,7 @@ import { createRequire } from 'node:module';
 const dist = (p) => new URL(`../dist/${p}`, import.meta.url).href;
 const repo = new URL('..', import.meta.url);
 
-const { resolveScopes, requirementsFor, isReadonlyScope, isFullAccessScope, coveredTools, serversOfGroup, PROFILES, heldBackBy } = await import(dist('core/scopes.js'));
+const { resolveScopes, requirementsFor, isReadonlyScope, isViewOnlyScope, isFullAccessScope, coveredTools, serversOfGroup, PROFILES, heldBackBy } = await import(dist('core/scopes.js'));
 
 /** Every tool key a HeldBack result names. */
 const heldKeys = (h) => new Set([...Object.values(h.optional), ...Object.values(h.needsProfile), h.noProfile].flatMap((l) => l.tools));
@@ -124,13 +124,14 @@ test('real servers: readonly covers every read tool and readwrite covers every t
     // A product's scope policy (config/products.json scopePolicy) holds some tools back on purpose; heldBackBy names them.
     // Every other tool must be covered as before.
     const heldRO = heldKeys(heldBackBy(reqs, 'readonly', [], readonly.scopes));
-    // A read tool is covered by readonly exactly when its list holds a read-only scope (or none is needed).
+    // A read tool is covered by readonly exactly when its list holds a read-only scope (or none is needed): read-only by
+    // name, or view-only by Google's description (isViewOnlyScope, since 1.32.1).
     for (const r of reqs.filter((x) => x.kind === 'read' && !heldRO.has(x.tool) && x.optional === undefined)) {
-      const readable = r.scopes.length === 0 || r.scopes.some(isReadonlyScope);
+      const readable = r.scopes.length === 0 || r.scopes.some(isViewOnlyScope);
       const where = readable ? readonly.covered : readonly.uncovered;
       assert.ok(where.includes(r.tool), `${group}: readonly ${readable ? 'covers' : 'leaves uncovered'} ${r.tool}`);
     }
-    assert.ok(readonly.scopes.every(isReadonlyScope), `${group}: readonly requests only read-only scopes`);
+    assert.ok(readonly.scopes.every(isViewOnlyScope), `${group}: readonly requests only read-only scopes`);
     for (const profile of ['readwrite', 'full']) {
       const r = resolveScopes(reqs, profile);
       assert.deepEqual(r.uncovered, [...heldKeys(heldBackBy(reqs, profile, [], r.scopes))].sort(), `${group}: ${profile} covers every tool not held back`);

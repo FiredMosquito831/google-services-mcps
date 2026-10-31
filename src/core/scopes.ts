@@ -136,6 +136,27 @@ export function isReadonlyScope(scope: string): boolean {
 }
 
 /**
+ * Scopes Google documents as view-only whose names the rule above does not catch, with Google's description of each on
+ * https://developers.google.com/identity/protocols/oauth2/scopes (checked 2026-10-31). Data, not a rule per product: a
+ * scope is added here only when Google's table says it lets the app view, and nothing more.
+ */
+export const VIEW_ONLY_SCOPES: Readonly<Record<string, string>> = {
+  'https://www.googleapis.com/auth/devstorage.read_only': 'View your data in Google Cloud Storage',
+  'https://www.googleapis.com/auth/logging.read': 'View log data for your projects',
+  'https://www.googleapis.com/auth/monitoring.read': 'View monitoring data for all of your Google Cloud and third-party projects',
+  'https://www.googleapis.com/auth/script.metrics': "View Google Apps Script project's metrics",
+  'https://www.googleapis.com/auth/script.processes': 'View Google Apps Script processes',
+};
+
+/**
+ * A scope the readonly profile may request: read-only by name (isReadonlyScope), or listed in VIEW_ONLY_SCOPES. The
+ * profiles, the held-back lines and the read-only posture use this; isReadonlyScope keeps its name rule.
+ */
+export function isViewOnlyScope(scope: string): boolean {
+  return isReadonlyScope(scope) || Object.prototype.hasOwnProperty.call(VIEW_ONLY_SCOPES, scope);
+}
+
+/**
  * A broad scope with no qualifier after the service name, such as .../auth/drive
  * or .../auth/cloud-platform, or the Gmail full-access scope. Qualified scopes
  * such as .../auth/gmail.modify are narrower.
@@ -162,7 +183,7 @@ interface Candidate {
 function comparePreference(a: Candidate, b: Candidate, profile: Profile): number {
   if (a.covers !== b.covers) return b.covers - a.covers;
   if (profile === 'readwrite') {
-    const byWrite = Number(isReadonlyScope(a.scope)) - Number(isReadonlyScope(b.scope));
+    const byWrite = Number(isViewOnlyScope(a.scope)) - Number(isViewOnlyScope(b.scope));
     if (byWrite !== 0) return byWrite;
   }
   if (profile !== 'full') {
@@ -184,7 +205,7 @@ function comparePreference(a: Candidate, b: Candidate, profile: Profile): number
  * Requirements without policy fields resolve exactly as they did before policies existed.
  */
 export function resolveScopes(requirements: readonly Requirement[], profile: Profile, include: readonly string[] = []): ScopeResolution {
-  const usable = (scope: string): boolean => profile !== 'readonly' || isReadonlyScope(scope);
+  const usable = (scope: string): boolean => profile !== 'readonly' || isViewOnlyScope(scope);
   const usableFor = (r: Requirement, scope: string): boolean => usable(scope) && allowedByPolicy(r, scope, profile);
   const targets = requirements.filter((r) => (profile !== 'readonly' || r.kind === 'read') && isIncluded(r, include));
   let open = targets.filter((r) => r.scopes.some((scope) => usableFor(r, scope)));
@@ -269,7 +290,7 @@ export function heldBackBy(
   for (const r of requirements) {
     if (covered.has(r.tool)) continue;
     if (profile === 'readonly' && r.kind !== 'read') continue;
-    const profileMayUse = (scope: string): boolean => profile !== 'readonly' || isReadonlyScope(scope);
+    const profileMayUse = (scope: string): boolean => profile !== 'readonly' || isViewOnlyScope(scope);
     if (!isIncluded(r, include)) {
       // Counted only when naming the part would let this profile cover it.
       const usable = r.scopes.filter((scope) => profileMayUse(scope) && allowedByPolicy(r, scope, profile));
@@ -342,7 +363,7 @@ export function notCoveredBy(
   return {
     tools: scoped.length,
     gateway: { reached, total: gatewayAll.length },
-    noReadOnlyForm: profile === 'readonly' && reads.every((r) => !r.scopes.some((s) => isReadonlyScope(s))),
+    noReadOnlyForm: profile === 'readonly' && reads.every((r) => !r.scopes.some((s) => isViewOnlyScope(s))),
     ...(next ? { next } : {}),
   };
 }

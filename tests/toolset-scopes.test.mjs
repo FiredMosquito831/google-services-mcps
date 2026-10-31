@@ -117,13 +117,13 @@ test('requirements: the gcloud google list (59 tools, no gateway) resolves to Cl
   assert.equal(google.length, 59);
   assert.equal(google.filter((r) => r.gateway).length, 0, 'no api_call in the list, so no gateway method counts');
   const readonly = resolveScopes(google, 'readonly');
-  assert.deepEqual(readonly.scopes, [G('cloud-billing.readonly'), G('cloud-platform.read-only')]);
-  // IAM lists only cloud-platform, and monitoring.read is not taken for a read-only scope by its name, so these reads
-  // stay outside a readonly login, as with the all toolset.
-  for (const tool of ['iam_roles_list', 'iam_role_get', 'iam_policies_get', 'monitoring_query_promql', 'monitoring_dashboards_list']) {
+  // Since 1.32.1 monitoring.read counts as view-only (Google: "View monitoring data ..."), so the Monitoring reads join.
+  assert.deepEqual(readonly.scopes, [G('cloud-billing.readonly'), G('cloud-platform.read-only'), G('monitoring.read')]);
+  // IAM lists only cloud-platform, so these reads stay outside a readonly login, as with the all toolset.
+  for (const tool of ['iam_roles_list', 'iam_role_get', 'iam_policies_get']) {
     assert.ok(readonly.uncovered.includes(`gcloud/${tool}`), tool);
   }
-  for (const tool of ['logging_entries_list', 'gcs_read_text', 'billing_price_lookup', 'bq_query_read', 'cloud_projects_search']) {
+  for (const tool of ['monitoring_query_promql', 'monitoring_dashboards_list', 'monitoring_dashboard_get', 'logging_entries_list', 'gcs_read_text', 'billing_price_lookup', 'bq_query_read', 'cloud_projects_search']) {
     assert.ok(readonly.covered.includes(`gcloud/${tool}`), tool);
   }
   // cloud-platform covers every tool but the curated BigQuery reads, which list bigquery and not cloud-platform.
@@ -330,9 +330,10 @@ test('requirements: the lean gmeet, gtasks and gapps lists resolve to the narrow
   assert.deepEqual(resolveScopes(withoutPrefer(await requirementsFor(['gtasks'], cfg, { ...quiet, toolset: 'google' })), 'readwrite').scopes, [G('keep'), G('tasks')]);
   const apps = await resolved('gapps');
   assert.equal(apps.n, 8);
-  assert.deepEqual(apps.readonly.scopes, [G('script.deployments.readonly'), G('script.projects.readonly')]);
-  // script.processes has no read-only scope, so the processes list stays outside a readonly login.
-  assert.ok(apps.readonly.uncovered.includes('gapps/appsscript_processes_list'));
+  // script.processes is view-only by Google's description ("View Google Apps Script processes"), so since 1.32.1 the
+  // processes list joins a readonly login.
+  assert.deepEqual(apps.readonly.scopes, [G('script.deployments.readonly'), G('script.processes'), G('script.projects.readonly')]);
+  assert.ok(apps.readonly.covered.includes('gapps/appsscript_processes_list'));
   assert.deepEqual(apps.readwrite, [G('script.deployments'), G('script.processes'), G('script.projects'), EMAIL]);
   // full takes the broadest scope scripts.run lists, the full Gmail scope; readwrite does not.
   assert.ok(apps.full.includes('https://mail.google.com/'));
@@ -382,9 +383,10 @@ test('requirements: the gai google list (6 tools, no gateway) resolves to cloud-
     'gai/vertex_count_tokens',
   ]);
   assert.deepEqual(resolveScopes(google, 'readwrite').scopes, [G('cloud-platform')]);
-  // The all toolset resolves as before 1.21.0.
+  // The all toolset resolves as before 1.21.0, except that since 1.32.1 readonly also takes devstorage.read_only (view-only
+  // by Google's description), the only read scope of the Gemini API's file and cached-content reads (gateway).
   const all = await requirementsFor(['gai'], cfg, quiet);
-  assert.deepEqual(resolveScopes(all, 'readonly').scopes, [G('cloud-platform.read-only')]);
+  assert.deepEqual(resolveScopes(all, 'readonly').scopes, [G('cloud-platform.read-only'), G('devstorage.read_only')]);
   assert.deepEqual(resolveScopes(all, 'readwrite').scopes, [G('cloud-platform'), G('devstorage.read_only')]);
 });
 
