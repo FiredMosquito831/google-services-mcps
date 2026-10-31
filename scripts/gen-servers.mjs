@@ -422,6 +422,47 @@ function methodNotesOf(value, id, apiMethods) {
   return value;
 }
 
+/** The schemas of each API's snapshot (every version merged), for checks that look into a method's request. */
+function snapshotSchemasOf(apis) {
+  const out = new Map();
+  for (const { api, version } of apis) {
+    const file = join(ROOT, 'data', 'discovery', `${api}.${version}.json`);
+    if (!existsSync(file)) continue;
+    out.set(api, { ...(out.get(api) ?? {}), ...(readJson(file).schemas ?? {}) });
+  }
+  return out;
+}
+
+/**
+ * A product's "destructiveWhen" (ServerSpec.destructiveWhen in src/core/registry.ts), checked and copied as is: per
+ * generated API of the product, write methods whose call is destructive for some request bodies, with the rule ({ methods:
+ * { id: { field, values } }, source, reason }): the body's field, a list in the method's request schema, holds one of the
+ * values. A GET has no body, so it is refused; the tests check that each listed method's tool is a write.
+ */
+function destructiveWhenOf(value, id, apiMethods, schemasByApi) {
+  if (value === undefined) return undefined;
+  const where = `product ${id} destructiveWhen`;
+  checkPerApi(value, where, apiMethods);
+  for (const [api, entry] of Object.entries(value)) {
+    const methods = entry.methods;
+    if (typeof methods !== 'object' || methods === null || Array.isArray(methods) || Object.keys(methods).length === 0) fail(`${where}["${api}"].methods must be a non-empty object`);
+    for (const [method, rule] of Object.entries(methods)) {
+      const at = `${where}["${api}"]["${method}"]`;
+      const found = checkMethodOf(`${where}["${api}"]`, api, method, apiMethods);
+      if (!isText(rule?.field)) fail(`${at} needs a field`);
+      if (!Array.isArray(rule.values) || rule.values.length === 0 || !rule.values.every(isText) || new Set(rule.values).size !== rule.values.length) {
+        fail(`${at}.values must be a non-empty list of different values`);
+      }
+      if (!found) continue;
+      if (found.httpMethod === 'GET') fail(`${at}: a GET method has no request body`);
+      const requestName = typeof found.request === 'string' ? found.request : found.request?.$ref;
+      const prop = schemasByApi.get(api)?.[requestName]?.properties?.[rule.field];
+      if (prop?.type !== 'array') fail(`${at}: "${rule.field}" is not a list field of the method's request (${requestName ?? 'none'})`);
+    }
+  }
+  return value;
+}
+
 /**
  * A product's "serviceAccountScopes": required for a product of the service-account group, and only there. "methods"
  * (every scope the product's methods declare) or a non-empty list of scope URLs.
@@ -500,6 +541,9 @@ function main() {
     // Only a product with method notes gets the key, so the entries of the others stay as they were.
     const methodNotes = methodNotesOf(p.methodNotes, id, apiMethods);
     if (methodNotes) server.methodNotes = methodNotes;
+    // Only a product with body rules for destructive calls gets the key, so the entries of the others stay as they were.
+    const destructiveWhen = destructiveWhenOf(p.destructiveWhen, id, apiMethods, snapshotSchemasOf(apis));
+    if (destructiveWhen) server.destructiveWhen = destructiveWhen;
     // Only a product that lists a toolset gets the key, so the entries of the others stay as they were.
     const toolsets = toolsetsOf(p.toolsets, id);
     if (toolsets) server.toolsets = toolsets;

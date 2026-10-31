@@ -17,7 +17,15 @@ import { verboseOn, type RuntimeConfig } from '../config.js';
 import { getAuthClient, type AuthKind } from '../auth.js';
 import { isIdempotentMethod, requestWithRetry } from '../http.js';
 import type { ToolContext, ToolDef, ToolKind } from '../tools.js';
-import { loadRegistry, serverByName, type ApiRef, type AuthGroup, type PageSizeDefault, type ServerSpec } from '../registry.js';
+import {
+  loadRegistry,
+  serverByName,
+  type ApiRef,
+  type AuthGroup,
+  type DestructiveBodyRule,
+  type PageSizeDefault,
+  type ServerSpec,
+} from '../registry.js';
 import {
   assignToolNames,
   flattenMethods,
@@ -246,6 +254,22 @@ export interface DiscoverySource {
    * config/products.json). Absent: the tool carries the API's note only, as before.
    */
   methodNotes?: Readonly<Record<string, string>>;
+  /**
+   * Method id to the request bodies that make a call of that write method destructive (ServerSpec.destructiveWhen,
+   * declared in config/products.json). Its tool gets a destructiveWhen, so runServer gates such a call as destructive.
+   * Absent: every call is gated by the method's kind, as before.
+   */
+  destructiveWhen?: Readonly<Record<string, DestructiveBodyRule>>;
+}
+
+/**
+ * True when a request body meets the rule: its `field` is a list that holds one of the rule's values. Any other body
+ * (no field, not a list, none of the values) does not.
+ */
+export function bodyMeetsRule(body: unknown, rule: DestructiveBodyRule): boolean {
+  if (typeof body !== 'object' || body === null || Array.isArray(body)) return false;
+  const value = (body as Record<string, unknown>)[rule.field];
+  return Array.isArray(value) && value.some((item) => typeof item === 'string' && rule.values.includes(item));
 }
 
 /** The note of one method's tool: the API's note (config/tool-kinds.json notes), then the method's own, or neither. */
@@ -549,6 +573,7 @@ function buildMethodTool(
   scopesWhenNone?: readonly string[],
   target?: MethodRecord,
   src: DefaultsSource = {},
+  bodyRule?: DestructiveBodyRule,
 ): ToolDef {
   const shape: ZodRawShape = {};
   const fields: RequestField[] = [];
@@ -572,9 +597,10 @@ function buildMethodTool(
     fields.push({ arg, api: p.name, location: 'query' });
   }
 
+  let bodyArg: string | undefined;
   if (m.requestRef) {
     const taken = new Set([...Object.keys(shape), ...RESERVED_ARGS]);
-    let bodyArg = 'body';
+    bodyArg = 'body';
     for (let i = 0; taken.has(bodyArg); i++) bodyArg = i === 0 ? 'requestBody' : `requestBody${i}`;
     shape[bodyArg] = schemaToZod({ $ref: m.requestRef }, { schemas: doc.schemas }).optional();
     fields.push({ arg: bodyArg, api: 'body', location: 'body' });
@@ -661,6 +687,12 @@ function buildMethodTool(
     },
   };
 
+  if (bodyRule && m.kind === 'write' && bodyArg !== undefined) {
+    // A write whose request body meets the product's rule (config/products.json destructiveWhen) is gated as destructive
+    // for that call (callKind in tools.ts). The tool's kind, and so the tool map and the hook, stay write.
+    const arg = bodyArg;
+    tool.destructiveWhen = (args) => bodyMeetsRule((args as Record<string, unknown>)[arg], bodyRule);
+  }
   if (m.kind === 'destructive') {
     tool.preview = (args) => {
       const req = buildRequest(plan, args as Record<string, unknown>);
@@ -772,7 +804,7 @@ export function generateDiscoveryTools(
     const name = names[i]!;
     const m = entry.method;
     const note = methodNoteText(kinds.notes[m.apiName], entry.src.methodNotes?.[m.fullId]);
-    tools.push(buildMethodTool(m, name, entry.doc, group, cfg, note, entry.scopesWhenNone, entry.target, entry.src));
+    tools.push(buildMethodTool(m, name, entry.doc, group, cfg, note, entry.scopesWhenNone, entry.target, entry.src, entry.src.destructiveWhen?.[m.fullId]));
     rows.push({
       method: m.fullId,
       tool: name,
@@ -859,6 +891,7 @@ export async function discoveryToolsFor(
       ...(server.scopeOverrides?.[a.api] ? { scopesWhenNone: server.scopeOverrides[a.api] } : {}),
       ...requestDefaultsFor(server, a.api),
       ...(server.methodNotes?.[a.api] ? { methodNotes: server.methodNotes[a.api]!.methods } : {}),
+      ...(server.destructiveWhen?.[a.api] ? { destructiveWhen: server.destructiveWhen[a.api]!.methods } : {}),
     });
   }
   if (missing.length > 0) {

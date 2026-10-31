@@ -1944,6 +1944,46 @@
           ]
         }
       },
+      "destructiveWhen": {
+        "gmail": {
+          "source": "https://developers.google.com/workspace/gmail/api/guides/labels (system labels: TRASH and SPAM \"Can be manually applied: yes\"); messages.trash and threads.trash are destructive (classifyMethod), and gmail_label refuses TRASH and SPAM so that such moves go through a tool that asks first",
+          "reason": "Adding the TRASH or SPAM label moves mail out of the mailbox as messages.trash does, and Gmail deletes it after 30 days. As a plain write it ran without a question under confirmation destructive-only; these calls now ask as destructive. Other label changes stay writes.",
+          "methods": {
+            "gmail.users.messages.modify": {
+              "field": "addLabelIds",
+              "values": [
+                "TRASH",
+                "SPAM"
+              ]
+            },
+            "gmail.users.threads.modify": {
+              "field": "addLabelIds",
+              "values": [
+                "TRASH",
+                "SPAM"
+              ]
+            },
+            "gmail.users.messages.batchModify": {
+              "field": "addLabelIds",
+              "values": [
+                "TRASH",
+                "SPAM"
+              ]
+            }
+          }
+        }
+      },
+      "methodNotes": {
+        "gmail": {
+          "source": "config/products.json destructiveWhen (gmail)",
+          "reason": "The description says which calls of these write methods ask as destructive actions.",
+          "methods": {
+            "gmail.users.messages.modify": "A call that adds TRASH or SPAM (addLabelIds) moves the message out of the mailbox, as gmail_trash does, so it asks as a destructive action.",
+            "gmail.users.threads.modify": "A call that adds TRASH or SPAM (addLabelIds) moves the thread out of the mailbox, as gmail_trash does, so it asks as a destructive action.",
+            "gmail.users.messages.batchModify": "A call that adds TRASH or SPAM (addLabelIds) moves every listed message out of the mailbox, so it asks as a destructive action."
+          }
+        }
+      },
       "toolsets": {
         "google": {
           "source": "https://developers.google.com/workspace/gmail/api/reference/mcp/tools_list",

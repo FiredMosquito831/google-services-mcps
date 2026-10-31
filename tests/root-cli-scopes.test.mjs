@@ -78,7 +78,7 @@ test('repo layout: each server is built from its plugin folder (curated module, 
     const entry = own.servers.find((s) => s.name === spec.name);
     const before = converted.servers.find((s) => s.name === spec.name);
     assert.equal(spec.pluginRoot, join(REPO, 'plugins', spec.plugin), spec.name);
-    for (const key of ['curated', 'apis', 'gatewayApis', 'scopes', 'scopePolicy', 'scopeOverrides', 'fieldsDefaults', 'fieldMaskDefaults', 'pageSizeDefaults', 'methodNotes', 'toolsets', 'toolsetScopes']) {
+    for (const key of ['curated', 'apis', 'gatewayApis', 'scopes', 'scopePolicy', 'scopeOverrides', 'fieldsDefaults', 'fieldMaskDefaults', 'pageSizeDefaults', 'methodNotes', 'destructiveWhen', 'toolsets', 'toolsetScopes']) {
       assert.deepEqual(spec[key], entry[key], `${spec.name}.${key} comes from the plugin's servers.json`);
     }
     // What listings and installs print stays the conversion's.
@@ -87,6 +87,8 @@ test('repo layout: each server is built from its plugin folder (curated module, 
   }
   assert.ok(reg.servers.find((s) => s.name === 'gmail').curated, 'gmail has its curated module');
   assert.ok(reg.servers.find((s) => s.name === 'gcloud').gatewayApis.length > 0, 'gcloud has its gateway APIs');
+  assert.ok(reg.servers.find((s) => s.name === 'gmail').destructiveWhen?.gmail, 'gmail has its body rules (1.38.4)');
+  assert.deepEqual(converted.servers.find((s) => s.name === 'gmail').destructiveWhen, readJson(REPO, 'config', 'products.json').products.gmail.destructiveWhen, 'the conversion carries them');
   // A plugin folder's own CLI reads its servers.json as it is: no plugin folder is set there.
   const plugin = loadProductRegistry({ layout: 'plugin', root: join(REPO, 'plugins', 'gmail'), mapFile: join(REPO, 'plugins', 'gmail', 'servers.json') });
   assert.equal(plugin.servers[0].pluginRoot, undefined);

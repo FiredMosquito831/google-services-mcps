@@ -609,6 +609,37 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
     };
   }
 
+  /**
+   * What gmail_send_draft sends, read before the approval (a read, it changes nothing): the draft's recipients, subject,
+   * attachments and the start of its body, as gmail_send's approval shows them. A draft that cannot be read is shown by
+   * its id, with the reason; the send then runs as asked, and Google answers for a draft that does not exist.
+   */
+  async function draftPreview(draftId: string): Promise<Record<string, unknown>> {
+    const action = 'Sends this draft now. Sending cannot be undone.';
+    const from_account = requestedAccount() ?? 'the default account of this server (accounts_list shows it)';
+    let msg: gmail_v1.Schema$Message | undefined;
+    try {
+      const api = await gmailApi();
+      msg = (await api.users.drafts.get({ userId: ME, id: draftId, format: 'full' })).data.message ?? undefined;
+    } catch (err) {
+      return { action, from_account, draft_id: draftId, note: `The draft could not be read first, so only its id is shown: ${(err as Error).message}` };
+    }
+    const walked = walkParts(msg?.payload);
+    const body = pickBody(await decodeBodies(walked.texts)).text;
+    return {
+      action,
+      from_account,
+      draft_id: draftId,
+      to: headerValue(msg, 'To') ?? null,
+      ...(headerValue(msg, 'Cc') ? { cc: headerValue(msg, 'Cc') } : {}),
+      ...(headerValue(msg, 'Bcc') ? { bcc: headerValue(msg, 'Bcc') } : {}),
+      subject: headerValue(msg, 'Subject') ?? '',
+      ...(msg?.threadId ? { thread_id: msg.threadId } : {}),
+      attachments: walked.attachments.map((a) => ({ name: a.filename, size_bytes: a.size, type: a.mime_type })),
+      body_excerpt: body.length > 600 ? `${body.slice(0, 600)}... (${body.length} characters in all)` : body,
+    };
+  }
+
   return [
     // ---- read ----
     defineTool({
@@ -947,24 +978,17 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
     defineTool({
       name: 'gmail_send_draft',
       title: 'Send Gmail draft',
-      description: 'Send an existing draft to its To, Cc and Bcc recipients. Sending cannot be undone.',
+      description:
+        'Send an existing draft to its To, Cc and Bcc recipients. Sending cannot be undone, so it asks first, and the approval shows the draft read from Gmail: recipients, subject, attachment names and sizes and the start of the body.',
       kind: 'destructive',
       scopes: googleScopes('https://mail.google.com/', 'gmail.compose', 'gmail.modify'),
       inputSchema: { draft_id: z.string() },
+      // The approval shows the draft (1.38.4); before, it showed the draft id only.
+      async prepare({ draft_id }) {
+        return { preview: await draftPreview(draft_id) };
+      },
       async preview({ draft_id }) {
-        const api = await gmailApi();
-        const res = await api.users.drafts.get({ userId: ME, id: draft_id, format: 'full' });
-        const msg = res.data.message;
-        const body = pickBody(await decodeBodies(walkParts(msg?.payload).texts)).text;
-        return {
-          draft_id,
-          to: headerValue(msg, 'To') ?? null,
-          cc: headerValue(msg, 'Cc') ?? null,
-          bcc: headerValue(msg, 'Bcc') ?? null,
-          subject: headerValue(msg, 'Subject') ?? '',
-          body_preview: body.slice(0, 200),
-          effect: 'Sends this draft now. This cannot be undone.',
-        };
+        return draftPreview(draft_id);
       },
       async handler({ draft_id }) {
         if (!draft_id) throw new Error('gmail_send_draft needs a draft_id.');

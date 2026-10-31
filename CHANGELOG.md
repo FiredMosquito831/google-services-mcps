@@ -2,6 +2,20 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.38.4 - 2026-10-31
+
+### Fixed: Gmail label changes that move mail to Trash or Spam ask as destructive actions
+- The per-method `gmail_users_messages_modify`, `gmail_users_threads_modify` and `gmail_users_messages_batch_modify` (up to 1,000 messages) could add the `TRASH` or `SPAM` label, which moves mail out of the mailbox as `messages.trash` does; Gmail's labels guide lists both as labels that "Can be manually applied" (https://developers.google.com/workspace/gmail/api/guides/labels). They are writes, so under `confirmation: destructive-only` such a call ran with no question, while `gmail_trash` (destructive) asks and the curated `gmail_label` refuses both labels so that these moves go through a tool that asks. The review of Gmail reported it (G3).
+- A call of those three tools whose `addLabelIds` holds `TRASH` or `SPAM` is now gated as destructive: it asks twice under `every-change` and once, in the server's form, under `destructive-only`, as the hand-written writes that are destructive for some arguments do (`destructiveWhen`, 1.26.3). Every other label change stays a write and asks as before. Their descriptions say so.
+- Refusing those labels, as `gmail_label` does, would have taken a capability away from the `all` toolset: `gmail_label`'s own answer points to these tools for marking mail as spam. They keep working and now ask.
+- It is data: `destructiveWhen` in `config/products.json`, per generated API of a product, `{ source, reason, methods: { "<method id>": { field, values } } }`: the request body's list `field` holds one of `values`. `scripts/gen-servers.mjs` checks each entry (a method of the API's snapshot that is not a GET, a list field of its request schema, different non-empty values, a source and a reason) and copies it into `config/servers.json` and the plugin's `servers.json`; both registry loaders carry it, and the generator gives the method's tool a `destructiveWhen`. Only gmail has one.
+
+### Fixed: gmail_send_draft's approval shows the draft
+- `gmail_send_draft` is destructive (sending cannot be undone), but its approval showed the draft id only: the tool's preview of the draft was never passed to the gate (`preview` is not read by the gate; `prepare` is). It now reads the draft first (a read, it changes nothing), and the approval shows the recipients (To, Cc, Bcc), the subject, the thread, the attachment names and sizes and the first 600 characters of the body, as `gmail_send`'s approval does. A draft that cannot be read is shown by its id with the reason; the send then runs as asked. docs/products/gmail.md already promised that the preview shows the recipients and body.
+
+### Not changed
+- Tool maps and tool kinds of all 23 plugins (0 kind changes; the three modify tools stay `write`, so the hook decides as before), `gsm scopes` (207 cases identical), server instructions, the gate (`approval.ts`), and the requests every tool sends. tools/list changes only for the gmail server with writes on: the descriptions of the three modify tools and of `gmail_send_draft` (with writes off, no tool changes). Not checked against live Google.
+
 ## 1.38.3 - 2026-10-31
 
 ### Fixed: the docs count the tools a server registers
