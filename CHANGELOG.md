@@ -2,6 +2,20 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 1.41.3 - 2026-10-31
+
+### Fixed: a credential word is a whole word of the method name
+- The rule that makes a non-`GET` method a write when its name holds a credential word ran one regular expression over the whole name, `/token|credential|secret|password|authoriz|key/i`, so a longer word that merely contains one counted: "Keyword" held "key", and `countTokens` held "token". Google Ads `generateKeywordIdeas` and Vertex AI `countTokens` were writes only through that accident (Q1 of the 2026-10-30 review).
+- `hasCredentialWord` (`methodWords` + `CREDENTIAL_WORDS` in src/core/discovery/methods.ts, and the same in the copy at src/cli/method-kinds.ts) now splits the name at camelCase boundaries, at digits and at separators and tests each word whole: `generateKeywordIdeas` is generate, keyword, ideas and `countTokens` is count, tokens. The words are `token`, `credential`, `secret`, `password` and `key`; `authoriz` stays a prefix, as it was (authorization, authorize). Plurals are not credential words: a list of secrets or of keys returns no credential value.
+
+### Unchanged, on purpose
+- No catalog method's kind moves. Every method the old expression caught and the words rule does not is a `POST` or a `PATCH`, and a `POST` is a write unless a read rule names it, so the kind is the same with or without the rule. The exact list is 49 (API version, method) pairs: Vertex AI `countTokens` and `computeTokens` (16 bindings), Google Ads and Search Ads 360 `generateKeywordIdeas`, `generateKeywordHistoricalMetrics`, `suggestKeywordThemes` and `generateKeywordForecastMetrics`, Identity Toolkit `getPublicKeys` and `getSessionCookiePublicKeys`, Cloud KMS `getAutokeyConfig` and `showEffectiveAutokeyConfig`, Dataproc `injectCredentials`, VMware Engine `resetVcenterCredentials` and `resetNsxCredentials`, Workstations `pushCredentials`, Tag Manager `reauthorize`, Games `retrieveTokens` and `gamesPlayerTokens`, `oauth2.tokeninfo` and `webcontentpublisher.users.generatePlatformSiteTokens`.
+- So no `write` entry was needed in config/tool-kinds.json, and none was added. Making the four methods the decision names `generateKeywordIdeas`, `generateKeywordHistoricalMetrics`, `suggestKeywordThemes` (and the Search Ads 360 copies) and Vertex AI `countTokens` reads needs a further decision: an exact `read` entry in config/tool-kinds.json, or the names in `READ_POST_EXACT`. This release did neither.
+- Tool maps, gateway `method-kinds.json`, `gsm scopes` (207 cases), the requests and the approval text are unchanged. Both classifiers give the same kind for every catalog method, every version.
+
+### Tests
+- tests/credential-words.test.mjs: the split and the words; every method whose name holds a credential word as a whole word is never a read in either classifier; and the old rule and the new one give the same kind for all 31,641 catalog methods, every API version, with both classifiers agreeing.
+
 ## 1.41.2 - 2026-10-31
 
 ### Fixed: the hook reads the policy file from the plugin's token folder

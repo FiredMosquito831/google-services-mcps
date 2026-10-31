@@ -4,7 +4,8 @@
 // accounts.query and Firestore runQuery. Each one is pinned in config/tool-kinds.json, given by both classifiers for
 // every catalog version, carried by the built plugins (generated tools in tool-map.json, gateway methods in
 // method-kinds.json), decided by the real plugin hook, and seen by a running server. Vertex AI countTokens is not
-// reclassified: its name holds "token", a credential word, so it stays a write (the brief's credential rule).
+// reclassified: a POST with no read rule is a write, and since 1.41.3 its name is no longer a credential name either
+// (whole words: "Tokens" is not "token"; tests/credential-words.test.mjs).
 // Every test works in temp folders. No network call is made: the read tools are listed, never called.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -59,7 +60,7 @@ const POST_READS = [
   { id: 'firestore.projects.databases.documents.runQuery', plugin: 'gcloud', tool: null, versions: ['firestore:v1', 'firestore:v1beta1'] },
 ];
 
-/** Vertex AI countTokens: approved by the owner, held back here by the credential rule ("token" in the name). */
+/** Vertex AI countTokens: approved by the owner, held back because a POST with no read rule is a write. */
 const COUNT_TOKENS = [
   'aiplatform.projects.locations.publishers.models.countTokens',
   'aiplatform.publishers.models.countTokens',
@@ -109,7 +110,7 @@ test('the credential rule holds: no reclassified name has a credential word, and
       if (!COUNT_TOKENS.includes(id)) continue;
       found.add(id);
       assert.equal(kindsFile[id], undefined, `${id}: no override`);
-      assert.equal(classifyMethod(verb, nameOf(id), id, overrides), 'write', `${id} ${api.version}: a credential word keeps it a write`);
+      assert.equal(classifyMethod(verb, nameOf(id), id, overrides), 'write', `${id} ${api.version}: a POST with no read rule is a write`);
       assert.equal(fallbackClassify(verb, nameOf(id), id, overrides), 'write', `${id} ${api.version}: the plugin copy`);
     }
   }

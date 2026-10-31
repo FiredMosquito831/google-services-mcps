@@ -84,8 +84,29 @@ export const FALLBACK_DESTRUCTIVE_NAMES = [
   'move-to-trash',
 ];
 
-/** Credential words in the method name. Same as CREDENTIAL_NAME in core/discovery/methods.ts. */
-const FALLBACK_CREDENTIAL_NAME = /token|credential|secret|password|authoriz|key/i;
+/**
+ * The words of a method name, lowercased. Same as methodWords in core/discovery/methods.ts: split at camelCase
+ * boundaries, at digits and at separators (generateKeywordIdeas -> generate, keyword, ideas).
+ */
+function methodWords(name: string): string[] {
+  return name
+    .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
+    .replace(/([A-Z]+)([A-Z][a-z])/g, '$1 $2')
+    .split(/[^A-Za-z0-9]+/)
+    .filter((word) => word.length > 0)
+    .map((word) => word.toLowerCase());
+}
+
+/** The credential words, whole. Same as CREDENTIAL_WORDS in core/discovery/methods.ts. */
+const CREDENTIAL_WORDS: ReadonlySet<string> = new Set(['token', 'credential', 'secret', 'password', 'key']);
+
+/**
+ * True when a word of the method name is a credential word. Same as hasCredentialWord in core/discovery/methods.ts:
+ * whole words only, with "authoriz" as a prefix, so "Keyword" is not a key and "countTokens" is not a credential.
+ */
+function hasCredentialWord(name: string): boolean {
+  return methodWords(name).some((word) => CREDENTIAL_WORDS.has(word) || word.startsWith('authoriz'));
+}
 
 const normalizeName = (s: string): string => s.replace(/[-_]/g, '').toLowerCase();
 const DESTRUCTIVE_SET = new Set(FALLBACK_DESTRUCTIVE_NAMES.map(normalizeName));
@@ -108,7 +129,7 @@ export const fallbackClassify: KindClassifier = (httpMethod, methodName, fullId,
   const http = httpMethod.toUpperCase();
   if (http === 'DELETE') return 'destructive';
   if (DESTRUCTIVE_SET.has(normalizeName(methodName))) return 'destructive';
-  if (http !== 'GET' && FALLBACK_CREDENTIAL_NAME.test(methodName)) return 'write';
+  if (http !== 'GET' && hasCredentialWord(methodName)) return 'write';
   if (http === 'GET') return 'read';
   if (http === 'POST') {
     if (FALLBACK_READ_POST_EXACT.includes(methodName)) return 'read';

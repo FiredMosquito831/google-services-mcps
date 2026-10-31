@@ -48,7 +48,7 @@ The gate needs to know whether a call changes data. For generated and gateway to
 - Anything else is a write.
 - `config/tool-kinds.json` overrides any method by its full id. A dynamic override is decided per call.
 - Since 1.24.2 it lists as reads twelve `POST` methods that Google marks read-only and that change nothing: Data Connect `executeGraphqlRead`, `generateQuery` and `generateSchema`, Firebase Rules `projects.test`, the three bindings of Discovery Engine `servingConfigs.answer`, Developer Knowledge `answerQuery`, Places `autocomplete`, Analytics Data `batchRunPivotReports` and `audienceExports.query`, and Calendar `freebusy.query`. It lists Merchant API `accounts.dataSources.fetch` as a write, because Google says it starts processing the data source's file. A credential name stays a write.
-- Since 1.24.5 it also lists as reads seventeen `POST` methods that only query: Search Console `searchanalytics.query`; the Monitoring Prometheus queries (`query`, `query_range`, `query_exemplars`, `series`, `labels`) and `timeSeries.query`; Postmaster v2 `domainStats.query` and `batchQuery`; Vertex AI `generateContent` (four bindings) and `embedContent`; Identity Toolkit `accounts.query` (project and tenant); Firestore `documents.runQuery`. BigQuery `jobs.query` stays a write, because it runs any SQL, DML and DDL included. Vertex AI `countTokens` stays a write: its name holds "token", and the credential rule is not overridden.
+- Since 1.24.5 it also lists as reads seventeen `POST` methods that only query: Search Console `searchanalytics.query`; the Monitoring Prometheus queries (`query`, `query_range`, `query_exemplars`, `series`, `labels`) and `timeSeries.query`; Postmaster v2 `domainStats.query` and `batchQuery`; Vertex AI `generateContent` (four bindings) and `embedContent`; Identity Toolkit `accounts.query` (project and tenant); Firestore `documents.runQuery`. BigQuery `jobs.query` stays a write, because it runs any SQL, DML and DDL included. Vertex AI `countTokens` stays a write: a `POST` whose read rule does not name it is a write, and since 1.41.3 its name is no longer a credential name either (see "Credential names" below).
 - Since 1.26.3 it lists the methods of the destructive rule as destructive (next section), 45 more `POST` methods that only read or compute as reads, and four `GET` methods that record an event as writes (see [POST reads and GET writes of 1.26.3](#post-reads-and-get-writes-of-1263)).
 
 The read rule for `POST` is a name prefix. It is not a check of what the method does. See the first known limit below.
@@ -152,7 +152,22 @@ These `POST` methods only read or compute, and change nothing. They are reads, s
 
 These `GET` methods record an event, so they are writes and ask first: `discoveryengine.projects.locations.collections.dataStores.userEvents.collect`, `discoveryengine.projects.locations.dataStores.userEvents.collect`, `discoveryengine.projects.locations.userEvents.collect` and `recommendationengine.projects.locations.catalogs.eventStores.userEvents.collect` ("Writes a single user event from the browser").
 
-Held back by the credential rule: Google Ads `generateKeywordIdeas`, `generateKeywordHistoricalMetrics` and `suggestKeywordThemes` only read, but their names hold "Keyword", and so the credential word "key". A credential name is always a write, and no override passes it, so they stay writes.
+Held back from being reads for another reason: Google Ads `generateKeywordIdeas`, `generateKeywordHistoricalMetrics`, `suggestKeywordThemes` and `generateKeywordForecastMetrics` (and the Search Ads 360 copies) only read. Since 1.41.3 the credential rule no longer catches them — "Keyword" is not the credential word "key" — but a `POST` with no read rule is a write, so they stay writes until a decision names them as reads. Nothing about them is safer than before: their kind did not change.
+
+### Credential names
+
+A non-`GET` method whose name holds a credential word is a write: it mints, reveals or uses a credential. Since 1.41.3 the words are matched whole (Q1 of the 2026-10-30 review). The name is split at camelCase boundaries, at digits and at separators, and a word counts only when it is `token`, `credential`, `secret`, `password` or `key`, or starts with `authoriz`:
+
+| Name | Words | Credential? |
+| :-- | :-- | :-- |
+| `fetchAccessToken` | fetch, access, token | yes |
+| `getKeyString` | get, key, string | yes |
+| `getSyncAuthorization` | get, sync, authorization | yes |
+| `generateKeywordIdeas` | generate, keyword, ideas | no |
+| `countTokens` | count, tokens | no |
+| `createKeypair` | create, keypair | no |
+
+Before 1.41.3 one regex, `/token|credential|secret|password|authoriz|key/i`, ran over the whole name, so `Keyword` and `Tokens` matched. Plurals are not credential words: a list of secrets or of keys returns no credential value, and the `GET` credential reveals are writes by exact id in config/tool-kinds.json anyway. A method the words rule would let through and that really mints, reveals or uses a credential gets an exact `write` entry in config/tool-kinds.json; today none needs one, because every method the old regex caught and the words rule does not is a `POST` or a `PATCH`, which is a write with or without the rule. tests/credential-words.test.mjs proves that equality over every catalog method, every version, and checks that both classifiers agree.
 
 ### Credential reveals and credential fields in read results
 
