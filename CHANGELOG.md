@@ -2,6 +2,23 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 2.2.0 - 2026-11-01
+
+### Fixed: the project IAM policy is read in version 3, so IAM conditions come back
+- `cloud_project_iam_policy` sent an empty `GetIamPolicyRequest`, so IAM answered in policy version 1: a role binding that carries an IAM condition lost its condition and had its role renamed `_withcond_<hash>`, which hides who has conditional access (review of gcloud, F5). It now sends `options.requestedPolicyVersion: 3`, the field Discovery's `GetPolicyOptions` documents ("Requests for policies with any conditional role bindings must specify version 3"). The answer is the same Policy object as before: a policy with no conditions still comes back as version 1, unchanged.
+- The six `google` toolset `source` URLs under `docs.cloud.google.com` that ended in `/tools_list` answered 404; they are now the parent reference pages, which answer 200 and carry the tool table for API Keys, BigQuery, Cloud Billing, IAM, Logging and Monitoring (checked with curl, 2026-11-01). Resource Manager, Storage and the two `.../tools_list/<tool>` pages already answered 200 and are unchanged.
+
+### Reported, not changed (owner decision needed)
+- `bigquery_jobs_query` (method `bigquery.jobs.query`) is a plain `write`, so under `confirmation: destructive-only` a `DROP TABLE`, `DELETE`, `MERGE` or script runs without a prompt: a write runs unasked in that mode and only `destructive` asks (src/core/policy.ts, `defaultDecision`). The 12 `setIamPolicy` tools of this server already ask twice since 1.26.3, and the gateway's `api_call` asks for a write method through the hook, so the hole is this one per-method tool. Raising it means `"bigquery.jobs.query": "destructive"` in config/tool-kinds.json (frozen, a double prompt for every query through that tool, SELECTs included) or a curated write tool that decides by the statement, neither of which this release does.
+- `bq_query_read`'s dry run calls `bigquery.jobs.insert`, whose Discovery scopes are `bigquery`, `cloud-platform` and `devstorage.*` only: a `readonly` login holds `cloud-platform.read-only`, which that method does not accept, while `bigquery.jobs.query` does list `cloud-platform.read-only` (data/discovery/bigquery.v2.json, checked 2026-11-01). So the dry run may be refused with a readonly login (NOT checked live). The fix would move the dry run to `jobs.query` with `dryRun`, or change the tool's scopes; both change behaviour, so neither is here.
+- Google's `google` toolset parity: 21 official tools (5 Logging, 12 Cloud Billing, 4 IAM role) have no tool here and are reachable only through `api_call`; a toolset list can name only tools the server defines. The 16 tools the review calls noise (10 Cloud Billing A2A agent methods, 2 write-only Cloud Trace methods, 4 Cloud Profiler methods) sit in the 350-tool generated budget, not in the `google` list, and only the Profiler four have no gateway route, so dropping them would lose coverage unless the profiler API joins the gateway. Proposal in the product page.
+
+### Not changed
+- No tool's kind, scopes or request other than the IAM policy body; the gcloud tool map, the gateway method kinds and `gsm scopes` are byte-identical, and the frozen files and goldens are untouched.
+
+### Tests
+- tests/cloud-parity.test.mjs: `cloud_project_iam_policy` sends `{ options: { requestedPolicyVersion: 3 } }` to `projects/{id}:getIamPolicy`, answers the conditional Policy unchanged, and answers a version 1 policy unchanged too.
+
 ## 2.1.0 - 2026-11-01
 
 ### Added: rename, move and restore a Drive file

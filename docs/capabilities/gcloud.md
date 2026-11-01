@@ -18,7 +18,7 @@ The tool map (`plugins/<id>/tool-map.json`) also lists these, so the consent hoo
 
 ## Toolset google (59)
 
-The tools that match Google's official MCP server for this product (https://docs.cloud.google.com/resource-manager/reference/mcp, https://docs.cloud.google.com/api-keys/docs/reference/mcp/tools_list, https://docs.cloud.google.com/bigquery/docs/reference/mcp/tools_list, https://docs.cloud.google.com/billing/docs/reference/mcp/tools_list, https://docs.cloud.google.com/iam/docs/reference/mcp/tools_list, https://docs.cloud.google.com/logging/docs/reference/v2_mcp/mcp/tools_list, https://docs.cloud.google.com/monitoring/api/ref_v3_mcp/mcp/tools_list, https://docs.cloud.google.com/storage/docs/reference/mcp/tools_list).
+The tools that match Google's official MCP server for this product (https://docs.cloud.google.com/resource-manager/reference/mcp, https://docs.cloud.google.com/api-keys/docs/reference/mcp, https://docs.cloud.google.com/bigquery/docs/reference/mcp, https://docs.cloud.google.com/billing/docs/reference/mcp, https://docs.cloud.google.com/iam/docs/reference/mcp, https://docs.cloud.google.com/logging/docs/reference/v2_mcp/mcp, https://docs.cloud.google.com/monitoring/api/ref_v3_mcp/mcp, https://docs.cloud.google.com/storage/docs/reference/mcp).
 
 | Tool | Google's tool | Note |
 |---|---|---|
