@@ -4,11 +4,11 @@ Google Chat spaces, messages and members, plus Workspace Events subscriptions.
 
 - Plugin: `gchat`, MCP server: `gchat`, login: Desktop OAuth client, then `login workspace-user`
 - Install: `claude plugin install gchat@google-services-mcps`
-- Tools: 76 total. Curated 14, per-method 61, gateway 0. Read 35, write 31, destructive 10, dynamic 0.
+- Tools: 78 total. Curated 16, per-method 61, gateway 0. Read 36, write 32, destructive 10, dynamic 0.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 76, google 16, curated 14 tools, each counting the 7 runtime tools this server registers (`account_remove`, `account_set_default`, `accounts_list`, `auth_login`, `auth_setup_client`, `auth_status`, `health`). "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 78, google 16, curated 16 tools, each counting the 7 runtime tools this server registers (`account_remove`, `account_set_default`, `accounts_list`, `auth_login`, `auth_setup_client`, `auth_status`, `health`). "(all)" means the product has no such toolset yet, so it lists every tool.
 
 ## Not registered by this server (2)
 
@@ -18,7 +18,7 @@ The tool map (`plugins/<id>/tool-map.json`) also lists these, so the consent hoo
 
 ## Toolset google (9)
 
-The tools that match Google's official MCP server for this product (https://developers.google.com/workspace/chat/api/reference/mcp/tools_list).
+The tools that match Google's official MCP server for this product (https://developers.google.com/workspace/chat/api/reference/mcp).
 
 | Tool | Google's tool | Note |
 |---|---|---|
@@ -29,10 +29,10 @@ The tools that match Google's official MCP server for this product (https://deve
 | `chat_send_message` | `send_message` | Text in Markdown (or Chat's own syntax), as a new thread or a reply. Google's cards and citations are left out: only Chat apps can post them. |
 | `chat_mark_read` | `mark_as_read` | Conversations only, up to 10 a call, each its own request with its own failure. Google's thread_ids have no public REST method (the Chat API has getThreadReadState only). |
 | `chat_mark_unread` | `mark_as_unread` | Conversations only; a thread's read state has no public REST method. |
-| `chat_spaces_space_notif_setting_get` | `get_notification_settings` | Generated from spaceNotificationSetting.get: name is users/me/spaces/{space}/spaceNotificationSetting. |
-| `chat_spaces_space_notif_setting_patch` | `update_notification_settings` | Generated from spaceNotificationSetting.patch: name is users/me/spaces/{space}/spaceNotificationSetting, updateMask notification_setting and/or mute_setting. A write, so it asks first. |
+| `chat_get_notification_settings` | `get_notification_settings` | Curated in place of the generated chat_spaces_space_notif_setting_get, which took the raw resource name and a clipped description: this one takes a conversation id, as Google's tool does. Google asks chat.users.spacesettings for reading the setting too (there is no read-only scope), so a readonly sign-in does not cover it. |
+| `chat_update_notification_settings` | `update_notification_settings` | Curated in place of the generated chat_spaces_space_notif_setting_patch, which took the raw resource name, updateMask and body: this one takes the conversation id and the two enums, as Google's tool does, and builds updateMask from what you pass. A write, so it asks first. |
 
-## Curated tools (14)
+## Curated tools (16)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
@@ -42,6 +42,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `auth_login` | write | Sign in to Google | (none) |
 | `auth_setup_client` | write | Save the Google OAuth client | (none) |
 | `auth_status` | read | Sign-in status | (none) |
+| `chat_get_notification_settings` | read | Get Chat notification settings | chat.users.spacesettings |
 | `chat_list_members` | read | List Chat members | chat.memberships, chat.memberships.readonly |
 | `chat_list_messages` | read | List Chat messages | chat.messages, chat.messages.readonly |
 | `chat_mark_read` | write | Mark Chat conversations read | chat.users.readstate |
@@ -49,6 +50,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `chat_search_conversations` | read | Find Chat conversations | chat.spaces, chat.spaces.readonly |
 | `chat_search_messages` | read | Search Chat messages | chat.messages, chat.messages.readonly |
 | `chat_send_message` | destructive | Send a Chat message | chat.messages, chat.messages.create |
+| `chat_update_notification_settings` | write | Change Chat notification settings | chat.users.spacesettings |
 | `health` | read | Server health | (none) |
 
 ## Per-method tools (61)

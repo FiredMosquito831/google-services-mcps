@@ -1806,6 +1806,17 @@
           "version": "v1"
         }
       ],
+      "scopePolicy": {
+        "prefer": {
+          "readonly": [
+            "https://www.googleapis.com/auth/chat.users.readstate.readonly"
+          ]
+        },
+        "onlyIn": {
+          "https://www.googleapis.com/auth/chat.bot": [],
+          "https://www.googleapis.com/auth/chat.import": []
+        }
+      },
       "toolsets": {
         "google": [
           "chat_search_conversations",
@@ -1815,8 +1826,8 @@
           "chat_send_message",
           "chat_mark_read",
           "chat_mark_unread",
-          "chat_spaces_space_notif_setting_get",
-          "chat_spaces_space_notif_setting_patch"
+          "chat_get_notification_settings",
+          "chat_update_notification_settings"
         ]
       },
       "toolsetScopes": {

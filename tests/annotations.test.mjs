@@ -122,6 +122,8 @@ const CURATED_IDEMPOTENT = [
   'calendar_update_event',
   'chat_mark_read',
   'chat_mark_unread',
+  // 2.3.0: Google's update_notification_settings is marked idempotent, and the same call twice leaves the same setting.
+  'chat_update_notification_settings',
   'cloud_apikey_delete',
   'cloud_apikey_reveal',
   'cloud_project_delete',

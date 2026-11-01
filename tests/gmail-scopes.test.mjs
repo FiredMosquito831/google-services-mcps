@@ -184,9 +184,10 @@ test('the scope policy marks only gmail requirements; every other server resolve
   const withPolicy = reg.servers.filter((s) => s.scopePolicy).map((s) => s.name);
   // Since 1.35.0 gyoutube has an optional part that names a scope (monetary; tests/optional-scope-part.test.mjs).
   // Since 1.36.0 gapps too (mail, the full Gmail scope), with a preference for full (tests/gapps-mail.test.mjs).
-  // Since 2.1.0 gdrive has two parts (books, labels; tests/optional-parts.test.mjs).
-  assert.deepEqual(withPolicy, ['gsc', 'gdrive', 'gmail', 'gmeet', 'gcontacts', 'gtasks', 'gclassroom', 'gapps', 'gyoutube']);
-  assert.deepEqual(reg.servers.filter((s) => s.scopePolicy?.onlyIn).map((s) => s.name), ['gmail']);
+  // Since 2.1.0 gdrive has two parts (books, labels; tests/optional-parts.test.mjs). Since 2.3.0 gchat has a preference
+  // (readonly read state) and blocks the two Chat app scopes for every profile (tests/toolset-scopes.test.mjs).
+  assert.deepEqual(withPolicy, ['gsc', 'gdrive', 'gmail', 'gchat', 'gmeet', 'gcontacts', 'gtasks', 'gclassroom', 'gapps', 'gyoutube']);
+  assert.deepEqual(reg.servers.filter((s) => s.scopePolicy?.onlyIn).map((s) => s.name), ['gmail', 'gchat']);
   assert.deepEqual(reg.servers.filter((s) => s.scopePolicy?.optional).map((s) => s.name), ['gsc', 'gdrive', 'gmail', 'gcontacts', 'gtasks', 'gapps', 'gyoutube']);
   for (const spec of reg.servers) {
     if (spec.scopePolicy) continue;

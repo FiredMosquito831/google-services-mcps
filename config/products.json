@@ -2201,9 +2201,20 @@
         }
       ],
       "gateway": [],
+      "scopePolicy": {
+        "prefer": {
+          "readonly": [
+            "https://www.googleapis.com/auth/chat.users.readstate.readonly"
+          ]
+        },
+        "onlyIn": {
+          "https://www.googleapis.com/auth/chat.bot": [],
+          "https://www.googleapis.com/auth/chat.import": []
+        }
+      },
       "toolsets": {
         "google": {
-          "source": "https://developers.google.com/workspace/chat/api/reference/mcp/tools_list",
+          "source": "https://developers.google.com/workspace/chat/api/reference/mcp",
           "preferScopes": {
             "readwrite": [
               "https://www.googleapis.com/auth/chat.spaces.readonly",
@@ -2220,8 +2231,8 @@
             "chat_send_message",
             "chat_mark_read",
             "chat_mark_unread",
-            "chat_spaces_space_notif_setting_get",
-            "chat_spaces_space_notif_setting_patch"
+            "chat_get_notification_settings",
+            "chat_update_notification_settings"
           ],
           "matches": {
             "chat_search_conversations": [
@@ -2245,10 +2256,10 @@
             "chat_mark_unread": [
               "mark_as_unread"
             ],
-            "chat_spaces_space_notif_setting_get": [
+            "chat_get_notification_settings": [
               "get_notification_settings"
             ],
-            "chat_spaces_space_notif_setting_patch": [
+            "chat_update_notification_settings": [
               "update_notification_settings"
             ]
           },
@@ -2257,8 +2268,8 @@
             "chat_send_message": "Text in Markdown (or Chat's own syntax), as a new thread or a reply. Google's cards and citations are left out: only Chat apps can post them.",
             "chat_mark_read": "Conversations only, up to 10 a call, each its own request with its own failure. Google's thread_ids have no public REST method (the Chat API has getThreadReadState only).",
             "chat_mark_unread": "Conversations only; a thread's read state has no public REST method.",
-            "chat_spaces_space_notif_setting_get": "Generated from spaceNotificationSetting.get: name is users/me/spaces/{space}/spaceNotificationSetting.",
-            "chat_spaces_space_notif_setting_patch": "Generated from spaceNotificationSetting.patch: name is users/me/spaces/{space}/spaceNotificationSetting, updateMask notification_setting and/or mute_setting. A write, so it asks first."
+            "chat_get_notification_settings": "Curated in place of the generated chat_spaces_space_notif_setting_get, which took the raw resource name and a clipped description: this one takes a conversation id, as Google's tool does. Google asks chat.users.spacesettings for reading the setting too (there is no read-only scope), so a readonly sign-in does not cover it.",
+            "chat_update_notification_settings": "Curated in place of the generated chat_spaces_space_notif_setting_patch, which took the raw resource name, updateMask and body: this one takes the conversation id and the two enums, as Google's tool does, and builds updateMask from what you pass. A write, so it asks first."
           }
         }
       },

@@ -62,7 +62,7 @@ const GSC_GOOGLE = [
   'indexing_url_notifications_get_metadata',
   'indexing_url_notifications_publish',
 ];
-/** The gchat list (1.12.0): Google's 9 Chat MCP tools, two of them through the generated notification-setting tools. */
+/** The gchat list (1.12.0): Google's 9 Chat MCP tools, all through curated tools since 2.3.0. */
 const CHAT_GOOGLE = [
   'chat_search_conversations',
   'chat_list_messages',
@@ -71,8 +71,8 @@ const CHAT_GOOGLE = [
   'chat_send_message',
   'chat_mark_read',
   'chat_mark_unread',
-  'chat_spaces_space_notif_setting_get',
-  'chat_spaces_space_notif_setting_patch',
+  'chat_get_notification_settings',
+  'chat_update_notification_settings',
 ];
 /** The gcontacts list (1.13.0): Google's 3 People MCP tools. */
 const CONTACTS_GOOGLE = ['contacts_search_directory', 'contacts_search', 'profile_me'];
@@ -518,9 +518,11 @@ test('the gsc google list is a lean set: no official server, so every tool says 
 test("the gchat google list covers the 9 tools of Google's Chat MCP server, with chat_list_members for list_memberships", () => {
   const google = readJson('config', 'products.json').products.gchat.toolsets.google;
   assert.deepEqual(google.tools, CHAT_GOOGLE);
-  assert.equal(google.source, 'https://developers.google.com/workspace/chat/api/reference/mcp/tools_list');
+  // Since 2.3.0 the parent page, which answers 200 and carries the tool table; .../mcp/tools_list answers 404 (curl,
+  // 2026-11-01), as it does for Gmail and Calendar (2.2.0).
+  assert.equal(google.source, 'https://developers.google.com/workspace/chat/api/reference/mcp');
   const official = new Set(Object.values(google.matches).flat());
-  // developers.google.com/workspace/chat/api/reference/mcp/tools_list
+  // developers.google.com/workspace/chat/api/reference/mcp
   for (const name of ['search_conversations', 'list_messages', 'search_messages', 'send_message', 'list_memberships', 'mark_as_read', 'mark_as_unread', 'get_notification_settings', 'update_notification_settings']) {
     assert.ok(official.has(name), `no tool of ours matches ${name}`);
   }
@@ -529,6 +531,11 @@ test("the gchat google list covers the 9 tools of Google's Chat MCP server, with
   assert.equal(google.tools.includes('chat_spaces_members_list'), false);
   assert.match(google.notes.chat_list_members, /chat\.bot/);
   assert.match(google.notes.chat_mark_read, /no public REST method/);
+  // Since 2.3.0 the notification settings are curated too: Google's tool takes a conversation id and two enums, and so
+  // does ours, where the generated tools took the raw name, updateMask and body.
+  assert.match(google.notes.chat_get_notification_settings, /chat\.users\.spacesettings/);
+  assert.equal(google.tools.includes('chat_spaces_space_notif_setting_get'), false);
+  assert.equal(google.tools.includes('chat_spaces_space_notif_setting_patch'), false);
 });
 
 test("the gcontacts google list covers the 3 tools of Google's People MCP server, and leaves out the gateway", () => {

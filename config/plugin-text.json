@@ -71,15 +71,16 @@
       "notes": ["send_updates is none unless set: guests get no email. With all, the call counts as sending to other people and asks as destructive."]
     },
     "gchat": {
-      "description": "Find and read Google Chat conversations, search messages across spaces, list members, send messages and thread replies, and mark conversations read; plus Workspace Events subscriptions.",
+      "description": "Find and read Google Chat conversations, search messages across spaces, list members, send messages and thread replies, mark conversations read, and read or change notification settings; plus Workspace Events subscriptions.",
       "whenToUse": "Use when the person mentions Google Chat, a space, a direct message, a thread, or what colleagues said in Chat. Examples: \"what did the team say in Chat today\", \"search Chat for the deploy link\", \"post this in the Marketing space\".",
       "flows": [
         { "title": "Find a conversation", "steps": ["{tool:chat_search_conversations} by name or participants gives the conversation_id."] },
         { "title": "Read", "steps": ["{tool:chat_list_messages} with conversation_id (start_time, end_time, order), or {tool:chat_search_messages} across spaces (query, senders, mentions_me, unread_only)."] },
         { "title": "Send", "steps": ["{tool:chat_send_message} with conversation_id and text, and thread_id to reply in a thread. It sends to other people, so it asks twice.", "{tool:chat_mark_read} afterwards, if the person wants."] },
-        { "title": "Members", "steps": ["{tool:chat_list_members} with conversation_id."] }
+        { "title": "Members", "steps": ["{tool:chat_list_members} with conversation_id."] },
+        { "title": "Quiet a conversation", "steps": ["{tool:chat_get_notification_settings} with conversation_id shows your setting for it, with a readwrite login.", "{tool:chat_update_notification_settings} with notification_setting (ALL, MAIN_CONVERSATIONS, FOR_YOU, OFF) and/or mute_setting (MUTED, UNMUTED). It changes your setting only, and asks first."] }
       ],
-      "notes": ["One message is at most 32,000 bytes."]
+      "notes": ["One message is at most 32,000 bytes.", "A mention is Chat's tag, not @name: <chat-user data-email=\"ana@example.com\"></chat-user>. A plain @name notifies no one."]
     },
     "gmeet": {
       "description": "Create Google Meet meeting spaces and read past meetings: conference records, participants, recordings, transcripts and smart notes.",

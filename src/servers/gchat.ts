@@ -1,9 +1,9 @@
 /**
- * Curated Google Chat tools (chat_*) of the gchat server. They match the tools of Google's Chat MCP server
- * (developers.google.com/workspace/chat/api/reference/mcp/tools_list): find a conversation by name or by participants,
- * read and search messages in Markdown with trimmed fields, list the members of a conversation, send a message, and mark
- * a conversation read or unread. The generated chat_* tools stay as they are; these take plain arguments and return
- * short answers.
+ * Curated Google Chat tools (chat_*) of the gchat server. They match the nine tools of Google's Chat MCP server
+ * (developers.google.com/workspace/chat/api/reference/mcp): find a conversation by name or by participants, read and
+ * search messages in Markdown with trimmed fields, list the members of a conversation, send a message, mark a
+ * conversation read or unread, and read or change your notification setting for one conversation. The generated chat_*
+ * tools stay as they are; these take plain arguments and return short answers.
  *
  * Reads never ask. chat_mark_read and chat_mark_unread are writes, so the gate asks first. chat_send_message posts to
  * other people, so it is destructive like gmail_send (the destructive rule, docs/SECURITY.md): it asks twice, also under
@@ -13,6 +13,7 @@
  *
  * Auth: OAuth user token from `gsm login workspace-user`.
  */
+import { randomUUID } from 'node:crypto';
 import { z } from 'zod';
 import type { RuntimeConfig } from '../core/config.js';
 import { getAuthClient, googleScopes } from '../core/auth.js';
@@ -27,6 +28,14 @@ const MESSAGES_READ = googleScopes('chat.messages', 'chat.messages.readonly');
 const MEMBERS_READ = googleScopes('chat.memberships', 'chat.memberships.readonly');
 const MESSAGES_CREATE = googleScopes('chat.messages', 'chat.messages.create');
 const READ_STATE = googleScopes('chat.users.readstate');
+/** Google's Chat MCP server asks chat.users.spacesettings for reading the setting too (there is no read-only scope). */
+const SPACE_SETTINGS = googleScopes('chat.users.spacesettings');
+/**
+ * chat_search_messages's unread_only filter is `is_unread()`, which Google documents with chat.users.readstate (or
+ * .readonly): without the scope the search is refused, so the tool declares it too and a readonly login asks for it
+ * (scopePolicy.prefer, config/products.json).
+ */
+const MESSAGES_SEARCH_READ = googleScopes('chat.messages', 'chat.messages.readonly', 'chat.users.readstate.readonly');
 
 /** Default and largest number of characters of one message's text in an answer. Longer text is cut and marked. */
 /**
@@ -116,6 +125,12 @@ interface ChatMessage {
   privateMessageViewer?: ChatUser;
   attachment?: Array<{ name?: string; contentName?: string; contentType?: string; driveDataRef?: { driveFileId?: string } }>;
 }
+/** SpaceNotificationSetting (Discovery, chat v1): the notification frequency and the mute state of one conversation. */
+interface ChatNotificationSetting {
+  name?: string;
+  notificationSetting?: string;
+  muteSetting?: string;
+}
 
 export type TextFormat = 'markdown' | 'chat';
 
@@ -160,6 +175,24 @@ export function conversationSummary(s: ChatSpace) {
 
 /** Messages only one user can see (sent privately by a Chat app) are left out, as Google's list_messages does. */
 const notPrivate = (m: ChatMessage): boolean => !m.privateMessageViewer;
+
+// ---------- Notification settings ----------
+
+/** The resource name of your own notification setting for one conversation. Only your own can be read or set. */
+export const notificationNameOf = (space: string): string => `users/me/${space}/spaceNotificationSetting`;
+
+/** One notification setting, short: the conversation, the frequency and the mute state. */
+export function notificationSummary(space: string, s: ChatNotificationSetting) {
+  return {
+    conversation_id: space,
+    notification_setting: s.notificationSetting ?? null,
+    mute_setting: s.muteSetting ?? null,
+  };
+}
+
+/** NotificationSetting and MuteSetting (Discovery, chat v1 SpaceNotificationSetting), without the UNSPECIFIED values. */
+export const NOTIFICATION_SETTINGS = ['ALL', 'MAIN_CONVERSATIONS', 'FOR_YOU', 'OFF'] as const;
+export const MUTE_SETTINGS = ['UNMUTED', 'MUTED'] as const;
 
 // ---------- Search filters ----------
 
@@ -236,6 +269,18 @@ const maxChars = z
   .optional()
   .describe(`Characters of each message's text to return, 1 to ${CHAT_TEXT_MAX_CHARS}. Default ${CHAT_TEXT_DEFAULT_CHARS}; longer text is cut and marked text_truncated.`);
 const conversationId = z.string().describe('The conversation id, spaces/{space} (from chat_search_conversations).');
+
+/**
+ * The text of a message, with Google's own list of what Markdown it takes (Chat MCP send_message, messageText):
+ * a mention needs Chat's chat-user tag, not "@name", or the person is not notified.
+ */
+const messageText = z
+  .string()
+  .describe(
+    'The message, in Markdown (tables are not supported): **bold**, *italic* or _italic_, ~~strikethrough~~, `monospace`, ```blocks```, * lists, 1. lists, > quotes, [label](url). ' +
+      'To mention someone, use <chat-user data-email="ana@example.com"></chat-user> or <chat-user data-user="users/111"></chat-user> (the id from a message\'s sender.id), never "@name": a plain @name notifies no one. At most 10 mentions, and @all is not allowed. ' +
+      'A custom emoji is <chat-emoji data-emoji-name=":xyz:"></chat-emoji> or <chat-emoji data-custom-emoji="customEmojis/abc"></chat-emoji>.',
+  );
 
 export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
   // The account is chosen per call (see account-context.ts), so the client is not cached here.
@@ -404,7 +449,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       description:
         "Search Google Chat messages by words and filters, across every conversation you are in or only some, newest first, in Markdown (matches search_messages in Google's Chat MCP server). Give query (words; quote a phrase), and narrow with conversation_ids, senders (email addresses), mentions_me, unread_only, has_link, has_attachment, start_time / end_time and space_types; several values of one filter match any of them. filter takes extra conditions in the API's syntax and is joined with AND. Use chat_list_messages to read one conversation in order, and chat_search_conversations to find a conversation by name. unread_only needs the chat.users.readstate (or .readonly) scope; space_types needs a spaces scope.",
       kind: 'read',
-      scopes: MESSAGES_READ,
+      scopes: MESSAGES_SEARCH_READ,
       inputSchema: {
         query: z.string().optional().describe('Words to find. Every word must match; "a phrase" in double quotes matches the phrase.'),
         conversation_ids: z.array(z.string()).optional().describe('Only these conversations (spaces/{space}).'),
@@ -493,6 +538,20 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
         };
       },
     }),
+    defineTool({
+      name: 'chat_get_notification_settings',
+      title: 'Get Chat notification settings',
+      description:
+        "Read your notification setting (notification_setting) and mute state (mute_setting) for one Google Chat conversation (matches get_notification_settings in Google's Chat MCP server). The setting is yours, not the conversation's: another member of the same conversation can have another one. notification_setting is ALL, MAIN_CONVERSATIONS, FOR_YOU or OFF, off when unset; mute_setting is MUTED or UNMUTED, unmuted when unset. Change them with chat_update_notification_settings. Requires the chat.users.spacesettings scope, which a readonly sign-in does not ask for.",
+      kind: 'read',
+      scopes: SPACE_SETTINGS,
+      inputSchema: { conversation_id: conversationId },
+      async handler({ conversation_id }) {
+        const space = spaceNameOf(conversation_id);
+        const res = await call<ChatNotificationSetting>({ url: `${CHAT}/${notificationNameOf(space)}` });
+        return notificationSummary(space, res.data);
+      },
+    }),
 
     // ---- write ----
     defineTool({
@@ -505,26 +564,35 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       scopes: MESSAGES_CREATE,
       inputSchema: {
         conversation_id: conversationId,
-        text: z.string().describe('The message. Standard Markdown by default (tables are not supported); see format.'),
+        text: messageText,
         thread_id: z.string().optional().describe('Reply in this thread, spaces/{space}/threads/{thread} (the thread_id of a message). Default: a new thread.'),
         format,
+        request_id: z
+          .string()
+          .optional()
+          .describe(
+            'A unique id for this send (a random UUID is recommended), so a retry of the same call posts one message, not two: Google answers with the message it already created (spaces.messages.create requestId). Leave it out and the server makes one for this call.',
+          ),
       },
       async prepare(args) {
         return planSend(args);
       },
       async handler(args, _ctx, prepared) {
         const plan = (prepared as SendPlan | undefined) ?? (await planSend(args));
+        // One id per call: a retry inside this request (a 503 answered after the message was created) does not post
+        // it twice, and a caller that gives the same request_id on its own retry does not either.
+        const requestId = args.request_id?.trim() || randomUUID();
         const res = await call<ChatMessage>({
           url: `${CHAT}/${plan.space}/messages`,
           method: 'POST',
-          query: plan.thread ? { messageReplyOption: 'REPLY_MESSAGE_OR_FAIL' } : {},
+          query: { requestId, ...(plan.thread ? { messageReplyOption: 'REPLY_MESSAGE_OR_FAIL' } : {}) },
           body: {
             text: plan.text,
             ...(plan.format === 'markdown' ? { markupSyntax: 'MARKUP_SYNTAX_MARKDOWN' } : {}),
             ...(plan.thread ? { thread: { name: plan.thread } } : {}),
           },
         });
-        return { sent: true, ...messageSummary(res.data, 'chat', CHAT_PREVIEW_CHARS) };
+        return { sent: true, request_id: requestId, ...messageSummary(res.data, 'chat', CHAT_PREVIEW_CHARS) };
       },
     }),
     defineTool({
@@ -584,6 +652,47 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
           body: { lastReadTime: last_read_time },
         });
         return { conversation_id: space, last_read_time: res.data.lastReadTime ?? last_read_time };
+      },
+    }),
+    defineTool({
+      name: 'chat_update_notification_settings',
+      title: 'Change Chat notification settings',
+      description:
+        "Change your notification setting and/or mute state for one Google Chat conversation (matches update_notification_settings in Google's Chat MCP server). Give at least one of them; the others keep their value. FOR_YOU is not accepted by Google in a 1:1 direct message (it answers INVALID_ARGUMENT), and MAIN_CONVERSATIONS and FOR_YOU are not accepted in one either. It changes your setting only, for you, so it is a write and asks first; it can be changed back at once, so it is not destructive. Requires the chat.users.spacesettings scope, which a readonly sign-in does not ask for.",
+      kind: 'write',
+      // Google's update_notification_settings is marked idempotent: the same call twice leaves the same setting.
+      idempotent: true,
+      scopes: SPACE_SETTINGS,
+      inputSchema: {
+        conversation_id: conversationId,
+        notification_setting: z
+          .enum(NOTIFICATION_SETTINGS)
+          .optional()
+          .describe('ALL: every message. MAIN_CONVERSATIONS: main conversations only. FOR_YOU: mentions, @all and followed threads (not in a 1:1 direct message). OFF: none.'),
+        mute_setting: z.enum(MUTE_SETTINGS).optional().describe('MUTED: no notifications for this conversation, whatever the setting. UNMUTED: as the setting says.'),
+      },
+      async handler({ conversation_id, notification_setting, mute_setting }) {
+        const space = spaceNameOf(conversation_id);
+        if (notification_setting === undefined && mute_setting === undefined) {
+          throw new Error('Nothing to change: pass notification_setting, mute_setting, or both.');
+        }
+        const body: Record<string, string> = {};
+        const fields: string[] = [];
+        if (notification_setting !== undefined) {
+          body.notificationSetting = notification_setting;
+          fields.push('notification_setting');
+        }
+        if (mute_setting !== undefined) {
+          body.muteSetting = mute_setting;
+          fields.push('mute_setting');
+        }
+        const res = await call<ChatNotificationSetting>({
+          url: `${CHAT}/${notificationNameOf(space)}`,
+          method: 'PATCH',
+          query: { updateMask: fields.join(',') },
+          body,
+        });
+        return notificationSummary(space, res.data);
       },
     }),
   ];

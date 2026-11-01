@@ -246,9 +246,11 @@ test('requirements: the gchat google list resolves to Chat user scopes only, nev
   const google = await requirementsFor(['gchat'], cfg, { ...quiet, toolset: 'google' });
   assert.equal(google.length, 9);
   const readonly = resolveScopes(google, 'readonly');
-  assert.deepEqual(readonly.scopes, [G('chat.memberships.readonly'), G('chat.messages.readonly'), G('chat.spaces.readonly')]);
+  // Since 2.3.0 the readonly profile also prefers chat.users.readstate.readonly, which unread_only needs (Google's
+  // message-search documentation: is_unread() needs chat.users.readstate or .readonly).
+  assert.deepEqual(readonly.scopes, [G('chat.memberships.readonly'), G('chat.messages.readonly'), G('chat.spaces.readonly'), G('chat.users.readstate.readonly')]);
   // The notification settings have no read-only scope, so their read stays outside a readonly login.
-  assert.ok(readonly.uncovered.includes('gchat/chat_spaces_space_notif_setting_get'));
+  assert.ok(readonly.uncovered.includes('gchat/chat_get_notification_settings'));
   const readwrite = resolveScopes(google, 'readwrite').scopes;
   // Since 1.25.0 the list prefers the six scopes of Google's Chat MCP server: read-only spaces, members and messages,
   // messages.create for sending, and the two user-state scopes.
@@ -262,9 +264,14 @@ test('requirements: the gchat google list resolves to Chat user scopes only, nev
   ]);
   assert.deepEqual(resolveScopes(withoutPrefer(google), 'readwrite').scopes, [G('chat.memberships'), G('chat.messages'), G('chat.spaces'), G('chat.users.readstate'), G('chat.users.spacesettings')]);
   for (const app of ['chat.bot', 'chat.import']) assert.equal(readwrite.includes(G(app)), false, app);
-  // The all toolset resolves as before 1.12.0: its generated tools still list chat.bot and chat.import.
-  const all = resolveScopes(await requirementsFor(['gchat'], cfg, quiet), 'readwrite').scopes;
-  assert.ok(all.includes(G('chat.bot')) && all.includes(G('chat.import')));
+  // Since 2.3.0 the all toolset blocks the Chat app scopes for every profile (scopePolicy.onlyIn: []), so a readwrite
+  // login no longer asks a person to grant chat.bot or chat.import. The three app-only tools stay uncovered (they need
+  // an app's credentials), and the space delete takes chat.delete, the shortest scope it accepts.
+  const all = resolveScopes(await requirementsFor(['gchat'], cfg, quiet), 'readwrite');
+  assert.equal(all.scopes.includes(G('chat.bot')), false);
+  assert.equal(all.scopes.includes(G('chat.import')), false);
+  assert.ok(all.scopes.includes(G('chat.delete')));
+  assert.deepEqual(all.uncovered.sort(), ['gchat/chat_spaces_complete_import', 'gchat/chat_spaces_messages_attachments_get', 'gchat/chat_spaces_messages_replace_cards']);
 });
 
 test('requirements: the gcontacts google list resolves to contacts and directory scopes, no gateway method', async () => {

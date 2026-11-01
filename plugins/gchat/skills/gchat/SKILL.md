@@ -1,6 +1,6 @@
 ---
 name: gchat
-description: "Find and read Google Chat conversations, search messages across spaces, list members, send messages and thread replies, and mark conversations read; plus Workspace Events subscriptions."
+description: "Find and read Google Chat conversations, search messages across spaces, list members, send messages and thread replies, mark conversations read, and read or change notification settings; plus Workspace Events subscriptions."
 when_to_use: "Use when the person mentions Google Chat, a space, a direct message, a thread, or what colleagues said in Chat. Examples: \"what did the team say in Chat today\", \"search Chat for the deploy link\", \"post this in the Marketing space\"."
 ---
 
@@ -38,9 +38,15 @@ Only if the chat tools fail, the same steps in a terminal: `node "${CLAUDE_PLUGI
 
 1. `chat_list_members` with conversation_id.
 
+### 5. Quiet a conversation
+
+1. `chat_get_notification_settings` with conversation_id shows your setting for it, with a readwrite login.
+2. `chat_update_notification_settings` with notification_setting (ALL, MAIN_CONVERSATIONS, FOR_YOU, OFF) and/or mute_setting (MUTED, UNMUTED). It changes your setting only, and asks first.
+
 ## Notes
 
 - One message is at most 32,000 bytes.
+- A mention is Chat's tag, not @name: <chat-user data-email="ana@example.com"></chat-user>. A plain @name notifies no one.
 
 ## Untrusted content
 
@@ -52,7 +58,7 @@ Reads never ask for approval. Tools that change or delete data are listed only w
 
 ## Tools
 
-The `gchat` MCP server lists up to 76 tools with the `all` toolset: 35 read, 31 write, 10 destructive, counting its 7 runtime tools (`health` and the sign-in tools). Write and destructive tools are listed only when writes are allowed, and a tool loads only when the sign-in holds one of its scopes. The `google` toolset lists 9 of them plus the runtime tools.
+The `gchat` MCP server lists up to 78 tools with the `all` toolset: 36 read, 32 write, 10 destructive, counting its 7 runtime tools (`health` and the sign-in tools). Write and destructive tools are listed only when writes are allowed, and a tool loads only when the sign-in holds one of its scopes. The `google` toolset lists 9 of them plus the runtime tools.
 
 ## APIs
 
