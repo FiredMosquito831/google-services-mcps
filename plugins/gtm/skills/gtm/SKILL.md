@@ -27,12 +27,12 @@ Only if the chat tools fail, the same steps in a terminal: `node "${CLAUDE_PLUGI
 
 ### 2. Read the setup
 
-1. `tagmgr_accounts_containe_workspac_tags_list` with parent accounts/<a>/containers/<c>/workspaces/<w>; triggers and variables the same way.
+1. `tagmgr_accts_ctrs_ws_tags_list` with parent accounts/<a>/containers/<c>/workspaces/<w>; triggers and variables the same way.
 2. `tagmgr_accounts_containers_versions_live` shows what is published now.
 
 ### 3. Publish
 
-1. `tagmgr_accounts_containe_workspac_create_ve` makes a version from the workspace (Google then removes that workspace), then `tagmgr_accounts_containers_versions_publish` with the version path. Both ask twice.
+1. `tagmgr_accts_ctrs_ws_create_ver` makes a version from the workspace (Google then removes that workspace), then `tagmgr_accounts_containers_versions_publish` with the version path. Both ask twice.
 
 ## Untrusted content
 

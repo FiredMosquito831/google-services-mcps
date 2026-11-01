@@ -28,12 +28,12 @@ The tools that match Google's official MCP server for this product (https://deve
 | `classroom_create_topic` | `create_topic` |  |
 | `classroom_list_coursework` | `list_course_work_summaries` | Assignments, questions and materials of a course in one list (courseWork.list and courseWorkMaterials.list), published only unless include_drafts; include_submission_overview adds one studentSubmissions.list per item. Materials need a classroom.courseworkmaterials scope; without one the answer lists the coursework and says so. |
 | `classroom_get_coursework` | `get_course_work` |  |
-| `classroom_cour_cour_list_1590` | `list_course_work_summaries` | Generated from courseWorkMaterials.list. Kept so a readonly login of this toolset asks for classroom.courseworkmaterials.readonly, which classroom_list_coursework needs for the materials (one tool can declare only one any-of scope list). |
-| `classroom_cour_cour_crea_e311` | `create_course_work` | Generated from courseWork.create (assignments and questions): a raw CourseWork body. Classroom makes it a DRAFT unless state is set. Not curated in this release. |
-| `classroom_cour_cour_crea_3302` | `create_course_work` | Generated from courseWorkMaterials.create (materials): a raw CourseWorkMaterial body. Classroom makes it a DRAFT unless state is set. |
-| `classroom_cour_cour_patc_dea2` | `update_course_work` | Generated from courseWork.patch: updateMask names the fields to change. |
-| `classroom_cours_course_modify` | `update_course_work` | Generated from courseWork.modifyAssignees: adds or removes the students of a coursework item. |
-| `classroom_cour_cour_patc_480d` | `update_course_work` | Generated from courseWorkMaterials.patch: updateMask names the fields to change. |
+| `classroom_materials_list` | `list_course_work_summaries` | Generated from courseWorkMaterials.list. Kept so a readonly login of this toolset asks for classroom.courseworkmaterials.readonly, which classroom_list_coursework needs for the materials (one tool can declare only one any-of scope list). |
+| `classroom_courses_work_create` | `create_course_work` | Generated from courseWork.create (assignments and questions): a raw CourseWork body. Classroom makes it a DRAFT unless state is set. Not curated in this release. |
+| `classroom_materials_create` | `create_course_work` | Generated from courseWorkMaterials.create (materials): a raw CourseWorkMaterial body. Classroom makes it a DRAFT unless state is set. |
+| `classroom_courses_work_patch` | `update_course_work` | Generated from courseWork.patch: updateMask names the fields to change. |
+| `classr_work_modify_assignees` | `update_course_work` | Generated from courseWork.modifyAssignees: adds or removes the students of a coursework item. |
+| `classroom_materials_patch` | `update_course_work` | Generated from courseWorkMaterials.patch: updateMask names the fields to change. |
 | `classroom_list_submissions` | `list_course_work_submissions` |  |
 | `classroom_get_rubric` | `get_course_work_rubric` |  |
 | `classroom_create_rubric` | `create_course_work_rubric` | Google's learningGoalId comes from search_course_standards, which has no public REST method (no learning-standards method in Classroom v1 Discovery), so no tool here matches search_course_standards. Google takes rubrics only for coursework of the same Cloud project. |
@@ -73,111 +73,111 @@ The tools that match Google's official MCP server for this product (https://deve
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
-| `classroom_cou_cou_add_cr_a08b` | write | classroom.courses.courseWork.addOnAttachments.create | classroom.addons.teacher |
-| `classroom_cou_cou_add_cr_e443` | write | classroom.courses.courseWorkMaterials.addOnAttachments.create | classroom.addons.teacher |
-| `classroom_cou_cou_add_de_2e22` | destructive | classroom.courses.courseWorkMaterials.addOnAttachments.delete | classroom.addons.teacher |
-| `classroom_cou_cou_add_de_d490` | destructive | classroom.courses.courseWork.addOnAttachments.delete | classroom.addons.teacher |
-| `classroom_cou_cou_add_ge_0da6` | read | classroom.courses.courseWork.addOnAttachments.get | classroom.addons.student, classroom.addons.teacher |
-| `classroom_cou_cou_add_ge_d005` | read | classroom.courses.courseWorkMaterials.addOnAttachments.get | classroom.addons.student, classroom.addons.teacher |
-| `classroom_cou_cou_add_li_1406` | read | classroom.courses.courseWork.addOnAttachments.list | classroom.addons.student, classroom.addons.teacher |
-| `classroom_cou_cou_add_li_51f4` | read | classroom.courses.courseWorkMaterials.addOnAttachments.list | classroom.addons.student, classroom.addons.teacher |
-| `classroom_cou_cou_add_pa_3930` | write | classroom.courses.courseWorkMaterials.addOnAttachments.patch | classroom.addons.teacher |
-| `classroom_cou_cou_add_pa_e09c` | write | classroom.courses.courseWork.addOnAttachments.patch | classroom.addons.teacher |
-| `classroom_cou_cou_add_stu_get` | read | classroom.courses.courseWork.addOnAttachments.studentSubmissions.get | classroom.addons.student, classroom.addons.teacher |
-| `classroom_cou_cou_add_stu_lis` | read | classroom.courses.courseWork.addOnAttachments.studentSubmissions.list | classroom.addons.student, classroom.addons.teacher |
-| `classroom_cou_cou_add_stu_pat` | write | classroom.courses.courseWork.addOnAttachments.studentSubmissions.patch | classroom.addons.teacher |
-| `classroom_cou_pos_add_stu_get` | read | classroom.courses.posts.addOnAttachments.studentSubmissions.get | classroom.addons.student, classroom.addons.teacher |
-| `classroom_cou_pos_add_stu_pat` | write | classroom.courses.posts.addOnAttachments.studentSubmissions.patch | classroom.addons.teacher |
-| `classroom_cour_anno_add_creat` | write | classroom.courses.announcements.addOnAttachments.create | classroom.addons.teacher |
-| `classroom_cour_anno_add_delet` | destructive | classroom.courses.announcements.addOnAttachments.delete | classroom.addons.teacher |
-| `classroom_cour_anno_add_list` | read | classroom.courses.announcements.addOnAttachments.list | classroom.addons.student, classroom.addons.teacher |
-| `classroom_cour_anno_add_o_get` | read | classroom.courses.announcements.addOnAttachments.get | classroom.addons.student, classroom.addons.teacher |
-| `classroom_cour_anno_add_patch` | write | classroom.courses.announcements.addOnAttachments.patch | classroom.addons.teacher |
-| `classroom_cour_cour_crea_3302` | write | classroom.courses.courseWorkMaterials.create | classroom.courseworkmaterials |
-| `classroom_cour_cour_crea_e311` | write | classroom.courses.courseWork.create | classroom.coursework.students |
-| `classroom_cour_cour_dele_357c` | destructive | classroom.courses.courseWorkMaterials.delete | classroom.courseworkmaterials |
-| `classroom_cour_cour_dele_a017` | destructive | classroom.courses.courseWork.delete | classroom.coursework.students |
-| `classroom_cour_cour_get_33a3` | read | classroom.courses.courseWorkMaterials.getAddOnContext | classroom.addons.student, classroom.addons.teacher |
-| `classroom_cour_cour_get_b5b8` | read | classroom.courses.courseWork.getAddOnContext | classroom.addons.student, classroom.addons.teacher |
-| `classroom_cour_cour_list_1590` | read | classroom.courses.courseWorkMaterials.list | classroom.courseworkmaterials, classroom.courseworkmaterials.readonly |
-| `classroom_cour_cour_list_2b20` | read | classroom.courses.courseWork.list | classroom.coursework.me, classroom.coursework.me.readonly |
-| `classroom_cour_cour_patc_480d` | write | classroom.courses.courseWorkMaterials.patch | classroom.courseworkmaterials |
-| `classroom_cour_cour_patc_dea2` | write | classroom.courses.courseWork.patch | classroom.coursework.students |
-| `classroom_cour_cour_rubr_crea` | write | classroom.courses.courseWork.rubrics.create | classroom.coursework.students |
-| `classroom_cour_cour_rubr_dele` | destructive | classroom.courses.courseWork.rubrics.delete | classroom.coursework.students |
-| `classroom_cour_cour_rubr_list` | read | classroom.courses.courseWork.rubrics.list | classroom.coursework.me, classroom.coursework.me.readonly |
-| `classroom_cour_cour_rubr_patc` | write | classroom.courses.courseWork.rubrics.patch | classroom.coursework.students |
-| `classroom_cour_cour_rubri_get` | read | classroom.courses.courseWork.rubrics.get | classroom.coursework.me, classroom.coursework.me.readonly |
-| `classroom_cour_cour_stud_list` | read | classroom.courses.courseWork.studentSubmissions.list | classroom.coursework.me, classroom.coursework.me.readonly |
-| `classroom_cour_cour_stud_modi` | write | classroom.courses.courseWork.studentSubmissions.modifyAttachments | classroom.coursework.me, classroom.coursework.students |
-| `classroom_cour_cour_stud_patc` | write | classroom.courses.courseWork.studentSubmissions.patch | classroom.coursework.me, classroom.coursework.students |
-| `classroom_cour_cour_stud_recl` | write | classroom.courses.courseWork.studentSubmissions.reclaim | classroom.coursework.me |
-| `classroom_cour_cour_stud_retu` | destructive | classroom.courses.courseWork.studentSubmissions.return | classroom.coursework.students |
-| `classroom_cour_cour_stud_turn` | write | classroom.courses.courseWork.studentSubmissions.turnIn | classroom.coursework.me |
-| `classroom_cour_cour_stude_get` | read | classroom.courses.courseWork.studentSubmissions.get | classroom.coursework.me, classroom.coursework.me.readonly |
-| `classroom_cour_cours_get_17da` | read | classroom.courses.courseWorkMaterials.get | classroom.courseworkmaterials, classroom.courseworkmaterials.readonly |
-| `classroom_cour_cours_get_22e5` | read | classroom.courses.courseWork.get | classroom.coursework.me, classroom.coursework.me.readonly |
-| `classroom_cour_post_add_creat` | write | classroom.courses.posts.addOnAttachments.create | classroom.addons.teacher |
-| `classroom_cour_post_add_delet` | destructive | classroom.courses.posts.addOnAttachments.delete | classroom.addons.teacher |
-| `classroom_cour_post_add_list` | read | classroom.courses.posts.addOnAttachments.list | classroom.addons.student, classroom.addons.teacher |
-| `classroom_cour_post_add_o_get` | read | classroom.courses.posts.addOnAttachments.get | classroom.addons.student, classroom.addons.teacher |
-| `classroom_cour_post_add_patch` | write | classroom.courses.posts.addOnAttachments.patch | classroom.addons.teacher |
-| `classroom_cour_stud_crea_3f02` | write | classroom.courses.students.create | classroom.profile.emails, classroom.profile.photos |
-| `classroom_cour_stud_crea_8b4f` | write | classroom.courses.studentGroups.create | classroom.rosters |
-| `classroom_cour_stud_dele_42c2` | destructive | classroom.courses.students.delete | classroom.rosters |
-| `classroom_cour_stud_dele_e2fa` | destructive | classroom.courses.studentGroups.delete | classroom.rosters |
-| `classroom_cour_stud_list_140b` | read | classroom.courses.students.list | classroom.profile.emails, classroom.profile.photos |
-| `classroom_cour_stud_list_5754` | read | classroom.courses.studentGroups.list | classroom.rosters, classroom.rosters.readonly |
-| `classroom_cour_stud_stud_crea` | write | classroom.courses.studentGroups.studentGroupMembers.create | classroom.rosters |
-| `classroom_cour_stud_stud_dele` | destructive | classroom.courses.studentGroups.studentGroupMembers.delete | classroom.rosters |
-| `classroom_cour_stud_stud_list` | read | classroom.courses.studentGroups.studentGroupMembers.list | classroom.rosters, classroom.rosters.readonly |
-| `classroom_cours_aliase_create` | write | classroom.courses.aliases.create | classroom.courses |
-| `classroom_cours_aliase_delete` | destructive | classroom.courses.aliases.delete | classroom.courses |
-| `classroom_cours_announ_create` | write | classroom.courses.announcements.create | classroom.announcements |
-| `classroom_cours_announ_delete` | destructive | classroom.courses.announcements.delete | classroom.announcements |
-| `classroom_cours_announ_get_ad` | read | classroom.courses.announcements.getAddOnContext | classroom.addons.student, classroom.addons.teacher |
-| `classroom_cours_announ_modify` | write | classroom.courses.announcements.modifyAssignees | classroom.announcements |
-| `classroom_cours_course_modify` | write | classroom.courses.courseWork.modifyAssignees | classroom.coursework.students |
-| `classroom_cours_course_update` | write | classroom.courses.courseWork.updateRubric | classroom.coursework.students |
-| `classroom_cours_teache_create` | write | classroom.courses.teachers.create | classroom.profile.emails, classroom.profile.photos |
-| `classroom_cours_teache_delete` | destructive | classroom.courses.teachers.delete | classroom.rosters |
-| `classroom_cours_topics_create` | write | classroom.courses.topics.create | classroom.topics |
-| `classroom_cours_topics_delete` | destructive | classroom.courses.topics.delete | classroom.topics |
-| `classroom_course_aliases_list` | read | classroom.courses.aliases.list | classroom.courses, classroom.courses.readonly |
-| `classroom_course_announ_patch` | write | classroom.courses.announcements.patch | classroom.announcements |
-| `classroom_course_announc_list` | read | classroom.courses.announcements.list | classroom.announcements, classroom.announcements.readonly |
-| `classroom_course_posts_get_ad` | read | classroom.courses.posts.getAddOnContext | classroom.addons.student, classroom.addons.teacher |
-| `classroom_course_studen_patch` | write | classroom.courses.studentGroups.patch | classroom.rosters |
-| `classroom_course_teacher_list` | read | classroom.courses.teachers.list | classroom.profile.emails, classroom.profile.photos |
-| `classroom_course_topics_patch` | write | classroom.courses.topics.patch | classroom.topics |
-| `classroom_courses_announc_get` | read | classroom.courses.announcements.get | classroom.announcements, classroom.announcements.readonly |
+| `cla_materials_attachments_get` | read | classroom.courses.courseWorkMaterials.addOnAttachments.get | classroom.addons.student, classroom.addons.teacher |
+| `cla_profiles_invitations_list` | read | classroom.userProfiles.guardianInvitations.list | classroom.guardianlinks.students, classroom.guardianlinks.students.readonly |
+| `clas_posts_attachments_create` | write | classroom.courses.posts.addOnAttachments.create | classroom.addons.teacher |
+| `clas_posts_attachments_delete` | destructive | classroom.courses.posts.addOnAttachments.delete | classroom.addons.teacher |
+| `clas_posts_get_add_on_context` | read | classroom.courses.posts.getAddOnContext | classroom.addons.student, classroom.addons.teacher |
+| `clas_profiles_invitations_get` | read | classroom.userProfiles.guardianInvitations.get | classroom.guardianlinks.students, classroom.guardianlinks.students.readonly |
+| `clas_work_submissions_reclaim` | write | classroom.courses.courseWork.studentSubmissions.reclaim | classroom.coursework.me |
+| `clas_work_submissions_turn_in` | write | classroom.courses.courseWork.studentSubmissions.turnIn | classroom.coursework.me |
+| `class_courses_period_settings` | read | classroom.courses.getGradingPeriodSettings | classroom.courses, classroom.courses.readonly |
+| `class_posts_attachments_patch` | write | classroom.courses.posts.addOnAttachments.patch | classroom.addons.teacher |
+| `class_work_attachments_create` | write | classroom.courses.courseWork.addOnAttachments.create | classroom.addons.teacher |
+| `class_work_attachments_delete` | destructive | classroom.courses.courseWork.addOnAttachments.delete | classroom.addons.teacher |
+| `class_work_get_add_on_context` | read | classroom.courses.courseWork.getAddOnContext | classroom.addons.student, classroom.addons.teacher |
+| `class_work_submissions_return` | destructive | classroom.courses.courseWork.studentSubmissions.return | classroom.coursework.students |
+| `classr_announcements_create` | write | classroom.courses.announcements.create | classroom.announcements |
+| `classr_announcements_delete` | destructive | classroom.courses.announcements.delete | classroom.announcements |
+| `classr_groups_members_create` | write | classroom.courses.studentGroups.studentGroupMembers.create | classroom.rosters |
+| `classr_groups_members_delete` | destructive | classroom.courses.studentGroups.studentGroupMembers.delete | classroom.rosters |
+| `classr_posts_attachments_get` | read | classroom.courses.posts.addOnAttachments.get | classroom.addons.student, classroom.addons.teacher |
+| `classr_posts_attachments_list` | read | classroom.courses.posts.addOnAttachments.list | classroom.addons.student, classroom.addons.teacher |
+| `classr_work_attachments_get` | read | classroom.courses.courseWork.addOnAttachments.get | classroom.addons.student, classroom.addons.teacher |
+| `classr_work_attachments_list` | read | classroom.courses.courseWork.addOnAttachments.list | classroom.addons.student, classroom.addons.teacher |
+| `classr_work_attachments_patch` | write | classroom.courses.courseWork.addOnAttachments.patch | classroom.addons.teacher |
+| `classr_work_modify_assignees` | write | classroom.courses.courseWork.modifyAssignees | classroom.coursework.students |
+| `classr_work_submissions_get` | read | classroom.courses.courseWork.studentSubmissions.get | classroom.coursework.me, classroom.coursework.me.readonly |
+| `classr_work_submissions_list` | read | classroom.courses.courseWork.studentSubmissions.list | classroom.coursework.me, classroom.coursework.me.readonly |
+| `classr_work_submissions_patch` | write | classroom.courses.courseWork.studentSubmissions.patch | classroom.coursework.me, classroom.coursework.students |
+| `classroom_aliases_create` | write | classroom.courses.aliases.create | classroom.courses |
+| `classroom_aliases_delete` | destructive | classroom.courses.aliases.delete | classroom.courses |
+| `classroom_aliases_list` | read | classroom.courses.aliases.list | classroom.courses, classroom.courses.readonly |
+| `classroom_announcements_get` | read | classroom.courses.announcements.get | classroom.announcements, classroom.announcements.readonly |
+| `classroom_announcements_list` | read | classroom.courses.announcements.list | classroom.announcements, classroom.announcements.readonly |
+| `classroom_announcements_patch` | write | classroom.courses.announcements.patch | classroom.announcements |
+| `classroom_attachments_create` | write | classroom.courses.announcements.addOnAttachments.create | classroom.addons.teacher |
+| `classroom_attachments_delete` | destructive | classroom.courses.announcements.addOnAttachments.delete | classroom.addons.teacher |
+| `classroom_attachments_get` | read | classroom.courses.announcements.addOnAttachments.get | classroom.addons.student, classroom.addons.teacher |
+| `classroom_attachments_list` | read | classroom.courses.announcements.addOnAttachments.list | classroom.addons.student, classroom.addons.teacher |
+| `classroom_attachments_patch` | write | classroom.courses.announcements.addOnAttachments.patch | classroom.addons.teacher |
+| `classroom_cou_upd_gra_per_set` | write | classroom.courses.updateGradingPeriodSettings | classroom.courses |
+| `classroom_cou_wor_att_sub_get` | read | classroom.courses.courseWork.addOnAttachments.studentSubmissions.get | classroom.addons.student, classroom.addons.teacher |
+| `classroom_cou_wor_att_sub_pat` | write | classroom.courses.courseWork.addOnAttachments.studentSubmissions.patch | classroom.addons.teacher |
+| `classroom_cour_mate_atta_crea` | write | classroom.courses.courseWorkMaterials.addOnAttachments.create | classroom.addons.teacher |
+| `classroom_cour_mate_atta_dele` | destructive | classroom.courses.courseWorkMaterials.addOnAttachments.delete | classroom.addons.teacher |
+| `classroom_cour_mate_atta_list` | read | classroom.courses.courseWorkMaterials.addOnAttachments.list | classroom.addons.student, classroom.addons.teacher |
+| `classroom_cour_mate_atta_patc` | write | classroom.courses.courseWorkMaterials.addOnAttachments.patch | classroom.addons.teacher |
 | `classroom_courses_create` | write | classroom.courses.create | classroom.courses |
 | `classroom_courses_delete` | destructive | classroom.courses.delete | classroom.courses |
 | `classroom_courses_get` | read | classroom.courses.get | classroom.courses, classroom.courses.readonly |
-| `classroom_courses_get_grading` | read | classroom.courses.getGradingPeriodSettings | classroom.courses, classroom.courses.readonly |
+| `classroom_courses_groups_list` | read | classroom.courses.studentGroups.list | classroom.rosters, classroom.rosters.readonly |
 | `classroom_courses_list` | read | classroom.courses.list | classroom.courses, classroom.courses.readonly |
 | `classroom_courses_patch` | write | classroom.courses.patch | classroom.courses |
-| `classroom_courses_student_get` | read | classroom.courses.students.get | classroom.profile.emails, classroom.profile.photos |
-| `classroom_courses_teacher_get` | read | classroom.courses.teachers.get | classroom.profile.emails, classroom.profile.photos |
 | `classroom_courses_topics_get` | read | classroom.courses.topics.get | classroom.topics, classroom.topics.readonly |
 | `classroom_courses_topics_list` | read | classroom.courses.topics.list | classroom.topics, classroom.topics.readonly |
 | `classroom_courses_update` | write | classroom.courses.update | classroom.courses |
-| `classroom_courses_update_grad` | write | classroom.courses.updateGradingPeriodSettings | classroom.courses |
+| `classroom_courses_work_create` | write | classroom.courses.courseWork.create | classroom.coursework.students |
+| `classroom_courses_work_delete` | destructive | classroom.courses.courseWork.delete | classroom.coursework.students |
+| `classroom_courses_work_get` | read | classroom.courses.courseWork.get | classroom.coursework.me, classroom.coursework.me.readonly |
+| `classroom_courses_work_list` | read | classroom.courses.courseWork.list | classroom.coursework.me, classroom.coursework.me.readonly |
+| `classroom_courses_work_patch` | write | classroom.courses.courseWork.patch | classroom.coursework.students |
+| `classroom_create` | write | classroom.registrations.create | classroom.push-notifications |
+| `classroom_delete` | destructive | classroom.registrations.delete | classroom.push-notifications |
+| `classroom_get_add_on_context` | read | classroom.courses.announcements.getAddOnContext | classroom.addons.student, classroom.addons.teacher |
+| `classroom_groups_create` | write | classroom.courses.studentGroups.create | classroom.rosters |
+| `classroom_groups_delete` | destructive | classroom.courses.studentGroups.delete | classroom.rosters |
+| `classroom_groups_members_list` | read | classroom.courses.studentGroups.studentGroupMembers.list | classroom.rosters, classroom.rosters.readonly |
+| `classroom_groups_patch` | write | classroom.courses.studentGroups.patch | classroom.rosters |
+| `classroom_guardians_delete` | destructive | classroom.userProfiles.guardians.delete | classroom.guardianlinks.students |
+| `classroom_guardians_get` | read | classroom.userProfiles.guardians.get | classroom.guardianlinks.me.readonly, classroom.guardianlinks.students |
+| `classroom_guardians_list` | read | classroom.userProfiles.guardians.list | classroom.guardianlinks.me.readonly, classroom.guardianlinks.students |
 | `classroom_invitations_accept` | write | classroom.invitations.accept | classroom.rosters |
 | `classroom_invitations_create` | destructive | classroom.invitations.create | classroom.rosters |
 | `classroom_invitations_delete` | destructive | classroom.invitations.delete | classroom.rosters |
 | `classroom_invitations_get` | read | classroom.invitations.get | classroom.rosters, classroom.rosters.readonly |
 | `classroom_invitations_list` | read | classroom.invitations.list | classroom.rosters, classroom.rosters.readonly |
-| `classroom_registration_create` | write | classroom.registrations.create | classroom.push-notifications |
-| `classroom_registration_delete` | destructive | classroom.registrations.delete | classroom.push-notifications |
-| `classroom_user_guar_list_8842` | read | classroom.userProfiles.guardians.list | classroom.guardianlinks.me.readonly, classroom.guardianlinks.students |
-| `classroom_user_guar_list_bc1c` | read | classroom.userProfiles.guardianInvitations.list | classroom.guardianlinks.students, classroom.guardianlinks.students.readonly |
-| `classroom_user_guard_get_8b7f` | read | classroom.userProfiles.guardians.get | classroom.guardianlinks.me.readonly, classroom.guardianlinks.students |
-| `classroom_user_guard_get_ed3d` | read | classroom.userProfiles.guardianInvitations.get | classroom.guardianlinks.students, classroom.guardianlinks.students.readonly |
-| `classroom_user_guardi_create` | destructive | classroom.userProfiles.guardianInvitations.create | classroom.guardianlinks.students |
-| `classroom_user_guardi_delete` | destructive | classroom.userProfiles.guardians.delete | classroom.guardianlinks.students |
-| `classroom_user_p_guardi_patch` | write | classroom.userProfiles.guardianInvitations.patch | classroom.guardianlinks.students |
+| `classroom_invitations_patch` | write | classroom.userProfiles.guardianInvitations.patch | classroom.guardianlinks.students |
+| `classroom_mat_get_add_on_cont` | read | classroom.courses.courseWorkMaterials.getAddOnContext | classroom.addons.student, classroom.addons.teacher |
+| `classroom_materials_create` | write | classroom.courses.courseWorkMaterials.create | classroom.courseworkmaterials |
+| `classroom_materials_delete` | destructive | classroom.courses.courseWorkMaterials.delete | classroom.courseworkmaterials |
+| `classroom_materials_get` | read | classroom.courses.courseWorkMaterials.get | classroom.courseworkmaterials, classroom.courseworkmaterials.readonly |
+| `classroom_materials_list` | read | classroom.courses.courseWorkMaterials.list | classroom.courseworkmaterials, classroom.courseworkmaterials.readonly |
+| `classroom_materials_patch` | write | classroom.courses.courseWorkMaterials.patch | classroom.courseworkmaterials |
+| `classroom_modify_assignees` | write | classroom.courses.announcements.modifyAssignees | classroom.announcements |
+| `classroom_modify_attachments` | write | classroom.courses.courseWork.studentSubmissions.modifyAttachments | classroom.coursework.me, classroom.coursework.students |
+| `classroom_students_create` | write | classroom.courses.students.create | classroom.profile.emails, classroom.profile.photos |
+| `classroom_students_delete` | destructive | classroom.courses.students.delete | classroom.rosters |
+| `classroom_students_get` | read | classroom.courses.students.get | classroom.profile.emails, classroom.profile.photos |
+| `classroom_students_list` | read | classroom.courses.students.list | classroom.profile.emails, classroom.profile.photos |
+| `classroom_submissions_get` | read | classroom.courses.posts.addOnAttachments.studentSubmissions.get | classroom.addons.student, classroom.addons.teacher |
+| `classroom_submissions_list` | read | classroom.courses.courseWork.addOnAttachments.studentSubmissions.list | classroom.addons.student, classroom.addons.teacher |
+| `classroom_submissions_patch` | write | classroom.courses.posts.addOnAttachments.studentSubmissions.patch | classroom.addons.teacher |
+| `classroom_teachers_create` | write | classroom.courses.teachers.create | classroom.profile.emails, classroom.profile.photos |
+| `classroom_teachers_delete` | destructive | classroom.courses.teachers.delete | classroom.rosters |
+| `classroom_teachers_get` | read | classroom.courses.teachers.get | classroom.profile.emails, classroom.profile.photos |
+| `classroom_teachers_list` | read | classroom.courses.teachers.list | classroom.profile.emails, classroom.profile.photos |
+| `classroom_topics_create` | write | classroom.courses.topics.create | classroom.topics |
+| `classroom_topics_delete` | destructive | classroom.courses.topics.delete | classroom.topics |
+| `classroom_topics_patch` | write | classroom.courses.topics.patch | classroom.topics |
+| `classroom_use_pro_gua_inv_cre` | destructive | classroom.userProfiles.guardianInvitations.create | classroom.guardianlinks.students |
 | `classroom_user_profiles_get` | read | classroom.userProfiles.get | classroom.profile.emails, classroom.profile.photos |
+| `classroom_work_rubrics_create` | write | classroom.courses.courseWork.rubrics.create | classroom.coursework.students |
+| `classroom_work_rubrics_delete` | destructive | classroom.courses.courseWork.rubrics.delete | classroom.coursework.students |
+| `classroom_work_rubrics_get` | read | classroom.courses.courseWork.rubrics.get | classroom.coursework.me, classroom.coursework.me.readonly |
+| `classroom_work_rubrics_list` | read | classroom.courses.courseWork.rubrics.list | classroom.coursework.me, classroom.coursework.me.readonly |
+| `classroom_work_rubrics_patch` | write | classroom.courses.courseWork.rubrics.patch | classroom.coursework.students |
+| `classroom_work_update_rubric` | write | classroom.courses.courseWork.updateRubric | classroom.coursework.students |
 
 ## Listing tool (1)
 

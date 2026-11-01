@@ -339,18 +339,18 @@ test("the gfirebase google list covers Google's Firebase tools that call an API,
   const kind = (name) => map.find((t) => t.name === `mcp__plugin_gfirebase_gfirebase__${name}`)?.kind;
   const writes = [
     'firebase_projects_add_firebase',
-    'firebase_project_web_app_create',
-    'firebase_project_android_create',
-    'firebase_project_ios_app_create',
-    'firebase_proje_andro_sha_create',
-    'firebasecr_proj_apps_issu_patch',
-    'firebasecr_pro_app_iss_not_crea',
-    'firebaseda_pro_loc_ser_exe_1fce',
+    'firebase_web_apps_create',
+    'firebase_android_apps_create',
+    'firebase_ios_apps_create',
+    'firebase_apps_sha_create',
+    'firebasecr_apps_issues_patch',
+    'firebasecr_issues_notes_create',
+    'firebaseda_execute_graphql',
   ];
-  const destructive = ['firebasecr_pro_app_iss_not_dele', 'fcm_projects_messages_send'];
+  const destructive = ['firebasecr_issues_notes_delete', 'fcm_projects_messages_send'];
   for (const name of google.tools) assert.equal(kind(name), writes.includes(name) ? 'write' : destructive.includes(name) ? 'destructive' : 'read', name);
   // The POST reads Google marks read-only are reads here since D2 (1.24.2), and each note says so.
-  for (const name of ['firebaseru_projects_test', 'firebaseda_pro_loc_ser_exe_3072', 'firebaseda_pro_loc_ser_gen_8f53', 'firebaseda_pro_loc_ser_gen_cf40']) {
+  for (const name of ['firebaseru_projects_test', 'firebaseda_execute_graphql_read', 'firebaseda_generate_query', 'firebaseda_generate_schema']) {
     assert.equal(kind(name), 'read', name);
     assert.match(google.notes[name], /D2/, name);
   }

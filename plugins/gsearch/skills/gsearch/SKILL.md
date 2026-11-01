@@ -18,12 +18,12 @@ No sign-in: this server uses an API key stored on this machine. A key is never p
 
 ### 1. Google developer docs
 
-1. `developerk_documents_search_documen` with query, then `developerk_documents_batch_get` with the document names it returned for the full text.
+1. `developerk_docs_search_doc_chunks` with query, then `developerk_documents_batch_get` with the document names it returned for the full text.
 2. `developerk_v1_answer_query` answers a question from the docs.
 
 ### 2. Page speed and Core Web Vitals
 
-1. `pagespeedo_pagespeedap_runpagespeed` with url and strategy (mobile or desktop).
+1. `pagespeed_pagespeedapi_runpagespeed` with url and strategy (mobile or desktop).
 2. `chromeuxre_records_query_record` with a body naming url or origin, for real-user data.
 
 ### 3. Is a URL safe

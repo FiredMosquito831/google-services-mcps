@@ -29,8 +29,8 @@ The tools that match Google's official MCP server for this product (https://deve
 | `chat_send_message` | `send_message` | Text in Markdown (or Chat's own syntax), as a new thread or a reply. Google's cards and citations are left out: only Chat apps can post them. |
 | `chat_mark_read` | `mark_as_read` | Conversations only, up to 10 a call, each its own request with its own failure. Google's thread_ids have no public REST method (the Chat API has getThreadReadState only). |
 | `chat_mark_unread` | `mark_as_unread` | Conversations only; a thread's read state has no public REST method. |
-| `chat_users_spaces_space_notificatio_get` | `get_notification_settings` | Generated from spaceNotificationSetting.get: name is users/me/spaces/{space}/spaceNotificationSetting. |
-| `chat_users_spaces_space_notificat_patch` | `update_notification_settings` | Generated from spaceNotificationSetting.patch: name is users/me/spaces/{space}/spaceNotificationSetting, updateMask notification_setting and/or mute_setting. A write, so it asks first. |
+| `chat_spaces_space_notif_setting_get` | `get_notification_settings` | Generated from spaceNotificationSetting.get: name is users/me/spaces/{space}/spaceNotificationSetting. |
+| `chat_spaces_space_notif_setting_patch` | `update_notification_settings` | Generated from spaceNotificationSetting.patch: name is users/me/spaces/{space}/spaceNotificationSetting, updateMask notification_setting and/or mute_setting. A write, so it asks first. |
 
 ## Curated tools (14)
 
@@ -59,6 +59,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `chat_custom_emojis_delete` | destructive | chat.customEmojis.delete | chat.customemojis |
 | `chat_custom_emojis_get` | read | chat.customEmojis.get | chat.customemojis, chat.customemojis.readonly |
 | `chat_custom_emojis_list` | read | chat.customEmojis.list | chat.customemojis, chat.customemojis.readonly |
+| `chat_mark_as_do_not_disturb` | write | chat.users.availability.markAsDoNotDisturb | chat.users.availability |
 | `chat_media_download` | read | chat.media.download | chat.bot, chat.messages |
 | `chat_spaces_complete_import` | write | chat.spaces.completeImport | chat.import |
 | `chat_spaces_create` | write | chat.spaces.create | chat.app.spaces, chat.app.spaces.create |
@@ -92,10 +93,13 @@ The tools that match Google's official MCP server for this product (https://deve
 | `chat_spaces_setup` | write | chat.spaces.setup | chat.spaces, chat.spaces.create |
 | `chat_spaces_space_events_get` | read | chat.spaces.spaceEvents.get | chat.app.all.memberships.readonly, chat.app.all.messages.readonly |
 | `chat_spaces_space_events_list` | read | chat.spaces.spaceEvents.list | chat.app.all.memberships.readonly, chat.app.all.messages.readonly |
+| `chat_spaces_space_notif_setting_get` | read | chat.users.spaces.spaceNotificationSetting.get | chat.users.spacesettings |
+| `chat_spaces_space_notif_setting_patch` | write | chat.users.spaces.spaceNotificationSetting.patch | chat.users.spacesettings |
+| `chat_spaces_update_space_read_state` | write | chat.users.spaces.updateSpaceReadState | chat.users.readstate |
+| `chat_threads_get_thread_read_state` | read | chat.users.spaces.threads.getThreadReadState | chat.users.readstate, chat.users.readstate.readonly |
 | `chat_users_availability_get` | read | chat.users.availability.get | chat.users.availability, chat.users.availability.readonly |
 | `chat_users_availability_mark_as_active` | write | chat.users.availability.markAsActive | chat.users.availability |
 | `chat_users_availability_mark_as_away` | write | chat.users.availability.markAsAway | chat.users.availability |
-| `chat_users_availability_mark_as_do_not` | write | chat.users.availability.markAsDoNotDisturb | chat.users.availability |
 | `chat_users_availability_patch` | write | chat.users.availability.patch | chat.users.availability |
 | `chat_users_sections_create` | write | chat.users.sections.create | chat.users.sections |
 | `chat_users_sections_delete` | destructive | chat.users.sections.delete | chat.users.sections |
@@ -105,10 +109,6 @@ The tools that match Google's official MCP server for this product (https://deve
 | `chat_users_sections_patch` | write | chat.users.sections.patch | chat.users.sections |
 | `chat_users_sections_position` | write | chat.users.sections.position | chat.users.sections |
 | `chat_users_spaces_get_space_read_state` | read | chat.users.spaces.getSpaceReadState | chat.users.readstate, chat.users.readstate.readonly |
-| `chat_users_spaces_space_notificat_patch` | write | chat.users.spaces.spaceNotificationSetting.patch | chat.users.spacesettings |
-| `chat_users_spaces_space_notificatio_get` | read | chat.users.spaces.spaceNotificationSetting.get | chat.users.spacesettings |
-| `chat_users_spaces_threads_get_thread_re` | read | chat.users.spaces.threads.getThreadReadState | chat.users.readstate, chat.users.readstate.readonly |
-| `chat_users_spaces_update_space_read_sta` | write | chat.users.spaces.updateSpaceReadState | chat.users.readstate |
 | `workspacee_operations_get` | read | workspaceevents.operations.get | chat.bot, chat.memberships |
 | `workspacee_subscriptions_create` | write | workspaceevents.subscriptions.create | chat.app.all.memberships.readonly, chat.app.all.messages.readonly |
 | `workspacee_subscriptions_delete` | destructive | workspaceevents.subscriptions.delete | chat.bot, chat.memberships |

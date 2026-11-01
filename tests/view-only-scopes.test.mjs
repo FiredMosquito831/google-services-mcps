@@ -84,7 +84,7 @@ test('real data: readonly takes monitoring.read for gcloud and script.processes 
   const gapps = await requirementsFor(['gapps'], cfg, quiet);
   const a = resolveScopes(gapps, 'readonly');
   assert.deepEqual(a.scopes, [G('script.deployments.readonly'), G('script.metrics'), G('script.processes'), G('script.projects.readonly')]);
-  for (const tool of ['appsscript_processes_list', 'appsscript_processes_list_script_proces', 'appsscript_projects_get_metrics']) assert.ok(a.covered.includes(`gapps/${tool}`), tool);
+  for (const tool of ['appsscript_processes_list', 'appsscript_processes_list', 'appsscript_projects_get_metrics']) assert.ok(a.covered.includes(`gapps/${tool}`), tool);
 });
 
 test('every readonly resolution, for every server and toolset, asks only for view-only scopes', async () => {

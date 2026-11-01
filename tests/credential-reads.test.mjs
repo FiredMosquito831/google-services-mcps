@@ -30,7 +30,7 @@ const kindsFile = readJson('config', 'tool-kinds.json');
 
 /** The owner's set: three Google Ads methods, and the four Vertex AI countTokens bindings. */
 const ADS_READS = [
-  { id: 'googleads.customers.generateKeywordIdeas', tool: 'mcp__plugin_gads_gads__googleads_customers_generate_keyword_idea' },
+  { id: 'googleads.customers.generateKeywordIdeas', tool: 'mcp__plugin_gads_gads__googleads_generate_keyword_ideas' },
   { id: 'googleads.customers.generateKeywordHistoricalMetrics', tool: null },
   { id: 'googleads.customers.suggestKeywordThemes', tool: null },
 ];
@@ -138,7 +138,7 @@ test('the generated tool is listed with writes off, and the gateway methods no l
   } finally {
     await client.close();
   }
-  assert.ok(names.includes('googleads_customers_generate_keyword_idea'), 'the read tool is listed with writes off');
+  assert.ok(names.includes('googleads_generate_keyword_ideas'), 'the read tool is listed with writes off');
 });
 
 test('the bundled hook asks nothing for them, and still asks for the copies left out', () => {
@@ -160,7 +160,7 @@ test('the bundled hook asks nothing for them, and still asks for the copies left
 
   // The generated read tool, and the three gateway methods through api_call: no output at all, so Claude Code runs
   // its normal permission flow as for any other read.
-  assert.equal(decision(gadsHook, event('mcp__plugin_gads_gads__googleads_customers_generate_keyword_idea', {})), '', 'the generated tool');
+  assert.equal(decision(gadsHook, event('mcp__plugin_gads_gads__googleads_generate_keyword_ideas', {})), '', 'the generated tool');
   for (const m of ADS_READS) {
     assert.equal(decision(gadsHook, event('mcp__plugin_gads_gads__api_call', { method: m.id, body: {} })), '', `gads api_call ${m.id}`);
   }

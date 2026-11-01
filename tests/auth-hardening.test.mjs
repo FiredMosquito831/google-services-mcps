@@ -206,7 +206,7 @@ test('the curated reveal tool and the billing account move are writes, in the ki
   const map = JSON.parse(readFileSync(join(REPO, 'plugins', 'gcloud', 'tool-map.json'), 'utf8'));
   const byName = new Map(map.map((tool) => [tool.name, tool]));
   assert.equal(byName.get('mcp__plugin_gcloud_gcloud__cloud_apikey_reveal').kind, 'write');
-  assert.equal(byName.get('mcp__plugin_gcloud_gcloud__billing_organizatio_billing_acco_move').kind, 'write');
+  assert.equal(byName.get('mcp__plugin_gcloud_gcloud__billing_orgs_billing_accts_move').kind, 'write');
 });
 
 /** Starts a plugin server with a temporary token folder, and talks to it over stdio. */

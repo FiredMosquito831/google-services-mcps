@@ -31,10 +31,10 @@
       ],
       "toolsets": {
         "google": [
-          "gaadmin_account_summarie_list",
+          "gaadmin_acct_summaries_list",
           "gaadmin_properties_get",
-          "gaadmin_propert_google_a_list",
-          "gadata_properties_get_metadat",
+          "gaadmin_pro_goo_ads_link_list",
+          "gadata_props_get_meta",
           "ga_run_report",
           "ga_run_realtime_report",
           "ga_run_funnel_report",

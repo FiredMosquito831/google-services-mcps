@@ -80,97 +80,7 @@
     "title": "Sign-in status"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__devicerun_proj_loca_opera_cance",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "devicerun.projects.locations.operations.cancel",
-    "title": "devicerun.projects.locations.operations.cancel"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__devicerun_proj_loca_opera_delet",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "devicerun.projects.locations.operations.delete",
-    "title": "devicerun.projects.locations.operations.delete"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__devicerun_proj_loca_sessi_batch",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "devicerun.projects.locations.sessions.batchGet",
-    "title": "devicerun.projects.locations.sessions.batchGet"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__devicerun_proj_loca_sessi_cance",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "devicerun.projects.locations.sessions.cancel",
-    "title": "devicerun.projects.locations.sessions.cancel"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__devicerun_proj_loca_sessi_creat",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "devicerun.projects.locations.sessions.create",
-    "title": "devicerun.projects.locations.sessions.create"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__devicerun_proj_loca_sessi_delet",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "devicerun.projects.locations.sessions.delete",
-    "title": "devicerun.projects.locations.sessions.delete"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__devicerun_proj_locat_devic_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "devicerun.projects.locations.devices.list",
-    "title": "devicerun.projects.locations.devices.list"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__devicerun_proj_locat_opera_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "devicerun.projects.locations.operations.list",
-    "title": "devicerun.projects.locations.operations.list"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__devicerun_proj_locat_sessi_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "devicerun.projects.locations.sessions.list",
-    "title": "devicerun.projects.locations.sessions.list"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__devicerun_proj_locat_softw_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "devicerun.projects.locations.softwareVersions.list",
-    "title": "devicerun.projects.locations.softwareVersions.list"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__devicerun_proje_locat_devic_get",
+    "name": "mcp__plugin_gfirebase_gfirebase__devicerun_devices_get",
     "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"
@@ -179,43 +89,16 @@
     "title": "devicerun.projects.locations.devices.get"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__devicerun_proje_locat_opera_get",
+    "name": "mcp__plugin_gfirebase_gfirebase__devicerun_devices_list",
     "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"
     ],
-    "methodId": "devicerun.projects.locations.operations.get",
-    "title": "devicerun.projects.locations.operations.get"
+    "methodId": "devicerun.projects.locations.devices.list",
+    "title": "devicerun.projects.locations.devices.list"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__devicerun_proje_locat_sessi_get",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "devicerun.projects.locations.sessions.get",
-    "title": "devicerun.projects.locations.sessions.get"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__devicerun_proje_locat_softw_get",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "devicerun.projects.locations.softwareVersions.get",
-    "title": "devicerun.projects.locations.softwareVersions.get"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__devicerun_project_location_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "devicerun.projects.locations.list",
-    "title": "devicerun.projects.locations.list"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__devicerun_projects_location_get",
+    "name": "mcp__plugin_gfirebase_gfirebase__devicerun_get",
     "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"
@@ -224,54 +107,121 @@
     "title": "devicerun.projects.locations.get"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__fcm_projec_regist_topic_create",
-    "kind": "write",
+    "name": "mcp__plugin_gfirebase_gfirebase__devicerun_list",
+    "kind": "read",
     "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase.messaging"
+      "https://www.googleapis.com/auth/cloud-platform"
     ],
-    "methodId": "fcm.projects.registrations.topicSubscriptions.create",
-    "title": "fcm.projects.registrations.topicSubscriptions.create"
+    "methodId": "devicerun.projects.locations.list",
+    "title": "devicerun.projects.locations.list"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__fcm_projec_regist_topic_delete",
+    "name": "mcp__plugin_gfirebase_gfirebase__devicerun_operations_cancel",
     "kind": "destructive",
     "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase.messaging"
+      "https://www.googleapis.com/auth/cloud-platform"
     ],
-    "methodId": "fcm.projects.registrations.topicSubscriptions.delete",
-    "title": "fcm.projects.registrations.topicSubscriptions.delete"
+    "methodId": "devicerun.projects.locations.operations.cancel",
+    "title": "devicerun.projects.locations.operations.cancel"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__fcm_projec_regist_topic_s_patch",
+    "name": "mcp__plugin_gfirebase_gfirebase__devicerun_operations_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "devicerun.projects.locations.operations.delete",
+    "title": "devicerun.projects.locations.operations.delete"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__devicerun_operations_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "devicerun.projects.locations.operations.get",
+    "title": "devicerun.projects.locations.operations.get"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__devicerun_operations_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "devicerun.projects.locations.operations.list",
+    "title": "devicerun.projects.locations.operations.list"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__devicerun_sessions_batch_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "devicerun.projects.locations.sessions.batchGet",
+    "title": "devicerun.projects.locations.sessions.batchGet"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__devicerun_sessions_cancel",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "devicerun.projects.locations.sessions.cancel",
+    "title": "devicerun.projects.locations.sessions.cancel"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__devicerun_sessions_create",
     "kind": "write",
     "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase.messaging"
+      "https://www.googleapis.com/auth/cloud-platform"
     ],
-    "methodId": "fcm.projects.registrations.topicSubscriptions.patch",
-    "title": "fcm.projects.registrations.topicSubscriptions.patch"
+    "methodId": "devicerun.projects.locations.sessions.create",
+    "title": "devicerun.projects.locations.sessions.create"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__fcm_projec_registr_topic_s_list",
-    "kind": "read",
+    "name": "mcp__plugin_gfirebase_gfirebase__devicerun_sessions_delete",
+    "kind": "destructive",
     "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase.messaging"
+      "https://www.googleapis.com/auth/cloud-platform"
     ],
-    "methodId": "fcm.projects.registrations.topicSubscriptions.list",
-    "title": "fcm.projects.registrations.topicSubscriptions.list"
+    "methodId": "devicerun.projects.locations.sessions.delete",
+    "title": "devicerun.projects.locations.sessions.delete"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__fcm_project_registr_topic_s_get",
+    "name": "mcp__plugin_gfirebase_gfirebase__devicerun_sessions_get",
     "kind": "read",
     "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase.messaging"
+      "https://www.googleapis.com/auth/cloud-platform"
     ],
-    "methodId": "fcm.projects.registrations.topicSubscriptions.get",
-    "title": "fcm.projects.registrations.topicSubscriptions.get"
+    "methodId": "devicerun.projects.locations.sessions.get",
+    "title": "devicerun.projects.locations.sessions.get"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__devicerun_sessions_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "devicerun.projects.locations.sessions.list",
+    "title": "devicerun.projects.locations.sessions.list"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__devicerun_software_vers_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "devicerun.projects.locations.softwareVersions.list",
+    "title": "devicerun.projects.locations.softwareVersions.list"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__devicerun_software_versions_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "devicerun.projects.locations.softwareVersions.get",
+    "title": "devicerun.projects.locations.softwareVersions.get"
   },
   {
     "name": "mcp__plugin_gfirebase_gfirebase__fcm_projects_messages_send",
@@ -284,7 +234,57 @@
     "title": "fcm.projects.messages.send"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__fcmdata_proje_andro_delive_list",
+    "name": "mcp__plugin_gfirebase_gfirebase__fcm_registrations_subs_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase.messaging"
+    ],
+    "methodId": "fcm.projects.registrations.topicSubscriptions.create",
+    "title": "fcm.projects.registrations.topicSubscriptions.create"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__fcm_registrations_subs_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase.messaging"
+    ],
+    "methodId": "fcm.projects.registrations.topicSubscriptions.delete",
+    "title": "fcm.projects.registrations.topicSubscriptions.delete"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__fcm_registrations_subs_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase.messaging"
+    ],
+    "methodId": "fcm.projects.registrations.topicSubscriptions.get",
+    "title": "fcm.projects.registrations.topicSubscriptions.get"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__fcm_registrations_subs_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase.messaging"
+    ],
+    "methodId": "fcm.projects.registrations.topicSubscriptions.list",
+    "title": "fcm.projects.registrations.topicSubscriptions.list"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__fcm_registrations_subs_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase.messaging"
+    ],
+    "methodId": "fcm.projects.registrations.topicSubscriptions.patch",
+    "title": "fcm.projects.registrations.topicSubscriptions.patch"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__fcmdata_apps_delivery_data_list",
     "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"
@@ -293,7 +293,190 @@
     "title": "fcmdata.projects.androidApps.deliveryData.list"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebase_available_project_list",
+    "name": "mcp__plugin_gfirebase_gfirebase__fir_app_attest_config_batch_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebaseappcheck.projects.apps.appAttestConfig.batchGet",
+    "title": "firebaseappcheck.projects.apps.appAttestConfig.batchGet"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__fir_connectors_execute_mutation",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebasedataconnect.projects.locations.services.connectors.executeMutation",
+    "title": "firebasedataconnect.projects.locations.services.connectors.executeMutation"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__fir_exchange_device_check_token",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebaseappcheck.projects.apps.exchangeDeviceCheckToken",
+    "title": "firebaseappcheck.projects.apps.exchangeDeviceCheckToken"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__fir_exchange_recaptcha_v3_token",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebaseappcheck.projects.apps.exchangeRecaptchaV3Token",
+    "title": "firebaseappcheck.projects.apps.exchangeRecaptchaV3Token"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__fir_play_integrity_config_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebaseappcheck.projects.apps.playIntegrityConfig.patch",
+    "title": "firebaseappcheck.projects.apps.playIntegrityConfig.patch"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__fir_rpc_postgrest_call_function",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebasedataconnect.projects.locations.services.postgrest.rpc.postgrestCallFunction",
+    "title": "firebasedataconnect.projects.locations.services.postgrest.rpc.postgrestCallFunction"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__fire_clients_attest_attestation",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebaseappcheck.oauthClients.exchangeAppAttestAttestation",
+    "title": "firebaseappcheck.oauthClients.exchangeAppAttestAttestation"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__fire_postgrest_postgrest_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebasedataconnect.projects.locations.services.postgrest.postgrestDelete",
+    "title": "firebasedataconnect.projects.locations.services.postgrest.postgrestDelete"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__fire_postgrest_postgrest_insert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebasedataconnect.projects.locations.services.postgrest.postgrestInsert",
+    "title": "firebasedataconnect.projects.locations.services.postgrest.postgrestInsert"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__fire_postgrest_postgrest_select",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebasedataconnect.projects.locations.services.postgrest.postgrestSelect",
+    "title": "firebasedataconnect.projects.locations.services.postgrest.postgrestSelect"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__fire_postgrest_postgrest_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebasedataconnect.projects.locations.services.postgrest.postgrestUpdate",
+    "title": "firebasedataconnect.projects.locations.services.postgrest.postgrestUpdate"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__fire_postgrest_postgrest_upsert",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebasedataconnect.projects.locations.services.postgrest.postgrestUpsert",
+    "title": "firebasedataconnect.projects.locations.services.postgrest.postgrestUpsert"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__fireb_device_check_config_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebaseappcheck.projects.apps.deviceCheckConfig.patch",
+    "title": "firebaseappcheck.projects.apps.deviceCheckConfig.patch"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__fireb_play_integrity_config_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebaseappcheck.projects.apps.playIntegrityConfig.get",
+    "title": "firebaseappcheck.projects.apps.playIntegrityConfig.get"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__fireb_projects_apps_debug_token",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebaseappcheck.projects.apps.exchangeDebugToken",
+    "title": "firebaseappcheck.projects.apps.exchangeDebugToken"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__fireb_recaptcha_v3_config_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebaseappcheck.projects.apps.recaptchaV3Config.patch",
+    "title": "firebaseappcheck.projects.apps.recaptchaV3Config.patch"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__fireba_app_attest_config_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebaseappcheck.projects.apps.appAttestConfig.patch",
+    "title": "firebaseappcheck.projects.apps.appAttestConfig.patch"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__fireba_apps_attest_attestation",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebaseappcheck.projects.apps.exchangeAppAttestAttestation",
+    "title": "firebaseappcheck.projects.apps.exchangeAppAttestAttestation"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__fireba_apps_integrity_challenge",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebaseappcheck.projects.apps.generatePlayIntegrityChallenge",
+    "title": "firebaseappcheck.projects.apps.generatePlayIntegrityChallenge"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__fireba_available_projects_list",
     "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform",
@@ -303,6 +486,289 @@
     ],
     "methodId": "firebase.availableProjects.list",
     "title": "firebase.availableProjects.list"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__fireba_clients_attest_assertion",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebaseappcheck.oauthClients.exchangeAppAttestAssertion",
+    "title": "firebaseappcheck.oauthClients.exchangeAppAttestAssertion"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__fireba_clients_attest_challenge",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebaseappcheck.oauthClients.generateAppAttestChallenge",
+    "title": "firebaseappcheck.oauthClients.generateAppAttestChallenge"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__fireba_connectors_execute_query",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebasedataconnect.projects.locations.services.connectors.executeQuery",
+    "title": "firebasedataconnect.projects.locations.services.connectors.executeQuery"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__fireba_device_check_config_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebaseappcheck.projects.apps.deviceCheckConfig.get",
+    "title": "firebaseappcheck.projects.apps.deviceCheckConfig.get"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__fireba_postgrest_query_function",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebasedataconnect.projects.locations.services.postgrest.rpc.postgrestQueryFunction",
+    "title": "firebasedataconnect.projects.locations.services.postgrest.rpc.postgrestQueryFunction"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__fireba_recaptcha_v3_config_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebaseappcheck.projects.apps.recaptchaV3Config.get",
+    "title": "firebaseappcheck.projects.apps.recaptchaV3Config.get"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__fireba_releases_reports_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebaseappdistribution.projects.apps.releases.feedbackReports.delete",
+    "title": "firebaseappdistribution.projects.apps.releases.feedbackReports.delete"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebase_add_google_analytics",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebase.projects.addGoogleAnalytics",
+    "title": "firebase.projects.addGoogleAnalytics"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebase_android_apps_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebase.projects.androidApps.create",
+    "title": "firebase.projects.androidApps.create"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebase_android_apps_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-platform.read-only",
+      "https://www.googleapis.com/auth/firebase",
+      "https://www.googleapis.com/auth/firebase.readonly"
+    ],
+    "methodId": "firebase.projects.androidApps.get",
+    "title": "firebase.projects.androidApps.get"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebase_android_apps_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-platform.read-only",
+      "https://www.googleapis.com/auth/firebase",
+      "https://www.googleapis.com/auth/firebase.readonly"
+    ],
+    "methodId": "firebase.projects.androidApps.list",
+    "title": "firebase.projects.androidApps.list"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebase_android_apps_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebase.projects.androidApps.patch",
+    "title": "firebase.projects.androidApps.patch"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebase_android_apps_remove",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebase.projects.androidApps.remove",
+    "title": "firebase.projects.androidApps.remove"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebase_android_apps_sha_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-platform.read-only",
+      "https://www.googleapis.com/auth/firebase",
+      "https://www.googleapis.com/auth/firebase.readonly"
+    ],
+    "methodId": "firebase.projects.androidApps.sha.list",
+    "title": "firebase.projects.androidApps.sha.list"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebase_android_apps_undelete",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebase.projects.androidApps.undelete",
+    "title": "firebase.projects.androidApps.undelete"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebase_apps_get_config",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-platform.read-only",
+      "https://www.googleapis.com/auth/firebase",
+      "https://www.googleapis.com/auth/firebase.readonly"
+    ],
+    "methodId": "firebase.projects.androidApps.getConfig",
+    "title": "firebase.projects.androidApps.getConfig"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebase_apps_sha_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebase.projects.androidApps.sha.create",
+    "title": "firebase.projects.androidApps.sha.create"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebase_apps_sha_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebase.projects.androidApps.sha.delete",
+    "title": "firebase.projects.androidApps.sha.delete"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebase_get_admin_sdk_config",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-platform.read-only",
+      "https://www.googleapis.com/auth/firebase",
+      "https://www.googleapis.com/auth/firebase.readonly"
+    ],
+    "methodId": "firebase.projects.getAdminSdkConfig",
+    "title": "firebase.projects.getAdminSdkConfig"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebase_get_analytics_details",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-platform.read-only",
+      "https://www.googleapis.com/auth/firebase",
+      "https://www.googleapis.com/auth/firebase.readonly"
+    ],
+    "methodId": "firebase.projects.getAnalyticsDetails",
+    "title": "firebase.projects.getAnalyticsDetails"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebase_ios_apps_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebase.projects.iosApps.create",
+    "title": "firebase.projects.iosApps.create"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebase_ios_apps_get_config",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-platform.read-only",
+      "https://www.googleapis.com/auth/firebase",
+      "https://www.googleapis.com/auth/firebase.readonly"
+    ],
+    "methodId": "firebase.projects.iosApps.getConfig",
+    "title": "firebase.projects.iosApps.getConfig"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebase_ios_apps_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebase.projects.iosApps.patch",
+    "title": "firebase.projects.iosApps.patch"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebase_ios_apps_remove",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebase.projects.iosApps.remove",
+    "title": "firebase.projects.iosApps.remove"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebase_ios_apps_undelete",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebase.projects.iosApps.undelete",
+    "title": "firebase.projects.iosApps.undelete"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebase_location_finalize",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebase.projects.defaultLocation.finalize",
+    "title": "firebase.projects.defaultLocation.finalize"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebase_locations_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-platform.read-only",
+      "https://www.googleapis.com/auth/firebase",
+      "https://www.googleapis.com/auth/firebase.readonly"
+    ],
+    "methodId": "firebase.projects.availableLocations.list",
+    "title": "firebase.projects.availableLocations.list"
   },
   {
     "name": "mcp__plugin_gfirebase_gfirebase__firebase_operations_get",
@@ -317,194 +783,6 @@
     "title": "firebase.operations.get"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebase_proje_andro_sha_create",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebase.projects.androidApps.sha.create",
-    "title": "firebase.projects.androidApps.sha.create"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebase_proje_andro_sha_delete",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebase.projects.androidApps.sha.delete",
-    "title": "firebase.projects.androidApps.sha.delete"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebase_projec_androi_sha_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/cloud-platform.read-only",
-      "https://www.googleapis.com/auth/firebase",
-      "https://www.googleapis.com/auth/firebase.readonly"
-    ],
-    "methodId": "firebase.projects.androidApps.sha.list",
-    "title": "firebase.projects.androidApps.sha.list"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebase_projec_android_get_con",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/cloud-platform.read-only",
-      "https://www.googleapis.com/auth/firebase",
-      "https://www.googleapis.com/auth/firebase.readonly"
-    ],
-    "methodId": "firebase.projects.androidApps.getConfig",
-    "title": "firebase.projects.androidApps.getConfig"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebase_projec_android_undelet",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebase.projects.androidApps.undelete",
-    "title": "firebase.projects.androidApps.undelete"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebase_projec_default_finaliz",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebase.projects.defaultLocation.finalize",
-    "title": "firebase.projects.defaultLocation.finalize"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebase_projec_ios_app_get_con",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/cloud-platform.read-only",
-      "https://www.googleapis.com/auth/firebase",
-      "https://www.googleapis.com/auth/firebase.readonly"
-    ],
-    "methodId": "firebase.projects.iosApps.getConfig",
-    "title": "firebase.projects.iosApps.getConfig"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebase_projec_ios_app_undelet",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebase.projects.iosApps.undelete",
-    "title": "firebase.projects.iosApps.undelete"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebase_projec_web_app_get_con",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/cloud-platform.read-only",
-      "https://www.googleapis.com/auth/firebase",
-      "https://www.googleapis.com/auth/firebase.readonly"
-    ],
-    "methodId": "firebase.projects.webApps.getConfig",
-    "title": "firebase.projects.webApps.getConfig"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebase_projec_web_app_undelet",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebase.projects.webApps.undelete",
-    "title": "firebase.projects.webApps.undelete"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebase_project_android_create",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebase.projects.androidApps.create",
-    "title": "firebase.projects.androidApps.create"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebase_project_android_remove",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebase.projects.androidApps.remove",
-    "title": "firebase.projects.androidApps.remove"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebase_project_ios_app_create",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebase.projects.iosApps.create",
-    "title": "firebase.projects.iosApps.create"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebase_project_ios_app_remove",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebase.projects.iosApps.remove",
-    "title": "firebase.projects.iosApps.remove"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebase_project_ios_apps_patch",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebase.projects.iosApps.patch",
-    "title": "firebase.projects.iosApps.patch"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebase_project_web_app_create",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebase.projects.webApps.create",
-    "title": "firebase.projects.webApps.create"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebase_project_web_app_remove",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebase.projects.webApps.remove",
-    "title": "firebase.projects.webApps.remove"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebase_project_web_apps_patch",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebase.projects.webApps.patch",
-    "title": "firebase.projects.webApps.patch"
-  },
-  {
     "name": "mcp__plugin_gfirebase_gfirebase__firebase_projects_add_firebase",
     "kind": "write",
     "scopes": [
@@ -513,62 +791,6 @@
     ],
     "methodId": "firebase.projects.addFirebase",
     "title": "firebase.projects.addFirebase"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebase_projects_add_google_an",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebase.projects.addGoogleAnalytics",
-    "title": "firebase.projects.addGoogleAnalytics"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebase_projects_android_a_get",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/cloud-platform.read-only",
-      "https://www.googleapis.com/auth/firebase",
-      "https://www.googleapis.com/auth/firebase.readonly"
-    ],
-    "methodId": "firebase.projects.androidApps.get",
-    "title": "firebase.projects.androidApps.get"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebase_projects_android_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/cloud-platform.read-only",
-      "https://www.googleapis.com/auth/firebase",
-      "https://www.googleapis.com/auth/firebase.readonly"
-    ],
-    "methodId": "firebase.projects.androidApps.list",
-    "title": "firebase.projects.androidApps.list"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebase_projects_android_patch",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebase.projects.androidApps.patch",
-    "title": "firebase.projects.androidApps.patch"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebase_projects_availabl_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/cloud-platform.read-only",
-      "https://www.googleapis.com/auth/firebase",
-      "https://www.googleapis.com/auth/firebase.readonly"
-    ],
-    "methodId": "firebase.projects.availableLocations.list",
-    "title": "firebase.projects.availableLocations.list"
   },
   {
     "name": "mcp__plugin_gfirebase_gfirebase__firebase_projects_get",
@@ -581,30 +803,6 @@
     ],
     "methodId": "firebase.projects.get",
     "title": "firebase.projects.get"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebase_projects_get_admin_sdk",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/cloud-platform.read-only",
-      "https://www.googleapis.com/auth/firebase",
-      "https://www.googleapis.com/auth/firebase.readonly"
-    ],
-    "methodId": "firebase.projects.getAdminSdkConfig",
-    "title": "firebase.projects.getAdminSdkConfig"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebase_projects_get_analytics",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/cloud-platform.read-only",
-      "https://www.googleapis.com/auth/firebase",
-      "https://www.googleapis.com/auth/firebase.readonly"
-    ],
-    "methodId": "firebase.projects.getAnalyticsDetails",
-    "title": "firebase.projects.getAnalyticsDetails"
   },
   {
     "name": "mcp__plugin_gfirebase_gfirebase__firebase_projects_ios_apps_get",
@@ -653,16 +851,6 @@
     "title": "firebase.projects.patch"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebase_projects_remove_analyt",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebase.projects.removeAnalytics",
-    "title": "firebase.projects.removeAnalytics"
-  },
-  {
     "name": "mcp__plugin_gfirebase_gfirebase__firebase_projects_search_apps",
     "kind": "read",
     "scopes": [
@@ -699,6 +887,518 @@
     "title": "firebase.projects.webApps.list"
   },
   {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebase_remove_analytics",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebase.projects.removeAnalytics",
+    "title": "firebase.projects.removeAnalytics"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebase_web_apps_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebase.projects.webApps.create",
+    "title": "firebase.projects.webApps.create"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebase_web_apps_get_config",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-platform.read-only",
+      "https://www.googleapis.com/auth/firebase",
+      "https://www.googleapis.com/auth/firebase.readonly"
+    ],
+    "methodId": "firebase.projects.webApps.getConfig",
+    "title": "firebase.projects.webApps.getConfig"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebase_web_apps_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebase.projects.webApps.patch",
+    "title": "firebase.projects.webApps.patch"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebase_web_apps_remove",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebase.projects.webApps.remove",
+    "title": "firebase.projects.webApps.remove"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebase_web_apps_undelete",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebase.projects.webApps.undelete",
+    "title": "firebase.projects.webApps.undelete"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebasea_app_attest_config_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebaseappcheck.projects.apps.appAttestConfig.get",
+    "title": "firebaseappcheck.projects.apps.appAttestConfig.get"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebasea_apps_attest_assertion",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebaseappcheck.projects.apps.exchangeAppAttestAssertion",
+    "title": "firebaseappcheck.projects.apps.exchangeAppAttestAssertion"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebasea_apps_attest_challenge",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebaseappcheck.projects.apps.generateAppAttestChallenge",
+    "title": "firebaseappcheck.projects.apps.generateAppAttestChallenge"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebasea_apps_debug_tokens_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebaseappcheck.projects.apps.debugTokens.get",
+    "title": "firebaseappcheck.projects.apps.debugTokens.get"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebasea_apps_enterprise_token",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebaseappcheck.projects.apps.exchangeRecaptchaEnterpriseToken",
+    "title": "firebaseappcheck.projects.apps.exchangeRecaptchaEnterpriseToken"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebasea_apps_releases_ops_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebaseappdistribution.projects.apps.releases.operations.get",
+    "title": "firebaseappdistribution.projects.apps.releases.operations.get"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebasea_backends_domains_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebaseapphosting.projects.locations.backends.domains.list",
+    "title": "firebaseapphosting.projects.locations.backends.domains.list"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebasea_backends_rollouts_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebaseapphosting.projects.locations.backends.rollouts.get",
+    "title": "firebaseapphosting.projects.locations.backends.rollouts.get"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebasea_exchange_custom_token",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebaseappcheck.projects.apps.exchangeCustomToken",
+    "title": "firebaseappcheck.projects.apps.exchangeCustomToken"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebasea_policies_batch_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebaseappcheck.projects.services.resourcePolicies.batchUpdate",
+    "title": "firebaseappcheck.projects.services.resourcePolicies.batchUpdate"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebasea_projects_groups_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebaseappdistribution.projects.groups.patch",
+    "title": "firebaseappdistribution.projects.groups.patch"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebasea_projects_services_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebaseappcheck.projects.services.get",
+    "title": "firebaseappcheck.projects.services.get"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebasea_projects_testers_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebaseappdistribution.projects.testers.list",
+    "title": "firebaseappdistribution.projects.testers.list"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebasea_releases_batch_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebaseappdistribution.projects.apps.releases.batchDelete",
+    "title": "firebaseappdistribution.projects.apps.releases.batchDelete"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebasea_releases_reports_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebaseappdistribution.projects.apps.releases.feedbackReports.list",
+    "title": "firebaseappdistribution.projects.apps.releases.feedbackReports.list"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebasea_services_batch_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebaseappcheck.projects.services.batchUpdate",
+    "title": "firebaseappcheck.projects.services.batchUpdate"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebasea_services_policies_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebaseappcheck.projects.services.resourcePolicies.get",
+    "title": "firebaseappcheck.projects.services.resourcePolicies.get"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_app_rec_ent_conf_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebaseappcheck.projects.apps.recaptchaEnterpriseConfig.get",
+    "title": "firebaseappcheck.projects.apps.recaptchaEnterpriseConfig.get"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_apps_get_aab_info",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebaseappdistribution.projects.apps.getAabInfo",
+    "title": "firebaseappdistribution.projects.apps.getAabInfo"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_apps_integrity_token",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebaseappcheck.projects.apps.exchangePlayIntegrityToken",
+    "title": "firebaseappcheck.projects.apps.exchangePlayIntegrityToken"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_apps_releases_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebaseappdistribution.projects.apps.releases.get",
+    "title": "firebaseappdistribution.projects.apps.releases.get"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_apps_releases_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebaseappdistribution.projects.apps.releases.list",
+    "title": "firebaseappdistribution.projects.apps.releases.list"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_apps_releases_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebaseappdistribution.projects.apps.releases.patch",
+    "title": "firebaseappdistribution.projects.apps.releases.patch"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_apps_tokens_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebaseappcheck.projects.apps.debugTokens.create",
+    "title": "firebaseappcheck.projects.apps.debugTokens.create"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_apps_tokens_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebaseappcheck.projects.apps.debugTokens.delete",
+    "title": "firebaseappcheck.projects.apps.debugTokens.delete"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_apps_tokens_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebaseappcheck.projects.apps.debugTokens.list",
+    "title": "firebaseappcheck.projects.apps.debugTokens.list"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_apps_tokens_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebaseappcheck.projects.apps.debugTokens.patch",
+    "title": "firebaseappcheck.projects.apps.debugTokens.patch"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_backends_builds_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebaseapphosting.projects.locations.backends.builds.get",
+    "title": "firebaseapphosting.projects.locations.backends.builds.get"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_backends_builds_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebaseapphosting.projects.locations.backends.builds.list",
+    "title": "firebaseapphosting.projects.locations.backends.builds.list"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_backends_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebaseapphosting.projects.locations.backends.create",
+    "title": "firebaseapphosting.projects.locations.backends.create"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_backends_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebaseapphosting.projects.locations.backends.delete",
+    "title": "firebaseapphosting.projects.locations.backends.delete"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_backends_domains_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebaseapphosting.projects.locations.backends.domains.get",
+    "title": "firebaseapphosting.projects.locations.backends.domains.get"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_backends_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebaseapphosting.projects.locations.backends.get",
+    "title": "firebaseapphosting.projects.locations.backends.get"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_backends_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebaseapphosting.projects.locations.backends.list",
+    "title": "firebaseapphosting.projects.locations.backends.list"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_backends_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebaseapphosting.projects.locations.backends.patch",
+    "title": "firebaseapphosting.projects.locations.backends.patch"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_backends_traffic_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebaseapphosting.projects.locations.backends.traffic.get",
+    "title": "firebaseapphosting.projects.locations.backends.traffic.get"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_batch_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebaseappcheck.projects.apps.deviceCheckConfig.batchGet",
+    "title": "firebaseappcheck.projects.apps.deviceCheckConfig.batchGet"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_builds_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebaseapphosting.projects.locations.backends.builds.create",
+    "title": "firebaseapphosting.projects.locations.backends.builds.create"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_builds_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebaseapphosting.projects.locations.backends.builds.delete",
+    "title": "firebaseapphosting.projects.locations.backends.builds.delete"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_domains_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebaseapphosting.projects.locations.backends.domains.create",
+    "title": "firebaseapphosting.projects.locations.backends.domains.create"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_domains_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebaseapphosting.projects.locations.backends.domains.delete",
+    "title": "firebaseapphosting.projects.locations.backends.domains.delete"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_domains_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebaseapphosting.projects.locations.backends.domains.patch",
+    "title": "firebaseapphosting.projects.locations.backends.domains.patch"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_exchange_debug_token",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebaseappcheck.oauthClients.exchangeDebugToken",
+    "title": "firebaseappcheck.oauthClients.exchangeDebugToken"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebaseapphosting.projects.locations.get",
+    "title": "firebaseapphosting.projects.locations.get"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_groups_batch_join",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebaseappdistribution.projects.groups.batchJoin",
+    "title": "firebaseappdistribution.projects.groups.batchJoin"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_groups_batch_leave",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebaseappdistribution.projects.groups.batchLeave",
+    "title": "firebaseappdistribution.projects.groups.batchLeave"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_groups_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebaseappdistribution.projects.groups.create",
+    "title": "firebaseappdistribution.projects.groups.create"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_groups_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebaseappdistribution.projects.groups.delete",
+    "title": "firebaseappdistribution.projects.groups.delete"
+  },
+  {
     "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_jwks_get",
     "kind": "read",
     "scopes": [
@@ -709,823 +1409,16 @@
     "title": "firebaseappcheck.jwks.get"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_oauth_c_exchang_3c21",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebaseappcheck.oauthClients.exchangeAppAttestAttestation",
-    "title": "firebaseappcheck.oauthClients.exchangeAppAttestAttestation"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_oauth_c_exchang_7abc",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebaseappcheck.oauthClients.exchangeAppAttestAssertion",
-    "title": "firebaseappcheck.oauthClients.exchangeAppAttestAssertion"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_oauth_cli_exchange_d",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebaseappcheck.oauthClients.exchangeDebugToken",
-    "title": "firebaseappcheck.oauthClients.exchangeDebugToken"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_oauth_cli_generate_a",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebaseappcheck.oauthClients.generateAppAttestChallenge",
-    "title": "firebaseappcheck.oauthClients.generateAppAttestChallenge"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_pro_app_rec_bat_4579",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebaseappcheck.projects.apps.recaptchaV3Config.batchGet",
-    "title": "firebaseappcheck.projects.apps.recaptchaV3Config.batchGet"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_pro_app_rec_bat_b8b0",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebaseappcheck.projects.apps.recaptchaEnterpriseConfig.batchGet",
-    "title": "firebaseappcheck.projects.apps.recaptchaEnterpriseConfig.batchGet"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_pro_app_rec_get_2829",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebaseappcheck.projects.apps.recaptchaV3Config.get",
-    "title": "firebaseappcheck.projects.apps.recaptchaV3Config.get"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_pro_app_rec_get_f29c",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebaseappcheck.projects.apps.recaptchaEnterpriseConfig.get",
-    "title": "firebaseappcheck.projects.apps.recaptchaEnterpriseConfig.get"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_pro_app_rec_pat_1cf4",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebaseappcheck.projects.apps.recaptchaEnterpriseConfig.patch",
-    "title": "firebaseappcheck.projects.apps.recaptchaEnterpriseConfig.patch"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_pro_app_rec_pat_3d2e",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebaseappcheck.projects.apps.recaptchaV3Config.patch",
-    "title": "firebaseappcheck.projects.apps.recaptchaV3Config.patch"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_pro_app_rel_fee_dele",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebaseappdistribution.projects.apps.releases.feedbackReports.delete",
-    "title": "firebaseappdistribution.projects.apps.releases.feedbackReports.delete"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_pro_app_rel_fee_list",
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_list",
     "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"
     ],
-    "methodId": "firebaseappdistribution.projects.apps.releases.feedbackReports.list",
-    "title": "firebaseappdistribution.projects.apps.releases.feedbackReports.list"
+    "methodId": "firebaseapphosting.projects.locations.list",
+    "title": "firebaseapphosting.projects.locations.list"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_pro_app_rel_feed_get",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebaseappdistribution.projects.apps.releases.feedbackReports.get",
-    "title": "firebaseappdistribution.projects.apps.releases.feedbackReports.get"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_pro_app_rel_ope_canc",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebaseappdistribution.projects.apps.releases.operations.cancel",
-    "title": "firebaseappdistribution.projects.apps.releases.operations.cancel"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_pro_app_rel_ope_dele",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebaseappdistribution.projects.apps.releases.operations.delete",
-    "title": "firebaseappdistribution.projects.apps.releases.operations.delete"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_pro_app_rel_ope_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebaseappdistribution.projects.apps.releases.operations.list",
-    "title": "firebaseappdistribution.projects.apps.releases.operations.list"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_pro_app_rel_ope_wait",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebaseappdistribution.projects.apps.releases.operations.wait",
-    "title": "firebaseappdistribution.projects.apps.releases.operations.wait"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_pro_app_rel_oper_get",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebaseappdistribution.projects.apps.releases.operations.get",
-    "title": "firebaseappdistribution.projects.apps.releases.operations.get"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_pro_loc_bac_bui_crea",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebaseapphosting.projects.locations.backends.builds.create",
-    "title": "firebaseapphosting.projects.locations.backends.builds.create"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_pro_loc_bac_bui_dele",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebaseapphosting.projects.locations.backends.builds.delete",
-    "title": "firebaseapphosting.projects.locations.backends.builds.delete"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_pro_loc_bac_bui_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebaseapphosting.projects.locations.backends.builds.list",
-    "title": "firebaseapphosting.projects.locations.backends.builds.list"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_pro_loc_bac_buil_get",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebaseapphosting.projects.locations.backends.builds.get",
-    "title": "firebaseapphosting.projects.locations.backends.builds.get"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_pro_loc_bac_dom_crea",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebaseapphosting.projects.locations.backends.domains.create",
-    "title": "firebaseapphosting.projects.locations.backends.domains.create"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_pro_loc_bac_dom_dele",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebaseapphosting.projects.locations.backends.domains.delete",
-    "title": "firebaseapphosting.projects.locations.backends.domains.delete"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_pro_loc_bac_dom_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebaseapphosting.projects.locations.backends.domains.list",
-    "title": "firebaseapphosting.projects.locations.backends.domains.list"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_pro_loc_bac_dom_patc",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebaseapphosting.projects.locations.backends.domains.patch",
-    "title": "firebaseapphosting.projects.locations.backends.domains.patch"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_pro_loc_bac_doma_get",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebaseapphosting.projects.locations.backends.domains.get",
-    "title": "firebaseapphosting.projects.locations.backends.domains.get"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_pro_loc_bac_rol_crea",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebaseapphosting.projects.locations.backends.rollouts.create",
-    "title": "firebaseapphosting.projects.locations.backends.rollouts.create"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_pro_loc_bac_rol_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebaseapphosting.projects.locations.backends.rollouts.list",
-    "title": "firebaseapphosting.projects.locations.backends.rollouts.list"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_pro_loc_bac_roll_get",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebaseapphosting.projects.locations.backends.rollouts.get",
-    "title": "firebaseapphosting.projects.locations.backends.rollouts.get"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_pro_loc_bac_tra_patc",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebaseapphosting.projects.locations.backends.traffic.patch",
-    "title": "firebaseapphosting.projects.locations.backends.traffic.patch"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_pro_loc_bac_traf_get",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebaseapphosting.projects.locations.backends.traffic.get",
-    "title": "firebaseapphosting.projects.locations.backends.traffic.get"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_proj_apps_app_batch",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebaseappcheck.projects.apps.appAttestConfig.batchGet",
-    "title": "firebaseappcheck.projects.apps.appAttestConfig.batchGet"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_proj_apps_app_patch",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebaseappcheck.projects.apps.appAttestConfig.patch",
-    "title": "firebaseappcheck.projects.apps.appAttestConfig.patch"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_proj_apps_debu_creat",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebaseappcheck.projects.apps.debugTokens.create",
-    "title": "firebaseappcheck.projects.apps.debugTokens.create"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_proj_apps_debu_delet",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebaseappcheck.projects.apps.debugTokens.delete",
-    "title": "firebaseappcheck.projects.apps.debugTokens.delete"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_proj_apps_debu_patch",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebaseappcheck.projects.apps.debugTokens.patch",
-    "title": "firebaseappcheck.projects.apps.debugTokens.patch"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_proj_apps_debug_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebaseappcheck.projects.apps.debugTokens.list",
-    "title": "firebaseappcheck.projects.apps.debugTokens.list"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_proj_apps_devi_batch",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebaseappcheck.projects.apps.deviceCheckConfig.batchGet",
-    "title": "firebaseappcheck.projects.apps.deviceCheckConfig.batchGet"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_proj_apps_devi_patch",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebaseappcheck.projects.apps.deviceCheckConfig.patch",
-    "title": "firebaseappcheck.projects.apps.deviceCheckConfig.patch"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_proj_apps_excha_0c66",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebaseappcheck.projects.apps.exchangeAppAttestAttestation",
-    "title": "firebaseappcheck.projects.apps.exchangeAppAttestAttestation"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_proj_apps_excha_30d5",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebaseappcheck.projects.apps.exchangeRecaptchaEnterpriseToken",
-    "title": "firebaseappcheck.projects.apps.exchangeRecaptchaEnterpriseToken"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_proj_apps_excha_371c",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebaseappcheck.projects.apps.exchangeDeviceCheckToken",
-    "title": "firebaseappcheck.projects.apps.exchangeDeviceCheckToken"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_proj_apps_excha_5334",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebaseappcheck.projects.apps.exchangeAppAttestAssertion",
-    "title": "firebaseappcheck.projects.apps.exchangeAppAttestAssertion"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_proj_apps_excha_60a2",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebaseappcheck.projects.apps.exchangePlayIntegrityToken",
-    "title": "firebaseappcheck.projects.apps.exchangePlayIntegrityToken"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_proj_apps_excha_8583",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebaseappcheck.projects.apps.exchangeCustomToken",
-    "title": "firebaseappcheck.projects.apps.exchangeCustomToken"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_proj_apps_excha_ae2a",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebaseappcheck.projects.apps.exchangeDebugToken",
-    "title": "firebaseappcheck.projects.apps.exchangeDebugToken"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_proj_apps_excha_dbb1",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebaseappcheck.projects.apps.exchangeRecaptchaV3Token",
-    "title": "firebaseappcheck.projects.apps.exchangeRecaptchaV3Token"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_proj_apps_gener_10a3",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebaseappcheck.projects.apps.generatePlayIntegrityChallenge",
-    "title": "firebaseappcheck.projects.apps.generatePlayIntegrityChallenge"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_proj_apps_gener_928d",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebaseappcheck.projects.apps.generateAppAttestChallenge",
-    "title": "firebaseappcheck.projects.apps.generateAppAttestChallenge"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_proj_apps_play_batch",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebaseappcheck.projects.apps.playIntegrityConfig.batchGet",
-    "title": "firebaseappcheck.projects.apps.playIntegrityConfig.batchGet"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_proj_apps_play_patch",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebaseappcheck.projects.apps.playIntegrityConfig.patch",
-    "title": "firebaseappcheck.projects.apps.playIntegrityConfig.patch"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_proj_apps_rele_batch",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebaseappdistribution.projects.apps.releases.batchDelete",
-    "title": "firebaseappdistribution.projects.apps.releases.batchDelete"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_proj_apps_rele_distr",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebaseappdistribution.projects.apps.releases.distribute",
-    "title": "firebaseappdistribution.projects.apps.releases.distribute"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_proj_apps_rele_patch",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebaseappdistribution.projects.apps.releases.patch",
-    "title": "firebaseappdistribution.projects.apps.releases.patch"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_proj_apps_relea_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebaseappdistribution.projects.apps.releases.list",
-    "title": "firebaseappdistribution.projects.apps.releases.list"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_proj_grou_batch_3c7d",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebaseappdistribution.projects.groups.batchJoin",
-    "title": "firebaseappdistribution.projects.groups.batchJoin"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_proj_grou_batch_6ce0",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebaseappdistribution.projects.groups.batchLeave",
-    "title": "firebaseappdistribution.projects.groups.batchLeave"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_proj_loca_back_creat",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebaseapphosting.projects.locations.backends.create",
-    "title": "firebaseapphosting.projects.locations.backends.create"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_proj_loca_back_delet",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebaseapphosting.projects.locations.backends.delete",
-    "title": "firebaseapphosting.projects.locations.backends.delete"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_proj_loca_back_patch",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebaseapphosting.projects.locations.backends.patch",
-    "title": "firebaseapphosting.projects.locations.backends.patch"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_proj_loca_backe_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebaseapphosting.projects.locations.backends.list",
-    "title": "firebaseapphosting.projects.locations.backends.list"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_proj_loca_oper_cance",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebaseapphosting.projects.locations.operations.cancel",
-    "title": "firebaseapphosting.projects.locations.operations.cancel"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_proj_loca_oper_delet",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebaseapphosting.projects.locations.operations.delete",
-    "title": "firebaseapphosting.projects.locations.operations.delete"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_proj_loca_opera_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebaseapphosting.projects.locations.operations.list",
-    "title": "firebaseapphosting.projects.locations.operations.list"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_proj_locat_backe_get",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebaseapphosting.projects.locations.backends.get",
-    "title": "firebaseapphosting.projects.locations.backends.get"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_proj_locat_opera_get",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebaseapphosting.projects.locations.operations.get",
-    "title": "firebaseapphosting.projects.locations.operations.get"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_proj_serv_reso_batch",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebaseappcheck.projects.services.resourcePolicies.batchUpdate",
-    "title": "firebaseappcheck.projects.services.resourcePolicies.batchUpdate"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_proj_serv_reso_creat",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebaseappcheck.projects.services.resourcePolicies.create",
-    "title": "firebaseappcheck.projects.services.resourcePolicies.create"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_proj_serv_reso_delet",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebaseappcheck.projects.services.resourcePolicies.delete",
-    "title": "firebaseappcheck.projects.services.resourcePolicies.delete"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_proj_serv_reso_patch",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebaseappcheck.projects.services.resourcePolicies.patch",
-    "title": "firebaseappcheck.projects.services.resourcePolicies.patch"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_proj_serv_resou_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebaseappcheck.projects.services.resourcePolicies.list",
-    "title": "firebaseappcheck.projects.services.resourcePolicies.list"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_proj_servi_resou_get",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebaseappcheck.projects.services.resourcePolicies.get",
-    "title": "firebaseappcheck.projects.services.resourcePolicies.get"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_proj_test_batch_8e11",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebaseappdistribution.projects.testers.batchRemove",
-    "title": "firebaseappdistribution.projects.testers.batchRemove"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_proj_test_batch_a43b",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebaseappdistribution.projects.testers.batchAdd",
-    "title": "firebaseappdistribution.projects.testers.batchAdd"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_proje_apps_app_a_get",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebaseappcheck.projects.apps.appAttestConfig.get",
-    "title": "firebaseappcheck.projects.apps.appAttestConfig.get"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_proje_apps_debug_get",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebaseappcheck.projects.apps.debugTokens.get",
-    "title": "firebaseappcheck.projects.apps.debugTokens.get"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_proje_apps_devic_get",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebaseappcheck.projects.apps.deviceCheckConfig.get",
-    "title": "firebaseappcheck.projects.apps.deviceCheckConfig.get"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_proje_apps_play_get",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebaseappcheck.projects.apps.playIntegrityConfig.get",
-    "title": "firebaseappcheck.projects.apps.playIntegrityConfig.get"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_proje_apps_relea_get",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebaseappdistribution.projects.apps.releases.get",
-    "title": "firebaseappdistribution.projects.apps.releases.get"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_projec_groups_create",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebaseappdistribution.projects.groups.create",
-    "title": "firebaseappdistribution.projects.groups.create"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_projec_groups_delete",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebaseappdistribution.projects.groups.delete",
-    "title": "firebaseappdistribution.projects.groups.delete"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_projec_servic_batch",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebaseappcheck.projects.services.batchUpdate",
-    "title": "firebaseappcheck.projects.services.batchUpdate"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_projec_service_patch",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebaseappcheck.projects.services.patch",
-    "title": "firebaseappcheck.projects.services.patch"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_projec_testers_patch",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebaseappdistribution.projects.testers.patch",
-    "title": "firebaseappdistribution.projects.testers.patch"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_project_apps_get_aab",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebaseappdistribution.projects.apps.getAabInfo",
-    "title": "firebaseappdistribution.projects.apps.getAabInfo"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_project_apps_mint_ap",
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_mint_app_check_token",
     "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform",
@@ -1535,60 +1428,100 @@
     "title": "firebaseappcheck.projects.apps.mintAppCheckToken"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_project_groups_patch",
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_operations_cancel",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebaseapphosting.projects.locations.operations.cancel",
+    "title": "firebaseapphosting.projects.locations.operations.cancel"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_operations_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebaseapphosting.projects.locations.operations.delete",
+    "title": "firebaseapphosting.projects.locations.operations.delete"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_operations_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebaseapphosting.projects.locations.operations.get",
+    "title": "firebaseapphosting.projects.locations.operations.get"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_operations_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebaseapphosting.projects.locations.operations.list",
+    "title": "firebaseapphosting.projects.locations.operations.list"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_patch",
     "kind": "write",
     "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
     ],
-    "methodId": "firebaseappdistribution.projects.groups.patch",
-    "title": "firebaseappdistribution.projects.groups.patch"
+    "methodId": "firebaseappcheck.projects.apps.recaptchaEnterpriseConfig.patch",
+    "title": "firebaseappcheck.projects.apps.recaptchaEnterpriseConfig.patch"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_project_locatio_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebaseapphosting.projects.locations.list",
-    "title": "firebaseapphosting.projects.locations.list"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_project_location_get",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebaseapphosting.projects.locations.get",
-    "title": "firebaseapphosting.projects.locations.get"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_project_service_list",
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_pla_int_con_batc_get",
     "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform",
       "https://www.googleapis.com/auth/firebase"
     ],
-    "methodId": "firebaseappcheck.projects.services.list",
-    "title": "firebaseappcheck.projects.services.list"
+    "methodId": "firebaseappcheck.projects.apps.playIntegrityConfig.batchGet",
+    "title": "firebaseappcheck.projects.apps.playIntegrityConfig.batchGet"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_project_services_get",
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_policies_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebaseappcheck.projects.services.resourcePolicies.create",
+    "title": "firebaseappcheck.projects.services.resourcePolicies.create"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_policies_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebaseappcheck.projects.services.resourcePolicies.delete",
+    "title": "firebaseappcheck.projects.services.resourcePolicies.delete"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_policies_list",
     "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform",
       "https://www.googleapis.com/auth/firebase"
     ],
-    "methodId": "firebaseappcheck.projects.services.get",
-    "title": "firebaseappcheck.projects.services.get"
+    "methodId": "firebaseappcheck.projects.services.resourcePolicies.list",
+    "title": "firebaseappcheck.projects.services.resourcePolicies.list"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_project_testers_list",
-    "kind": "read",
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_policies_patch",
+    "kind": "write",
     "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
     ],
-    "methodId": "firebaseappdistribution.projects.testers.list",
-    "title": "firebaseappdistribution.projects.testers.list"
+    "methodId": "firebaseappcheck.projects.services.resourcePolicies.patch",
+    "title": "firebaseappcheck.projects.services.resourcePolicies.patch"
   },
   {
     "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_projects_groups_get",
@@ -1609,37 +1542,155 @@
     "title": "firebaseappdistribution.projects.groups.list"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebasecr_pro_app_iss_not_crea",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebasecrashlytics.projects.apps.issues.notes.create",
-    "title": "firebasecrashlytics.projects.apps.issues.notes.create"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebasecr_pro_app_iss_not_dele",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebasecrashlytics.projects.apps.issues.notes.delete",
-    "title": "firebasecrashlytics.projects.apps.issues.notes.delete"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebasecr_pro_app_iss_not_list",
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_rec_ent_con_batc_get",
     "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform",
       "https://www.googleapis.com/auth/firebase"
     ],
-    "methodId": "firebasecrashlytics.projects.apps.issues.notes.list",
-    "title": "firebasecrashlytics.projects.apps.issues.notes.list"
+    "methodId": "firebaseappcheck.projects.apps.recaptchaEnterpriseConfig.batchGet",
+    "title": "firebaseappcheck.projects.apps.recaptchaEnterpriseConfig.batchGet"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebasecr_proj_apps_even_batch",
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_rec_v3_conf_batc_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebaseappcheck.projects.apps.recaptchaV3Config.batchGet",
+    "title": "firebaseappcheck.projects.apps.recaptchaV3Config.batchGet"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_releases_distribute",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebaseappdistribution.projects.apps.releases.distribute",
+    "title": "firebaseappdistribution.projects.apps.releases.distribute"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_releases_ops_cancel",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebaseappdistribution.projects.apps.releases.operations.cancel",
+    "title": "firebaseappdistribution.projects.apps.releases.operations.cancel"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_releases_ops_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebaseappdistribution.projects.apps.releases.operations.delete",
+    "title": "firebaseappdistribution.projects.apps.releases.operations.delete"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_releases_ops_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebaseappdistribution.projects.apps.releases.operations.list",
+    "title": "firebaseappdistribution.projects.apps.releases.operations.list"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_releases_ops_wait",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebaseappdistribution.projects.apps.releases.operations.wait",
+    "title": "firebaseappdistribution.projects.apps.releases.operations.wait"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_releases_reports_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebaseappdistribution.projects.apps.releases.feedbackReports.get",
+    "title": "firebaseappdistribution.projects.apps.releases.feedbackReports.get"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_rollouts_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebaseapphosting.projects.locations.backends.rollouts.create",
+    "title": "firebaseapphosting.projects.locations.backends.rollouts.create"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_rollouts_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebaseapphosting.projects.locations.backends.rollouts.list",
+    "title": "firebaseapphosting.projects.locations.backends.rollouts.list"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_services_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebaseappcheck.projects.services.list",
+    "title": "firebaseappcheck.projects.services.list"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_services_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebaseappcheck.projects.services.patch",
+    "title": "firebaseappcheck.projects.services.patch"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_testers_batch_add",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebaseappdistribution.projects.testers.batchAdd",
+    "title": "firebaseappdistribution.projects.testers.batchAdd"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_testers_batch_remove",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebaseappdistribution.projects.testers.batchRemove",
+    "title": "firebaseappdistribution.projects.testers.batchRemove"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_testers_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebaseappdistribution.projects.testers.patch",
+    "title": "firebaseappdistribution.projects.testers.patch"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseap_traffic_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebaseapphosting.projects.locations.backends.traffic.patch",
+    "title": "firebaseapphosting.projects.locations.backends.traffic.patch"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebasec_apps_events_batch_get",
     "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform",
@@ -1649,77 +1700,7 @@
     "title": "firebasecrashlytics.projects.apps.events.batchGet"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebasecr_proj_apps_event_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebasecrashlytics.projects.apps.events.list",
-    "title": "firebasecrashlytics.projects.apps.events.list"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebasecr_proj_apps_issu_batch",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebasecrashlytics.projects.apps.issues.batchUpdate",
-    "title": "firebasecrashlytics.projects.apps.issues.batchUpdate"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebasecr_proj_apps_issu_patch",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebasecrashlytics.projects.apps.issues.patch",
-    "title": "firebasecrashlytics.projects.apps.issues.patch"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebasecr_proj_apps_repor_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebasecrashlytics.projects.apps.reports.list",
-    "title": "firebasecrashlytics.projects.apps.reports.list"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebasecr_proj_apps_user_delet",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebasecrashlytics.projects.apps.users.deleteCrashReports",
-    "title": "firebasecrashlytics.projects.apps.users.deleteCrashReports"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebasecr_proje_apps_issue_get",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebasecrashlytics.projects.apps.issues.get",
-    "title": "firebasecrashlytics.projects.apps.issues.get"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebasecr_proje_apps_repor_get",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebasecrashlytics.projects.apps.reports.get",
-    "title": "firebasecrashlytics.projects.apps.reports.get"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebasecr_project_apps_generat",
+    "name": "mcp__plugin_gfirebase_gfirebase__firebasec_generate_alert_policy",
     "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform",
@@ -1729,205 +1710,107 @@
     "title": "firebasecrashlytics.projects.apps.generateAlertPolicy"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_pro_loc_ser_con_674d",
-    "kind": "write",
+    "name": "mcp__plugin_gfirebase_gfirebase__firebasecr_apps_events_list",
+    "kind": "read",
     "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
     ],
-    "methodId": "firebasedataconnect.projects.locations.services.connectors.impersonateQuery",
-    "title": "firebasedataconnect.projects.locations.services.connectors.impersonateQuery"
+    "methodId": "firebasecrashlytics.projects.apps.events.list",
+    "title": "firebasecrashlytics.projects.apps.events.list"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_pro_loc_ser_con_9a6d",
-    "kind": "write",
+    "name": "mcp__plugin_gfirebase_gfirebase__firebasecr_apps_issues_get",
+    "kind": "read",
     "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
     ],
-    "methodId": "firebasedataconnect.projects.locations.services.connectors.executeQuery",
-    "title": "firebasedataconnect.projects.locations.services.connectors.executeQuery"
+    "methodId": "firebasecrashlytics.projects.apps.issues.get",
+    "title": "firebasecrashlytics.projects.apps.issues.get"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_pro_loc_ser_con_c6c3",
+    "name": "mcp__plugin_gfirebase_gfirebase__firebasecr_apps_issues_patch",
     "kind": "write",
     "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
     ],
-    "methodId": "firebasedataconnect.projects.locations.services.connectors.impersonateMutation",
-    "title": "firebasedataconnect.projects.locations.services.connectors.impersonateMutation"
+    "methodId": "firebasecrashlytics.projects.apps.issues.patch",
+    "title": "firebasecrashlytics.projects.apps.issues.patch"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_pro_loc_ser_con_crea",
-    "kind": "write",
+    "name": "mcp__plugin_gfirebase_gfirebase__firebasecr_apps_reports_get",
+    "kind": "read",
     "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
     ],
-    "methodId": "firebasedataconnect.projects.locations.services.connectors.create",
-    "title": "firebasedataconnect.projects.locations.services.connectors.create"
+    "methodId": "firebasecrashlytics.projects.apps.reports.get",
+    "title": "firebasecrashlytics.projects.apps.reports.get"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_pro_loc_ser_con_dele",
+    "name": "mcp__plugin_gfirebase_gfirebase__firebasecr_apps_reports_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebasecrashlytics.projects.apps.reports.list",
+    "title": "firebasecrashlytics.projects.apps.reports.list"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebasecr_delete_crash_reports",
     "kind": "destructive",
     "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
     ],
-    "methodId": "firebasedataconnect.projects.locations.services.connectors.delete",
-    "title": "firebasedataconnect.projects.locations.services.connectors.delete"
+    "methodId": "firebasecrashlytics.projects.apps.users.deleteCrashReports",
+    "title": "firebasecrashlytics.projects.apps.users.deleteCrashReports"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_pro_loc_ser_con_f17e",
+    "name": "mcp__plugin_gfirebase_gfirebase__firebasecr_issues_batch_update",
     "kind": "write",
     "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
     ],
-    "methodId": "firebasedataconnect.projects.locations.services.connectors.executeMutation",
-    "title": "firebasedataconnect.projects.locations.services.connectors.executeMutation"
+    "methodId": "firebasecrashlytics.projects.apps.issues.batchUpdate",
+    "title": "firebasecrashlytics.projects.apps.issues.batchUpdate"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_pro_loc_ser_con_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebasedataconnect.projects.locations.services.connectors.list",
-    "title": "firebasedataconnect.projects.locations.services.connectors.list"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_pro_loc_ser_con_patc",
+    "name": "mcp__plugin_gfirebase_gfirebase__firebasecr_issues_notes_create",
     "kind": "write",
     "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
     ],
-    "methodId": "firebasedataconnect.projects.locations.services.connectors.patch",
-    "title": "firebasedataconnect.projects.locations.services.connectors.patch"
+    "methodId": "firebasecrashlytics.projects.apps.issues.notes.create",
+    "title": "firebasecrashlytics.projects.apps.issues.notes.create"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_pro_loc_ser_conn_get",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebasedataconnect.projects.locations.services.connectors.get",
-    "title": "firebasedataconnect.projects.locations.services.connectors.get"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_pro_loc_ser_exe_1fce",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebasedataconnect.projects.locations.services.executeGraphql",
-    "title": "firebasedataconnect.projects.locations.services.executeGraphql"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_pro_loc_ser_exe_3072",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebasedataconnect.projects.locations.services.executeGraphqlRead",
-    "title": "firebasedataconnect.projects.locations.services.executeGraphqlRead"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_pro_loc_ser_gen_8f53",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebasedataconnect.projects.locations.services.generateQuery",
-    "title": "firebasedataconnect.projects.locations.services.generateQuery"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_pro_loc_ser_gen_cf40",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebasedataconnect.projects.locations.services.generateSchema",
-    "title": "firebasedataconnect.projects.locations.services.generateSchema"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_pro_loc_ser_pos_0946",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebasedataconnect.projects.locations.services.postgrest.rpc.postgrestQueryFunction",
-    "title": "firebasedataconnect.projects.locations.services.postgrest.rpc.postgrestQueryFunction"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_pro_loc_ser_pos_257a",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebasedataconnect.projects.locations.services.postgrest.postgrestUpsert",
-    "title": "firebasedataconnect.projects.locations.services.postgrest.postgrestUpsert"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_pro_loc_ser_pos_34c4",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebasedataconnect.projects.locations.services.postgrest.postgrestInsert",
-    "title": "firebasedataconnect.projects.locations.services.postgrest.postgrestInsert"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_pro_loc_ser_pos_621f",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebasedataconnect.projects.locations.services.postgrest.rpc.postgrestCallFunction",
-    "title": "firebasedataconnect.projects.locations.services.postgrest.rpc.postgrestCallFunction"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_pro_loc_ser_pos_7f54",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebasedataconnect.projects.locations.services.postgrest.postgrestUpdate",
-    "title": "firebasedataconnect.projects.locations.services.postgrest.postgrestUpdate"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_pro_loc_ser_pos_9d50",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebasedataconnect.projects.locations.services.postgrest.postgrestSelect",
-    "title": "firebasedataconnect.projects.locations.services.postgrest.postgrestSelect"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_pro_loc_ser_pos_d433",
+    "name": "mcp__plugin_gfirebase_gfirebase__firebasecr_issues_notes_delete",
     "kind": "destructive",
     "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
     ],
-    "methodId": "firebasedataconnect.projects.locations.services.postgrest.postgrestDelete",
-    "title": "firebasedataconnect.projects.locations.services.postgrest.postgrestDelete"
+    "methodId": "firebasecrashlytics.projects.apps.issues.notes.delete",
+    "title": "firebasecrashlytics.projects.apps.issues.notes.delete"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_pro_loc_ser_sch_crea",
-    "kind": "write",
+    "name": "mcp__plugin_gfirebase_gfirebase__firebasecr_issues_notes_list",
+    "kind": "read",
     "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
     ],
-    "methodId": "firebasedataconnect.projects.locations.services.schemas.create",
-    "title": "firebasedataconnect.projects.locations.services.schemas.create"
+    "methodId": "firebasecrashlytics.projects.apps.issues.notes.list",
+    "title": "firebasecrashlytics.projects.apps.issues.notes.list"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_pro_loc_ser_sch_dele",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebasedataconnect.projects.locations.services.schemas.delete",
-    "title": "firebasedataconnect.projects.locations.services.schemas.delete"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_pro_loc_ser_sch_list",
+    "name": "mcp__plugin_gfirebase_gfirebase__firebased_services_schemas_list",
     "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"
@@ -1936,34 +1819,115 @@
     "title": "firebasedataconnect.projects.locations.services.schemas.list"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_pro_loc_ser_sch_migr",
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_connectors_create",
     "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"
     ],
-    "methodId": "firebasedataconnect.projects.locations.services.schemas.migrate",
-    "title": "firebasedataconnect.projects.locations.services.schemas.migrate"
+    "methodId": "firebasedataconnect.projects.locations.services.connectors.create",
+    "title": "firebasedataconnect.projects.locations.services.connectors.create"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_pro_loc_ser_sch_patc",
-    "kind": "write",
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_connectors_delete",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"
     ],
-    "methodId": "firebasedataconnect.projects.locations.services.schemas.patch",
-    "title": "firebasedataconnect.projects.locations.services.schemas.patch"
+    "methodId": "firebasedataconnect.projects.locations.services.connectors.delete",
+    "title": "firebasedataconnect.projects.locations.services.connectors.delete"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_pro_loc_ser_sche_get",
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_connectors_get",
     "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"
     ],
-    "methodId": "firebasedataconnect.projects.locations.services.schemas.get",
-    "title": "firebasedataconnect.projects.locations.services.schemas.get"
+    "methodId": "firebasedataconnect.projects.locations.services.connectors.get",
+    "title": "firebasedataconnect.projects.locations.services.connectors.get"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_proj_loca_inst_creat",
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_connectors_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebasedataconnect.projects.locations.services.connectors.list",
+    "title": "firebasedataconnect.projects.locations.services.connectors.list"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_connectors_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebasedataconnect.projects.locations.services.connectors.patch",
+    "title": "firebasedataconnect.projects.locations.services.connectors.patch"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_execute_graphql",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebasedataconnect.projects.locations.services.executeGraphql",
+    "title": "firebasedataconnect.projects.locations.services.executeGraphql"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_execute_graphql_read",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebasedataconnect.projects.locations.services.executeGraphqlRead",
+    "title": "firebasedataconnect.projects.locations.services.executeGraphqlRead"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_generate_query",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebasedataconnect.projects.locations.services.generateQuery",
+    "title": "firebasedataconnect.projects.locations.services.generateQuery"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_generate_schema",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebasedataconnect.projects.locations.services.generateSchema",
+    "title": "firebasedataconnect.projects.locations.services.generateSchema"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebasedataconnect.projects.locations.get",
+    "title": "firebasedataconnect.projects.locations.get"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_impersonate_mutation",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebasedataconnect.projects.locations.services.connectors.impersonateMutation",
+    "title": "firebasedataconnect.projects.locations.services.connectors.impersonateMutation"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_impersonate_query",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebasedataconnect.projects.locations.services.connectors.impersonateQuery",
+    "title": "firebasedataconnect.projects.locations.services.connectors.impersonateQuery"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_instances_create",
     "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform",
@@ -1973,7 +1937,7 @@
     "title": "firebasedatabase.projects.locations.instances.create"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_proj_loca_inst_delet",
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_instances_delete",
     "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform",
@@ -1983,7 +1947,7 @@
     "title": "firebasedatabase.projects.locations.instances.delete"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_proj_loca_inst_disab",
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_instances_disable",
     "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform",
@@ -1993,111 +1957,7 @@
     "title": "firebasedatabase.projects.locations.instances.disable"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_proj_loca_inst_reena",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebasedatabase.projects.locations.instances.reenable",
-    "title": "firebasedatabase.projects.locations.instances.reenable"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_proj_loca_inst_undel",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebasedatabase.projects.locations.instances.undelete",
-    "title": "firebasedatabase.projects.locations.instances.undelete"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_proj_loca_insta_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/cloud-platform.read-only",
-      "https://www.googleapis.com/auth/firebase",
-      "https://www.googleapis.com/auth/firebase.readonly"
-    ],
-    "methodId": "firebasedatabase.projects.locations.instances.list",
-    "title": "firebasedatabase.projects.locations.instances.list"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_proj_loca_oper_cance",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebasedataconnect.projects.locations.operations.cancel",
-    "title": "firebasedataconnect.projects.locations.operations.cancel"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_proj_loca_oper_delet",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebasedataconnect.projects.locations.operations.delete",
-    "title": "firebasedataconnect.projects.locations.operations.delete"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_proj_loca_opera_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebasedataconnect.projects.locations.operations.list",
-    "title": "firebasedataconnect.projects.locations.operations.list"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_proj_loca_serv_creat",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebasedataconnect.projects.locations.services.create",
-    "title": "firebasedataconnect.projects.locations.services.create"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_proj_loca_serv_delet",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebasedataconnect.projects.locations.services.delete",
-    "title": "firebasedataconnect.projects.locations.services.delete"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_proj_loca_serv_intro",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebasedataconnect.projects.locations.services.introspectGraphql",
-    "title": "firebasedataconnect.projects.locations.services.introspectGraphql"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_proj_loca_serv_patch",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebasedataconnect.projects.locations.services.patch",
-    "title": "firebasedataconnect.projects.locations.services.patch"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_proj_loca_servi_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebasedataconnect.projects.locations.services.list",
-    "title": "firebasedataconnect.projects.locations.services.list"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_proj_locat_insta_get",
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_instances_get",
     "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform",
@@ -2109,25 +1969,48 @@
     "title": "firebasedatabase.projects.locations.instances.get"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_proj_locat_opera_get",
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_instances_list",
     "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-platform.read-only",
+      "https://www.googleapis.com/auth/firebase",
+      "https://www.googleapis.com/auth/firebase.readonly"
+    ],
+    "methodId": "firebasedatabase.projects.locations.instances.list",
+    "title": "firebasedatabase.projects.locations.instances.list"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_instances_reenable",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebasedatabase.projects.locations.instances.reenable",
+    "title": "firebasedatabase.projects.locations.instances.reenable"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_instances_undelete",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebasedatabase.projects.locations.instances.undelete",
+    "title": "firebasedatabase.projects.locations.instances.undelete"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_introspect_graphql",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"
     ],
-    "methodId": "firebasedataconnect.projects.locations.operations.get",
-    "title": "firebasedataconnect.projects.locations.operations.get"
+    "methodId": "firebasedataconnect.projects.locations.services.introspectGraphql",
+    "title": "firebasedataconnect.projects.locations.services.introspectGraphql"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_proj_locat_servi_get",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "firebasedataconnect.projects.locations.services.get",
-    "title": "firebasedataconnect.projects.locations.services.get"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_project_locatio_list",
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_list",
     "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"
@@ -2136,13 +2019,150 @@
     "title": "firebasedataconnect.projects.locations.list"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_project_location_get",
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_operations_cancel",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebasedataconnect.projects.locations.operations.cancel",
+    "title": "firebasedataconnect.projects.locations.operations.cancel"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_operations_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebasedataconnect.projects.locations.operations.delete",
+    "title": "firebasedataconnect.projects.locations.operations.delete"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_operations_get",
     "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"
     ],
-    "methodId": "firebasedataconnect.projects.locations.get",
-    "title": "firebasedataconnect.projects.locations.get"
+    "methodId": "firebasedataconnect.projects.locations.operations.get",
+    "title": "firebasedataconnect.projects.locations.operations.get"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_operations_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebasedataconnect.projects.locations.operations.list",
+    "title": "firebasedataconnect.projects.locations.operations.list"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_schemas_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebasedataconnect.projects.locations.services.schemas.create",
+    "title": "firebasedataconnect.projects.locations.services.schemas.create"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_schemas_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebasedataconnect.projects.locations.services.schemas.delete",
+    "title": "firebasedataconnect.projects.locations.services.schemas.delete"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_schemas_migrate",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebasedataconnect.projects.locations.services.schemas.migrate",
+    "title": "firebasedataconnect.projects.locations.services.schemas.migrate"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_schemas_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebasedataconnect.projects.locations.services.schemas.patch",
+    "title": "firebasedataconnect.projects.locations.services.schemas.patch"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_services_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebasedataconnect.projects.locations.services.create",
+    "title": "firebasedataconnect.projects.locations.services.create"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_services_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebasedataconnect.projects.locations.services.delete",
+    "title": "firebasedataconnect.projects.locations.services.delete"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_services_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebasedataconnect.projects.locations.services.get",
+    "title": "firebasedataconnect.projects.locations.services.get"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_services_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebasedataconnect.projects.locations.services.list",
+    "title": "firebasedataconnect.projects.locations.services.list"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_services_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebasedataconnect.projects.locations.services.patch",
+    "title": "firebasedataconnect.projects.locations.services.patch"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseda_services_schemas_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "firebasedataconnect.projects.locations.services.schemas.get",
+    "title": "firebasedataconnect.projects.locations.services.schemas.get"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseho_domains_ops_cancel",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebasehosting.projects.sites.customDomains.operations.cancel",
+    "title": "firebasehosting.projects.sites.customDomains.operations.cancel"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseho_domains_ops_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebasehosting.projects.sites.customDomains.operations.delete",
+    "title": "firebasehosting.projects.sites.customDomains.operations.delete"
   },
   {
     "name": "mcp__plugin_gfirebase_gfirebase__firebaseho_operations_cancel",
@@ -2164,26 +2184,6 @@
     "scopes": [],
     "methodId": "firebasehosting.operations.list",
     "title": "firebasehosting.operations.list"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseho_pro_sit_cus_ope_canc",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebasehosting.projects.sites.customDomains.operations.cancel",
-    "title": "firebasehosting.projects.sites.customDomains.operations.cancel"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseho_pro_sit_cus_ope_dele",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebasehosting.projects.sites.customDomains.operations.delete",
-    "title": "firebasehosting.projects.sites.customDomains.operations.delete"
   },
   {
     "name": "mcp__plugin_gfirebase_gfirebase__firebaseml_operations_cancel",
@@ -2213,79 +2213,7 @@
     "title": "firebaseml.operations.list"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseru_projec_releas_create",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebaserules.projects.releases.create",
-    "title": "firebaserules.projects.releases.create"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseru_projec_releas_delete",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebaserules.projects.releases.delete",
-    "title": "firebaserules.projects.releases.delete"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseru_projec_releas_get_ex",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase",
-      "https://www.googleapis.com/auth/firebase.readonly"
-    ],
-    "methodId": "firebaserules.projects.releases.getExecutable",
-    "title": "firebaserules.projects.releases.getExecutable"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseru_projec_release_patch",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebaserules.projects.releases.patch",
-    "title": "firebaserules.projects.releases.patch"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseru_projec_rulese_create",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebaserules.projects.rulesets.create",
-    "title": "firebaserules.projects.rulesets.create"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseru_projec_rulese_delete",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebaserules.projects.rulesets.delete",
-    "title": "firebaserules.projects.rulesets.delete"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseru_project_release_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase",
-      "https://www.googleapis.com/auth/firebase.readonly"
-    ],
-    "methodId": "firebaserules.projects.releases.list",
-    "title": "firebaserules.projects.releases.list"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseru_project_releases_get",
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaser_projects_releases_get",
     "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform",
@@ -2296,18 +2224,7 @@
     "title": "firebaserules.projects.releases.get"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseru_project_ruleset_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase",
-      "https://www.googleapis.com/auth/firebase.readonly"
-    ],
-    "methodId": "firebaserules.projects.rulesets.list",
-    "title": "firebaserules.projects.rulesets.list"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebaseru_project_rulesets_get",
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaser_projects_rulesets_get",
     "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform",
@@ -2316,6 +2233,17 @@
     ],
     "methodId": "firebaserules.projects.rulesets.get",
     "title": "firebaserules.projects.rulesets.get"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseru_get_executable",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase",
+      "https://www.googleapis.com/auth/firebase.readonly"
+    ],
+    "methodId": "firebaserules.projects.releases.getExecutable",
+    "title": "firebaserules.projects.releases.getExecutable"
   },
   {
     "name": "mcp__plugin_gfirebase_gfirebase__firebaseru_projects_test",
@@ -2329,27 +2257,79 @@
     "title": "firebaserules.projects.test"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebasest_projec_bucket_add_fi",
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseru_releases_create",
     "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform",
       "https://www.googleapis.com/auth/firebase"
     ],
-    "methodId": "firebasestorage.projects.buckets.addFirebase",
-    "title": "firebasestorage.projects.buckets.addFirebase"
+    "methodId": "firebaserules.projects.releases.create",
+    "title": "firebaserules.projects.releases.create"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebasest_projec_bucket_remove",
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseru_releases_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebaserules.projects.releases.delete",
+    "title": "firebaserules.projects.releases.delete"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseru_releases_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase",
+      "https://www.googleapis.com/auth/firebase.readonly"
+    ],
+    "methodId": "firebaserules.projects.releases.list",
+    "title": "firebaserules.projects.releases.list"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseru_releases_patch",
     "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform",
       "https://www.googleapis.com/auth/firebase"
     ],
-    "methodId": "firebasestorage.projects.buckets.removeFirebase",
-    "title": "firebasestorage.projects.buckets.removeFirebase"
+    "methodId": "firebaserules.projects.releases.patch",
+    "title": "firebaserules.projects.releases.patch"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebasest_projec_defaul_create",
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseru_rulesets_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebaserules.projects.rulesets.create",
+    "title": "firebaserules.projects.rulesets.create"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseru_rulesets_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebaserules.projects.rulesets.delete",
+    "title": "firebaserules.projects.rulesets.delete"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebaseru_rulesets_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase",
+      "https://www.googleapis.com/auth/firebase.readonly"
+    ],
+    "methodId": "firebaserules.projects.rulesets.list",
+    "title": "firebaserules.projects.rulesets.list"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebases_default_bucket_create",
     "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform",
@@ -2359,7 +2339,17 @@
     "title": "firebasestorage.projects.defaultBucket.create"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebasest_project_buckets_list",
+    "name": "mcp__plugin_gfirebase_gfirebase__firebases_delete_default_bucket",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebasestorage.projects.deleteDefaultBucket",
+    "title": "firebasestorage.projects.deleteDefaultBucket"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebases_projects_buckets_list",
     "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform",
@@ -2367,6 +2357,26 @@
     ],
     "methodId": "firebasestorage.projects.buckets.list",
     "title": "firebasestorage.projects.buckets.list"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebasest_buckets_add_firebase",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebasestorage.projects.buckets.addFirebase",
+    "title": "firebasestorage.projects.buckets.addFirebase"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebasest_get_default_bucket",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/firebase"
+    ],
+    "methodId": "firebasestorage.projects.getDefaultBucket",
+    "title": "firebasestorage.projects.getDefaultBucket"
   },
   {
     "name": "mcp__plugin_gfirebase_gfirebase__firebasest_projects_buckets_get",
@@ -2379,24 +2389,14 @@
     "title": "firebasestorage.projects.buckets.get"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebasest_projects_delete_defa",
-    "kind": "destructive",
+    "name": "mcp__plugin_gfirebase_gfirebase__firebasest_remove_firebase",
+    "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform",
       "https://www.googleapis.com/auth/firebase"
     ],
-    "methodId": "firebasestorage.projects.deleteDefaultBucket",
-    "title": "firebasestorage.projects.deleteDefaultBucket"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__firebasest_projects_get_default",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/firebase"
-    ],
-    "methodId": "firebasestorage.projects.getDefaultBucket",
-    "title": "firebasestorage.projects.getDefaultBucket"
+    "methodId": "firebasestorage.projects.buckets.removeFirebase",
+    "title": "firebasestorage.projects.buckets.removeFirebase"
   },
   {
     "name": "mcp__plugin_gfirebase_gfirebase__firestore_get_document",
@@ -2432,7 +2432,25 @@
     "title": "Server health"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__identityto_relyingpa_create_aut",
+    "name": "mcp__plugin_gfirebase_gfirebase__ident_get_oob_confirmation_code",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "identitytoolkit.relyingparty.getOobConfirmationCode",
+    "title": "identitytoolkit.relyingparty.getOobConfirmationCode"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__identity_send_verification_code",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "identitytoolkit.relyingparty.sendVerificationCode",
+    "title": "identitytoolkit.relyingparty.sendVerificationCode"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__identityto_create_auth_uri",
     "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"
@@ -2441,7 +2459,7 @@
     "title": "identitytoolkit.relyingparty.createAuthUri"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__identityto_relyingpa_delete_acc",
+    "name": "mcp__plugin_gfirebase_gfirebase__identityto_delete_acct",
     "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"
@@ -2450,7 +2468,7 @@
     "title": "identitytoolkit.relyingparty.deleteAccount"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__identityto_relyingpa_download_a",
+    "name": "mcp__plugin_gfirebase_gfirebase__identityto_download_acct",
     "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform",
@@ -2460,7 +2478,7 @@
     "title": "identitytoolkit.relyingparty.downloadAccount"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__identityto_relyingpa_email_link",
+    "name": "mcp__plugin_gfirebase_gfirebase__identityto_email_link_signin",
     "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"
@@ -2469,7 +2487,7 @@
     "title": "identitytoolkit.relyingparty.emailLinkSignin"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__identityto_relyingpa_get_accoun",
+    "name": "mcp__plugin_gfirebase_gfirebase__identityto_get_acct_info",
     "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"
@@ -2478,16 +2496,7 @@
     "title": "identitytoolkit.relyingparty.getAccountInfo"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__identityto_relyingpa_get_oob_co",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "identitytoolkit.relyingparty.getOobConfirmationCode",
-    "title": "identitytoolkit.relyingparty.getOobConfirmationCode"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__identityto_relyingpa_get_projec",
+    "name": "mcp__plugin_gfirebase_gfirebase__identityto_get_project_config",
     "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"
@@ -2496,7 +2505,7 @@
     "title": "identitytoolkit.relyingparty.getProjectConfig"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__identityto_relyingpa_get_public",
+    "name": "mcp__plugin_gfirebase_gfirebase__identityto_get_public_keys",
     "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"
@@ -2505,7 +2514,7 @@
     "title": "identitytoolkit.relyingparty.getPublicKeys"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__identityto_relyingpa_get_recapt",
+    "name": "mcp__plugin_gfirebase_gfirebase__identityto_get_recaptcha_param",
     "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"
@@ -2514,7 +2523,7 @@
     "title": "identitytoolkit.relyingparty.getRecaptchaParam"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__identityto_relyingpa_reset_pass",
+    "name": "mcp__plugin_gfirebase_gfirebase__identityto_reset_password",
     "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"
@@ -2523,16 +2532,7 @@
     "title": "identitytoolkit.relyingparty.resetPassword"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__identityto_relyingpa_send_verif",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "identitytoolkit.relyingparty.sendVerificationCode",
-    "title": "identitytoolkit.relyingparty.sendVerificationCode"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__identityto_relyingpa_set_accoun",
+    "name": "mcp__plugin_gfirebase_gfirebase__identityto_set_acct_info",
     "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"
@@ -2541,7 +2541,7 @@
     "title": "identitytoolkit.relyingparty.setAccountInfo"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__identityto_relyingpa_set_projec",
+    "name": "mcp__plugin_gfirebase_gfirebase__identityto_set_project_config",
     "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"
@@ -2550,7 +2550,7 @@
     "title": "identitytoolkit.relyingparty.setProjectConfig"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__identityto_relyingpa_sign_out_u",
+    "name": "mcp__plugin_gfirebase_gfirebase__identityto_sign_out_user",
     "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"
@@ -2559,7 +2559,7 @@
     "title": "identitytoolkit.relyingparty.signOutUser"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__identityto_relyingpa_signup_new",
+    "name": "mcp__plugin_gfirebase_gfirebase__identityto_signup_new_user",
     "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"
@@ -2568,7 +2568,7 @@
     "title": "identitytoolkit.relyingparty.signupNewUser"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__identityto_relyingpa_upload_acc",
+    "name": "mcp__plugin_gfirebase_gfirebase__identityto_upload_acct",
     "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform",
@@ -2578,7 +2578,7 @@
     "title": "identitytoolkit.relyingparty.uploadAccount"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__identityto_relyingpa_verify_ass",
+    "name": "mcp__plugin_gfirebase_gfirebase__identityto_verify_assertion",
     "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"
@@ -2587,7 +2587,7 @@
     "title": "identitytoolkit.relyingparty.verifyAssertion"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__identityto_relyingpa_verify_cus",
+    "name": "mcp__plugin_gfirebase_gfirebase__identityto_verify_custom_token",
     "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"
@@ -2596,7 +2596,7 @@
     "title": "identitytoolkit.relyingparty.verifyCustomToken"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__identityto_relyingpa_verify_pas",
+    "name": "mcp__plugin_gfirebase_gfirebase__identityto_verify_password",
     "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"
@@ -2605,7 +2605,7 @@
     "title": "identitytoolkit.relyingparty.verifyPassword"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__identityto_relyingpa_verify_pho",
+    "name": "mcp__plugin_gfirebase_gfirebase__identityto_verify_phone_number",
     "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"
@@ -2622,16 +2622,7 @@
     "title": "Get the Remote Config template"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__testing_application_get_apk_det",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "testing.applicationDetailService.getApkDetails",
-    "title": "testing.applicationDetailService.getApkDetails"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__testing_project_device_s_cancel",
+    "name": "mcp__plugin_gfirebase_gfirebase__testing_device_sessions_cancel",
     "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"
@@ -2640,7 +2631,7 @@
     "title": "testing.projects.deviceSessions.cancel"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__testing_project_device_s_create",
+    "name": "mcp__plugin_gfirebase_gfirebase__testing_device_sessions_create",
     "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"
@@ -2649,43 +2640,7 @@
     "title": "testing.projects.deviceSessions.create"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__testing_project_test_mat_cancel",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "testing.projects.testMatrices.cancel",
-    "title": "testing.projects.testMatrices.cancel"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__testing_project_test_mat_create",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "testing.projects.testMatrices.create",
-    "title": "testing.projects.testMatrices.create"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__testing_projects_device_s_patch",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "testing.projects.deviceSessions.patch",
-    "title": "testing.projects.deviceSessions.patch"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__testing_projects_device_se_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "testing.projects.deviceSessions.list",
-    "title": "testing.projects.deviceSessions.list"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__testing_projects_device_ses_get",
+    "name": "mcp__plugin_gfirebase_gfirebase__testing_device_sessions_get",
     "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"
@@ -2694,17 +2649,34 @@
     "title": "testing.projects.deviceSessions.get"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__testing_projects_test_matri_get",
+    "name": "mcp__plugin_gfirebase_gfirebase__testing_device_sessions_list",
     "kind": "read",
     "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/cloud-platform.read-only"
+      "https://www.googleapis.com/auth/cloud-platform"
     ],
-    "methodId": "testing.projects.testMatrices.get",
-    "title": "testing.projects.testMatrices.get"
+    "methodId": "testing.projects.deviceSessions.list",
+    "title": "testing.projects.deviceSessions.list"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__testing_test_environment_ca_get",
+    "name": "mcp__plugin_gfirebase_gfirebase__testing_device_sessions_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "testing.projects.deviceSessions.patch",
+    "title": "testing.projects.deviceSessions.patch"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__testing_service_get_apk_details",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "testing.applicationDetailService.getApkDetails",
+    "title": "testing.applicationDetailService.getApkDetails"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__testing_test_env_catalog_get",
     "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform",
@@ -2714,133 +2686,35 @@
     "title": "testing.testEnvironmentCatalog.get"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__toolresult_pro_his_exe_clu_list",
-    "kind": "read",
+    "name": "mcp__plugin_gfirebase_gfirebase__testing_test_matrices_cancel",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"
     ],
-    "methodId": "toolresults.projects.histories.executions.clusters.list",
-    "title": "toolresults.projects.histories.executions.clusters.list"
+    "methodId": "testing.projects.testMatrices.cancel",
+    "title": "testing.projects.testMatrices.cancel"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__toolresult_pro_his_exe_clus_get",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "toolresults.projects.histories.executions.clusters.get",
-    "title": "toolresults.projects.histories.executions.clusters.get"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__toolresult_pro_his_exe_env_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "toolresults.projects.histories.executions.environments.list",
-    "title": "toolresults.projects.histories.executions.environments.list"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__toolresult_pro_his_exe_envi_get",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "toolresults.projects.histories.executions.environments.get",
-    "title": "toolresults.projects.histories.executions.environments.get"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__toolresult_pro_his_exe_ste_203c",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "toolresults.projects.histories.executions.steps.getPerfMetricsSummary",
-    "title": "toolresults.projects.histories.executions.steps.getPerfMetricsSummary"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__toolresult_pro_his_exe_ste_2837",
+    "name": "mcp__plugin_gfirebase_gfirebase__testing_test_matrices_create",
     "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"
     ],
-    "methodId": "toolresults.projects.histories.executions.steps.perfSampleSeries.create",
-    "title": "toolresults.projects.histories.executions.steps.perfSampleSeries.create"
+    "methodId": "testing.projects.testMatrices.create",
+    "title": "testing.projects.testMatrices.create"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__toolresult_pro_his_exe_ste_344f",
+    "name": "mcp__plugin_gfirebase_gfirebase__testing_test_matrices_get",
     "kind": "read",
     "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-platform.read-only"
     ],
-    "methodId": "toolresults.projects.histories.executions.steps.testCases.get",
-    "title": "toolresults.projects.histories.executions.steps.testCases.get"
+    "methodId": "testing.projects.testMatrices.get",
+    "title": "testing.projects.testMatrices.get"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__toolresult_pro_his_exe_ste_8c77",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "toolresults.projects.histories.executions.steps.get",
-    "title": "toolresults.projects.histories.executions.steps.get"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__toolresult_pro_his_exe_ste_8edc",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "toolresults.projects.histories.executions.steps.perfMetricsSummary.create",
-    "title": "toolresults.projects.histories.executions.steps.perfMetricsSummary.create"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__toolresult_pro_his_exe_ste_9bac",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "toolresults.projects.histories.executions.steps.perfSampleSeries.list",
-    "title": "toolresults.projects.histories.executions.steps.perfSampleSeries.list"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__toolresult_pro_his_exe_ste_a21c",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "toolresults.projects.histories.executions.steps.perfSampleSeries.get",
-    "title": "toolresults.projects.histories.executions.steps.perfSampleSeries.get"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__toolresult_pro_his_exe_ste_acce",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "toolresults.projects.histories.executions.steps.accessibilityClusters",
-    "title": "toolresults.projects.histories.executions.steps.accessibilityClusters"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__toolresult_pro_his_exe_ste_ca67",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "toolresults.projects.histories.executions.steps.perfSampleSeries.samples.list",
-    "title": "toolresults.projects.histories.executions.steps.perfSampleSeries.samples.list"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__toolresult_pro_his_exe_ste_crea",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "toolresults.projects.histories.executions.steps.create",
-    "title": "toolresults.projects.histories.executions.steps.create"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__toolresult_pro_his_exe_ste_e393",
+    "name": "mcp__plugin_gfirebase_gfirebase__too_execs_steps_thumbnails_list",
     "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"
@@ -2849,7 +2723,7 @@
     "title": "toolresults.projects.histories.executions.steps.thumbnails.list"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__toolresult_pro_his_exe_ste_f80f",
+    "name": "mcp__plugin_gfirebase_gfirebase__too_series_samples_batch_create",
     "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"
@@ -2858,34 +2732,52 @@
     "title": "toolresults.projects.histories.executions.steps.perfSampleSeries.samples.batchCreate"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__toolresult_pro_his_exe_ste_f89c",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "toolresults.projects.histories.executions.steps.testCases.list",
-    "title": "toolresults.projects.histories.executions.steps.testCases.list"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__toolresult_pro_his_exe_ste_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "toolresults.projects.histories.executions.steps.list",
-    "title": "toolresults.projects.histories.executions.steps.list"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__toolresult_pro_his_exe_ste_patc",
+    "name": "mcp__plugin_gfirebase_gfirebase__tool_execs_steps_summary_create",
     "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"
     ],
-    "methodId": "toolresults.projects.histories.executions.steps.patch",
-    "title": "toolresults.projects.histories.executions.steps.patch"
+    "methodId": "toolresults.projects.histories.executions.steps.perfMetricsSummary.create",
+    "title": "toolresults.projects.histories.executions.steps.perfMetricsSummary.create"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__toolresult_pro_his_exe_ste_publ",
+    "name": "mcp__plugin_gfirebase_gfirebase__toolr_execs_steps_series_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "toolresults.projects.histories.executions.steps.perfSampleSeries.create",
+    "title": "toolresults.projects.histories.executions.steps.perfSampleSeries.create"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__toolr_steps_series_samples_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "toolresults.projects.histories.executions.steps.perfSampleSeries.samples.list",
+    "title": "toolresults.projects.histories.executions.steps.perfSampleSeries.samples.list"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__toolre_execs_steps_series_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "toolresults.projects.histories.executions.steps.perfSampleSeries.list",
+    "title": "toolresults.projects.histories.executions.steps.perfSampleSeries.list"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__toolre_get_perf_metrics_summary",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "toolresults.projects.histories.executions.steps.getPerfMetricsSummary",
+    "title": "toolresults.projects.histories.executions.steps.getPerfMetricsSummary"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__toolre_publish_xunit_xml_files",
     "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"
@@ -2894,16 +2786,43 @@
     "title": "toolresults.projects.histories.executions.steps.publishXunitXmlFiles"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__toolresult_proj_hist_exec_creat",
-    "kind": "write",
+    "name": "mcp__plugin_gfirebase_gfirebase__toolresu_accessibility_clusters",
+    "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"
     ],
-    "methodId": "toolresults.projects.histories.executions.create",
-    "title": "toolresults.projects.histories.executions.create"
+    "methodId": "toolresults.projects.histories.executions.steps.accessibilityClusters",
+    "title": "toolresults.projects.histories.executions.steps.accessibilityClusters"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__toolresult_proj_hist_exec_patch",
+    "name": "mcp__plugin_gfirebase_gfirebase__toolresu_execs_steps_cases_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "toolresults.projects.histories.executions.steps.testCases.list",
+    "title": "toolresults.projects.histories.executions.steps.testCases.list"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__toolresu_execs_steps_series_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "toolresults.projects.histories.executions.steps.perfSampleSeries.get",
+    "title": "toolresults.projects.histories.executions.steps.perfSampleSeries.get"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__toolresul_execs_steps_cases_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "toolresults.projects.histories.executions.steps.testCases.get",
+    "title": "toolresults.projects.histories.executions.steps.testCases.get"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__toolresul_histories_execs_patch",
     "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"
@@ -2912,52 +2831,7 @@
     "title": "toolresults.projects.histories.executions.patch"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__toolresult_proj_hist_execu_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "toolresults.projects.histories.executions.list",
-    "title": "toolresults.projects.histories.executions.list"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__toolresult_proj_histo_execu_get",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "toolresults.projects.histories.executions.get",
-    "title": "toolresults.projects.histories.executions.get"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__toolresult_projec_histor_create",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "toolresults.projects.histories.create",
-    "title": "toolresults.projects.histories.create"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__toolresult_project_histori_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "toolresults.projects.histories.list",
-    "title": "toolresults.projects.histories.list"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__toolresult_project_historie_get",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ],
-    "methodId": "toolresults.projects.histories.get",
-    "title": "toolresults.projects.histories.get"
-  },
-  {
-    "name": "mcp__plugin_gfirebase_gfirebase__toolresult_projects_get_setting",
+    "name": "mcp__plugin_gfirebase_gfirebase__toolresul_projects_get_settings",
     "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"
@@ -2966,7 +2840,133 @@
     "title": "toolresults.projects.getSettings"
   },
   {
-    "name": "mcp__plugin_gfirebase_gfirebase__toolresult_projects_initialize",
+    "name": "mcp__plugin_gfirebase_gfirebase__toolresult_execs_clusters_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "toolresults.projects.histories.executions.clusters.get",
+    "title": "toolresults.projects.histories.executions.clusters.get"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__toolresult_execs_clusters_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "toolresults.projects.histories.executions.clusters.list",
+    "title": "toolresults.projects.histories.executions.clusters.list"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__toolresult_execs_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "toolresults.projects.histories.executions.create",
+    "title": "toolresults.projects.histories.executions.create"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__toolresult_execs_envs_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "toolresults.projects.histories.executions.environments.get",
+    "title": "toolresults.projects.histories.executions.environments.get"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__toolresult_execs_envs_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "toolresults.projects.histories.executions.environments.list",
+    "title": "toolresults.projects.histories.executions.environments.list"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__toolresult_execs_steps_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "toolresults.projects.histories.executions.steps.create",
+    "title": "toolresults.projects.histories.executions.steps.create"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__toolresult_execs_steps_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "toolresults.projects.histories.executions.steps.get",
+    "title": "toolresults.projects.histories.executions.steps.get"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__toolresult_execs_steps_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "toolresults.projects.histories.executions.steps.list",
+    "title": "toolresults.projects.histories.executions.steps.list"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__toolresult_execs_steps_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "toolresults.projects.histories.executions.steps.patch",
+    "title": "toolresults.projects.histories.executions.steps.patch"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__toolresult_histories_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "toolresults.projects.histories.create",
+    "title": "toolresults.projects.histories.create"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__toolresult_histories_execs_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "toolresults.projects.histories.executions.get",
+    "title": "toolresults.projects.histories.executions.get"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__toolresult_histories_execs_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "toolresults.projects.histories.executions.list",
+    "title": "toolresults.projects.histories.executions.list"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__toolresult_histories_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "toolresults.projects.histories.get",
+    "title": "toolresults.projects.histories.get"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__toolresult_histories_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "methodId": "toolresults.projects.histories.list",
+    "title": "toolresults.projects.histories.list"
+  },
+  {
+    "name": "mcp__plugin_gfirebase_gfirebase__toolresult_initialize_settings",
     "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"

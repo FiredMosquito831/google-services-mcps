@@ -248,7 +248,7 @@ test('requirements: the gchat google list resolves to Chat user scopes only, nev
   const readonly = resolveScopes(google, 'readonly');
   assert.deepEqual(readonly.scopes, [G('chat.memberships.readonly'), G('chat.messages.readonly'), G('chat.spaces.readonly')]);
   // The notification settings have no read-only scope, so their read stays outside a readonly login.
-  assert.ok(readonly.uncovered.includes('gchat/chat_users_spaces_space_notificatio_get'));
+  assert.ok(readonly.uncovered.includes('gchat/chat_spaces_space_notif_setting_get'));
   const readwrite = resolveScopes(google, 'readwrite').scopes;
   // Since 1.25.0 the list prefers the six scopes of Google's Chat MCP server: read-only spaces, members and messages,
   // messages.create for sending, and the two user-state scopes.
@@ -319,7 +319,7 @@ test('requirements: the gclassroom google list resolves to the Classroom read-on
     C('topics'),
   ]);
   // Without the generated materials list, no tool of the list would bring the materials scope to a readonly login.
-  const withoutMaterialsList = google.filter((r) => r.tool !== 'gclassroom/classroom_cour_cour_list_1590');
+  const withoutMaterialsList = google.filter((r) => r.tool !== 'gclassroom/classroom_materials_list');
   assert.equal(resolveScopes(withoutMaterialsList, 'readonly').scopes.includes(C('courseworkmaterials.readonly')), false);
 });
 
@@ -400,9 +400,9 @@ test('requirements: the gai google list (6 tools, no gateway) resolves to cloud-
   assert.deepEqual(readonly.scopes, [G('cloud-platform.read-only')]);
   // Discovery lists cloud-platform.read-only for generateContent and embedContent, but not for countTokens or Agent Search.
   assert.deepEqual(readonly.uncovered.sort(), [
-    'gai/discoverye_pro_loc_coll_engi_serv_sear_a054',
-    'gai/discoverye_proj_loca_coll_engin_servi_answe',
-    'gai/discoverye_projec_locati_collec_engine_list',
+    'gai/discoverye_collections_engines_list',
+    'gai/discoverye_engines_serving_configs_answer',
+    'gai/discoverye_engines_serving_configs_search',
     'gai/vertex_count_tokens',
   ]);
   assert.deepEqual(resolveScopes(google, 'readwrite').scopes, [G('cloud-platform')]);

@@ -84,6 +84,7 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `blogger_users_get` | read | blogger.users.get | blogger, blogger.readonly |
 | `youtube_abuse_reports_insert` | write | youtube.abuseReports.insert | youtube, youtube.force-ssl |
 | `youtube_activities_list` | read | youtube.activities.list | youtube, youtube.force-ssl |
+| `youtube_broadcasts_transition` | destructive | youtube.liveBroadcasts.transition | youtube, youtube.force-ssl |
 | `youtube_captions_delete` | destructive | youtube.captions.delete | youtube.force-ssl, youtubepartner |
 | `youtube_captions_download` | read | youtube.captions.download | youtube.force-ssl, youtubepartner |
 | `youtube_captions_list` | read | youtube.captions.list | youtube.force-ssl, youtubepartner |
@@ -99,12 +100,10 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `youtube_comments_insert` | write | youtube.comments.insert | youtube.force-ssl |
 | `youtube_comments_list` | read | youtube.comments.list | youtube.force-ssl |
 | `youtube_comments_mark_as_spam` | write | youtube.comments.markAsSpam | youtube.force-ssl |
-| `youtube_comments_set_moderation_s` | write | youtube.comments.setModerationStatus | youtube.force-ssl |
 | `youtube_comments_update` | write | youtube.comments.update | youtube.force-ssl |
 | `youtube_i18n_languages_list` | read | youtube.i18nLanguages.list | youtube, youtube.force-ssl |
 | `youtube_i18n_regions_list` | read | youtube.i18nRegions.list | youtube, youtube.force-ssl |
-| `youtube_live_broadca_insert_cuepo` | write | youtube.liveBroadcasts.insertCuepoint | youtube, youtube.force-ssl |
-| `youtube_live_broadcast_transition` | destructive | youtube.liveBroadcasts.transition | youtube, youtube.force-ssl |
+| `youtube_insert_cuepoint` | write | youtube.liveBroadcasts.insertCuepoint | youtube, youtube.force-ssl |
 | `youtube_live_broadcasts_bind` | write | youtube.liveBroadcasts.bind | youtube, youtube.force-ssl |
 | `youtube_live_broadcasts_delete` | destructive | youtube.liveBroadcasts.delete | youtube, youtube.force-ssl |
 | `youtube_live_broadcasts_insert` | write | youtube.liveBroadcasts.insert | youtube, youtube.force-ssl |
@@ -112,12 +111,10 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `youtube_live_broadcasts_update` | write | youtube.liveBroadcasts.update | youtube, youtube.force-ssl |
 | `youtube_live_chat_bans_delete` | destructive | youtube.liveChatBans.delete | youtube, youtube.force-ssl |
 | `youtube_live_chat_bans_insert` | write | youtube.liveChatBans.insert | youtube, youtube.force-ssl |
-| `youtube_live_chat_mess_transition` | write | youtube.liveChatMessages.transition | youtube, youtube.force-ssl |
 | `youtube_live_chat_messages_delete` | destructive | youtube.liveChatMessages.delete | youtube, youtube.force-ssl |
 | `youtube_live_chat_messages_insert` | write | youtube.liveChatMessages.insert | youtube, youtube.force-ssl |
 | `youtube_live_chat_messages_list` | read | youtube.liveChatMessages.list | youtube, youtube.force-ssl |
-| `youtube_live_chat_moderato_delete` | destructive | youtube.liveChatModerators.delete | youtube, youtube.force-ssl |
-| `youtube_live_chat_moderato_insert` | write | youtube.liveChatModerators.insert | youtube, youtube.force-ssl |
+| `youtube_live_chat_messages_stream` | read | youtube.youtube.v3.liveChat.messages.stream | youtube, youtube.force-ssl |
 | `youtube_live_chat_moderators_list` | read | youtube.liveChatModerators.list | youtube, youtube.force-ssl |
 | `youtube_live_streams_delete` | destructive | youtube.liveStreams.delete | youtube, youtube.force-ssl |
 | `youtube_live_streams_insert` | write | youtube.liveStreams.insert | youtube, youtube.force-ssl |
@@ -125,6 +122,9 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `youtube_live_streams_update` | write | youtube.liveStreams.update | youtube, youtube.force-ssl |
 | `youtube_members_list` | read | youtube.members.list | youtube.channel-memberships.creator |
 | `youtube_memberships_levels_list` | read | youtube.membershipsLevels.list | youtube.channel-memberships.creator |
+| `youtube_messages_transition` | write | youtube.liveChatMessages.transition | youtube, youtube.force-ssl |
+| `youtube_moderators_delete` | destructive | youtube.liveChatModerators.delete | youtube, youtube.force-ssl |
+| `youtube_moderators_insert` | write | youtube.liveChatModerators.insert | youtube, youtube.force-ssl |
 | `youtube_playlist_images_delete` | destructive | youtube.playlistImages.delete | youtube, youtube.force-ssl |
 | `youtube_playlist_images_list` | read | youtube.playlistImages.list | youtube, youtube.force-ssl |
 | `youtube_playlist_items_delete` | destructive | youtube.playlistItems.delete | youtube, youtube.force-ssl |
@@ -135,7 +135,9 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `youtube_playlists_insert` | write | youtube.playlists.insert | youtube, youtube.force-ssl |
 | `youtube_playlists_list` | read | youtube.playlists.list | youtube, youtube.force-ssl |
 | `youtube_playlists_update` | write | youtube.playlists.update | youtube, youtube.force-ssl |
+| `youtube_reasons_list` | read | youtube.videoAbuseReportReasons.list | youtube, youtube.force-ssl |
 | `youtube_search_list` | read | youtube.search.list | youtube, youtube.force-ssl |
+| `youtube_set_moderation_status` | write | youtube.comments.setModerationStatus | youtube.force-ssl |
 | `youtube_subscriptions_delete` | destructive | youtube.subscriptions.delete | youtube, youtube.force-ssl |
 | `youtube_subscriptions_insert` | write | youtube.subscriptions.insert | youtube, youtube.force-ssl |
 | `youtube_subscriptions_list` | read | youtube.subscriptions.list | youtube, youtube.force-ssl |
@@ -145,7 +147,6 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `youtube_third_party_links_insert` | write | youtube.thirdPartyLinks.insert | (none) |
 | `youtube_third_party_links_list` | read | youtube.thirdPartyLinks.list | (none) |
 | `youtube_third_party_links_update` | write | youtube.thirdPartyLinks.update | (none) |
-| `youtube_video_abuse_report_r_list` | read | youtube.videoAbuseReportReasons.list | youtube, youtube.force-ssl |
 | `youtube_video_categories_list` | read | youtube.videoCategories.list | youtube, youtube.force-ssl |
 | `youtube_video_trainability_get` | read | youtube.videoTrainability.get | youtube, youtube.force-ssl |
 | `youtube_videos_batch_get_stats` | read | youtube.videos.batchGetStats | youtube, youtube.force-ssl |
@@ -156,7 +157,6 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `youtube_videos_report_abuse` | write | youtube.videos.reportAbuse | youtube, youtube.force-ssl |
 | `youtube_videos_update` | destructive | youtube.videos.update | youtube, youtube.force-ssl |
 | `youtube_watermarks_unset` | write | youtube.watermarks.unset | youtube, youtube.force-ssl |
-| `youtube_youtu_v3_live_messa_strea` | read | youtube.youtube.v3.liveChat.messages.stream | youtube, youtube.force-ssl |
 | `youtuberep_jobs_create` | write | youtubereporting.jobs.create | yt-analytics-monetary.readonly, yt-analytics.readonly |
 | `youtuberep_jobs_delete` | destructive | youtubereporting.jobs.delete | yt-analytics-monetary.readonly, yt-analytics.readonly |
 | `youtuberep_jobs_get` | read | youtubereporting.jobs.get | yt-analytics-monetary.readonly, yt-analytics.readonly |

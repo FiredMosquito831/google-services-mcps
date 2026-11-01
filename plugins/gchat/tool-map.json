@@ -110,6 +110,15 @@
     "title": "List Chat messages"
   },
   {
+    "name": "mcp__plugin_gchat_gchat__chat_mark_as_do_not_disturb",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.users.availability"
+    ],
+    "methodId": "chat.users.availability.markAsDoNotDisturb",
+    "title": "chat.users.availability.markAsDoNotDisturb"
+  },
+  {
     "name": "mcp__plugin_gchat_gchat__chat_mark_read",
     "kind": "write",
     "scopes": [
@@ -559,6 +568,43 @@
     "title": "chat.spaces.spaceEvents.list"
   },
   {
+    "name": "mcp__plugin_gchat_gchat__chat_spaces_space_notif_setting_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.users.spacesettings"
+    ],
+    "methodId": "chat.users.spaces.spaceNotificationSetting.get",
+    "title": "chat.users.spaces.spaceNotificationSetting.get"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_spaces_space_notif_setting_patch",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.users.spacesettings"
+    ],
+    "methodId": "chat.users.spaces.spaceNotificationSetting.patch",
+    "title": "chat.users.spaces.spaceNotificationSetting.patch"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_spaces_update_space_read_state",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.users.readstate"
+    ],
+    "methodId": "chat.users.spaces.updateSpaceReadState",
+    "title": "chat.users.spaces.updateSpaceReadState"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_threads_get_thread_read_state",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.users.readstate",
+      "https://www.googleapis.com/auth/chat.users.readstate.readonly"
+    ],
+    "methodId": "chat.users.spaces.threads.getThreadReadState",
+    "title": "chat.users.spaces.threads.getThreadReadState"
+  },
+  {
     "name": "mcp__plugin_gchat_gchat__chat_users_availability_get",
     "kind": "read",
     "scopes": [
@@ -585,15 +631,6 @@
     ],
     "methodId": "chat.users.availability.markAsAway",
     "title": "chat.users.availability.markAsAway"
-  },
-  {
-    "name": "mcp__plugin_gchat_gchat__chat_users_availability_mark_as_do_not",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/chat.users.availability"
-    ],
-    "methodId": "chat.users.availability.markAsDoNotDisturb",
-    "title": "chat.users.availability.markAsDoNotDisturb"
   },
   {
     "name": "mcp__plugin_gchat_gchat__chat_users_availability_patch",
@@ -678,43 +715,6 @@
     ],
     "methodId": "chat.users.spaces.getSpaceReadState",
     "title": "chat.users.spaces.getSpaceReadState"
-  },
-  {
-    "name": "mcp__plugin_gchat_gchat__chat_users_spaces_space_notificat_patch",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/chat.users.spacesettings"
-    ],
-    "methodId": "chat.users.spaces.spaceNotificationSetting.patch",
-    "title": "chat.users.spaces.spaceNotificationSetting.patch"
-  },
-  {
-    "name": "mcp__plugin_gchat_gchat__chat_users_spaces_space_notificatio_get",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/chat.users.spacesettings"
-    ],
-    "methodId": "chat.users.spaces.spaceNotificationSetting.get",
-    "title": "chat.users.spaces.spaceNotificationSetting.get"
-  },
-  {
-    "name": "mcp__plugin_gchat_gchat__chat_users_spaces_threads_get_thread_re",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/chat.users.readstate",
-      "https://www.googleapis.com/auth/chat.users.readstate.readonly"
-    ],
-    "methodId": "chat.users.spaces.threads.getThreadReadState",
-    "title": "chat.users.spaces.threads.getThreadReadState"
-  },
-  {
-    "name": "mcp__plugin_gchat_gchat__chat_users_spaces_update_space_read_sta",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/chat.users.readstate"
-    ],
-    "methodId": "chat.users.spaces.updateSpaceReadState",
-    "title": "chat.users.spaces.updateSpaceReadState"
   },
   {
     "name": "mcp__plugin_gchat_gchat__health",

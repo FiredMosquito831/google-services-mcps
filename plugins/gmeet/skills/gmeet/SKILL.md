@@ -27,11 +27,11 @@ Only if the chat tools fail, the same steps in a terminal: `node "${CLAUDE_PLUGI
 
 ### 2. A past meeting
 
-1. `meet_conference_records_list` (filter by meeting code or time), then `meet_conference_recor_participants_list` with parent conferenceRecords/<id>.
+1. `meet_conference_records_list` (filter by meeting code or time), then `meet_records_participants_list` with parent conferenceRecords/<id>.
 
 ### 3. Transcript and recording
 
-1. `meet_conference_record_transcripts_list` with parent, then `meet_conference_transcript_entries_list`.
+1. `meet_records_transcripts_list` with parent, then `meet_records_transcripts_entries_list`.
 2. `meet_conference_records_recordings_list`: the recording and transcript files are in Drive; read them with the gdrive plugin and the file id.
 
 ## Notes

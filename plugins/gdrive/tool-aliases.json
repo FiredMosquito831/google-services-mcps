@@ -1,0 +1,33 @@
+{
+  "note": "Old names of generated tools, accepted until 3.0.0 (renamed in 2.0.0). Each key is an old tool name, each value the name that tool has now. See CHANGELOG.md.",
+  "aliases": {
+    "books_dictionary_list_offline_metadat": "books_dictionary_list_offline_meta",
+    "books_myconfig_release_download_acces": "books_release_download_access",
+    "books_mylibrary_bookshelve_add_volume": "books_bookshelves_add_volume",
+    "books_mylibrary_bookshelve_clear_volu": "books_bookshelves_clear_volumes",
+    "books_mylibrary_bookshelve_move_volum": "books_bookshelves_move_volume",
+    "books_mylibrary_bookshelve_remove_vol": "books_bookshelves_remove_volume",
+    "books_mylibrary_readingpos_set_positi": "books_readingpositions_set_position",
+    "books_onboarding_list_category_volume": "books_list_category_volumes",
+    "drivelabel_labe_revi_permi_batch_52b2": "drivelabel_revs_perms_batch_delete",
+    "drivelabel_labe_revi_permi_batch_b7ee": "drivelabel_revs_perms_batch_update",
+    "drivelabel_label_revisi_permis_create": "drivelabel_labels_revs_perms_create",
+    "drivelabel_label_revisi_permis_delete": "drivelabel_labels_revs_perms_delete",
+    "drivelabel_labels_permissio_batch_del": "drivelabel_labels_perms_batch_delete",
+    "drivelabel_labels_permissio_batch_upd": "drivelabel_labels_perms_batch_update",
+    "drivelabel_labels_revisi_permiss_list": "drivelabel_labels_revs_perms_list",
+    "drivelabel_labels_revision_locks_list": "drivelabe_labels_revisions_locks_list",
+    "drivelabel_labels_revisions_update_pe": "drivelabel_labels_revs_update_perms",
+    "drivelabel_labels_update_label_copy_m": "drivelabel_update_label_copy_mode",
+    "drivelabel_labels_update_label_enable": "dri_update_label_enabled_app_settings",
+    "sheets_spreadsh_values_batch_cle_7bcc": "sheets_values_batch_clear",
+    "sheets_spreadsh_values_batch_cle_c5d4": "she_values_batch_clear_by_data_filter",
+    "sheets_spreadsh_values_batch_upd_91bd": "sheets_batch_update_by_data_filter",
+    "sheets_spreadsh_values_batch_upd_d329": "sheets_values_batch_update",
+    "sheets_spreadsheet_developer_m_search": "sheets_spreadsheets_meta_search",
+    "sheets_spreadsheet_values_batch_get_b": "sheet_values_batch_get_by_data_filter",
+    "sheets_spreadsheets_developer_met_get": "sheets_spreadsheets_meta_get",
+    "sheets_spreadsheets_get_by_data_filte": "sheets_get_by_data_filter",
+    "slides_presentatio_pages_get_thumbnai": "slides_pages_get_thumbnail"
+  }
+}

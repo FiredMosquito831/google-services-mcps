@@ -31,7 +31,7 @@ Only if the chat tools fail, the same steps in a terminal: `node "${CLAUDE_PLUGI
 
 ### 3. Vertex AI Search
 
-1. `discoverye_projec_locati_collec_engine_list` lists the apps (engines); then the engine's search or answer tool.
+1. `discoverye_collections_engines_list` lists the apps (engines); then the engine's search or answer tool.
 
 ### 4. Other AI APIs
 

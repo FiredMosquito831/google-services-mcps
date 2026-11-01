@@ -1,0 +1,12 @@
+{
+  "note": "Old names of generated tools, accepted until 3.0.0 (renamed in 2.0.0). Each key is an old tool name, each value the name that tool has now. See CHANGELOG.md.",
+  "aliases": {
+    "chromeuxre_records_query_history_re": "chromeuxre_query_history_record",
+    "civicinfo_divisions_query_division": "civicinfo_query_division_by_address",
+    "civicinfo_elections_voter_info_quer": "civicinfo_voter_info_query",
+    "developerk_documents_search_documen": "developerk_docs_search_doc_chunks",
+    "pagespeedo_pagespeedap_runpagespeed": "pagespeed_pagespeedapi_runpagespeed",
+    "versionhis_plat_chan_vers_rele_list": "versionhis_chans_vers_releases_list",
+    "versionhis_platf_channe_versio_list": "versionhi_platforms_chans_vers_list"
+  }
+}

@@ -34,7 +34,7 @@ const TOOL_MAP = [
  * A fake plugin folder. toolMap null means no tool-map.json. policy, when given, is written
  * as <tokenDir>/policy.json; a string is written as-is, anything else as JSON.
  */
-function fakePlugin({ toolMap = TOOL_MAP, policy, folder = 'google-cloud', manifest } = {}) {
+function fakePlugin({ toolMap = TOOL_MAP, policy, folder = 'google-cloud', manifest, aliases } = {}) {
   const root = mkdtempSync(join(tmpdir(), 'gsm-hook-test-'));
   work.push(root);
   const plugin = join(root, folder);
@@ -49,6 +49,9 @@ function fakePlugin({ toolMap = TOOL_MAP, policy, folder = 'google-cloud', manif
   copyFileSync(dist('core/dynamic.js'), join(plugin, 'core', 'dynamic.js'));
   // And the unset-option rule for GSM_TOKEN_DIR (1.37.1).
   copyFileSync(dist('core/plugin-option.js'), join(plugin, 'core', 'plugin-option.js'));
+  // And the old tool names of 2.0.0 (tool-aliases.json in the plugin folder).
+  copyFileSync(dist('core/tool-aliases.js'), join(plugin, 'core', 'tool-aliases.js'));
+  if (aliases !== undefined) writeFileSync(join(plugin, 'tool-aliases.json'), JSON.stringify({ aliases }, null, 2));
   if (toolMap !== null) writeFileSync(join(plugin, 'tool-map.json'), JSON.stringify(toolMap, null, 2));
   // manifest: undefined writes no plugin.json; a string is written as-is; anything else as JSON.
   if (manifest !== undefined) {

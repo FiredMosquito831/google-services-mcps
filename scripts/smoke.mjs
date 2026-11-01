@@ -78,6 +78,7 @@ function staticChecks(id) {
     'servers.json',
     'scopes.json',
     'tool-map.json',
+    'tool-aliases.json',
     'hooks/hooks.json',
     'bin/gsm.mjs',
     'bin/gsm-hook.mjs',

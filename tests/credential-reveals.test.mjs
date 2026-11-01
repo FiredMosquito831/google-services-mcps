@@ -73,14 +73,14 @@ const WRITES = [
   {
     id: 'analyticsadmin.properties.dataStreams.measurementProtocolSecrets.get',
     plugin: 'ganalytics',
-    tool: 'gaadmin_prope_data_measur_get',
+    tool: 'gaadmin_streams_secrets_get',
     gateway: true,
     evidence: 'secretValue: Output only. The measurement protocol secret value.',
   },
   {
     id: 'androidenterprise.enterprises.getServiceAccount',
     plugin: 'gplay',
-    tool: 'androident_enterprises_get_service_acco',
+    tool: 'androident_enterprises_get_service_acct',
     gateway: false,
     evidence: 'Returns a service account and credentials ... The credentials contain private key data',
   },
@@ -89,7 +89,7 @@ const WRITES = [
   {
     id: 'identitytoolkit.relyingparty.getOobConfirmationCode',
     plugin: 'gfirebase',
-    tool: 'identityto_relyingpa_get_oob_co',
+    tool: 'ident_get_oob_confirmation_code',
     gateway: false,
     evidence: 'oobCode: The code to be send to the user. (reset password, change email)',
   },
@@ -895,7 +895,7 @@ test('runServer: getServiceAccount is hidden with writes off; with writes on it 
   // What `gsm setup-service-account` stores: the key's path (a throwaway key in the temp folder).
   writeFileSync(join(tokenDir, 'service-account.json'), JSON.stringify({ keyFile, clientEmail: 'sa@test-project.iam.gserviceaccount.com', savedAt: '2026-10-31T00:00:00Z' }));
   const entry = generatedEntry(dir, 'gplay');
-  const tool = 'androident_enterprises_get_service_acco';
+  const tool = 'androident_enterprises_get_service_acct';
 
   const readOnly = await withClient(entry, childEnv(dir, tokenDir), async (client) => (await client.listTools()).tools.map((t) => t.name));
   assert.equal(readOnly.includes(tool), false, 'the reveal is not registered with writes off');
@@ -912,7 +912,7 @@ test('runServer: getServiceAccount is hidden with writes off; with writes on it 
       assert.equal(res.isError, true);
       assert.match(res.content[0].text, /You declined this action\. Nothing was changed\./);
       assert.equal(asked.length, 1, 'the gate asked once');
-      assert.match(asked[0], /About to change Google data: androident_enterprises_get_service_acco/);
+      assert.match(asked[0], /About to change Google data: androident_enterprises_get_service_acct/);
       assert.match(asked[0], /androidenterprise\.enterprises\.getServiceAccount/);
     },
     { action: 'decline' },

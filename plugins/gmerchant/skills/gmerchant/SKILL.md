@@ -26,15 +26,15 @@ The service account must also be added in Play Console (Users and permissions) o
 
 ### 2. Products and issues
 
-1. `merchantap_acco_produ_list_6ad8` with parent accounts/<id>, then `merchantap_account_products_get`; `merchantap_accounts_issues_list` for account issues.
+1. `merchantap_accts_products_list` with parent accounts/<id>, then `merchanta_accounts_products_get`; `merchantap_accounts_issues_list` for account issues.
 
 ### 3. Reports
 
-1. `merchantap_accoun_report_search` with parent accounts/<id> and a body with an MCQL query.
+1. `merchantap_accts_reports_search` with parent accounts/<id> and a body with an MCQL query.
 
 ### 4. Feeds
 
-1. `merchantap_account_data_so_list`, then `merchantap_accoun_data_so_fetch` to fetch one now.
+1. `merc_accounts_data_sources_list`, then `merchantap_accts_sources_fetch` to fetch one now.
 
 ## Notes
 

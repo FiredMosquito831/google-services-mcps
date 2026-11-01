@@ -1,0 +1,13 @@
+{
+  "note": "Old names of generated tools, accepted until 3.0.0 (renamed in 2.0.0). Each key is an old tool name, each value the name that tool has now. See CHANGELOG.md.",
+  "aliases": {
+    "youtube_comments_set_moderation_s": "youtube_set_moderation_status",
+    "youtube_live_broadca_insert_cuepo": "youtube_insert_cuepoint",
+    "youtube_live_broadcast_transition": "youtube_broadcasts_transition",
+    "youtube_live_chat_mess_transition": "youtube_messages_transition",
+    "youtube_live_chat_moderato_delete": "youtube_moderators_delete",
+    "youtube_live_chat_moderato_insert": "youtube_moderators_insert",
+    "youtube_video_abuse_report_r_list": "youtube_reasons_list",
+    "youtube_youtu_v3_live_messa_strea": "youtube_live_chat_messages_stream"
+  }
+}

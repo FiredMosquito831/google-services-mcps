@@ -26,7 +26,7 @@ The service account must also be added in Play Console (Users and permissions) o
 
 ### 2. Releases
 
-1. `androidpub_applica_tracks_releases_list` with parent. Changes to tracks go through an edit: insert, change, validate, commit.
+1. `androidpub_tracks_releases_list` with parent. Changes to tracks go through an edit: insert, change, validate, commit.
 
 ### 3. Android Management
 

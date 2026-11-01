@@ -72,6 +72,24 @@
     "title": "Sign-in status"
   },
   {
+    "name": "mcp__plugin_gdrive_gdrive__books_bookshelves_add_volume",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.mylibrary.bookshelves.addVolume",
+    "title": "books.mylibrary.bookshelves.addVolume"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_bookshelves_clear_volumes",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.mylibrary.bookshelves.clearVolumes",
+    "title": "books.mylibrary.bookshelves.clearVolumes"
+  },
+  {
     "name": "mcp__plugin_gdrive_gdrive__books_bookshelves_get",
     "kind": "read",
     "scopes": [
@@ -88,6 +106,24 @@
     ],
     "methodId": "books.bookshelves.list",
     "title": "books.bookshelves.list"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_bookshelves_move_volume",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.mylibrary.bookshelves.moveVolume",
+    "title": "books.mylibrary.bookshelves.moveVolume"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_bookshelves_remove_volume",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.mylibrary.bookshelves.removeVolume",
+    "title": "books.mylibrary.bookshelves.removeVolume"
   },
   {
     "name": "mcp__plugin_gdrive_gdrive__books_bookshelves_volumes_list",
@@ -126,7 +162,7 @@
     "title": "books.cloudloading.updateBook"
   },
   {
-    "name": "mcp__plugin_gdrive_gdrive__books_dictionary_list_offline_metadat",
+    "name": "mcp__plugin_gdrive_gdrive__books_dictionary_list_offline_meta",
     "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/books"
@@ -216,6 +252,15 @@
     "title": "books.layers.volumeAnnotations.list"
   },
   {
+    "name": "mcp__plugin_gdrive_gdrive__books_list_category_volumes",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.onboarding.listCategoryVolumes",
+    "title": "books.onboarding.listCategoryVolumes"
+  },
+  {
     "name": "mcp__plugin_gdrive_gdrive__books_myconfig_get_user_settings",
     "kind": "read",
     "scopes": [
@@ -223,15 +268,6 @@
     ],
     "methodId": "books.myconfig.getUserSettings",
     "title": "books.myconfig.getUserSettings"
-  },
-  {
-    "name": "mcp__plugin_gdrive_gdrive__books_myconfig_release_download_acces",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/books"
-    ],
-    "methodId": "books.myconfig.releaseDownloadAccess",
-    "title": "books.myconfig.releaseDownloadAccess"
   },
   {
     "name": "mcp__plugin_gdrive_gdrive__books_myconfig_request_access",
@@ -315,42 +351,6 @@
     "title": "books.mylibrary.annotations.update"
   },
   {
-    "name": "mcp__plugin_gdrive_gdrive__books_mylibrary_bookshelve_add_volume",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/books"
-    ],
-    "methodId": "books.mylibrary.bookshelves.addVolume",
-    "title": "books.mylibrary.bookshelves.addVolume"
-  },
-  {
-    "name": "mcp__plugin_gdrive_gdrive__books_mylibrary_bookshelve_clear_volu",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/books"
-    ],
-    "methodId": "books.mylibrary.bookshelves.clearVolumes",
-    "title": "books.mylibrary.bookshelves.clearVolumes"
-  },
-  {
-    "name": "mcp__plugin_gdrive_gdrive__books_mylibrary_bookshelve_move_volum",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/books"
-    ],
-    "methodId": "books.mylibrary.bookshelves.moveVolume",
-    "title": "books.mylibrary.bookshelves.moveVolume"
-  },
-  {
-    "name": "mcp__plugin_gdrive_gdrive__books_mylibrary_bookshelve_remove_vol",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/books"
-    ],
-    "methodId": "books.mylibrary.bookshelves.removeVolume",
-    "title": "books.mylibrary.bookshelves.removeVolume"
-  },
-  {
     "name": "mcp__plugin_gdrive_gdrive__books_mylibrary_bookshelves_get",
     "kind": "read",
     "scopes": [
@@ -367,15 +367,6 @@
     ],
     "methodId": "books.mylibrary.bookshelves.list",
     "title": "books.mylibrary.bookshelves.list"
-  },
-  {
-    "name": "mcp__plugin_gdrive_gdrive__books_mylibrary_readingpos_set_positi",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/books"
-    ],
-    "methodId": "books.mylibrary.readingpositions.setPosition",
-    "title": "books.mylibrary.readingpositions.setPosition"
   },
   {
     "name": "mcp__plugin_gdrive_gdrive__books_mylibrary_readingpositions_get",
@@ -403,15 +394,6 @@
     ],
     "methodId": "books.onboarding.listCategories",
     "title": "books.onboarding.listCategories"
-  },
-  {
-    "name": "mcp__plugin_gdrive_gdrive__books_onboarding_list_category_volume",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/books"
-    ],
-    "methodId": "books.onboarding.listCategoryVolumes",
-    "title": "books.onboarding.listCategoryVolumes"
   },
   {
     "name": "mcp__plugin_gdrive_gdrive__books_personalizedstream_get",
@@ -448,6 +430,24 @@
     ],
     "methodId": "books.promooffer.get",
     "title": "books.promooffer.get"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_readingpositions_set_position",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.mylibrary.readingpositions.setPosition",
+    "title": "books.mylibrary.readingpositions.setPosition"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__books_release_download_access",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/books"
+    ],
+    "methodId": "books.myconfig.releaseDownloadAccess",
+    "title": "books.myconfig.releaseDownloadAccess"
   },
   {
     "name": "mcp__plugin_gdrive_gdrive__books_series_get",
@@ -564,6 +564,13 @@
     ],
     "methodId": "docs.documents.get",
     "title": "docs.documents.get"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__dri_update_label_enabled_app_settings",
+    "kind": "write",
+    "scopes": [],
+    "methodId": "drivelabels.labels.updateLabelEnabledAppSettings",
+    "title": "drivelabels.labels.updateLabelEnabledAppSettings"
   },
   {
     "name": "mcp__plugin_gdrive_gdrive__drive_about_get",
@@ -1392,44 +1399,16 @@
     "title": "driveactivity.activity.query"
   },
   {
-    "name": "mcp__plugin_gdrive_gdrive__drivelabel_labe_revi_permi_batch_52b2",
-    "kind": "destructive",
+    "name": "mcp__plugin_gdrive_gdrive__drivelabe_labels_revisions_locks_list",
+    "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/drive.admin.labels",
-      "https://www.googleapis.com/auth/drive.labels"
+      "https://www.googleapis.com/auth/drive.admin.labels.readonly",
+      "https://www.googleapis.com/auth/drive.labels",
+      "https://www.googleapis.com/auth/drive.labels.readonly"
     ],
-    "methodId": "drivelabels.labels.revisions.permissions.batchDelete",
-    "title": "drivelabels.labels.revisions.permissions.batchDelete"
-  },
-  {
-    "name": "mcp__plugin_gdrive_gdrive__drivelabel_labe_revi_permi_batch_b7ee",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/drive.admin.labels",
-      "https://www.googleapis.com/auth/drive.labels"
-    ],
-    "methodId": "drivelabels.labels.revisions.permissions.batchUpdate",
-    "title": "drivelabels.labels.revisions.permissions.batchUpdate"
-  },
-  {
-    "name": "mcp__plugin_gdrive_gdrive__drivelabel_label_revisi_permis_create",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/drive.admin.labels",
-      "https://www.googleapis.com/auth/drive.labels"
-    ],
-    "methodId": "drivelabels.labels.revisions.permissions.create",
-    "title": "drivelabels.labels.revisions.permissions.create"
-  },
-  {
-    "name": "mcp__plugin_gdrive_gdrive__drivelabel_label_revisi_permis_delete",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/drive.admin.labels",
-      "https://www.googleapis.com/auth/drive.labels"
-    ],
-    "methodId": "drivelabels.labels.revisions.permissions.delete",
-    "title": "drivelabels.labels.revisions.permissions.delete"
+    "methodId": "drivelabels.labels.revisions.locks.list",
+    "title": "drivelabels.labels.revisions.locks.list"
   },
   {
     "name": "mcp__plugin_gdrive_gdrive__drivelabel_labels_create",
@@ -1518,26 +1497,6 @@
     "title": "drivelabels.labels.locks.list"
   },
   {
-    "name": "mcp__plugin_gdrive_gdrive__drivelabel_labels_permissio_batch_del",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/drive.admin.labels",
-      "https://www.googleapis.com/auth/drive.labels"
-    ],
-    "methodId": "drivelabels.labels.permissions.batchDelete",
-    "title": "drivelabels.labels.permissions.batchDelete"
-  },
-  {
-    "name": "mcp__plugin_gdrive_gdrive__drivelabel_labels_permissio_batch_upd",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/drive.admin.labels",
-      "https://www.googleapis.com/auth/drive.labels"
-    ],
-    "methodId": "drivelabels.labels.permissions.batchUpdate",
-    "title": "drivelabels.labels.permissions.batchUpdate"
-  },
-  {
     "name": "mcp__plugin_gdrive_gdrive__drivelabel_labels_permissions_create",
     "kind": "write",
     "scopes": [
@@ -1570,6 +1529,26 @@
     "title": "drivelabels.labels.permissions.list"
   },
   {
+    "name": "mcp__plugin_gdrive_gdrive__drivelabel_labels_perms_batch_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive.admin.labels",
+      "https://www.googleapis.com/auth/drive.labels"
+    ],
+    "methodId": "drivelabels.labels.permissions.batchDelete",
+    "title": "drivelabels.labels.permissions.batchDelete"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drivelabel_labels_perms_batch_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive.admin.labels",
+      "https://www.googleapis.com/auth/drive.labels"
+    ],
+    "methodId": "drivelabels.labels.permissions.batchUpdate",
+    "title": "drivelabels.labels.permissions.batchUpdate"
+  },
+  {
     "name": "mcp__plugin_gdrive_gdrive__drivelabel_labels_publish",
     "kind": "write",
     "scopes": [
@@ -1580,7 +1559,27 @@
     "title": "drivelabels.labels.publish"
   },
   {
-    "name": "mcp__plugin_gdrive_gdrive__drivelabel_labels_revisi_permiss_list",
+    "name": "mcp__plugin_gdrive_gdrive__drivelabel_labels_revs_perms_create",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive.admin.labels",
+      "https://www.googleapis.com/auth/drive.labels"
+    ],
+    "methodId": "drivelabels.labels.revisions.permissions.create",
+    "title": "drivelabels.labels.revisions.permissions.create"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drivelabel_labels_revs_perms_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive.admin.labels",
+      "https://www.googleapis.com/auth/drive.labels"
+    ],
+    "methodId": "drivelabels.labels.revisions.permissions.delete",
+    "title": "drivelabels.labels.revisions.permissions.delete"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drivelabel_labels_revs_perms_list",
     "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/drive.admin.labels",
@@ -1592,19 +1591,7 @@
     "title": "drivelabels.labels.revisions.permissions.list"
   },
   {
-    "name": "mcp__plugin_gdrive_gdrive__drivelabel_labels_revision_locks_list",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/drive.admin.labels",
-      "https://www.googleapis.com/auth/drive.admin.labels.readonly",
-      "https://www.googleapis.com/auth/drive.labels",
-      "https://www.googleapis.com/auth/drive.labels.readonly"
-    ],
-    "methodId": "drivelabels.labels.revisions.locks.list",
-    "title": "drivelabels.labels.revisions.locks.list"
-  },
-  {
-    "name": "mcp__plugin_gdrive_gdrive__drivelabel_labels_revisions_update_pe",
+    "name": "mcp__plugin_gdrive_gdrive__drivelabel_labels_revs_update_perms",
     "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/drive.admin.labels",
@@ -1612,23 +1599,6 @@
     ],
     "methodId": "drivelabels.labels.revisions.updatePermissions",
     "title": "drivelabels.labels.revisions.updatePermissions"
-  },
-  {
-    "name": "mcp__plugin_gdrive_gdrive__drivelabel_labels_update_label_copy_m",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/drive.admin.labels",
-      "https://www.googleapis.com/auth/drive.labels"
-    ],
-    "methodId": "drivelabels.labels.updateLabelCopyMode",
-    "title": "drivelabels.labels.updateLabelCopyMode"
-  },
-  {
-    "name": "mcp__plugin_gdrive_gdrive__drivelabel_labels_update_label_enable",
-    "kind": "write",
-    "scopes": [],
-    "methodId": "drivelabels.labels.updateLabelEnabledAppSettings",
-    "title": "drivelabels.labels.updateLabelEnabledAppSettings"
   },
   {
     "name": "mcp__plugin_gdrive_gdrive__drivelabel_labels_update_permissions",
@@ -1651,6 +1621,36 @@
     ],
     "methodId": "drivelabels.limits.getLabel",
     "title": "drivelabels.limits.getLabel"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drivelabel_revs_perms_batch_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive.admin.labels",
+      "https://www.googleapis.com/auth/drive.labels"
+    ],
+    "methodId": "drivelabels.labels.revisions.permissions.batchDelete",
+    "title": "drivelabels.labels.revisions.permissions.batchDelete"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drivelabel_revs_perms_batch_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive.admin.labels",
+      "https://www.googleapis.com/auth/drive.labels"
+    ],
+    "methodId": "drivelabels.labels.revisions.permissions.batchUpdate",
+    "title": "drivelabels.labels.revisions.permissions.batchUpdate"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drivelabel_update_label_copy_mode",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive.admin.labels",
+      "https://www.googleapis.com/auth/drive.labels"
+    ],
+    "methodId": "drivelabels.labels.updateLabelCopyMode",
+    "title": "drivelabels.labels.updateLabelCopyMode"
   },
   {
     "name": "mcp__plugin_gdrive_gdrive__drivelabel_users_get_capabilities",
@@ -1795,6 +1795,50 @@
     "title": "Server health"
   },
   {
+    "name": "mcp__plugin_gdrive_gdrive__she_values_batch_clear_by_data_filter",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/spreadsheets"
+    ],
+    "methodId": "sheets.spreadsheets.values.batchClearByDataFilter",
+    "title": "sheets.spreadsheets.values.batchClearByDataFilter"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__sheet_values_batch_get_by_data_filter",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/spreadsheets"
+    ],
+    "methodId": "sheets.spreadsheets.values.batchGetByDataFilter",
+    "title": "sheets.spreadsheets.values.batchGetByDataFilter"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__sheets_batch_update_by_data_filter",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/spreadsheets"
+    ],
+    "methodId": "sheets.spreadsheets.values.batchUpdateByDataFilter",
+    "title": "sheets.spreadsheets.values.batchUpdateByDataFilter"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__sheets_get_by_data_filter",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/spreadsheets"
+    ],
+    "methodId": "sheets.spreadsheets.getByDataFilter",
+    "title": "sheets.spreadsheets.getByDataFilter"
+  },
+  {
     "name": "mcp__plugin_gdrive_gdrive__sheets_get_values",
     "kind": "read",
     "scopes": [
@@ -1815,72 +1859,6 @@
       "https://www.googleapis.com/auth/spreadsheets"
     ],
     "title": "Insert spreadsheet rows or columns"
-  },
-  {
-    "name": "mcp__plugin_gdrive_gdrive__sheets_spreadsh_values_batch_cle_7bcc",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/drive",
-      "https://www.googleapis.com/auth/drive.file",
-      "https://www.googleapis.com/auth/spreadsheets"
-    ],
-    "methodId": "sheets.spreadsheets.values.batchClear",
-    "title": "sheets.spreadsheets.values.batchClear"
-  },
-  {
-    "name": "mcp__plugin_gdrive_gdrive__sheets_spreadsh_values_batch_cle_c5d4",
-    "kind": "destructive",
-    "scopes": [
-      "https://www.googleapis.com/auth/drive",
-      "https://www.googleapis.com/auth/drive.file",
-      "https://www.googleapis.com/auth/spreadsheets"
-    ],
-    "methodId": "sheets.spreadsheets.values.batchClearByDataFilter",
-    "title": "sheets.spreadsheets.values.batchClearByDataFilter"
-  },
-  {
-    "name": "mcp__plugin_gdrive_gdrive__sheets_spreadsh_values_batch_upd_91bd",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/drive",
-      "https://www.googleapis.com/auth/drive.file",
-      "https://www.googleapis.com/auth/spreadsheets"
-    ],
-    "methodId": "sheets.spreadsheets.values.batchUpdateByDataFilter",
-    "title": "sheets.spreadsheets.values.batchUpdateByDataFilter"
-  },
-  {
-    "name": "mcp__plugin_gdrive_gdrive__sheets_spreadsh_values_batch_upd_d329",
-    "kind": "write",
-    "scopes": [
-      "https://www.googleapis.com/auth/drive",
-      "https://www.googleapis.com/auth/drive.file",
-      "https://www.googleapis.com/auth/spreadsheets"
-    ],
-    "methodId": "sheets.spreadsheets.values.batchUpdate",
-    "title": "sheets.spreadsheets.values.batchUpdate"
-  },
-  {
-    "name": "mcp__plugin_gdrive_gdrive__sheets_spreadsheet_developer_m_search",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/drive",
-      "https://www.googleapis.com/auth/drive.file",
-      "https://www.googleapis.com/auth/spreadsheets"
-    ],
-    "methodId": "sheets.spreadsheets.developerMetadata.search",
-    "title": "sheets.spreadsheets.developerMetadata.search"
-  },
-  {
-    "name": "mcp__plugin_gdrive_gdrive__sheets_spreadsheet_values_batch_get_b",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/drive",
-      "https://www.googleapis.com/auth/drive.file",
-      "https://www.googleapis.com/auth/spreadsheets"
-    ],
-    "methodId": "sheets.spreadsheets.values.batchGetByDataFilter",
-    "title": "sheets.spreadsheets.values.batchGetByDataFilter"
   },
   {
     "name": "mcp__plugin_gdrive_gdrive__sheets_spreadsheets_batch_update",
@@ -1905,17 +1883,6 @@
     "title": "sheets.spreadsheets.create"
   },
   {
-    "name": "mcp__plugin_gdrive_gdrive__sheets_spreadsheets_developer_met_get",
-    "kind": "read",
-    "scopes": [
-      "https://www.googleapis.com/auth/drive",
-      "https://www.googleapis.com/auth/drive.file",
-      "https://www.googleapis.com/auth/spreadsheets"
-    ],
-    "methodId": "sheets.spreadsheets.developerMetadata.get",
-    "title": "sheets.spreadsheets.developerMetadata.get"
-  },
-  {
     "name": "mcp__plugin_gdrive_gdrive__sheets_spreadsheets_get",
     "kind": "read",
     "scopes": [
@@ -1929,15 +1896,26 @@
     "title": "sheets.spreadsheets.get"
   },
   {
-    "name": "mcp__plugin_gdrive_gdrive__sheets_spreadsheets_get_by_data_filte",
+    "name": "mcp__plugin_gdrive_gdrive__sheets_spreadsheets_meta_get",
     "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/drive",
       "https://www.googleapis.com/auth/drive.file",
       "https://www.googleapis.com/auth/spreadsheets"
     ],
-    "methodId": "sheets.spreadsheets.getByDataFilter",
-    "title": "sheets.spreadsheets.getByDataFilter"
+    "methodId": "sheets.spreadsheets.developerMetadata.get",
+    "title": "sheets.spreadsheets.developerMetadata.get"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__sheets_spreadsheets_meta_search",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/spreadsheets"
+    ],
+    "methodId": "sheets.spreadsheets.developerMetadata.search",
+    "title": "sheets.spreadsheets.developerMetadata.search"
   },
   {
     "name": "mcp__plugin_gdrive_gdrive__sheets_spreadsheets_sheets_copy_to",
@@ -2010,6 +1988,28 @@
     "title": "sheets.spreadsheets.values.update"
   },
   {
+    "name": "mcp__plugin_gdrive_gdrive__sheets_values_batch_clear",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/spreadsheets"
+    ],
+    "methodId": "sheets.spreadsheets.values.batchClear",
+    "title": "sheets.spreadsheets.values.batchClear"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__sheets_values_batch_update",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/spreadsheets"
+    ],
+    "methodId": "sheets.spreadsheets.values.batchUpdate",
+    "title": "sheets.spreadsheets.values.batchUpdate"
+  },
+  {
     "name": "mcp__plugin_gdrive_gdrive__sheets_write_values",
     "kind": "write",
     "scopes": [
@@ -2020,7 +2020,7 @@
     "title": "Write spreadsheet values"
   },
   {
-    "name": "mcp__plugin_gdrive_gdrive__slides_presentatio_pages_get_thumbnai",
+    "name": "mcp__plugin_gdrive_gdrive__slides_pages_get_thumbnail",
     "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/drive",

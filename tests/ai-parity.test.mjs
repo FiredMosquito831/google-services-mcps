@@ -159,9 +159,9 @@ test("the gai google list: Google's three Agent Search tools and the three Verte
     'vertex_generate_content',
     'vertex_count_tokens',
     'vertex_embed_content',
-    'discoverye_pro_loc_coll_engi_serv_sear_a054',
-    'discoverye_proj_loca_coll_engin_servi_answe',
-    'discoverye_projec_locati_collec_engine_list',
+    'discoverye_engines_serving_configs_search',
+    'discoverye_engines_serving_configs_answer',
+    'discoverye_collections_engines_list',
   ]);
   assert.deepEqual([...new Set(Object.values(google.matches).flat())].sort(), ['conversational_search', 'count_tokens', 'embed_content', 'generate_content', 'list_engines', 'search']);
   assert.match(google.notes.vertex_generate_content, /other 53 Agent Platform tools/);
@@ -170,5 +170,5 @@ test("the gai google list: Google's three Agent Search tools and the three Verte
   const kind = (name) => map.find((t) => t.name === `mcp__plugin_gai_gai__${name}`)?.kind;
   // Discovery Engine's answer is a POST that Google marks read-only, and a read here since D2 (1.24.2): every tool of the list is a read.
   for (const name of google.tools) assert.equal(kind(name), 'read', name);
-  assert.match(google.notes.discoverye_proj_loca_coll_engin_servi_answe, /D2/);
+  assert.match(google.notes.discoverye_engines_serving_configs_answer, /D2/);
 });

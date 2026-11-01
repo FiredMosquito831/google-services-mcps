@@ -34,7 +34,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const AUTHOR = { name: 'FiredMosquito831' };
-const MANIFEST_VERSION = '1.41.4';
+const MANIFEST_VERSION = '2.0.0';
 const TOOL_NAME_MAX = 64;
 /** When two API versions give one method two kinds, the riskier one is kept. A dynamic method is kept as dynamic (decided per call). */
 const RANK = { read: 0, write: 1, dynamic: 2, destructive: 3 };
@@ -70,6 +70,7 @@ const GENERATED = [
   'hooks',
   'skills',
   'tool-map.json',
+  'tool-aliases.json',
   'method-kinds.json',
   'catalog.json',
   'tool-kinds.json',
@@ -253,7 +254,13 @@ function dumpTools(serverFile, tokenDir, label) {
   if (res.status !== 0) throw new Error(`${label} --dump-tools exited with ${res.status}`);
   const parsed = JSON.parse(res.stdout);
   if (!Array.isArray(parsed.tools)) throw new Error(`${label} --dump-tools printed no tools array`);
-  return parsed.tools;
+  // aliases: old generated tool name -> name now (2.0.0), written as the plugin's tool-aliases.json.
+  const aliases = parsed.aliases ?? {};
+  if (typeof aliases !== 'object' || aliases === null || Array.isArray(aliases)) throw new Error(`${label} --dump-tools printed a bad aliases object`);
+  for (const [from, to] of Object.entries(aliases)) {
+    if (typeof to !== 'string' || to.length === 0) throw new Error(`${label}: alias ${from} does not name a tool`);
+  }
+  return { tools: parsed.tools, aliases };
 }
 
 /** Full Claude tool name: mcp__plugin_<plugin>_<server>__<tool>, with characters outside A-Za-z0-9_- replaced by "_". */
@@ -667,10 +674,18 @@ async function buildPlugin(id, product, ctx) {
 
   // Tool map: what the bundled server registers with writes on, with full Claude names.
   const dumped = dumpTools(serverFile, ctx.tokenDir, server.name);
-  const toolMap = toolMapFrom(id, server.name, dumped);
+  const toolMap = toolMapFrom(id, server.name, dumped.tools);
   writeJson(join(pluginDir, 'tool-map.json'), toolMap);
+  // Old tool names accepted until 3.0.0 (2.0.0), from the renames the server reported with its tool map: one entry per
+  // renamed tool, old -> new. The hook and the server read this file (core/tool-aliases.ts). Each new name must be a
+  // tool the server registers, and no old name may be a tool name of its own (or two tools would answer to one name).
+  const dumpedNames = new Set(dumped.tools.map((t) => t.name));
+  for (const [from, to] of Object.entries(dumped.aliases)) {
+    if (!dumpedNames.has(to)) throw new Error(`${id}: old tool name ${from} points at ${to}, which the server does not register`);
+    if (dumpedNames.has(from)) throw new Error(`${id}: old tool name ${from} is still a tool of the server`);
+  }
+  writeJson(join(pluginDir, 'tool-aliases.json'), (await import(pathToFileURL(join(ROOT, 'dist', 'core', 'tool-aliases.js')).href)).toolAliasesDocument(dumped.aliases));
   // Every tool a listed toolset names must be a tool of the server (config/products.json toolsets).
-  const dumpedNames = new Set(dumped.map((t) => t.name));
   for (const [toolset, names] of Object.entries(server.toolsets ?? {})) {
     const missing = names.filter((name) => !dumpedNames.has(name));
     if (missing.length) throw new Error(`toolset ${toolset} of ${id} names tools the server does not have: ${missing.join(', ')}`);
@@ -679,14 +694,14 @@ async function buildPlugin(id, product, ctx) {
   // that toolset, as the server builds it, so a preference never asks for a scope no tool of the toolset uses.
   for (const [toolset, byProfile] of Object.entries(server.toolsetScopes ?? {})) {
     const listed = new Set(server.toolsets?.[toolset] ?? []);
-    const accepted = new Set(dumped.filter((t) => listed.has(t.name)).flatMap((t) => t.scopes ?? []));
+    const accepted = new Set(dumped.tools.filter((t) => listed.has(t.name)).flatMap((t) => t.scopes ?? []));
     for (const [profile, scopes] of Object.entries(byProfile)) {
       const unused = scopes.filter((scope) => !accepted.has(scope));
       if (unused.length) throw new Error(`toolset ${toolset} of ${id} prefers for ${profile} scopes no tool of the toolset accepts: ${unused.join(', ')}`);
     }
   }
   // A product's preferred scopes (config/products.json scopePolicy.prefer) must each be accepted by a tool of the server.
-  const acceptedByServer = new Set(dumped.flatMap((t) => t.scopes ?? []));
+  const acceptedByServer = new Set(dumped.tools.flatMap((t) => t.scopes ?? []));
   for (const [profile, scopes] of Object.entries(server.scopePolicy?.prefer ?? {})) {
     const unused = scopes.filter((scope) => !acceptedByServer.has(scope));
     if (unused.length) throw new Error(`scopePolicy.prefer of ${id} names for ${profile} scopes no tool of the server accepts: ${unused.join(', ')}`);

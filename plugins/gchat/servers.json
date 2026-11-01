@@ -32,8 +32,8 @@
           "chat_send_message",
           "chat_mark_read",
           "chat_mark_unread",
-          "chat_users_spaces_space_notificatio_get",
-          "chat_users_spaces_space_notificat_patch"
+          "chat_spaces_space_notif_setting_get",
+          "chat_spaces_space_notif_setting_patch"
         ]
       },
       "toolsetScopes": {

@@ -206,10 +206,12 @@ test('gadmin: no duplicate tool names, and admin_users_list is the curated tool,
   assert.equal(curated.title, 'List users');
   assert.equal(curated.methodId, undefined, 'the curated tool has no Discovery method id');
 
-  // The generated Directory method of the same name is registered under a hashed name.
+  // The generated Directory method of the same name takes another readable form (2.0.0: the curated name stays put,
+  // and the method keeps its words rather than a hash).
   const generated = toolMap.filter((t) => t.methodId === 'directory.users.list');
   assert.equal(generated.length, 1, 'directory.users.list is generated once');
-  assert.match(generated[0].name, /^mcp__plugin_gadmin_gadmin__admin_users_list_[0-9a-f]{4}$/);
+  assert.notEqual(generated[0].name, 'mcp__plugin_gadmin_gadmin__admin_users_list');
+  assert.match(generated[0].name, /^mcp__plugin_gadmin_gadmin__[a-z0-9_]+$/);
 });
 
 test('every generated method id reaches tool-map.json, and matches its Discovery method', () => {

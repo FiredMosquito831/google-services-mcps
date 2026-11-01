@@ -49,8 +49,8 @@ Google has no official MCP server for this product. The google toolset is a lean
 |---|---|---|---|
 | `appsmarket_customer_license_get` | read | appsmarket.customerLicense.get | appsmarketplace.license |
 | `appsmarket_user_license_get` | read | appsmarket.userLicense.get | appsmarketplace.license |
+| `appsscript_list_script_processes` | read | script.processes.listScriptProcesses | script.processes |
 | `appsscript_processes_list` | read | script.processes.list | script.processes |
-| `appsscript_processes_list_script_proces` | read | script.processes.listScriptProcesses | script.processes |
 | `appsscript_projects_create` | write | script.projects.create | script.projects |
 | `appsscript_projects_deployments_create` | write | script.projects.deployments.create | script.deployments |
 | `appsscript_projects_deployments_delete` | destructive | script.projects.deployments.delete | script.deployments |

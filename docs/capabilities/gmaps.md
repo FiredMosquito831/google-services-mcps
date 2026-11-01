@@ -39,12 +39,12 @@ The tools that match Google's official MCP server for this product (https://deve
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
-| `addressval_v1_provide_validation_feedba` | write | addressvalidation.provideValidationFeedback | cloud-platform, maps-platform.addressvalidation |
+| `addressval_provide_validation_feedback` | write | addressvalidation.provideValidationFeedback | cloud-platform, maps-platform.addressvalidation |
 | `addressval_v1_validate_address` | read | addressvalidation.validateAddress | cloud-platform, maps-platform.addressvalidation |
 | `airquality_current_conditions_lookup` | read | airquality.currentConditions.lookup | cloud-platform |
 | `airquality_forecast_lookup` | read | airquality.forecast.lookup | cloud-platform |
 | `airquality_history_lookup` | read | airquality.history.lookup | cloud-platform |
-| `airquality_map_type_heatmap_t_lookup_he` | read | airquality.mapTypes.heatmapTiles.lookupHeatmapTile | cloud-platform |
+| `airquality_tiles_lookup_heatmap_tile` | read | airquality.mapTypes.heatmapTiles.lookupHeatmapTile | cloud-platform |
 | `areainsigh_v1_compute_insights` | read | areainsights.computeInsights | cloud-platform |
 | `places_places_autocomplete` | read | places.places.autocomplete | cloud-platform, maps-platform.places |
 | `places_places_get` | read | places.places.get | cloud-platform, maps-platform.places |
@@ -52,7 +52,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `places_places_search_nearby` | read | places.places.searchNearby | cloud-platform, maps-platform.places |
 | `places_places_search_text` | read | places.places.searchText | cloud-platform, maps-platform.places |
 | `pollen_forecast_lookup` | read | pollen.forecast.lookup | cloud-platform |
-| `pollen_map_types_heatmap_ti_lookup_heat` | read | pollen.mapTypes.heatmapTiles.lookupHeatmapTile | cloud-platform |
+| `pollen_tiles_lookup_heatmap_tile` | read | pollen.mapTypes.heatmapTiles.lookupHeatmapTile | cloud-platform |
 | `solar_building_insights_find_closest` | read | solar.buildingInsights.findClosest | cloud-platform |
 | `solar_data_layers_get` | read | solar.dataLayers.get | cloud-platform |
 | `solar_geo_tiff_get` | read | solar.geoTiff.get | cloud-platform |
@@ -70,10 +70,10 @@ The tools that match Google's official MCP server for this product (https://deve
 | `streetview_photos_batch_get` | read | streetviewpublish.photos.batchGet | streetviewpublish |
 | `streetview_photos_batch_update` | write | streetviewpublish.photos.batchUpdate | streetviewpublish |
 | `streetview_photos_list` | read | streetviewpublish.photos.list | streetviewpublish |
-| `travelimpa_flights_compute_detailed_fli` | read | travelimpactmodel.flights.computeDetailedFlightEmissions | (none) |
-| `travelimpa_flights_compute_flight_emiss` | read | travelimpactmodel.flights.computeFlightEmissions | (none) |
-| `travelimpa_flights_compute_scope3_fligh` | read | travelimpactmodel.flights.computeScope3FlightEmissions | (none) |
-| `travelimpa_flights_compute_typical_flig` | read | travelimpactmodel.flights.computeTypicalFlightEmissions | (none) |
+| `trave_compute_detailed_flight_emissions` | read | travelimpactmodel.flights.computeDetailedFlightEmissions | (none) |
+| `travel_compute_scope3_flight_emissions` | read | travelimpactmodel.flights.computeScope3FlightEmissions | (none) |
+| `travel_compute_typical_flight_emissions` | read | travelimpactmodel.flights.computeTypicalFlightEmissions | (none) |
+| `travelimpa_compute_flight_emissions` | read | travelimpactmodel.flights.computeFlightEmissions | (none) |
 
 ## Listing tool (1)
 

@@ -18,7 +18,7 @@
     "title": "Signed-in accounts"
   },
   {
-    "name": "mcp__plugin_gmaps_gmaps__addressval_v1_provide_validation_feedba",
+    "name": "mcp__plugin_gmaps_gmaps__addressval_provide_validation_feedback",
     "kind": "write",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform",
@@ -65,7 +65,7 @@
     "title": "airquality.history.lookup"
   },
   {
-    "name": "mcp__plugin_gmaps_gmaps__airquality_map_type_heatmap_t_lookup_he",
+    "name": "mcp__plugin_gmaps_gmaps__airquality_tiles_lookup_heatmap_tile",
     "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"
@@ -205,7 +205,7 @@
     "title": "pollen.forecast.lookup"
   },
   {
-    "name": "mcp__plugin_gmaps_gmaps__pollen_map_types_heatmap_ti_lookup_heat",
+    "name": "mcp__plugin_gmaps_gmaps__pollen_tiles_lookup_heatmap_tile",
     "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/cloud-platform"
@@ -367,31 +367,31 @@
     "title": "streetviewpublish.photos.list"
   },
   {
-    "name": "mcp__plugin_gmaps_gmaps__travelimpa_flights_compute_detailed_fli",
+    "name": "mcp__plugin_gmaps_gmaps__trave_compute_detailed_flight_emissions",
     "kind": "read",
     "scopes": [],
     "methodId": "travelimpactmodel.flights.computeDetailedFlightEmissions",
     "title": "travelimpactmodel.flights.computeDetailedFlightEmissions"
   },
   {
-    "name": "mcp__plugin_gmaps_gmaps__travelimpa_flights_compute_flight_emiss",
-    "kind": "read",
-    "scopes": [],
-    "methodId": "travelimpactmodel.flights.computeFlightEmissions",
-    "title": "travelimpactmodel.flights.computeFlightEmissions"
-  },
-  {
-    "name": "mcp__plugin_gmaps_gmaps__travelimpa_flights_compute_scope3_fligh",
+    "name": "mcp__plugin_gmaps_gmaps__travel_compute_scope3_flight_emissions",
     "kind": "read",
     "scopes": [],
     "methodId": "travelimpactmodel.flights.computeScope3FlightEmissions",
     "title": "travelimpactmodel.flights.computeScope3FlightEmissions"
   },
   {
-    "name": "mcp__plugin_gmaps_gmaps__travelimpa_flights_compute_typical_flig",
+    "name": "mcp__plugin_gmaps_gmaps__travel_compute_typical_flight_emissions",
     "kind": "read",
     "scopes": [],
     "methodId": "travelimpactmodel.flights.computeTypicalFlightEmissions",
     "title": "travelimpactmodel.flights.computeTypicalFlightEmissions"
+  },
+  {
+    "name": "mcp__plugin_gmaps_gmaps__travelimpa_compute_flight_emissions",
+    "kind": "read",
+    "scopes": [],
+    "methodId": "travelimpactmodel.flights.computeFlightEmissions",
+    "title": "travelimpactmodel.flights.computeFlightEmissions"
   }
 ]

@@ -25,7 +25,7 @@ Only if the chat tools fail, the same steps in a terminal: `node "${CLAUDE_PLUGI
 
 ### 1. Projects and apps
 
-1. `firebase_projects_list`, then `firebase_projects_search_apps` with parent projects/<id>; `firebase_projec_web_app_get_con` for a web app's config.
+1. `firebase_projects_list`, then `firebase_projects_search_apps` with parent projects/<id>; `firebase_web_apps_get_config` for a web app's config.
 
 ### 2. Firestore
 
@@ -37,7 +37,7 @@ Only if the chat tools fail, the same steps in a terminal: `node "${CLAUDE_PLUGI
 
 ### 4. Crashes
 
-1. `firebasecr_proje_apps_repor_get` with the report name.
+1. `firebasecr_apps_reports_get` with the report name.
 
 ## Untrusted content
 
