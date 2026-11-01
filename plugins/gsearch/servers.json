@@ -11,8 +11,8 @@
       "name": "gsearch",
       "plugin": "gsearch",
       "group": "apikey",
-      "kind": "discovery",
-      "curated": null,
+      "kind": "curated+discovery",
+      "curated": "src/servers/gsearch.ts",
       "apis": [
         {
           "api": "customsearch",
@@ -83,6 +83,66 @@
         {
           "api": "safebrowsing",
           "version": "v4"
+        },
+        {
+          "api": "customsearch",
+          "version": "v1"
+        },
+        {
+          "api": "pagespeedonline",
+          "version": "v5"
+        },
+        {
+          "api": "chromeuxreport",
+          "version": "v1"
+        },
+        {
+          "api": "kgsearch",
+          "version": "v1"
+        },
+        {
+          "api": "safebrowsing",
+          "version": "v5"
+        },
+        {
+          "api": "factchecktools",
+          "version": "v1alpha1"
+        },
+        {
+          "api": "acceleratedmobilepageurl",
+          "version": "v1"
+        },
+        {
+          "api": "abusiveexperiencereport",
+          "version": "v1"
+        },
+        {
+          "api": "adexperiencereport",
+          "version": "v1"
+        },
+        {
+          "api": "webfonts",
+          "version": "v1"
+        },
+        {
+          "api": "webrisk",
+          "version": "v1"
+        },
+        {
+          "api": "civicinfo",
+          "version": "v2"
+        },
+        {
+          "api": "digitalassetlinks",
+          "version": "v1"
+        },
+        {
+          "api": "versionhistory",
+          "version": "v1"
+        },
+        {
+          "api": "developerknowledge",
+          "version": "v1"
         }
       ],
       "methodNotes": {
@@ -114,13 +174,16 @@
           "developerk_docs_search_doc_chunks",
           "developerk_documents_batch_get",
           "developerk_v1_answer_query",
-          "pagespeed_pagespeedapi_runpagespeed",
+          "psi_run",
           "chromeuxre_records_query_record",
           "kgsearch_entities_search",
           "factcheckt_claims_search",
           "webrisk_uris_search"
         ]
       },
+      "scopes": [
+        "openid"
+      ],
       "label": "Search and Web Quality: Public search and web-quality APIs (Custom Search, PageSpeed, CrUX, Safe Browsing, Web Risk, Fact Check) that take an API key instead of OAuth. The Custom Search JSON API is closed to new customers and is scheduled to be discontinued on 2027-01-01."
     }
   ]

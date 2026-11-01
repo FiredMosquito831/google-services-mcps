@@ -154,6 +154,10 @@ const DOCS = [
   'firebase.v1beta1',
   // 2.12.0: the curated androidpub_upload_bundle uploads an app bundle and writes a track here.
   'androidpublisher.v3',
+  // 2.14.0: the curated gtm_publish_version publishes a container version here.
+  'tagmanager.v2',
+  // 2.13.0: the curated psi_run runs one PageSpeed Insights analysis here.
+  'pagespeedonline.v5',
 ];
 
 /**
@@ -314,7 +318,7 @@ function problemsOf(call) {
 // ---------------------------------------------------------------------------
 // The servers and their tools.
 
-const SERVERS = ['gmail', 'gcalendar', 'gdrive', 'searchconsole', 'cloud', 'gads', 'workspace-admin', 'gchat', 'gcontacts', 'gclassroom', 'ganalytics', 'gfirebase', 'gai', 'gmaps', 'gplay', 'meet'];
+const SERVERS = ['gmail', 'gcalendar', 'gdrive', 'searchconsole', 'cloud', 'gads', 'workspace-admin', 'gchat', 'gcontacts', 'gclassroom', 'ganalytics', 'gfirebase', 'gai', 'gmaps', 'gplay', 'meet', 'gsearch', 'gtm'];
 const tools = new Map();
 for (const mod of SERVERS) {
   const { buildTools } = await import(DIST(`servers/${mod}.js`));
@@ -1078,6 +1082,11 @@ const CASES = {
     },
   ],
   ga_annotations_list: [{ args: { property_id: '123', filter: 'title:Sale', page_size: 20, page_token: 'p1' }, expect: ['analyticsadmin.properties.reportingDataAnnotations.list'] }],
+  // 2.17.0: one read of the property's field catalogue, filtered and paged here.
+  ga_get_metadata: [
+    { args: { property_id: 123456789 }, expect: ['analyticsdata.properties.getMetadata'] },
+    { args: { property_id: 'properties/123456789', custom_only: false, search: 'session', category: 'Session', limit: 5, offset: 10 }, expect: ['analyticsdata.properties.getMetadata'] },
+  ],
   ga_annotation_create: [
     { args: { property_id: '123', title: 'Launch', start_date: '2026-10-01', description: 'New site', color: 'BLUE' }, expect: ['analyticsadmin.properties.reportingDataAnnotations.create'] },
     { args: { property_id: '123', title: 'Sale', start_date: '2026-10-05', end_date: '2026-10-09' }, expect: ['analyticsadmin.properties.reportingDataAnnotations.create'] },
@@ -1200,6 +1209,31 @@ const CASES = {
     { args: { latitude: 48.85, longitude: 2.35, forecast: 'daily', days: 3, page_size: 3 }, expect: ['weather.forecast.days.lookup'] },
   ],
 
+  // gsearch (2.13.0), with the API key
+  psi_run: [
+    { args: { url: 'https://example.com/' }, expect: ['pagespeedonline.pagespeedapi.runpagespeed'], sends: { url: 'https://example.com/', category: 'performance' } },
+    { args: { url: 'https://example.com/', strategy: 'mobile', categories: ['performance', 'seo', 'accessibility', 'best-practices'], locale: 'fr', include_raw: true }, expect: ['pagespeedonline.pagespeedapi.runpagespeed'] },
+  ],
+
+  // gtm (2.14.0)
+  gtm_publish_version: [
+    {
+      args: { container: 'accounts/1/containers/2', version: '7' },
+      // The reads the approval needs (container, version, live), then the publish itself.
+      expect: ['tagmanager.accounts.containers.get', 'tagmanager.accounts.containers.versions.get', 'tagmanager.accounts.containers.versions.live', 'tagmanager.accounts.containers.versions.publish'],
+      prepare: true,
+      respond: (call) =>
+        call.url.endsWith('/versions:live')
+          ? { containerVersionId: '6', tag: [{ tagId: '1', name: 'Live only', type: 'gaawe' }], trigger: [], variable: [] }
+          : call.url.endsWith('/versions/7')
+            ? { containerVersionId: '7', fingerprint: 'fp-7', tag: [{ tagId: '1', name: 'Changed', type: 'gaawe' }, { tagId: '2', name: 'New', type: 'html' }], trigger: [], variable: [] }
+            : call.url.endsWith('/containers/2')
+              ? { name: 'Shop', publicId: 'GTM-ABCDEF', path: 'accounts/1/containers/2' }
+              : { containerVersionId: '7', name: 'Release 7', path: 'accounts/1/containers/2/versions/7' },
+    },
+    { args: { container: 'accounts/1/containers/2', version: 'accounts/1/containers/2/versions/9', fingerprint: 'given' }, expect: ['tagmanager.accounts.containers.get', 'tagmanager.accounts.containers.versions.get', 'tagmanager.accounts.containers.versions.live', 'tagmanager.accounts.containers.versions.publish'] },
+  ],
+
   // gplay (1.24.0), with the service account key
   androidmgmt_list_enterprises: [{ args: { project_id: 'my-emm-project', view: 'BASIC', page_size: 10, page_token: 'p1' }, expect: ['androidmanagement.enterprises.list'] }],
   androidmgmt_get_enterprise: [{ args: { enterprise: 'LC0123abcd' }, expect: ['androidmanagement.enterprises.get'] }],
@@ -1247,7 +1281,7 @@ test('every curated tool has a contract row, a skip reason or a known defect, an
   const listed = new Set([...Object.keys(CASES), ...Object.keys(SKIPPED), ...Object.keys(KNOWN_DEFECTS)]);
   assert.deepEqual([...tools.keys()].filter((name) => !listed.has(name)), [], 'curated tools without a row');
   assert.deepEqual([...listed].filter((name) => !tools.has(name)), [], 'rows for tools that do not exist');
-  assert.equal(tools.size, 162, 'the curated tool count; update the table when it changes');
+  assert.equal(tools.size, 165, 'the curated tool count; update the table when it changes');
 });
 
 for (const [name, cases] of Object.entries(CASES)) {

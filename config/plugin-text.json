@@ -30,7 +30,7 @@
       "whenToUse": "Use for Google developer docs, a page's speed or Core Web Vitals, whether a URL is unsafe, a Knowledge Graph entity, or fact checks of a claim. Examples: \"run PageSpeed on example.com\", \"what are this site's Core Web Vitals\", \"is this link malicious\", \"find Google's docs on OAuth scopes\".",
       "flows": [
         { "title": "Google developer docs", "steps": ["{tool:developerk_docs_search_doc_chunks} with query, then {tool:developerk_documents_batch_get} with the document names it returned for the full text.", "{tool:developerk_v1_answer_query} answers a question from the docs."] },
-        { "title": "Page speed and Core Web Vitals", "steps": ["{tool:pagespeed_pagespeedapi_runpagespeed} with url and strategy (mobile or desktop).", "{tool:chromeuxre_records_query_record} with a body naming url or origin, for real-user data."] },
+        { "title": "Page speed and Core Web Vitals", "steps": ["{tool:psi_run} with url and strategy (mobile or desktop): the Lighthouse scores, the field data Google has from real visitors, the six lab metrics and the worst opportunities, in that order.", "{tool:chromeuxre_records_query_record} with a body naming url or origin, for the raw CrUX field data."] },
         { "title": "Is a URL safe", "steps": ["{tool:webrisk_uris_search} with uri and threatTypes (MALWARE, SOCIAL_ENGINEERING, UNWANTED_SOFTWARE)."] },
         { "title": "Entities and fact checks", "steps": ["{tool:kgsearch_entities_search} with query; {tool:factcheckt_claims_search} with query."] }
       ],
@@ -155,7 +155,7 @@
       "whenToUse": "Use for website or app analytics in GA4: users, sessions, conversions, traffic sources, top pages, realtime visitors, funnels. Examples: \"how many users last week\", \"top landing pages this month\", \"realtime visitors now\".",
       "flows": [
         { "title": "Find the property", "steps": ["{tool:gaadmin_acct_summaries_list} gives accounts and their property ids."] },
-        { "title": "Know the fields", "steps": ["{tool:gadata_props_get_meta} with name properties/<id>/metadata lists the dimension and metric names, custom ones included."] },
+        { "title": "Know the fields", "steps": ["{tool:ga_get_metadata} with property_id lists the property's custom dimensions and metrics (search and category filter them; custom_only false for Google's standard fields)."] },
         { "title": "Report", "steps": ["{tool:ga_run_report} with property_id, date_ranges, dimensions and metrics; limit and offset page through rows.", "{tool:ga_run_realtime_report} for the last 30 minutes; {tool:ga_run_funnel_report} for steps."] }
       ],
       "notes": []
@@ -166,7 +166,7 @@
       "flows": [
         { "title": "Find the workspace", "steps": ["{tool:tagmgr_accounts_list}, then {tool:tagmgr_accounts_containers_list} with parent accounts/<id>, then {tool:tagmgr_accounts_containers_workspaces_list} with parent accounts/<id>/containers/<id>."] },
         { "title": "Read the setup", "steps": ["{tool:tagmgr_accts_ctrs_ws_tags_list} with parent accounts/<a>/containers/<c>/workspaces/<w>; triggers and variables the same way.", "{tool:tagmgr_accounts_containers_versions_live} shows what is published now."] },
-        { "title": "Publish", "steps": ["{tool:tagmgr_accts_ctrs_ws_create_ver} makes a version from the workspace (Google then removes that workspace), then {tool:tagmgr_accounts_containers_versions_publish} with the version path. Both ask twice."] }
+        { "title": "Publish", "steps": ["{tool:tagmgr_accts_ctrs_ws_create_ver} makes a version from the workspace (Google then removes that workspace), then {tool:gtm_publish_version} with the container path and the version id. Both ask twice, and the publish approval names the container, the version and what it changes against what is live now."] }
       ],
       "notes": []
     },
@@ -179,7 +179,7 @@
         { "title": "Analytics", "steps": ["{tool:ytanalyt_reports_query} with ids channel==MINE, startDate, endDate and metrics (views,estimatedMinutesWatched)."] },
         { "title": "Comments", "steps": ["{tool:youtube_comment_threads_list} with videoId; {tool:youtube_comments_insert} replies (a change: it asks first)."] }
       ],
-      "notes": ["A search costs 100 units of the daily YouTube Data API quota; most reads cost 1.", "{tool:youtube_videos_update} replaces the parts it sends (it asks twice): read the video first and send the whole part back. Video uploads are not available here."]
+      "notes": ["search.list has its own daily bucket of 100 calls (1 unit each); most other calls use the project's 10,000-unit day, where videos.update, comments.insert and captions.list cost 50 each.", "{tool:youtube_videos_update} replaces the parts it sends (it asks twice): read the video first and send the whole part back. Video, thumbnail and caption uploads are not available here."]
     },
     "gbusiness": {
       "description": "Google Business Profile: list accounts and locations, read and update a location's details, verifications, performance (calls, website clicks, direction requests, search keywords), place actions and notifications.",
@@ -188,7 +188,8 @@
         { "title": "Locations", "steps": ["{tool:mbaccount_accounts_list}, then {tool:mbinfo_accounts_locations_list} with parent accounts/<id> and readMask (such as name,title,storefrontAddress)."] },
         { "title": "One location", "steps": ["{tool:mbinfo_locations_get} with name locations/<id> and readMask."] },
         { "title": "Performance", "steps": ["{tool:bpperf_locations_time_series} with location, dailyMetrics and the dailyRange dates; {tool:bpperf_impressions_monthly_list} for search keywords."] },
-        { "title": "Update a listing", "steps": ["{tool:mbinfo_locations_patch} with updateMask naming the fields changed (a change: it asks first)."] }
+        { "title": "Update a listing", "steps": ["{tool:mbinfo_locations_patch} with updateMask naming the fields changed (a change: it asks first).", "A category change: {tool:mbinfo_categories_list} for the id (categories/gcid:...), read the location with {tool:mbinfo_locations_get} first (categories must be sent whole), then patch categories.primaryCategory."] },
+        { "title": "What Google changed, and whether the profile is healthy", "steps": ["{tool:mbinfo_get_google_updated} lists the fields Google changed; {tool:mbveri_locations_merchant_state} says whether the profile is verified or held."] }
       ],
       "notes": []
     },

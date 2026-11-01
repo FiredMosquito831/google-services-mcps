@@ -117,6 +117,8 @@ interface AdsCall {
   /** The path after the version, such as customers/1234567890/googleAds:search. */
   path: string;
   body?: unknown;
+  /** The manager account this call acts through, as login-customer-id: it wins over GSM_ADS_LOGIN_CUSTOMER_ID. */
+  loginCustomerId?: string;
 }
 
 interface AdsSession {
@@ -125,7 +127,8 @@ interface AdsSession {
 
 /**
  * The session for a sequence of calls: the OAuth client, and the Ads headers. The developer-token header is sent only
- * when a token is configured, and a missing token blocks nothing. Each request goes through requestWithRetry.
+ * when a token is configured, and a missing token blocks nothing. A call that names a manager account sends it as
+ * login-customer-id, which replaces the configured one for that call. Each request goes through requestWithRetry.
  */
 async function adsSession(cfg: RuntimeConfig): Promise<AdsSession> {
   const headers = adsHeaders(cfg);
@@ -135,13 +138,21 @@ async function adsSession(cfg: RuntimeConfig): Promise<AdsSession> {
     async request<T>(call: AdsCall): Promise<T> {
       try {
         // The auth client retries each request (core/auth.ts), so this call is covered.
-        const res = await auth.request<T>({ url: `${ADS_BASE}/${call.path}`, method: call.method, data: call.body, headers });
+        const callHeaders = call.loginCustomerId ? { ...headers, 'login-customer-id': call.loginCustomerId } : headers;
+        const res = await auth.request<T>({ url: `${ADS_BASE}/${call.path}`, method: call.method, data: call.body, headers: callHeaders });
         return res.data;
       } catch (err) {
         throw adsError(err, secret);
       }
     },
   };
+}
+
+/** A customer or manager account id as the tools take it: digits, with or without dashes, as the Ads UI shows it. */
+export function customerIdOf(value: number | string, what: string): string {
+  const digits = String(value).replace(/-/g, '').trim();
+  if (!/^\d+$/.test(digits)) throw new Error(`${what} must be the customer id, digits only (dashes are allowed and removed).`);
+  return digits;
 }
 
 /** GAQL reads only: the query must be a SELECT. Checked before any request is sent. */
@@ -296,13 +307,80 @@ export function riskOfOperations(operations: Operation[]): ActionKind {
   return operationsRisk(operations);
 }
 
+/** The most operations the approval lists one by one. The rest are counted, so a long batch is never cut mid-list. */
+const MUTATE_PREVIEW_MAX = 15;
+
+export interface MutateSummary {
+  operation_count: number;
+  /** How many operations there are of each kind, keyed "remove campaignOperation". */
+  by_operation: Record<string, number>;
+  /** The removals, which are the ones that cannot be undone, listed first in `operations`. */
+  removes: string[];
+  /** One line per operation, at most MUTATE_PREVIEW_MAX, removals first. */
+  operations: string[];
+  /** How many operations are not listed one by one. */
+  remaining: number;
+}
+
+/**
+ * What a mutate request does, as one line per operation, for the approval: it shows the verb, the resource and the
+ * target of each, removals first, instead of pretty-printed JSON that the approval truncates (the review's G5). The
+ * operations are the ones Google will receive, unchanged.
+ */
+export function summariseOperations(operations: Operation[]): MutateSummary {
+  const lines = operations.map((op) => {
+    const keys = Object.keys(op ?? {});
+    if (keys.length !== 1) return { verb: 'invalid', text: `an operation with ${keys.length} keys (${keys.join(', ')}): each needs exactly one` };
+    const key = keys[0] as string;
+    const inner = op?.[key];
+    if (!inner || typeof inner !== 'object') return { verb: 'invalid', text: `${key}: no create, update or remove` };
+    const body = inner as Record<string, unknown>;
+    const verbs = ['remove', 'update', 'create'].filter((v) => v in body);
+    if (verbs.length !== 1) return { verb: 'invalid', text: `${key} needs exactly one of create, update or remove (it has ${verbs.join(', ') || 'none'})` };
+    const verb = verbs[0] as string;
+    if (verb === 'remove') return { verb, text: `remove ${key} ${String(body.remove)}` };
+    if (verb === 'update') {
+      const update = body.update as { resourceName?: unknown } | undefined;
+      const name = typeof update?.resourceName === 'string' ? update.resourceName : '(no update.resourceName)';
+      const mask = typeof body.updateMask === 'string' && body.updateMask !== '' ? ` (updateMask: ${body.updateMask})` : '';
+      return { verb, text: `update ${key} ${name}${mask}` };
+    }
+    return { verb, text: `create ${key}` };
+  });
+  const order = { remove: 0, update: 1, create: 2, invalid: 3 } as Record<string, number>;
+  const sorted = lines.map((line, i) => ({ ...line, i })).sort((a, b) => (order[a.verb] ?? 9) - (order[b.verb] ?? 9) || a.i - b.i).map(({ i: _i, ...line }) => line);
+  const byOperation: Record<string, number> = {};
+  for (const line of lines) {
+    // Only a create, update or remove is counted; a malformed operation is named in `operations` and counted nowhere.
+    if (line.verb === 'invalid') continue;
+    const key = `${line.verb} ${line.text.split(' ')[1] ?? ''}`.trim();
+    byOperation[key] = (byOperation[key] ?? 0) + 1;
+  }
+  const shown = sorted.slice(0, MUTATE_PREVIEW_MAX).map((line) => line.text);
+  return {
+    operation_count: operations.length,
+    by_operation: byOperation,
+    removes: lines.filter((line) => line.verb === 'remove').map((line) => line.text),
+    operations: shown,
+    remaining: Math.max(0, sorted.length - shown.length),
+  };
+}
+
 const customerId = z
-  .string()
-  .regex(/^\d+$/, 'Use digits only, with no dashes.')
-  .describe('Customer ID, digits only, for example 1234567890 (no dashes). ads_list_customers lists them.');
+  .union([z.string(), z.number()])
+  .describe('Customer ID, such as 1234567890 or 123-456-7890. Dashes are removed; ads_list_customers lists them.');
+
+/** A manager account to act through for one call: its id, dashes allowed (login-customer-id). */
+const loginCustomerId = z
+  .union([z.string(), z.number()])
+  .optional()
+  .describe(
+    'The manager account this call acts through (login-customer-id), such as 123-456-7890. It replaces the account configured for the plugin (ads_login_customer_id) for this call only, so one session can reach several managers or a direct account.',
+  );
 
 const searchShape = {
   customer_id: customerId,
+  login_customer_id: loginCustomerId,
   query: z
     .string()
     .max(SEARCH_MAX_QUERY)
@@ -332,10 +410,12 @@ const searchShape = {
 
 const metadataShape = {
   resource: z.string().describe('A Google Ads resource name, as in a FROM clause: campaign, ad_group, ad_group_criterion, keyword_view and so on.'),
+  login_customer_id: loginCustomerId,
 };
 
 const mutateShape = {
   customer_id: customerId,
+  login_customer_id: loginCustomerId,
   operations: z
     .array(z.record(z.string(), z.unknown()))
     .min(1)
@@ -369,7 +449,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       name: 'ads_search',
       title: 'Search Google Ads (GAQL)',
       description:
-        "Run one page of a GAQL SELECT query against a Google Ads account and return the rows, at most 500 and at most what fits the result limit (matches search in Google's Google Ads MCP server). Give the query as text, or as fields, resource, conditions, orderings and limit, from which the SELECT is written (with PARAMETERS omit_unselected_resource_names=true, as Google's server does). next_page_token, with page_token, reads the next page. Google Ads has no row offset, so rows left out of a page are reached by narrowing the query (a WHERE condition, fewer fields or a LIMIT). ads_resource_metadata lists the fields a resource can select, filter and sort by. Read only: any statement other than SELECT is refused before a request is sent.",
+        "Run one page of a GAQL SELECT query against a Google Ads account and return the rows, at most 500 and at most what fits the result limit (matches search in Google's Google Ads MCP server). Give the query as text, or as fields, resource, conditions, orderings and limit, from which the SELECT is written (with PARAMETERS omit_unselected_resource_names=true, as Google's server does). next_page_token, with page_token, reads the next page. Google Ads has no row offset, so rows left out of a page are reached by narrowing the query (a WHERE condition, fewer fields or a LIMIT). login_customer_id acts through a manager account for this call; without it the configured one applies. ads_resource_metadata lists the fields a resource can select, filter and sort by. Read only: any statement other than SELECT is refused before a request is sent.",
       kind: 'read',
       scopes: ADS_SCOPES,
       inputSchema: searchShape,
@@ -381,9 +461,10 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
         const session = await adsSession(cfg);
         const res = await session.request<AdsSearchResponse>({
           method: 'POST',
-          path: `customers/${input.customer_id}/googleAds:search`,
+          path: `customers/${customerIdOf(input.customer_id, 'customer_id')}/googleAds:search`,
           // No pageSize: Google Ads (v26 Discovery) answers PAGE_SIZE_NOT_SUPPORTED when it is set. Google sets the page size.
           body: { query, ...(input.page_token ? { pageToken: input.page_token } : {}) },
+          ...(input.login_customer_id === undefined ? {} : { loginCustomerId: customerIdOf(input.login_customer_id, 'login_customer_id') }),
         });
         const rows = res.results ?? [];
         const truncated = rows.length > SEARCH_ROW_CAP;
@@ -413,12 +494,13 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       name: 'ads_resource_metadata',
       title: 'Fields of a Google Ads resource',
       description:
-        "List the fields a Google Ads resource can select, filter by and sort by in GAQL: its own attributes, and the metrics, segments and attributed-resource fields that are selectable with it (matches get_resource_metadata in Google's Google Ads MCP server). Use it before ads_search to pick valid fields. Needs no customer_id: the field catalog is the same for every account.",
+        "List the fields a Google Ads resource can select, filter by and sort by in GAQL: its own attributes, and the metrics, segments and attributed-resource fields that are selectable with it (matches get_resource_metadata in Google's Google Ads MCP server). Use it before ads_search to pick valid fields. Needs no customer_id: the field catalog is the same for every account; login_customer_id acts through a manager account for this call.",
       kind: 'read',
       scopes: ADS_SCOPES,
       inputSchema: metadataShape,
       async handler(args) {
-        const { resource } = z.object(metadataShape).parse(args);
+        const { resource, login_customer_id } = z.object(metadataShape).parse(args);
+        const loginCustomerId = login_customer_id === undefined ? undefined : customerIdOf(login_customer_id, 'login_customer_id');
         const queries = resourceMetadataQueries(resource);
         const session = await adsSession(cfg);
         const fields = new Map<string, AdsField>();
@@ -431,6 +513,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
               method: 'POST',
               path: 'googleAdsFields:search',
               body: { query, ...(pageToken ? { pageToken } : {}) },
+              ...(loginCustomerId ? { loginCustomerId } : {}),
             });
             for (const f of res.results ?? []) if (f.name && !fields.has(f.name)) fields.set(f.name, f);
             pageToken = res.nextPageToken || undefined;
@@ -456,7 +539,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       name: 'ads_mutate',
       title: 'Change Google Ads resources',
       description:
-        'Create, update or remove Google Ads resources in one mutate request. Each operation has exactly one resource key (campaignOperation, adGroupOperation, campaignBudgetOperation and so on) holding create, update (with updateMask) or remove. validate_only defaults to true: Google checks the operations and nothing changes. With validate_only false the user approves the exact operations first, and a remove operation is destructive.',
+        'Create, update or remove Google Ads resources in one mutate request. Each operation has exactly one resource key (campaignOperation, adGroupOperation, campaignBudgetOperation and so on) holding create, update (with updateMask) or remove. validate_only defaults to true: Google checks the operations and nothing changes. With validate_only false the user approves first, and the approval lists one line per operation - the verb, the resource and the target, removals first - so a long batch is never cut mid-list; a remove operation is destructive. login_customer_id acts through a manager account for this call.',
       // No methodId in the tool map. The hook classifies this tool's arguments with curatedMutateBody, the same
       // normalisation the gate below uses, so a validate-only call is not asked for and a change is.
       kind: 'dynamic',
@@ -466,6 +549,8 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
         const input = z.object(mutateShape).parse(args);
         const operations = input.operations;
         for (const op of operations) resourceOperation(op);
+        const customerIdDigits = customerIdOf(input.customer_id, 'customer_id');
+        const loginCustomerId = input.login_customer_id === undefined ? undefined : customerIdOf(input.login_customer_id, 'login_customer_id');
         // validate_only is read as validateOnly by curatedMutateBody (default true): the same normalisation the hook uses.
         const mutate = curatedMutateBody({ operations, validate_only: input.validate_only });
         const body = { mutateOperations: mutate.operations, validateOnly: mutate.validateOnly };
@@ -473,12 +558,29 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
         // The same rule as the generated and gateway mutate methods (core/dynamic.ts): a validate-only call is a read.
         const kind = resolveDynamicKind(GOOGLE_ADS_MUTATE_METHOD, mutate) ?? 'destructive';
         if (kind !== 'read') {
-          await ctx.gate({ kind, target: 'ads_mutate', methodId: GOOGLE_ADS_MUTATE_METHOD, args: input });
+          // The approval shows one line per operation, removals first, instead of a pretty-printed body that it would cut
+          // at 2,000 characters (the review's G5). The request sent is still the body built above, unchanged.
+          const summary = summariseOperations(operations);
+          await ctx.gate({
+            kind,
+            target: 'ads_mutate',
+            methodId: GOOGLE_ADS_MUTATE_METHOD,
+            args: {
+              customer_id: customerIdDigits,
+              ...(loginCustomerId ? { login_customer_id: loginCustomerId } : {}),
+              validate_only: false,
+              operation_count: summary.operation_count,
+              by_operation: summary.by_operation,
+              operations: summary.operations,
+              ...(summary.remaining > 0 ? { more_operations: summary.remaining, note: `${summary.remaining} more operation(s) are sent too; they are in the request.` } : {}),
+            },
+          });
         }
         const res = await session.request<AdsMutateResponse>({
           method: 'POST',
-          path: `customers/${input.customer_id}/googleAds:mutate`,
+          path: `customers/${customerIdDigits}/googleAds:mutate`,
           body,
+          ...(loginCustomerId ? { loginCustomerId } : {}),
         });
         return mutate.validateOnly ? { validateOnly: true, note: 'Nothing was changed. Google checked these operations.', ...res } : res;
       },

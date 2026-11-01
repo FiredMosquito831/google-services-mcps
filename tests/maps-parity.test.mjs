@@ -173,11 +173,14 @@ test('ApiKeyClient: keyInHeader puts the key in the header only, over a caller k
   assert.equal('X-Goog-Api-Key' in calls[0].headers, false);
 });
 
-test("the gmaps google list: Google's search_places, compute_routes and lookup_weather, and place details; the two resolve tools have no public API", () => {
+test("the gmaps google list: Google's search_places, compute_routes and lookup_weather, and place details; the two resolve tools need OAuth", () => {
   const google = JSON.parse(readFileSync(join(REPO, 'config', 'products.json'), 'utf8')).products.gmaps.toolsets.google;
   assert.deepEqual(google.tools, ['places_places_search_text', 'places_places_get', 'maps_compute_routes', 'maps_lookup_weather']);
   assert.deepEqual([...new Set(Object.values(google.matches).flat())].sort(), ['compute_routes', 'lookup_weather', 'search_places']);
-  assert.match(google.notes.places_places_get, /resolve_names and resolve_maps_urls/);
+  // The note names the REST surface Google publishes and why it has no tool here: no public Discovery document, and an
+  // OAuth scope this API-key product cannot ask for.
+  assert.match(google.notes.places_places_get, /mapstools\.googleapis\.com\/v1:resolveNames/);
+  assert.match(google.notes.places_places_get, /maps-platform\.mapstools/);
   const map = JSON.parse(readFileSync(join(REPO, 'plugins', 'gmaps', 'tool-map.json'), 'utf8'));
   for (const name of google.tools) assert.equal(map.find((t) => t.name === `mcp__plugin_gmaps_gmaps__${name}`)?.kind, 'read', name);
 });

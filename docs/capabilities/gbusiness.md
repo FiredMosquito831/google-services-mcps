@@ -8,7 +8,7 @@ Business Profile accounts, locations, verifications, lodging, place actions, not
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 59, google 15, curated 59 (all) tools, each counting the 7 runtime tools this server registers (`account_remove`, `account_set_default`, `accounts_list`, `auth_login`, `auth_setup_client`, `auth_status`, `health`). "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 59, google 20, curated 59 (all) tools, each counting the 7 runtime tools this server registers (`account_remove`, `account_set_default`, `accounts_list`, `auth_login`, `auth_setup_client`, `auth_status`, `health`). "(all)" means the product has no such toolset yet, so it lists every tool.
 
 ## Not registered by this server (2)
 
@@ -16,20 +16,25 @@ The tool map (`plugins/<id>/tool-map.json`) also lists these, so the consent hoo
 
 - Sign-in tools of other sign-in kinds: `auth_setup_admin`, `auth_setup_service_account`.
 
-## Toolset google (8)
+## Toolset google (13)
 
 Google has no official MCP server for this product. The google toolset is a lean set chosen here: No official Google MCP server for Google Business Profile was found (Google's Cloud and Workspace MCP lists and Google's GitHub organisations, 2026-10-29; a negative, not confirmed by Google); a lean set chosen here.
 
 | Tool | Google's tool | Note |
 |---|---|---|
 | `mbaccount_accounts_list` | (none) | The Business Profile accounts the signed-in user can manage. Start here. Google's Business Profile Discovery documents list no OAuth scope; since 1.24.1 the product declares business.manage for them (scopeOverrides), so a readwrite login asks for it. It has no read-only form, so a readonly login covers none of these tools. |
+| `mbaccount_accounts_admins_list` | (none) | The people who manage an account, with their role (OWNER, MANAGER, SITE_MANAGER, COMMUNICATIONS_MANAGER) and whether they have accepted. |
 | `mbinfo_accounts_locations_list` | (none) | The locations of an account; readMask names the fields to return, such as name,title,storefrontAddress. |
 | `mbinfo_locations_get` | (none) | One location with the fields readMask names: hours, categories, phone, website and so on. |
-| `bpperf_loc_get_dai_met_tim_seri` | (none) | One daily metric of a location over a date range, such as calls or website clicks. |
-| `bpperf_locations_time_series` | (none) | Several daily metrics of a location over a date range in one call. |
+| `bpperf_locations_time_series` | (none) | Several daily metrics of a location over a date range in one call (Google's fetchMultiDailyMetricsTimeSeries). The single-metric call is the generated bpperf_loc_get_dai_met_tim_seri, in the all toolset. |
 | `bpperf_impressions_monthly_list` | (none) | The search keywords that showed the location, with monthly impressions. |
 | `mbverify_verifications_list` | (none) | The verifications of a location and their state. |
-| `mbinfo_locations_patch` | (none) | Changes the fields updateMask names. A write, so it asks first; the change is public on Google Search and Maps. |
+| `mbinfo_locations_patch` | (none) | Changes the fields updateMask names. A write, so it asks first; the change is public on Google Search and Maps. Google allows 10 edits per minute per location, and categories and phoneNumbers must be sent whole. Use validateOnly to check first. |
+| `mbinfo_categories_list` | (none) | The categories a location can have, with their ids (categories/gcid:...) and display names; the ids are what a category change sends. Needed to change a location's primary category. |
+| `mbinfo_attributes_list` | (none) | The attributes a location can have (attributes/...), with their value types and whether they apply to a category; mbinfo_locations_get_attributes gives the values of one location. |
+| `mbinfo_locations_get_attributes` | (none) | The attribute values of a location, such as wheelchair accessible or outdoor seating. |
+| `mbinfo_get_google_updated` | (none) | The fields Google has changed on a location since it was last edited (locations.getGoogleUpdated); Google owns them and a normal edit does not overwrite them. |
+| `mbveri_locations_merchant_state` | (none) | A location's Voice of Merchant state: whether it is verified, whether it has a holding state (such as pending verification or a suspended profile) and what it needs (getVoiceOfMerchantState). |
 
 ## Curated tools (7)
 

@@ -4,11 +4,11 @@ Google Tag Manager accounts, containers, tags, triggers and variables.
 
 - Plugin: `gtm`, MCP server: `gtm`, login: Desktop OAuth client, then `login business`
 - Install: `claude plugin install gtm@google-services-mcps`
-- Tools: 117 total. Curated 7, per-method 106, gateway 3. Read 45, write 52, destructive 19, dynamic 1.
+- Tools: 118 total. Curated 8, per-method 106, gateway 3. Read 45, write 52, destructive 20, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 117, google 20, curated 10 tools, each counting the 7 runtime tools this server registers (`account_remove`, `account_set_default`, `accounts_list`, `auth_login`, `auth_setup_client`, `auth_status`, `health`). "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 118, google 24, curated 11 tools, each counting the 7 runtime tools this server registers (`account_remove`, `account_set_default`, `accounts_list`, `auth_login`, `auth_setup_client`, `auth_status`, `health`). "(all)" means the product has no such toolset yet, so it lists every tool.
 
 ## Not registered by this server (2)
 
@@ -16,7 +16,7 @@ The tool map (`plugins/<id>/tool-map.json`) also lists these, so the consent hoo
 
 - Sign-in tools of other sign-in kinds: `auth_setup_admin`, `auth_setup_service_account`.
 
-## Toolset google (13)
+## Toolset google (17)
 
 Google has no official MCP server for this product. The google toolset is a lean set chosen here: No official Google MCP server for Google Tag Manager was found (Google's Cloud and Workspace MCP lists and Google's GitHub organisations, 2026-10-29; a negative, not confirmed by Google); a lean set chosen here.
 
@@ -24,19 +24,23 @@ Google has no official MCP server for this product. The google toolset is a lean
 |---|---|---|
 | `tagmgr_accounts_list` | (none) | The Tag Manager accounts the signed-in user can see. Start here. |
 | `tagmgr_accounts_containers_list` | (none) | The containers of an account (web, iOS, Android, AMP, server) with their public ids (GTM-XXXX). |
+| `tagmgr_accounts_containers_lookup` | (none) | The container behind a destination id, such as GTM-XXXX: gives the accounts/{account}/containers/{container} path the other tools take. |
 | `tagmgr_accounts_containers_workspaces_list` | (none) | The workspaces of a container. Changes are made in a workspace, saved as a version, then published. |
+| `tagmgr_accounts_containers_workspaces_get` | (none) | One workspace: its name, description and id. |
+| `tagmgr_accts_ctrs_ws_get_status` | (none) | A workspace's status, as the workspace syncs: merge conflicts and the changes it holds. |
 | `tagmgr_accts_ctrs_ws_tags_list` | (none) | The tags of a workspace. |
 | `tagmgr_accts_ctrs_ws_tags_get` | (none) | One tag with its type, parameters and firing and blocking triggers. |
 | `tagmgr_accts_ctrs_ws_triggers_list` | (none) | The triggers of a workspace. |
 | `tagmgr_accts_ctrs_ws_triggers_get` | (none) | One trigger with its type and filters. |
 | `tagmgr_accts_ctrs_ws_variables_list` | (none) | The user-defined variables of a workspace. |
 | `tagmgr_accts_ctrs_ws_variables_get` | (none) | One variable with its type and parameters. |
-| `tagmgr_accounts_containers_versions_live` | (none) | The version that is live now, with its tags, triggers and variables. |
+| `tagmgr_accounts_containers_versions_live` | (none) | The version that is live now, with its tags, triggers and variables. It can be large; the result limit may cut it. |
+| `tagmgr_accounts_containers_versions_get` | (none) | One container version by its id (such as 7): its name, notes and contents, and the fingerprint Google checks when it is published. |
 | `tagmgr_accts_ctrs_ver_headers_list` | (none) | The versions of a container as headers: name, number and counts. |
-| `tagmgr_accts_ctrs_ws_create_ver` | (none) | Saves a workspace as a new container version, and Google deletes the workspace. Destructive since 1.26.3, so it asks twice; nothing goes live. |
-| `tagmgr_accounts_containers_versions_publish` | (none) | Publishes a version: it goes live on every site or app that loads the container. Destructive since 1.26.3, so it asks twice; check the version before. |
+| `tagmgr_accts_ctrs_ws_create_ver` | (none) | Saves a workspace as a new container version, and Google deletes the workspace (Discovery: "Creates a Container Version from the entities present in the workspace, deletes the workspace"). Destructive since 1.26.3, so it asks twice. Nothing goes live: publishing is a second step. |
+| `gtm_publish_version` | (none) | Publishes a container version, so every page or app loading the container runs it. Before asking, it reads the container, the version and the live version, and the approval names what is added, changed and removed and any Custom HTML or custom JavaScript. It takes the place of the generated publish tool in this list. Destructive, so it asks twice. |
 
-## Curated tools (7)
+## Curated tools (8)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
@@ -46,6 +50,7 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `auth_login` | write | Sign in to Google | (none) |
 | `auth_setup_client` | write | Save the Google OAuth client | (none) |
 | `auth_status` | read | Sign-in status | (none) |
+| `gtm_publish_version` | destructive | Publish a Tag Manager version | tagmanager.publish |
 | `health` | read | Server health | (none) |
 
 ## Per-method tools (106)

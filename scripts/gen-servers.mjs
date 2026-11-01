@@ -53,6 +53,8 @@ const CURATED_FILES = {
   maps: 'src/servers/gmaps.ts',
   meet: 'src/servers/meet.ts',
   play: 'src/servers/gplay.ts',
+  search: 'src/servers/gsearch.ts',
+  tagmanager: 'src/servers/gtm.ts',
 };
 
 const ID_PATTERN = /^[a-z]+$/;

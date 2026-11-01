@@ -1403,8 +1403,8 @@
       "name": "gsearch",
       "plugin": "gsearch",
       "group": "apikey",
-      "kind": "discovery",
-      "curated": null,
+      "kind": "curated+discovery",
+      "curated": "src/servers/gsearch.ts",
       "apis": [
         {
           "api": "customsearch",
@@ -1475,6 +1475,66 @@
         {
           "api": "safebrowsing",
           "version": "v4"
+        },
+        {
+          "api": "customsearch",
+          "version": "v1"
+        },
+        {
+          "api": "pagespeedonline",
+          "version": "v5"
+        },
+        {
+          "api": "chromeuxreport",
+          "version": "v1"
+        },
+        {
+          "api": "kgsearch",
+          "version": "v1"
+        },
+        {
+          "api": "safebrowsing",
+          "version": "v5"
+        },
+        {
+          "api": "factchecktools",
+          "version": "v1alpha1"
+        },
+        {
+          "api": "acceleratedmobilepageurl",
+          "version": "v1"
+        },
+        {
+          "api": "abusiveexperiencereport",
+          "version": "v1"
+        },
+        {
+          "api": "adexperiencereport",
+          "version": "v1"
+        },
+        {
+          "api": "webfonts",
+          "version": "v1"
+        },
+        {
+          "api": "webrisk",
+          "version": "v1"
+        },
+        {
+          "api": "civicinfo",
+          "version": "v2"
+        },
+        {
+          "api": "digitalassetlinks",
+          "version": "v1"
+        },
+        {
+          "api": "versionhistory",
+          "version": "v1"
+        },
+        {
+          "api": "developerknowledge",
+          "version": "v1"
         }
       ],
       "methodNotes": {
@@ -1506,7 +1566,7 @@
           "developerk_docs_search_doc_chunks",
           "developerk_documents_batch_get",
           "developerk_v1_answer_query",
-          "pagespeed_pagespeedapi_runpagespeed",
+          "psi_run",
           "chromeuxre_records_query_record",
           "kgsearch_entities_search",
           "factcheckt_claims_search",
@@ -2288,7 +2348,7 @@
           "gaadmin_acct_summaries_list",
           "gaadmin_properties_get",
           "gaadmin_pro_goo_ads_link_list",
-          "gadata_props_get_meta",
+          "ga_get_metadata",
           "ga_run_report",
           "ga_run_realtime_report",
           "ga_run_funnel_report",
@@ -2302,8 +2362,8 @@
       "name": "gtm",
       "plugin": "gtm",
       "group": "business",
-      "kind": "discovery",
-      "curated": null,
+      "kind": "curated+discovery",
+      "curated": "src/servers/gtm.ts",
       "apis": [
         {
           "api": "tagmanager",
@@ -2320,7 +2380,10 @@
         "google": [
           "tagmgr_accounts_list",
           "tagmgr_accounts_containers_list",
+          "tagmgr_accounts_containers_lookup",
           "tagmgr_accounts_containers_workspaces_list",
+          "tagmgr_accounts_containers_workspaces_get",
+          "tagmgr_accts_ctrs_ws_get_status",
           "tagmgr_accts_ctrs_ws_tags_list",
           "tagmgr_accts_ctrs_ws_tags_get",
           "tagmgr_accts_ctrs_ws_triggers_list",
@@ -2328,9 +2391,10 @@
           "tagmgr_accts_ctrs_ws_variables_list",
           "tagmgr_accts_ctrs_ws_variables_get",
           "tagmgr_accounts_containers_versions_live",
+          "tagmgr_accounts_containers_versions_get",
           "tagmgr_accts_ctrs_ver_headers_list",
           "tagmgr_accts_ctrs_ws_create_ver",
-          "tagmgr_accounts_containers_versions_publish"
+          "gtm_publish_version"
         ]
       },
       "toolsetScopes": {
@@ -2465,13 +2529,18 @@
       "toolsets": {
         "google": [
           "mbaccount_accounts_list",
+          "mbaccount_accounts_admins_list",
           "mbinfo_accounts_locations_list",
           "mbinfo_locations_get",
-          "bpperf_loc_get_dai_met_tim_seri",
           "bpperf_locations_time_series",
           "bpperf_impressions_monthly_list",
           "mbverify_verifications_list",
-          "mbinfo_locations_patch"
+          "mbinfo_locations_patch",
+          "mbinfo_categories_list",
+          "mbinfo_attributes_list",
+          "mbinfo_locations_get_attributes",
+          "mbinfo_get_google_updated",
+          "mbveri_locations_merchant_state"
         ]
       },
       "label": "Business Profile: Business Profile accounts, locations, verifications, lodging, place actions, notifications and performance."
@@ -3179,6 +3248,28 @@
             "places.places.searchText": "places.id,places.displayName,places.formattedAddress,places.location,places.types,places.googleMapsUri,nextPageToken",
             "places.places.searchNearby": "places.id,places.displayName,places.formattedAddress,places.location,places.types,places.googleMapsUri",
             "places.places.get": "id,displayName,formattedAddress,location,types,googleMapsUri"
+          }
+        }
+      },
+      "methodNotes": {
+        "streetviewpublish": {
+          "source": "https://developers.google.com/streetview/publish/first-app (\"After you have your API key and access token\"; the samples send both ?key=YOUR_API_KEY and authorization: Bearer YOUR_ACCESS_TOKEN). Every method of the API lists the OAuth scope https://www.googleapis.com/auth/streetviewpublish in Discovery.",
+          "reason": "gsearch and gmaps are the apikey group: gmaps holds an API key and has no Google sign-in, so no OAuth token is ever sent. Every Street View Publish tool is expected to be refused until the product gains an OAuth sign-in, which is a separate decision (adversarial review of gmaps, F2).",
+          "methods": {
+            "streetviewpublish.photo.create": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call.",
+            "streetviewpublish.photo.delete": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call.",
+            "streetviewpublish.photo.get": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call.",
+            "streetviewpublish.photo.startUpload": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call.",
+            "streetviewpublish.photo.update": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call.",
+            "streetviewpublish.photoSequence.create": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call.",
+            "streetviewpublish.photoSequence.delete": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call.",
+            "streetviewpublish.photoSequence.get": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call.",
+            "streetviewpublish.photoSequence.startUpload": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call.",
+            "streetviewpublish.photoSequences.list": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call.",
+            "streetviewpublish.photos.batchDelete": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call.",
+            "streetviewpublish.photos.batchGet": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call.",
+            "streetviewpublish.photos.batchUpdate": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call.",
+            "streetviewpublish.photos.list": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call."
           }
         }
       },

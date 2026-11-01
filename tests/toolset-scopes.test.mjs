@@ -204,7 +204,9 @@ test('requirements: the lean gtm, gyoutube and gbusiness lists resolve to the na
     return { n: reqs.length, gateway: reqs.filter((r) => r.gateway).length, readonly: resolveScopes(reqs, 'readonly'), readwrite: resolveScopes(reqs, 'readwrite').scopes, greedy: resolveScopes(withoutPrefer(reqs), 'readwrite').scopes };
   };
   const gtm = await resolved('gtm');
-  assert.equal(gtm.n, 13);
+  // 2.14.0: 17 tools (13 + the container lookup, the workspace get and status, the version get, and the hand-written
+  // gtm_publish_version in place of the generated publish tool).
+  assert.equal(gtm.n, 17);
   assert.equal(gtm.gateway, 0, 'the tagmanager v1 gateway does not count: no api_call in the list');
   assert.deepEqual(gtm.readonly.scopes, [G('tagmanager.readonly')]);
   assert.deepEqual(gtm.readwrite, GTM_READWRITE);
@@ -216,11 +218,12 @@ test('requirements: the lean gtm, gyoutube and gbusiness lists resolve to the na
   for (const tool of ['youtube_comment_threads_list', 'youtube_captions_list']) assert.ok(yt.readonly.uncovered.includes(`gyoutube/${tool}`), tool);
   assert.deepEqual(yt.readwrite, YT_READWRITE);
   const gb = await resolved('gbusiness');
-  assert.equal(gb.n, 8);
+  // 2.16.0: 13 tools.
+  assert.equal(gb.n, 13);
   // Google's Business Profile Discovery documents list no scope; the product declares business.manage for them (scopeOverrides,
-  // 1.24.1). It has no read-only form, so a readonly login covers none of the eight (as in the all toolset).
+  // 1.24.1). It has no read-only form, so a readonly login covers none of the thirteen (as in the all toolset).
   assert.deepEqual(gb.readonly.scopes, []);
-  assert.equal(gb.readonly.uncovered.length, 8);
+  assert.equal(gb.readonly.uncovered.length, 13);
   assert.deepEqual(gb.readwrite, [G('business.manage')]);
 });
 

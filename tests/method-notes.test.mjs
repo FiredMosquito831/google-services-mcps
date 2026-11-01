@@ -111,6 +111,28 @@ test('gtasks (2.7.0): the update and patch tools say what `completed` and `due` 
   assert.deepEqual(readJson('plugins', 'gtasks', 'servers.json').servers[0].methodNotes, notes);
 });
 
+test('gmaps (2.12.1): every Street View Publish tool says it needs OAuth, and no other gmaps tool carries a note', async () => {
+  const notes = readJson('config', 'products.json').products.gmaps.methodNotes;
+  assert.deepEqual(Object.keys(notes), ['streetviewpublish']);
+  // All 14 methods of the API carry the note: the product has an API key only, and Google wants a token too.
+  const methods = notes.streetviewpublish.methods;
+  assert.equal(Object.keys(methods).length, 14);
+  for (const [id, note] of Object.entries(methods)) {
+    assert.match(note, /OAuth 2\.0 access token/, id);
+    assert.match(note, /only a key and has no Google sign-in/, id);
+  }
+  const tools = await discoveryToolsFor('gmaps', cfg);
+  for (const [id, note] of Object.entries(methods)) {
+    const tool = tools.find((t) => t.methodId === id);
+    assert.ok(tool, `${id} is a tool`);
+    assert.ok(tool.description.includes(note), `${id}: the note is in the tool description`);
+    assert.ok(tool.description.length <= 2048, `${id}: ${tool.description.length} characters`);
+  }
+  for (const tool of tools.filter((t) => !(t.methodId in methods))) assert.doesNotMatch(tool.description, /has no Google sign-in/, `${tool.methodId} carries no note`);
+  // The plugin's servers.json, which the bundled server reads, carries exactly the same note.
+  assert.deepEqual(readJson('plugins', 'gmaps', 'servers.json').servers[0].methodNotes, notes);
+});
+
 test('gen-servers: methodNotes name methods of a generated API snapshot, with a source, a reason and a non-empty note', () => {
   const run = (methodNotes) => {
     const root = mkdtempSync(join(tmpdir(), 'gsm-gen-notes-'));

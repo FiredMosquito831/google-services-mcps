@@ -59,18 +59,20 @@ const REPORT = {
   kind: 'analyticsData#runReport',
 };
 
-test('five tools: four reads and one write; scopes as Discovery lists them; each names the Google tool it matches', () => {
+test('six tools: five reads and one write; scopes as Discovery lists them; each names the Google tool it matches', () => {
   assert.deepEqual(
     [...tools.values()].map((t) => [t.name, t.kind]),
     [
       ['ga_run_report', 'read'],
       ['ga_run_realtime_report', 'read'],
       ['ga_run_funnel_report', 'read'],
+      // 2.17.0: the metadata read, in the place of the generated gadata_props_get_meta.
+      ['ga_get_metadata', 'read'],
       ['ga_annotations_list', 'read'],
       ['ga_annotation_create', 'write'],
     ],
   );
-  for (const name of ['ga_run_report', 'ga_run_realtime_report', 'ga_run_funnel_report']) assert.deepEqual(tools.get(name).scopes, [G('analytics'), G('analytics.readonly')], name);
+  for (const name of ['ga_run_report', 'ga_run_realtime_report', 'ga_run_funnel_report', 'ga_get_metadata']) assert.deepEqual(tools.get(name).scopes, [G('analytics'), G('analytics.readonly')], name);
   assert.deepEqual(tools.get('ga_annotations_list').scopes, [G('analytics.edit'), G('analytics.readonly')]);
   assert.deepEqual(tools.get('ga_annotation_create').scopes, [G('analytics.edit')]);
   const official = { ga_run_report: 'run_report', ga_run_realtime_report: 'run_realtime_report', ga_run_funnel_report: 'run_funnel_report', ga_annotations_list: 'list_property_annotations', ga_annotation_create: 'create_property_annotation' };
@@ -326,4 +328,103 @@ test("the ganalytics google list covers the 10 tools of Google's Google Analytic
   const map = JSON.parse(readFileSync(join(REPO, 'plugins', 'ganalytics', 'tool-map.json'), 'utf8'));
   const kind = (name) => map.find((t) => t.name === `mcp__plugin_ganalytics_ganalytics__${name}`)?.kind;
   for (const name of google.tools) assert.equal(kind(name), name === 'ga_annotation_create' ? 'write' : 'read', name);
+});
+
+// ---- ga_get_metadata (2.17.0) ----
+
+/** The field catalogue as Google returns it: every standard field too, with long descriptions. */
+const METADATA = {
+  name: 'properties/123456789/metadata',
+  dimensions: [
+    { apiName: 'sessionCampaignName', uiName: 'Session campaign', category: 'Session', description: 'The name of the marketing campaign. '.repeat(30), customDefinition: false },
+    { apiName: 'customUserTier', uiName: 'User tier', category: 'Custom', description: 'Our own tier.', customDefinition: true, deprecatedApiNames: [] },
+    { apiName: 'customPlan', uiName: 'Plan', category: 'Custom', description: '  The plan\nthe user is on.  ', customDefinition: true },
+  ],
+  metrics: [
+    { apiName: 'sessions', uiName: 'Sessions', category: 'Session', description: 'The number of sessions.', customDefinition: false },
+    { apiName: 'customLtv', uiName: 'Lifetime value', category: 'Custom', description: 'Our LTV estimate.', customDefinition: true },
+  ],
+};
+
+test('ga_get_metadata: the custom fields only by default, short, with the property id and a count each', async () => {
+  reset(() => METADATA);
+  const answer = await run('ga_get_metadata', { property_id: 123456789 });
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0].url, 'https://analyticsdata.googleapis.com/v1beta/properties/123456789/metadata');
+  assert.equal(calls[0].method, 'GET');
+  assert.equal(answer.property_id, '123456789');
+  assert.equal(answer.custom_only, true);
+  assert.equal(answer.dimension_count, 2);
+  assert.equal(answer.metric_count, 1);
+  assert.deepEqual(answer.dimensions, [
+    { api_name: 'customUserTier', ui_name: 'User tier', category: 'Custom', custom: true, description: 'Our own tier.' },
+    // The description is one line and short enough to keep as it is; the standard field is not here at all.
+    { api_name: 'customPlan', ui_name: 'Plan', category: 'Custom', custom: true, description: 'The plan the user is on.' },
+  ]);
+  assert.deepEqual(answer.metrics, [{ api_name: 'customLtv', ui_name: 'Lifetime value', category: 'Custom', custom: true, description: 'Our LTV estimate.' }]);
+  assert.equal('next_offset' in answer, false);
+  assert.equal('note' in answer, false);
+});
+
+test('ga_get_metadata: custom_only false returns the whole catalogue, and a long description is cut', async () => {
+  reset(() => METADATA);
+  const answer = await run('ga_get_metadata', { property_id: 'properties/123456789', custom_only: false });
+  assert.equal(answer.custom_only, false);
+  assert.equal(answer.dimension_count, 3);
+  assert.equal(answer.metric_count, 2);
+  const standard = answer.dimensions.find((d) => d.api_name === 'sessionCampaignName');
+  assert.equal(standard.custom, false);
+  assert.equal(standard.description.length, 300, 'the description is cut to 300 characters, with an ellipsis');
+  assert.ok(standard.description.endsWith('…'));
+  assert.equal(calls[0].url, 'https://analyticsdata.googleapis.com/v1beta/properties/123456789/metadata');
+});
+
+test('ga_get_metadata: search and category filter, limit pages, and next_offset counts the fields shown', async () => {
+  reset(() => METADATA);
+  const searched = await run('ga_get_metadata', { property_id: '123456789', custom_only: false, search: 'PLAN' });
+  assert.deepEqual(searched.dimensions.map((d) => d.api_name), ['customPlan']);
+  assert.deepEqual(searched.metrics, []);
+  assert.equal(searched.dimension_count, 1);
+  reset(() => METADATA);
+  const byCategory = await run('ga_get_metadata', { property_id: '123456789', custom_only: false, category: 'session' });
+  assert.deepEqual(byCategory.dimensions.map((d) => d.api_name), ['sessionCampaignName']);
+  assert.deepEqual(byCategory.metrics.map((m) => m.api_name), ['sessions']);
+  reset(() => METADATA);
+  const paged = await run('ga_get_metadata', { property_id: '123456789', custom_only: false, limit: 1 });
+  assert.equal(paged.dimensions.length, 1);
+  assert.equal(paged.metrics.length, 1);
+  assert.equal(paged.dimension_count, 3);
+  assert.equal(paged.next_offset, 1);
+  reset(() => METADATA);
+  const second = await run('ga_get_metadata', { property_id: '123456789', custom_only: false, limit: 1, offset: 2 });
+  assert.deepEqual(second.dimensions.map((d) => d.api_name), ['customPlan']);
+  assert.equal(second.metrics.length, 0);
+  assert.equal('next_offset' in second, false, 'nothing left after the last row');
+});
+
+test('ga_get_metadata: no custom fields says why, and the filters are named', async () => {
+  reset(() => ({ dimensions: [{ apiName: 'sessions', uiName: 'Sessions', category: 'Session', customDefinition: false, description: 'x' }], metrics: [] }));
+  const answer = await run('ga_get_metadata', { property_id: '123456789' });
+  assert.equal(answer.dimension_count, 0);
+  assert.equal(answer.metric_count, 0);
+  assert.match(answer.note, /No custom dimension or metric matches/);
+  assert.match(answer.note, /custom_only false/);
+  reset(() => METADATA);
+  const filtered = await run('ga_get_metadata', { property_id: '123456789', custom_only: false, search: 'nothing-matches-this' });
+  assert.match(filtered.note, /Nothing matches the filters/);
+  reset(() => ({ dimensions: [{ apiName: 'customPlan', uiName: 'Plan', customDefinition: true, description: 'P' }], metrics: [] }));
+  const noCategory = await run('ga_get_metadata', { property_id: '123456789', custom_only: false, category: 'Revenue' });
+  assert.match(noCategory.note, /Nothing matches the filters/);
+});
+
+test('ga_get_metadata: the tool is a read with the Data API scopes, and a bad limit is refused before any request', async () => {
+  const tool = tools.get('ga_get_metadata');
+  assert.equal(tool.kind, 'read');
+  assert.deepEqual(tool.scopes, [G('analytics'), G('analytics.readonly')]);
+  assert.equal(parse('ga_get_metadata', {}).success, false, 'property_id is required');
+  assert.equal(parse('ga_get_metadata', { property_id: '123', limit: 0 }).success, false);
+  assert.equal(parse('ga_get_metadata', { property_id: '123', limit: 501 }).success, false);
+  reset(() => METADATA);
+  await run('ga_get_metadata', { property_id: '123', limit: 3 });
+  assert.equal(calls.length, 1);
 });

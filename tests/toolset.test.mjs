@@ -150,7 +150,8 @@ const ANALYTICS_GOOGLE = [
   'gaadmin_acct_summaries_list',
   'gaadmin_properties_get',
   'gaadmin_pro_goo_ads_link_list',
-  'gadata_props_get_meta',
+  // 2.17.0: the hand-written metadata tool takes the place of the generated gadata_props_get_meta.
+  'ga_get_metadata',
   'ga_run_report',
   'ga_run_realtime_report',
   'ga_run_funnel_report',
@@ -178,7 +179,11 @@ const BUSINESS_LEAN = {
   gtm: [
     'tagmgr_accounts_list',
     'tagmgr_accounts_containers_list',
+    // 2.14.0: the container behind a GTM-XXXX id, and the workspace and version reads the publish needs.
+    'tagmgr_accounts_containers_lookup',
     'tagmgr_accounts_containers_workspaces_list',
+    'tagmgr_accounts_containers_workspaces_get',
+    'tagmgr_accts_ctrs_ws_get_status',
     'tagmgr_accts_ctrs_ws_tags_list',
     'tagmgr_accts_ctrs_ws_tags_get',
     'tagmgr_accts_ctrs_ws_triggers_list',
@@ -186,9 +191,11 @@ const BUSINESS_LEAN = {
     'tagmgr_accts_ctrs_ws_variables_list',
     'tagmgr_accts_ctrs_ws_variables_get',
     'tagmgr_accounts_containers_versions_live',
+    'tagmgr_accounts_containers_versions_get',
     'tagmgr_accts_ctrs_ver_headers_list',
     'tagmgr_accts_ctrs_ws_create_ver',
-    'tagmgr_accounts_containers_versions_publish',
+    // 2.14.0: the hand-written publish, in place of the generated tagmgr_accounts_containers_versions_publish.
+    'gtm_publish_version',
   ],
   gyoutube: [
     'youtube_search_list',
@@ -204,13 +211,20 @@ const BUSINESS_LEAN = {
   ],
   gbusiness: [
     'mbaccount_accounts_list',
+    // 2.16.0: the admins list, so the list can complete its own category example.
+    'mbaccount_accounts_admins_list',
     'mbinfo_accounts_locations_list',
     'mbinfo_locations_get',
-    'bpperf_loc_get_dai_met_tim_seri',
     'bpperf_locations_time_series',
     'bpperf_impressions_monthly_list',
     'mbverify_verifications_list',
     'mbinfo_locations_patch',
+    // 2.16.0: the reads a category or attribute change needs, and what Google has changed on a location.
+    'mbinfo_categories_list',
+    'mbinfo_attributes_list',
+    'mbinfo_locations_get_attributes',
+    'mbinfo_get_google_updated',
+    'mbveri_locations_merchant_state',
   ],
 };
 /**
@@ -274,7 +288,8 @@ const SEARCH_GOOGLE = [
   'developerk_docs_search_doc_chunks',
   'developerk_documents_batch_get',
   'developerk_v1_answer_query',
-  'pagespeed_pagespeedapi_runpagespeed',
+  // 2.13.0: the curated psi_run takes the place of the generated pagespeed_pagespeedapi_runpagespeed.
+  'psi_run',
   'chromeuxre_records_query_record',
   'kgsearch_entities_search',
   'factcheckt_claims_search',
@@ -997,7 +1012,7 @@ test("the gsearch google list: Google's three Developer Knowledge tools, and a l
   const kindOf = (tool) => readJson('plugins', 'gsearch', 'tool-map.json').find((t) => t.name === `mcp__plugin_gsearch_gsearch__${tool}`).kind;
   // answerQuery is a POST that Google marks read-only, and a read here since D2 (1.24.2): every tool of the list is a read.
   for (const tool of SEARCH_GOOGLE) assert.equal(kindOf(tool), 'read', tool);
-  assert.match(google.notes.developerk_v1_answer_query, /D2/);
+  assert.match(google.notes.developerk_v1_answer_query, /read-only/);
 });
 
 test('the gadmin google list is a lean set: no official server, every tool says why it is kept; two writes, no delete', () => {
@@ -1046,21 +1061,22 @@ test('the gtm, gyoutube and gbusiness google lists are lean sets: no official se
   // The writes of the lists, and every other tool a read; no delete is in any of them. Since 1.26.3 (the destructive
   // rule) publishing, the workspace-consuming version and the whole-video update are destructive: they ask twice.
   const writes = ['youtube_comments_insert', 'mbinfo_locations_patch'];
-  const destructive = ['tagmgr_accts_ctrs_ws_create_ver', 'tagmgr_accounts_containers_versions_publish', 'youtube_videos_update'];
+  const destructive = ['tagmgr_accts_ctrs_ws_create_ver', 'gtm_publish_version', 'youtube_videos_update'];
   for (const [id, tools] of Object.entries(BUSINESS_LEAN)) {
     for (const tool of tools) assert.equal(kindOf(id, tool), destructive.includes(tool) ? 'destructive' : writes.includes(tool) ? 'write' : 'read', `${id}/${tool}`);
   }
   for (const name of ['tagmgr_accts_ctrs_ws_tags_delete', 'youtube_videos_delete', 'mbinfo_locations_delete']) {
     assert.equal(Object.values(BUSINESS_LEAN).flat().includes(name), false, name);
   }
-  assert.match(products.gtm.toolsets.google.notes.tagmgr_accounts_containers_versions_publish, /goes live/);
+  assert.match(products.gtm.toolsets.google.notes.gtm_publish_version, /runs it/);
   assert.match(products.gbusiness.toolsets.google.notes.mbaccount_accounts_list, /declares business\.manage/);
 });
 
 test('runServer: google on gtm, gyoutube and gbusiness lists the lean list and the runtime tools, with the same schemas as all', async () => {
   for (const [id, tools] of Object.entries(BUSINESS_LEAN)) {
     const dir = tempDir(`gsm-toolset-${id}-`);
-    const entry = generatedEntry(dir, id);
+    // gtm has a hand-written tool since 2.14.0, so its entry carries the curated module as well.
+    const entry = id === 'gtm' ? curatedEntry(dir, id, 'gtm') : generatedEntry(dir, id);
     const tokenDir = fakeLogin(dir, id, 'business');
     const unset = await withClient(entry, childEnv(dir, tokenDir), listTools);
     const google = await withClient(entry, childEnv(dir, tokenDir, { GSM_TOOLSET: 'google' }), async (c) => ({ tools: await listTools(c), health: await health(c) }));
@@ -1118,9 +1134,10 @@ test('runServer: google on gmerchant (service account key) lists its 13 tools an
 });
 
 test('runServer: google on gsearch (API key) and gadmin lists the list and the runtime tools, with the same schemas as all', async () => {
-  // gsearch: generated tools only, the apikey group (a fake key, never sent: tools/list and health only).
+  // gsearch: the curated psi_run and the generated tools, the apikey group (a fake key, never sent: tools/list and
+  // health only). Since 2.13.0 the product has a hand-written tool, so the entry carries both parts.
   const sdir = tempDir('gsm-toolset-gsearch-');
-  const sentry = generatedEntry(sdir, 'gsearch');
+  const sentry = curatedEntry(sdir, 'gsearch', 'gsearch');
   const stokens = join(sdir, 'tokens');
   mkdirSync(stokens, { recursive: true });
   const senv = (extra = {}) => childEnv(sdir, stokens, { GSM_API_KEY: 'fake-key-for-tools-list', ...extra });

@@ -2,6 +2,142 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 2.17.0 - 2026-11-01
+
+### Added: `ga_get_metadata`, which answers a metadata question instead of returning the catalogue
+- The generated `gadata_props_get_meta` returned Google's whole field catalogue - every standard and custom dimension and metric, each with a long description - and cut it off at the result limit, so the custom fields, the answer to "what can I report on", were lost (adversarial review of ganalytics, F2). The new hand-written `ga_get_metadata` takes the property id, answers the custom dimensions and metrics by default (the API name a report takes, the display name, the category and a short description, 300 characters), and takes `search`, `category`, `limit` (25 by default) and `offset`. `custom_only: false` asks for Google's whole catalogue; fields that do not fit the result limit are left out of the larger list, and `next_offset` counts only the fields shown.
+- The generated tool keeps its own name in `all` and `curated`; in the `google` toolset the new tool takes its place, as it does the same method better. `ga_run_report` and the structured query fields now point at `ga_get_metadata`.
+
+### Fixed (docs): the counts and the tool descriptions
+- The page said 75 tools; the server registers 83. It said "five hand-written tools", and its counts disagreeing with the skill and the capability page (the review saw 82 against 84). All say what the server registers, and the page names the new tool.
+
+### Not changed
+- No tool's kind, scope, name or request: every existing tool's map entry is byte-identical, `ga_get_metadata` is the one addition, a read with the `analytics` and `analytics.readonly` scopes the generated tool already listed, so `gsm scopes` asks for the same scopes in every case (compared across the business group: no scope URL added or removed). `tool-aliases.json` is untouched, and the frozen files and the goldens have no diff.
+- Verified and left as they are: a large report no longer loses its `row_count` and `next_offset`, which `reportAnswer` puts first and sizes with the result limit since 1.28.0/1.29.0, and a test pins it (review F1).
+- Reported, not changed: `ga_get_metadata` was not run against live Google; its request shape comes from Discovery (`analyticsdata.properties.getMetadata`) and its answer shape from the response schema.
+
+### Tests
+- tests/analytics-parity.test.mjs: the custom-only answer (the standard field absent, a long description cut, whitespace folded), the whole catalogue with `custom_only: false`, search and category, paging with `limit` and `offset` and `next_offset`, the notes for no match and for the property having no custom fields, and the tool's scopes. tests/curated-contract.test.mjs: two `ga_get_metadata` rows against `analyticsdata.properties.getMetadata` (165 curated tools). tests/toolset.test.mjs and tests/curated.test.mjs follow the new list and count.
+
+## 2.16.1 - 2026-11-01
+
+### Fixed: the YouTube quota note, which was off by a factor of 100
+- The `google` toolset's search note said "Each call costs 100 units of the project's daily YouTube quota", and the plugin's skill said the same. Google's quota page says the opposite: "The search.list and videos.insert methods have their own quota buckets", "Each of these methods has a default daily limit of 100 per day", and "The quota cost is 1 per call" (https://developers.google.com/youtube/v3/determine_quota_cost, checked 2026-11-01). Both now say that, and the page adds the costs of the calls that are expensive (videos.update, comments.insert and captions.list 50, liveChatMessages.list 5).
+
+### Fixed (docs): what cannot be done here, and the comments example
+- The page said the plugin "manages captions" and that 125 tools were registered; captions are listed only (their text is a download, which is a media method), 132 tools register, and neither videos, thumbnails nor caption tracks can be uploaded, because those are media uploads the per-method tools and the gateway both skip. The page now says so, names the methods, and points to a hand-written upload tool as its own change.
+- Its example "Show the top 10 comments on my last video. No prompt" contradicted its own login note: a `readonly` login cannot read comment threads (`youtube.force-ssl` has no read-only form). The example says which login it needs.
+
+### Not changed
+- No tool's kind, scope, name, request or toolset list: the `google` list is still 17 tools and `gsm scopes` asks for the same scopes in every case. `tool-aliases.json` is untouched, and the frozen files and the goldens have no diff.
+- Verified and left as they are: `videos.update` has been destructive since 1.26.3 and the note tells a caller to send the whole part (F1); `liveStreams.list` never returns the stream key, which `src/core/credential-fields.ts` redacts (`IngestionInfo.streamName`, F2); the four `reports.query` parameters Discovery marks "required: true" are required in the tool since 1.30.1 (`requiredByText`), and the parameter descriptions are no longer clipped, so `channel==CHANNEL_ID` and `channel==MINE` are in them (F6).
+- Reported, not changed: video, thumbnail and caption uploads (F4) want a hand-written tool with a local path and a gate, like Play's bundle upload, and that is its own change; the `all` toolset still lists the junk methods the review named (`youtube_tests_insert`, the server-streamed live chat method, four unscoped `third_party_links` writes), because removing them is narrowing.
+
+### Tests
+- No test change: the suite pins the lists, the kinds and the counts, and all of them are unchanged (npm test 1482 tests, 1479 pass, 3 skipped).
+
+## 2.16.0 - 2026-11-01
+
+### Added: the reads a Business Profile change needs, in the `google` toolset
+- The list could not complete its own documented example. Changing a location's primary category needs the category id, and a location's attribute values, what Google has changed and whether the profile is verified are the questions a listing owner asks most (adversarial review of gbusiness, C). Five reads join the list, and the noisy single-metric performance tool leaves it: `mbinfo_categories_list`, `mbinfo_attributes_list`, `mbinfo_locations_get_attributes`, `mbinfo_get_google_updated` and `mbveri_locations_merchant_state` (getVoiceOfMerchantState), plus `mbaccount_accounts_admins_list`. The list is 13 tools.
+- `bpperf_loc_get_dai_met_tim_seri` leaves the list because its 15-argument shape (six date parts and five `dailySubEntityType` fields, which Google's own text calls unsupported) is covered by `bpperf_locations_time_series`, which takes one metric or several and was already in the list. The generated tool stays in `all` and `curated`, so nothing is removed from the product.
+- The plugin's skill now walks the category change (list the categories, read the location, patch `categories.primaryCategory`) and names `getGoogleUpdated` and the Voice of Merchant state.
+
+### Fixed (docs): what the plugin does not cover, and why
+- The page said 52 tools; the server registers 59. It now says plainly that reviews, local posts and media are not covered, and why: they live in the older My Business API v4, which Google does not list in its Discovery directory, and its direct Discovery URL (`https://mybusiness.googleapis.com/$discovery/rest?version=v4`) answered 404 on 2026-11-01, so no snapshot can be made here; adding v4 also needs an `include` list and a decision on where those tools belong. It also says why the flat performance call left the `google` list and that the 15-argument form stays in `all`.
+
+### Not changed
+- No tool's kind, scope, name or request: the map is byte-identical, `gsm scopes` for the business group asks for the same scopes in every case (compared: no scope URL added or removed), and `tool-aliases.json` is untouched. The frozen files and the goldens have no diff.
+- Verified and left as they are: `admins.create`, `admins.patch`, `locations.transfer` and admin deletes have been destructive since 1.26.3, so they ask twice (review F6). Parameters Google's text marks "Required." — `readMask` and the masks on the Business Information reads — are required in the tools since 1.30.1 (`requiredByText`), checked on the snapshot's own text. `business.manage` and the `Not covered:` line came with 1.24.1 and 1.32.0.
+- Reported, not changed: a body object still strips fields the snapshot does not know (review F11), which could matter for a newer Location field named in `updateMask`; nothing was run against live Google.
+
+### Tests
+- tests/toolset.test.mjs (the 13-tool `google` list and every one of their kinds), tests/toolset-scopes.test.mjs (13 requirements, a readonly login covers none of them), tests/not-covered.test.mjs (the `Not covered:` line now says 13 tools).
+
+## 2.15.0 - 2026-11-01
+
+### Added: a manager account per call, and customer ids as the Ads UI shows them
+- The manager account Google Ads calls act through was one setting for the whole session (`GSM_ADS_LOGIN_CUSTOMER_ID`), so reaching a direct account and a manager's client, or two managers, needed a config change and a restart (adversarial review of gads, G3). `ads_search`, `ads_resource_metadata` and `ads_mutate` now take `login_customer_id`, sent as Google's `login-customer-id` header for that call only; without it the configured account applies, as before.
+- `customer_id` and `login_customer_id` are taken with or without dashes, and as a number: the Ads UI shows `123-456-7890` and Google's own tools strip the dashes, where this suite refused them (G9). A value that is not digits is still refused before any request, with a message that says dashes are allowed.
+
+### Added: an `ads_mutate` approval that lists every operation
+- The approval for a big mutate batch was the raw arguments as pretty-printed JSON, cut at 2,000 characters, so about 14 removals filled it and later operations went unseen (G5). The approval the server shows now lists one line per operation - the verb, the resource key and the target, with the update mask for an update - removals first, then the remaining count, then a per-operation tally. The request sent is the body built from the same operations, unchanged.
+- A dynamic tool's approval is built in the handler (`ctx.gate`), because `prepare` runs only for a write or destructive tool; the consent hook's own line is built from the raw arguments and is still cut at 2,000 characters, so the improvement is in the server's form and in the audit line. The page says so.
+
+### Fixed (docs): what the `google` list says, and the count
+- Its `ads_search` note said "The manager account is GSM_ADS_LOGIN_CUSTOMER_ID, not a per-call login_customer_id", which this release makes false. The page said 331 tools; the server registers 338. Both are corrected, and the page documents `login_customer_id` and what the approve step shows.
+
+### Not changed
+- No tool's kind, scope, name or toolset list: the map is byte-identical and the generated and gateway Ads tools still send the configured manager account (a per-call id there is a separate change). `gsm scopes` asks for the same scopes in every case (`adwords` only, in every profile and toolset). `tool-aliases.json` is untouched, and the frozen files and the goldens have no diff.
+- Reported, not changed: `ads_search` paging (`page_token` and `next_page_token`) was already added in 1.41.4, and the row cap of 500 is documented. Nothing here was run against live Google Ads; the header and the request shapes come from Google's tools and Discovery.
+
+### Tests
+- tests/ads.test.mjs: customer ids with dashes and as numbers, the exact path they build; `login_customer_id` on all three tools, its header, and the refusal before any request; `summariseOperations` (removals first, the update mask, the 15-line cap with the rest counted, and a malformed operation named rather than guessed at); the mutate approval's lines and tally; the mutation checks fail without the change. tests/ads-parity.test.mjs: the new argument on the three shapes.
+
+## 2.14.0 - 2026-11-01
+
+### Added: `gtm_publish_version`, whose approval says what goes live
+- Publishing a container version is the one Tag Manager action that reaches every visitor of a site, and its approval showed one path (`{"path":"accounts/1/containers/2/versions/3"}`): no container name, no version name, no idea what the version changes (adversarial review of gtm, F1). The new hand-written `gtm_publish_version` reads the container, the version and the live version in `prepare` and puts what it found in the approval: the container's name and its GTM-XXXX public id, the version's id, name and notes, the tags, triggers and variables that are added, changed or removed against what is live now (by id, comparing the entities with the fields that carry no change left out), and the Custom HTML tags and Custom JavaScript variables it would put on the page.
+- It takes `container` (`accounts/{account}/containers/{container}`), `version` (the id, such as 7, or the full path) and an optional `fingerprint`. Without one, the fingerprint comes from the version it read, so a version that changed after the approval is refused by Google instead of published unread. It publishes exactly the path it approved.
+- A destructive call, so it asks twice, and it asks under `confirmation: destructive-only` too, where the generated tool's write ran with no prompt. A login that holds only `tagmanager.publish` can still use it: the reads that fail are listed in the approval as `unread` instead of failing the call, and the publish request stays exact.
+- In the `google` toolset it takes the place of the generated publish tool, which stays in `all` and `curated`.
+
+### Added: the Tag Manager reads a publish needs, in the `google` toolset
+- It could not inspect the version it publishes, find a container from a GTM-XXXX id, or see a workspace's status (review C): `tagmgr_accounts_containers_versions_get`, `tagmgr_accounts_containers_lookup`, `tagmgr_accounts_containers_workspaces_get` and `tagmgr_accts_ctrs_ws_get_status` join it, 17 tools in all.
+
+### Fixed (docs and wording): what a version does, and what set-latest does not
+- The `create_version` note said "nothing goes live" and left out the rest: Discovery says it "Creates a Container Version from the entities present in the workspace, deletes the workspace", so the note now says the workspace goes (review F2). The product page said "setting the latest version also changes what is live"; Google's text is "Sets the latest version used for synchronization of workspaces when detecting conflicts and errors", so it does not. The page's counts, its publish row (destructive since 1.26.3) and its `google` list description are corrected.
+
+### Not changed
+- No tool's kind or request: the map gains one entry (`gtm_publish_version`, destructive, `tagmanager.publish`) and the generated publish tool keeps its own. `gsm scopes` asks for the same scopes in every case — the `google` list already held a publish tool, so the readwrite login asked for `tagmanager.publish` before this change too (compared for the whole business group: no scope URL added or removed, only counts move). `tool-aliases.json` is untouched, and the frozen files and the goldens have no diff.
+- One "Not covered:" line appears: `gtm readonly curated`. The `curated` toolset is now the hand-written publish and the gateway, and `tagmanager.publish` has no read-only form, so a `readonly` login covers none of that product's tools. The `google` and `all` toolsets still cover their reads.
+- Reported, not changed: whether Google still serves Tag Manager API v1, which the gateway reaches, is UNVERIFIED (its reference pages answered 404 on 2026-10-30, and data/discovery holds only v2); the page now says so. `gtm_publish_version` was not run against live Google.
+
+### Tests
+- tests/gtm-parity.test.mjs: the path checks and their refusals, `diffVersions` (added, removed, changed, counts, and the fields a diff ignores), `customCode`, the prepare preview (container, version, live, changes, custom code and the fingerprint from the version), the handler publishing exactly the approved path with the approved fingerprint, a caller fingerprint, and the `unread` case where every read is refused. tests/curated-contract.test.mjs: two `gtm_publish_version` rows against the container, version, live and publish methods, with `tagmanager.v2` added to its documents (164 curated tools). tests/toolset.test.mjs, tests/toolset-scopes.test.mjs, tests/not-covered.test.mjs and tests/curated.test.mjs follow the new list and the new not-covered line.
+
+## 2.13.0 - 2026-11-01
+
+### Added: `psi_run`, which answers a page-speed question instead of returning Lighthouse
+- The generated `pagespeed_pagespeedapi_runpagespeed` returned Google's whole Lighthouse report: about 150 audits come before `lighthouseResult.categories`, so the runtime's result limit cut the category scores off, and the answer to "how fast is this page" was lost (adversarial review of gsearch, F1). The new hand-written `psi_run` runs one PageSpeed Insights analysis and leads with what a caller asks for: the category scores as 0 to 100 (`performance`, `accessibility`, `best_practices`, `seo`, null for a category that did not run), the field data Google has from real visitors (Core Web Vitals at the 75th percentile and their rating), the six lab metrics with Lighthouse's display text and number, and the worst opportunities with the time or bytes each would save. `include_raw` adds Google's whole report as `raw`, which the runtime shapes as before.
+- Its arguments are the URL, `strategy` (mobile or desktop, Google's default), `categories` (Performance only by default, as Google does), `locale`, `top_opportunities` (5 by default, 0 for none) and `include_raw`. It sends only parameters Discovery lists, with `category` repeated once per category. A Lighthouse `runtimeError` is an error with Google's message, not an empty answer, and an answer without field data says why (too little traffic for CrUX).
+- It matches no tool of Google's Developer Knowledge MCP server and the note says so; in the `google` toolset it takes the place of the generated PageSpeed tool, which stays in `all` and `curated`.
+
+### Fixed: the `curated` toolset of gsearch reaches all 15 APIs
+- gsearch has no place for gateway tools beyond the two its `gateway` list held (Developer Knowledge v1alpha and the legacy Safe Browsing v4), so the `curated` toolset could not reach PageSpeed, CrUX, Web Risk, Knowledge Graph, Custom Search, Fact Check, Civic Information, Digital Asset Links, Version History or the other report APIs (review F2). The `gateway` list now names every API the product generates, at the version it generates, so `api_search`, `api_describe` and `api_call` reach all of them.
+
+### Fixed: `project_readiness` covers the APIs gsearch calls
+- The apikey group's list held six services, so the readiness check said nothing about Custom Search, Developer Knowledge, Fact Check Tools, Civic Information, Digital Asset Links, Web Fonts, Version History, the two experience reports or the Accelerated Mobile Pages URL API (review F9). It now lists all sixteen.
+
+### Fixed (docs): the gsearch page's claims
+- It said the answer tool asks first; `answerQuery` is a read since 1.24.2, and the toolset note that leaked the internal label "D2" now says why it does not ask. It said the plugin has no hand-written tools (it has `psi_run` since this release) and that the gateway holds 2 APIs (now all 15). docs/USING.md carried the same "still asks first" sentence.
+
+### Not changed
+- No other tool's kind, scope, name, request or toolset list: every existing tool's map entry is byte-identical (`psi_run` is the one addition, a read with the `openid` scope Discovery lists), and the generated tool is untouched in `all` and `curated`. `gsm scopes` is byte-identical for every group, profile and toolset: gsearch is in the apikey group, which has no profiles. `tool-aliases.json` is untouched, and the frozen files and the goldens have no diff.
+- Reported, not changed: the generated tools of this product still return raw JSON (only `psi_run` projects its answer); `psi_run` was not run against live Google, so its request shape comes from Discovery and its answer shape from Google's response schemas.
+
+### Tests
+- tests/search-parity.test.mjs: the summary (scores, field data, lab metrics, opportunities in order, the note for the default category, no raw report, the key only in the query and never in the answer), the arguments sent (categories repeated, strategy, locale, `top_opportunities`), `include_raw` adding the report with the same summary, no field data, a Lighthouse runtime error, and the refusals before any request. tests/curated-contract.test.mjs: two `psi_run` rows against `pagespeedonline.pagespeedapi.runpagespeed` with `pagespeedonline.v5` added to the documents it checks (163 curated tools). tests/curated.test.mjs, tests/toolset.test.mjs (the `google` list and the runServer check), tests/method-notes.test.mjs, tests/gateway.test.mjs (411 gateway APIs), tests/kinds-destructive.test.mjs (the gateway now carries `bulkCheck`).
+
+## 2.12.1 - 2026-11-01
+
+### Fixed: every Street View Publish tool says it cannot work here
+- gmaps is in the API key group: it holds an API key and has no Google sign-in. Google's Street View Publish API needs an API key **and** an OAuth 2.0 access token (https://developers.google.com/streetview/publish/first-app: "After you have your API key and access token", and its samples send both `?key=YOUR_API_KEY` and `authorization: Bearer YOUR_ACCESS_TOKEN`), and every method of the API lists the OAuth scope `streetviewpublish` in Discovery. So all 14 Street View Publish tools are expected to be refused, and nothing said so (adversarial review of gmaps, F2). Each of their descriptions now carries the fact, through the product's `methodNotes` in config/products.json, and the product page has a "Street View Publish" section that says it plainly, including that uploading imagery needs a media upload the suite does not offer either.
+- No tool was removed and no kind, scope or name changed: the 14 tools stay listed and keep their kinds, and only their descriptions grow.
+
+### Fixed (docs): what Google publishes for `resolve_names` and `resolve_maps_urls`
+- Four places said those two tools of Google's Maps Grounding Lite server "have no public API". Google does publish a REST surface (`POST https://mapstools.googleapis.com/v1:resolveNames`, the review cites its REST reference), but its Discovery document is not public — it answered 403 on 2026-11-01 — and the only documented authorization is the OAuth scope `maps-platform.mapstools`, which this API-key product cannot ask for. The product page, docs/USING.md, the `google` toolset note and the module comment now say that instead. The tools are still not built: a snapshot needs the document, and the group has no OAuth.
+
+### Fixed (docs): the gmaps product page
+- It said Street View uploads and place autocomplete need `allow_writes`; autocomplete has been a read since 1.24.2. It also offered "upload Street View imagery" as a reason to install, which cannot work. Both are corrected.
+
+### Not changed
+- No tool's kind, scope, name, request or toolset list. `plugins/gmaps/tool-map.json`, every other plugin's `tool-map.json` and `tool-aliases.json` are byte-identical, the frozen files and the goldens have no diff, and `gsm scopes` asks for the same scopes in every case. tools/list changes only in the descriptions of the 14 Street View tools and of the four `places_places_get` texts that carry the note.
+- Reported, not changed: the Weather API's Discovery document (public; checked 2026-11-01) has no address, place id, date or hour parameter, so `maps_lookup_weather` is not missing them; the official `lookup_weather` does the geocoding on its own server. The same document lists four methods the tool does not cover (`history.hours.lookup`, `publicAlerts.lookup`, `forecast.minutes.lookup`, `mapTypes.mapTiles.lookupMapTile`), which want their own change. The five Places/area POST reads the review asked for are already reads since 1.26.3 and the Places field masks since 1.30.0.
+
+### Tests
+- tests/method-notes.test.mjs: all 14 Street View Publish methods carry the note in their tool descriptions (each under the 2,048-character limit), no other gmaps tool carries it, and the plugin's servers.json holds exactly the same notes. tests/maps-parity.test.mjs: the `google` list's note now names the REST surface and its OAuth scope instead of saying "no public API".
+
 ## 2.12.0 - 2026-11-01
 
 ### Added: `androidpub_upload_bundle`, so a new build can be released

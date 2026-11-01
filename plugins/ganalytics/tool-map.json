@@ -89,6 +89,15 @@
     "title": "List Google Analytics annotations"
   },
   {
+    "name": "mcp__plugin_ganalytics_ganalytics__ga_get_metadata",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics",
+      "https://www.googleapis.com/auth/analytics.readonly"
+    ],
+    "title": "List a property's dimensions and metrics"
+  },
+  {
     "name": "mcp__plugin_ganalytics_ganalytics__ga_run_funnel_report",
     "kind": "read",
     "scopes": [

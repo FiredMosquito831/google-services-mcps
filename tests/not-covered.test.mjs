@@ -98,7 +98,7 @@ test('gsm scopes: with the google toolset, readonly leaves gads (adwords has no 
   const lines = await notCoveredOf('business', undefined, 'google');
   assert.equal(lines.readonly.length, 2, lines.readonly.join('\n'));
   assert.match(lines.readonly.find((l) => / of gads /.test(l)), /covers none of the 3 tool\(s\) of gads .*The readwrite profile covers all 3/);
-  assert.match(lines.readonly.find((l) => / of gbusiness /.test(l)), /covers none of the 8 tool\(s\) of gbusiness/);
+  assert.match(lines.readonly.find((l) => / of gbusiness /.test(l)), /covers none of the 13 tool\(s\) of gbusiness/);
   assert.deepEqual(lines.readwrite, []);
 });
 
@@ -113,12 +113,16 @@ test('gsm scopes: which plugins, toolsets and profiles name a product with no to
   }
   // gfirebase left this list in 2.11.0: firebase_get_sdk_config declares firebase.readonly, which a readonly login holds,
   // so the curated toolset is no longer empty for it.
+  // gtm readonly curated joins it in 2.14.0: the curated toolset is now the hand-written gtm_publish_version (and the
+  // gateway), and tagmanager.publish has no read-only form, so a readonly login covers none of them. The google list
+  // still holds the read tools, so gtm readonly google and gtm readonly all are covered.
   assert.deepEqual(found.sort(), [
     'gads readonly curated',
     'gads readonly google',
     'gbusiness readonly all',
     'gbusiness readonly curated',
     'gbusiness readonly google',
+    'gtm readonly curated',
   ]);
 });
 

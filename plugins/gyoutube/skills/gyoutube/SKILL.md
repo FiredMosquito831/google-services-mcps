@@ -39,8 +39,8 @@ Only if the chat tools fail, the same steps in a terminal: `node "${CLAUDE_PLUGI
 
 ## Notes
 
-- A search costs 100 units of the daily YouTube Data API quota; most reads cost 1.
-- `youtube_videos_update` replaces the parts it sends (it asks twice): read the video first and send the whole part back. Video uploads are not available here.
+- search.list has its own daily bucket of 100 calls (1 unit each); most other calls use the project's 10,000-unit day, where videos.update, comments.insert and captions.list cost 50 each.
+- `youtube_videos_update` replaces the parts it sends (it asks twice): read the video first and send the whole part back. Video, thumbnail and caption uploads are not available here.
 
 ## Untrusted content
 

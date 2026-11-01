@@ -1606,7 +1606,7 @@
       "group": "apikey",
       "server": {
         "name": "gsearch",
-        "curated": null
+        "curated": "search"
       },
       "generated": [
         {
@@ -1678,6 +1678,66 @@
         {
           "api": "safebrowsing",
           "version": "v4"
+        },
+        {
+          "api": "customsearch",
+          "version": "v1"
+        },
+        {
+          "api": "pagespeedonline",
+          "version": "v5"
+        },
+        {
+          "api": "chromeuxreport",
+          "version": "v1"
+        },
+        {
+          "api": "kgsearch",
+          "version": "v1"
+        },
+        {
+          "api": "safebrowsing",
+          "version": "v5"
+        },
+        {
+          "api": "factchecktools",
+          "version": "v1alpha1"
+        },
+        {
+          "api": "acceleratedmobilepageurl",
+          "version": "v1"
+        },
+        {
+          "api": "abusiveexperiencereport",
+          "version": "v1"
+        },
+        {
+          "api": "adexperiencereport",
+          "version": "v1"
+        },
+        {
+          "api": "webfonts",
+          "version": "v1"
+        },
+        {
+          "api": "webrisk",
+          "version": "v1"
+        },
+        {
+          "api": "civicinfo",
+          "version": "v2"
+        },
+        {
+          "api": "digitalassetlinks",
+          "version": "v1"
+        },
+        {
+          "api": "versionhistory",
+          "version": "v1"
+        },
+        {
+          "api": "developerknowledge",
+          "version": "v1"
         }
       ],
       "methodNotes": {
@@ -1711,7 +1771,7 @@
             "developerk_docs_search_doc_chunks",
             "developerk_documents_batch_get",
             "developerk_v1_answer_query",
-            "pagespeed_pagespeedapi_runpagespeed",
+            "psi_run",
             "chromeuxre_records_query_record",
             "kgsearch_entities_search",
             "factcheckt_claims_search",
@@ -1727,7 +1787,7 @@
             "developerk_v1_answer_query": [
               "answer_query"
             ],
-            "pagespeed_pagespeedapi_runpagespeed": [],
+            "psi_run": [],
             "chromeuxre_records_query_record": [],
             "kgsearch_entities_search": [],
             "factcheckt_claims_search": [],
@@ -1736,8 +1796,8 @@
           "notes": {
             "developerk_docs_search_doc_chunks": "Searches Google's developer documentation (Developer Knowledge API searchDocumentChunks): matching chunks with their document names.",
             "developerk_documents_batch_get": "The full text of up to 20 documents by name (Developer Knowledge API documents.batchGet), after a search.",
-            "developerk_v1_answer_query": "A grounded answer about Google developer products (Developer Knowledge API answerQuery). Google marks it read-only, and since 1.24.2 (D2) the suite counts it as a read too, so it does not ask.",
-            "pagespeed_pagespeedapi_runpagespeed": "No official Google MCP server covers PageSpeed Insights; kept for the Lighthouse scores and Core Web Vitals of a page (PageSpeed Insights API runpagespeed).",
+            "developerk_v1_answer_query": "A grounded answer about Google developer products (Developer Knowledge API answerQuery). Google marks it read-only, and so does this suite, so it does not ask.",
+            "psi_run": "No official Google MCP server covers PageSpeed Insights; the summary leads with the Lighthouse category scores, the field data Google has from real visitors, the six lab metrics and the worst opportunities, and include_raw adds Google's whole report. Each call uses one of the API's 25,000 daily queries; name categories to run more than Performance, which is Google's default.",
             "chromeuxre_records_query_record": "No official Google MCP server covers the Chrome UX Report; kept for real-user Core Web Vitals of an origin or URL (CrUX API records.queryRecord).",
             "kgsearch_entities_search": "No official Google MCP server covers the Knowledge Graph; kept to look up an entity by name (Knowledge Graph Search API entities.search).",
             "factcheckt_claims_search": "No official Google MCP server covers Fact Check Tools; kept to find published fact checks of a claim (Fact Check Tools API claims.search).",
@@ -2936,7 +2996,7 @@
             "gaadmin_acct_summaries_list",
             "gaadmin_properties_get",
             "gaadmin_pro_goo_ads_link_list",
-            "gadata_props_get_meta",
+            "ga_get_metadata",
             "ga_run_report",
             "ga_run_realtime_report",
             "ga_run_funnel_report",
@@ -2953,7 +3013,7 @@
             "gaadmin_pro_goo_ads_link_list": [
               "list_google_ads_links"
             ],
-            "gadata_props_get_meta": [
+            "ga_get_metadata": [
               "get_custom_dimensions_and_metrics"
             ],
             "ga_run_report": [
@@ -2977,7 +3037,7 @@
             "gaadmin_acct_summaries_list": "The accounts and properties the signed-in user can see (Admin API v1beta accountSummaries.list). Start here for a property id.",
             "gaadmin_properties_get": "One property's details: name, time zone, currency, industry, service level (Admin API v1beta).",
             "gaadmin_pro_goo_ads_link_list": "The Google Ads accounts linked to a property (Admin API v1beta).",
-            "gadata_props_get_meta": "Every dimension and metric the property can report on, custom ones flagged with customDefinition; Google's tool returns only the custom ones. Pass name properties/<id>/metadata.",
+            "ga_get_metadata": "The custom dimensions and metrics of a property by default - the API name a report takes, the display name, the category and a short description - with search, category and paging; custom_only false returns Google's whole catalogue. It takes the property id, where the generated tool of the same method takes name properties/<id>/metadata and returns everything at once. It takes the place of the generated tool in this list.",
             "ga_run_report": "A report with rows keyed by dimension and metric name, row_count, next_offset and, on request, the property's quota. With conversion_spec it runs Google's conversions report on Data API v1alpha, as run_conversions_report does.",
             "ga_run_realtime_report": "The last 30 minutes. The Data API has no offset for realtime reports, so there is none here (Google's tool lists one).",
             "ga_run_funnel_report": "Data API v1alpha runFunnelReport, which no generated tool or gateway method of this server reaches; steps as event names or filter expressions.",
@@ -2994,7 +3054,7 @@
       "group": "business",
       "server": {
         "name": "gtm",
-        "curated": null
+        "curated": "tagmanager"
       },
       "generated": [
         {
@@ -3019,7 +3079,10 @@
           "tools": [
             "tagmgr_accounts_list",
             "tagmgr_accounts_containers_list",
+            "tagmgr_accounts_containers_lookup",
             "tagmgr_accounts_containers_workspaces_list",
+            "tagmgr_accounts_containers_workspaces_get",
+            "tagmgr_accts_ctrs_ws_get_status",
             "tagmgr_accts_ctrs_ws_tags_list",
             "tagmgr_accts_ctrs_ws_tags_get",
             "tagmgr_accts_ctrs_ws_triggers_list",
@@ -3027,14 +3090,18 @@
             "tagmgr_accts_ctrs_ws_variables_list",
             "tagmgr_accts_ctrs_ws_variables_get",
             "tagmgr_accounts_containers_versions_live",
+            "tagmgr_accounts_containers_versions_get",
             "tagmgr_accts_ctrs_ver_headers_list",
             "tagmgr_accts_ctrs_ws_create_ver",
-            "tagmgr_accounts_containers_versions_publish"
+            "gtm_publish_version"
           ],
           "matches": {
             "tagmgr_accounts_list": [],
             "tagmgr_accounts_containers_list": [],
+            "tagmgr_accounts_containers_lookup": [],
             "tagmgr_accounts_containers_workspaces_list": [],
+            "tagmgr_accounts_containers_workspaces_get": [],
+            "tagmgr_accts_ctrs_ws_get_status": [],
             "tagmgr_accts_ctrs_ws_tags_list": [],
             "tagmgr_accts_ctrs_ws_tags_get": [],
             "tagmgr_accts_ctrs_ws_triggers_list": [],
@@ -3042,24 +3109,29 @@
             "tagmgr_accts_ctrs_ws_variables_list": [],
             "tagmgr_accts_ctrs_ws_variables_get": [],
             "tagmgr_accounts_containers_versions_live": [],
+            "tagmgr_accounts_containers_versions_get": [],
             "tagmgr_accts_ctrs_ver_headers_list": [],
             "tagmgr_accts_ctrs_ws_create_ver": [],
-            "tagmgr_accounts_containers_versions_publish": []
+            "gtm_publish_version": []
           },
           "notes": {
             "tagmgr_accounts_list": "The Tag Manager accounts the signed-in user can see. Start here.",
             "tagmgr_accounts_containers_list": "The containers of an account (web, iOS, Android, AMP, server) with their public ids (GTM-XXXX).",
+            "tagmgr_accounts_containers_lookup": "The container behind a destination id, such as GTM-XXXX: gives the accounts/{account}/containers/{container} path the other tools take.",
             "tagmgr_accounts_containers_workspaces_list": "The workspaces of a container. Changes are made in a workspace, saved as a version, then published.",
+            "tagmgr_accounts_containers_workspaces_get": "One workspace: its name, description and id.",
+            "tagmgr_accts_ctrs_ws_get_status": "A workspace's status, as the workspace syncs: merge conflicts and the changes it holds.",
             "tagmgr_accts_ctrs_ws_tags_list": "The tags of a workspace.",
             "tagmgr_accts_ctrs_ws_tags_get": "One tag with its type, parameters and firing and blocking triggers.",
             "tagmgr_accts_ctrs_ws_triggers_list": "The triggers of a workspace.",
             "tagmgr_accts_ctrs_ws_triggers_get": "One trigger with its type and filters.",
             "tagmgr_accts_ctrs_ws_variables_list": "The user-defined variables of a workspace.",
             "tagmgr_accts_ctrs_ws_variables_get": "One variable with its type and parameters.",
-            "tagmgr_accounts_containers_versions_live": "The version that is live now, with its tags, triggers and variables.",
+            "tagmgr_accounts_containers_versions_live": "The version that is live now, with its tags, triggers and variables. It can be large; the result limit may cut it.",
+            "tagmgr_accounts_containers_versions_get": "One container version by its id (such as 7): its name, notes and contents, and the fingerprint Google checks when it is published.",
             "tagmgr_accts_ctrs_ver_headers_list": "The versions of a container as headers: name, number and counts.",
-            "tagmgr_accts_ctrs_ws_create_ver": "Saves a workspace as a new container version, and Google deletes the workspace. Destructive since 1.26.3, so it asks twice; nothing goes live.",
-            "tagmgr_accounts_containers_versions_publish": "Publishes a version: it goes live on every site or app that loads the container. Destructive since 1.26.3, so it asks twice; check the version before."
+            "tagmgr_accts_ctrs_ws_create_ver": "Saves a workspace as a new container version, and Google deletes the workspace (Discovery: \"Creates a Container Version from the entities present in the workspace, deletes the workspace\"). Destructive since 1.26.3, so it asks twice. Nothing goes live: publishing is a second step.",
+            "gtm_publish_version": "Publishes a container version, so every page or app loading the container runs it. Before asking, it reads the container, the version and the live version, and the approval names what is added, changed and removed and any Custom HTML or custom JavaScript. It takes the place of the generated publish tool in this list. Destructive, so it asks twice."
           }
         }
       },
@@ -3141,7 +3213,7 @@
             "youtube_comments_insert": []
           },
           "notes": {
-            "youtube_search_list": "Search YouTube for videos, channels and playlists. Each call costs 100 units of the project's daily YouTube quota.",
+            "youtube_search_list": "Search YouTube for videos, channels and playlists. Google's quota page (checked 2026-11-01): search.list has its own daily bucket, 100 calls per day, and each call costs 1 unit of it; it does not use the project's 10,000-unit bucket.",
             "youtube_channels_list": "Channels by id, by handle, or your own (mine): statistics and the id of the uploads playlist.",
             "youtube_videos_list": "Videos by id, or the most popular chart: title, description, statistics and duration.",
             "youtube_playlists_list": "The playlists of a channel, or by id.",
@@ -3223,33 +3295,48 @@
           "source": "No official Google MCP server for Google Business Profile was found (Google's Cloud and Workspace MCP lists and Google's GitHub organisations, 2026-10-29; a negative, not confirmed by Google); a lean set chosen here.",
           "tools": [
             "mbaccount_accounts_list",
+            "mbaccount_accounts_admins_list",
             "mbinfo_accounts_locations_list",
             "mbinfo_locations_get",
-            "bpperf_loc_get_dai_met_tim_seri",
             "bpperf_locations_time_series",
             "bpperf_impressions_monthly_list",
             "mbverify_verifications_list",
-            "mbinfo_locations_patch"
+            "mbinfo_locations_patch",
+            "mbinfo_categories_list",
+            "mbinfo_attributes_list",
+            "mbinfo_locations_get_attributes",
+            "mbinfo_get_google_updated",
+            "mbveri_locations_merchant_state"
           ],
           "matches": {
             "mbaccount_accounts_list": [],
+            "mbaccount_accounts_admins_list": [],
             "mbinfo_accounts_locations_list": [],
             "mbinfo_locations_get": [],
-            "bpperf_loc_get_dai_met_tim_seri": [],
             "bpperf_locations_time_series": [],
             "bpperf_impressions_monthly_list": [],
             "mbverify_verifications_list": [],
-            "mbinfo_locations_patch": []
+            "mbinfo_locations_patch": [],
+            "mbinfo_categories_list": [],
+            "mbinfo_attributes_list": [],
+            "mbinfo_locations_get_attributes": [],
+            "mbinfo_get_google_updated": [],
+            "mbveri_locations_merchant_state": []
           },
           "notes": {
             "mbaccount_accounts_list": "The Business Profile accounts the signed-in user can manage. Start here. Google's Business Profile Discovery documents list no OAuth scope; since 1.24.1 the product declares business.manage for them (scopeOverrides), so a readwrite login asks for it. It has no read-only form, so a readonly login covers none of these tools.",
+            "mbaccount_accounts_admins_list": "The people who manage an account, with their role (OWNER, MANAGER, SITE_MANAGER, COMMUNICATIONS_MANAGER) and whether they have accepted.",
             "mbinfo_accounts_locations_list": "The locations of an account; readMask names the fields to return, such as name,title,storefrontAddress.",
             "mbinfo_locations_get": "One location with the fields readMask names: hours, categories, phone, website and so on.",
-            "bpperf_loc_get_dai_met_tim_seri": "One daily metric of a location over a date range, such as calls or website clicks.",
-            "bpperf_locations_time_series": "Several daily metrics of a location over a date range in one call.",
+            "bpperf_locations_time_series": "Several daily metrics of a location over a date range in one call (Google's fetchMultiDailyMetricsTimeSeries). The single-metric call is the generated bpperf_loc_get_dai_met_tim_seri, in the all toolset.",
             "bpperf_impressions_monthly_list": "The search keywords that showed the location, with monthly impressions.",
             "mbverify_verifications_list": "The verifications of a location and their state.",
-            "mbinfo_locations_patch": "Changes the fields updateMask names. A write, so it asks first; the change is public on Google Search and Maps."
+            "mbinfo_locations_patch": "Changes the fields updateMask names. A write, so it asks first; the change is public on Google Search and Maps. Google allows 10 edits per minute per location, and categories and phoneNumbers must be sent whole. Use validateOnly to check first.",
+            "mbinfo_categories_list": "The categories a location can have, with their ids (categories/gcid:...) and display names; the ids are what a category change sends. Needed to change a location's primary category.",
+            "mbinfo_attributes_list": "The attributes a location can have (attributes/...), with their value types and whether they apply to a category; mbinfo_locations_get_attributes gives the values of one location.",
+            "mbinfo_locations_get_attributes": "The attribute values of a location, such as wheelchair accessible or outdoor seating.",
+            "mbinfo_get_google_updated": "The fields Google has changed on a location since it was last edited (locations.getGoogleUpdated); Google owns them and a normal edit does not overwrite them.",
+            "mbveri_locations_merchant_state": "A location's Voice of Merchant state: whether it is verified, whether it has a holding state (such as pending verification or a suspended profile) and what it needs (getVoiceOfMerchantState)."
           }
         }
       },
@@ -3496,7 +3583,7 @@
           },
           "notes": {
             "ads_list_customers": "The customer resource names the signed-in user can reach; the digits are the customer_id of the other tools. Google's server exposes it as customers_list_accessible_customers.",
-            "ads_search": "One page of GAQL, at most 500 rows, given as text or as fields, resource, conditions, orderings and limit (Google's structured form, with PARAMETERS omit_unselected_resource_names=true). It calls googleAds:search, not searchStream, and never sends pageSize. Google's server is read-only, so ads_mutate (validate first, then gated changes) is not in this list; it stays in the all and curated toolsets. The manager account is GSM_ADS_LOGIN_CUSTOMER_ID, not a per-call login_customer_id.",
+            "ads_search": "One page of GAQL, at most 500 rows, given as text or as fields, resource, conditions, orderings and limit (Google's structured form, with PARAMETERS omit_unselected_resource_names=true). It calls googleAds:search, not searchStream, and never sends pageSize; next_page_token with page_token reads the next page. Google's server is read-only, so ads_mutate (validate first, then gated changes) is not in this list; it stays in the all and curated toolsets. The manager account is ads_login_customer_id (GSM_ADS_LOGIN_CUSTOMER_ID) unless a call names its own login_customer_id, which applies to that call only.",
             "ads_resource_metadata": "The two field queries Google's get_resource_metadata runs (the resource's attributes, then every field selectable with it), as selectable, filterable and sortable name lists."
           }
         }
@@ -4231,6 +4318,28 @@
         }
       ],
       "gateway": [],
+      "methodNotes": {
+        "streetviewpublish": {
+          "source": "https://developers.google.com/streetview/publish/first-app (\"After you have your API key and access token\"; the samples send both ?key=YOUR_API_KEY and authorization: Bearer YOUR_ACCESS_TOKEN). Every method of the API lists the OAuth scope https://www.googleapis.com/auth/streetviewpublish in Discovery.",
+          "reason": "gsearch and gmaps are the apikey group: gmaps holds an API key and has no Google sign-in, so no OAuth token is ever sent. Every Street View Publish tool is expected to be refused until the product gains an OAuth sign-in, which is a separate decision (adversarial review of gmaps, F2).",
+          "methods": {
+            "streetviewpublish.photo.create": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call.",
+            "streetviewpublish.photo.delete": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call.",
+            "streetviewpublish.photo.get": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call.",
+            "streetviewpublish.photo.startUpload": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call.",
+            "streetviewpublish.photo.update": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call.",
+            "streetviewpublish.photoSequence.create": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call.",
+            "streetviewpublish.photoSequence.delete": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call.",
+            "streetviewpublish.photoSequence.get": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call.",
+            "streetviewpublish.photoSequence.startUpload": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call.",
+            "streetviewpublish.photoSequences.list": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call.",
+            "streetviewpublish.photos.batchDelete": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call.",
+            "streetviewpublish.photos.batchGet": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call.",
+            "streetviewpublish.photos.batchUpdate": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call.",
+            "streetviewpublish.photos.list": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call."
+          }
+        }
+      },
       "fieldMaskDefaults": {
         "places": {
           "source": "https://developers.google.com/maps/documentation/places/web-service/text-search (also nearby-search and place-details)",
@@ -4269,7 +4378,7 @@
           },
           "notes": {
             "places_places_search_text": "Places API (New) searchText: places by a text query, with an optional location bias. Google's search_places also returns a summary written by its server; this returns Places data.",
-            "places_places_get": "One place's details by its id (Places API places.get), the extended details Google's search_places adds on request. Google's resolve_names and resolve_maps_urls call a REST surface only Google's own server reaches (no public API), so they have no tool here.",
+            "places_places_get": "One place's details by its id (Places API places.get), the extended details Google's search_places adds on request. Google publishes resolveNames and resolveMapsUrls as a REST surface (POST https://mapstools.googleapis.com/v1:resolveNames) whose Discovery document is not public (403 on 2026-11-01) and whose only documented authorization is the OAuth scope maps-platform.mapstools; this product holds an API key and has no Google sign-in, so they have no tool here.",
             "maps_compute_routes": "Routes API computeRoutes with a response field mask (a short summary by default). Routes API is not in Google's Discovery directory; called directly with the API key.",
             "maps_lookup_weather": "Weather API current conditions, hourly forecast or daily forecast, by latitude and longitude. Not in Google's Discovery directory; called directly with the API key."
           }

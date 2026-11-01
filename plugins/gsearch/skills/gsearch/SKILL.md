@@ -23,8 +23,8 @@ No sign-in: this server uses an API key stored on this machine. A key is never p
 
 ### 2. Page speed and Core Web Vitals
 
-1. `pagespeed_pagespeedapi_runpagespeed` with url and strategy (mobile or desktop).
-2. `chromeuxre_records_query_record` with a body naming url or origin, for real-user data.
+1. `psi_run` with url and strategy (mobile or desktop): the Lighthouse scores, the field data Google has from real visitors, the six lab metrics and the worst opportunities, in that order.
+2. `chromeuxre_records_query_record` with a body naming url or origin, for the raw CrUX field data.
 
 ### 3. Is a URL safe
 
@@ -49,7 +49,7 @@ Reads never ask for approval. Tools that change or delete data are listed only w
 
 ## Tools
 
-The `gsearch` MCP server lists up to 52 tools with the `all` toolset: 45 read, 3 write, 3 destructive and 1 dynamic (decided per call), counting its 1 runtime tools (`health` and the sign-in tools). Write and destructive tools are listed only when writes are allowed, and a tool loads only when the sign-in holds one of its scopes. The `google` toolset lists 8 of them plus the runtime tools. The gateway APIs below are reached through `api_search` (find a method), `api_describe` (its parameters) and `api_call` (run it).
+The `gsearch` MCP server lists up to 53 tools with the `all` toolset: 46 read, 3 write, 3 destructive and 1 dynamic (decided per call), counting its 1 runtime tools (`health` and the sign-in tools). Write and destructive tools are listed only when writes are allowed, and a tool loads only when the sign-in holds one of its scopes. The `google` toolset lists 8 of them plus the runtime tools. The gateway APIs below are reached through `api_search` (find a method), `api_describe` (its parameters) and `api_call` (run it).
 
 ## APIs
 
@@ -75,3 +75,18 @@ Through the gateway:
 
 - Developer Knowledge API (developerknowledge v1alpha)
 - Safe Browsing API (safebrowsing v4)
+- Custom Search API (customsearch v1)
+- PageSpeed Insights API (pagespeedonline v5)
+- Chrome UX Report API (chromeuxreport v1)
+- Knowledge Graph Search API (kgsearch v1)
+- Safe Browsing API (safebrowsing v5)
+- Fact Check Tools API (factchecktools v1alpha1)
+- Accelerated Mobile Pages (AMP) URL API (acceleratedmobilepageurl v1)
+- Abusive Experience Report API (abusiveexperiencereport v1)
+- Ad Experience Report API (adexperiencereport v1)
+- Web Fonts Developer API (webfonts v1)
+- Web Risk API (webrisk v1)
+- Google Civic Information API (civicinfo v2)
+- Digital Asset Links API (digitalassetlinks v1)
+- versionhistory.googleapis.com API (versionhistory v1)
+- Developer Knowledge API (developerknowledge v1)

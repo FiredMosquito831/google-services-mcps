@@ -144,7 +144,7 @@ const dateRange = z.object({
   end_date: z.string().regex(REPORT_DATE, 'Use YYYY-MM-DD, today, yesterday or NdaysAgo.').describe('YYYY-MM-DD, today, yesterday or NdaysAgo.'),
   name: z.string().optional().describe('A name for the range, shown in the dateRange dimension when there are several ranges.'),
 });
-const names = (what: string, example: string) => z.array(z.string().trim().min(1)).describe(`${what} by API name, such as ${example}. gadata_props_get_meta lists them for a property.`);
+const names = (what: string, example: string) => z.array(z.string().trim().min(1)).describe(`${what} by API name, such as ${example}. ga_get_metadata lists them for a property.`);
 const filter = (what: string) =>
   z
     .record(z.string(), z.unknown())
@@ -243,6 +243,65 @@ export function funnelStepOf(step: z.infer<typeof funnelStep>, index: number) {
   };
 }
 
+/**
+ * The metadata tool (2.17.0). Google's `properties.getMetadata` returns the whole field catalogue - every standard and
+ * custom dimension and metric, with long descriptions - and Google's own MCP tool returns the custom fields only, which
+ * is what a caller usually wants and what the result limit can hold (adversarial review of ganalytics, F2). This one
+ * filters, pages and shortens; `custom_only: false` asks for the whole catalogue.
+ */
+/** The most fields one answer asks for by default: about 25 short rows fit the 25,000-character result limit. */
+export const GA_METADATA_ROWS_DEFAULT = 25;
+
+const metadataShape = {
+  property_id: propertyId,
+  custom_only: z.boolean().optional().describe("Default true: only the custom dimensions and metrics of the property. false returns Google's whole catalogue, standard fields included."),
+  search: z.string().optional().describe('Keep only fields whose API name, display name or description contains this text (case-insensitive), such as revenue or session.'),
+  category: z.string().optional().describe('Keep only fields of one category, such as Session, Page, Event or Revenue.'),
+  limit: z.number().int().min(1).max(500).optional().describe(`Fields per list, default ${GA_METADATA_ROWS_DEFAULT}; the dimensions and the metrics are each cut to this.`),
+  offset: z.number().int().min(0).optional().describe('The first field of each list to return, from 0; next_offset of the previous answer pages on.'),
+};
+
+interface FieldMetadata {
+  apiName?: string;
+  uiName?: string;
+  description?: string;
+  category?: string;
+  customDefinition?: boolean;
+  deprecatedApiNames?: string[];
+}
+
+/** One dimension or metric, short: the API name a report takes, the display name, the category and whether it is custom. */
+export function fieldSummary(f: FieldMetadata, maxDescription = 300) {
+  const description = f.description?.replace(/\s+/g, ' ').trim();
+  return {
+    api_name: f.apiName,
+    ui_name: f.uiName,
+    ...(f.category ? { category: f.category } : {}),
+    custom: f.customDefinition === true,
+    ...(description ? { description: description.length > maxDescription ? `${description.slice(0, maxDescription - 1)}…` : description } : {}),
+    ...(f.deprecatedApiNames?.length ? { deprecated_api_names: f.deprecatedApiNames } : {}),
+  };
+}
+
+/** The fields of one list that pass the filters, then the page: from `offset`, at most `limit`. */
+export function fieldPage(fields: FieldMetadata[] | undefined, input: { custom_only?: boolean; search?: string; category?: string; limit?: number; offset?: number }) {
+  const search = input.search?.trim().toLowerCase();
+  const category = input.category?.trim().toLowerCase();
+  const keep = (input.custom_only ?? true) === true;
+  const matching = (fields ?? []).filter((f) => {
+    if (keep && f.customDefinition !== true) return false;
+    if (category && (f.category ?? '').toLowerCase() !== category) return false;
+    if (search) {
+      const haystack = `${f.apiName ?? ''} ${f.uiName ?? ''} ${f.description ?? ''}`.toLowerCase();
+      if (!haystack.includes(search)) return false;
+    }
+    return true;
+  });
+  const offset = input.offset ?? 0;
+  const limit = input.limit ?? GA_METADATA_ROWS_DEFAULT;
+  return { total: matching.length, offset, rows: matching.slice(offset, offset + limit) };
+}
+
 const annotationsListShape = {
   property_id: propertyId,
   filter: z
@@ -314,7 +373,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       name: 'ga_run_report',
       title: 'Run a Google Analytics report',
       description:
-        "Run a Google Analytics report for a property: metrics by dimensions over date ranges, with filters, order and paging (matches run_report in Google's Google Analytics MCP server, and run_conversions_report with conversion_spec). Rows come back as objects keyed by the dimension and metric names, with row_count and next_offset when Google has more rows. gadata_props_get_meta lists the dimensions and metrics a property has. A read.",
+        "Run a Google Analytics report for a property: metrics by dimensions over date ranges, with filters, order and paging (matches run_report in Google's Google Analytics MCP server, and run_conversions_report with conversion_spec). Rows come back as objects keyed by the dimension and metric names, with row_count and next_offset when Google has more rows. ga_get_metadata lists the dimensions and metrics a property has. A read.",
       kind: 'read',
       scopes: DATA_SCOPES,
       inputSchema: runReportShape,
@@ -406,6 +465,50 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
           funnel_visualization: shapeReport(res.data.funnelVisualization ?? {}),
           ...(res.data.propertyQuota ? { property_quota: res.data.propertyQuota } : {}),
         };
+      },
+    }),
+    defineTool({
+      name: 'ga_get_metadata',
+      title: 'List a property\'s dimensions and metrics',
+      description:
+        'The dimensions and metrics a Google Analytics report can use for a property: by default only the custom ones, which Google\'s own metadata tool returns, with the API name a report takes, the display name, the category and a short description. Filter with search or category, and page with limit and offset. custom_only false returns Google\'s whole catalogue, standard fields included. Data API v1beta properties.getMetadata, which returns everything at once; this tool filters and pages it. A read.',
+      kind: 'read',
+      scopes: DATA_SCOPES,
+      inputSchema: metadataShape,
+      async handler(args) {
+        const input = z.object(metadataShape).parse(args);
+        const property = propertyName(input.property_id);
+        const res = await call<{ dimensions?: FieldMetadata[]; metrics?: FieldMetadata[] }>({ url: `${DATA}/v1beta/${property}/metadata` });
+        const dimensions = fieldPage(res.data.dimensions, input);
+        const metrics = fieldPage(res.data.metrics, input);
+        const nextOf = (page: { total: number; rows: FieldMetadata[] }) => (page.rows.length > 0 ? page.rows.length : 0);
+        const next = Math.max(
+          dimensions.total > dimensions.offset + nextOf(dimensions) ? dimensions.offset + nextOf(dimensions) : 0,
+          metrics.total > metrics.offset + nextOf(metrics) ? metrics.offset + nextOf(metrics) : 0,
+        );
+        const answer = {
+          property_id: property.replace(/^properties\//, ''),
+          custom_only: input.custom_only ?? true,
+          dimension_count: dimensions.total,
+          metric_count: metrics.total,
+          ...(next > 0 ? { next_offset: next } : {}),
+          dimensions: dimensions.rows.map((f) => fieldSummary(f)),
+          metrics: metrics.rows.map((f) => fieldSummary(f)),
+          ...(dimensions.total === 0 && metrics.total === 0
+            ? {
+                note:
+                  (input.custom_only ?? true)
+                    ? 'No custom dimension or metric matches. This property has none defined, or the filters exclude them: try custom_only false for Google\'s standard fields, or another search.'
+                    : 'Nothing matches the filters (search or category).',
+              }
+            : {}),
+        };
+        // The rows that do not fit the result limit are left out of the larger list, and next_offset continues after them.
+        const larger = dimensions.rows.length >= metrics.rows.length ? 'dimensions' : 'metrics';
+        return fitItems(answer, larger, cfg.maxResultChars, (shown) => ({
+          fields: { next_offset: (larger === 'dimensions' ? dimensions.offset : metrics.offset) + shown },
+          how_to_continue: `The ${larger} list was cut to ${shown} fields by the result limit (${cfg.maxResultChars} characters). Call again with offset=${(larger === 'dimensions' ? dimensions.offset : metrics.offset) + shown} and the same other arguments for the rest.`,
+        }));
       },
     }),
     defineTool({

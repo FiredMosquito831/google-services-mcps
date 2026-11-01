@@ -23,7 +23,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | Tool | Google's tool | Note |
 |---|---|---|
 | `places_places_search_text` | `search_places` | Places API (New) searchText: places by a text query, with an optional location bias. Google's search_places also returns a summary written by its server; this returns Places data. |
-| `places_places_get` | (none) | One place's details by its id (Places API places.get), the extended details Google's search_places adds on request. Google's resolve_names and resolve_maps_urls call a REST surface only Google's own server reaches (no public API), so they have no tool here. |
+| `places_places_get` | (none) | One place's details by its id (Places API places.get), the extended details Google's search_places adds on request. Google publishes resolveNames and resolveMapsUrls as a REST surface (POST https://mapstools.googleapis.com/v1:resolveNames) whose Discovery document is not public (403 on 2026-11-01) and whose only documented authorization is the OAuth scope maps-platform.mapstools; this product holds an API key and has no Google sign-in, so they have no tool here. |
 | `maps_compute_routes` | `compute_routes` | Routes API computeRoutes with a response field mask (a short summary by default). Routes API is not in Google's Discovery directory; called directly with the API key. |
 | `maps_lookup_weather` | `lookup_weather` | Weather API current conditions, hourly forecast or daily forecast, by latitude and longitude. Not in Google's Discovery directory; called directly with the API key. |
 

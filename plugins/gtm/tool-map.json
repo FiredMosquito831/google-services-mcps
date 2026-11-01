@@ -72,6 +72,14 @@
     "title": "Sign-in status"
   },
   {
+    "name": "mcp__plugin_gtm_gtm__gtm_publish_version",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.publish"
+    ],
+    "title": "Publish a Tag Manager version"
+  },
+  {
     "name": "mcp__plugin_gtm_gtm__health",
     "kind": "read",
     "scopes": [],

@@ -2,7 +2,7 @@
 
 Install with the simplest command: `npx google-services-mcps install --agent claude --plugin <id>` (see docs/TUTORIAL.md).
 
-YouTube Data API, YouTube Analytics API, YouTube Reporting API and Blogger. It searches and reads videos, channels, playlists and comments, manages captions and playlists, handles live chat moderation, and reads or publishes blog posts. It has 125 tools and no gateway.
+YouTube Data API, YouTube Analytics API, YouTube Reporting API and Blogger. It searches and reads videos, channels, playlists and comments, lists caption tracks, handles live chat moderation, and reads or publishes blog posts. It has 132 tools and no gateway. It cannot upload: video, thumbnail and caption uploads are media uploads, which the per-method tools and the gateway both leave out (see Caveats).
 
 ## When to install it
 
@@ -58,7 +58,7 @@ Google has no official MCP server for YouTube. With the plugin option `toolset: 
 
 ## Example requests
 
-- "Show the top 10 comments on my last video." Claude runs a comment threads read. No prompt.
+- "Show the top 10 comments on my last video." Claude runs a comment threads read. No prompt under a `readwrite` login; a `readonly` login cannot read comment threads (see the login note above), and the `Not covered:` line says so.
 - "Find videos about home solar from the last month." Claude runs `youtube_search_list`. No prompt. Search is limited to 100 calls per day.
 - "Publish my draft blog post Spring recap." Claude runs the Blogger publish tool. It asks first, and the post goes live.
 - "Mark the spam comment as spam." Claude runs `youtube_comments_mark_as_spam`. It asks first.
@@ -73,11 +73,11 @@ Google has no official MCP server for YouTube. With the plugin option `toolset: 
 
 ## Costs and limits
 
-The fee is UNVERIFIED. The default is 10,000 units per day for all endpoints, except search.list and videos.insert, which each allow 100 calls per day. More quota needs a compliance audit first. See `docs/LIMITS-AND-COSTS.md` and `docs/limits/ads-business-youtube-play.md`, section 6.
+The fee is UNVERIFIED. The default is 10,000 units per day for all endpoints, except search.list and videos.insert, which each have their own daily bucket of 100 calls ("The search.list and videos.insert methods have their own quota buckets", "Each of these methods has a default daily limit of 100 per day", "The quota cost is 1 per call" — https://developers.google.com/youtube/v3/determine_quota_cost, checked 2026-11-01). videos.update, comments.insert and captions.list cost 50 units each, liveChatMessages.list 5. More quota needs a compliance audit first. See `docs/LIMITS-AND-COSTS.md` and `docs/limits/ads-business-youtube-play.md`, section 6.
 
 ## Caveats
 
-- The unit cost of `search.list` and of `videos.insert` is UNVERIFIED. The sources disagree.
-- The error code for the daily cap is UNVERIFIED.
+- Videos, thumbnails and caption tracks cannot be uploaded from here: `videos.insert`, `thumbnails.set`, `captions.insert`, `captions.update`, `captions.download`, `channelBanners.insert`, `watermarks.set` and the playlist image methods are media uploads or downloads, which the per-method tools and the gateway both skip (they are media methods). Uploading wants a hand-written tool with a local path, like the Play bundle upload, and is reported for its own change. `youtube_captions_list` lists the tracks and their metadata; it does not return the caption text.
+- The error code for the daily cap is UNVERIFIED, and a `quotaExceeded` 403 is the daily cap, not a burst limit: retrying it the same day cannot succeed.
 - Report jobs expire after 60 days. Download each report once and keep it.
 - The daily download limits for Reporting are UNVERIFIED.

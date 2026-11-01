@@ -1,8 +1,233 @@
 {
   "generatedAt": "2026-10-31T06:09:39.188Z",
-  "apiCount": 2,
-  "methodCount": 11,
+  "apiCount": 17,
+  "methodCount": 58,
   "apis": [
+    {
+      "name": "abusiveexperiencereport",
+      "version": "v1",
+      "preferred": true,
+      "title": "Abusive Experience Report API",
+      "description": "Views Abusive Experience Report data, and gets a list of sites that have a significant number of abusive experiences.",
+      "documentationLink": "https://developers.google.com/abusive-experience-report/",
+      "labels": [],
+      "deprecated": false,
+      "rootUrl": "https://abusiveexperiencereport.googleapis.com/",
+      "servicePath": "",
+      "methods": [
+        [
+          "abusiveexperiencereport.sites.get",
+          "GET",
+          "v1/{+name}",
+          [],
+          ""
+        ],
+        [
+          "abusiveexperiencereport.violatingSites.list",
+          "GET",
+          "v1/violatingSites",
+          [],
+          ""
+        ]
+      ]
+    },
+    {
+      "name": "acceleratedmobilepageurl",
+      "version": "v1",
+      "preferred": true,
+      "title": "Accelerated Mobile Pages (AMP) URL API",
+      "description": "Retrieves the list of AMP URLs (and equivalent AMP Cache URLs) for a given list of public URL(s).",
+      "documentationLink": "https://developers.google.com/amp/cache/",
+      "labels": [],
+      "deprecated": false,
+      "rootUrl": "https://acceleratedmobilepageurl.googleapis.com/",
+      "servicePath": "",
+      "methods": [
+        [
+          "acceleratedmobilepageurl.ampUrls.batchGet",
+          "POST",
+          "v1/ampUrls:batchGet",
+          [],
+          ""
+        ]
+      ]
+    },
+    {
+      "name": "adexperiencereport",
+      "version": "v1",
+      "preferred": true,
+      "title": "Ad Experience Report API",
+      "description": "Views Ad Experience Report data, and gets a list of sites that have a significant number of annoying ads.",
+      "documentationLink": "https://developers.google.com/ad-experience-report/",
+      "labels": [],
+      "deprecated": false,
+      "rootUrl": "https://adexperiencereport.googleapis.com/",
+      "servicePath": "",
+      "methods": [
+        [
+          "adexperiencereport.violatingSites.list",
+          "GET",
+          "v1/violatingSites",
+          [],
+          ""
+        ],
+        [
+          "adexperiencereport.sites.get",
+          "GET",
+          "v1/{+name}",
+          [],
+          ""
+        ]
+      ]
+    },
+    {
+      "name": "chromeuxreport",
+      "version": "v1",
+      "preferred": true,
+      "title": "Chrome UX Report API",
+      "description": "The Chrome UX Report API lets you view real user experience data for millions of websites.",
+      "documentationLink": "https://developers.google.com/web/tools/chrome-user-experience-report/api/reference",
+      "labels": [],
+      "deprecated": false,
+      "rootUrl": "https://chromeuxreport.googleapis.com/",
+      "servicePath": "",
+      "methods": [
+        [
+          "chromeuxreport.records.queryHistoryRecord",
+          "POST",
+          "v1/records:queryHistoryRecord",
+          [],
+          ""
+        ],
+        [
+          "chromeuxreport.records.queryRecord",
+          "POST",
+          "v1/records:queryRecord",
+          [],
+          ""
+        ]
+      ]
+    },
+    {
+      "name": "civicinfo",
+      "version": "v2",
+      "preferred": true,
+      "title": "Google Civic Information API",
+      "description": "Provides polling places, early vote locations, contest data, election officials, and government representatives for U.S. residential addresses.",
+      "documentationLink": "https://developers.google.com/civic-information/",
+      "labels": [],
+      "deprecated": false,
+      "rootUrl": "https://civicinfo.googleapis.com/",
+      "servicePath": "",
+      "methods": [
+        [
+          "civicinfo.elections.electionQuery",
+          "GET",
+          "civicinfo/v2/elections",
+          [],
+          ""
+        ],
+        [
+          "civicinfo.elections.voterInfoQuery",
+          "GET",
+          "civicinfo/v2/voterinfo",
+          [],
+          ""
+        ],
+        [
+          "civicinfo.divisions.search",
+          "GET",
+          "civicinfo/v2/divisions",
+          [],
+          ""
+        ],
+        [
+          "civicinfo.divisions.queryDivisionByAddress",
+          "GET",
+          "civicinfo/v2/divisionsByAddress",
+          [],
+          ""
+        ]
+      ]
+    },
+    {
+      "name": "customsearch",
+      "version": "v1",
+      "preferred": true,
+      "title": "Custom Search API",
+      "description": "Searches over a website or collection of websites",
+      "documentationLink": "https://developers.google.com/custom-search/v1/introduction",
+      "labels": [],
+      "deprecated": false,
+      "rootUrl": "https://customsearch.googleapis.com/",
+      "servicePath": "",
+      "methods": [
+        [
+          "search.cse.list",
+          "GET",
+          "customsearch/v1",
+          [],
+          ""
+        ],
+        [
+          "search.cse.siterestrict.list",
+          "GET",
+          "customsearch/v1/siterestrict",
+          [],
+          ""
+        ]
+      ]
+    },
+    {
+      "name": "developerknowledge",
+      "version": "v1",
+      "preferred": true,
+      "title": "Developer Knowledge API",
+      "description": "The Developer Knowledge API provides access to Google's developer knowledge.",
+      "documentationLink": "https://developers.google.com/knowledge",
+      "labels": [],
+      "deprecated": false,
+      "rootUrl": "https://developerknowledge.googleapis.com/",
+      "servicePath": "",
+      "methods": [
+        [
+          "developerknowledge.answerQuery",
+          "POST",
+          "v1:answerQuery",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "developerknowledge.documents.searchDocumentChunks",
+          "GET",
+          "v1/documents:searchDocumentChunks",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "developerknowledge.documents.get",
+          "GET",
+          "v1/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "developerknowledge.documents.batchGet",
+          "GET",
+          "v1/documents:batchGet",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ]
+      ]
+    },
     {
       "name": "developerknowledge",
       "version": "v1alpha",
@@ -48,6 +273,158 @@
           "v1alpha:answerQuery",
           [
             "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ]
+      ]
+    },
+    {
+      "name": "digitalassetlinks",
+      "version": "v1",
+      "preferred": true,
+      "title": "Digital Asset Links API",
+      "description": "Discovers relationships between online assets such as websites or mobile apps.",
+      "documentationLink": "https://developers.google.com/digital-asset-links/",
+      "labels": [],
+      "deprecated": false,
+      "rootUrl": "https://digitalassetlinks.googleapis.com/",
+      "servicePath": "",
+      "methods": [
+        [
+          "digitalassetlinks.assetlinks.bulkCheck",
+          "POST",
+          "v1/assetlinks:bulkCheck",
+          [],
+          ""
+        ],
+        [
+          "digitalassetlinks.assetlinks.check",
+          "GET",
+          "v1/assetlinks:check",
+          [],
+          ""
+        ],
+        [
+          "digitalassetlinks.statements.list",
+          "GET",
+          "v1/statements:list",
+          [],
+          ""
+        ]
+      ]
+    },
+    {
+      "name": "factchecktools",
+      "version": "v1alpha1",
+      "preferred": true,
+      "title": "Fact Check Tools API",
+      "description": "",
+      "documentationLink": "https://developers.google.com/fact-check/tools/api/",
+      "labels": [],
+      "deprecated": false,
+      "rootUrl": "https://factchecktools.googleapis.com/",
+      "servicePath": "",
+      "methods": [
+        [
+          "factchecktools.claims.search",
+          "GET",
+          "v1alpha1/claims:search",
+          [],
+          ""
+        ],
+        [
+          "factchecktools.claims.imageSearch",
+          "GET",
+          "v1alpha1/claims:imageSearch",
+          [],
+          ""
+        ],
+        [
+          "factchecktools.pages.delete",
+          "DELETE",
+          "v1alpha1/{+name}",
+          [
+            "https://www.googleapis.com/auth/factchecktools"
+          ],
+          ""
+        ],
+        [
+          "factchecktools.pages.list",
+          "GET",
+          "v1alpha1/pages",
+          [
+            "https://www.googleapis.com/auth/factchecktools"
+          ],
+          ""
+        ],
+        [
+          "factchecktools.pages.get",
+          "GET",
+          "v1alpha1/{+name}",
+          [
+            "https://www.googleapis.com/auth/factchecktools"
+          ],
+          ""
+        ],
+        [
+          "factchecktools.pages.create",
+          "POST",
+          "v1alpha1/pages",
+          [
+            "https://www.googleapis.com/auth/factchecktools"
+          ],
+          ""
+        ],
+        [
+          "factchecktools.pages.update",
+          "PUT",
+          "v1alpha1/{+name}",
+          [
+            "https://www.googleapis.com/auth/factchecktools"
+          ],
+          ""
+        ]
+      ]
+    },
+    {
+      "name": "kgsearch",
+      "version": "v1",
+      "preferred": true,
+      "title": "Knowledge Graph Search API",
+      "description": "Searches the Google Knowledge Graph for entities.",
+      "documentationLink": "https://developers.google.com/knowledge-graph/",
+      "labels": [],
+      "deprecated": false,
+      "rootUrl": "https://kgsearch.googleapis.com/",
+      "servicePath": "",
+      "methods": [
+        [
+          "kgsearch.entities.search",
+          "GET",
+          "v1/entities:search",
+          [],
+          ""
+        ]
+      ]
+    },
+    {
+      "name": "pagespeedonline",
+      "version": "v5",
+      "preferred": true,
+      "title": "PageSpeed Insights API",
+      "description": "The PageSpeed Insights API lets you analyze the performance of your website with a simple API. It offers tailored suggestions for how you can optimize your site",
+      "documentationLink": "https://developers.google.com/speed/docs/insights/v5/about",
+      "labels": [],
+      "deprecated": false,
+      "rootUrl": "https://pagespeedonline.googleapis.com/",
+      "servicePath": "",
+      "methods": [
+        [
+          "pagespeedonline.pagespeedapi.runpagespeed",
+          "GET",
+          "pagespeedonline/v5/runPagespeed",
+          [
+            "openid"
           ],
           ""
         ]
@@ -111,6 +488,198 @@
           "safebrowsing.threatListUpdates.fetch",
           "POST",
           "v4/threatListUpdates:fetch",
+          [],
+          ""
+        ]
+      ]
+    },
+    {
+      "name": "safebrowsing",
+      "version": "v5",
+      "preferred": true,
+      "title": "Safe Browsing API",
+      "description": "Enables client applications to check web resources (most commonly URLs) against Google-generated lists of unsafe web resources. The Safe Browsing APIs are for n",
+      "documentationLink": "https://developers.google.com/safe-browsing/",
+      "labels": [],
+      "deprecated": false,
+      "rootUrl": "https://safebrowsing.googleapis.com/",
+      "servicePath": "",
+      "methods": [
+        [
+          "safebrowsing.hashList.get",
+          "GET",
+          "v5/hashList/{name}",
+          [],
+          ""
+        ],
+        [
+          "safebrowsing.hashes.search",
+          "GET",
+          "v5/hashes:search",
+          [],
+          ""
+        ],
+        [
+          "safebrowsing.urls.search",
+          "GET",
+          "v5/urls:search",
+          [],
+          ""
+        ],
+        [
+          "safebrowsing.hashLists.list",
+          "GET",
+          "v5/hashLists",
+          [],
+          ""
+        ],
+        [
+          "safebrowsing.hashLists.batchGet",
+          "GET",
+          "v5/hashLists:batchGet",
+          [],
+          ""
+        ]
+      ]
+    },
+    {
+      "name": "versionhistory",
+      "version": "v1",
+      "preferred": true,
+      "title": "versionhistory.googleapis.com API",
+      "description": "Version History API - Prod",
+      "documentationLink": "https://developer.chrome.com/docs/web-platform/versionhistory/guide",
+      "labels": [],
+      "deprecated": false,
+      "rootUrl": "https://versionhistory.googleapis.com/",
+      "servicePath": "",
+      "methods": [
+        [
+          "versionhistory.platforms.list",
+          "GET",
+          "v1/{+parent}/platforms",
+          [],
+          ""
+        ],
+        [
+          "versionhistory.platforms.channels.list",
+          "GET",
+          "v1/{+parent}/channels",
+          [],
+          ""
+        ],
+        [
+          "versionhistory.platforms.channels.versions.list",
+          "GET",
+          "v1/{+parent}/versions",
+          [],
+          ""
+        ],
+        [
+          "versionhistory.platforms.channels.versions.releases.list",
+          "GET",
+          "v1/{+parent}/releases",
+          [],
+          ""
+        ]
+      ]
+    },
+    {
+      "name": "webfonts",
+      "version": "v1",
+      "preferred": true,
+      "title": "Web Fonts Developer API",
+      "description": "The Google Web Fonts Developer API lets you retrieve information about web fonts served by Google.",
+      "documentationLink": "https://developers.google.com/fonts/docs/developer_api",
+      "labels": [],
+      "deprecated": false,
+      "rootUrl": "https://webfonts.googleapis.com/",
+      "servicePath": "",
+      "methods": [
+        [
+          "webfonts.webfonts.list",
+          "GET",
+          "v1/webfonts",
+          [],
+          ""
+        ]
+      ]
+    },
+    {
+      "name": "webrisk",
+      "version": "v1",
+      "preferred": true,
+      "title": "Web Risk API",
+      "description": "",
+      "documentationLink": "https://cloud.google.com/web-risk/",
+      "labels": [],
+      "deprecated": false,
+      "rootUrl": "https://webrisk.googleapis.com/",
+      "servicePath": "",
+      "methods": [
+        [
+          "webrisk.threatLists.computeDiff",
+          "GET",
+          "v1/threatLists:computeDiff",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "webrisk.uris.search",
+          "GET",
+          "v1/uris:search",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "webrisk.hashes.search",
+          "GET",
+          "v1/hashes:search",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "webrisk.projects.submissions.create",
+          "POST",
+          "v1/{+parent}/submissions",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "webrisk.projects.operations.delete",
+          "DELETE",
+          "v1/{+name}",
+          [],
+          ""
+        ],
+        [
+          "webrisk.projects.operations.get",
+          "GET",
+          "v1/{+name}",
+          [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          ""
+        ],
+        [
+          "webrisk.projects.operations.list",
+          "GET",
+          "v1/{+name}/operations",
+          [],
+          ""
+        ],
+        [
+          "webrisk.projects.operations.cancel",
+          "POST",
+          "v1/{+name}:cancel",
           [],
           ""
         ]

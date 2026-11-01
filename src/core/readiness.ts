@@ -117,6 +117,17 @@ export const READINESS_GROUPS: ReadinessGroup[] = [
       'kgsearch.googleapis.com',
       'safebrowsing.googleapis.com',
       'webrisk.googleapis.com',
+      // gsearch's other per-method tools call these APIs, and its curated psi_run calls PageSpeed Insights directly.
+      'customsearch.googleapis.com',
+      'developerknowledge.googleapis.com',
+      'factchecktools.googleapis.com',
+      'civicinfo.googleapis.com',
+      'digitalassetlinks.googleapis.com',
+      'webfonts.googleapis.com',
+      'versionhistory.googleapis.com',
+      'acceleratedmobilepageurl.googleapis.com',
+      'abusiveexperiencereport.googleapis.com',
+      'adexperiencereport.googleapis.com',
     ],
   },
   {

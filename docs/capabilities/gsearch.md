@@ -4,11 +4,11 @@ Public search and web-quality APIs (Custom Search, PageSpeed, CrUX, Safe Browsin
 
 - Plugin: `gsearch`, MCP server: `gsearch`, login: API key, then `setup-apikey` (no login)
 - Install: `claude plugin install gsearch@google-services-mcps`
-- Tools: 52 total. Curated 1, per-method 47, gateway 3. Read 45, write 3, destructive 3, dynamic 1.
+- Tools: 53 total. Curated 2, per-method 47, gateway 3. Read 46, write 3, destructive 3, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 52, google 9, curated 4 tools, each counting the 1 runtime tools this server registers (`health`). "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 53, google 9, curated 5 tools, each counting the 1 runtime tools this server registers (`health`). "(all)" means the product has no such toolset yet, so it lists every tool.
 
 ## Not registered by this server (8)
 
@@ -24,18 +24,19 @@ The tools that match Google's official MCP server for this product (https://deve
 |---|---|---|
 | `developerk_docs_search_doc_chunks` | `search_documents` | Searches Google's developer documentation (Developer Knowledge API searchDocumentChunks): matching chunks with their document names. |
 | `developerk_documents_batch_get` | `get_documents` | The full text of up to 20 documents by name (Developer Knowledge API documents.batchGet), after a search. |
-| `developerk_v1_answer_query` | `answer_query` | A grounded answer about Google developer products (Developer Knowledge API answerQuery). Google marks it read-only, and since 1.24.2 (D2) the suite counts it as a read too, so it does not ask. |
-| `pagespeed_pagespeedapi_runpagespeed` | (none) | No official Google MCP server covers PageSpeed Insights; kept for the Lighthouse scores and Core Web Vitals of a page (PageSpeed Insights API runpagespeed). |
+| `developerk_v1_answer_query` | `answer_query` | A grounded answer about Google developer products (Developer Knowledge API answerQuery). Google marks it read-only, and so does this suite, so it does not ask. |
+| `psi_run` | (none) | No official Google MCP server covers PageSpeed Insights; the summary leads with the Lighthouse category scores, the field data Google has from real visitors, the six lab metrics and the worst opportunities, and include_raw adds Google's whole report. Each call uses one of the API's 25,000 daily queries; name categories to run more than Performance, which is Google's default. |
 | `chromeuxre_records_query_record` | (none) | No official Google MCP server covers the Chrome UX Report; kept for real-user Core Web Vitals of an origin or URL (CrUX API records.queryRecord). |
 | `kgsearch_entities_search` | (none) | No official Google MCP server covers the Knowledge Graph; kept to look up an entity by name (Knowledge Graph Search API entities.search). |
 | `factcheckt_claims_search` | (none) | No official Google MCP server covers Fact Check Tools; kept to find published fact checks of a claim (Fact Check Tools API claims.search). |
 | `webrisk_uris_search` | (none) | No official Google MCP server covers Web Risk; kept to check a URL against Google's threat lists (Web Risk API uris.search). |
 
-## Curated tools (1)
+## Curated tools (2)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
 | `health` | read | Server health | (none) |
+| `psi_run` | read | Run PageSpeed Insights | openid |
 
 ## Per-method tools (47)
 
@@ -127,4 +128,19 @@ Each API links to Google's documentation for it, as Google's Discovery directory
 
 - Developer Knowledge API (`developerknowledge/v1alpha`), 4 methods. Documentation: <https://developers.google.com/knowledge>
 - Safe Browsing API (`safebrowsing/v4`), 7 methods. Documentation: <https://developers.google.com/safe-browsing/>
+- Custom Search API (`customsearch/v1`), 2 methods. Documentation: <https://developers.google.com/custom-search/v1/introduction>
+- PageSpeed Insights API (`pagespeedonline/v5`), 1 methods. Documentation: <https://developers.google.com/speed/docs/insights/v5/about>
+- Chrome UX Report API (`chromeuxreport/v1`), 2 methods. Documentation: <https://developers.google.com/web/tools/chrome-user-experience-report/api/reference>
+- Knowledge Graph Search API (`kgsearch/v1`), 1 methods. Documentation: <https://developers.google.com/knowledge-graph/>
+- Safe Browsing API (`safebrowsing/v5`), 5 methods. Documentation: <https://developers.google.com/safe-browsing/>
+- Fact Check Tools API (`factchecktools/v1alpha1`), 7 methods. Documentation: <https://developers.google.com/fact-check/tools/api/>
+- Accelerated Mobile Pages (AMP) URL API (`acceleratedmobilepageurl/v1`), 1 methods. Documentation: <https://developers.google.com/amp/cache/>
+- Abusive Experience Report API (`abusiveexperiencereport/v1`), 2 methods. Documentation: <https://developers.google.com/abusive-experience-report/>
+- Ad Experience Report API (`adexperiencereport/v1`), 2 methods. Documentation: <https://developers.google.com/ad-experience-report/>
+- Web Fonts Developer API (`webfonts/v1`), 1 methods. Documentation: <https://developers.google.com/fonts/docs/developer_api>
+- Web Risk API (`webrisk/v1`), 8 methods. Documentation: <https://cloud.google.com/web-risk/>
+- Google Civic Information API (`civicinfo/v2`), 4 methods. Documentation: <https://developers.google.com/civic-information/>
+- Digital Asset Links API (`digitalassetlinks/v1`), 3 methods. Documentation: <https://developers.google.com/digital-asset-links/>
+- versionhistory.googleapis.com API (`versionhistory/v1`), 4 methods. Documentation: <https://developer.chrome.com/docs/web-platform/versionhistory/guide>
+- Developer Knowledge API (`developerknowledge/v1`), 4 methods. Documentation: <https://developers.google.com/knowledge>
 
