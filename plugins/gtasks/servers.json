@@ -30,6 +30,16 @@
           ]
         }
       },
+      "methodNotes": {
+        "tasks": {
+          "source": "Google's Tasks reference (https://developers.google.com/workspace/tasks/reference/rest/v1/tasks, read 2026-11-01) and Discovery's Task schema in data/discovery/tasks.v1.json",
+          "reason": "The generated schema types `completed` as a string and takes no null, and the tool said nothing about what that means, about `status`, or about `due` keeping the date only. Google's reference says it; no other tool of the API is affected, so the note goes on the two methods that write a task (adversarial review of gtasks, F6).",
+          "methods": {
+            "tasks.tasks.update": "`completed` is a timestamp string and the schema takes no null: mark a task completed or not with `status` (`completed` or `needsAction`). `due` keeps the date only, because Google discards the time of day. This method is a PUT and sends the whole task, so read it first with tasks_tasks_get and send back what you keep, or use tasks_tasks_patch to change one field.",
+            "tasks.tasks.patch": "`completed` is a timestamp string and the schema takes no null: mark a task completed or not with `status` (`completed` or `needsAction`). `due` keeps the date only, because Google discards the time of day."
+          }
+        }
+      },
       "toolsets": {
         "google": [
           "tasks_tasklists_list",
@@ -38,6 +48,8 @@
           "tasks_tasks_insert",
           "tasks_tasks_patch",
           "tasks_tasks_delete",
+          "tasks_tasks_move",
+          "tasks_tasklists_insert",
           "keep_notes_list",
           "keep_notes_get"
         ]

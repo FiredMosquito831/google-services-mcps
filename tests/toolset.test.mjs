@@ -116,7 +116,19 @@ const LEAN_GOOGLE = {
     'meet_conference_records_recordings_list',
     'meet_records_smart_notes_list',
   ],
-  gtasks: ['tasks_tasklists_list', 'tasks_tasks_list', 'tasks_tasks_get', 'tasks_tasks_insert', 'tasks_tasks_patch', 'tasks_tasks_delete', 'keep_notes_list', 'keep_notes_get'],
+  // 2.7.0: the move and the task list create join the list (review of gtasks, section C).
+  gtasks: [
+    'tasks_tasklists_list',
+    'tasks_tasks_list',
+    'tasks_tasks_get',
+    'tasks_tasks_insert',
+    'tasks_tasks_patch',
+    'tasks_tasks_delete',
+    'tasks_tasks_move',
+    'tasks_tasklists_insert',
+    'keep_notes_list',
+    'keep_notes_get',
+  ],
   gapps: [
     'appsscript_projects_get',
     'appsscript_projects_get_content',

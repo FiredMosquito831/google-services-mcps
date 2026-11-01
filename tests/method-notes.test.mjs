@@ -91,6 +91,26 @@ test('gapps (2.5.0): the scripts.run note reaches that one tool, after the API n
   assert.deepEqual(readJson('plugins', 'gapps', 'servers.json').servers[0].methodNotes, notes);
 });
 
+test('gtasks (2.7.0): the update and patch tools say what `completed` and `due` are, and only they carry it', async () => {
+  const notes = readJson('config', 'products.json').products.gtasks.methodNotes;
+  assert.deepEqual(Object.keys(notes), ['tasks']);
+  assert.deepEqual(Object.keys(notes.tasks.methods).sort(), ['tasks.tasks.patch', 'tasks.tasks.update']);
+  for (const [id, note] of Object.entries(notes.tasks.methods)) {
+    // Google's reference states each fact the schema alone does not: `completed` is a timestamp, and `due` keeps the date.
+    for (const fact of [/`completed` is a timestamp string/, /no null/, /`status`/, /`due` keeps the date only/]) assert.match(note, fact, id);
+  }
+  assert.match(notes.tasks.methods['tasks.tasks.update'], /PUT and sends the whole task/);
+  const tools = await discoveryToolsFor('gtasks', cfg);
+  for (const [id, note] of Object.entries(notes.tasks.methods)) {
+    const tool = tools.find((t) => t.methodId === id);
+    assert.ok(tool, `${id} is a tool`);
+    assert.ok(tool.description.includes(note), `${id}: the note is in the tool description`);
+    assert.ok(tool.description.length <= 2048, `${id}: ${tool.description.length} characters`);
+  }
+  for (const tool of tools.filter((t) => !(t.methodId in notes.tasks.methods))) assert.doesNotMatch(tool.description, /no null/, `${tool.methodId} carries no note`);
+  assert.deepEqual(readJson('plugins', 'gtasks', 'servers.json').servers[0].methodNotes, notes);
+});
+
 test('gen-servers: methodNotes name methods of a generated API snapshot, with a source, a reason and a non-empty note', () => {
   const run = (methodNotes) => {
     const root = mkdtempSync(join(tmpdir(), 'gsm-gen-notes-'));

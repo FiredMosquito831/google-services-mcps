@@ -345,7 +345,9 @@ test('requirements: the lean gmeet, gtasks and gapps lists resolve to the narrow
   // Since 1.33.0 readwrite keeps the reads' reach over every space the user can see (scopePolicy.prefer).
   assert.deepEqual(meet.readwrite, [G('meetings.space.created'), G('meetings.space.readonly')]);
   const tasks = await resolved('gtasks', ['keep']);
-  assert.equal(tasks.n, 8);
+  // 10 since 2.7.0: tasks_tasks_move and tasks_tasklists_insert join the list. Both need only the tasks scope the list
+  // already asks for, so the scope lists below do not move.
+  assert.equal(tasks.n, 10);
   assert.deepEqual(tasks.readonly.scopes, [G('keep.readonly'), G('tasks.readonly')]);
   // The Keep reads list keep and keep.readonly; the greedy rule takes the write scope on a tie, as in the all toolset.
   // The list has no Keep write, so since 1.25.0 it prefers keep.readonly.

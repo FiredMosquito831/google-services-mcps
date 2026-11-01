@@ -108,9 +108,13 @@
       "flows": [
         { "title": "Read tasks", "steps": ["{tool:tasks_tasklists_list}, then {tool:tasks_tasks_list} with tasklist (showCompleted and showHidden true to include completed tasks)."] },
         { "title": "Add or complete", "steps": ["{tool:tasks_tasks_insert} with tasklist and a body with title, notes and due (a date, such as 2026-11-06T00:00:00.000Z).", "Complete a task with {tool:tasks_tasks_patch} and the body {\"status\": \"completed\"}."] },
+        { "title": "Reorder or move a task", "steps": ["{tool:tasks_tasks_move} with tasklist and task: previous for another position, parent to make it a subtask, destinationTasklist to move it to another list.", "A new list: {tool:tasks_tasklists_insert} with a title."] },
         { "title": "Keep notes", "steps": ["{tool:keep_notes_list}, then {tool:keep_notes_get}."] }
       ],
-      "notes": ["The Keep API works for Google Workspace accounts."]
+      "notes": [
+        "A task's due date keeps the date only: Google discards the time of day.",
+        "The Keep API works for Google Workspace accounts."
+      ]
     },
     "gclassroom": {
       "description": "Google Classroom for teachers and students: courses, rosters, coursework and submissions, topics, announcements, rubrics and guardians.",

@@ -2459,6 +2459,16 @@
           ]
         }
       },
+      "methodNotes": {
+        "tasks": {
+          "source": "Google's Tasks reference (https://developers.google.com/workspace/tasks/reference/rest/v1/tasks, read 2026-11-01) and Discovery's Task schema in data/discovery/tasks.v1.json",
+          "reason": "The generated schema types `completed` as a string and takes no null, and the tool said nothing about what that means, about `status`, or about `due` keeping the date only. Google's reference says it; no other tool of the API is affected, so the note goes on the two methods that write a task (adversarial review of gtasks, F6).",
+          "methods": {
+            "tasks.tasks.update": "`completed` is a timestamp string and the schema takes no null: mark a task completed or not with `status` (`completed` or `needsAction`). `due` keeps the date only, because Google discards the time of day. This method is a PUT and sends the whole task, so read it first with tasks_tasks_get and send back what you keep, or use tasks_tasks_patch to change one field.",
+            "tasks.tasks.patch": "`completed` is a timestamp string and the schema takes no null: mark a task completed or not with `status` (`completed` or `needsAction`). `due` keeps the date only, because Google discards the time of day."
+          }
+        }
+      },
       "toolsets": {
         "google": {
           "source": "No official Google MCP server for Google Tasks or Google Keep was found (Google's Cloud and Workspace MCP lists, 2026-10-29; a negative, not confirmed by Google); a lean set chosen here.",
@@ -2474,6 +2484,8 @@
             "tasks_tasks_insert",
             "tasks_tasks_patch",
             "tasks_tasks_delete",
+            "tasks_tasks_move",
+            "tasks_tasklists_insert",
             "keep_notes_list",
             "keep_notes_get"
           ],
@@ -2484,16 +2496,20 @@
             "tasks_tasks_insert": [],
             "tasks_tasks_patch": [],
             "tasks_tasks_delete": [],
+            "tasks_tasks_move": [],
+            "tasks_tasklists_insert": [],
             "keep_notes_list": [],
             "keep_notes_get": []
           },
           "notes": {
             "tasks_tasklists_list": "Your task lists and their ids. Start here; @default is your first list.",
-            "tasks_tasks_list": "The tasks of one list, with due dates and status; showCompleted and dueMin/dueMax narrow it.",
+            "tasks_tasks_list": "The tasks of one list, with due dates and status. Completed tasks need showHidden true as well as showCompleted; dueMin and dueMax narrow by date.",
             "tasks_tasks_get": "One task with its notes, due date, status and links.",
             "tasks_tasks_insert": "Adds a task to a list (as a subtask with parent). A write, so it asks first.",
             "tasks_tasks_patch": "Changes only the fields given: title, notes, due date, or status completed. A write, so it asks first.",
             "tasks_tasks_delete": "Deletes a task. Destructive, so it asks twice.",
+            "tasks_tasks_move": "Reorders a task: another position in its list, under a parent (a subtask), or into another list (destinationTasklist). A write, so it asks first.",
+            "tasks_tasklists_insert": "Makes a new task list. A write, so it asks first.",
             "keep_notes_list": "Google Keep notes, read only here (filter by trashed or create and update time). Google documents the Keep API for Google Workspace; whether a personal account can use it is not verified.",
             "keep_notes_get": "One Keep note with its text or list items."
           }

@@ -2,6 +2,27 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 2.7.0 - 2026-11-01
+
+### Added: the move and the list create in the gtasks `google` toolset
+- `tasks_tasks_move` and `tasks_tasklists_insert` join the list, which now holds 10 tools (adversarial review of gtasks, section C). Both already existed in the `all` toolset: without the move a model could not reorder a task, make it a subtask or move it to another list, and without the insert it could not make a list. Both need only the `tasks` scope the list already asks for, so `gsm scopes` for gtasks is identical in every profile and toolset; only the covered counts and the `google` tool count move.
+
+### Added: what `completed` and `due` are, in the two tools that write a task
+- The generated schema types `completed` as a string, so a call cannot send null, and the tool said nothing about it; `due` keeps the date only, and the tool did not say that either (review F6). The Tasks reference states both (https://developers.google.com/workspace/tasks/reference/rest/v1/tasks, read 2026-11-01), so `tasks.tasks.update` and `tasks.tasks.patch` carry a `methodNote` (config/products.json): mark a task completed or not with `status` (`completed` or `needsAction`), because `completed` is a timestamp and takes no null; `due` keeps the date only. The update's note adds that it is a PUT which sends the whole task, so read the task first or patch one field.
+- The schema is unchanged: Google's Discovery document and its reference page type `completed` as a string and say nothing about null, so the tool does not accept one (the review asked for a check first, not a widening).
+
+### Fixed (docs): Keep sharing is destructive, and the tool count was stale
+- `docs/products/gtasks.md` listed `keep_notes_permissions_batch_create` as a write; it has been destructive since 1.26.3, since it shows a private note to other people. The page also said the plugin has 22 tools (it registers 29), and did not say that a task's due date keeps the date only. All three are fixed, and the page says how `keep_media_download` returns an attachment's file (`alt: "media"`, since 1.31.0).
+- The plugin's skill gains a reorder and move flow and the due-date note.
+
+### Not changed
+- No tool's kind and no other product's tool map, scopes or `tools/list`. `tool-aliases.json` is untouched, and the frozen files and the goldens have no diff.
+- The other findings of the gtasks review were already fixed by earlier releases and are left as they are: Keep is an optional part (1.34.0) so a personal-account sign-in no longer asks for a Keep scope (F1); a delete's approval names the task, its list and its ids from a read of it (1.27.0 target preview, F2, pinned by tests/approval-previews.test.mjs); the clipped descriptions are whole since 1.29.1 (F3); `keep_media_download` takes `alt` and `offset` since 1.31.0 (F4); results are compact, budgeted and keep their page token since 1.28.0 (F5); the docs' counts follow the server since 1.38.3 (F8); and Keep sharing is destructive since 1.26.3 (F9).
+- Reported, not changed (owner decision needed): the generated body schema still carries read-only properties (`position`, `parent`, `links`, `webViewLink`, `assignmentInfo`) because `src/core/discovery/schema.ts` ignores Discovery's `readOnly`, so a caller can send them and Google ignores them. Dropping them is a change to the shared schema derivation, for its own release.
+
+### Tests
+- tests/method-notes.test.mjs: the two gtasks notes reach exactly the update and patch tools, state each fact, stay under the description limit, and are carried by the plugin's servers.json. tests/toolset.test.mjs and tests/toolset-scopes.test.mjs: the 10-tool `google` list and the scopes it resolves to. tests/approval-previews.test.mjs already pins the delete approval's target read and is unchanged.
+
 ## 2.6.0 - 2026-11-01
 
 ### Added: two hand-written Meet tools that answer the questions the generated ones left open

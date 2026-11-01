@@ -30,12 +30,18 @@ Only if the chat tools fail, the same steps in a terminal: `node "${CLAUDE_PLUGI
 1. `tasks_tasks_insert` with tasklist and a body with title, notes and due (a date, such as 2026-11-06T00:00:00.000Z).
 2. Complete a task with `tasks_tasks_patch` and the body {"status": "completed"}.
 
-### 3. Keep notes
+### 3. Reorder or move a task
+
+1. `tasks_tasks_move` with tasklist and task: previous for another position, parent to make it a subtask, destinationTasklist to move it to another list.
+2. A new list: `tasks_tasklists_insert` with a title.
+
+### 4. Keep notes
 
 1. `keep_notes_list`, then `keep_notes_get`.
 
 ## Notes
 
+- A task's due date keeps the date only: Google discards the time of day.
 - The Keep API works for Google Workspace accounts.
 
 ## Untrusted content
@@ -48,7 +54,7 @@ Reads never ask for approval. Tools that change or delete data are listed only w
 
 ## Tools
 
-The `gtasks` MCP server lists up to 29 tools with the `all` toolset: 11 read, 12 write, 6 destructive, counting its 7 runtime tools (`health` and the sign-in tools). Write and destructive tools are listed only when writes are allowed, and a tool loads only when the sign-in holds one of its scopes. The `google` toolset lists 8 of them plus the runtime tools.
+The `gtasks` MCP server lists up to 29 tools with the `all` toolset: 11 read, 12 write, 6 destructive, counting its 7 runtime tools (`health` and the sign-in tools). Write and destructive tools are listed only when writes are allowed, and a tool loads only when the sign-in holds one of its scopes. The `google` toolset lists 10 of them plus the runtime tools.
 
 ## APIs
 
