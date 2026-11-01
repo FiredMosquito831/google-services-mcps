@@ -62,7 +62,7 @@ const GSC_GOOGLE = [
   'indexing_url_notifications_get_metadata',
   'indexing_url_notifications_publish',
 ];
-/** The gchat list (1.12.0): Google's 9 Chat MCP tools, two of them through the generated notification-setting tools. */
+/** The gchat list (1.12.0): Google's 9 Chat MCP tools, all through curated tools since 2.3.0. */
 const CHAT_GOOGLE = [
   'chat_search_conversations',
   'chat_list_messages',
@@ -71,8 +71,8 @@ const CHAT_GOOGLE = [
   'chat_send_message',
   'chat_mark_read',
   'chat_mark_unread',
-  'chat_spaces_space_notif_setting_get',
-  'chat_spaces_space_notif_setting_patch',
+  'chat_get_notification_settings',
+  'chat_update_notification_settings',
 ];
 /** The gcontacts list (1.13.0): Google's 3 People MCP tools. */
 const CONTACTS_GOOGLE = ['contacts_search_directory', 'contacts_search', 'profile_me'];
@@ -119,8 +119,11 @@ const LEAN_GOOGLE = {
     'appsscript_projects_get_content',
     'appsscript_projects_update_content',
     'appsscript_projects_versions_create',
+    // 2.5.0: the versions list and the redeploy (deployments.update keeps the id and the URL; create makes a new one).
+    'appsscript_projects_versions_list',
     'appsscript_projects_deployments_list',
     'appsscript_projects_deployments_create',
+    'appsscript_projects_deployments_update',
     'appsscript_processes_list',
     'appsscript_scripts_run',
   ],
@@ -266,8 +269,11 @@ const ADMIN_GOOGLE = [
   'admin_users_list',
   'admin_user_get',
   'admin_groups_list',
+  // 2.4.0: one group and one org unit by key, as the lists already allow (Directory API groups.get, orgunits.get).
+  'admin_group_get',
   'admin_group_members_list',
   'admin_orgunits_list',
+  'admin_orgunit_get',
   'admin_domains_list',
   'admin_activities_list',
   'alerts_alerts_list',
@@ -518,9 +524,11 @@ test('the gsc google list is a lean set: no official server, so every tool says 
 test("the gchat google list covers the 9 tools of Google's Chat MCP server, with chat_list_members for list_memberships", () => {
   const google = readJson('config', 'products.json').products.gchat.toolsets.google;
   assert.deepEqual(google.tools, CHAT_GOOGLE);
-  assert.equal(google.source, 'https://developers.google.com/workspace/chat/api/reference/mcp/tools_list');
+  // Since 2.3.0 the parent page, which answers 200 and carries the tool table; .../mcp/tools_list answers 404 (curl,
+  // 2026-11-01), as it does for Gmail and Calendar (2.2.0).
+  assert.equal(google.source, 'https://developers.google.com/workspace/chat/api/reference/mcp');
   const official = new Set(Object.values(google.matches).flat());
-  // developers.google.com/workspace/chat/api/reference/mcp/tools_list
+  // developers.google.com/workspace/chat/api/reference/mcp
   for (const name of ['search_conversations', 'list_messages', 'search_messages', 'send_message', 'list_memberships', 'mark_as_read', 'mark_as_unread', 'get_notification_settings', 'update_notification_settings']) {
     assert.ok(official.has(name), `no tool of ours matches ${name}`);
   }
@@ -529,6 +537,11 @@ test("the gchat google list covers the 9 tools of Google's Chat MCP server, with
   assert.equal(google.tools.includes('chat_spaces_members_list'), false);
   assert.match(google.notes.chat_list_members, /chat\.bot/);
   assert.match(google.notes.chat_mark_read, /no public REST method/);
+  // Since 2.3.0 the notification settings are curated too: Google's tool takes a conversation id and two enums, and so
+  // does ours, where the generated tools took the raw name, updateMask and body.
+  assert.match(google.notes.chat_get_notification_settings, /chat\.users\.spacesettings/);
+  assert.equal(google.tools.includes('chat_spaces_space_notif_setting_get'), false);
+  assert.equal(google.tools.includes('chat_spaces_space_notif_setting_patch'), false);
 });
 
 test("the gcontacts google list covers the 3 tools of Google's People MCP server, and leaves out the gateway", () => {
@@ -573,7 +586,10 @@ test('the gmeet, gtasks and gapps google lists are lean sets: no official server
   // deployment delete and the Marketplace licence reads.
   for (const name of ['meet_spaces_members_delete', 'meet_spaces_end_active_conference']) assert.equal(LEAN_GOOGLE.gmeet.includes(name), false, name);
   for (const name of ['tasks_tasklists_delete', 'tasks_tasks_clear', 'keep_notes_create', 'keep_notes_delete']) assert.equal(LEAN_GOOGLE.gtasks.includes(name), false, name);
-  for (const name of ['appsscript_projects_deployments_delete', 'appsmarket_user_license_get']) assert.equal(LEAN_GOOGLE.gapps.includes(name), false, name);
+  for (const name of ['appsscript_projects_deployments_delete', 'appsmarket_user_license_get', 'appsscript_projects_create']) assert.equal(LEAN_GOOGLE.gapps.includes(name), false, name);
+  // Since 2.5.0 the redeploy is in it, and the create says why it is not the way to ship a new version.
+  assert.equal(LEAN_GOOGLE.gapps.length, 10);
+  assert.match(products.gapps.toolsets.google.notes.appsscript_projects_deployments_create, /NEW deployment/);
   // The kinds in the plugin tool maps: scripts.run is destructive, tasks.delete is destructive, the rest as classified.
   const kindOf = (id, tool) => readJson('plugins', id, 'tool-map.json').find((t) => t.name === `mcp__plugin_${id}_${id}__${tool}`).kind;
   assert.equal(kindOf('gapps', 'appsscript_scripts_run'), 'destructive');
@@ -971,6 +987,7 @@ test("the gsearch google list: Google's three Developer Knowledge tools, and a l
 test('the gadmin google list is a lean set: no official server, every tool says why it is kept; two writes, no delete', () => {
   const google = readJson('config', 'products.json').products.gadmin.toolsets.google;
   assert.deepEqual(google.tools, ADMIN_GOOGLE);
+  assert.equal(ADMIN_GOOGLE.length, 12, '10 since 1.23.0, plus admin_group_get and admin_orgunit_get since 2.4.0');
   assert.ok(google.source.startsWith('No official Google MCP server for Google Workspace administration'));
   for (const tool of ADMIN_GOOGLE) {
     assert.deepEqual(google.matches[tool], [], tool);

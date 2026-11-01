@@ -95,5 +95,6 @@ test('no other product has a preference, so every other server resolves exactly 
   }
   // gcontacts since 1.35.1 (userinfo.profile for readwrite and full; tests/profile-name.test.mjs). gapps since 1.36.0
   // (userinfo.email for full, so full no longer takes the full Gmail scope for scripts.run; tests/gapps-mail.test.mjs).
-  assert.deepEqual(withPrefer.sort(), ['gapps', 'gclassroom', 'gcontacts', 'gmeet']);
+  // gchat since 2.3.0 (chat.users.readstate.readonly for readonly, which unread_only needs; tests/toolset-scopes.test.mjs).
+  assert.deepEqual(withPrefer.sort(), ['gapps', 'gchat', 'gclassroom', 'gcontacts', 'gmeet']);
 });

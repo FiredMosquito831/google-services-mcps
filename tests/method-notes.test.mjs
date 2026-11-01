@@ -70,6 +70,27 @@ test('an API note from tool-kinds.json and a method note: the method tool carrie
   );
 });
 
+test('gapps (2.5.0): the scripts.run note reaches that one tool, after the API note, and the plugin carries it', async () => {
+  const notes = readJson('config', 'products.json').products.gapps.methodNotes;
+  assert.deepEqual(Object.keys(notes), ['script']);
+  assert.deepEqual(Object.keys(notes.script.methods), ['script.scripts.run']);
+  const note = notes.script.methods['script.scripts.run'];
+  // The facts Google's guide states and Discovery does not, each of them in the note the model reads.
+  for (const fact of [/DEPLOYMENT id/, /standard Google Cloud project/, /every scope the script uses/, /six minutes/, /does not work with service accounts/]) {
+    assert.match(note, fact);
+  }
+  const tools = await discoveryToolsFor('gapps', cfg);
+  const run = tools.find((t) => t.methodId === 'script.scripts.run');
+  // Discovery's description is empty, so the tool falls back to the method line; the API note (tool-kinds.json) comes
+  // first, then this method's note.
+  assert.match(run.description, /Note: scripts\.run executes Apps Script code with the project's authority/);
+  assert.ok(run.description.includes(note), 'the method note is in the tool description');
+  assert.ok(run.description.length <= 2048, `${run.description.length} characters`);
+  for (const tool of tools.filter((t) => t.methodId !== 'script.scripts.run')) assert.doesNotMatch(tool.description, /DEPLOYMENT id/, `${tool.methodId} carries no note`);
+  // The plugin's servers.json, which the bundled server reads, carries exactly the same note.
+  assert.deepEqual(readJson('plugins', 'gapps', 'servers.json').servers[0].methodNotes, notes);
+});
+
 test('gen-servers: methodNotes name methods of a generated API snapshot, with a source, a reason and a non-empty note', () => {
   const run = (methodNotes) => {
     const root = mkdtempSync(join(tmpdir(), 'gsm-gen-notes-'));

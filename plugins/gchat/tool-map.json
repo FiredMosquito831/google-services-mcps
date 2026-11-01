@@ -92,6 +92,14 @@
     "title": "chat.customEmojis.list"
   },
   {
+    "name": "mcp__plugin_gchat_gchat__chat_get_notification_settings",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.users.spacesettings"
+    ],
+    "title": "Get Chat notification settings"
+  },
+  {
     "name": "mcp__plugin_gchat_gchat__chat_list_members",
     "kind": "read",
     "scopes": [
@@ -159,7 +167,8 @@
     "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/chat.messages",
-      "https://www.googleapis.com/auth/chat.messages.readonly"
+      "https://www.googleapis.com/auth/chat.messages.readonly",
+      "https://www.googleapis.com/auth/chat.users.readstate.readonly"
     ],
     "title": "Search Chat messages"
   },
@@ -603,6 +612,14 @@
     ],
     "methodId": "chat.users.spaces.threads.getThreadReadState",
     "title": "chat.users.spaces.threads.getThreadReadState"
+  },
+  {
+    "name": "mcp__plugin_gchat_gchat__chat_update_notification_settings",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/chat.users.spacesettings"
+    ],
+    "title": "Change Chat notification settings"
   },
   {
     "name": "mcp__plugin_gchat_gchat__chat_users_availability_get",

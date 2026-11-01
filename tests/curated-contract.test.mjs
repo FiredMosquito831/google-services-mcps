@@ -856,10 +856,12 @@ const CASES = {
   admin_orgunit_update: [{ args: { org_unit_path: '/Sales', name: 'Sales EU', description: 'EU', parent_org_unit_path: '/' }, expect: ['directory.orgunits.patch'] }],
   admin_group_create: [{ args: { email: 'team@example.com', name: 'Team', description: 'The team' }, expect: ['directory.groups.insert'] }],
   admin_group_member_add: [{ args: { group_key: 'team@example.com', email: 'a@example.com', role: 'MEMBER' }, expect: ['directory.members.insert'] }],
-  admin_user_delete: [{ args: { user_key: 'a@example.com' }, preview: true, expect: ['directory.users.get', 'directory.users.delete'] }],
-  admin_orgunit_delete: [{ args: { org_unit_path: '/Sales' }, preview: true, expect: ['directory.orgunits.list', 'directory.users.list', 'directory.orgunits.delete'] }],
-  admin_group_delete: [{ args: { group_key: 'team@example.com' }, preview: true, expect: ['directory.groups.get', 'directory.groups.delete'] }],
-  admin_member_remove: [{ args: { group_key: 'team@example.com', member_key: 'a@example.com' }, preview: true, expect: ['directory.members.get', 'directory.members.delete'] }],
+  // 2.4.0: the four deletes work their approval out in prepare (a preview alone never reaches the gate), so the row
+  // runs prepare and then the handler, as drive_trash_file does since 2.1.0.
+  admin_user_delete: [{ args: { user_key: 'a@example.com' }, prepare: true, expect: ['directory.users.get', 'directory.users.delete'] }],
+  admin_orgunit_delete: [{ args: { org_unit_path: '/Sales' }, prepare: true, expect: ['directory.orgunits.list', 'directory.users.list', 'directory.orgunits.delete'] }],
+  admin_group_delete: [{ args: { group_key: 'team@example.com' }, prepare: true, expect: ['directory.groups.get', 'directory.groups.delete'] }],
+  admin_member_remove: [{ args: { group_key: 'team@example.com', member_key: 'a@example.com' }, prepare: true, expect: ['directory.members.get', 'directory.members.delete'] }],
 
   // gchat (1.12.0)
   chat_search_conversations: [
@@ -890,6 +892,13 @@ const CASES = {
   ],
   chat_mark_read: [{ args: { conversation_ids: ['spaces/AAA', 'spaces/BBB'] }, expect: ['chat.users.spaces.updateSpaceReadState'] }],
   chat_mark_unread: [{ args: { conversation_id: 'spaces/AAA', last_read_time: '2026-10-29T08:00:00Z' }, expect: ['chat.users.spaces.updateSpaceReadState'] }],
+  // 2.3.0: Google's get_notification_settings and update_notification_settings take a conversation id and two enums;
+  // updateMask is built from what the call passes (Discovery, chat v1 spaceNotificationSetting.patch).
+  chat_get_notification_settings: [{ args: { conversation_id: 'spaces/AAA' }, expect: ['chat.users.spaces.spaceNotificationSetting.get'] }],
+  chat_update_notification_settings: [
+    { args: { conversation_id: 'spaces/AAA', notification_setting: 'ALL', mute_setting: 'MUTED' }, expect: ['chat.users.spaces.spaceNotificationSetting.patch'], sends: { updateMask: 'notification_setting,mute_setting' } },
+    { args: { conversation_id: 'spaces/AAA', mute_setting: 'UNMUTED' }, expect: ['chat.users.spaces.spaceNotificationSetting.patch'], sends: { updateMask: 'mute_setting' } },
+  ],
 
   // gcontacts (1.13.0)
   contacts_search_directory: [
@@ -1119,7 +1128,7 @@ test('every curated tool has a contract row, a skip reason or a known defect, an
   const listed = new Set([...Object.keys(CASES), ...Object.keys(SKIPPED), ...Object.keys(KNOWN_DEFECTS)]);
   assert.deepEqual([...tools.keys()].filter((name) => !listed.has(name)), [], 'curated tools without a row');
   assert.deepEqual([...listed].filter((name) => !tools.has(name)), [], 'rows for tools that do not exist');
-  assert.equal(tools.size, 152, 'the curated tool count; update the table when it changes');
+  assert.equal(tools.size, 154, 'the curated tool count; update the table when it changes');
 });
 
 for (const [name, cases] of Object.entries(CASES)) {

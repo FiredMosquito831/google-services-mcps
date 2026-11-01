@@ -1,5 +1,6 @@
 // The Google Chat parity tools (1.12.0): chat_search_conversations, chat_list_messages, chat_search_messages,
-// chat_list_members, chat_send_message, chat_mark_read and chat_mark_unread. The HTTP layer is stubbed
+// chat_list_members, chat_send_message, chat_mark_read and chat_mark_unread, and (2.3.0) chat_get_notification_settings
+// and chat_update_notification_settings. The HTTP layer is stubbed
 // (OAuth2Client.prototype.request), so nothing leaves the machine. Fake tokens in a temp folder only.
 import { test, after } from 'node:test';
 import assert from 'node:assert/strict';
@@ -60,8 +61,8 @@ const msg = (id, text, extra = {}) => ({
 // ---------------------------------------------------------------------------
 // Kinds and scopes
 
-test('kinds follow classifyMethod: four reads; send is destructive; the read-state changes are writes; no confirm argument', () => {
-  for (const name of ['chat_search_conversations', 'chat_list_messages', 'chat_search_messages', 'chat_list_members']) assert.equal(tools.get(name).kind, 'read', name);
+test('kinds follow classifyMethod: six reads; send is destructive; the read-state and notification changes are writes; no confirm argument', () => {
+  for (const name of ['chat_search_conversations', 'chat_list_messages', 'chat_search_messages', 'chat_list_members', 'chat_get_notification_settings']) assert.equal(tools.get(name).kind, 'read', name);
   // Sending to other people is destructive since 1.26.3 (the destructive rule): the curated tool and the generated
   // messages.create, through its entry in config/tool-kinds.json.
   const kinds = Object.fromEntries(Object.entries(JSON.parse(readFileSync(join(REPO, 'config', 'tool-kinds.json'), 'utf8'))).filter(([k]) => k !== 'notes'));
@@ -74,6 +75,13 @@ test('kinds follow classifyMethod: four reads; send is destructive; the read-sta
   assert.deepEqual(tools.get('chat_send_message').scopes, [G('chat.messages'), G('chat.messages.create')]);
   assert.deepEqual(tools.get('chat_list_members').scopes, [G('chat.memberships'), G('chat.memberships.readonly')], 'no Chat app scope (chat.bot, chat.import)');
   assert.deepEqual(tools.get('chat_mark_read').scopes, [G('chat.users.readstate')]);
+  // 2.3.0: the notification setting needs chat.users.spacesettings for reading too (there is no read-only scope), and
+  // the search declares the read-state scope its unread_only filter needs, so a readonly login asks for it.
+  assert.deepEqual(tools.get('chat_get_notification_settings').scopes, [G('chat.users.spacesettings')]);
+  assert.deepEqual(tools.get('chat_update_notification_settings').scopes, [G('chat.users.spacesettings')]);
+  assert.equal(tools.get('chat_update_notification_settings').kind, 'write');
+  assert.equal(tools.get('chat_update_notification_settings').idempotent, true, "Google's update_notification_settings is idempotent");
+  assert.deepEqual(tools.get('chat_search_messages').scopes, [G('chat.messages'), G('chat.messages.readonly'), G('chat.users.readstate.readonly')]);
   assert.equal(typeof tools.get('chat_send_message').prepare, 'function', 'the approval shows the conversation and the text');
   for (const t of tools.values()) {
     assert.equal(t.inputSchema.confirm, undefined, `${t.name}: no model-controlled confirm`);
@@ -281,11 +289,31 @@ test('send_message: prepare reads the conversation name; the approval shows it a
   assert.equal(prepared.preview.text, text);
   assert.equal(prepared.preview.text_chars, text.length);
   const res = await tool.handler({ conversation_id: 'spaces/AAA', text }, ctx, prepared);
-  assert.deepEqual(calls.slice(1).map((c) => [c.method, c.path, c.query]), [['POST', '/v1/spaces/AAA/messages', {}]]);
+  const [post] = calls.slice(1);
+  assert.deepEqual([post.method, post.path], ['POST', '/v1/spaces/AAA/messages']);
+  // Since 2.3.0 every send carries a requestId (spaces.messages.create): the same id twice posts one message.
+  assert.match(post.query.requestId, /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/, 'a random UUID');
+  assert.equal(res.request_id, post.query.requestId, 'the answer names the id it sent');
   assert.deepEqual(calls[1].body, { text, markupSyntax: 'MARKUP_SYNTAX_MARKDOWN' });
   assert.equal(res.sent, true);
   assert.equal(res.id, 'spaces/AAA/messages/new');
   assert.equal(res.text_truncated, true);
+});
+
+test('send_message: a request_id the caller gives is the one sent, so its own retry posts one message', async () => {
+  reset((call) => (call.method === 'GET' ? { name: 'spaces/AAA', displayName: 'Team', spaceType: 'SPACE' } : { name: 'spaces/AAA/messages/m1' }));
+  const tool = tools.get('chat_send_message');
+  const args = { conversation_id: 'spaces/AAA', text: 'hi', request_id: '  7b2f0a1e-0b0b-4a2a-9a8f-2f3d4c5b6a70  ' };
+  const res = await tool.handler(args, ctx, await tool.prepare(args, ctx));
+  assert.equal(calls[1].query.requestId, '7b2f0a1e-0b0b-4a2a-9a8f-2f3d4c5b6a70', 'trimmed, and sent as given');
+  assert.equal(res.request_id, '7b2f0a1e-0b0b-4a2a-9a8f-2f3d4c5b6a70');
+  // Two calls without one get two different ids.
+  reset((call) => (call.method === 'GET' ? { name: 'spaces/AAA' } : {}));
+  await tool.handler({ conversation_id: 'spaces/AAA', text: 'a' }, ctx);
+  await tool.handler({ conversation_id: 'spaces/AAA', text: 'b' }, ctx);
+  const ids = calls.filter((c) => c.method === 'POST').map((c) => c.query.requestId);
+  assert.equal(ids.length, 2);
+  assert.notEqual(ids[0], ids[1]);
 });
 
 test('send_message: a reply goes in its thread or fails (REPLY_MESSAGE_OR_FAIL); chat format sends no markup; the name may be unreadable', async () => {
@@ -304,7 +332,7 @@ test('send_message: a reply goes in its thread or fails (REPLY_MESSAGE_OR_FAIL);
   assert.equal(prepared.preview.thread_id, 'spaces/AAA/threads/t1');
   await tool.handler(args, ctx, prepared);
   const post = calls.find((c) => c.method === 'POST');
-  assert.deepEqual(post.query, { messageReplyOption: 'REPLY_MESSAGE_OR_FAIL' });
+  assert.deepEqual(post.query, { requestId: post.query.requestId, messageReplyOption: 'REPLY_MESSAGE_OR_FAIL' });
   assert.deepEqual(post.body, { text: '*hi*', thread: { name: 'spaces/AAA/threads/t1' } });
   // Without a prepared plan (a direct handler call), the handler works the plan out itself.
   reset(() => ({ name: 'spaces/AAA', displayName: 'Team' }));
@@ -359,4 +387,41 @@ test('mark_unread: one PATCH with the given read time', async () => {
   assert.deepEqual(calls.map((c) => [c.method, c.path, c.query, c.body]), [['PATCH', '/v1/users/me/spaces/AAA/spaceReadState', { updateMask: 'last_read_time' }, { lastReadTime: '2026-10-29T08:59:59Z' }]]);
   assert.deepEqual(res, { conversation_id: 'spaces/AAA', last_read_time: '2026-10-29T08:59:59Z' });
   assert.equal(parse('chat_mark_unread', { conversation_id: 'spaces/AAA', last_read_time: 'yesterday' }).success, false);
+});
+
+// ---------------------------------------------------------------------------
+// chat_get_notification_settings and chat_update_notification_settings (2.3.0)
+
+test('get_notification_settings: one GET of your own setting for the conversation, short fields', async () => {
+  reset(() => ({ name: 'users/me/spaces/AAA/spaceNotificationSetting', notificationSetting: 'MAIN_CONVERSATIONS', muteSetting: 'MUTED' }));
+  const res = await run('chat_get_notification_settings', { conversation_id: 'spaces/AAA' });
+  assert.deepEqual(calls.map((c) => [c.method, c.path]), [['GET', '/v1/users/me/spaces/AAA/spaceNotificationSetting']]);
+  assert.deepEqual(res, { conversation_id: 'spaces/AAA', notification_setting: 'MAIN_CONVERSATIONS', mute_setting: 'MUTED' });
+  // A bare conversation id is taken as spaces/{id}, as the other Chat tools take it; anything else is refused first.
+  assert.equal(chat.spaceNameOf('AAA'), 'spaces/AAA');
+  reset(() => ({}));
+  const unset = await run('chat_get_notification_settings', { conversation_id: 'AAA' });
+  assert.deepEqual(unset, { conversation_id: 'spaces/AAA', notification_setting: null, mute_setting: null });
+  await assert.rejects(run('chat_get_notification_settings', { conversation_id: 'not a space!' }), /must be a conversation id/);
+});
+
+test('update_notification_settings: one PATCH with updateMask built from what was passed; at least one is required', async () => {
+  reset((call) => ({ name: 'users/me/spaces/AAA/spaceNotificationSetting', ...call.body }));
+  const both = await run('chat_update_notification_settings', { conversation_id: 'spaces/AAA', notification_setting: 'OFF', mute_setting: 'MUTED' });
+  assert.deepEqual(calls.map((c) => [c.method, c.path, c.query, c.body]), [
+    ['PATCH', '/v1/users/me/spaces/AAA/spaceNotificationSetting', { updateMask: 'notification_setting,mute_setting' }, { notificationSetting: 'OFF', muteSetting: 'MUTED' }],
+  ]);
+  assert.deepEqual(both, { conversation_id: 'spaces/AAA', notification_setting: 'OFF', mute_setting: 'MUTED' });
+  reset((call) => ({ ...call.body }));
+  const one = await run('chat_update_notification_settings', { conversation_id: 'spaces/AAA', notification_setting: 'FOR_YOU' });
+  assert.deepEqual(calls[0].query, { updateMask: 'notification_setting' }, 'only the field passed is in the mask');
+  assert.deepEqual(calls[0].body, { notificationSetting: 'FOR_YOU' });
+  assert.equal(one.mute_setting, null, 'a value Google did not answer stays null');
+  // Nothing to change is refused before any request.
+  reset();
+  await assert.rejects(run('chat_update_notification_settings', { conversation_id: 'spaces/AAA' }), /Nothing to change/);
+  assert.equal(calls.length, 0);
+  // The enums are Google's, without the UNSPECIFIED values.
+  assert.equal(parse('chat_update_notification_settings', { conversation_id: 'spaces/AAA', notification_setting: 'SOME' }).success, false);
+  assert.equal(parse('chat_update_notification_settings', { conversation_id: 'spaces/AAA', notification_setting: 'FOR_YOU', mute_setting: 'MUTED' }).success, true);
 });

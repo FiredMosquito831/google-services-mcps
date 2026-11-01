@@ -15,6 +15,7 @@ import { z } from 'zod';
 import type { RuntimeConfig } from '../core/config.js';
 import { getAuthClient, googleScopes } from '../core/auth.js';
 import { defineTool, type ToolDef } from '../core/tools.js';
+import { statusOf } from './cloud-http.js';
 
 type Dir = admin_directory_v1.Admin;
 type User = admin_directory_v1.Schema$User;
@@ -144,17 +145,31 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       title: 'Get user',
       description: 'Get one user (raw record, password removed) plus the emails of the groups the user belongs to.',
       kind: 'read',
-      scopes: googleScopes('admin.directory.user', 'admin.directory.user.readonly'),
+      // users.get needs a user scope and groups.list a group scope (Discovery). Since 2.4.0 both are declared, and a
+      // sign-in that holds only the user scopes still returns the user, with groups null and a note (before, the whole
+      // call failed). See tests/admin-tools.test.mjs.
+      scopes: googleScopes('admin.directory.user', 'admin.directory.user.readonly', 'admin.directory.group', 'admin.directory.group.readonly'),
       inputSchema: { user_key: userKeyField },
       async handler({ user_key }) {
         const key = requireText(user_key, 'user_key');
         const dir = await api();
         const user = (await dir.users.get({ userKey: key })).data;
-        const groups = (await dir.groups.list({ userKey: key, maxResults: 200 })).data;
+        let groups: string[] | null = null;
+        let groupsMore: boolean | undefined;
+        let note: string | undefined;
+        try {
+          const res = await dir.groups.list({ userKey: key, maxResults: 200 });
+          groups = (res.data.groups ?? []).map((g) => g.email ?? '');
+          groupsMore = Boolean(res.data.nextPageToken);
+        } catch (err) {
+          if (statusOf(err) !== 403) throw err;
+          note = 'The groups were not listed: the sign-in lacks an admin.directory.group scope (or this account cannot list them).';
+        }
         return {
           ...withoutPassword(user),
-          groups: (groups.groups ?? []).map((g) => g.email),
-          groupsMore: Boolean(groups.nextPageToken),
+          groups,
+          ...(groupsMore !== undefined ? { groupsMore } : {}),
+          ...(note ? { note } : {}),
         };
       },
     }),
@@ -420,7 +435,9 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       },
     }),
 
-    // ---- destructive (asks for approval before each call). Previews only read; they never change anything. ----
+    // ---- destructive (asks for approval before each call). The prepare step only reads: it names the user, the group,
+    // the member or the org unit (and what the org unit holds) in the approval, because a preview alone never reaches
+    // the gate (runServer shows prepared.preview; learning of 2026-10-31). Before 2.4.0 these four had a preview only. ----
     defineTool({
       name: 'admin_user_delete',
       title: 'Delete user',
@@ -430,13 +447,15 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       idempotent: true,
       scopes: googleScopes('admin.directory.user'),
       inputSchema: { user_key: userKeyField },
-      async preview({ user_key }) {
+      async prepare({ user_key }) {
         const u = (await (await api()).users.get({ userKey: requireText(user_key, 'user_key') })).data;
         return {
-          name: u.name?.fullName,
-          email: u.primaryEmail,
-          orgUnitPath: u.orgUnitPath,
-          effect: 'User is deleted. Restorable for a limited time; after that the deletion is permanent.',
+          preview: {
+            name: u.name?.fullName,
+            email: u.primaryEmail,
+            orgUnitPath: u.orgUnitPath,
+            effect: 'User is deleted. Restorable for a limited time; after that the deletion is permanent.',
+          },
         };
       },
       async handler({ user_key }) {
@@ -454,7 +473,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       idempotent: true,
       scopes: googleScopes('admin.directory.orgunit'),
       inputSchema: { org_unit_path: orgPathField },
-      async preview({ org_unit_path }) {
+      async prepare({ org_unit_path }) {
         const path = ouBodyPath(ouPath(org_unit_path, 'org_unit_path'));
         const dir = await api();
         const usersQuery = `orgUnitPath='${path}'`;
@@ -463,12 +482,14 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
           dir.users.list({ customer: CUSTOMER, query: usersQuery, maxResults: 500 }),
         ]);
         return {
-          orgUnitPath: path,
-          childOrgUnits: (children.data.organizationUnits ?? []).map((o) => o.orgUnitPath),
-          usersInOrgUnit: (users.data.users ?? []).map((u) => u.primaryEmail),
-          usersMoreExist: Boolean(users.data.nextPageToken),
-          usersQuery,
-          effect: 'The API refuses deletion while users remain in the org unit. Move or delete them first.',
+          preview: {
+            orgUnitPath: path,
+            childOrgUnits: (children.data.organizationUnits ?? []).map((o) => o.orgUnitPath),
+            usersInOrgUnit: (users.data.users ?? []).map((u) => u.primaryEmail),
+            usersMoreExist: Boolean(users.data.nextPageToken),
+            usersQuery,
+            effect: 'The API refuses deletion while users remain in the org unit. Move or delete them first.',
+          },
         };
       },
       async handler({ org_unit_path }) {
@@ -486,13 +507,15 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       idempotent: true,
       scopes: googleScopes('admin.directory.group'),
       inputSchema: { group_key: groupKeyField },
-      async preview({ group_key }) {
+      async prepare({ group_key }) {
         const g = (await (await api()).groups.get({ groupKey: requireText(group_key, 'group_key') })).data;
         return {
-          email: g.email,
-          name: g.name,
-          directMembersCount: g.directMembersCount,
-          effect: 'Group and its memberships are removed.',
+          preview: {
+            email: g.email,
+            name: g.name,
+            directMembersCount: g.directMembersCount,
+            effect: 'Group and its memberships are removed.',
+          },
         };
       },
       async handler({ group_key }) {
@@ -510,12 +533,12 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       idempotent: true,
       scopes: googleScopes('admin.directory.group', 'admin.directory.group.member'),
       inputSchema: { group_key: groupKeyField, member_key: z.string().min(1).describe('Member email, alias, or unique ID.') },
-      async preview({ group_key, member_key }) {
+      async prepare({ group_key, member_key }) {
         const m = (await (await api()).members.get({
           groupKey: requireText(group_key, 'group_key'),
           memberKey: requireText(member_key, 'member_key'),
         })).data;
-        return { group: group_key, member: summarizeMember(m), effect: 'Member is removed from the group.' };
+        return { preview: { group: group_key, member: summarizeMember(m), effect: 'Member is removed from the group.' } };
       },
       async handler({ group_key, member_key }) {
         const g = requireText(group_key, 'group_key');

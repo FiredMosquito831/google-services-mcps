@@ -2201,9 +2201,20 @@
         }
       ],
       "gateway": [],
+      "scopePolicy": {
+        "prefer": {
+          "readonly": [
+            "https://www.googleapis.com/auth/chat.users.readstate.readonly"
+          ]
+        },
+        "onlyIn": {
+          "https://www.googleapis.com/auth/chat.bot": [],
+          "https://www.googleapis.com/auth/chat.import": []
+        }
+      },
       "toolsets": {
         "google": {
-          "source": "https://developers.google.com/workspace/chat/api/reference/mcp/tools_list",
+          "source": "https://developers.google.com/workspace/chat/api/reference/mcp",
           "preferScopes": {
             "readwrite": [
               "https://www.googleapis.com/auth/chat.spaces.readonly",
@@ -2220,8 +2231,8 @@
             "chat_send_message",
             "chat_mark_read",
             "chat_mark_unread",
-            "chat_spaces_space_notif_setting_get",
-            "chat_spaces_space_notif_setting_patch"
+            "chat_get_notification_settings",
+            "chat_update_notification_settings"
           ],
           "matches": {
             "chat_search_conversations": [
@@ -2245,10 +2256,10 @@
             "chat_mark_unread": [
               "mark_as_unread"
             ],
-            "chat_spaces_space_notif_setting_get": [
+            "chat_get_notification_settings": [
               "get_notification_settings"
             ],
-            "chat_spaces_space_notif_setting_patch": [
+            "chat_update_notification_settings": [
               "update_notification_settings"
             ]
           },
@@ -2257,8 +2268,8 @@
             "chat_send_message": "Text in Markdown (or Chat's own syntax), as a new thread or a reply. Google's cards and citations are left out: only Chat apps can post them.",
             "chat_mark_read": "Conversations only, up to 10 a call, each its own request with its own failure. Google's thread_ids have no public REST method (the Chat API has getThreadReadState only).",
             "chat_mark_unread": "Conversations only; a thread's read state has no public REST method.",
-            "chat_spaces_space_notif_setting_get": "Generated from spaceNotificationSetting.get: name is users/me/spaces/{space}/spaceNotificationSetting.",
-            "chat_spaces_space_notif_setting_patch": "Generated from spaceNotificationSetting.patch: name is users/me/spaces/{space}/spaceNotificationSetting, updateMask notification_setting and/or mute_setting. A write, so it asks first."
+            "chat_get_notification_settings": "Curated in place of the generated chat_spaces_space_notif_setting_get, which took the raw resource name and a clipped description: this one takes a conversation id, as Google's tool does. Google asks chat.users.spacesettings for reading the setting too (there is no read-only scope), so a readonly sign-in does not cover it.",
+            "chat_update_notification_settings": "Curated in place of the generated chat_spaces_space_notif_setting_patch, which took the raw resource name, updateMask and body: this one takes the conversation id and the two enums, as Google's tool does, and builds updateMask from what you pass. A write, so it asks first."
           }
         }
       },
@@ -2636,6 +2647,15 @@
         }
       ],
       "gateway": [],
+      "methodNotes": {
+        "script": {
+          "source": "Google's Apps Script guide \"Execute functions with the Google Apps Script API\" (https://developers.google.com/apps-script/api/how-tos/execute), read 2026-11-01, and Discovery's own scriptId parameter text of scripts.run",
+          "reason": "Discovery gives scripts.run an empty description (live revision 20261011 too), so its tool said only that it calls the method, and the scriptId text does not say what a call needs. Google's guide states the deployment, Cloud-project and scope requirements a call needs before it works (adversarial review of gapps, F1); no other tool of the API is affected.",
+          "methods": {
+            "script.scripts.run": "Before a call works: deploy the script as an API executable and pass the DEPLOYMENT id here, not the script id (the new editor keeps one per deployment; Discovery's scriptId text says the same). The script and this OAuth client must share a standard Google Cloud project with the Apps Script API enabled: a default Apps Script project is not enough. The sign-in must hold every scope the script uses, not only the scope of the function called. A run may take six minutes, passes and returns basic types only (string, number, boolean, array, object), and the Apps Script API does not work with service accounts."
+          }
+        }
+      },
       "scopePolicy": {
         "optional": {
           "mail": [
@@ -2656,8 +2676,10 @@
             "appsscript_projects_get_content",
             "appsscript_projects_update_content",
             "appsscript_projects_versions_create",
+            "appsscript_projects_versions_list",
             "appsscript_projects_deployments_list",
             "appsscript_projects_deployments_create",
+            "appsscript_projects_deployments_update",
             "appsscript_processes_list",
             "appsscript_scripts_run"
           ],
@@ -2666,8 +2688,10 @@
             "appsscript_projects_get_content": [],
             "appsscript_projects_update_content": [],
             "appsscript_projects_versions_create": [],
+            "appsscript_projects_versions_list": [],
             "appsscript_projects_deployments_list": [],
             "appsscript_projects_deployments_create": [],
+            "appsscript_projects_deployments_update": [],
             "appsscript_processes_list": [],
             "appsscript_scripts_run": []
           },
@@ -2676,10 +2700,12 @@
             "appsscript_projects_get_content": "The files of a script project: name, type and source.",
             "appsscript_projects_update_content": "Replaces every file of a script project with the files given. Destructive since 1.26.3 (Google: it clears all the existing files), so it asks twice; send the files you keep too.",
             "appsscript_projects_versions_create": "Saves the current code as a numbered version, for a deployment. A write, so it asks first.",
+            "appsscript_projects_versions_list": "The saved versions of a script project, newest first, with their numbers and times: which one a deployment points at.",
             "appsscript_projects_deployments_list": "The deployments of a script project and their entry points.",
-            "appsscript_projects_deployments_create": "Deploys a version (as an API executable, web app or add-on, by its manifest). A write, so it asks first.",
+            "appsscript_projects_deployments_create": "Deploys a version (as an API executable, web app or add-on, by its manifest). A write, so it asks first. It makes a NEW deployment each time, with a new id and a new web-app URL; to ship a new version of an existing one, use appsscript_projects_deployments_update.",
+            "appsscript_projects_deployments_update": "Points an existing deployment at another version, or changes its manifest fields; its id and web-app URL stay the same. A write, so it asks first.",
             "appsscript_processes_list": "Your recent script runs: function, status, start time and duration.",
-            "appsscript_scripts_run": "Runs a function of a script deployed as an API executable. Destructive, so it asks twice: the script can do anything its own scopes allow, and the sign-in needs those scopes (the login asks for one of them here, userinfo.email)."
+            "appsscript_scripts_run": "Runs a function of a script deployed as an API executable; pass the deployment id, not the script id. Destructive, so it asks twice: the script can do anything its own scopes allow, and the sign-in needs the scopes the script uses (the login asks for one of them here, userinfo.email). The script and this OAuth client must share a standard Google Cloud project with the Apps Script API enabled."
           }
         }
       },
@@ -2814,8 +2840,10 @@
             "admin_users_list",
             "admin_user_get",
             "admin_groups_list",
+            "admin_group_get",
             "admin_group_members_list",
             "admin_orgunits_list",
+            "admin_orgunit_get",
             "admin_domains_list",
             "admin_activities_list",
             "alerts_alerts_list",
@@ -2826,8 +2854,10 @@
             "admin_users_list": [],
             "admin_user_get": [],
             "admin_groups_list": [],
+            "admin_group_get": [],
             "admin_group_members_list": [],
             "admin_orgunits_list": [],
+            "admin_orgunit_get": [],
             "admin_domains_list": [],
             "admin_activities_list": [],
             "alerts_alerts_list": [],
@@ -2836,15 +2866,17 @@
           },
           "notes": {
             "admin_users_list": "The domain's users, searchable by name or email (Directory API users.list). Start here for a user key.",
-            "admin_user_get": "One user, with the groups they belong to (Directory API users.get and groups.list).",
+            "admin_user_get": "One user, with the groups they belong to (Directory API users.get and groups.list). A sign-in that holds only the user scopes still returns the user: the groups are then null, with a note saying why.",
             "admin_groups_list": "The account's groups, or the groups of one user (Directory API groups.list).",
+            "admin_group_get": "One group by email or ID (Directory API groups.get): its settings, who can join it, and its aliases.",
             "admin_group_members_list": "The members of a group and their roles (Directory API members.list).",
             "admin_orgunits_list": "The organizational units (Directory API orgunits.list).",
+            "admin_orgunit_get": "One org unit by its full path (Directory API orgunits.get), with its description and parent.",
             "admin_domains_list": "The domains of the account (Directory API domains.list).",
             "admin_activities_list": "Audit activity of the domain: logins, admin console changes, Drive and others (Reports API activities.list).",
             "alerts_alerts_list": "Security and system alerts of the domain (Alert Center API alerts.list).",
-            "admin_user_set_suspended": "Suspends or restores a user. A write: it asks first.",
-            "admin_group_member_add": "Adds a member to a group. A write: it asks first."
+            "admin_user_set_suspended": "Suspends or restores a user. A write: it asks first. Confirm the exact account first (the primaryEmail from admin_user_get): a suspended user cannot sign in to any Workspace service.",
+            "admin_group_member_add": "Adds a member to a group. A write: it asks first. Membership grants access to whatever the group can reach, so confirm the group and the person first."
           }
         }
       },

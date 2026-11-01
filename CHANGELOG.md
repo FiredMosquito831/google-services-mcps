@@ -2,6 +2,75 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 2.5.0 - 2026-11-01
+
+### Added: what `scripts.run` needs before it works, in the tool that runs it
+- Discovery gives `scripts.run` an empty description, so the generated tool said only that it calls the method, and the `scriptId` text Google ships does not say what the call needs. Google's guide, "Execute functions with the Google Apps Script API" (https://developers.google.com/apps-script/api/how-tos/execute, read 2026-11-01), states it: the script project is deployed as an API executable and the call passes the DEPLOYMENT id, not the script id; the script and the calling OAuth client share a **standard** Google Cloud project with the Apps Script API enabled (a default Apps Script project is not enough); the sign-in holds every scope the script uses, not only the called function's; a run may take six minutes, passes and returns basic types only, and the Apps Script API does not work with service accounts. That text is a `methodNote` (config/products.json), so it reaches the one tool it describes and no other, after the API's own note (adversarial review of gapps, F1 and F9).
+
+### Added: redeploying and listing versions in the gapps `google` toolset
+- `appsscript_projects_deployments_update` (a write) and `appsscript_projects_versions_list` (a read) join the `google` toolset, which now holds 10 tools (review F8). Redeploying needs the update: `deployments.create` makes a new deployment each time, with a new id and a new web-app URL, while `deployments.update` keeps the deployment id and its URL and points it at another version. Both tools already existed in the `all` toolset and need no new scope (`script.deployments` and `script.projects.readonly` are already in the cover), so `gsm scopes` for gapps is identical in every profile and toolset; the covered counts move (google `readonly` 4 → 5 of 10, `readwrite` and `full` 8 → 10 of 10).
+
+### Fixed (docs): how to set up a script for `scripts.run`
+- `docs/products/gapps.md` said the setup `scripts.run` needs was UNVERIFIED. Google states it, so the page now lists it and cites the page above, and the plugin's skill names the deployment id and the standard Cloud project in its run flow.
+
+### Not changed
+- No tool's kind, scope or request: the tool map of gapps is byte-identical (the two tools were already there), `tool-aliases.json` is untouched, and every other product is unchanged. `gsm scopes` for gapps: the same scope lists in all nine profile and toolset cases.
+- Reported, not changed (owner decision needed): a script error comes back as HTTP 200 with an `error` on the Operation, so `isError` is false and the model sees a normal result; and a 503 on the POST is retried, which could run a function twice if Google answered after dispatch (the same `requestId` reasoning as Chat does not exist here).
+
+### Tests
+- tests/method-notes.test.mjs: the `script.scripts.run` note reaches that tool and only that tool, after the API note from config/tool-kinds.json, and the plugin's servers.json carries it unchanged. tests/toolset.test.mjs: the 10-tool list, its notes and the kinds (the update is a write, the versions list a read).
+
+## 2.4.0 - 2026-11-01
+
+### Added: two reads in the gadmin `google` toolset
+- `admin_group_get` and `admin_orgunit_get` join the `google` toolset, which now holds 12 tools (adversarial review of gadmin, section C). Both were already curated tools (Directory API `groups.get` and `orgunits.get`): the lists let you find a group or an org unit, and nothing let you read one. They need no new scope: `admin.directory.group.readonly` and `admin.directory.orgunit.readonly` were already in the `readonly` cover and in the `readwrite` preference, so `gsm scopes` for gadmin is identical in every profile and toolset; only the covered counts move (google `readonly` 7 → 9 of 12, `readwrite` and `full` 10 → 12 of 12).
+
+### Fixed: `admin_user_get` declares the scopes its second call needs
+- The tool reads the user (`users.get`, a user scope) and then the groups the user belongs to (`groups.list`, a group scope, which Discovery lists only under `admin.directory.group` and `.readonly`). It declared the user scopes only, so a sign-in with those alone registered the tool and then failed the whole call (review G9). It now declares both families, and a 403 on the groups call no longer loses the user: `groups` comes back `null` with a note naming the missing scope. Any other failure still fails the call.
+- It is the only tool map entry that changes: the same kind, the same four scopes on no other tool, and no rename (`tool-aliases.json` untouched).
+
+### Fixed: the four curated admin deletes show what they delete
+- `admin_user_delete`, `admin_group_delete`, `admin_member_remove` and `admin_orgunit_delete` had a `preview` that the gate never showed (only `prepare` reaches the approval; learning of 2026-10-31), so the form showed the raw key you passed. Each now works the same read out in `prepare`, so the approval names the user and their org unit, the group and its member count, the member, or the org unit with its children and users. Nothing else moves: the request the gate approves and the request the handler sends are the same as before, and `prepare` only reads.
+
+### Fixed (docs): a doubled period on eight capability pages
+- `scripts/gen-capabilities.mjs` adds a period after a `source` that is a sentence, and eight products' sources already end with one, so their `docs/capabilities/<id>.md` read "…a lean set chosen here..". The generator strips a trailing period now; the eight pages (gadmin, gapps, gbusiness, gmeet, gsc, gtasks, gtm, gyoutube) read "…chosen here." A source that is a URL is unchanged.
+
+### Not changed
+- No tool's kind and no other tool's scopes. The gadmin tool map gains the two group scopes on `admin_user_get` and nothing else; the gapps, gchat and every other product's tool map, `tools/list` and scopes are byte-identical to 2.3.0. `gsm scopes` for gadmin, every profile and toolset: the same scope lists in all nine cases.
+- Reported, not changed (owner decision needed): a generated tool of the admin group mints a new JWT and a fresh access token on every call, because `getAuthClient('workspace-admin')` builds a client per call and caches nothing (the service-account group caches per key file and scope set); the fix belongs in `src/core/auth.ts`, which is frozen. The curated tools keep the SDK client they build once, so the two paths differ. And domain-wide delegation cannot be checked without a live call: `gsm doctor` can only see that the setup file, key and subject exist.
+
+### Tests
+- tests/admin-tools.test.mjs: the four deletes' `prepare` (reads only, names the resource, and the handler sends the same DELETE), `admin_user_get`'s declared scopes, its answer with and without a group scope (a 403 leaves the user and a note; a 500 still fails), and the two tools the `google` list gains.
+- tests/curated-contract.test.mjs: the four rows run `prepare` instead of `preview` (155 tests, 154 curated tools). tests/toolset.test.mjs: the 12-tool list, its notes and matches, and still no delete.
+
+## 2.3.0 - 2026-11-01
+
+### Added: the two notification-setting tools of Google's Chat MCP server, as curated tools
+- `chat_get_notification_settings` and `chat_update_notification_settings` replace the generated `chat_spaces_space_notif_setting_get` and `chat_spaces_space_notif_setting_patch` in the `google` toolset, which now holds all nine tools of Google's Chat MCP server (adversarial review of gchat, F6). Like Google's tools they take a conversation id and two enums (`ALL`, `MAIN_CONVERSATIONS`, `FOR_YOU`, `OFF`; `MUTED`, `UNMUTED`), not a raw resource name, `updateMask` and body, and they return the setting. The update builds `updateMask` from what the call passes, refuses a call with neither field before any request, and is a `write` that asks once: it changes your own setting and can be changed back at once, so it is not destructive. Google marks `update_notification_settings` idempotent and so does ours. `FOR_YOU` is refused by Google in a 1:1 direct message, and the tool says so.
+- Both need `https://www.googleapis.com/auth/chat.users.spacesettings`, for reading too: Google's `get_notification_settings` asks for it and the Chat API has no read-only scope for it (`spaceNotificationSetting.get` lists only that scope), so a `readonly` login does not list the read.
+
+### Changed: a readonly Chat login asks for the read-state scope, so `unread_only` works
+- `chat_search_messages` takes `unread_only`, which sends `is_unread()`; Google's message-search page gives that filter `chat.users.readstate` or `.readonly`. The `google` toolset's `readonly` profile asked for neither, so the search was refused at Google. The tool now declares `chat.users.readstate.readonly` as well, and gchat's `scopePolicy.prefer` names it for `readonly`, so a `readonly` login of the `google` or `curated` toolset asks for it. Readwrite is unchanged: the greedy cover still takes `chat.messages`, which covers the search.
+
+### Changed: a login no longer asks a person for the Chat app scopes
+- The generated Chat tools list the Chat **app** scopes `chat.bot` and `chat.import` next to the user scopes, so a `readwrite` or `full` login of the default `all` toolset asked a person to grant an app's scope (`gsm scopes` printed `chat.bot` and `chat.import`). gchat's `scopePolicy.onlyIn` now lists both with an empty profile list, as Gmail does for `gmail.settings.sharing`: no login of any profile asks for them. The three generated tools that accept only them (`chat_spaces_messages_attachments_get`, `chat_spaces_messages_replace_cards`, `chat_spaces_complete_import`) are app-only and stay uncovered; the space delete now resolves to `chat.delete`, the shortest scope it accepts.
+- An account that already holds `chat.bot` or `chat.import` keeps them: both stay in the group's scope universe, so the stored-scope merge keeps them and its tools load. Only a login that would ask for them anew no longer does.
+
+### Changed: `chat_send_message` sends a `requestId` and names Google's mention syntax
+- Every send now carries a `requestId` (`spaces.messages.create`: "Specifying a request ID makes the request idempotent"), one random UUID per call, so a retry after an answer was lost posts one message, not two; the answer names the id it sent. A new `request_id` argument passes your own, for a client that retries itself. The text argument now lists the formatting Google documents for `messageText`: mentions as `<chat-user data-email="ana@example.com"></chat-user>` or `<chat-user data-user="users/111"></chat-user>` (never `@name`, with Google's limit of 10 a message and no `@all`), custom emoji, strikethrough, quotes, code, lists and links (review of gchat, F8).
+
+### Fixed: the gchat `google` toolset's `source` URL
+- `https://developers.google.com/workspace/chat/api/reference/mcp/tools_list` answers 404; the parent page `.../workspace/chat/api/reference/mcp` answers 200 and carries the tool table (curl, 2026-11-01), as for Gmail, Calendar and Drive.
+
+### Not changed
+- No other tool's kind, scope or request. `chat_send_message` stays destructive, `chat_mark_read` and `chat_mark_unread` stay writes, and the four reads stay reads. The generated notification tools stay in the `all` toolset (a write and a read), so their names, kinds and scopes are unchanged; only the `google` list names the curated ones. `tool-aliases.json` is untouched. Every other product's tool map, scopes and `tools/list` are identical.
+- `gsm scopes` for gchat, every profile and toolset: `google` `readonly` gains `chat.users.readstate.readonly` (3 → 4 scopes, the same tools covered), `curated` `readonly` the same, `curated` `readwrite` and `full` gain `chat.users.spacesettings` (the two new tools), and `all` `readwrite` and `full` lose `chat.bot` and `chat.import` and gain `chat.delete` (69 → 68 tools covered, the three app-only tools uncovered). No other case moves.
+
+### Tests
+- tests/chat-parity.test.mjs: the two notification tools (the GET, the PATCH with `updateMask` built from what was passed, the refusal with neither field, the enums, null for a value Google did not answer), the `request_id` (a given one is sent trimmed and named in the answer; two calls without one get two ids), and the scopes of the search and the notification tools.
+- tests/curated-contract.test.mjs: rows for the two tools against `chat.users.spaces.spaceNotificationSetting.get` and `.patch`, including the `updateMask` a call sends (154 curated tools).
+- tests/toolset-scopes.test.mjs: the `google` readonly scopes and the uncovered notification read; the `all` readwrite resolution without the app scopes, with `chat.delete` and the three uncovered app-only tools. tests/toolset.test.mjs, tests/gmail-scopes.test.mjs, tests/curated.test.mjs, tests/annotations.test.mjs: the new list, the server with a policy, the tool count and the idempotent write.
+
 ## 2.2.0 - 2026-11-01
 
 ### Fixed: the project IAM policy is read in version 3, so IAM conditions come back
