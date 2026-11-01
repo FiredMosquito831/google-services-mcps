@@ -150,7 +150,8 @@ const ANALYTICS_GOOGLE = [
   'gaadmin_acct_summaries_list',
   'gaadmin_properties_get',
   'gaadmin_pro_goo_ads_link_list',
-  'gadata_props_get_meta',
+  // 2.17.0: the hand-written metadata tool takes the place of the generated gadata_props_get_meta.
+  'ga_get_metadata',
   'ga_run_report',
   'ga_run_realtime_report',
   'ga_run_funnel_report',

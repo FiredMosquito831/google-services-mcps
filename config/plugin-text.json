@@ -155,7 +155,7 @@
       "whenToUse": "Use for website or app analytics in GA4: users, sessions, conversions, traffic sources, top pages, realtime visitors, funnels. Examples: \"how many users last week\", \"top landing pages this month\", \"realtime visitors now\".",
       "flows": [
         { "title": "Find the property", "steps": ["{tool:gaadmin_acct_summaries_list} gives accounts and their property ids."] },
-        { "title": "Know the fields", "steps": ["{tool:gadata_props_get_meta} with name properties/<id>/metadata lists the dimension and metric names, custom ones included."] },
+        { "title": "Know the fields", "steps": ["{tool:ga_get_metadata} with property_id lists the property's custom dimensions and metrics (search and category filter them; custom_only false for Google's standard fields)."] },
         { "title": "Report", "steps": ["{tool:ga_run_report} with property_id, date_ranges, dimensions and metrics; limit and offset page through rows.", "{tool:ga_run_realtime_report} for the last 30 minutes; {tool:ga_run_funnel_report} for steps."] }
       ],
       "notes": []

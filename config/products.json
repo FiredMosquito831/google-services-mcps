@@ -2996,7 +2996,7 @@
             "gaadmin_acct_summaries_list",
             "gaadmin_properties_get",
             "gaadmin_pro_goo_ads_link_list",
-            "gadata_props_get_meta",
+            "ga_get_metadata",
             "ga_run_report",
             "ga_run_realtime_report",
             "ga_run_funnel_report",
@@ -3013,7 +3013,7 @@
             "gaadmin_pro_goo_ads_link_list": [
               "list_google_ads_links"
             ],
-            "gadata_props_get_meta": [
+            "ga_get_metadata": [
               "get_custom_dimensions_and_metrics"
             ],
             "ga_run_report": [
@@ -3037,7 +3037,7 @@
             "gaadmin_acct_summaries_list": "The accounts and properties the signed-in user can see (Admin API v1beta accountSummaries.list). Start here for a property id.",
             "gaadmin_properties_get": "One property's details: name, time zone, currency, industry, service level (Admin API v1beta).",
             "gaadmin_pro_goo_ads_link_list": "The Google Ads accounts linked to a property (Admin API v1beta).",
-            "gadata_props_get_meta": "Every dimension and metric the property can report on, custom ones flagged with customDefinition; Google's tool returns only the custom ones. Pass name properties/<id>/metadata.",
+            "ga_get_metadata": "The custom dimensions and metrics of a property by default - the API name a report takes, the display name, the category and a short description - with search, category and paging; custom_only false returns Google's whole catalogue. It takes the property id, where the generated tool of the same method takes name properties/<id>/metadata and returns everything at once. It takes the place of the generated tool in this list.",
             "ga_run_report": "A report with rows keyed by dimension and metric name, row_count, next_offset and, on request, the property's quota. With conversion_spec it runs Google's conversions report on Data API v1alpha, as run_conversions_report does.",
             "ga_run_realtime_report": "The last 30 minutes. The Data API has no offset for realtime reports, so there is none here (Google's tool lists one).",
             "ga_run_funnel_report": "Data API v1alpha runFunnelReport, which no generated tool or gateway method of this server reaches; steps as event names or filter expressions.",

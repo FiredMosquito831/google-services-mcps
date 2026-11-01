@@ -1082,6 +1082,11 @@ const CASES = {
     },
   ],
   ga_annotations_list: [{ args: { property_id: '123', filter: 'title:Sale', page_size: 20, page_token: 'p1' }, expect: ['analyticsadmin.properties.reportingDataAnnotations.list'] }],
+  // 2.17.0: one read of the property's field catalogue, filtered and paged here.
+  ga_get_metadata: [
+    { args: { property_id: 123456789 }, expect: ['analyticsdata.properties.getMetadata'] },
+    { args: { property_id: 'properties/123456789', custom_only: false, search: 'session', category: 'Session', limit: 5, offset: 10 }, expect: ['analyticsdata.properties.getMetadata'] },
+  ],
   ga_annotation_create: [
     { args: { property_id: '123', title: 'Launch', start_date: '2026-10-01', description: 'New site', color: 'BLUE' }, expect: ['analyticsadmin.properties.reportingDataAnnotations.create'] },
     { args: { property_id: '123', title: 'Sale', start_date: '2026-10-05', end_date: '2026-10-09' }, expect: ['analyticsadmin.properties.reportingDataAnnotations.create'] },
@@ -1276,7 +1281,7 @@ test('every curated tool has a contract row, a skip reason or a known defect, an
   const listed = new Set([...Object.keys(CASES), ...Object.keys(SKIPPED), ...Object.keys(KNOWN_DEFECTS)]);
   assert.deepEqual([...tools.keys()].filter((name) => !listed.has(name)), [], 'curated tools without a row');
   assert.deepEqual([...listed].filter((name) => !tools.has(name)), [], 'rows for tools that do not exist');
-  assert.equal(tools.size, 164, 'the curated tool count; update the table when it changes');
+  assert.equal(tools.size, 165, 'the curated tool count; update the table when it changes');
 });
 
 for (const [name, cases] of Object.entries(CASES)) {

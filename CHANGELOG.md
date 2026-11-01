@@ -2,6 +2,23 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 2.17.0 - 2026-11-01
+
+### Added: `ga_get_metadata`, which answers a metadata question instead of returning the catalogue
+- The generated `gadata_props_get_meta` returned Google's whole field catalogue - every standard and custom dimension and metric, each with a long description - and cut it off at the result limit, so the custom fields, the answer to "what can I report on", were lost (adversarial review of ganalytics, F2). The new hand-written `ga_get_metadata` takes the property id, answers the custom dimensions and metrics by default (the API name a report takes, the display name, the category and a short description, 300 characters), and takes `search`, `category`, `limit` (25 by default) and `offset`. `custom_only: false` asks for Google's whole catalogue; fields that do not fit the result limit are left out of the larger list, and `next_offset` counts only the fields shown.
+- The generated tool keeps its own name in `all` and `curated`; in the `google` toolset the new tool takes its place, as it does the same method better. `ga_run_report` and the structured query fields now point at `ga_get_metadata`.
+
+### Fixed (docs): the counts and the tool descriptions
+- The page said 75 tools; the server registers 83. It said "five hand-written tools", and its counts disagreeing with the skill and the capability page (the review saw 82 against 84). All say what the server registers, and the page names the new tool.
+
+### Not changed
+- No tool's kind, scope, name or request: every existing tool's map entry is byte-identical, `ga_get_metadata` is the one addition, a read with the `analytics` and `analytics.readonly` scopes the generated tool already listed, so `gsm scopes` asks for the same scopes in every case (compared across the business group: no scope URL added or removed). `tool-aliases.json` is untouched, and the frozen files and the goldens have no diff.
+- Verified and left as they are: a large report no longer loses its `row_count` and `next_offset`, which `reportAnswer` puts first and sizes with the result limit since 1.28.0/1.29.0, and a test pins it (review F1).
+- Reported, not changed: `ga_get_metadata` was not run against live Google; its request shape comes from Discovery (`analyticsdata.properties.getMetadata`) and its answer shape from the response schema.
+
+### Tests
+- tests/analytics-parity.test.mjs: the custom-only answer (the standard field absent, a long description cut, whitespace folded), the whole catalogue with `custom_only: false`, search and category, paging with `limit` and `offset` and `next_offset`, the notes for no match and for the property having no custom fields, and the tool's scopes. tests/curated-contract.test.mjs: two `ga_get_metadata` rows against `analyticsdata.properties.getMetadata` (165 curated tools). tests/toolset.test.mjs and tests/curated.test.mjs follow the new list and count.
+
 ## 2.16.1 - 2026-11-01
 
 ### Fixed: the YouTube quota note, which was off by a factor of 100

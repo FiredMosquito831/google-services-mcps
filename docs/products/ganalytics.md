@@ -2,7 +2,7 @@
 
 Install with the simplest command: `npx google-services-mcps install --agent claude --plugin <id>` (see docs/TUTORIAL.md).
 
-Google Analytics Admin and Data APIs for GA4 properties: accounts, properties, data streams, conversion events, custom dimensions and metrics, links to Ads and Firebase, and reports. It has 75 tools. The gateway adds the alpha Admin API, with 166 more methods.
+Google Analytics Admin and Data APIs for GA4 properties: accounts, properties, data streams, conversion events, custom dimensions and metrics, links to Ads and Firebase, and reports. It has 83 tools. The gateway adds the alpha Admin API, with 166 more methods.
 
 ## When to install it
 
@@ -32,7 +32,8 @@ You need a GA4 property ID and an account with access to that property. Start wi
 
 | Area | Tools | Safety | What it does |
 |---|---|---|---|
-| Reports (hand-written) | `ga_run_report`, `ga_run_realtime_report`, `ga_run_funnel_report` | read | Run a report, a realtime report or a funnel report; rows come back keyed by dimension and metric name |
+| Reports (hand-written) | `ga_run_report`, `ga_run_realtime_report`, `ga_run_funnel_report` | read | Run a report, a realtime report or a funnel report; rows come back keyed by dimension and metric name, with row_count and next_offset up front |
+| Metadata (hand-written) | `ga_get_metadata` | read | The custom dimensions and metrics of a property (Google's whole catalogue with `custom_only: false`), with search, category and paging |
 | Annotations (hand-written) | `ga_annotations_list`, `ga_annotation_create` | read, write | List a property's annotations, or add one for a date or a date range |
 | Reports (Data API) | run access report, report calls | read | Run GA4 reports and read the data |
 | Accounts and properties (read) | account, property, data stream, conversion event, custom dimension list and get | read | Read the property setup |
@@ -44,7 +45,7 @@ You need a GA4 property ID and an account with access to that property. Start wi
 
 The full list is in `docs/capabilities/ganalytics.md`.
 
-The five hand-written tools match tools of Google's Google Analytics MCP server (https://github.com/googleanalytics/google-analytics-mcp): `run_report` and `run_conversions_report` (`ga_run_report`, with `conversion_spec` for the conversions report on the Data API v1alpha), `run_realtime_report`, `run_funnel_report` (Data API v1alpha), `list_property_annotations` and `create_property_annotation` (Admin API v1alpha). With the plugin option `toolset: google`, the server lists these five, the generated account summaries, property, Google Ads links and metadata tools (Google's other four tools), `health` and the sign-in tools. A `readonly` login with that toolset asks for `analytics.readonly`; a `readwrite` login adds `analytics.edit` for the annotation write, as Google's server does with `--allow-write`.
+The six hand-written tools match tools of Google's Google Analytics MCP server (https://github.com/googleanalytics/google-analytics-mcp): `run_report` and `run_conversions_report` (`ga_run_report`, with `conversion_spec` for the conversions report on the Data API v1alpha), `run_realtime_report`, `run_funnel_report` (Data API v1alpha), `list_property_annotations` and `create_property_annotation` (Admin API v1alpha). The sixth is `ga_get_metadata`, where Google's `get_custom_dimensions_and_metrics` returns the custom fields only: `properties.getMetadata` answers with the whole catalogue, so `ga_get_metadata` returns the custom fields by default and filters, pages and shortens; `custom_only: false` asks for the whole catalogue, and `limit` and `offset` page on. With the plugin option `toolset: google`, the server lists these six, the generated account summaries, property and Google Ads links tools, `health` and the sign-in tools. A `readonly` login with that toolset asks for `analytics.readonly`; a `readwrite` login adds `analytics.edit` for the annotation write, as Google's server does with `--allow-write`.
 
 ## Example requests
 
@@ -53,6 +54,7 @@ The five hand-written tools match tools of Google's Google Analytics MCP server 
 - "How many visitors went from the product page to checkout to purchase last month?" Claude runs `ga_run_funnel_report` with three steps. No prompt.
 - "Mark 1 October as the new site launch." Claude runs `ga_annotation_create`. It asks first, and the approval shows the annotation.
 - "List my GA4 properties and their data streams." Claude runs the account and property reads. No prompt.
+- "What custom dimensions does property 123 have?" Claude runs `ga_get_metadata` with `property_id: 123`. No prompt. `search` and `category` narrow the lists; `custom_only: false` returns Google's standard fields too.
 - "Add a conversion event named signup on property 123." Claude runs the conversion event create tool. It asks first.
 - "Delete the old test data stream." Claude runs the data stream delete tool. It asks twice.
 
