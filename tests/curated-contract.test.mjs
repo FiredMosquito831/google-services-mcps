@@ -856,10 +856,12 @@ const CASES = {
   admin_orgunit_update: [{ args: { org_unit_path: '/Sales', name: 'Sales EU', description: 'EU', parent_org_unit_path: '/' }, expect: ['directory.orgunits.patch'] }],
   admin_group_create: [{ args: { email: 'team@example.com', name: 'Team', description: 'The team' }, expect: ['directory.groups.insert'] }],
   admin_group_member_add: [{ args: { group_key: 'team@example.com', email: 'a@example.com', role: 'MEMBER' }, expect: ['directory.members.insert'] }],
-  admin_user_delete: [{ args: { user_key: 'a@example.com' }, preview: true, expect: ['directory.users.get', 'directory.users.delete'] }],
-  admin_orgunit_delete: [{ args: { org_unit_path: '/Sales' }, preview: true, expect: ['directory.orgunits.list', 'directory.users.list', 'directory.orgunits.delete'] }],
-  admin_group_delete: [{ args: { group_key: 'team@example.com' }, preview: true, expect: ['directory.groups.get', 'directory.groups.delete'] }],
-  admin_member_remove: [{ args: { group_key: 'team@example.com', member_key: 'a@example.com' }, preview: true, expect: ['directory.members.get', 'directory.members.delete'] }],
+  // 2.4.0: the four deletes work their approval out in prepare (a preview alone never reaches the gate), so the row
+  // runs prepare and then the handler, as drive_trash_file does since 2.1.0.
+  admin_user_delete: [{ args: { user_key: 'a@example.com' }, prepare: true, expect: ['directory.users.get', 'directory.users.delete'] }],
+  admin_orgunit_delete: [{ args: { org_unit_path: '/Sales' }, prepare: true, expect: ['directory.orgunits.list', 'directory.users.list', 'directory.orgunits.delete'] }],
+  admin_group_delete: [{ args: { group_key: 'team@example.com' }, prepare: true, expect: ['directory.groups.get', 'directory.groups.delete'] }],
+  admin_member_remove: [{ args: { group_key: 'team@example.com', member_key: 'a@example.com' }, prepare: true, expect: ['directory.members.get', 'directory.members.delete'] }],
 
   // gchat (1.12.0)
   chat_search_conversations: [

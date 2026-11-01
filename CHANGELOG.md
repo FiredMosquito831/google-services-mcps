@@ -2,6 +2,29 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 2.4.0 - 2026-11-01
+
+### Added: two reads in the gadmin `google` toolset
+- `admin_group_get` and `admin_orgunit_get` join the `google` toolset, which now holds 12 tools (adversarial review of gadmin, section C). Both were already curated tools (Directory API `groups.get` and `orgunits.get`): the lists let you find a group or an org unit, and nothing let you read one. They need no new scope: `admin.directory.group.readonly` and `admin.directory.orgunit.readonly` were already in the `readonly` cover and in the `readwrite` preference, so `gsm scopes` for gadmin is identical in every profile and toolset; only the covered counts move (google `readonly` 7 → 9 of 12, `readwrite` and `full` 10 → 12 of 12).
+
+### Fixed: `admin_user_get` declares the scopes its second call needs
+- The tool reads the user (`users.get`, a user scope) and then the groups the user belongs to (`groups.list`, a group scope, which Discovery lists only under `admin.directory.group` and `.readonly`). It declared the user scopes only, so a sign-in with those alone registered the tool and then failed the whole call (review G9). It now declares both families, and a 403 on the groups call no longer loses the user: `groups` comes back `null` with a note naming the missing scope. Any other failure still fails the call.
+- It is the only tool map entry that changes: the same kind, the same four scopes on no other tool, and no rename (`tool-aliases.json` untouched).
+
+### Fixed: the four curated admin deletes show what they delete
+- `admin_user_delete`, `admin_group_delete`, `admin_member_remove` and `admin_orgunit_delete` had a `preview` that the gate never showed (only `prepare` reaches the approval; learning of 2026-10-31), so the form showed the raw key you passed. Each now works the same read out in `prepare`, so the approval names the user and their org unit, the group and its member count, the member, or the org unit with its children and users. Nothing else moves: the request the gate approves and the request the handler sends are the same as before, and `prepare` only reads.
+
+### Fixed (docs): a doubled period on eight capability pages
+- `scripts/gen-capabilities.mjs` adds a period after a `source` that is a sentence, and eight products' sources already end with one, so their `docs/capabilities/<id>.md` read "…a lean set chosen here..". The generator strips a trailing period now; the eight pages (gadmin, gapps, gbusiness, gmeet, gsc, gtasks, gtm, gyoutube) read "…chosen here." A source that is a URL is unchanged.
+
+### Not changed
+- No tool's kind and no other tool's scopes. The gadmin tool map gains the two group scopes on `admin_user_get` and nothing else; the gapps, gchat and every other product's tool map, `tools/list` and scopes are byte-identical to 2.3.0. `gsm scopes` for gadmin, every profile and toolset: the same scope lists in all nine cases.
+- Reported, not changed (owner decision needed): a generated tool of the admin group mints a new JWT and a fresh access token on every call, because `getAuthClient('workspace-admin')` builds a client per call and caches nothing (the service-account group caches per key file and scope set); the fix belongs in `src/core/auth.ts`, which is frozen. The curated tools keep the SDK client they build once, so the two paths differ. And domain-wide delegation cannot be checked without a live call: `gsm doctor` can only see that the setup file, key and subject exist.
+
+### Tests
+- tests/admin-tools.test.mjs: the four deletes' `prepare` (reads only, names the resource, and the handler sends the same DELETE), `admin_user_get`'s declared scopes, its answer with and without a group scope (a 403 leaves the user and a note; a 500 still fails), and the two tools the `google` list gains.
+- tests/curated-contract.test.mjs: the four rows run `prepare` instead of `preview` (155 tests, 154 curated tools). tests/toolset.test.mjs: the 12-tool list, its notes and matches, and still no delete.
+
 ## 2.3.0 - 2026-11-01
 
 ### Added: the two notification-setting tools of Google's Chat MCP server, as curated tools

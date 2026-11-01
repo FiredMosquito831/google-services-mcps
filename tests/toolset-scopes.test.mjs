@@ -423,7 +423,8 @@ test('requirements: the gai google list (6 tools, no gateway) resolves to cloud-
 test('requirements: the lean gadmin google list resolves to the read-only Directory and audit scopes, and adds the write scopes and alerts for readwrite', async () => {
   const { cfg } = tempTokens();
   const google = await requirementsFor(['gadmin'], cfg, { ...quiet, toolset: 'google' });
-  assert.equal(google.length, 10);
+  // 12 since 2.4.0: admin_group_get and admin_orgunit_get join the list, with the scopes the other tools already carry.
+  assert.equal(google.length, 12);
   assert.equal(google.filter((r) => r.gateway).length, 0);
   const readonly = resolveScopes(google, 'readonly');
   assert.deepEqual(readonly.scopes, ['domain', 'group', 'orgunit', 'user'].map((s) => G(`admin.directory.${s}.readonly`)).concat(G('admin.reports.audit.readonly')));

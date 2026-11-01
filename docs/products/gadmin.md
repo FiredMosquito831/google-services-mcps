@@ -48,7 +48,9 @@ Restart the MCP server (`/mcp`) after setup.
 
 The full list is in `docs/capabilities/gadmin.md`.
 
-Google has no official MCP server for Workspace administration (none was found on 2026-10-29), so with the plugin option `toolset: google` the server lists a small set chosen here: `admin_users_list`, `admin_user_get`, `admin_groups_list`, `admin_group_members_list`, `admin_orgunits_list`, `admin_domains_list`, `admin_activities_list` (Reports API; since 1.30.1 it asks for 25 records a page when you give no `maxResults`, where Google's default is 1,000), `alerts_alerts_list` (Alert Center), and two writes, `admin_user_set_suspended` and `admin_group_member_add`. 10 tools, with `health` and the setup tools. No delete is in it. `setup-admin --toolset google` delegates only the scopes those tools need. For `readwrite` that is, since 1.25.0, `admin.directory.user`, `admin.directory.group.member`, `admin.directory.group.readonly`, `admin.directory.orgunit.readonly`, `admin.directory.domain.readonly`, `admin.reports.audit.readonly` and `apps.alerts` (before, the write scopes of groups, org units and domains).
+Google has no official MCP server for Workspace administration (none was found on 2026-10-29), so with the plugin option `toolset: google` the server lists a small set chosen here: `admin_users_list`, `admin_user_get`, `admin_groups_list`, `admin_group_get` (2.4.0), `admin_group_members_list`, `admin_orgunits_list`, `admin_orgunit_get` (2.4.0), `admin_domains_list`, `admin_activities_list` (Reports API; since 1.30.1 it asks for 25 records a page when you give no `maxResults`, where Google's default is 1,000), `alerts_alerts_list` (Alert Center), and two writes, `admin_user_set_suspended` and `admin_group_member_add`. 12 tools, with `health` and the setup tools. No delete is in it. `setup-admin --toolset google` delegates only the scopes those tools need. For `readwrite` that is, since 1.25.0, `admin.directory.user`, `admin.directory.group.member`, `admin.directory.group.readonly`, `admin.directory.orgunit.readonly`, `admin.directory.domain.readonly`, `admin.reports.audit.readonly` and `apps.alerts` (before, the write scopes of groups, org units and domains). The two tools 2.4.0 adds need no new scope: their read-only directory scopes are already in it.
+
+`admin_user_get` reads the user and the groups they belong to, and since 2.4.0 it declares the group scopes that second call needs. A sign-in that holds only the user scopes still returns the user: `groups` is then `null`, with a note saying why (before, the whole call failed).
 
 ## Example requests
 
@@ -61,7 +63,7 @@ Google has no official MCP server for Workspace administration (none was found o
 ## Safety
 
 - This product can change every user in the domain. Use `readonly` until you need changes.
-- Reads never ask. Writes ask first. Deletes ask twice, and since 1.26.3 so do admin and role grants, turning off 2-Step Verification, SSO profile and assignment changes, device actions and commands, data transfers, reseller seat changes and new subscriptions, and removing accounts from a Vault hold. There are 81 destructive tools.
+- Reads never ask. Writes ask first. Deletes ask twice, and since 1.26.3 so do admin and role grants, turning off 2-Step Verification, SSO profile and assignment changes, device actions and commands, data transfers, reseller seat changes and new subscriptions, and removing accounts from a Vault hold. There are 81 destructive tools. Since 2.4.0 the four curated deletes work their approval out first (a read of the user, group, member or org unit), so the form names what is about to be deleted instead of only the id you passed.
 - A token without a write scope gets HTTP 403 on writes. Check the scopes before you test a write.
 - The `confirmation` option defaults to `every-change`. Change it with `printf '%s' '{"confirmation":"destructive-only"}' | claude plugin configure gadmin@google-services-mcps --values-stdin` (JSON on stdin), or `/plugin configure gadmin@google-services-mcps` in Claude Code.
 
@@ -75,3 +77,4 @@ Admin SDK APIs are included with Google Workspace, and the fee was not fetched (
 - Admin role requirements per API are UNVERIFIED.
 - Limits for Cloud Identity, Chrome Management and Reseller are UNVERIFIED.
 - Key creation can be blocked by organization policy. Ask for an exception before you set up.
+- `gsm doctor` checks that the setup file, the key and the subject exist; it cannot tell whether the Admin console authorized a scope for the service account's client ID. Only a token request to Google answers that (an unauthorized scope comes back as `unauthorized_client`), so a missing scope shows up as a 403 on the tool that needs it. `gsm status --check` is the live check in this suite.

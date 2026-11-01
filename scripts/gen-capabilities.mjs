@@ -210,7 +210,9 @@ for (const p of perProduct) {
     lines.push(`## Toolset google (${p.google.tools.length})`);
     lines.push('');
     const official = p.google.tools.some((tool) => (p.google.matches?.[tool] ?? []).length > 0);
-    const source = Array.isArray(p.google.source) ? p.google.source.join(', ') : p.google.source;
+    // A source that is a sentence ends with a period already: the line adds one, so strip it (before 2.4.0 eight pages
+    // read "…chosen here.."; a source that is a URL has no trailing period).
+    const source = (Array.isArray(p.google.source) ? p.google.source.join(', ') : p.google.source)?.replace(/\.+$/, '');
     lines.push(
       official
         ? `The tools that match Google's official MCP server for this product${source ? ` (${source})` : ''}.`

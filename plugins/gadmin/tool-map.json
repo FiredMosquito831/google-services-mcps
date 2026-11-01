@@ -1265,7 +1265,9 @@
     "kind": "read",
     "scopes": [
       "https://www.googleapis.com/auth/admin.directory.user",
-      "https://www.googleapis.com/auth/admin.directory.user.readonly"
+      "https://www.googleapis.com/auth/admin.directory.user.readonly",
+      "https://www.googleapis.com/auth/admin.directory.group",
+      "https://www.googleapis.com/auth/admin.directory.group.readonly"
     ],
     "title": "Get user"
   },

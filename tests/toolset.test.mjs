@@ -266,8 +266,11 @@ const ADMIN_GOOGLE = [
   'admin_users_list',
   'admin_user_get',
   'admin_groups_list',
+  // 2.4.0: one group and one org unit by key, as the lists already allow (Directory API groups.get, orgunits.get).
+  'admin_group_get',
   'admin_group_members_list',
   'admin_orgunits_list',
+  'admin_orgunit_get',
   'admin_domains_list',
   'admin_activities_list',
   'alerts_alerts_list',
@@ -978,6 +981,7 @@ test("the gsearch google list: Google's three Developer Knowledge tools, and a l
 test('the gadmin google list is a lean set: no official server, every tool says why it is kept; two writes, no delete', () => {
   const google = readJson('config', 'products.json').products.gadmin.toolsets.google;
   assert.deepEqual(google.tools, ADMIN_GOOGLE);
+  assert.equal(ADMIN_GOOGLE.length, 12, '10 since 1.23.0, plus admin_group_get and admin_orgunit_get since 2.4.0');
   assert.ok(google.source.startsWith('No official Google MCP server for Google Workspace administration'));
   for (const tool of ADMIN_GOOGLE) {
     assert.deepEqual(google.matches[tool], [], tool);

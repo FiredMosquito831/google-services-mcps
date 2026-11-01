@@ -18,7 +18,7 @@ The tool map (`plugins/<id>/tool-map.json`) also lists these, so the consent hoo
 
 ## Toolset google (8)
 
-Google has no official MCP server for this product. The google toolset is a lean set chosen here: No official Google MCP server for Apps Script was found (Google's Cloud and Workspace MCP lists, 2026-10-29; a negative, not confirmed by Google); a lean set chosen here..
+Google has no official MCP server for this product. The google toolset is a lean set chosen here: No official Google MCP server for Apps Script was found (Google's Cloud and Workspace MCP lists, 2026-10-29; a negative, not confirmed by Google); a lean set chosen here.
 
 | Tool | Google's tool | Note |
 |---|---|---|

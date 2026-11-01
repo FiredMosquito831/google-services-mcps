@@ -2825,8 +2825,10 @@
             "admin_users_list",
             "admin_user_get",
             "admin_groups_list",
+            "admin_group_get",
             "admin_group_members_list",
             "admin_orgunits_list",
+            "admin_orgunit_get",
             "admin_domains_list",
             "admin_activities_list",
             "alerts_alerts_list",
@@ -2837,8 +2839,10 @@
             "admin_users_list": [],
             "admin_user_get": [],
             "admin_groups_list": [],
+            "admin_group_get": [],
             "admin_group_members_list": [],
             "admin_orgunits_list": [],
+            "admin_orgunit_get": [],
             "admin_domains_list": [],
             "admin_activities_list": [],
             "alerts_alerts_list": [],
@@ -2847,15 +2851,17 @@
           },
           "notes": {
             "admin_users_list": "The domain's users, searchable by name or email (Directory API users.list). Start here for a user key.",
-            "admin_user_get": "One user, with the groups they belong to (Directory API users.get and groups.list).",
+            "admin_user_get": "One user, with the groups they belong to (Directory API users.get and groups.list). A sign-in that holds only the user scopes still returns the user: the groups are then null, with a note saying why.",
             "admin_groups_list": "The account's groups, or the groups of one user (Directory API groups.list).",
+            "admin_group_get": "One group by email or ID (Directory API groups.get): its settings, who can join it, and its aliases.",
             "admin_group_members_list": "The members of a group and their roles (Directory API members.list).",
             "admin_orgunits_list": "The organizational units (Directory API orgunits.list).",
+            "admin_orgunit_get": "One org unit by its full path (Directory API orgunits.get), with its description and parent.",
             "admin_domains_list": "The domains of the account (Directory API domains.list).",
             "admin_activities_list": "Audit activity of the domain: logins, admin console changes, Drive and others (Reports API activities.list).",
             "alerts_alerts_list": "Security and system alerts of the domain (Alert Center API alerts.list).",
-            "admin_user_set_suspended": "Suspends or restores a user. A write: it asks first.",
-            "admin_group_member_add": "Adds a member to a group. A write: it asks first."
+            "admin_user_set_suspended": "Suspends or restores a user. A write: it asks first. Confirm the exact account first (the primaryEmail from admin_user_get): a suspended user cannot sign in to any Workspace service.",
+            "admin_group_member_add": "Adds a member to a group. A write: it asks first. Membership grants access to whatever the group can reach, so confirm the group and the person first."
           }
         }
       },

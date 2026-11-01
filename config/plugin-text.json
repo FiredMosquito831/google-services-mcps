@@ -138,7 +138,7 @@
       "whenToUse": "Use for Google Workspace admin tasks: look up or create users, suspend an account, group membership, org units, who signed in or changed a setting (audit reports), security alerts. Examples: \"is ana@example.com suspended\", \"add Ben to the sales group\", \"show admin activity from yesterday\".",
       "flows": [
         { "title": "Find a user", "steps": ["{tool:admin_users_list} with query (such as email:ana* or orgUnitPath=/Sales), then {tool:admin_user_get} with user_key (an email or id)."] },
-        { "title": "Groups", "steps": ["{tool:admin_groups_list}, then {tool:admin_group_members_list}; {tool:admin_group_member_add} adds a member."] },
+        { "title": "Groups", "steps": ["{tool:admin_groups_list}, then {tool:admin_group_get} for one group or {tool:admin_group_members_list} for its members; {tool:admin_group_member_add} adds a member."] },
         { "title": "Audit and alerts", "steps": ["{tool:admin_activities_list} with userKey (all, or an email) and applicationName (login, admin, drive, token and others); {tool:alerts_alerts_list}."] },
         { "title": "Suspend rather than delete", "steps": ["{tool:admin_user_set_suspended} can be undone; {tool:admin_user_delete} cannot (it asks twice)."] }
       ],

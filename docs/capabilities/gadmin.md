@@ -8,7 +8,7 @@ Google Workspace administration: Cloud Identity, Chrome management and policy, G
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 368, google 12, curated 24 tools, each counting the 2 runtime tools this server registers (`auth_setup_admin`, `health`). "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 368, google 14, curated 24 tools, each counting the 2 runtime tools this server registers (`auth_setup_admin`, `health`). "(all)" means the product has no such toolset yet, so it lists every tool.
 
 ## Not registered by this server (7)
 
@@ -16,22 +16,24 @@ The tool map (`plugins/<id>/tool-map.json`) also lists these, so the consent hoo
 
 - Sign-in tools of other sign-in kinds: `account_remove`, `account_set_default`, `accounts_list`, `auth_login`, `auth_setup_client`, `auth_setup_service_account`, `auth_status`.
 
-## Toolset google (10)
+## Toolset google (12)
 
-Google has no official MCP server for this product. The google toolset is a lean set chosen here: No official Google MCP server for Google Workspace administration (the Admin SDK, reports and the alert center) was found in Google's Workspace and Cloud MCP lists on 2026-10-29; a lean set chosen here..
+Google has no official MCP server for this product. The google toolset is a lean set chosen here: No official Google MCP server for Google Workspace administration (the Admin SDK, reports and the alert center) was found in Google's Workspace and Cloud MCP lists on 2026-10-29; a lean set chosen here.
 
 | Tool | Google's tool | Note |
 |---|---|---|
 | `admin_users_list` | (none) | The domain's users, searchable by name or email (Directory API users.list). Start here for a user key. |
-| `admin_user_get` | (none) | One user, with the groups they belong to (Directory API users.get and groups.list). |
+| `admin_user_get` | (none) | One user, with the groups they belong to (Directory API users.get and groups.list). A sign-in that holds only the user scopes still returns the user: the groups are then null, with a note saying why. |
 | `admin_groups_list` | (none) | The account's groups, or the groups of one user (Directory API groups.list). |
+| `admin_group_get` | (none) | One group by email or ID (Directory API groups.get): its settings, who can join it, and its aliases. |
 | `admin_group_members_list` | (none) | The members of a group and their roles (Directory API members.list). |
 | `admin_orgunits_list` | (none) | The organizational units (Directory API orgunits.list). |
+| `admin_orgunit_get` | (none) | One org unit by its full path (Directory API orgunits.get), with its description and parent. |
 | `admin_domains_list` | (none) | The domains of the account (Directory API domains.list). |
 | `admin_activities_list` | (none) | Audit activity of the domain: logins, admin console changes, Drive and others (Reports API activities.list). |
 | `alerts_alerts_list` | (none) | Security and system alerts of the domain (Alert Center API alerts.list). |
-| `admin_user_set_suspended` | (none) | Suspends or restores a user. A write: it asks first. |
-| `admin_group_member_add` | (none) | Adds a member to a group. A write: it asks first. |
+| `admin_user_set_suspended` | (none) | Suspends or restores a user. A write: it asks first. Confirm the exact account first (the primaryEmail from admin_user_get): a suspended user cannot sign in to any Workspace service. |
+| `admin_group_member_add` | (none) | Adds a member to a group. A write: it asks first. Membership grants access to whatever the group can reach, so confirm the group and the person first. |
 
 ## Curated tools (21)
 

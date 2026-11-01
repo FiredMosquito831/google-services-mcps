@@ -22,7 +22,7 @@ Only if the chat tool fails: `node "${CLAUDE_PLUGIN_ROOT}/bin/gsm.mjs" setup-adm
 
 ### 2. Groups
 
-1. `admin_groups_list`, then `admin_group_members_list`; `admin_group_member_add` adds a member.
+1. `admin_groups_list`, then `admin_group_get` for one group or `admin_group_members_list` for its members; `admin_group_member_add` adds a member.
 
 ### 3. Audit and alerts
 
@@ -46,7 +46,7 @@ Reads never ask for approval. Tools that change or delete data are listed only w
 
 ## Tools
 
-The `gadmin` MCP server lists up to 368 tools with the `all` toolset: 153 read, 133 write, 81 destructive and 1 dynamic (decided per call), counting its 2 runtime tools (`health` and the sign-in tools). Write and destructive tools are listed only when writes are allowed, and a tool loads only when the sign-in holds one of its scopes. The `google` toolset lists 10 of them plus the runtime tools. The gateway APIs below are reached through `api_search` (find a method), `api_describe` (its parameters) and `api_call` (run it).
+The `gadmin` MCP server lists up to 368 tools with the `all` toolset: 153 read, 133 write, 81 destructive and 1 dynamic (decided per call), counting its 2 runtime tools (`health` and the sign-in tools). Write and destructive tools are listed only when writes are allowed, and a tool loads only when the sign-in holds one of its scopes. The `google` toolset lists 12 of them plus the runtime tools. The gateway APIs below are reached through `api_search` (find a method), `api_describe` (its parameters) and `api_call` (run it).
 
 ## APIs
 
