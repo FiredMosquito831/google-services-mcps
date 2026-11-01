@@ -22,7 +22,7 @@ Google has no official MCP server for this product. The google toolset is a lean
 
 | Tool | Google's tool | Note |
 |---|---|---|
-| `youtube_search_list` | (none) | Search YouTube for videos, channels and playlists. Each call costs 100 units of the project's daily YouTube quota. |
+| `youtube_search_list` | (none) | Search YouTube for videos, channels and playlists. Google's quota page (checked 2026-11-01): search.list has its own daily bucket, 100 calls per day, and each call costs 1 unit of it; it does not use the project's 10,000-unit bucket. |
 | `youtube_channels_list` | (none) | Channels by id, by handle, or your own (mine): statistics and the id of the uploads playlist. |
 | `youtube_videos_list` | (none) | Videos by id, or the most popular chart: title, description, statistics and duration. |
 | `youtube_playlists_list` | (none) | The playlists of a channel, or by id. |

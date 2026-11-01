@@ -179,7 +179,7 @@
         { "title": "Analytics", "steps": ["{tool:ytanalyt_reports_query} with ids channel==MINE, startDate, endDate and metrics (views,estimatedMinutesWatched)."] },
         { "title": "Comments", "steps": ["{tool:youtube_comment_threads_list} with videoId; {tool:youtube_comments_insert} replies (a change: it asks first)."] }
       ],
-      "notes": ["A search costs 100 units of the daily YouTube Data API quota; most reads cost 1.", "{tool:youtube_videos_update} replaces the parts it sends (it asks twice): read the video first and send the whole part back. Video uploads are not available here."]
+      "notes": ["search.list has its own daily bucket of 100 calls (1 unit each); most other calls use the project's 10,000-unit day, where videos.update, comments.insert and captions.list cost 50 each.", "{tool:youtube_videos_update} replaces the parts it sends (it asks twice): read the video first and send the whole part back. Video, thumbnail and caption uploads are not available here."]
     },
     "gbusiness": {
       "description": "Google Business Profile: list accounts and locations, read and update a location's details, verifications, performance (calls, website clicks, direction requests, search keywords), place actions and notifications.",

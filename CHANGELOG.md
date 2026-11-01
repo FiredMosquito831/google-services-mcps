@@ -2,6 +2,23 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 2.16.1 - 2026-11-01
+
+### Fixed: the YouTube quota note, which was off by a factor of 100
+- The `google` toolset's search note said "Each call costs 100 units of the project's daily YouTube quota", and the plugin's skill said the same. Google's quota page says the opposite: "The search.list and videos.insert methods have their own quota buckets", "Each of these methods has a default daily limit of 100 per day", and "The quota cost is 1 per call" (https://developers.google.com/youtube/v3/determine_quota_cost, checked 2026-11-01). Both now say that, and the page adds the costs of the calls that are expensive (videos.update, comments.insert and captions.list 50, liveChatMessages.list 5).
+
+### Fixed (docs): what cannot be done here, and the comments example
+- The page said the plugin "manages captions" and that 125 tools were registered; captions are listed only (their text is a download, which is a media method), 132 tools register, and neither videos, thumbnails nor caption tracks can be uploaded, because those are media uploads the per-method tools and the gateway both skip. The page now says so, names the methods, and points to a hand-written upload tool as its own change.
+- Its example "Show the top 10 comments on my last video. No prompt" contradicted its own login note: a `readonly` login cannot read comment threads (`youtube.force-ssl` has no read-only form). The example says which login it needs.
+
+### Not changed
+- No tool's kind, scope, name, request or toolset list: the `google` list is still 17 tools and `gsm scopes` asks for the same scopes in every case. `tool-aliases.json` is untouched, and the frozen files and the goldens have no diff.
+- Verified and left as they are: `videos.update` has been destructive since 1.26.3 and the note tells a caller to send the whole part (F1); `liveStreams.list` never returns the stream key, which `src/core/credential-fields.ts` redacts (`IngestionInfo.streamName`, F2); the four `reports.query` parameters Discovery marks "required: true" are required in the tool since 1.30.1 (`requiredByText`), and the parameter descriptions are no longer clipped, so `channel==CHANNEL_ID` and `channel==MINE` are in them (F6).
+- Reported, not changed: video, thumbnail and caption uploads (F4) want a hand-written tool with a local path and a gate, like Play's bundle upload, and that is its own change; the `all` toolset still lists the junk methods the review named (`youtube_tests_insert`, the server-streamed live chat method, four unscoped `third_party_links` writes), because removing them is narrowing.
+
+### Tests
+- No test change: the suite pins the lists, the kinds and the counts, and all of them are unchanged (npm test 1482 tests, 1479 pass, 3 skipped).
+
 ## 2.16.0 - 2026-11-01
 
 ### Added: the reads a Business Profile change needs, in the `google` toolset
