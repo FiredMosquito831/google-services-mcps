@@ -2,7 +2,7 @@
 
 Install with the simplest command: `npx google-services-mcps install --agent claude --plugin <id>` (see docs/TUTORIAL.md).
 
-Google Play developer publishing and reporting, Play Games Services, Android Enterprise and Management, Play Integrity and device APIs. It has 362 tools. The gateway adds Android Management, Google Wallet and Chrome Web Store.
+Google Play developer publishing and reporting, Play Games Services, Android Enterprise and Management, Play Integrity and device APIs. It has 366 tools. The gateway adds Android Management, Google Wallet and Chrome Web Store.
 
 ## When to install it
 
@@ -34,7 +34,8 @@ The key asks for the scopes of every API gplay carries (since 1.23.1; before, on
 | Android Management (hand-written) | `androidmgmt_list_enterprises`, `androidmgmt_get_enterprise`, `androidmgmt_get_application`, `androidmgmt_list_devices`, `androidmgmt_get_device`, `androidmgmt_list_policies`, `androidmgmt_get_policy`, `androidmgmt_list_web_apps`, `androidmgmt_get_web_app` | read | Read the enterprises your project manages, their devices, policies, apps and web apps |
 | Tracks and releases (read) | track and release list and get | read | Read tracks, releases and app details |
 | Edits and listings | edits, tracks create, update and patch | write | Stage store changes in an edit and change tracks |
-| | `androidpub_edits_commit` | write | Commit an edit, which publishes it |
+| Builds (hand-written) | `androidpub_upload_bundle` | write | Upload an Android App Bundle from a local file into an edit, put it on a track as a draft, alpha, beta or staged release, and commit the edit if told to. With `commit` it asks twice |
+| | `androidpub_edits_commit` | destructive | Commit an edit, which publishes it |
 | Reviews | list, get | read | Read user reviews |
 | | reviews reply | write | Reply to a review in public |
 | Reporting (25 methods) | Play Developer Reporting | read | Crash, ANR, install and other statistics |
@@ -46,6 +47,10 @@ The full list is in `docs/capabilities/gplay.md`.
 
 The nine hand-written tools match the tools of Google's Android Device Management MCP server (https://androidmanagement.googleapis.com/mcp). The Android Management API is a gateway API here (its per-method tools would take gplay past the 350 generated tools a server may have), so these call it directly with the service account key; the account must belong to the Google Cloud project that manages the enterprise. With the plugin option `toolset: google`, the server lists these nine and a small Play publishing set chosen here (Google has no official MCP server for Play publishing): reviews list and reply (the reply is public and asks first), a track's releases, an edit's tracks, a subscription purchase, the subscription products and an order. 16 tools, with `health` and the setup tools.
 
+**Uploading a build.** The per-method tools leave out every media-upload method (Play's `edits.bundles.upload` among them), so a new build could not be released at all. `androidpub_upload_bundle` does that one step: it takes a full path to an `.aab`, creates an edit (or uses `edit_id`), uploads the file, optionally writes the new version code onto a track as a release (`draft` by default, `inProgress` with `user_fraction` for a staged rollout), and commits the edit only when `commit` is true. Its approval names the file, its size and SHA-256, the track and the releases it holds, so a person can see what would be published; with `commit` it is a destructive call and asks twice. Without `commit` the edit stays open, and `androidpub_edits_commit` (or `androidpub_edits_delete`) finishes it.
+
+**Zero-touch enrolment.** The 27 `androiddeviceprovisioning` tools declare no scope, because Google's Discovery document for that API lists none. They therefore load at any profile and with any key, but the key's token does not ask for `androidworkzerotouchemm` or `androidworkprovisioning`, so Google answers a call with 403. Making them work needs a `scopeOverrides` entry for that API in `config/products.json`, which would add those scopes to the key's one token request, and one scope Google refuses for this service account would fail every token request of gplay (UNVERIFIED). That is the owner's decision; nothing here asks for them.
+
 ## Example requests
 
 - "Which devices of enterprise LC0123abcd are not compliant?" Claude runs `androidmgmt_list_devices`. No prompt.
@@ -53,12 +58,14 @@ The nine hand-written tools match the tools of Google's Android Device Managemen
 - "Show the crash rate for my app this month." Claude runs a Reporting read. No prompt.
 - "List my release tracks and the version on each." Claude runs the tracks list. No prompt.
 - "Commit my staged edit to the production track." Claude runs `androidpub_edits_commit`. It asks twice, and the change publishes.
+- "Put this build (C:\builds\app-release.aab) on the beta track as a draft." Claude runs `androidpub_upload_bundle` with `track: "beta"` and no `commit`: the bundle is uploaded and the release is staged, and nothing is published until the commit.
 - "Reply to Kim's one-star review." Claude runs the review reply tool. It asks first, and the reply is public.
 - "Revoke a device's access to the enterprise account." Claude runs the revoke tool. It asks twice.
 
 ## Safety
 
 - Committing an edit publishes store changes. Since 1.26.3 it is destructive, so Claude asks twice; so do refunds, price migrations and device commands. Check the track and the edit before you approve.
+- `androidpub_upload_bundle` with `commit: true` publishes in the same way, and its approval names the bundle it would publish. Without it, the upload and the release stay in an open edit, which Google discards if it is never committed.
 - Review replies are public.
 - Android Enterprise deletes and device access revocation are destructive.
 - The `confirmation` option defaults to `every-change`. Change it with `printf '%s' '{"confirmation":"destructive-only"}' | claude plugin configure gplay@google-services-mcps --values-stdin` (JSON on stdin), or `/plugin configure gplay@google-services-mcps` in Claude Code.

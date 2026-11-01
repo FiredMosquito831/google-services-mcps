@@ -150,6 +150,10 @@ const DOCS = [
   'classroom.v1',
   'meet.v2',
   'analyticsdata.v1beta',
+  // 2.11.0: the curated firebase_get_sdk_config reads an app's config (and the app list) here.
+  'firebase.v1beta1',
+  // 2.12.0: the curated androidpub_upload_bundle uploads an app bundle and writes a track here.
+  'androidpublisher.v3',
 ];
 
 /**
@@ -328,6 +332,9 @@ const SMALL_FILE = join(attachDir, 'notes.txt');
 writeFileSync(SMALL_FILE, 'notes');
 const LARGE_FILE = join(attachDir, 'large.bin');
 writeFileSync(LARGE_FILE, Buffer.alloc(6 * 1024 * 1024, 1));
+// 2.12.0: the Play build upload reads an Android App Bundle from disk.
+const AAB_FILE = join(attachDir, 'app-release.aab');
+writeFileSync(AAB_FILE, Buffer.from('an Android App Bundle'));
 
 /** A message to reply to: the headers a reply reads, and a text part Gmail keeps apart (only an attachment id). */
 const replyable = (call) => {
@@ -1121,6 +1128,18 @@ const CASES = {
     { args: { project_id: 'my-app-1234', limit: 20 }, expect: ['identitytoolkit.projects.accounts.query'] },
     { args: { project_id: 'my-app-1234', offset: 100 }, expect: ['identitytoolkit.projects.accounts.query'] },
   ],
+  // 2.11.0: the SDK config of an app, decoded. The three platforms are three getConfig methods.
+  firebase_get_sdk_config: [
+    { args: { project_id: 'my-app-1234', app_id: '1:1234567890:android:9a1b2c3d' }, expect: ['firebase.projects.androidApps.getConfig'], respond: () => ({ configFilename: 'google-services.json', configFileContents: '' }) },
+    { args: { project_id: 'my-app-1234', app_id: '1:1234567890:ios:aa11bb22' }, expect: ['firebase.projects.iosApps.getConfig'], respond: () => ({}) },
+    { args: { project_id: 'my-app-1234', app_id: '1:1234567890:web:cc33dd44' }, expect: ['firebase.projects.webApps.getConfig'], respond: () => ({ projectId: 'my-app-1234' }) },
+    // With no app id the app list picks one first.
+    {
+      args: { project_id: 'my-app-1234', platform: 'ios' },
+      expect: ['firebase.projects.iosApps.list', 'firebase.projects.iosApps.getConfig'],
+      respond: (call) => (call.url.endsWith('/iosApps') ? { apps: [{ appId: '1:1234567890:ios:aa11bb22' }] } : {}),
+    },
+  ],
 
   // gai (1.21.0)
   vertex_generate_content: [
@@ -1194,6 +1213,28 @@ const CASES = {
   androidmgmt_get_policy: [{ args: { enterprise: 'LC0123abcd', policy: 'default' }, expect: ['androidmanagement.enterprises.policies.get'] }],
   androidmgmt_list_web_apps: [{ args: { enterprise: 'LC0123abcd', page_token: 'p1' }, expect: ['androidmanagement.enterprises.webApps.list'] }],
   androidmgmt_get_web_app: [{ args: { enterprise: 'LC0123abcd', web_app: 'w1' }, expect: ['androidmanagement.enterprises.webApps.get'] }],
+  // 2.12.0: the build upload, which the per-method tools leave out (a media upload).
+  androidpub_upload_bundle: [
+    {
+      args: { package_name: 'com.example.app', bundle_path: AAB_FILE, edit_id: 'edit-1', track: 'beta', release_name: '1.4.0' },
+      expect: ['androidpublisher.edits.tracks.get', 'androidpublisher.edits.bundles.upload', 'androidpublisher.edits.tracks.update'],
+      respond: (call) => {
+        if (call.method === 'GET') return { track: 'beta', releases: [{ versionCodes: ['41'], status: 'completed' }] };
+        if (call.url.includes('/upload/')) return { versionCode: 42 };
+        return {};
+      },
+    },
+    // A new edit, and the commit at the end.
+    {
+      args: { package_name: 'com.example.app', bundle_path: AAB_FILE, track: 'production', release_status: 'inProgress', user_fraction: 0.2, commit: true },
+      expect: ['androidpublisher.edits.insert', 'androidpublisher.edits.bundles.upload', 'androidpublisher.edits.tracks.get', 'androidpublisher.edits.tracks.update', 'androidpublisher.edits.commit'],
+      respond: (call) => {
+        if (call.method === 'POST' && call.url.endsWith('/edits')) return { id: 'edit-2' };
+        if (call.url.includes('/upload/')) return { versionCode: 43 };
+        return {};
+      },
+    },
+  ],
 };
 
 /** Tools that cannot run here, with the reason. Counted. */
@@ -1206,7 +1247,7 @@ test('every curated tool has a contract row, a skip reason or a known defect, an
   const listed = new Set([...Object.keys(CASES), ...Object.keys(SKIPPED), ...Object.keys(KNOWN_DEFECTS)]);
   assert.deepEqual([...tools.keys()].filter((name) => !listed.has(name)), [], 'curated tools without a row');
   assert.deepEqual([...listed].filter((name) => !tools.has(name)), [], 'rows for tools that do not exist');
-  assert.equal(tools.size, 160, 'the curated tool count; update the table when it changes');
+  assert.equal(tools.size, 162, 'the curated tool count; update the table when it changes');
 });
 
 for (const [name, cases] of Object.entries(CASES)) {

@@ -219,6 +219,7 @@
       "flows": [
         { "title": "Reviews", "steps": ["{tool:androidpub_reviews_list} with packageName, then {tool:androidpub_reviews_reply} (a change: it asks first)."] },
         { "title": "Releases", "steps": ["{tool:androidpub_tracks_releases_list} with parent. Changes to tracks go through an edit: insert, change, validate, commit."] },
+        { "title": "Upload a build", "steps": ["{tool:androidpub_upload_bundle} with package_name, the full path of the .aab and a track: it uploads the bundle and stages the release in an open edit, and with commit: true it publishes it (that asks twice)."] },
         { "title": "Android Management", "steps": ["{tool:androidmgmt_list_enterprises} with project_id, then {tool:androidmgmt_list_devices} with enterprise and {tool:androidmgmt_list_policies}."] }
       ],
       "notes": ["The service account must be invited in Play Console (Users and permissions)."]
@@ -227,7 +228,7 @@
       "description": "Firebase: projects and apps (with their SDK config), Firestore documents and queries, Remote Config, Authentication users, Crashlytics, Hosting, App Distribution, Data Connect, security Rules, Test Lab and Cloud Messaging.",
       "whenToUse": "Use for Firebase projects: app config, Firestore data, Remote Config, Auth users, Crashlytics crashes, security rules, or sending a push message. Examples: \"list my Firebase projects\", \"read the users collection\", \"top crashes this week\".",
       "flows": [
-        { "title": "Projects and apps", "steps": ["{tool:firebase_projects_list}, then {tool:firebase_projects_search_apps} with parent projects/<id>; {tool:firebase_web_apps_get_config} for a web app's config."] },
+        { "title": "Projects and apps", "steps": ["{tool:firebase_projects_list}, then {tool:firebase_projects_search_apps} with parent projects/<id>; {tool:firebase_get_sdk_config} with an app id (or a platform) for its SDK configuration."] },
         { "title": "Firestore", "steps": ["{tool:firestore_list_documents} with project_id and collection_path, then {tool:firestore_get_document} with document_path; {tool:firestore_query_collection} with filters."] },
         { "title": "Config and users", "steps": ["{tool:remoteconfig_get_template}; {tool:auth_get_users} by uids or emails (password hashes are never returned)."] },
         { "title": "Crashes", "steps": ["{tool:firebasecr_apps_reports_get} with the report name."] }
@@ -248,8 +249,8 @@
       "description": "Vertex AI generation, token counting and embeddings with Gemini and other models, Vertex AI Search (Discovery Engine), plus Vision, Speech, Text-to-Speech, Translate, Natural Language, Document AI and Dialogflow.",
       "whenToUse": "Use to call Google's AI APIs in a Cloud project: generate text with a model on Vertex AI, count tokens, make embeddings, search a Vertex AI Search app, or run Vision, Speech, Translate, Natural Language or Document AI. Examples: \"ask Gemini on Vertex to summarize this\", \"embed these sentences\", \"detect the text in this image\".",
       "flows": [
-        { "title": "Generate", "steps": ["{tool:vertex_count_tokens} for a long prompt, then {tool:vertex_generate_content} with project_id, model and prompt (billed per token by Google)."] },
-        { "title": "Embeddings", "steps": ["{tool:vertex_embed_content} with project_id, model and text."] },
+        { "title": "Generate", "steps": ["{tool:vertex_count_tokens} for a long prompt, then {tool:vertex_generate_content} with project_id, model and prompt (billed per token by Google). An image the model returns comes back as parts of its bytes in image: read on with offset and next_offset."] },
+        { "title": "Embeddings", "steps": ["{tool:vertex_embed_content} with project_id, model and text. A vector longer than the result limit comes in parts: next_offset continues it, and values_omitted says how many were not shown."] },
         { "title": "Vertex AI Search", "steps": ["{tool:discoverye_collections_engines_list} lists the apps (engines); then the engine's search or answer tool."] },
         { "title": "Other AI APIs", "steps": ["{tool:api_search} (\"vision images annotate\", \"translate text\"), then {tool:api_describe} and {tool:api_call}."] }
       ],

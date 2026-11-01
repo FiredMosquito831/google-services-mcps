@@ -28,7 +28,11 @@ The service account must also be added in Play Console (Users and permissions) o
 
 1. `androidpub_tracks_releases_list` with parent. Changes to tracks go through an edit: insert, change, validate, commit.
 
-### 3. Android Management
+### 3. Upload a build
+
+1. `androidpub_upload_bundle` with package_name, the full path of the .aab and a track: it uploads the bundle and stages the release in an open edit, and with commit: true it publishes it (that asks twice).
+
+### 4. Android Management
 
 1. `androidmgmt_list_enterprises` with project_id, then `androidmgmt_list_devices` with enterprise and `androidmgmt_list_policies`.
 
@@ -46,7 +50,7 @@ Reads never ask for approval. Tools that change or delete data are listed only w
 
 ## Tools
 
-The `gplay` MCP server lists up to 365 tools with the `all` toolset: 170 read, 147 write, 47 destructive and 1 dynamic (decided per call), counting its 3 runtime tools (`health` and the sign-in tools). Write and destructive tools are listed only when writes are allowed, and a tool loads only when the sign-in holds one of its scopes. The `google` toolset lists 16 of them plus the runtime tools. The gateway APIs below are reached through `api_search` (find a method), `api_describe` (its parameters) and `api_call` (run it).
+The `gplay` MCP server lists up to 366 tools with the `all` toolset: 170 read, 148 write, 47 destructive and 1 dynamic (decided per call), counting its 3 runtime tools (`health` and the sign-in tools). Write and destructive tools are listed only when writes are allowed, and a tool loads only when the sign-in holds one of its scopes. The `google` toolset lists 16 of them plus the runtime tools. The gateway APIs below are reached through `api_search` (find a method), `api_describe` (its parameters) and `api_call` (run it).
 
 ## APIs
 

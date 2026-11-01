@@ -739,7 +739,7 @@ export async function runServer(opts: {
       {
         title: 'Set up the service account key',
         description:
-          'Records the service account JSON key for this server. Give the full path of the key file (from Google Cloud console, IAM & Admin > Service accounts > Keys). Its content is never shown. First add the service account email in Play Console (Users and permissions) or Merchant Center (Users). Call auth_status afterwards. Pass remove: true to forget the stored setup; the key file itself is not deleted.',
+          'Records the service account JSON key for this server. Give the full path of the key file (from Google Cloud console, IAM & Admin > Service accounts > Keys). Its content is never shown. First add the service account email in Play Console (Users and permissions), or in Merchant Center (Users) with the access rights it needs (READ_ONLY to read, STANDARD to change product data, ADMIN only for accounts and users). Call auth_status afterwards. Pass remove: true to forget the stored setup; the key file itself is not deleted.',
         inputSchema: {
           path: z.string().optional().describe('Full path of the service account JSON key file.'),
           remove: z.boolean().optional().describe('Forget the stored setup. The key file is not deleted.'),

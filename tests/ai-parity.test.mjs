@@ -63,17 +63,38 @@ test('three tools, all reads; scopes as Discovery lists them; each names the Goo
   }
 });
 
-test('hosts and models: global is the main host, a region its own; ids, publisher models and endpoints; bad input refused', () => {
+test('hosts and models: global is the main host, a region and a multi-region their own; ids, publisher models, endpoints and full resource names; bad input refused', () => {
   assert.equal(ai.hostOf('global'), 'https://aiplatform.googleapis.com');
   assert.equal(ai.hostOf(' europe-west4 '), 'https://europe-west4-aiplatform.googleapis.com');
-  for (const bad of ['', 'US-CENTRAL1', 'evil.com/x', 'us central1', 'x']) assert.throws(() => ai.hostOf(bad), /is not a Google Cloud region/, bad);
-  assert.equal(ai.modelResource('my-project-123', 'global', 'gemini-2.5-flash'), MODEL);
-  assert.equal(ai.modelResource('my-project-123', 'us-central1', 'publishers/meta/models/llama-4@001'), 'projects/my-project-123/locations/us-central1/publishers/meta/models/llama-4@001');
-  assert.equal(ai.modelResource('my-project-123', 'us-central1', 'endpoints/987'), 'projects/my-project-123/locations/us-central1/endpoints/987');
-  for (const bad of ['', 'models/x/../y', 'gemini 2', 'projects/p/locations/l/publishers/google/models/m', 'endpoints/a/b']) {
-    assert.throws(() => ai.modelResource('my-project-123', 'global', bad), /is not a model/, bad);
+  // The multi-regions of Discovery's endpoints (aiplatform v1), not <region>-aiplatform.googleapis.com.
+  assert.equal(ai.hostOf('us'), 'https://aiplatform.us.rep.googleapis.com');
+  assert.equal(ai.hostOf('eu'), 'https://aiplatform.eu.rep.googleapis.com');
+  assert.deepEqual(ai.MULTI_REGION_HOSTS, { us: 'https://aiplatform.us.rep.googleapis.com', eu: 'https://aiplatform.eu.rep.googleapis.com' });
+  for (const bad of ['', 'US-CENTRAL1', 'evil.com/x', 'us central1', 'x', 'asiap']) assert.throws(() => ai.hostOf(bad), /is not a Google Cloud region/, bad);
+  assert.deepEqual(ai.modelTarget('my-project-123', '', 'gemini-2.5-flash'), { resource: MODEL, location: 'global' });
+  assert.deepEqual(ai.modelTarget('my-project-123', 'us-central1', 'publishers/meta/models/llama-4@001'), {
+    resource: 'projects/my-project-123/locations/us-central1/publishers/meta/models/llama-4@001',
+    location: 'us-central1',
+  });
+  assert.deepEqual(ai.modelTarget('my-project-123', 'us-central1', 'endpoints/987'), {
+    resource: 'projects/my-project-123/locations/us-central1/endpoints/987',
+    location: 'us-central1',
+  });
+  // A full resource name as Google prints it: its own location picks the host, and region may be left out or must agree.
+  const full = 'projects/my-project-123/locations/europe-west4/publishers/google/models/gemini-2.5-flash';
+  assert.deepEqual(ai.modelTarget('my-project-123', '', full), { resource: full, location: 'europe-west4' });
+  assert.deepEqual(ai.modelTarget('my-project-123', 'europe-west4', full), { resource: full, location: 'europe-west4' });
+  assert.deepEqual(ai.modelTarget('my-project-123', 'us', 'projects/my-project-123/locations/us/endpoints/42'), {
+    resource: 'projects/my-project-123/locations/us/endpoints/42',
+    location: 'us',
+  });
+  assert.throws(() => ai.modelTarget('my-project-123', 'us-central1', full), /is in europe-west4, but region is us-central1/);
+  assert.throws(() => ai.modelTarget('other-project', '', full), /is in project my-project-123, but project_id is other-project/);
+  for (const bad of ['', 'models/x/../y', 'gemini 2', 'endpoints/a/b', 'projects/p/locations/l/publishers/google']) {
+    assert.throws(() => ai.modelTarget('my-project-123', 'global', bad), /is not a model/, bad);
   }
-  assert.throws(() => ai.modelResource('My Project', 'global', 'gemini-2.5-flash'), /is not a Google Cloud project id/);
+  assert.throws(() => ai.modelTarget('My Project', 'global', 'gemini-2.5-flash'), /is not a Google Cloud project id/);
+  assert.throws(() => ai.modelTarget('my-project-123', 'nowhere', 'gemini-2.5-flash'), /is not a Google Cloud region/);
 });
 
 test('vertex_generate_content: a prompt is one user turn; the options keep the API names; the answer is the text, usage and model', async () => {
@@ -118,6 +139,96 @@ test('vertex_generate_content: a prompt is one user turn; the options keep the A
   assert.deepEqual(await run('vertex_generate_content', { project_id: 'my-project-123', region: 'asia-northeast1', model: 'endpoints/42', contents: [{ role: 'user', parts: [{ text: 'Hi' }] }], raw: true }), whole);
   assert.equal(calls[0].url, 'https://asia-northeast1-aiplatform.googleapis.com/v1/projects/my-project-123/locations/asia-northeast1/endpoints/42:generateContent');
   assert.deepEqual(calls[0].body, { contents: [{ role: 'user', parts: [{ text: 'Hi' }] }] });
+});
+
+test('vertex_generate_content: an image comes back as part of its bytes, never dropped; files and other parts are named', async () => {
+  const png = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00, 0x01, 0x02]);
+  reset(() => ({
+    candidates: [
+      {
+        content: {
+          parts: [
+            { text: 'Here is the picture.' },
+            { inlineData: { mimeType: 'image/png', data: png.toString('base64') } },
+            { fileData: { mimeType: 'image/png', fileUri: 'gs://bucket/cat.png' } },
+            { executableCode: { language: 'PYTHON', code: 'print(1)' } },
+          ],
+        },
+        finishReason: 'STOP',
+      },
+    ],
+  }));
+  const out = await run('vertex_generate_content', { project_id: 'my-project-123', model: 'gemini-2.5-flash', prompt: 'Draw a cat' });
+  assert.equal(out.text, 'Here is the picture.');
+  assert.deepEqual(out.images, [{ index: 0, mime_type: 'image/png', size_bytes: png.length }]);
+  assert.deepEqual(out.image, {
+    mime_type: 'image/png',
+    size_bytes: png.length,
+    offset: 0,
+    bytes_read: png.length,
+    data_base64: png.toString('base64'),
+  });
+  assert.deepEqual(out.files, [{ mimeType: 'image/png', fileUri: 'gs://bucket/cat.png' }]);
+  assert.deepEqual(out.other_parts, [{ kinds: ['executableCode'] }]);
+
+  // Two images: image_index picks one, and an index past the last is refused after the call with its range.
+  const big = Buffer.alloc(40_000, 7);
+  reset(() => ({ candidates: [{ content: { parts: [{ inlineData: { mimeType: 'image/png', data: png.toString('base64') } }, { inlineData: { mimeType: 'image/png', data: big.toString('base64') } }] } }] }));
+  const two = await run('vertex_generate_content', { project_id: 'my-project-123', model: 'gemini-2.5-flash', prompt: 'x', image_index: 1 });
+  assert.deepEqual(two.images.map((i) => i.size_bytes), [png.length, 40_000]);
+  assert.equal(two.image.size_bytes, 40_000);
+  assert.equal(two.image.bytes_read, 18_000, 'one part of base64PartBytes(25,000)');
+  assert.equal(two.image.next_offset, 18_000);
+  assert.match(two.image.note, /Call again with offset 18000/);
+  await assert.rejects(run('vertex_generate_content', { project_id: 'my-project-123', model: 'gemini-2.5-flash', prompt: 'x', image_index: 2 }), /is past the 2 images/);
+  // The second part: offset continues where next_offset said.
+  const next = await run('vertex_generate_content', { project_id: 'my-project-123', model: 'gemini-2.5-flash', prompt: 'x', image_index: 1, offset: 18_000 });
+  assert.equal(next.image.offset, 18_000);
+  assert.equal(next.image.bytes_read, 18_000);
+  assert.equal(next.image.next_offset, 36_000);
+  const last = await run('vertex_generate_content', { project_id: 'my-project-123', model: 'gemini-2.5-flash', prompt: 'x', image_index: 1, offset: 36_000 });
+  assert.equal(last.image.bytes_read, 4_000);
+  assert.equal(last.image.next_offset, undefined);
+  // A text-only answer has no images, files or other parts, exactly as before.
+  reset(() => ({ candidates: [{ content: { parts: [{ text: 'plain' }] } }] }));
+  assert.deepEqual(await run('vertex_generate_content', { project_id: 'my-project-123', model: 'gemini-2.5-flash', prompt: 'x' }), { text: 'plain' });
+});
+
+test('vertex_embed_content: a long vector comes in parts, names what it left out, and never cuts a value', async () => {
+  const values = Array.from({ length: 3_072 }, (_, i) => Math.sin(i) * 0.1);
+  reset(() => ({ embedding: { values } }));
+  const out = await run('vertex_embed_content', { project_id: 'my-project-123', model: 'gemini-embedding-001', text: 'x' });
+  assert.equal(out.dimensions, 3_072);
+  assert.ok(out.values.length > 0 && out.values.length < 3_072, 'a 3,072-value vector does not fit 25,000 characters');
+  assert.deepEqual(out.values, values.slice(0, out.values.length), 'every value is the one Google sent, uncut');
+  assert.equal(out.next_offset, out.values.length);
+  assert.equal(out.values_omitted, 3_072 - out.values.length);
+  assert.match(out.note, /The vector has 3072 values/);
+  assert.ok(JSON.stringify(out).length <= 25_000, 'the answer fits the result limit');
+  // The parts join into the whole vector, and the last one ends it.
+  const parts = [out];
+  while (parts.at(-1).next_offset !== undefined) {
+    const prev = parts.at(-1);
+    parts.push(await run('vertex_embed_content', { project_id: 'my-project-123', model: 'gemini-embedding-001', text: 'x', offset: prev.next_offset }));
+    assert.ok(parts.length < 10, 'the vector is read in a few parts');
+  }
+  assert.deepEqual(parts.flatMap((p) => p.values), values);
+  assert.equal(parts.at(-1).values_omitted, undefined);
+  assert.equal(parts[1].offset, out.next_offset, 'a later part says where it starts');
+  // An offset past the end is refused after the call.
+  reset(() => ({ embedding: { values: [1, 2] } }));
+  await assert.rejects(run('vertex_embed_content', { project_id: 'my-project-123', model: 'gemini-embedding-001', text: 'x', offset: 3 }), /past the 2 values/);
+});
+
+test('the cloud readiness group lists the APIs gai calls directly', async () => {
+  const { READINESS_GROUPS } = await import(DIST('core/readiness.js'));
+  const products = JSON.parse(readFileSync(join(REPO, 'config', 'products.json'), 'utf8')).products;
+  const cloud = READINESS_GROUPS.find((g) => g.group === products.gai.group);
+  assert.ok(cloud, 'the cloud group exists');
+  // aiplatform is called directly by the three curated tools; the rest carry gai's per-method tools.
+  for (const api of [...products.gai.generated.map((g) => g.api), 'aiplatform']) {
+    assert.ok(cloud.services.includes(`${api}.googleapis.com`), `${api}.googleapis.com is missing from READINESS_GROUPS`);
+  }
 });
 
 test('vertex_generate_content and vertex_count_tokens: exactly one of prompt and contents, checked before any request', async () => {

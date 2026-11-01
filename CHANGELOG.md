@@ -2,6 +2,91 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 2.12.0 - 2026-11-01
+
+### Added: `androidpub_upload_bundle`, so a new build can be released
+- The per-method tools leave out every media-upload method (`src/core/discovery/tools.ts` skips them, and `api_call` refuses them), and Play's `edits.bundles.upload` is one of them: a new Android App Bundle could not reach a track by any route, so "release a build" was impossible from here (adversarial review of gplay, F3). The new hand-written tool does that one step: it takes a package name, the full path of an `.aab` and, optionally, an `edit_id`, a `track`, the release's status, `user_fraction`, a name and release notes, and `commit`.
+  - It creates an edit when none is given (or uses the one given), uploads the file as a stream through the media-upload endpoint (`uploadType=media`, `Content-Type: application/octet-stream`), reads the track, writes the new version code at the front of the track's releases (the releases already there are kept, never cleared), and commits the edit only when `commit` is true. Without it the edit stays open and the answer says how to finish it: `androidpub_edits_commit` publishes, `androidpub_edits_delete` drops it, and Google discards an edit nobody commits.
+  - A staged rollout is `release_status: "inProgress"` with `user_fraction` (0 to 1); a call with one and not the other is refused before any request, as is a file that is not `.aab` and a path in the folder that holds the Google sign-in data.
+  - It works its approval out in `prepare`: the file (path, size, SHA-256), the track and the releases it holds right now, the release that would be added, and what committing does. The SHA-256 is of the local file, read in chunks. A write: it asks first, and a call with `commit: true` is gated as destructive (publishing is), so it asks twice.
+
+### Fixed (docs): the build upload, the zero-touch tools and a stale kind
+- The product page said nothing about uploading, so `androidpub_edits_commit` could never be reached with a build of your own. It now describes the new tool, names the classic flow it completes, and gives an example.
+- The page listed `androidpub_edits_commit` as a plain write; it has been destructive since 1.26.3.
+- The 27 `androiddeviceprovisioning` tools are described: Google's Discovery document for that API lists no scope, so they load at any profile and with any key, but the key's token does not ask for `androidworkzerotouchemm` or `androidworkprovisioning`, and Google answers 403 (review F4). Making them work needs a `scopeOverrides` entry that would add those scopes to the key's single token request, where one refused scope fails every request of the product; that is reported for the owner and not done.
+
+### Not changed
+- No tool's kind, scope, name or request: the tool map gains one entry (`androidpub_upload_bundle`, a write, with `androidpublisher`), and every other entry is byte-identical. The `google` toolset still lists its 16 tools. `gsm scopes` asks for the same scopes in every case but one: with the `curated` toolset, `readwrite` and `full` now list `androidpublisher`, because the new tool needs it — the same scope the key already asks for, so no login asks Google for anything new, and the generated service-account scope list is unchanged (`node scripts/gen-service-account-scopes.mjs --check`: 13 scopes). Only the counts move (`curated` 9 → 10 tools). `tool-aliases.json` is untouched, and the frozen files and the goldens have no diff.
+- `src/servers/cloud-http.ts` takes `PUT` among the methods a curated tool may send: the track update is a PUT, as Discovery says. Nothing else in that module changed.
+
+### Reported, not changed
+- The review's F1 (Vitals `query` reads) was fixed in 1.26.3, and F2 (`getServiceAccount` as a write) in 1.26.2. F5's kinds are the decision of 1.26.3: `edits.commit`, `orders.refund`, the external-transaction refund, `basePlans.migratePrices` (and `batchMigratePrices`) and `androidmanagement.devices.issueCommand` all ask twice; the AMAPI command is destructive for every command type, so the per-type rule the review suggested is not needed. F6's paging is already solved by the shaping of 1.28.0, which moves `next_page_token` to the front of a result; a test now proves it for these answers. Still open and reported: the `google` list's Publishing half (the review would drop `androidpub_edits_tracks_list` and `androidpub_reviews_reply` and add the Vitals reads), the Reporting limits in the reviews and vitals descriptions (F8), the service-account key's 12 fixed scopes (F9, touches `auth.ts`), and whether the Games and Smart Device Management tools can work with a service account at all (F11, UNVERIFIED).
+
+### Tests
+- tests/play-parity.test.mjs: the upload end to end (the edit, the streamed upload, the track read and its merged body with the existing release kept, the open-edit note), the commit case with a staged rollout and release notes, the no-track case, the approval preview (nothing read for a new edit, the track read for a given one, the refusal cases before any request), and the page-token order through `shapeResult`. tests/curated-contract.test.mjs: two rows against `edits.bundles.upload`, `edits.insert`, `edits.tracks.get`, `edits.tracks.update` and `edits.commit`, with `androidpublisher.v3` added to the documents it checks (162 curated tools). tests/curated.test.mjs: the gplay module count.
+
+## 2.11.1 - 2026-11-01
+
+### Fixed (docs and wording): the Merchant Center access rights the key needs
+- Every place that set a service account up (the `setup-service-account` output, `gsm login`, the guided flow, `gsm explain`, the chat tool `auth_setup_service_account`, the readiness console steps and the product page) said to add the account "as an Admin user of Merchant Center" (adversarial review of gmerchant, F10). Admin can change anything, including accounts and users, and Google asks for "the most restrictive access rights possible". They now name the access rights that match what the tools do: `READ_ONLY` when they only read ("Has access to the same read-only methods as STANDARD, but no access to any mutating methods"), `STANDARD` to change product data, and `ADMIN` only for accounts and users. The rights are Discovery's `User.accessRights` (`STANDARD`, `READ_ONLY`, `ADMIN`, `PERFORMANCE_REPORTING`, `API_DEVELOPER`, in data/discovery/merchantapi.accounts_v1.json).
+- docs/SETUP.md keeps the Merchant API quickstart's own wording, which says Admin, and says why we suggest less.
+
+### Fixed (docs): what the key's one scope reaches, and the counts
+- The product page now says which APIs the key's `content` scope reaches (the 13 Merchant API v1 resource APIs, Reviews v1alpha and the CSS API) and that Manufacturer Center, which declares only `manufacturercenter`, is the one it does not. The tool counts are what the server registers, with the read/write/destructive/dynamic split; the old page gave a writes-off total that no longer matched.
+- The `google` toolset's source URL answers 200 (checked 2026-11-01), and the page names no discontinued version.
+
+### Not changed
+- No tool's kind, scope, name or request, no toolset list, and no scope a login asks for: `gsm scopes` for every group, profile and toolset is byte-identical, the tool maps are unchanged, and `tool-aliases.json` is untouched. tools/list changes only for `auth_setup_service_account` on the two service-account servers, in its description.
+- Reported, not changed (the frozen kind file): the review's two candidates are already the decision of 1.26.3, and this release adds the evidence. `merchantapi.issueresolution.renderaccountissues` and `renderproductissues` are reads (their output is "meant to be rendered and shown in third-party applications"); `merchantapi.accounts.developerRegistration.unregisterGcp` and `merchantapi.accounts.homepage.unclaim` are destructive, so they ask twice, because unregistering cuts API access and unclaiming drops the website claim.
+
+### Tests
+- No test changes: the wording is not pinned, and the scopes, kinds and tool maps the suite checks are unchanged (npm test 1458 tests, 1455 pass, 3 skipped).
+
+## 2.11.0 - 2026-11-01
+
+### Added: `firebase_get_sdk_config` hands back the configuration file, decoded
+- The Firebase Management API returns an Android or iOS app's configuration as base64 (`AndroidAppConfig.configFileContents`), and the three generated `*_get_config` tools returned it that way, where Google's own `get_sdk_config` decodes it (adversarial review of gfirebase, F2). The new hand-written `firebase_get_sdk_config` takes a project and an app id (its platform decides which configuration is read) or a `platform`, picks the first app of that platform when no id is given (web, then Android, then iOS otherwise), and answers `sdk_config` as the text of `google-services.json` or `GoogleService-Info.plist` with its file name. A web app's configuration is the object Google returns, which has no file to decode. Base64 that is not text comes back as `sdk_config_base64` with a note saying so.
+- It matches Google's `get_sdk_config`, so in the `google` toolset it takes the place of the three generated per-platform tools. They stay in `all` and `curated`, so nothing is lost there.
+
+### Added: the operation poller and the rules release lookup in the `google` toolset
+- `firebase_operations_get` and `firebaser_projects_releases_get` join it (review F3): a create in this product returns a long-running Operation, and without the poller a caller had to reach for `api_call`, which the `google` toolset does not have. Neither has a Google equivalent, and each note says so. The list still holds 38 tools.
+
+### Fixed (docs): what can and cannot be deployed from here
+- The product page and the plugin's skill said "deploy hosting and backends", and the safety section said Hosting deploys ask first (review F8). A classic Hosting deploy cannot be finished here: a version's files go through `versions.populateFiles`, a media upload, and this suite's per-method tools and `api_call` both refuse media uploads. The page now says so and points to the Firebase CLI; the five Hosting operation tools stay, to follow or cancel an operation someone else started. App Hosting (backends, builds, rollouts, domains, traffic) is real and is described as it is.
+- The page also says what a `readonly` login covers (the project, app and rule reads) and that Firestore, Remote Config, Authentication users, Crashlytics and Data Connect need `readwrite` (F12), states the real tool count, and names the new tools.
+
+### Not changed
+- No tool's kind, scope or request. Every existing tool's map entry is byte-identical; the map gains one read (`firebase_get_sdk_config`), and `gsm scopes` for gfirebase asks for the same scopes in every profile and toolset. `tool-aliases.json` is untouched, and the frozen files and the goldens have no diff.
+- One not-covered line goes: with the new tool declaring `firebase.readonly`, a `readonly` login of the `curated` toolset covers one of gfirebase's tools, so the "Not covered:" line for `gfirebase readonly curated` (1.32.0) no longer applies. Every other not-covered case is unchanged (tests/not-covered.test.mjs).
+- The other findings of the review were already fixed and are left as they are: the Identity Toolkit password hashes, salts and OOB codes are writes or are redacted since 1.26.2 (F1); the readable names came with 2.0.0 (F4); `firestore_query_collection` asks for 10 by default and `auth_get_users` for 100 since 1.29.0, with `offset` and `next_offset` (F6, F13); results are compact and budgeted since 1.28.0 (F6); `firebaseru_projects_test` and the Data Connect queries no longer ask (F11); the product description names Firestore, Remote Config and Authentication users (F10).
+- Reported, not changed: the readiness list still holds only `firebase.googleapis.com` for the developer group, though the tools call a dozen Firebase APIs (F5); `curated` still reaches only the gateway's APIs (F9); the Firestore writes, Realtime Database, Remote Config updates and `auth_update_user` of Google's server have no tool here (F7). Each wants its own change; the first is a one-line-per-API list for every group, not only this one.
+
+### Tests
+- tests/firebase-parity.test.mjs: `firebase_get_sdk_config` for an Android app by id (the decoded text), an iOS app, a web app (the object), the app picked per platform (one list call with `pageSize=1`, then the config), the web-then-Android-then-iOS order, a project with no app, and the two refusals before any request. tests/curated-contract.test.mjs adds rows for the three `getConfig` methods and the app list, and `firebase.v1beta1` joins the documents it checks against (161 curated tools). tests/toolset.test.mjs: the 38-tool list.
+
+## 2.10.0 - 2026-11-01
+
+### Fixed: `vertex_generate_content` no longer drops the images a model returns
+- The answer kept only the text parts and the function calls, so an image (or any other inline data) the model returned disappeared without a word, and asking again cost another billed call (adversarial review of gai, F4). It now reports every part: `images` lists each image with its index, type and size, and the bytes of the one at the new `image_index` argument (0 by default) come back as `image` in the part form of 1.31.0 (`mime_type`, `size_bytes`, `offset`, `bytes_read`, `next_offset`, `data_base64`), so a large image is read in as many calls as it needs with the new `offset` argument, and the note says where to continue. A file reference Google returns instead of bytes (`fileData`) is listed in `files`, and any other kind of part in `other_parts`. A text-only answer is byte-identical to before.
+
+### Fixed: `vertex_embed_content` no longer overflows the result limit
+- A 3,072-value vector is about 60,000 characters, and the answer was cut by the runtime in the middle of the numbers, so the values a caller saw had no marker and no way to continue (F5). The tool now returns as many values as fit this server's result limit (GSM_MAX_RESULT_CHARS, 25,000 characters by default) and, when the vector is longer, `next_offset` and `values_omitted` with a note that says how many values are left and how to read them. A new `offset` argument continues the vector, and the parts join in order. No value is ever rounded or cut: a number is either whole or not shown.
+
+### Added: the model ids and multi-regions Google documents
+- `modelResource` refused the full resource name Google prints (`projects/<p>/locations/<l>/publishers/google/models/<id>`), which Google's own reference and MCP examples use, and the region check needed a hyphen, so the multi-regions `us` and `eu` could not be used (F6). The new `modelTarget` accepts a full name, takes its location as the one that picks the host, and refuses a name whose location or project disagrees with `region` and `project_id` instead of silently calling somewhere else. `us` and `eu` ask for `aiplatform.us.rep.googleapis.com` and `aiplatform.eu.rep.googleapis.com`, the hosts Discovery lists in the document's `endpoints` (not `<location>-aiplatform.googleapis.com`, which is for regions).
+
+### Fixed: `project_readiness` covers the APIs gai needs
+- The cloud group's list held only gcloud's services, so the readiness check said nothing about the APIs gai's tools call (F7). It now lists Vertex AI (`aiplatform`, which the three hand-written tools call directly), Discovery Engine, Vision, Speech, Text-to-Speech, Natural Language and Video Intelligence. `project_enable_missing` enables them in the same batches of 20.
+
+### Not changed
+- No tool's kind, scope, name or request when the new arguments are not used: the three tools send the same request as before, the `google` toolset still lists its six tools, and `gsm scopes` for gai asks for the same scopes in every profile and toolset. `tool-aliases.json` is untouched, and the frozen files and the goldens have no diff.
+- Not checked against live Google. The multi-region hosts are the ones the Discovery document lists, the image part sizes follow 1.31.0's and the vector sizes are measured on the JSON.
+- The other findings of the gai review were already fixed and are left as they are: the compute-only POSTs are reads since 1.26.3 (F3); the readable names came with 2.0.0, so Discovery Engine's tools read `discoverye_engines_serving_configs_search` and its neighbours instead of hashed names, and the `google` note says "match" rather than "parity" (F8, and section C); the sign-in advice is `readwrite` since 1.32.0 and the docs say why (F2); the tools' descriptions are whole since 1.29.1 and results compact and budgeted since 1.28.0 (F8); `docs/USING.md` no longer says the answer tool asks first (F11); the gateway reaches the AI APIs, which the product page names (F12); `input` regions go to their own host since 1.31.1 (F1).
+- Reported, not changed: `modelArmorConfig` is a field of the v1 request that the tool does not expose, and no `x-goog-user-project` header is sent, so a `project_id` other than the quota project is untested (F13). The gateway refuses upload methods, so the Gemini file upload reads that the `all` toolset lists `devstorage.read_only` for stay out of reach there (F14). Both want their own change.
+
+### Tests
+- tests/ai-parity.test.mjs: `hostOf` for `global`, a region and the two multi-regions; `modelTarget` for ids, publisher models, endpoints and full resource names, with the two refusals and the bad inputs; an image answer (the part of its bytes, the second part with `offset`, `image_index` past the last, `files` and `other_parts`, a text-only answer unchanged); a 3,072-value vector read in parts that join into the whole vector, with `values_omitted` and the offset past the end refused; and the cloud readiness group listing gai's APIs. tests/readiness.test.mjs is unchanged (it checks product membership and well-formedness).
+
 ## 2.9.0 - 2026-11-01
 
 ### Added: two hand-written coursework writes in place of three raw generated tools

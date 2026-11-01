@@ -96,6 +96,14 @@ export const READINESS_GROUPS: ReadinessGroup[] = [
       'bigquery.googleapis.com',
       'iam.googleapis.com',
       'cloudtrace.googleapis.com',
+      // gai: the curated Vertex AI tools call aiplatform directly, and its per-method tools cover these APIs.
+      'aiplatform.googleapis.com',
+      'discoveryengine.googleapis.com',
+      'vision.googleapis.com',
+      'speech.googleapis.com',
+      'texttospeech.googleapis.com',
+      'language.googleapis.com',
+      'videointelligence.googleapis.com',
     ],
   },
   {
@@ -175,7 +183,7 @@ export function consoleSteps(projectId: string): string[] {
     'Search Console: the account must be an owner or user of each property (Settings > Users and permissions): https://search.google.com/search-console',
     'Analytics: Viewer or Analyst on the GA4 property (Admin > Property access management): https://analytics.google.com',
     'Play Console: add the service account email under Users and permissions: https://play.google.com/console',
-    'Merchant Center: add the service account email as an Admin user: https://merchants.google.com',
+    'Merchant Center: add the service account email under Users, with the access rights it needs (READ_ONLY to read, STANDARD to change product data, ADMIN only for accounts and users): https://merchants.google.com',
     'Workspace admin: authorise the admin server scopes under Security > API controls > Domain-wide delegation: https://admin.google.com/ac/owl/domainwidedelegation',
   ];
 }

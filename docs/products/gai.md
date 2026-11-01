@@ -2,7 +2,7 @@
 
 Install with the simplest command: `npx google-services-mcps install --agent claude --plugin <id>` (see docs/TUTORIAL.md).
 
-Generative and classic AI APIs: the Gemini API, Vertex AI (catalogued as the Agent Platform API), Discovery Engine, Dialogflow, Vision, Speech-to-Text, Text-to-Speech, Translate, Natural Language, Video Intelligence, Document AI and agent services. It has 357 tools. The Gemini and Vertex AI methods are reached through the gateway, apart from three hand-written Vertex AI tools (generate, count tokens, embed).
+Generative and classic AI APIs: the Gemini API, Vertex AI (catalogued as the Agent Platform API), Discovery Engine, Dialogflow, Vision, Speech-to-Text, Text-to-Speech, Translate, Natural Language, Video Intelligence, Document AI and agent services. It has 364 tools. The Gemini and Vertex AI methods are reached through the gateway, apart from three hand-written Vertex AI tools (generate, count tokens, embed).
 
 ## When to install it
 
@@ -22,7 +22,7 @@ node <plugin>/bin/gsm.mjs status
 
 `<plugin>` is the plugin folder (in this repo, `plugins/gai`).
 
-1. In a Google Cloud project, enable the APIs you use: the Generative Language (Gemini) API, Vertex AI, Discovery Engine, Vision, Speech-to-Text and others. Enable billing for paid services.
+1. In a Google Cloud project, enable the APIs you use: the Generative Language (Gemini) API, Vertex AI, Discovery Engine, Vision, Speech-to-Text and others. Enable billing for paid services. `project_readiness` in the gcloud plugin lists the ones this plugin's tools call directly (Vertex AI `aiplatform`, Discovery Engine, Vision, Speech, Text-to-Speech, Natural Language, Video Intelligence) and enables them for you with `project_enable_missing`.
 2. Set up the OAuth consent screen. Create an OAuth client ID of type Desktop app and download the JSON file.
 3. Run `setup-client`, then `login cloud`. Restart the MCP server (`/mcp`) after login.
 
@@ -40,7 +40,14 @@ The `cloud` login is shared with `gcloud`. Sign in with `--profile readwrite`: a
 
 The full list is in `docs/capabilities/gai.md`.
 
-The three hand-written tools match the generative tools of Google's Agent Platform MCP server (Google Cloud's hosted Vertex AI MCP server, https://docs.cloud.google.com/gemini-enterprise-agent-platform/reference/use-agent-platform-mcp): `generate_content`, `count_tokens` and `embed_content`. Give the project, the model (an id such as `gemini-2.5-flash`, `publishers/<publisher>/models/<id>`, or `endpoints/<id>` for a model deployed to an endpoint) and the region (`global` by default, or a region such as `us-central1`, which picks that region's host). They are reads, as Google's server marks them: they compute and change nothing, so they do not ask, but Google bills them per token. With the plugin option `toolset: google`, the server lists these three and the three generated Discovery Engine tools that match Google's Agent Search tools (search, answer and the engine list): 6 tools, with `health` and the sign-in tools. Google's other 53 Agent Platform tools (Colab Enterprise, notebook executions, endpoints, models, tuning, RAG, evaluation, prompts, predict) have no tool here; `api_call` reaches their methods in the `all` and `curated` toolsets; since 1.31.1 a call whose path names a region (`projects/p/locations/us-central1/...`) goes to that region's host from the API's Discovery document, as Vertex AI needs, and Discovery Engine `us` data stores to `discoveryengine.us.rep.googleapis.com` (the document lists no `eu` host, so `eu` stays on the global host; not checked live). A `readonly` login with that toolset asks for `cloud-platform.read-only` (it covers generate and embed); a `readwrite` login for `cloud-platform`.
+The three hand-written tools match the generative tools of Google's Agent Platform MCP server (Google Cloud's hosted Vertex AI MCP server, https://docs.cloud.google.com/gemini-enterprise-agent-platform/reference/use-agent-platform-mcp): `generate_content`, `count_tokens` and `embed_content`. Give the project, the model and the region.
+
+- The model is an id such as `gemini-2.5-flash` (publisher `google`), `publishers/<publisher>/models/<id>`, `endpoints/<id>` for a model deployed to an endpoint, or the full resource name Google prints, `projects/<p>/locations/<l>/publishers/google/models/<id>`. A full name carries its own location: that location picks the host, and `region` may be left out or must name the same one.
+- The region is `global` by default (the main host), a region such as `us-central1`, or the multi-region `us` or `eu`, whose host is `aiplatform.us.rep.googleapis.com` or `aiplatform.eu.rep.googleapis.com` (the hosts in the API's Discovery document).
+- `vertex_generate_content` returns the text, why the model stopped, any function calls and the token usage, and it drops no output: every image the model made is listed in `images` with its type and size, and the bytes of the one at `image_index` come back as `image` in parts (`data_base64`, `offset`, `next_offset`), so a large image is read in as many calls as it needs. A file reference Google returns instead of bytes is listed in `files`, and any other kind of part in `other_parts`.
+- `vertex_embed_content` returns a vector longer than the result limit in parts, with `next_offset` and the number of values left out. No value is ever cut or rounded.
+
+They are reads, as Google's server marks them: they compute and change nothing, so they do not ask, but Google bills them per token. With the plugin option `toolset: google`, the server lists these three and the three generated Discovery Engine tools that match Google's Agent Search tools (search, answer and the engine list): 6 tools, with `health` and the sign-in tools. Google's other 53 Agent Platform tools (Colab Enterprise, notebook executions, endpoints, models, tuning, RAG, evaluation, prompts, predict) have no tool here; `api_call` reaches their methods in the `all` and `curated` toolsets; since 1.31.1 a call whose path names a region (`projects/p/locations/us-central1/...`) goes to that region's host from the API's Discovery document, as Vertex AI needs, and Discovery Engine `us` data stores to `discoveryengine.us.rep.googleapis.com` (the document lists no `eu` host, so `eu` stays on the global host; not checked live). A `readonly` login with that toolset asks for `cloud-platform.read-only` (it covers generate and embed); a `readwrite` login for `cloud-platform`.
 
 ## Example requests
 

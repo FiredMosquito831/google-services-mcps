@@ -214,26 +214,27 @@ const BUSINESS_LEAN = {
   ],
 };
 /**
- * The gfirebase list (1.20.0): Google's Firebase MCP tools that call an API, through generated tools and five curated
- * ones (Firestore, Remote Config, Authentication users).
+ * The gfirebase list (1.20.0): Google's Firebase MCP tools that call an API, through generated tools and six curated
+ * ones (Firestore, Remote Config, Authentication users, the SDK config). Since 2.11.0 one curated SDK-config tool takes
+ * the place of the three generated per-platform ones, and the operation poller and the rules release get joined.
  */
 const FIREBASE_GOOGLE = [
   'firebase_projects_list',
   'firebase_projects_get',
   'firebase_projects_search_apps',
-  'firebase_web_apps_get_config',
-  'firebase_apps_get_config',
-  'firebase_ios_apps_get_config',
+  'firebase_get_sdk_config',
   'firebase_projects_add_firebase',
   'firebase_web_apps_create',
   'firebase_android_apps_create',
   'firebase_ios_apps_create',
   'firebase_apps_sha_create',
   'firebaseru_releases_list',
+  'firebaser_projects_releases_get',
   'firebaser_projects_rulesets_get',
   'firebaseru_projects_test',
   'firebaseap_backends_list',
   'firebaseap_backends_get',
+  'firebase_operations_get',
   'firebasecr_apps_issues_get',
   'firebasecr_apps_issues_patch',
   'firebasecr_apps_events_list',
