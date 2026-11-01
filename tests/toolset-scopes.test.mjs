@@ -204,7 +204,9 @@ test('requirements: the lean gtm, gyoutube and gbusiness lists resolve to the na
     return { n: reqs.length, gateway: reqs.filter((r) => r.gateway).length, readonly: resolveScopes(reqs, 'readonly'), readwrite: resolveScopes(reqs, 'readwrite').scopes, greedy: resolveScopes(withoutPrefer(reqs), 'readwrite').scopes };
   };
   const gtm = await resolved('gtm');
-  assert.equal(gtm.n, 13);
+  // 2.14.0: 17 tools (13 + the container lookup, the workspace get and status, the version get, and the hand-written
+  // gtm_publish_version in place of the generated publish tool).
+  assert.equal(gtm.n, 17);
   assert.equal(gtm.gateway, 0, 'the tagmanager v1 gateway does not count: no api_call in the list');
   assert.deepEqual(gtm.readonly.scopes, [G('tagmanager.readonly')]);
   assert.deepEqual(gtm.readwrite, GTM_READWRITE);

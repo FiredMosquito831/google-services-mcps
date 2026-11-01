@@ -17,6 +17,8 @@ Sign in here, in the chat. Do not start with terminal commands.
 3. Call `auth_login` without `method`: it lists the two ways to sign in (oauth with the saved client, or adc through the gcloud CLI). Let the person choose, then call it again with `method` and `profile` readonly to read, or readwrite to make changes. For an account already signed in for another server of this group, pass its email as `account`, so its other scopes are kept.
 4. The person approves in the browser. Call `auth_status`: the tools load without a restart.
 
+With the `curated` toolset, the readonly profile covers none of its tools that need a Google scope: sign in with readwrite (write tools stay hidden until writes are allowed in the plugin settings).
+
 Only if the chat tools fail, the same steps in a terminal: `node "${CLAUDE_PLUGIN_ROOT}/bin/gsm.mjs" setup-client <client_secret.json>`, then `node "${CLAUDE_PLUGIN_ROOT}/bin/gsm.mjs" login business`.
 
 ## Common tasks
@@ -32,7 +34,7 @@ Only if the chat tools fail, the same steps in a terminal: `node "${CLAUDE_PLUGI
 
 ### 3. Publish
 
-1. `tagmgr_accts_ctrs_ws_create_ver` makes a version from the workspace (Google then removes that workspace), then `tagmgr_accounts_containers_versions_publish` with the version path. Both ask twice.
+1. `tagmgr_accts_ctrs_ws_create_ver` makes a version from the workspace (Google then removes that workspace), then `gtm_publish_version` with the container path and the version id. Both ask twice, and the publish approval names the container, the version and what it changes against what is live now.
 
 ## Untrusted content
 
@@ -44,7 +46,7 @@ Reads never ask for approval. Tools that change or delete data are listed only w
 
 ## Tools
 
-The `gtm` MCP server lists up to 117 tools with the `all` toolset: 45 read, 52 write, 19 destructive and 1 dynamic (decided per call), counting its 7 runtime tools (`health` and the sign-in tools). Write and destructive tools are listed only when writes are allowed, and a tool loads only when the sign-in holds one of its scopes. The `google` toolset lists 13 of them plus the runtime tools. The gateway APIs below are reached through `api_search` (find a method), `api_describe` (its parameters) and `api_call` (run it).
+The `gtm` MCP server lists up to 118 tools with the `all` toolset: 45 read, 52 write, 20 destructive and 1 dynamic (decided per call), counting its 7 runtime tools (`health` and the sign-in tools). Write and destructive tools are listed only when writes are allowed, and a tool loads only when the sign-in holds one of its scopes. The `google` toolset lists 17 of them plus the runtime tools. The gateway APIs below are reached through `api_search` (find a method), `api_describe` (its parameters) and `api_call` (run it).
 
 ## APIs
 

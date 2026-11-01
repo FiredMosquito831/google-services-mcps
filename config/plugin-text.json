@@ -166,7 +166,7 @@
       "flows": [
         { "title": "Find the workspace", "steps": ["{tool:tagmgr_accounts_list}, then {tool:tagmgr_accounts_containers_list} with parent accounts/<id>, then {tool:tagmgr_accounts_containers_workspaces_list} with parent accounts/<id>/containers/<id>."] },
         { "title": "Read the setup", "steps": ["{tool:tagmgr_accts_ctrs_ws_tags_list} with parent accounts/<a>/containers/<c>/workspaces/<w>; triggers and variables the same way.", "{tool:tagmgr_accounts_containers_versions_live} shows what is published now."] },
-        { "title": "Publish", "steps": ["{tool:tagmgr_accts_ctrs_ws_create_ver} makes a version from the workspace (Google then removes that workspace), then {tool:tagmgr_accounts_containers_versions_publish} with the version path. Both ask twice."] }
+        { "title": "Publish", "steps": ["{tool:tagmgr_accts_ctrs_ws_create_ver} makes a version from the workspace (Google then removes that workspace), then {tool:gtm_publish_version} with the container path and the version id. Both ask twice, and the publish approval names the container, the version and what it changes against what is live now."] }
       ],
       "notes": []
     },

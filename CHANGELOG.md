@@ -2,6 +2,28 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 2.14.0 - 2026-11-01
+
+### Added: `gtm_publish_version`, whose approval says what goes live
+- Publishing a container version is the one Tag Manager action that reaches every visitor of a site, and its approval showed one path (`{"path":"accounts/1/containers/2/versions/3"}`): no container name, no version name, no idea what the version changes (adversarial review of gtm, F1). The new hand-written `gtm_publish_version` reads the container, the version and the live version in `prepare` and puts what it found in the approval: the container's name and its GTM-XXXX public id, the version's id, name and notes, the tags, triggers and variables that are added, changed or removed against what is live now (by id, comparing the entities with the fields that carry no change left out), and the Custom HTML tags and Custom JavaScript variables it would put on the page.
+- It takes `container` (`accounts/{account}/containers/{container}`), `version` (the id, such as 7, or the full path) and an optional `fingerprint`. Without one, the fingerprint comes from the version it read, so a version that changed after the approval is refused by Google instead of published unread. It publishes exactly the path it approved.
+- A destructive call, so it asks twice, and it asks under `confirmation: destructive-only` too, where the generated tool's write ran with no prompt. A login that holds only `tagmanager.publish` can still use it: the reads that fail are listed in the approval as `unread` instead of failing the call, and the publish request stays exact.
+- In the `google` toolset it takes the place of the generated publish tool, which stays in `all` and `curated`.
+
+### Added: the Tag Manager reads a publish needs, in the `google` toolset
+- It could not inspect the version it publishes, find a container from a GTM-XXXX id, or see a workspace's status (review C): `tagmgr_accounts_containers_versions_get`, `tagmgr_accounts_containers_lookup`, `tagmgr_accounts_containers_workspaces_get` and `tagmgr_accts_ctrs_ws_get_status` join it, 17 tools in all.
+
+### Fixed (docs and wording): what a version does, and what set-latest does not
+- The `create_version` note said "nothing goes live" and left out the rest: Discovery says it "Creates a Container Version from the entities present in the workspace, deletes the workspace", so the note now says the workspace goes (review F2). The product page said "setting the latest version also changes what is live"; Google's text is "Sets the latest version used for synchronization of workspaces when detecting conflicts and errors", so it does not. The page's counts, its publish row (destructive since 1.26.3) and its `google` list description are corrected.
+
+### Not changed
+- No tool's kind or request: the map gains one entry (`gtm_publish_version`, destructive, `tagmanager.publish`) and the generated publish tool keeps its own. `gsm scopes` asks for the same scopes in every case — the `google` list already held a publish tool, so the readwrite login asked for `tagmanager.publish` before this change too (compared for the whole business group: no scope URL added or removed, only counts move). `tool-aliases.json` is untouched, and the frozen files and the goldens have no diff.
+- One "Not covered:" line appears: `gtm readonly curated`. The `curated` toolset is now the hand-written publish and the gateway, and `tagmanager.publish` has no read-only form, so a `readonly` login covers none of that product's tools. The `google` and `all` toolsets still cover their reads.
+- Reported, not changed: whether Google still serves Tag Manager API v1, which the gateway reaches, is UNVERIFIED (its reference pages answered 404 on 2026-10-30, and data/discovery holds only v2); the page now says so. `gtm_publish_version` was not run against live Google.
+
+### Tests
+- tests/gtm-parity.test.mjs: the path checks and their refusals, `diffVersions` (added, removed, changed, counts, and the fields a diff ignores), `customCode`, the prepare preview (container, version, live, changes, custom code and the fingerprint from the version), the handler publishing exactly the approved path with the approved fingerprint, a caller fingerprint, and the `unread` case where every read is refused. tests/curated-contract.test.mjs: two `gtm_publish_version` rows against the container, version, live and publish methods, with `tagmanager.v2` added to its documents (164 curated tools). tests/toolset.test.mjs, tests/toolset-scopes.test.mjs, tests/not-covered.test.mjs and tests/curated.test.mjs follow the new list and the new not-covered line.
+
 ## 2.13.0 - 2026-11-01
 
 ### Added: `psi_run`, which answers a page-speed question instead of returning Lighthouse

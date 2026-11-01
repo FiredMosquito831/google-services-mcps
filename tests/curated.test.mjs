@@ -9,10 +9,10 @@ const here = dirname(fileURLToPath(import.meta.url));
 const dist = (p) => new URL(`../dist/${p}`, import.meta.url).href;
 
 // Every hand-written (curated) module. Each one exports buildTools and nothing that starts a server.
-const MODULES = ['cloud', 'gmail', 'gdrive', 'gcalendar', 'workspace-admin', 'searchconsole', 'gchat', 'gcontacts', 'gclassroom', 'ganalytics', 'gfirebase', 'gai', 'gmaps', 'gplay', 'meet', 'gsearch'];
+const MODULES = ['cloud', 'gmail', 'gdrive', 'gcalendar', 'workspace-admin', 'searchconsole', 'gchat', 'gcontacts', 'gclassroom', 'ganalytics', 'gfirebase', 'gai', 'gmaps', 'gplay', 'meet', 'gsearch', 'gtm'];
 // The product modules that must hold only their own area's tools.
-const AREA_PREFIX = { gmail: ['gmail'], gdrive: ['drive', 'sheets'], gcalendar: ['calendar'], gchat: ['chat'], gcontacts: ['contacts', 'profile'], gclassroom: ['classroom'], ganalytics: ['ga'], gfirebase: ['firestore', 'remoteconfig', 'auth', 'firebase'], gai: ['vertex'], gmaps: ['maps'], gplay: ['androidmgmt', 'androidpub'], meet: ['meet'], gsearch: ['psi'] };
-const EXPECTED_COUNT = { gmail: 16, gdrive: 14, gcalendar: 9, gchat: 9, gcontacts: 5, gclassroom: 16, ganalytics: 5, gfirebase: 6, gai: 3, gmaps: 2, gplay: 10, meet: 2, gsearch: 1 };
+const AREA_PREFIX = { gmail: ['gmail'], gdrive: ['drive', 'sheets'], gcalendar: ['calendar'], gchat: ['chat'], gcontacts: ['contacts', 'profile'], gclassroom: ['classroom'], ganalytics: ['ga'], gfirebase: ['firestore', 'remoteconfig', 'auth', 'firebase'], gai: ['vertex'], gmaps: ['maps'], gplay: ['androidmgmt', 'androidpub'], meet: ['meet'], gsearch: ['psi'], gtm: ['gtm'] };
+const EXPECTED_COUNT = { gmail: 16, gdrive: 14, gcalendar: 9, gchat: 9, gcontacts: 5, gclassroom: 16, ganalytics: 5, gfirebase: 6, gai: 3, gmaps: 2, gplay: 10, meet: 2, gsearch: 1, gtm: 1 };
 const KINDS = new Set(['read', 'write', 'destructive']);
 
 const dir = mkdtempSync(join(tmpdir(), 'gsm-curated-'));

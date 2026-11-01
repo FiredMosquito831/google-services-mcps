@@ -11,8 +11,8 @@
       "name": "gtm",
       "plugin": "gtm",
       "group": "business",
-      "kind": "discovery",
-      "curated": null,
+      "kind": "curated+discovery",
+      "curated": "src/servers/gtm.ts",
       "apis": [
         {
           "api": "tagmanager",
@@ -29,7 +29,10 @@
         "google": [
           "tagmgr_accounts_list",
           "tagmgr_accounts_containers_list",
+          "tagmgr_accounts_containers_lookup",
           "tagmgr_accounts_containers_workspaces_list",
+          "tagmgr_accounts_containers_workspaces_get",
+          "tagmgr_accts_ctrs_ws_get_status",
           "tagmgr_accts_ctrs_ws_tags_list",
           "tagmgr_accts_ctrs_ws_tags_get",
           "tagmgr_accts_ctrs_ws_triggers_list",
@@ -37,9 +40,10 @@
           "tagmgr_accts_ctrs_ws_variables_list",
           "tagmgr_accts_ctrs_ws_variables_get",
           "tagmgr_accounts_containers_versions_live",
+          "tagmgr_accounts_containers_versions_get",
           "tagmgr_accts_ctrs_ver_headers_list",
           "tagmgr_accts_ctrs_ws_create_ver",
-          "tagmgr_accounts_containers_versions_publish"
+          "gtm_publish_version"
         ]
       },
       "toolsetScopes": {
@@ -49,6 +53,9 @@
           ]
         }
       },
+      "scopes": [
+        "https://www.googleapis.com/auth/tagmanager.publish"
+      ],
       "label": "Tag Manager: Google Tag Manager accounts, containers, tags, triggers and variables."
     }
   ],

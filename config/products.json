@@ -3054,7 +3054,7 @@
       "group": "business",
       "server": {
         "name": "gtm",
-        "curated": null
+        "curated": "tagmanager"
       },
       "generated": [
         {
@@ -3079,7 +3079,10 @@
           "tools": [
             "tagmgr_accounts_list",
             "tagmgr_accounts_containers_list",
+            "tagmgr_accounts_containers_lookup",
             "tagmgr_accounts_containers_workspaces_list",
+            "tagmgr_accounts_containers_workspaces_get",
+            "tagmgr_accts_ctrs_ws_get_status",
             "tagmgr_accts_ctrs_ws_tags_list",
             "tagmgr_accts_ctrs_ws_tags_get",
             "tagmgr_accts_ctrs_ws_triggers_list",
@@ -3087,14 +3090,18 @@
             "tagmgr_accts_ctrs_ws_variables_list",
             "tagmgr_accts_ctrs_ws_variables_get",
             "tagmgr_accounts_containers_versions_live",
+            "tagmgr_accounts_containers_versions_get",
             "tagmgr_accts_ctrs_ver_headers_list",
             "tagmgr_accts_ctrs_ws_create_ver",
-            "tagmgr_accounts_containers_versions_publish"
+            "gtm_publish_version"
           ],
           "matches": {
             "tagmgr_accounts_list": [],
             "tagmgr_accounts_containers_list": [],
+            "tagmgr_accounts_containers_lookup": [],
             "tagmgr_accounts_containers_workspaces_list": [],
+            "tagmgr_accounts_containers_workspaces_get": [],
+            "tagmgr_accts_ctrs_ws_get_status": [],
             "tagmgr_accts_ctrs_ws_tags_list": [],
             "tagmgr_accts_ctrs_ws_tags_get": [],
             "tagmgr_accts_ctrs_ws_triggers_list": [],
@@ -3102,24 +3109,29 @@
             "tagmgr_accts_ctrs_ws_variables_list": [],
             "tagmgr_accts_ctrs_ws_variables_get": [],
             "tagmgr_accounts_containers_versions_live": [],
+            "tagmgr_accounts_containers_versions_get": [],
             "tagmgr_accts_ctrs_ver_headers_list": [],
             "tagmgr_accts_ctrs_ws_create_ver": [],
-            "tagmgr_accounts_containers_versions_publish": []
+            "gtm_publish_version": []
           },
           "notes": {
             "tagmgr_accounts_list": "The Tag Manager accounts the signed-in user can see. Start here.",
             "tagmgr_accounts_containers_list": "The containers of an account (web, iOS, Android, AMP, server) with their public ids (GTM-XXXX).",
+            "tagmgr_accounts_containers_lookup": "The container behind a destination id, such as GTM-XXXX: gives the accounts/{account}/containers/{container} path the other tools take.",
             "tagmgr_accounts_containers_workspaces_list": "The workspaces of a container. Changes are made in a workspace, saved as a version, then published.",
+            "tagmgr_accounts_containers_workspaces_get": "One workspace: its name, description and id.",
+            "tagmgr_accts_ctrs_ws_get_status": "A workspace's status, as the workspace syncs: merge conflicts and the changes it holds.",
             "tagmgr_accts_ctrs_ws_tags_list": "The tags of a workspace.",
             "tagmgr_accts_ctrs_ws_tags_get": "One tag with its type, parameters and firing and blocking triggers.",
             "tagmgr_accts_ctrs_ws_triggers_list": "The triggers of a workspace.",
             "tagmgr_accts_ctrs_ws_triggers_get": "One trigger with its type and filters.",
             "tagmgr_accts_ctrs_ws_variables_list": "The user-defined variables of a workspace.",
             "tagmgr_accts_ctrs_ws_variables_get": "One variable with its type and parameters.",
-            "tagmgr_accounts_containers_versions_live": "The version that is live now, with its tags, triggers and variables.",
+            "tagmgr_accounts_containers_versions_live": "The version that is live now, with its tags, triggers and variables. It can be large; the result limit may cut it.",
+            "tagmgr_accounts_containers_versions_get": "One container version by its id (such as 7): its name, notes and contents, and the fingerprint Google checks when it is published.",
             "tagmgr_accts_ctrs_ver_headers_list": "The versions of a container as headers: name, number and counts.",
-            "tagmgr_accts_ctrs_ws_create_ver": "Saves a workspace as a new container version, and Google deletes the workspace. Destructive since 1.26.3, so it asks twice; nothing goes live.",
-            "tagmgr_accounts_containers_versions_publish": "Publishes a version: it goes live on every site or app that loads the container. Destructive since 1.26.3, so it asks twice; check the version before."
+            "tagmgr_accts_ctrs_ws_create_ver": "Saves a workspace as a new container version, and Google deletes the workspace (Discovery: \"Creates a Container Version from the entities present in the workspace, deletes the workspace\"). Destructive since 1.26.3, so it asks twice. Nothing goes live: publishing is a second step.",
+            "gtm_publish_version": "Publishes a container version, so every page or app loading the container runs it. Before asking, it reads the container, the version and the live version, and the approval names what is added, changed and removed and any Custom HTML or custom JavaScript. It takes the place of the generated publish tool in this list. Destructive, so it asks twice."
           }
         }
       },

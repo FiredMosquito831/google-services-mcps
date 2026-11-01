@@ -178,7 +178,11 @@ const BUSINESS_LEAN = {
   gtm: [
     'tagmgr_accounts_list',
     'tagmgr_accounts_containers_list',
+    // 2.14.0: the container behind a GTM-XXXX id, and the workspace and version reads the publish needs.
+    'tagmgr_accounts_containers_lookup',
     'tagmgr_accounts_containers_workspaces_list',
+    'tagmgr_accounts_containers_workspaces_get',
+    'tagmgr_accts_ctrs_ws_get_status',
     'tagmgr_accts_ctrs_ws_tags_list',
     'tagmgr_accts_ctrs_ws_tags_get',
     'tagmgr_accts_ctrs_ws_triggers_list',
@@ -186,9 +190,11 @@ const BUSINESS_LEAN = {
     'tagmgr_accts_ctrs_ws_variables_list',
     'tagmgr_accts_ctrs_ws_variables_get',
     'tagmgr_accounts_containers_versions_live',
+    'tagmgr_accounts_containers_versions_get',
     'tagmgr_accts_ctrs_ver_headers_list',
     'tagmgr_accts_ctrs_ws_create_ver',
-    'tagmgr_accounts_containers_versions_publish',
+    // 2.14.0: the hand-written publish, in place of the generated tagmgr_accounts_containers_versions_publish.
+    'gtm_publish_version',
   ],
   gyoutube: [
     'youtube_search_list',
@@ -1047,21 +1053,22 @@ test('the gtm, gyoutube and gbusiness google lists are lean sets: no official se
   // The writes of the lists, and every other tool a read; no delete is in any of them. Since 1.26.3 (the destructive
   // rule) publishing, the workspace-consuming version and the whole-video update are destructive: they ask twice.
   const writes = ['youtube_comments_insert', 'mbinfo_locations_patch'];
-  const destructive = ['tagmgr_accts_ctrs_ws_create_ver', 'tagmgr_accounts_containers_versions_publish', 'youtube_videos_update'];
+  const destructive = ['tagmgr_accts_ctrs_ws_create_ver', 'gtm_publish_version', 'youtube_videos_update'];
   for (const [id, tools] of Object.entries(BUSINESS_LEAN)) {
     for (const tool of tools) assert.equal(kindOf(id, tool), destructive.includes(tool) ? 'destructive' : writes.includes(tool) ? 'write' : 'read', `${id}/${tool}`);
   }
   for (const name of ['tagmgr_accts_ctrs_ws_tags_delete', 'youtube_videos_delete', 'mbinfo_locations_delete']) {
     assert.equal(Object.values(BUSINESS_LEAN).flat().includes(name), false, name);
   }
-  assert.match(products.gtm.toolsets.google.notes.tagmgr_accounts_containers_versions_publish, /goes live/);
+  assert.match(products.gtm.toolsets.google.notes.gtm_publish_version, /runs it/);
   assert.match(products.gbusiness.toolsets.google.notes.mbaccount_accounts_list, /declares business\.manage/);
 });
 
 test('runServer: google on gtm, gyoutube and gbusiness lists the lean list and the runtime tools, with the same schemas as all', async () => {
   for (const [id, tools] of Object.entries(BUSINESS_LEAN)) {
     const dir = tempDir(`gsm-toolset-${id}-`);
-    const entry = generatedEntry(dir, id);
+    // gtm has a hand-written tool since 2.14.0, so its entry carries the curated module as well.
+    const entry = id === 'gtm' ? curatedEntry(dir, id, 'gtm') : generatedEntry(dir, id);
     const tokenDir = fakeLogin(dir, id, 'business');
     const unset = await withClient(entry, childEnv(dir, tokenDir), listTools);
     const google = await withClient(entry, childEnv(dir, tokenDir, { GSM_TOOLSET: 'google' }), async (c) => ({ tools: await listTools(c), health: await health(c) }));
