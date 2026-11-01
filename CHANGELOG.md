@@ -2,6 +2,28 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 2.8.0 - 2026-11-01
+
+### Added: `contacts_list` pages through every contact
+- Google's People MCP server has three tools and no way to walk the contact list; its two searches find a person from the start of a name, email, phone or organization, and the generated `people_people_connections_list` wants a raw readMask, a sort order and a page size from the caller. `contacts_list` sets the readMask (names, email addresses, phone numbers, organizations; `fields` picks others), takes Google's own page size (up to 1,000, 100 by default) and sort order, and answers short entries with the total when Google sends it (adversarial review of gcontacts, F4).
+- A read, with the scopes of `people.connections.list` (`contacts`, `contacts.readonly`), so a `readonly` login lists it.
+
+### Added: a contact delete whose approval names the contact
+- A generated write or destructive tool reads its target first and adds a few naming fields to the approval (1.27.0), but a Person has no top-level title, display name or subject, so the approval of `people.deleteContact` showed `people/c123...` and nothing else (review F5). `contacts_delete` works the read out in `prepare` instead: the approval names the contact with its email addresses and phones, and the handler sends the same DELETE the generated tool sends.
+- It is destructive, so it asks twice, and it needs the `contacts` write scope. `src/servers/cloud-http.ts` takes `DELETE` for it (no curated tool sent one before).
+
+### Fixed (docs and wording): the warm-up search does not promise a new contact
+- `contacts_search`'s description and `docs/USING.md` said the warm-up search means "new contacts are found". Google only says "Before searching, clients should send a warmup request with an empty query to update the cache" (Discovery's `searchContacts` text), so both now say that the warm-up refreshes the cache and that a contact added a moment before can still take a moment to appear. It also no longer claims to be what makes a search work.
+
+### Not changed
+- No tool's kind and no other product's tool map, scopes or `tools/list`. The gcontacts `google` toolset is still Google's three reads: the two new tools are not in it. `tool-aliases.json` is untouched, and the frozen files and the goldens have no diff.
+- The other findings of the gcontacts review were already fixed and are left as they are: `health.*.rollUp` and `dailyRollUp` are reads (1.26.3, F1); Health webhooks and Data Portability are optional parts, so a contacts login no longer asks for `cloud-platform` or a Data Portability scope (1.35.0, F2); the clipped readMask lists are whole since 1.29.1 (F3); results are compact, budgeted and keep their page token since 1.28.0 (F4); `userinfo.profile` is preferred by every profile since 1.35.1, so `profile_me` returns the name (F6); the docs' counts follow the server since 1.38.3 (F9).
+- Reported, not changed (owner decision needed): a Person-shaped target would name a contact in a search result or an update's approval too if the generic target preview looked one level into `names[0].displayName` and `emailAddresses[0].value`. That is `src/core/target-preview.ts`, a rule for every product's approvals, so it is not here.
+- Reported, not changed: `personSummary` still returns emails and phones as plain values, without the type label Google gives each (review F11). Adding the label changes the shape of an answer that callers may already parse, so it wants its own change. `people.people.batchDeleteContacts` and `people.contactGroups.delete` keep their generated form: the group delete already names the group from its target read.
+
+### Tests
+- tests/contacts-parity.test.mjs: `contacts_list` (the connections list for `people/me`, the readMask, the page size, the sort order, the page token, the total, the schema limits), `contacts_delete` (the `prepare` read and the names it shows, the DELETE alone, and the same request when called without `prepare`), and the corrected warm-up wording. tests/curated-contract.test.mjs: rows for both (158 curated tools). tests/curated.test.mjs: the gcontacts count, and the `meet` module of 2.6.0 joins the module list it was missing from.
+
 ## 2.7.0 - 2026-11-01
 
 ### Added: the move and the list create in the gtasks `google` toolset

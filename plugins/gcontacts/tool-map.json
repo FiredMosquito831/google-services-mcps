@@ -72,6 +72,23 @@
     "title": "Sign-in status"
   },
   {
+    "name": "mcp__plugin_gcontacts_gcontacts__contacts_delete",
+    "kind": "destructive",
+    "scopes": [
+      "https://www.googleapis.com/auth/contacts"
+    ],
+    "title": "Delete a contact"
+  },
+  {
+    "name": "mcp__plugin_gcontacts_gcontacts__contacts_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/contacts",
+      "https://www.googleapis.com/auth/contacts.readonly"
+    ],
+    "title": "List your contacts"
+  },
+  {
     "name": "mcp__plugin_gcontacts_gcontacts__contacts_search",
     "kind": "read",
     "scopes": [

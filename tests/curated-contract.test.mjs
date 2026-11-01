@@ -945,6 +945,12 @@ const CASES = {
     { args: { query: 'ana', sources: ['profile', 'contact'], fields: ['names', 'photos'], page_size: 50, page_token: 'p1' }, expect: ['people.people.searchDirectoryPeople'] },
   ],
   contacts_search: [{ args: { query: 'ana', fields: ['names', 'emailAddresses'], max_results: 5 }, expect: ['people.people.searchContacts'] }],
+  // 2.8.0: every contact, paged, and the delete whose approval names the contact it read.
+  contacts_list: [
+    { args: {}, expect: ['people.people.connections.list'] },
+    { args: { fields: ['photos'], page_size: 1000, page_token: 'p1', sort_order: 'FIRST_NAME_ASCENDING' }, expect: ['people.people.connections.list'] },
+  ],
+  contacts_delete: [{ args: { resource_name: 'people/c1' }, prepare: true, expect: ['people.people.get', 'people.people.deleteContact'] }],
   profile_me: [{ args: {}, expect: ['oauth2.userinfo.get'] }],
 
   // gclassroom (1.14.0)
@@ -1167,7 +1173,7 @@ test('every curated tool has a contract row, a skip reason or a known defect, an
   const listed = new Set([...Object.keys(CASES), ...Object.keys(SKIPPED), ...Object.keys(KNOWN_DEFECTS)]);
   assert.deepEqual([...tools.keys()].filter((name) => !listed.has(name)), [], 'curated tools without a row');
   assert.deepEqual([...listed].filter((name) => !tools.has(name)), [], 'rows for tools that do not exist');
-  assert.equal(tools.size, 156, 'the curated tool count; update the table when it changes');
+  assert.equal(tools.size, 158, 'the curated tool count; update the table when it changes');
 });
 
 for (const [name, cases] of Object.entries(CASES)) {

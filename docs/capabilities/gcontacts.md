@@ -4,11 +4,11 @@ Google Contacts and People, personal health metrics, Data Portability, and the O
 
 - Plugin: `gcontacts`, MCP server: `gcontacts`, login: Desktop OAuth client, then `login workspace-user`
 - Install: `claude plugin install gcontacts@google-services-mcps`
-- Tools: 73 total. Curated 10, per-method 59, gateway 3. Read 40, write 23, destructive 9, dynamic 1.
+- Tools: 75 total. Curated 12, per-method 59, gateway 3. Read 41, write 23, destructive 10, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 73, google 10, curated 13 tools, each counting the 7 runtime tools this server registers (`account_remove`, `account_set_default`, `accounts_list`, `auth_login`, `auth_setup_client`, `auth_status`, `health`). "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 75, google 10, curated 15 tools, each counting the 7 runtime tools this server registers (`account_remove`, `account_set_default`, `accounts_list`, `auth_login`, `auth_setup_client`, `auth_status`, `health`). "(all)" means the product has no such toolset yet, so it lists every tool.
 
 ## Not registered by this server (2)
 
@@ -26,7 +26,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `contacts_search` | `search_contacts` | Sends the empty warm-up search Google asks for before each search, then the search, with a default readMask. Carries Google's caution. |
 | `profile_me` | `get_user_profile` | From the OAuth2 userinfo endpoint. Every sign-in holds userinfo.email, so the email is always there; the name and picture need userinfo.profile, which every profile of a gcontacts login asks for since 1.35.1 (a view-only scope by Google's description; readwrite and full prefer it). |
 
-## Curated tools (10)
+## Curated tools (12)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
@@ -36,6 +36,8 @@ The tools that match Google's official MCP server for this product (https://deve
 | `auth_login` | write | Sign in to Google | (none) |
 | `auth_setup_client` | write | Save the Google OAuth client | (none) |
 | `auth_status` | read | Sign-in status | (none) |
+| `contacts_delete` | destructive | Delete a contact | contacts |
+| `contacts_list` | read | List your contacts | contacts, contacts.readonly |
 | `contacts_search` | read | Search your contacts | contacts, contacts.readonly |
 | `contacts_search_directory` | read | Search the Workspace directory | directory.readonly |
 | `health` | read | Server health | (none) |
