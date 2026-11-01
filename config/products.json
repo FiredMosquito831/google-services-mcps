@@ -4231,6 +4231,28 @@
         }
       ],
       "gateway": [],
+      "methodNotes": {
+        "streetviewpublish": {
+          "source": "https://developers.google.com/streetview/publish/first-app (\"After you have your API key and access token\"; the samples send both ?key=YOUR_API_KEY and authorization: Bearer YOUR_ACCESS_TOKEN). Every method of the API lists the OAuth scope https://www.googleapis.com/auth/streetviewpublish in Discovery.",
+          "reason": "gsearch and gmaps are the apikey group: gmaps holds an API key and has no Google sign-in, so no OAuth token is ever sent. Every Street View Publish tool is expected to be refused until the product gains an OAuth sign-in, which is a separate decision (adversarial review of gmaps, F2).",
+          "methods": {
+            "streetviewpublish.photo.create": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call.",
+            "streetviewpublish.photo.delete": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call.",
+            "streetviewpublish.photo.get": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call.",
+            "streetviewpublish.photo.startUpload": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call.",
+            "streetviewpublish.photo.update": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call.",
+            "streetviewpublish.photoSequence.create": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call.",
+            "streetviewpublish.photoSequence.delete": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call.",
+            "streetviewpublish.photoSequence.get": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call.",
+            "streetviewpublish.photoSequence.startUpload": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call.",
+            "streetviewpublish.photoSequences.list": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call.",
+            "streetviewpublish.photos.batchDelete": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call.",
+            "streetviewpublish.photos.batchGet": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call.",
+            "streetviewpublish.photos.batchUpdate": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call.",
+            "streetviewpublish.photos.list": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call."
+          }
+        }
+      },
       "fieldMaskDefaults": {
         "places": {
           "source": "https://developers.google.com/maps/documentation/places/web-service/text-search (also nearby-search and place-details)",
@@ -4269,7 +4291,7 @@
           },
           "notes": {
             "places_places_search_text": "Places API (New) searchText: places by a text query, with an optional location bias. Google's search_places also returns a summary written by its server; this returns Places data.",
-            "places_places_get": "One place's details by its id (Places API places.get), the extended details Google's search_places adds on request. Google's resolve_names and resolve_maps_urls call a REST surface only Google's own server reaches (no public API), so they have no tool here.",
+            "places_places_get": "One place's details by its id (Places API places.get), the extended details Google's search_places adds on request. Google publishes resolveNames and resolveMapsUrls as a REST surface (POST https://mapstools.googleapis.com/v1:resolveNames) whose Discovery document is not public (403 on 2026-11-01) and whose only documented authorization is the OAuth scope maps-platform.mapstools; this product holds an API key and has no Google sign-in, so they have no tool here.",
             "maps_compute_routes": "Routes API computeRoutes with a response field mask (a short summary by default). Routes API is not in Google's Discovery directory; called directly with the API key.",
             "maps_lookup_weather": "Weather API current conditions, hourly forecast or daily forecast, by latitude and longitude. Not in Google's Discovery directory; called directly with the API key."
           }

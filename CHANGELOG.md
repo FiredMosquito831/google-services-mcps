@@ -2,6 +2,25 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 2.12.1 - 2026-11-01
+
+### Fixed: every Street View Publish tool says it cannot work here
+- gmaps is in the API key group: it holds an API key and has no Google sign-in. Google's Street View Publish API needs an API key **and** an OAuth 2.0 access token (https://developers.google.com/streetview/publish/first-app: "After you have your API key and access token", and its samples send both `?key=YOUR_API_KEY` and `authorization: Bearer YOUR_ACCESS_TOKEN`), and every method of the API lists the OAuth scope `streetviewpublish` in Discovery. So all 14 Street View Publish tools are expected to be refused, and nothing said so (adversarial review of gmaps, F2). Each of their descriptions now carries the fact, through the product's `methodNotes` in config/products.json, and the product page has a "Street View Publish" section that says it plainly, including that uploading imagery needs a media upload the suite does not offer either.
+- No tool was removed and no kind, scope or name changed: the 14 tools stay listed and keep their kinds, and only their descriptions grow.
+
+### Fixed (docs): what Google publishes for `resolve_names` and `resolve_maps_urls`
+- Four places said those two tools of Google's Maps Grounding Lite server "have no public API". Google does publish a REST surface (`POST https://mapstools.googleapis.com/v1:resolveNames`, the review cites its REST reference), but its Discovery document is not public — it answered 403 on 2026-11-01 — and the only documented authorization is the OAuth scope `maps-platform.mapstools`, which this API-key product cannot ask for. The product page, docs/USING.md, the `google` toolset note and the module comment now say that instead. The tools are still not built: a snapshot needs the document, and the group has no OAuth.
+
+### Fixed (docs): the gmaps product page
+- It said Street View uploads and place autocomplete need `allow_writes`; autocomplete has been a read since 1.24.2. It also offered "upload Street View imagery" as a reason to install, which cannot work. Both are corrected.
+
+### Not changed
+- No tool's kind, scope, name, request or toolset list. `plugins/gmaps/tool-map.json`, every other plugin's `tool-map.json` and `tool-aliases.json` are byte-identical, the frozen files and the goldens have no diff, and `gsm scopes` asks for the same scopes in every case. tools/list changes only in the descriptions of the 14 Street View tools and of the four `places_places_get` texts that carry the note.
+- Reported, not changed: the Weather API's Discovery document (public; checked 2026-11-01) has no address, place id, date or hour parameter, so `maps_lookup_weather` is not missing them; the official `lookup_weather` does the geocoding on its own server. The same document lists four methods the tool does not cover (`history.hours.lookup`, `publicAlerts.lookup`, `forecast.minutes.lookup`, `mapTypes.mapTiles.lookupMapTile`), which want their own change. The five Places/area POST reads the review asked for are already reads since 1.26.3 and the Places field masks since 1.30.0.
+
+### Tests
+- tests/method-notes.test.mjs: all 14 Street View Publish methods carry the note in their tool descriptions (each under the 2,048-character limit), no other gmaps tool carries it, and the plugin's servers.json holds exactly the same notes. tests/maps-parity.test.mjs: the `google` list's note now names the REST surface and its OAuth scope instead of saying "no public API".
+
 ## 2.12.0 - 2026-11-01
 
 ### Added: `androidpub_upload_bundle`, so a new build can be released

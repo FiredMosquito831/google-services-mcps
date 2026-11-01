@@ -1,9 +1,10 @@
 /**
  * Curated Maps tools of the gmaps server. They match tools of Google's Maps Grounding Lite MCP server (Maps
  * Experience agent tools, mapstools.googleapis.com/mcp): compute_routes and lookup_weather. Google's search_places is the
- * generated places_places_search_text here already, and a place's details are places_places_get. Google's
- * resolve_names and resolve_maps_urls call a REST surface that only its own server reaches (no public API), so they
- * have no tool here.
+ * generated places_places_search_text here already, and a place's details are places_places_get. Google publishes
+ * resolve_names and resolve_maps_urls as a REST surface (POST mapstools.googleapis.com/v1:resolveNames) whose Discovery
+ * document is not public (403 on 2026-11-01) and whose only documented authorization is the OAuth scope
+ * maps-platform.mapstools. This product holds an API key and has no Google sign-in, so they have no tool here.
  *
  *   maps_compute_routes  read  Routes API v2 computeRoutes (POST, a read: it computes and changes nothing; declared a
  *                              read here as Google marks it). Google requires a response field mask; this tool always
