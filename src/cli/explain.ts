@@ -64,7 +64,7 @@ export function describeLogin(group: CliGroup): string[] {
       ];
     case 'service-account':
       return [
-        'gplay and gmerchant use a service account key: a JSON file from the Google Cloud console (IAM & Admin, Service accounts, Keys). There is no login. First add the service account\'s email in Play Console (Users and permissions) and as an Admin user of Merchant Center. Then give gsm the key file (setup-service-account). The key is referenced by path and never printed.',
+        'gplay and gmerchant use a service account key: a JSON file from the Google Cloud console (IAM & Admin, Service accounts, Keys). There is no login. First add the service account\'s email in Play Console (Users and permissions) and in Merchant Center (Users), with the access rights it needs: READ_ONLY to read, STANDARD to change product data, ADMIN only for accounts and users. Then give gsm the key file (setup-service-account). The key is referenced by path and never printed.',
       ];
     default:
       return [

@@ -183,7 +183,7 @@ export function consoleSteps(projectId: string): string[] {
     'Search Console: the account must be an owner or user of each property (Settings > Users and permissions): https://search.google.com/search-console',
     'Analytics: Viewer or Analyst on the GA4 property (Admin > Property access management): https://analytics.google.com',
     'Play Console: add the service account email under Users and permissions: https://play.google.com/console',
-    'Merchant Center: add the service account email as an Admin user: https://merchants.google.com',
+    'Merchant Center: add the service account email under Users, with the access rights it needs (READ_ONLY to read, STANDARD to change product data, ADMIN only for accounts and users): https://merchants.google.com',
     'Workspace admin: authorise the admin server scopes under Security > API controls > Domain-wide delegation: https://admin.google.com/ac/owl/domainwidedelegation',
   ];
 }

@@ -276,7 +276,7 @@ function printApiKeyAlias(out: Output): void {
 function printServiceAccountGuidance(out: Output): void {
   out.log('service-account (gplay, gmerchant) uses a service account key. It has no interactive login.');
   out.log('Set it up with: node gsm.mjs setup-service-account --key-file <service account JSON>');
-  out.log('First add the service account email in Play Console (Users and permissions), and as an Admin user of Merchant Center.');
+  out.log('First add the service account email in Play Console (Users and permissions), and in Merchant Center (Users) with the access rights it needs: READ_ONLY to read, STANDARD to change product data, ADMIN only for accounts and users.');
   out.log('The key file stays where it is. Forget the setup with: node gsm.mjs setup-service-account --remove');
 }
 

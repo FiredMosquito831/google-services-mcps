@@ -2,7 +2,7 @@
 
 Install with the simplest command: `npx google-services-mcps install --agent claude --plugin <id>` (see docs/TUTORIAL.md).
 
-Merchant Center accounts through the Merchant API and the Comparison Shopping Service (CSS) API. It reads and changes product data, inventories, promotions, data sources, business information and account settings. With a key set up it lists 153 tools when **Allow write tools** is on and 74 when it is off, and it has no hand-written tools. The 8 Manufacturer Center tools are defined but never load: see "Manufacturer Center" below.
+Merchant Center accounts through the Merchant API and the Comparison Shopping Service (CSS) API. It reads and changes product data, inventories, promotions, data sources, business information and account settings. With a key set up it registers 153 tools with **Allow write tools** on (72 read, 60 write, 20 destructive, 1 dynamic) and lists the reads and the dynamic tool with it off, and it has no hand-written tools. The 8 Manufacturer Center tools are defined but never load: see "Manufacturer Center" below.
 
 Since 1.35.2 every tool uses a Merchant API version Google serves: the v1 resource APIs and Reviews v1alpha. Google discontinued v1beta in May 2026 ("The Merchant API v1beta version discontinued. All API calls must now be directed to the `v1` or `v1alpha` versions.", [Merchant API latest updates](https://developers.google.com/merchant/api/latest-updates)).
 
@@ -25,11 +25,11 @@ node <plugin>/bin/gsm.mjs status
 
 1. Create a production Merchant Center account with a verified website. The identity that registers needs ADMIN access on that account. The developer contact must be a Google account email, not a service account.
 2. In a Google Cloud project, enable the Merchant API. Registration is a one-time step per project. The new developer contact must accept the invitation within 14 days.
-3. Create a service account in that project and a JSON key for it, and add the service account's email as an Admin user of the Merchant Center account. Run `setup-service-account` (see [SETUP.md](../SETUP.md#google-play-and-merchant-center-gplay-gmerchant)). Restart the MCP server (`/mcp`) afterwards.
+3. Create a service account in that project and a JSON key for it, and add the service account's email as a user of the Merchant Center account (Users), with the access rights it needs: `READ_ONLY` when the tools only read ("Has access to the same read-only methods as STANDARD, but no access to any mutating methods"), `STANDARD` to change product data, and `ADMIN` only when accounts and users must be managed (the access rights are Discovery's `User.accessRights`: `STANDARD`, `READ_ONLY`, `ADMIN`, `PERFORMANCE_REPORTING` and `API_DEVELOPER`). Google asks for "the most restrictive access rights possible". Run `setup-service-account` (see [SETUP.md](../SETUP.md#google-play-and-merchant-center-gplay-gmerchant)). Restart the MCP server (`/mcp`) afterwards.
 
-gmerchant has no OAuth sign-in and no profile: the key asks for one fixed scope, `content`. Changes need the plugin option `allow_writes`.
+gmerchant has no OAuth sign-in and no profile: the key asks for one fixed scope, `content`. That one scope is what every API this plugin calls declares, except Manufacturer Center: the 13 Merchant API v1 resource APIs (accounts, conversions, data sources, inventories, issue resolution, Local Finance, loyalty customers, notifications, order tracking, products, promotions, quota, reports), Reviews v1alpha and the CSS API. `manufacturers` (Manufacturer Center) declares only `manufacturercenter`, which the key does not ask for, so its 8 tools never load. Changes need the plugin option `allow_writes`.
 
-**Manufacturer Center.** The 8 Manufacturer Center tools need the `manufacturercenter` scope. The service account key asks only for `content` (`serviceAccountScopes` in `config/products.json`), so these tools never load, whatever the toolset. They are counted in the tool totals, and `docs/capabilities/gmerchant.md` lists them, but they cannot be called.
+**Manufacturer Center.** The 8 Manufacturer Center tools need the `manufacturercenter` scope, so they never load, whatever the toolset, and calling one is not possible. They stay in the tool map and `docs/capabilities/gmerchant.md` lists them in a "Not registered by this server" section.
 
 ## What it can do
 

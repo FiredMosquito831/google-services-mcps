@@ -87,7 +87,7 @@ These two use a service account key, not a login. Google recommends a service ac
 1. In the Google Cloud console, open IAM & Admin > Service accounts, and create a service account. Under Keys, add a JSON key. Keep the file.
 2. Give the service account's email address (it ends in `.iam.gserviceaccount.com`) access:
    - Google Play: Play Console > Users and permissions, and add the email with the rights you need.
-   - Merchant Center: add the email as a user with Admin access, as the [Merchant API quickstart](https://developers.google.com/merchant/api/guides/quickstart/authentication) describes.
+   - Merchant Center: add the email as a user (Users), with the access rights the tools need: `READ_ONLY` to read, `STANDARD` to change product data, `ADMIN` only for accounts and users. The [Merchant API quickstart](https://developers.google.com/merchant/api/guides/quickstart/authentication) says Admin, which works; Google asks for "the most restrictive access rights possible", so give less when the server only reads. The rights are `STANDARD`, `READ_ONLY`, `ADMIN`, `PERFORMANCE_REPORTING` and `API_DEVELOPER` in Discovery's `User.accessRights`.
 3. Record the key:
 
    ```

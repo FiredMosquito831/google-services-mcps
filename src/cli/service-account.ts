@@ -73,7 +73,7 @@ export function runSetupServiceAccount(req: SetupServiceAccountRequest, out: Out
   out.log(`Saved service account setup: ${file} (mode 0600).`);
   out.log(`Account: ${key.clientEmail}${key.projectId ? ` (project ${key.projectId})` : ''}`);
   out.log(`Key file: ${keyFile} (referenced, not copied)`);
-  out.log('Add this account in Play Console (Users and permissions), and as an Admin user of Merchant Center.');
+  out.log('Add this account in Play Console (Users and permissions), and in Merchant Center (Users) with the access rights it needs: READ_ONLY to read, STANDARD to change product data, ADMIN only for accounts and users.');
   out.log('Then restart the gplay and gmerchant servers. Write tools also need GSM_ALLOW_WRITES=true.');
   return 0;
 }

@@ -2,6 +2,23 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 2.11.1 - 2026-11-01
+
+### Fixed (docs and wording): the Merchant Center access rights the key needs
+- Every place that set a service account up (the `setup-service-account` output, `gsm login`, the guided flow, `gsm explain`, the chat tool `auth_setup_service_account`, the readiness console steps and the product page) said to add the account "as an Admin user of Merchant Center" (adversarial review of gmerchant, F10). Admin can change anything, including accounts and users, and Google asks for "the most restrictive access rights possible". They now name the access rights that match what the tools do: `READ_ONLY` when they only read ("Has access to the same read-only methods as STANDARD, but no access to any mutating methods"), `STANDARD` to change product data, and `ADMIN` only for accounts and users. The rights are Discovery's `User.accessRights` (`STANDARD`, `READ_ONLY`, `ADMIN`, `PERFORMANCE_REPORTING`, `API_DEVELOPER`, in data/discovery/merchantapi.accounts_v1.json).
+- docs/SETUP.md keeps the Merchant API quickstart's own wording, which says Admin, and says why we suggest less.
+
+### Fixed (docs): what the key's one scope reaches, and the counts
+- The product page now says which APIs the key's `content` scope reaches (the 13 Merchant API v1 resource APIs, Reviews v1alpha and the CSS API) and that Manufacturer Center, which declares only `manufacturercenter`, is the one it does not. The tool counts are what the server registers, with the read/write/destructive/dynamic split; the old page gave a writes-off total that no longer matched.
+- The `google` toolset's source URL answers 200 (checked 2026-11-01), and the page names no discontinued version.
+
+### Not changed
+- No tool's kind, scope, name or request, no toolset list, and no scope a login asks for: `gsm scopes` for every group, profile and toolset is byte-identical, the tool maps are unchanged, and `tool-aliases.json` is untouched. tools/list changes only for `auth_setup_service_account` on the two service-account servers, in its description.
+- Reported, not changed (the frozen kind file): the review's two candidates are already the decision of 1.26.3, and this release adds the evidence. `merchantapi.issueresolution.renderaccountissues` and `renderproductissues` are reads (their output is "meant to be rendered and shown in third-party applications"); `merchantapi.accounts.developerRegistration.unregisterGcp` and `merchantapi.accounts.homepage.unclaim` are destructive, so they ask twice, because unregistering cuts API access and unclaiming drops the website claim.
+
+### Tests
+- No test changes: the wording is not pinned, and the scopes, kinds and tool maps the suite checks are unchanged (npm test 1458 tests, 1455 pass, 3 skipped).
+
 ## 2.11.0 - 2026-11-01
 
 ### Added: `firebase_get_sdk_config` hands back the configuration file, decoded

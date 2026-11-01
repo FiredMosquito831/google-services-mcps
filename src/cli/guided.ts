@@ -388,7 +388,7 @@ export async function guidedSignIn(env: GuidedEnv): Promise<number> {
   }
 
   if (group === 'service-account') {
-    prompt.say('Play and Merchant Center use one service account. Add its email in Play Console (Users and permissions) and as an Admin user of Merchant Center.');
+    prompt.say('Play and Merchant Center use one service account. Add its email in Play Console (Users and permissions) and in Merchant Center (Users), with the access rights it needs: READ_ONLY to read, STANDARD to change product data, ADMIN only for accounts and users.');
     const keyFile = await askFile(env, 'Path to the service account JSON key file');
     const args = ['setup-service-account', '--key-file', keyFile];
     showCommand(env, args);
