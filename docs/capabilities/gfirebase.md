@@ -4,11 +4,11 @@ Firebase management, App Check, App Distribution, Crashlytics, Hosting, Data Con
 
 - Plugin: `gfirebase`, MCP server: `gfirebase`, login: Desktop OAuth client, then `login developer`
 - Install: `claude plugin install gfirebase@google-services-mcps`
-- Tools: 314 total. Curated 12, per-method 298, gateway 3. Read 146, write 123, destructive 44, dynamic 1.
+- Tools: 315 total. Curated 13, per-method 298, gateway 3. Read 147, write 123, destructive 44, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 314, google 45, curated 15 tools, each counting the 7 runtime tools this server registers (`account_remove`, `account_set_default`, `accounts_list`, `auth_login`, `auth_setup_client`, `auth_status`, `health`). "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 315, google 45, curated 16 tools, each counting the 7 runtime tools this server registers (`account_remove`, `account_set_default`, `accounts_list`, `auth_login`, `auth_setup_client`, `auth_status`, `health`). "(all)" means the product has no such toolset yet, so it lists every tool.
 
 ## Not registered by this server (2)
 
@@ -25,19 +25,19 @@ The tools that match Google's official MCP server for this product (https://gith
 | `firebase_projects_list` | `firebase_list_projects` |  |
 | `firebase_projects_get` | `firebase_get_project` |  |
 | `firebase_projects_search_apps` | `firebase_list_apps` | Every app of a project (iOS, Android and web) in one list; Google's tool filters by platform. |
-| `firebase_web_apps_get_config` | `firebase_get_sdk_config` | The web app's SDK configuration; Google's one tool takes the platform, here there is one tool per platform. |
-| `firebase_apps_get_config` | `firebase_get_sdk_config` |  |
-| `firebase_ios_apps_get_config` | `firebase_get_sdk_config` |  |
-| `firebase_projects_add_firebase` | `firebase_create_project` |  |
+| `firebase_get_sdk_config` | `firebase_get_sdk_config` | One tool for the three app platforms, as Google's is; the web configuration is the object Google returns, and an Android or iOS one is the text of google-services.json or GoogleService-Info.plist, decoded from the base64 the API sends. |
+| `firebase_projects_add_firebase` | `firebase_create_project` | Adds Firebase to a Google Cloud project that exists already (Firebase Management projects.addFirebase). Google's create_project also makes the Cloud project; this tool does not, so create it in the Cloud console or with the gcloud plugin first. |
 | `firebase_web_apps_create` | `firebase_create_app` |  |
 | `firebase_android_apps_create` | `firebase_create_app` |  |
 | `firebase_ios_apps_create` | `firebase_create_app` |  |
 | `firebase_apps_sha_create` | `firebase_create_android_sha` |  |
 | `firebaseru_releases_list` | `firebase_get_security_rules` | The rules releases of a project; with firebaser_projects_rulesets_get it gives the rules source, as Google's tool does. Realtime Database rules are not covered (no API here). |
+| `firebaser_projects_releases_get` | (none) | One rules release by name. The generated firebaseru_releases_list gives the recent ones, and firebaser_projects_rulesets_get the rules source. Google's server has no release lookup. |
 | `firebaser_projects_rulesets_get` | `firebase_get_security_rules` |  |
 | `firebaseru_projects_test` | `firebase_validate_security_rules` | Checks a rules source. Google marks it read-only, and since 1.24.2 (D2) the suite counts it as a read too, so it does not ask. |
 | `firebaseap_backends_list` | `apphosting_list_backends` |  |
 | `firebaseap_backends_get` | `apphosting_fetch_logs` | The backend and its state. Google's tool also reads its build and run logs, which are Cloud Logging: use the gcloud server's logging_entries_list. |
+| `firebase_operations_get` | (none) | Polls a long-running operation that a create returned (Firebase Management API); Google's server waits for its own creates, so it has no such tool. A read. |
 | `firebasecr_apps_issues_get` | `crashlytics_get_issue` |  |
 | `firebasecr_apps_issues_patch` | `crashlytics_update_issue` |  |
 | `firebasecr_apps_events_list` | `crashlytics_list_events` |  |
@@ -61,7 +61,7 @@ The tools that match Google's official MCP server for this product (https://gith
 | `remoteconfig_get_template` | `remoteconfig_get_template` | Remote Config is in no API list here; this curated tool reads the active template or a given version. |
 | `auth_get_users` | `auth_get_users` | Identity Toolkit v1 accounts.lookup (by uid, email or phone) or accounts.query (a page). Password hashes and salts are left out. |
 
-## Curated tools (12)
+## Curated tools (13)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
@@ -72,6 +72,7 @@ The tools that match Google's official MCP server for this product (https://gith
 | `auth_login` | write | Sign in to Google | (none) |
 | `auth_setup_client` | write | Save the Google OAuth client | (none) |
 | `auth_status` | read | Sign-in status | (none) |
+| `firebase_get_sdk_config` | read | Get a Firebase app's SDK configuration | cloud-platform, cloud-platform.read-only |
 | `firestore_get_document` | read | Get a Firestore document | cloud-platform, datastore |
 | `firestore_list_documents` | read | List Firestore documents | cloud-platform, datastore |
 | `firestore_query_collection` | read | Query a Firestore collection | cloud-platform, datastore |

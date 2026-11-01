@@ -1,9 +1,10 @@
 /**
  * Curated Firebase tools of the gfirebase server. They match tools of Google's Firebase MCP server (firebase-tools, the
  * `firebase mcp` command, and the Firestore MCP server it proxies): firestore_get_document, firestore_list_documents,
- * firestore_query_collection, remoteconfig_get_template and auth_get_users. Google's other Firebase tools that call an
- * API (projects, apps, SDK configs, security rules, App Hosting, Crashlytics, Data Connect, Cloud Messaging) are
- * generated tools here already; the ones that drive the local Firebase CLI (init, deploy, the emulators) are not copied.
+ * firestore_query_collection, remoteconfig_get_template, auth_get_users and firebase_get_sdk_config. Google's other
+ * Firebase tools that call an API (projects, apps, security rules, App Hosting, Crashlytics, Data Connect, Cloud
+ * Messaging) are generated tools here already; the ones that drive the local Firebase CLI (init, deploy, the emulators)
+ * are not copied.
  *
  *   firestore_get_document      read  Firestore v1 projects.databases.documents.get.
  *   firestore_list_documents    read  Firestore v1 projects.databases.documents.list.
@@ -12,6 +13,9 @@
  *   remoteconfig_get_template   read  Remote Config v1 projects.getRemoteConfig.
  *   auth_get_users              read  Identity Toolkit v1 projects.accounts.lookup (by uid, email or phone number) or
  *                                     projects.accounts.query (a page of users). Password hashes and salts are left out.
+ *   firebase_get_sdk_config     read  Firebase Management v1beta1 projects.{web,android,ios}Apps.getConfig (and the
+ *                                     app list, to pick one when the call names none). The Android and iOS configs come
+ *                                     back as base64; this tool decodes them to the text of the file Google ships.
  *
  * Firestore, Remote Config and Identity Toolkit v1 have no per-method tools in this server (Firestore is a gcloud API,
  * Remote Config is in no API list, Identity Toolkit v1 is a gateway API here). These tools call them directly; their
@@ -45,6 +49,8 @@ const REMOTE_CONFIG_SCOPES = googleScopes('cloud-platform');
  * list, so it is the scope both accept.
  */
 const AUTH_USERS_SCOPES = googleScopes('cloud-platform');
+/** The scopes of the app configs and the app lists, as Discovery lists them for the same methods' tools. */
+const SDK_CONFIG_SCOPES = googleScopes('cloud-platform', 'cloud-platform.read-only', 'firebase', 'firebase.readonly');
 
 /** The value kinds of a Firestore Value (Discovery: Value). An object with exactly one of these keys is a typed value. */
 const VALUE_KINDS = new Set([
@@ -320,6 +326,40 @@ const getUsersShape = {
   offset: z.number().int().min(0).optional().describe('Without uids, emails or phone numbers: users to skip first (next_offset of the previous answer).'),
 };
 
+const MANAGEMENT = 'https://firebase.googleapis.com/v1beta1';
+
+/** The platforms of a Firebase app, and the resource each one's config lives under. */
+export const APP_PLATFORMS = ['web', 'android', 'ios'] as const;
+export type AppPlatform = (typeof APP_PLATFORMS)[number];
+
+const APP_RESOURCE: Readonly<Record<AppPlatform, string>> = { web: 'webApps', android: 'androidApps', ios: 'iosApps' };
+
+/** The platform an app id names: Google's ids read <version>:<projectNumber>:<platform>:<hash>. */
+export function platformOfAppId(appId: string): AppPlatform | undefined {
+  const m = /^[A-Za-z0-9]+:[A-Za-z0-9]+:(web|android|ios):[A-Za-z0-9]+$/.exec(appId.trim());
+  return m ? (m[1] as AppPlatform) : undefined;
+}
+
+/** A base64 payload as text, when the bytes are text and round-trip exactly; undefined when they are not. */
+export function textOfBase64(data: string): string | undefined {
+  const bytes = Buffer.from(data, 'base64');
+  const text = bytes.toString('utf8');
+  if (!Buffer.from(text, 'utf8').equals(bytes)) return undefined;
+  // eslint-disable-next-line no-control-regex
+  return /[\u0000-\u0008\u000b\u000c\u000e-\u001f]/.test(text) ? undefined : text;
+}
+
+const sdkConfigShape = {
+  project_id: projectId,
+  app_id: z
+    .string()
+    .optional()
+    .describe(
+      "The app's id, such as 1:1234567890:android:9a1b2c3d: its platform decides which configuration is read. Default: the first app of the platform given, else the first web app, then the first Android app, then the first iOS app.",
+    ),
+  platform: z.enum(APP_PLATFORMS).optional().describe('Which app to use when no app_id is given: the first one of that platform.'),
+};
+
 export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
   // The account is chosen per call (see account-context.ts), so the client is not cached here.
   const call: CloudCall = makeCloudCall(() => getAuthClient('developer', cfg));
@@ -438,5 +478,59 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
         return offsetPage({ users, count: users.length }, 'users', offset, limit, cfg.maxResultChars, 'users');
       },
     }),
+    defineTool({
+      name: 'firebase_get_sdk_config',
+      title: "Get a Firebase app's SDK configuration",
+      description:
+        "Read the SDK configuration of a Firebase app (matches get_sdk_config in Google's Firebase MCP server). For a web app it is the configuration object Google returns; for an Android or iOS app it is the text of google-services.json or GoogleService-Info.plist, decoded from the base64 the API sends, with its file name. With no app_id, the first app of platform is used, else the first web app, then the first Android app, then the first iOS app. A read.",
+      kind: 'read',
+      scopes: SDK_CONFIG_SCOPES,
+      inputSchema: sdkConfigShape,
+      async handler(args) {
+        const input = z.object(sdkConfigShape).parse(args);
+        const project = encodeURIComponent(projectIdOf(input.project_id));
+        const { platform, appId, displayName } = await sdkConfigApp(call, project, input.app_id, input.platform);
+        const res = await call<Record<string, unknown>>({ url: `${MANAGEMENT}/projects/${project}/${APP_RESOURCE[platform]}/${appId}/config` });
+        const contents = res.data.configFileContents;
+        const filename = typeof res.data.configFilename === 'string' ? res.data.configFilename : undefined;
+        const head = { app_id: appId, platform, ...(displayName ? { display_name: displayName } : {}), ...(filename ? { config_filename: filename } : {}) };
+        if (typeof contents !== 'string') {
+          // A web app: Google returns the configuration object itself, with the apiKey, appId and project id.
+          return { ...head, sdk_config: res.data };
+        }
+        const text = textOfBase64(contents);
+        return text === undefined
+          ? { ...head, sdk_config_base64: contents, note: 'The configuration is not text, so it comes back as the base64 Google sent.' }
+          : { ...head, sdk_config: text };
+      },
+    }),
   ];
+}
+
+/**
+ * The app whose configuration is read: the one named by app_id, or the first of the platform given, else the first web
+ * app, then the first Android app, then the first iOS app (Google's app order inside each platform).
+ */
+export async function sdkConfigApp(
+  call: CloudCall,
+  encodedProject: string,
+  appId: string | undefined,
+  platform: AppPlatform | undefined,
+): Promise<{ platform: AppPlatform; appId: string; displayName?: string }> {
+  if (appId !== undefined) {
+    const wanted = platformOfAppId(appId);
+    if (!wanted) throw new Error(`"${appId}" is not a Firebase app id: use the form 1:1234567890:android:9a1b2c3d (firebase_projects_search_apps lists them).`);
+    if (platform !== undefined && platform !== wanted) throw new Error(`App ${appId} is a ${wanted} app, but platform is ${platform}.`);
+    return { platform: wanted, appId: appId.trim() };
+  }
+  const order: AppPlatform[] = platform ? [platform] : [...APP_PLATFORMS];
+  for (const p of order) {
+    const res = await call<{ apps?: Array<{ appId?: string; displayName?: string }> }>({
+      url: `${MANAGEMENT}/projects/${encodedProject}/${APP_RESOURCE[p]}`,
+      query: { pageSize: 1 },
+    });
+    const first = (res.data.apps ?? [])[0];
+    if (first?.appId) return { platform: p, appId: first.appId, ...(first.displayName ? { displayName: first.displayName } : {}) };
+  }
+  throw new Error(`Project has no ${platform ? `${platform} ` : ''}app: firebase_projects_search_apps lists the apps, and firebase_web_apps_create or firebase_apps_create makes one.`);
 }

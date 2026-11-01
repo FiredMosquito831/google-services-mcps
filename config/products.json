@@ -4015,19 +4015,19 @@
             "firebase_projects_list",
             "firebase_projects_get",
             "firebase_projects_search_apps",
-            "firebase_web_apps_get_config",
-            "firebase_apps_get_config",
-            "firebase_ios_apps_get_config",
+            "firebase_get_sdk_config",
             "firebase_projects_add_firebase",
             "firebase_web_apps_create",
             "firebase_android_apps_create",
             "firebase_ios_apps_create",
             "firebase_apps_sha_create",
             "firebaseru_releases_list",
+            "firebaser_projects_releases_get",
             "firebaser_projects_rulesets_get",
             "firebaseru_projects_test",
             "firebaseap_backends_list",
             "firebaseap_backends_get",
+            "firebase_operations_get",
             "firebasecr_apps_issues_get",
             "firebasecr_apps_issues_patch",
             "firebasecr_apps_events_list",
@@ -4061,13 +4061,7 @@
             "firebase_projects_search_apps": [
               "firebase_list_apps"
             ],
-            "firebase_web_apps_get_config": [
-              "firebase_get_sdk_config"
-            ],
-            "firebase_apps_get_config": [
-              "firebase_get_sdk_config"
-            ],
-            "firebase_ios_apps_get_config": [
+            "firebase_get_sdk_config": [
               "firebase_get_sdk_config"
             ],
             "firebase_projects_add_firebase": [
@@ -4088,6 +4082,7 @@
             "firebaseru_releases_list": [
               "firebase_get_security_rules"
             ],
+            "firebaser_projects_releases_get": [],
             "firebaser_projects_rulesets_get": [
               "firebase_get_security_rules"
             ],
@@ -4100,6 +4095,7 @@
             "firebaseap_backends_get": [
               "apphosting_fetch_logs"
             ],
+            "firebase_operations_get": [],
             "firebasecr_apps_issues_get": [
               "crashlytics_get_issue"
             ],
@@ -4169,7 +4165,10 @@
           },
           "notes": {
             "firebase_projects_search_apps": "Every app of a project (iOS, Android and web) in one list; Google's tool filters by platform.",
-            "firebase_web_apps_get_config": "The web app's SDK configuration; Google's one tool takes the platform, here there is one tool per platform.",
+            "firebase_get_sdk_config": "One tool for the three app platforms, as Google's is; the web configuration is the object Google returns, and an Android or iOS one is the text of google-services.json or GoogleService-Info.plist, decoded from the base64 the API sends.",
+            "firebase_projects_add_firebase": "Adds Firebase to a Google Cloud project that exists already (Firebase Management projects.addFirebase). Google's create_project also makes the Cloud project; this tool does not, so create it in the Cloud console or with the gcloud plugin first.",
+            "firebaser_projects_releases_get": "One rules release by name. The generated firebaseru_releases_list gives the recent ones, and firebaser_projects_rulesets_get the rules source. Google's server has no release lookup.",
+            "firebase_operations_get": "Polls a long-running operation that a create returned (Firebase Management API); Google's server waits for its own creates, so it has no such tool. A read.",
             "firebaseru_releases_list": "The rules releases of a project; with firebaser_projects_rulesets_get it gives the rules source, as Google's tool does. Realtime Database rules are not covered (no API here).",
             "firebaseru_projects_test": "Checks a rules source. Google marks it read-only, and since 1.24.2 (D2) the suite counts it as a read too, so it does not ask.",
             "firebaseap_backends_get": "The backend and its state. Google's tool also reads its build and run logs, which are Cloud Logging: use the gcloud server's logging_entries_list.",

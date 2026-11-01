@@ -130,19 +130,19 @@
           "firebase_projects_list",
           "firebase_projects_get",
           "firebase_projects_search_apps",
-          "firebase_web_apps_get_config",
-          "firebase_apps_get_config",
-          "firebase_ios_apps_get_config",
+          "firebase_get_sdk_config",
           "firebase_projects_add_firebase",
           "firebase_web_apps_create",
           "firebase_android_apps_create",
           "firebase_ios_apps_create",
           "firebase_apps_sha_create",
           "firebaseru_releases_list",
+          "firebaser_projects_releases_get",
           "firebaser_projects_rulesets_get",
           "firebaseru_projects_test",
           "firebaseap_backends_list",
           "firebaseap_backends_get",
+          "firebase_operations_get",
           "firebasecr_apps_issues_get",
           "firebasecr_apps_issues_patch",
           "firebasecr_apps_events_list",
@@ -169,7 +169,10 @@
       },
       "scopes": [
         "https://www.googleapis.com/auth/cloud-platform",
-        "https://www.googleapis.com/auth/datastore"
+        "https://www.googleapis.com/auth/cloud-platform.read-only",
+        "https://www.googleapis.com/auth/datastore",
+        "https://www.googleapis.com/auth/firebase",
+        "https://www.googleapis.com/auth/firebase.readonly"
       ],
       "label": "Firebase: Firebase management, App Check, App Distribution, Crashlytics, Hosting, Data Connect, Rules, Test Lab, FCM and Identity Toolkit."
     }

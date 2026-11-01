@@ -2,14 +2,14 @@
 
 Install with the simplest command: `npx google-services-mcps install --agent claude --plugin <id>` (see docs/TUTORIAL.md).
 
-Firebase management, App Check, App Distribution, App Hosting, Crashlytics, Hosting, Data Connect, Rules, Cloud Messaging (FCM), Test Lab and Identity Toolkit. It manages Firebase projects and apps, sends push messages, distributes builds and runs device tests. It has 306 tools.
+Firebase management, App Check, App Distribution, App Hosting, Crashlytics, Hosting, Data Connect, Rules, Cloud Messaging (FCM), Test Lab and Identity Toolkit. It manages Firebase projects and apps, sends push messages, distributes builds and runs device tests. It has 315 tools.
 
 ## When to install it
 
-- You list Firebase projects and apps, or add an Android, iOS or web app.
+- You list Firebase projects and apps, or add an Android, iOS or web app, and read an app's SDK configuration.
 - You send a Cloud Messaging push or manage topic subscriptions.
 - You distribute builds to testers, or read crash reports.
-- You run tests in Test Lab or deploy Hosting and App Hosting.
+- You run tests in Test Lab, or create and roll out an App Hosting backend.
 - Wrong choice: you have no Firebase project. Firebase Dynamic Links was shut down in 2025 and is not in the catalog.
 
 ## Install and set up
@@ -17,7 +17,7 @@ Firebase management, App Check, App Distribution, App Hosting, Crashlytics, Host
 ```
 claude plugin install gfirebase@google-services-mcps --scope user
 node <plugin>/bin/gsm.mjs setup-client <client_secret.json>
-node <plugin>/bin/gsm.mjs login developer --profile readonly
+node <plugin>/bin/gsm.mjs login developer --profile readwrite
 node <plugin>/bin/gsm.mjs status
 ```
 
@@ -27,7 +27,7 @@ node <plugin>/bin/gsm.mjs status
 2. Set up the OAuth consent screen. Create an OAuth client ID of type Desktop app and download the JSON file.
 3. Run `setup-client`, then `login developer`. Restart the MCP server (`/mcp`) after login.
 
-Spark, the no-cost plan, covers Crashlytics, App Distribution and FCM. Cloud Functions, Cloud Storage, App Hosting and SMS authentication need Blaze. Start with `--profile readonly`. Changes need a `readwrite` login and the plugin option `allow_writes`.
+Spark, the no-cost plan, covers Crashlytics, App Distribution and FCM. Cloud Functions, Cloud Storage, App Hosting and SMS authentication need Blaze. A `readonly` login lists only the reads that a read-only Firebase scope covers (projects, apps and security rules); Firestore, Remote Config, Authentication users, Crashlytics and Data Connect need `--profile readwrite`. Changes need a `readwrite` login and the plugin option `allow_writes`.
 
 ## What it can do
 
@@ -35,20 +35,23 @@ Spark, the no-cost plan, covers Crashlytics, App Distribution and FCM. Cloud Fun
 |---|---|---|---|
 | Firestore (hand-written) | `firestore_get_document`, `firestore_list_documents`, `firestore_query_collection` | read | Read a document, list a collection, or find documents by field conditions; fields as plain JSON |
 | Remote Config and Authentication (hand-written) | `remoteconfig_get_template`, `auth_get_users` | read | Read the Remote Config template; read Authentication users by uid, email or phone (no password hashes) |
+| SDK config (hand-written) | `firebase_get_sdk_config` | read | An app's configuration: for a web app the object Google returns, for an Android or iOS app the text of google-services.json or GoogleService-Info.plist (decoded from the base64 the API sends) |
 | Projects and apps (per-method) | list and get projects and apps | read | List projects, apps and configuration |
 | | create apps, SHA certificates | write | Add an app or a SHA certificate |
 | | remove apps, delete SHA certificates | destructive | Remove an app or a SHA certificate |
+| Operations | `firebase_operations_get`, the App Hosting operation tools | read, destructive | Follow a long-running operation a create returned; cancel or delete one |
 | Messaging | `fcm_projects_messages_send` | destructive | Send a push message |
 | | topic subscriptions create and delete | write, destructive | Subscribe or unsubscribe devices from topics |
 | App Distribution (26 methods) | releases, testers, groups | read, write, destructive | Distribute builds. Cancelling a release is destructive. |
-| Hosting | backends, builds, rollouts, hosting releases | read, write | Deploy hosting and backends |
+| App Hosting (25 methods) | backends, builds, rollouts, domains, traffic | read, write, destructive | Create and change a backend, start a build or a rollout |
+| Hosting | the 5 operation tools | read, destructive | Follow or cancel a classic Hosting operation. A deploy needs the Firebase CLI: its file upload is not a tool here |
 | Test Lab and device runs (55 methods) | test sessions, results, device runs | read, write, destructive | Run tests on devices. Cancel and delete are destructive. |
 | Other per-method | App Check (46), Identity Toolkit (20), Crashlytics (11), Rules (11), Data Connect (38), ML, Cloud Storage | mixed | Security, auth, crash data, rules and data schema |
 | Gateway (9 APIs) | `api_search`, `api_describe`, `api_call` | read, read, dynamic | App Check v1beta, App Distribution v1alpha, App Hosting v1beta, SQL Connect v1beta, Hosting v1beta1, ML, Identity Toolkit v1 and v2 |
 
 The full list is in `docs/capabilities/gfirebase.md`.
 
-The five hand-written tools match tools of Google's Firebase MCP server (the `firebase mcp` command of firebase-tools, https://github.com/firebase/firebase-tools): `firestore_get_document`, `firestore_list_documents`, `firestore_query_collection`, `remoteconfig_get_template` and `auth_get_users`. Firestore is a gcloud API in this suite and Remote Config is in no API list, so these call the APIs directly. With the plugin option `toolset: google`, the server lists these five and the generated tools that match Google's other Firebase tools that call an API (projects, apps, SDK configs, project and app creation, Android SHA certificates, security rules, App Hosting backends, Crashlytics, Data Connect, Cloud Messaging): 38 tools, with `health` and the sign-in tools. Not in that list: Google's tools that drive the local Firebase CLI (init, deploy, deploy status, environment, the Data Connect build and emulator), the Realtime Database data reads and writes, Remote Config updates, the Storage download URL, App Testing, Cloud Functions logs, and the Authentication user update and SMS region policy (Identity Toolkit, reachable with `api_call` in the `all` and `curated` toolsets). A `readonly` login with that toolset asks for `firebase.readonly`; a `readwrite` login for `cloud-platform`.
+The six hand-written tools match tools of Google's Firebase MCP server (the `firebase mcp` command of firebase-tools, https://github.com/firebase/firebase-tools): `firestore_get_document`, `firestore_list_documents`, `firestore_query_collection`, `remoteconfig_get_template`, `auth_get_users` and `firebase_get_sdk_config`. Firestore is a gcloud API in this suite and Remote Config is in no API list, so these call the APIs directly. With the plugin option `toolset: google`, the server lists these six and the generated tools that match Google's other Firebase tools that call an API (projects, apps, project and app creation, Android SHA certificates, security rules, App Hosting backends, Crashlytics, Data Connect, Cloud Messaging): 38 tools, with `health` and the sign-in tools. Two of them have no Google equivalent and say so in their notes: `firebase_operations_get`, which follows a long-running operation that a create returned, and `firebaser_projects_releases_get`, which reads one rules release. Not in that list: Google's tools that drive the local Firebase CLI (init, deploy, deploy status, environment, the Data Connect build and emulator), the Realtime Database data reads and writes, Remote Config updates, the Storage download URL, App Testing, Cloud Functions logs, and the Authentication user update and SMS region policy (Identity Toolkit, reachable with `api_call` in the `all` and `curated` toolsets). A `readonly` login with that toolset asks for `firebase.readonly`; a `readwrite` login for `cloud-platform`.
 
 ## Example requests
 
@@ -56,6 +59,7 @@ The five hand-written tools match tools of Google's Firebase MCP server (the `fi
 - "Which orders over 100 are still open?" Claude runs `firestore_query_collection` with two filters and a limit. No prompt.
 - "What does the Remote Config template set for welcome_message?" Claude runs `remoteconfig_get_template`. No prompt.
 - "Is ana@example.com a user of my app, and is the account disabled?" Claude runs `auth_get_users` with `emails`. No prompt.
+- "Give me the google-services.json of my Android app." Claude runs `firebase_get_sdk_config` with the app id, or with `platform: android` and no id. No prompt.
 - "List my Firebase apps and their app IDs." Claude runs the apps list. No prompt.
 - "Show the crash trends for my Android app." Claude runs the Crashlytics reads. No prompt.
 - "Send a test push to the beta topic." Claude runs `fcm_projects_messages_send`. It asks twice.
@@ -66,7 +70,7 @@ The five hand-written tools match tools of Google's Firebase MCP server (the `fi
 
 - A push message reaches real devices. Sending is destructive, so it asks twice.
 - Removing an app, a SHA certificate, or cancelling a test or release is destructive.
-- Hosting and App Hosting deploys change a live site or backend. They ask first.
+- An App Hosting rollout changes a live backend, so it asks first. A classic Hosting deploy cannot be finished from here: the API's file upload (`versions.populateFiles`) is a media upload, and this suite's per-method tools and `api_call` both refuse those. Use the Firebase CLI for it; the operation tools here follow the result.
 - Rules changes can open or block access to data. Read the preview first.
 - The `confirmation` option defaults to `every-change`. Change it with `printf '%s' '{"confirmation":"destructive-only"}' | claude plugin configure gfirebase@google-services-mcps --values-stdin` (JSON on stdin), or `/plugin configure gfirebase@google-services-mcps` in Claude Code.
 

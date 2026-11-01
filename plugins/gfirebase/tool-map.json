@@ -697,6 +697,17 @@
     "title": "firebase.projects.getAnalyticsDetails"
   },
   {
+    "name": "mcp__plugin_gfirebase_gfirebase__firebase_get_sdk_config",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform",
+      "https://www.googleapis.com/auth/cloud-platform.read-only",
+      "https://www.googleapis.com/auth/firebase",
+      "https://www.googleapis.com/auth/firebase.readonly"
+    ],
+    "title": "Get a Firebase app's SDK configuration"
+  },
+  {
     "name": "mcp__plugin_gfirebase_gfirebase__firebase_ios_apps_create",
     "kind": "write",
     "scopes": [

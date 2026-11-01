@@ -227,7 +227,7 @@
       "description": "Firebase: projects and apps (with their SDK config), Firestore documents and queries, Remote Config, Authentication users, Crashlytics, Hosting, App Distribution, Data Connect, security Rules, Test Lab and Cloud Messaging.",
       "whenToUse": "Use for Firebase projects: app config, Firestore data, Remote Config, Auth users, Crashlytics crashes, security rules, or sending a push message. Examples: \"list my Firebase projects\", \"read the users collection\", \"top crashes this week\".",
       "flows": [
-        { "title": "Projects and apps", "steps": ["{tool:firebase_projects_list}, then {tool:firebase_projects_search_apps} with parent projects/<id>; {tool:firebase_web_apps_get_config} for a web app's config."] },
+        { "title": "Projects and apps", "steps": ["{tool:firebase_projects_list}, then {tool:firebase_projects_search_apps} with parent projects/<id>; {tool:firebase_get_sdk_config} with an app id (or a platform) for its SDK configuration."] },
         { "title": "Firestore", "steps": ["{tool:firestore_list_documents} with project_id and collection_path, then {tool:firestore_get_document} with document_path; {tool:firestore_query_collection} with filters."] },
         { "title": "Config and users", "steps": ["{tool:remoteconfig_get_template}; {tool:auth_get_users} by uids or emails (password hashes are never returned)."] },
         { "title": "Crashes", "steps": ["{tool:firebasecr_apps_reports_get} with the report name."] }

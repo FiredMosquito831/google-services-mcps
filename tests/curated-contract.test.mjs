@@ -150,6 +150,8 @@ const DOCS = [
   'classroom.v1',
   'meet.v2',
   'analyticsdata.v1beta',
+  // 2.11.0: the curated firebase_get_sdk_config reads an app's config (and the app list) here.
+  'firebase.v1beta1',
 ];
 
 /**
@@ -1121,6 +1123,18 @@ const CASES = {
     { args: { project_id: 'my-app-1234', limit: 20 }, expect: ['identitytoolkit.projects.accounts.query'] },
     { args: { project_id: 'my-app-1234', offset: 100 }, expect: ['identitytoolkit.projects.accounts.query'] },
   ],
+  // 2.11.0: the SDK config of an app, decoded. The three platforms are three getConfig methods.
+  firebase_get_sdk_config: [
+    { args: { project_id: 'my-app-1234', app_id: '1:1234567890:android:9a1b2c3d' }, expect: ['firebase.projects.androidApps.getConfig'], respond: () => ({ configFilename: 'google-services.json', configFileContents: '' }) },
+    { args: { project_id: 'my-app-1234', app_id: '1:1234567890:ios:aa11bb22' }, expect: ['firebase.projects.iosApps.getConfig'], respond: () => ({}) },
+    { args: { project_id: 'my-app-1234', app_id: '1:1234567890:web:cc33dd44' }, expect: ['firebase.projects.webApps.getConfig'], respond: () => ({ projectId: 'my-app-1234' }) },
+    // With no app id the app list picks one first.
+    {
+      args: { project_id: 'my-app-1234', platform: 'ios' },
+      expect: ['firebase.projects.iosApps.list', 'firebase.projects.iosApps.getConfig'],
+      respond: (call) => (call.url.endsWith('/iosApps') ? { apps: [{ appId: '1:1234567890:ios:aa11bb22' }] } : {}),
+    },
+  ],
 
   // gai (1.21.0)
   vertex_generate_content: [
@@ -1206,7 +1220,7 @@ test('every curated tool has a contract row, a skip reason or a known defect, an
   const listed = new Set([...Object.keys(CASES), ...Object.keys(SKIPPED), ...Object.keys(KNOWN_DEFECTS)]);
   assert.deepEqual([...tools.keys()].filter((name) => !listed.has(name)), [], 'curated tools without a row');
   assert.deepEqual([...listed].filter((name) => !tools.has(name)), [], 'rows for tools that do not exist');
-  assert.equal(tools.size, 160, 'the curated tool count; update the table when it changes');
+  assert.equal(tools.size, 161, 'the curated tool count; update the table when it changes');
 });
 
 for (const [name, cases] of Object.entries(CASES)) {

@@ -17,15 +17,13 @@ Sign in here, in the chat. Do not start with terminal commands.
 3. Call `auth_login` without `method`: it lists the two ways to sign in (oauth with the saved client, or adc through the gcloud CLI). Let the person choose, then call it again with `method` and `profile` readonly to read, or readwrite to make changes. For an account already signed in for another server of this group, pass its email as `account`, so its other scopes are kept.
 4. The person approves in the browser. Call `auth_status`: the tools load without a restart.
 
-With the `curated` toolset, the readonly profile covers none of its tools that need a Google scope: sign in with readwrite (write tools stay hidden until writes are allowed in the plugin settings).
-
 Only if the chat tools fail, the same steps in a terminal: `node "${CLAUDE_PLUGIN_ROOT}/bin/gsm.mjs" setup-client <client_secret.json>`, then `node "${CLAUDE_PLUGIN_ROOT}/bin/gsm.mjs" login developer`.
 
 ## Common tasks
 
 ### 1. Projects and apps
 
-1. `firebase_projects_list`, then `firebase_projects_search_apps` with parent projects/<id>; `firebase_web_apps_get_config` for a web app's config.
+1. `firebase_projects_list`, then `firebase_projects_search_apps` with parent projects/<id>; `firebase_get_sdk_config` with an app id (or a platform) for its SDK configuration.
 
 ### 2. Firestore
 
@@ -49,7 +47,7 @@ Reads never ask for approval. Tools that change or delete data are listed only w
 
 ## Tools
 
-The `gfirebase` MCP server lists up to 314 tools with the `all` toolset: 146 read, 123 write, 44 destructive and 1 dynamic (decided per call), counting its 7 runtime tools (`health` and the sign-in tools). Write and destructive tools are listed only when writes are allowed, and a tool loads only when the sign-in holds one of its scopes. The `google` toolset lists 38 of them plus the runtime tools. The gateway APIs below are reached through `api_search` (find a method), `api_describe` (its parameters) and `api_call` (run it).
+The `gfirebase` MCP server lists up to 315 tools with the `all` toolset: 147 read, 123 write, 44 destructive and 1 dynamic (decided per call), counting its 7 runtime tools (`health` and the sign-in tools). Write and destructive tools are listed only when writes are allowed, and a tool loads only when the sign-in holds one of its scopes. The `google` toolset lists 38 of them plus the runtime tools. The gateway APIs below are reached through `api_search` (find a method), `api_describe` (its parameters) and `api_call` (run it).
 
 ## APIs
 

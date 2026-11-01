@@ -85,7 +85,7 @@ const PLAIN = {
   empty: [],
 };
 
-test('five tools, all reads; scopes as Discovery lists them; each names the Google tool it matches', () => {
+test('six tools, all reads; scopes as Discovery lists them; each names the Google tool it matches', () => {
   assert.deepEqual(
     [...tools.values()].map((t) => [t.name, t.kind]),
     [
@@ -94,14 +94,18 @@ test('five tools, all reads; scopes as Discovery lists them; each names the Goog
       ['firestore_query_collection', 'read'],
       ['remoteconfig_get_template', 'read'],
       ['auth_get_users', 'read'],
+      ['firebase_get_sdk_config', 'read'],
     ],
   );
   for (const name of ['firestore_get_document', 'firestore_list_documents', 'firestore_query_collection']) assert.deepEqual(tools.get(name).scopes, [G('cloud-platform'), G('datastore')], name);
   assert.deepEqual(tools.get('remoteconfig_get_template').scopes, [G('cloud-platform')]);
   // accounts.lookup lists only cloud-platform, so that is the one scope both of auth_get_users' methods accept.
   assert.deepEqual(tools.get('auth_get_users').scopes, [G('cloud-platform')]);
+  assert.deepEqual(tools.get('firebase_get_sdk_config').scopes, [G('cloud-platform'), G('cloud-platform.read-only'), G('firebase'), G('firebase.readonly')]);
+  // Google's own tool is get_sdk_config; this one keeps the firebase_ prefix of the server's tools.
+  const GOOGLE_NAME = { firebase_get_sdk_config: 'get_sdk_config' };
   for (const t of tools.values()) {
-    assert.ok(t.description.includes(`matches ${t.name} in Google's Firebase MCP server`), t.name);
+    assert.ok(t.description.includes(`matches ${GOOGLE_NAME[t.name] ?? t.name} in Google's Firebase MCP server`), t.name);
     assert.equal(t.inputSchema.confirm, undefined, `${t.name}: no model-controlled confirm`);
     assert.ok(t.name.length <= 49 - 'gfirebase'.length * 2, `${t.name} fits the name budget`);
   }
@@ -325,6 +329,73 @@ const FIREBASE_OFFICIAL = [
   'remoteconfig_get_template',
   'auth_get_users',
 ];
+
+test('firebase_get_sdk_config: the config file decoded, the web object as Google sends it, and the app picked when none is named', async () => {
+  const ANDROID = '1:1234567890:android:9a1b2c3d';
+  const IOS = '1:1234567890:ios:aa11bb22';
+  const WEB = '1:1234567890:web:cc33dd44';
+  const googleJson = '{\n  "project_info": { "project_id": "my-app-1234" }\n}\n';
+  const plist = '<?xml version="1.0" encoding="UTF-8"?>\n<plist version="1.0"><dict/></plist>\n';
+  const androidApp = { configFilename: 'google-services.json', configFileContents: Buffer.from(googleJson, 'utf8').toString('base64') };
+  const iosApp = { configFilename: 'GoogleService-Info.plist', configFileContents: Buffer.from(plist, 'utf8').toString('base64') };
+  const webApp = { projectId: 'my-app-1234', appId: WEB, apiKey: 'AIza-test', authDomain: 'my-app-1234.firebaseapp.com', storageBucket: 'my-app-1234.appspot.com' };
+
+  // An Android app by id: one request, and the base64 becomes the text of google-services.json.
+  reset((call) => (call.url.endsWith(`/androidApps/${ANDROID}/config`) ? androidApp : {}));
+  const android = await run('firebase_get_sdk_config', { project_id: 'my-app-1234', app_id: ANDROID });
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0].url, `https://firebase.googleapis.com/v1beta1/projects/my-app-1234/androidApps/${ANDROID}/config`);
+  assert.deepEqual(android, { app_id: ANDROID, platform: 'android', config_filename: 'google-services.json', sdk_config: googleJson });
+
+  // An iOS app: the plist text, and the platform may be given when it agrees.
+  reset((call) => (call.url.includes('/iosApps/') ? iosApp : {}));
+  const ios = await run('firebase_get_sdk_config', { project_id: 'my-app-1234', app_id: IOS, platform: 'ios' });
+  assert.equal(ios.sdk_config, plist);
+
+  // A web app: Google returns the configuration object itself, and there is nothing to decode.
+  reset((call) => (call.url.endsWith('/config') ? webApp : {}));
+  const web = await run('firebase_get_sdk_config', { project_id: 'my-app-1234', app_id: WEB });
+  assert.deepEqual(web, { app_id: WEB, platform: 'web', sdk_config: webApp });
+
+  // No app id: the first app of the platform asked for, from the list, then its config.
+  reset((call) => {
+    if (call.url.endsWith('/iosApps')) return { apps: [{ appId: IOS, displayName: 'My iOS app' }, { appId: '1:1234567890:ios:ffff' }] };
+    if (call.url.endsWith('/config')) return iosApp;
+    return {};
+  });
+  const picked = await run('firebase_get_sdk_config', { project_id: 'my-app-1234', platform: 'ios' });
+  assert.deepEqual(calls.map((c) => `${c.method} ${c.url}`), [
+    'GET https://firebase.googleapis.com/v1beta1/projects/my-app-1234/iosApps',
+    `GET https://firebase.googleapis.com/v1beta1/projects/my-app-1234/iosApps/${IOS}/config`,
+  ]);
+  assert.equal(calls[0].query.pageSize, '1', 'one app is enough');
+  assert.deepEqual(picked, { app_id: IOS, platform: 'ios', display_name: 'My iOS app', config_filename: 'GoogleService-Info.plist', sdk_config: plist });
+
+  // No app id and no platform: the first web app, else Android, else iOS.
+  reset((call) => {
+    if (call.url.endsWith('/webApps')) return { apps: [] };
+    if (call.url.endsWith('/androidApps')) return { apps: [{ appId: ANDROID }] };
+    if (call.url.endsWith('/config')) return androidApp;
+    return {};
+  });
+  const first = await run('firebase_get_sdk_config', { project_id: 'my-app-1234' });
+  assert.deepEqual(calls.map((c) => c.url), [
+    'https://firebase.googleapis.com/v1beta1/projects/my-app-1234/webApps',
+    'https://firebase.googleapis.com/v1beta1/projects/my-app-1234/androidApps',
+    `https://firebase.googleapis.com/v1beta1/projects/my-app-1234/androidApps/${ANDROID}/config`,
+  ]);
+  assert.equal(first.platform, 'android');
+
+  // A project with no app at all says so, and what makes one.
+  reset((call) => (call.url.endsWith('/config') ? {} : { apps: [] }));
+  await assert.rejects(run('firebase_get_sdk_config', { project_id: 'my-app-1234' }), /has no app/);
+
+  // Refused before any request: an app id that is not one, and a platform that disagrees with the id.
+  reset();
+  await assert.rejects(run('firebase_get_sdk_config', { project_id: 'my-app-1234', app_id: 'my-app' }), /is not a Firebase app id/);
+  await assert.rejects(run('firebase_get_sdk_config', { project_id: 'my-app-1234', app_id: IOS, platform: 'web' }), /is a ios app, but platform is web/);
+  assert.equal(calls.length, 0);
+});
 
 test("the gfirebase google list covers Google's Firebase tools that call an API, and no local CLI tool", () => {
   const google = JSON.parse(readFileSync(join(REPO, 'config', 'products.json'), 'utf8')).products.gfirebase.toolsets.google;

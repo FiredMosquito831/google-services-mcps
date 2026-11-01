@@ -2,6 +2,28 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 2.11.0 - 2026-11-01
+
+### Added: `firebase_get_sdk_config` hands back the configuration file, decoded
+- The Firebase Management API returns an Android or iOS app's configuration as base64 (`AndroidAppConfig.configFileContents`), and the three generated `*_get_config` tools returned it that way, where Google's own `get_sdk_config` decodes it (adversarial review of gfirebase, F2). The new hand-written `firebase_get_sdk_config` takes a project and an app id (its platform decides which configuration is read) or a `platform`, picks the first app of that platform when no id is given (web, then Android, then iOS otherwise), and answers `sdk_config` as the text of `google-services.json` or `GoogleService-Info.plist` with its file name. A web app's configuration is the object Google returns, which has no file to decode. Base64 that is not text comes back as `sdk_config_base64` with a note saying so.
+- It matches Google's `get_sdk_config`, so in the `google` toolset it takes the place of the three generated per-platform tools. They stay in `all` and `curated`, so nothing is lost there.
+
+### Added: the operation poller and the rules release lookup in the `google` toolset
+- `firebase_operations_get` and `firebaser_projects_releases_get` join it (review F3): a create in this product returns a long-running Operation, and without the poller a caller had to reach for `api_call`, which the `google` toolset does not have. Neither has a Google equivalent, and each note says so. The list still holds 38 tools.
+
+### Fixed (docs): what can and cannot be deployed from here
+- The product page and the plugin's skill said "deploy hosting and backends", and the safety section said Hosting deploys ask first (review F8). A classic Hosting deploy cannot be finished here: a version's files go through `versions.populateFiles`, a media upload, and this suite's per-method tools and `api_call` both refuse media uploads. The page now says so and points to the Firebase CLI; the five Hosting operation tools stay, to follow or cancel an operation someone else started. App Hosting (backends, builds, rollouts, domains, traffic) is real and is described as it is.
+- The page also says what a `readonly` login covers (the project, app and rule reads) and that Firestore, Remote Config, Authentication users, Crashlytics and Data Connect need `readwrite` (F12), states the real tool count, and names the new tools.
+
+### Not changed
+- No tool's kind, scope or request. Every existing tool's map entry is byte-identical; the map gains one read (`firebase_get_sdk_config`), and `gsm scopes` for gfirebase asks for the same scopes in every profile and toolset. `tool-aliases.json` is untouched, and the frozen files and the goldens have no diff.
+- One not-covered line goes: with the new tool declaring `firebase.readonly`, a `readonly` login of the `curated` toolset covers one of gfirebase's tools, so the "Not covered:" line for `gfirebase readonly curated` (1.32.0) no longer applies. Every other not-covered case is unchanged (tests/not-covered.test.mjs).
+- The other findings of the review were already fixed and are left as they are: the Identity Toolkit password hashes, salts and OOB codes are writes or are redacted since 1.26.2 (F1); the readable names came with 2.0.0 (F4); `firestore_query_collection` asks for 10 by default and `auth_get_users` for 100 since 1.29.0, with `offset` and `next_offset` (F6, F13); results are compact and budgeted since 1.28.0 (F6); `firebaseru_projects_test` and the Data Connect queries no longer ask (F11); the product description names Firestore, Remote Config and Authentication users (F10).
+- Reported, not changed: the readiness list still holds only `firebase.googleapis.com` for the developer group, though the tools call a dozen Firebase APIs (F5); `curated` still reaches only the gateway's APIs (F9); the Firestore writes, Realtime Database, Remote Config updates and `auth_update_user` of Google's server have no tool here (F7). Each wants its own change; the first is a one-line-per-API list for every group, not only this one.
+
+### Tests
+- tests/firebase-parity.test.mjs: `firebase_get_sdk_config` for an Android app by id (the decoded text), an iOS app, a web app (the object), the app picked per platform (one list call with `pageSize=1`, then the config), the web-then-Android-then-iOS order, a project with no app, and the two refusals before any request. tests/curated-contract.test.mjs adds rows for the three `getConfig` methods and the app list, and `firebase.v1beta1` joins the documents it checks against (161 curated tools). tests/toolset.test.mjs: the 38-tool list.
+
 ## 2.10.0 - 2026-11-01
 
 ### Fixed: `vertex_generate_content` no longer drops the images a model returns

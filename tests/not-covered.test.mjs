@@ -111,13 +111,14 @@ test('gsm scopes: which plugins, toolsets and profiles name a product with no to
       for (const [profile, list] of Object.entries(lines)) if (list.length > 0) found.push(`${spec.name} ${profile} ${toolset}`);
     }
   }
+  // gfirebase left this list in 2.11.0: firebase_get_sdk_config declares firebase.readonly, which a readonly login holds,
+  // so the curated toolset is no longer empty for it.
   assert.deepEqual(found.sort(), [
     'gads readonly curated',
     'gads readonly google',
     'gbusiness readonly all',
     'gbusiness readonly curated',
     'gbusiness readonly google',
-    'gfirebase readonly curated',
   ]);
 });
 
