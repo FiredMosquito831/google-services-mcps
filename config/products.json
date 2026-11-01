@@ -1799,6 +1799,16 @@
           "version": "v2beta"
         }
       ],
+      "scopePolicy": {
+        "optional": {
+          "books": [
+            "books"
+          ],
+          "labels": [
+            "drivelabels"
+          ]
+        }
+      },
       "fieldsDefaults": {
         "drive": {
           "value": "*",
@@ -1827,7 +1837,7 @@
       },
       "toolsets": {
         "google": {
-          "source": "https://developers.google.com/workspace/drive/api/reference/mcp/tools_list",
+          "source": "https://developers.google.com/workspace/drive/api/reference/mcp",
           "tools": [
             "drive_search",
             "drive_list_recent",

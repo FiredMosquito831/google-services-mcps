@@ -1,7 +1,8 @@
 /**
  * Curated Drive tools (drive_*) and Sheets tools (sheets_*), served by the gdrive server.
  * Read: search, list recent, get file, read text, download; Sheets get values.
- * Write: create folder, create text file, create file (a blank Google file or an upload); Sheets write values, insert rows.
+ * Write: create folder, create text file, create file (a blank Google file or an upload); update a file's metadata
+ * (rename, move, star, description); untrash a file; Sheets write values, insert rows.
  * Destructive: trash file (asks for approval first).
  *
  * Auth: OAuth user token from `gsm login workspace-user`. The local-file guard is in local-files.ts (shared with Gmail
@@ -43,6 +44,42 @@ const EXPORT_DEFAULT: Record<string, string> = {
   'application/vnd.google-apps.drawing': 'image/png',
   'application/vnd.google-apps.script': 'application/vnd.google-apps.script+json',
 };
+
+/**
+ * application types whose content is text a person reads: JSON, XML (SVG is XML), YAML, CSV, TOML, source code. Read as
+ * text by drive_read_text; every other type is bytes, which drive_download returns.
+ */
+const TEXT_APPLICATION = new Set([
+  'application/json',
+  'application/xml',
+  'application/yaml',
+  'application/x-yaml',
+  'application/toml',
+  'application/x-toml',
+  'application/csv',
+  'application/javascript',
+  'application/ecmascript',
+  'application/x-ndjson',
+  'application/ndjson',
+  'application/sql',
+  'application/graphql',
+  'application/x-sh',
+  'application/x-shellscript',
+]);
+
+/** True for a content type whose bytes are text: text/*, the text application types, and +json, +xml or +yaml types. */
+export function isTextMime(mime: string): boolean {
+  return mime.startsWith('text/') || TEXT_APPLICATION.has(mime) || /[+](json|xml|yaml)$/.test(mime);
+}
+
+/** One cell of a spreadsheet row as CSV (RFC 4180 quoting, which the export format uses too). */
+const csvCell = (value: unknown): string => {
+  const text = value === null || value === undefined ? '' : String(value);
+  return /[",\r\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
+};
+
+/** Spreadsheet values as CSV text, the form Drive's own CSV export has. */
+export const csvOf = (rows: readonly (readonly unknown[])[]): string => rows.map((row) => row.map(csvCell).join(',')).join('\n');
 
 /** Blank Google files drive_create_file makes, and the Google type an upload is converted to. */
 const GOOGLE_TYPES = {
@@ -146,6 +183,19 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
     return { comments, more: true };
   }
 
+  /** What drive_trash_file shows before it asks: the file's name, type and whether it is in the trash already. Read only. */
+  async function trashPreview(file_id: string): Promise<Record<string, unknown>> {
+    const api = await driveApi();
+    const res = await api.files.get({ fileId: file_id, fields: 'id, name, mimeType, trashed', supportsAllDrives: true });
+    return {
+      file_id,
+      name: res.data.name,
+      mime_type: res.data.mimeType,
+      already_trashed: res.data.trashed ?? false,
+      effect: 'Moves the file to Drive trash. Restorable from trash.',
+    };
+  }
+
   return [
     // ---- read ----
     defineTool({
@@ -239,7 +289,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       name: 'drive_read_text',
       title: 'Read Drive file as text',
       description:
-        `Read the text of a file (matches read_file_content in Google's Drive MCP server): Google Docs and Slides as plain text, Sheets as CSV, text/* files, and Word, Excel and PowerPoint (docx, xlsx, pptx) and OpenDocument (odt, ods, odp) files up to ${OFFICE_READ_MAX_BYTES / 1024 / 1024} MB, whose text is taken from the downloaded file (Drive exports only Google files). PDF and image text is not read: Drive has no public text-extraction call; use drive_download for the bytes. include_comments adds the file's comment threads. A longer text comes in parts: next_offset, passed as offset, reads on.`,
+        `Read the text of a file (matches read_file_content in Google's Drive MCP server): Google Docs and Slides as plain text, Sheets as CSV, text files (text/*, JSON, XML and SVG, YAML, TOML, CSV, source code), and Word, Excel and PowerPoint (docx, xlsx, pptx) and OpenDocument (odt, ods, odp) files up to ${OFFICE_READ_MAX_BYTES / 1024 / 1024} MB, whose text is taken from the downloaded file (Drive exports only Google files). A spreadsheet reads its first sheet, as Drive's CSV export does; "sheets" names every sheet and "sheet" reads one by name. PDF and image text (a scan, a photo metafile) is not read: Drive has no public text-extraction call, and this server has no PDF reader, so the call refuses rather than return nonsense; use drive_download for the bytes. include_comments adds the file's comment threads. A longer text comes in parts: next_offset, passed as offset, reads on.`,
       kind: 'read',
       scopes: googleScopes('drive', 'drive.readonly'),
       inputSchema: {
@@ -252,19 +302,63 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
           .optional()
           .describe('Cap on returned characters. Default 20000. The text also stops where the answer would pass the result limit; next_offset then continues.'),
         offset: z.number().int().min(0).optional().describe('Start at this character of the text, from 0: next_offset of the previous answer reads on.'),
+        sheet: z.string().optional().describe('A spreadsheet only: the name of the sheet to read (a tab of it), from "sheets". Without it the first sheet is read, as the CSV export does.'),
         include_comments: z.boolean().optional().describe('Also return the comment threads (author, text, quoted text, replies, resolved). Default false.'),
       },
-      async handler({ file_id, max_chars, offset, include_comments }) {
+      async handler({ file_id, max_chars, offset, sheet, include_comments }) {
         const api = await driveApi();
         const meta = await api.files.get({ fileId: file_id, fields: 'id, name, mimeType', supportsAllDrives: true });
         const mime = meta.data.mimeType ?? '';
         const exportMime = EXPORT_TEXT[mime];
+        const isSheet = mime === 'application/vnd.google-apps.spreadsheet';
+
+        /** The sheets (tabs) of a spreadsheet. A failure is not fatal: the CSV export still reads the first one. */
+        async function tabsOf(): Promise<string[] | undefined> {
+          try {
+            const res = await sheetsRequest<{ sheets?: Array<{ properties?: { title?: string; sheetType?: string } }> }>({
+              url: `${SHEETS}/${encodeURIComponent(file_id)}`,
+              method: 'GET',
+              params: { fields: 'sheets.properties(title,sheetType)' },
+            });
+            const tabs = (res.sheets ?? []).map((s) => s.properties?.title).filter((t): t is string => typeof t === 'string');
+            return tabs.length > 0 ? tabs : undefined;
+          } catch {
+            return undefined;
+          }
+        }
 
         let raw: unknown;
         let source: string | undefined;
-        if (exportMime) {
+        let tabPart: Record<string, unknown> = {};
+        if (isSheet && sheet !== undefined) {
+          const tabs = await tabsOf();
+          if (tabs && !tabs.includes(sheet)) {
+            throw new Error(`"${sheet}" is not a sheet of "${meta.data.name ?? file_id}". Its sheets: ${tabs.join(', ')}.`);
+          }
+          const values = await sheetsRequest<{ values?: unknown[][] }>({
+            url: `${SHEETS}/${encodeURIComponent(file_id)}/values/${encodeURIComponent(sheet)}`,
+            method: 'GET',
+            params: { valueRenderOption: 'FORMATTED_VALUE' },
+          });
+          raw = csvOf(values.values ?? []);
+          source = `values of the sheet "${sheet}"`;
+          if (tabs) tabPart = { sheet, sheets: tabs };
+        } else if (exportMime) {
           raw = (await api.files.export({ fileId: file_id, mimeType: exportMime }, { responseType: 'text' })).data;
-        } else if (mime.startsWith('text/')) {
+          if (isSheet) {
+            // Drive exports a spreadsheet as CSV one sheet deep; say which one, so a second sheet is not read as an empty one.
+            const tabs = await tabsOf();
+            if (tabs) {
+              tabPart = {
+                sheet: tabs[0],
+                sheets: tabs,
+                ...(tabs.length > 1
+                  ? { sheet_note: `Drive's CSV export reads the first sheet only (${tabs[0]}). This spreadsheet has ${tabs.length} sheets: ${tabs.join(', ')}. Read another with "sheet", or one range with sheets_get_values.` }
+                  : {}),
+              };
+            }
+          }
+        } else if (isTextMime(mime)) {
           raw = (await api.files.get({ fileId: file_id, alt: 'media', supportsAllDrives: true }, { responseType: 'text' })).data;
         } else if (OFFICE_TYPES[mime]) {
           const sized = await api.files.get({ fileId: file_id, fields: 'size', supportsAllDrives: true });
@@ -277,9 +371,17 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
           const media = await api.files.get({ fileId: file_id, alt: 'media', supportsAllDrives: true }, { responseType: 'arraybuffer' });
           raw = officeText(bytesOf(media.data), mime);
           source = 'text taken from the downloaded file';
+        } else if (mime === 'application/pdf') {
+          throw new Error(
+            `"${meta.data.name ?? file_id}" is a PDF, and reading its text needs a PDF extractor this server does not have. Use drive_download for the bytes (it stores nothing on this machine), or open the file in Drive, where a PDF's text can be copied.`,
+          );
+        } else if (mime.startsWith('image/')) {
+          throw new Error(
+            `"${meta.data.name ?? file_id}" is an image (mimeType ${mime}). This server does not read text out of an image: Drive has no public text-extraction call. Use drive_download for the bytes, or open the file in Drive.`,
+          );
         } else {
           throw new Error(
-            `Cannot read "${meta.data.name ?? file_id}" as text (mimeType ${mime || 'unknown'}). drive_read_text supports Google Docs, Sheets, Slides, text/* files and Office or OpenDocument files (docx, xlsx, pptx, odt, ods, odp). Use drive_download for the bytes, or drive_get_file for metadata.`,
+            `Cannot read "${meta.data.name ?? file_id}" as text (mimeType ${mime || 'unknown'}). drive_read_text supports Google Docs, Sheets, Slides, text files (text/*, JSON, XML, YAML) and Office or OpenDocument files (docx, xlsx, pptx, odt, ods, odp). Use drive_download for the bytes, or drive_get_file for metadata.`,
           );
         }
         if (typeof raw !== 'string') throw new Error('Drive returned no text content for this file.');
@@ -300,6 +402,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
             text_total_chars: raw.length,
             truncated: end < raw.length,
             ...(source ? { text_source: source } : {}),
+            ...tabPart,
             ...(withComments ? commentPart : {}),
           };
         };
@@ -543,6 +646,98 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       },
     }),
     defineTool({
+      name: 'drive_update_file',
+      title: 'Update Drive file metadata',
+      description:
+        "Change a Drive file's metadata: rename it, move it to another folder, star or unstar it, or set its description. Google's Drive MCP server has no such tool, so this one is not in the google toolset. Only the fields given change; the request is Drive's PATCH, so every other field keeps its value. parent_id moves the file (it is added to that folder and taken out of the others), while add_parent_id and remove_parent_id change one folder at a time. The file's type is never changed: Drive converts a Google file when mimeType changes, so this tool takes no mime_type. To restore a file from the trash, use drive_untrash_file.",
+      kind: 'write',
+      scopes: googleScopes('drive', 'drive.file'),
+      inputSchema: {
+        file_id: z.string(),
+        name: z.string().min(1).optional().describe('The new name.'),
+        description: z.string().optional().describe('The new description. An empty string clears it.'),
+        starred: z.boolean().optional().describe('true stars the file, false unstars it.'),
+        parent_id: z.string().optional().describe('Move the file into this folder: it is added there and taken out of the folders it is in now.'),
+        add_parent_id: z.string().optional().describe('Add the file to this folder and keep the folders it is in now.'),
+        remove_parent_id: z.string().optional().describe('Take the file out of this folder.'),
+      },
+      async handler({ file_id, name, description, starred, parent_id, add_parent_id, remove_parent_id }) {
+        const given = [name, description, starred, parent_id, add_parent_id, remove_parent_id].filter((v) => v !== undefined).length;
+        if (given === 0) throw new Error('Nothing to change: give name, description, starred, parent_id, add_parent_id or remove_parent_id.');
+        if (parent_id !== undefined && (add_parent_id !== undefined || remove_parent_id !== undefined)) {
+          throw new Error('parent_id moves the file on its own. Give it without add_parent_id and remove_parent_id.');
+        }
+        const api = await driveApi();
+        let addParents = add_parent_id;
+        let removeParents = remove_parent_id;
+        if (parent_id !== undefined) {
+          // A move: the file goes into the new folder and leaves the folders it is in now (the new one stays, if it is there already).
+          const current = await api.files.get({ fileId: file_id, fields: 'parents', supportsAllDrives: true });
+          const others = (current.data.parents ?? []).filter((p) => p !== parent_id);
+          addParents = parent_id;
+          removeParents = others.length > 0 ? others.join(',') : undefined;
+        }
+        const res = await api.files.update({
+          fileId: file_id,
+          requestBody: {
+            ...(name !== undefined ? { name } : {}),
+            ...(description !== undefined ? { description } : {}),
+            ...(starred !== undefined ? { starred } : {}),
+          },
+          ...(addParents !== undefined ? { addParents } : {}),
+          ...(removeParents !== undefined ? { removeParents } : {}),
+          fields: 'id, name, mimeType, parents, starred, description, webViewLink, modifiedTime',
+          supportsAllDrives: true,
+        });
+        const f = res.data;
+        return {
+          id: f.id,
+          name: f.name,
+          mime_type: f.mimeType,
+          parents: f.parents ?? [],
+          starred: f.starred ?? false,
+          description: f.description ?? null,
+          web_view_link: f.webViewLink,
+          modified_time: f.modifiedTime,
+          changed: [name !== undefined ? 'name' : undefined, description !== undefined ? 'description' : undefined, starred !== undefined ? 'starred' : undefined, addParents !== undefined ? 'parents' : undefined].filter(
+            (c): c is string => c !== undefined,
+          ),
+        };
+      },
+    }),
+    defineTool({
+      name: 'drive_untrash_file',
+      title: 'Restore Drive file from trash',
+      description:
+        "Restore a file from the Drive trash, the inverse of drive_trash_file, with the file's folder and sharing kept. Nothing is uploaded and nothing is overwritten. The approval shows the file's name, read from Drive.",
+      kind: 'write',
+      scopes: googleScopes('drive', 'drive.file', 'drive.metadata'),
+      inputSchema: { file_id: z.string() },
+      async prepare({ file_id }) {
+        const api = await driveApi();
+        const res = await api.files.get({ fileId: file_id, fields: 'id, name, mimeType, trashed', supportsAllDrives: true });
+        return {
+          preview: {
+            file_id,
+            name: res.data.name,
+            mime_type: res.data.mimeType,
+            in_trash: res.data.trashed ?? false,
+            effect: 'Restores the file from Drive trash to its folder, with its sharing as it was.',
+          },
+        };
+      },
+      async handler({ file_id }) {
+        const api = await driveApi();
+        const res = await api.files.update({
+          fileId: file_id,
+          requestBody: { trashed: false },
+          fields: 'id, name, trashed',
+          supportsAllDrives: true,
+        });
+        return { id: res.data.id, name: res.data.name, trashed: res.data.trashed };
+      },
+    }),
+    defineTool({
       name: 'sheets_write_values',
       title: 'Write spreadsheet values',
       description:
@@ -616,20 +811,15 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
     defineTool({
       name: 'drive_trash_file',
       title: 'Trash Drive file',
-      description: 'Move a Drive file to the trash. Never a permanent delete; the file can be restored from trash.',
+      description: 'Move a Drive file to the trash. Never a permanent delete; the file can be restored from trash. The approval names the file, read from Drive.',
       kind: 'destructive',
       scopes: googleScopes('drive', 'drive.file', 'drive.metadata'),
       inputSchema: { file_id: z.string() },
+      async prepare({ file_id }) {
+        return { preview: await trashPreview(file_id) };
+      },
       async preview({ file_id }) {
-        const api = await driveApi();
-        const res = await api.files.get({ fileId: file_id, fields: 'id, name, mimeType, trashed', supportsAllDrives: true });
-        return {
-          file_id,
-          name: res.data.name,
-          mime_type: res.data.mimeType,
-          already_trashed: res.data.trashed ?? false,
-          effect: 'Moves the file to Drive trash. Restorable from trash.',
-        };
+        return trashPreview(file_id);
       },
       async handler({ file_id }) {
         const api = await driveApi();

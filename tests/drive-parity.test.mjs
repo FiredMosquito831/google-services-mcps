@@ -80,7 +80,12 @@ test('kinds follow classifyMethod: list_recent, download and get_values read; cr
   assert.deepEqual(tools.get('sheets_write_values').scopes, [G('drive'), G('drive.file'), G('spreadsheets')]);
   assert.deepEqual(tools.get('sheets_get_values').scopes, [G('drive'), G('drive.file'), G('drive.readonly'), G('spreadsheets'), G('spreadsheets.readonly')]);
   assert.deepEqual(tools.get('drive_list_recent').scopes, tools.get('drive_search').scopes);
-  assert.equal([...tools.values()].some((t) => t.prepare), false);
+  // 2.1.0: drive_trash_file and drive_untrash_file work their approval out in prepare (a preview alone is never shown);
+  // no other tool of this server has one.
+  assert.deepEqual(
+    [...tools.values()].filter((t) => t.prepare).map((t) => t.name).sort(),
+    ['drive_trash_file', 'drive_untrash_file'],
+  );
   for (const t of tools.values()) assert.equal(t.inputSchema.confirm, undefined, `${t.name}: no model-controlled confirm`);
 });
 

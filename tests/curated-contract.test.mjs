@@ -368,7 +368,8 @@ const zoned = (call) => (call.query.fields === 'timeZone' ? { timeZone: 'Europe/
 
 /**
  * One row per curated tool: the arguments, the Discovery methods its requests must match (in order of first use), and
- * an optional responder. A tool can have several cases (args differ); `preview` also runs the tool's preview.
+ * an optional responder. A tool can have several cases (args differ); `preview` also runs the tool's preview, and
+ * `prepare` its prepare step (the read that names the action in the approval).
  */
 const CASES = {
   // gmail
@@ -597,6 +598,29 @@ const CASES = {
       respond: (call) =>
         call.url.endsWith('/comments') ? { comments: [{ id: 'c1', content: 'Check this', replies: [] }] } : call.query.alt === 'media' ? docx() : { ...generic(), mimeType: DOCX, size: '900' },
     },
+    // 2.1.0: a spreadsheet names the sheet it read (Drive's CSV export is one sheet deep), and "sheet" reads one by name.
+    {
+      args: { file_id: 'sheet-1' },
+      expect: ['drive.files.get', 'drive.files.export', 'sheets.spreadsheets.get'],
+      respond: (call) =>
+        call.url.endsWith('/export')
+          ? 'a,b\n1,2'
+          : call.url === 'https://sheets.googleapis.com/v4/spreadsheets/sheet-1'
+            ? { sheets: [{ properties: { title: 'Budget', sheetType: 'GRID' } }, { properties: { title: 'Notes', sheetType: 'GRID' } }] }
+            : { ...generic(), mimeType: 'application/vnd.google-apps.spreadsheet' },
+    },
+    {
+      args: { file_id: 'sheet-1', sheet: 'Notes' },
+      expect: ['drive.files.get', 'sheets.spreadsheets.get', 'sheets.spreadsheets.values.get'],
+      respond: (call) =>
+        call.url.endsWith('/values/Notes')
+          ? { values: [['item', 'cost']] }
+          : call.url === 'https://sheets.googleapis.com/v4/spreadsheets/sheet-1'
+            ? { sheets: [{ properties: { title: 'Budget', sheetType: 'GRID' } }, { properties: { title: 'Notes', sheetType: 'GRID' } }] }
+            : { ...generic(), mimeType: 'application/vnd.google-apps.spreadsheet' },
+    },
+    // 2.1.0: JSON and XML are text.
+    { args: { file_id: 'json-1' }, expect: ['drive.files.get'], respond: (call) => (call.query.alt === 'media' ? '{"a":1}' : { ...generic(), mimeType: 'application/json' }) },
   ],
   drive_list_recent: [{ args: { order_by: 'lastModifiedByMe', page_size: 5, page_token: 'p1' }, expect: ['drive.files.list'] }],
   drive_download: [
@@ -617,7 +641,14 @@ const CASES = {
   sheets_insert_rows: [{ args: { spreadsheet_id: 'sheet-1', sheet_id: 0, start_index: 2, end_index: 5, dimension: 'ROWS', inherit_from_before: true }, expect: ['sheets.spreadsheets.batchUpdate'] }],
   drive_create_folder: [{ args: { name: 'Reports', parent_id: 'folder-1' }, expect: ['drive.files.create'] }],
   drive_create_text_file: [{ args: { name: 'notes.txt', content: 'Hello', mime_type: 'text/plain', parent_id: 'folder-1' }, expect: ['drive.files.create'] }],
-  drive_trash_file: [{ args: { file_id: 'file-1' }, preview: true, expect: ['drive.files.get', 'drive.files.update'] }],
+  drive_trash_file: [{ args: { file_id: 'file-1' }, preview: true, prepare: true, expect: ['drive.files.get', 'drive.files.update'] }],
+  // 2.1.0: metadata only, a PATCH; a move reads the file's folders first.
+  drive_update_file: [
+    { args: { file_id: 'file-1', name: 'Renamed', starred: true }, expect: ['drive.files.update'] },
+    { args: { file_id: 'file-1', parent_id: 'folder-1' }, expect: ['drive.files.get', 'drive.files.update'], respond: (call) => (call.method === 'GET' ? { id: 'file-1', parents: ['folder-2'] } : generic()) },
+    { args: { file_id: 'file-1', description: '' }, expect: ['drive.files.update'] },
+  ],
+  drive_untrash_file: [{ args: { file_id: 'file-1' }, prepare: true, expect: ['drive.files.get', 'drive.files.update'] }],
 
   // searchconsole
   sc_sites_list: [{ args: {}, expect: ['webmasters.sites.list'] }],
@@ -1088,7 +1119,7 @@ test('every curated tool has a contract row, a skip reason or a known defect, an
   const listed = new Set([...Object.keys(CASES), ...Object.keys(SKIPPED), ...Object.keys(KNOWN_DEFECTS)]);
   assert.deepEqual([...tools.keys()].filter((name) => !listed.has(name)), [], 'curated tools without a row');
   assert.deepEqual([...listed].filter((name) => !tools.has(name)), [], 'rows for tools that do not exist');
-  assert.equal(tools.size, 150, 'the curated tool count; update the table when it changes');
+  assert.equal(tools.size, 152, 'the curated tool count; update the table when it changes');
 });
 
 for (const [name, cases] of Object.entries(CASES)) {
@@ -1098,6 +1129,7 @@ for (const [name, cases] of Object.entries(CASES)) {
       calls = [];
       respond = c.respond ?? generic;
       if (c.preview && tool.preview) await tool.preview(c.args);
+      if (c.prepare && tool.prepare) await tool.prepare(c.args, ctx);
       await tool.handler(c.args, ctx);
       assert.ok(calls.length > 0, `${name}: the handler sent a request`);
       const seen = [];

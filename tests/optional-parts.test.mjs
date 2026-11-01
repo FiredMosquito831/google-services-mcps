@@ -45,11 +45,17 @@ const reqsOf = (name, toolset, cfg = loadConfig({ GSM_TOKEN_DIR: tempDir('gsm-op
 /** The requirements without their optional part: how they resolved before the part existed. */
 const plain = (reqs) => reqs.map(({ optional: _o, ...rest }) => rest);
 
-const PARTS = { gtasks: ['keep'], gcontacts: ['health', 'portability'], gsc: ['indexing'] };
+const PARTS = { gtasks: ['keep'], gcontacts: ['health', 'portability'], gsc: ['indexing'], gdrive: ['books', 'labels'] };
 /** The scopes a part's APIs bring, which no login asks for unless the part is named. */
-const PART_SCOPE = { gtasks: /\/auth\/keep/, gcontacts: /\/auth\/(googlehealth|dataportability|cloud-platform$)/, gsc: /\/auth\/indexing$/ };
+const PART_SCOPE = {
+  gtasks: /\/auth\/keep/,
+  gcontacts: /\/auth\/(googlehealth|dataportability|cloud-platform$)/,
+  gsc: /\/auth\/indexing$/,
+  // 2.1.0: Google Books and the Drive Labels API, which the `all` toolset carries and no other toolset does.
+  gdrive: /\/auth\/(books$|drive\.(admin\.)?labels(\.readonly)?$)/,
+};
 
-test('the server map lists the parts: keep (gtasks), health and portability (gcontacts), indexing (gsc)', () => {
+test('the server map lists the parts: keep (gtasks), health and portability (gcontacts), indexing (gsc), books and labels (gdrive)', () => {
   const reg = registry();
   for (const [name, parts] of Object.entries(PARTS)) {
     assert.deepEqual(Object.keys(reg.servers.find((s) => s.name === name).scopePolicy.optional).sort(), [...parts].sort(), name);
@@ -57,6 +63,8 @@ test('the server map lists the parts: keep (gtasks), health and portability (gco
   assert.deepEqual(reg.servers.find((s) => s.name === 'gtasks').scopePolicy.optional, { keep: ['keep'] });
   assert.deepEqual(reg.servers.find((s) => s.name === 'gcontacts').scopePolicy.optional, { health: ['health'], portability: ['dataportability'] });
   assert.deepEqual(reg.servers.find((s) => s.name === 'gsc').scopePolicy.optional, { indexing: ['indexing'] });
+  // The parts name APIs, so the policy marks their generated tools and their gateway methods alike.
+  assert.deepEqual(reg.servers.find((s) => s.name === 'gdrive').scopePolicy.optional, { books: ['books'], labels: ['drivelabels'] });
 });
 
 test('without --with no profile asks for a scope of the parts; with every part named, the login asks what it asked before', async () => {
@@ -72,7 +80,7 @@ test('without --with no profile asks for a scope of the parts; with every part n
   }
 });
 
-test('pinned lists: gtasks, gcontacts and gsc with and without their parts', async () => {
+test('pinned lists: gtasks, gcontacts, gsc and gdrive with and without their parts', async () => {
   const gtasks = await reqsOf('gtasks', 'all');
   assert.deepEqual(resolveScopes(gtasks, 'readonly').scopes, [G('tasks.readonly')]);
   assert.deepEqual(resolveScopes(gtasks, 'readwrite').scopes, [G('tasks')]);
@@ -92,6 +100,20 @@ test('pinned lists: gtasks, gcontacts and gsc with and without their parts', asy
   const gsc = await reqsOf('gsc', 'all');
   assert.deepEqual(resolveScopes(gsc, 'readwrite').scopes, [G('siteverification'), G('webmasters')]);
   assert.deepEqual(resolveScopes(gsc, 'readwrite', ['indexing']).scopes, [G('indexing'), G('siteverification'), G('webmasters')]);
+
+  // gdrive 2.1.0: the `all` toolset carries Books (51 tools) and the Drive Labels API (25 tools and 25 gateway methods).
+  const gdrive = await reqsOf('gdrive', 'all');
+  assert.deepEqual(resolveScopes(gdrive, 'readonly').scopes, [G('drive.activity.readonly'), G('drive.apps.readonly'), G('drive.readonly'), G('forms.responses.readonly')]);
+  assert.deepEqual(resolveScopes(gdrive, 'readwrite').scopes, [G('drive'), G('drive.activity'), G('drive.apps.readonly')]);
+  // Named, the login asks what it asked before the parts existed.
+  assert.deepEqual(resolveScopes(gdrive, 'readonly', ['books', 'labels']).scopes, [G('drive.activity.readonly'), G('drive.apps.readonly'), G('drive.labels.readonly'), G('drive.readonly'), G('forms.responses.readonly')]);
+  assert.deepEqual(resolveScopes(gdrive, 'readwrite', ['books', 'labels']).scopes, [G('books'), G('drive'), G('drive.activity'), G('drive.apps.readonly'), G('drive.labels')]);
+  assert.deepEqual(resolveScopes(gdrive, 'full', ['books', 'labels']).scopes, resolveScopes(gdrive, 'readwrite', ['books', 'labels']).scopes);
+  // A part is named on its own: naming books alone leaves the Labels scopes held back.
+  assert.deepEqual(resolveScopes(gdrive, 'readwrite', ['books']).scopes, [G('books'), G('drive'), G('drive.activity'), G('drive.apps.readonly')]);
+  // The `google` toolset has no Books or Labels tool, so nothing of it is held back there.
+  const gdriveGoogle = await reqsOf('gdrive', 'google');
+  assert.deepEqual(resolveScopes(gdriveGoogle, 'readwrite'), resolveScopes(plain(gdriveGoogle), 'readwrite'));
 });
 
 test('the held-back lines name the part and how to add it; no other line changes', async () => {
@@ -165,6 +187,33 @@ test('an account that holds Keep, Health or Indexing scopes keeps them: a named 
   const gscGoogle = fakeGoogle('me@example.com');
   await runLogin({ group: 'searchconsole', servers: ['gsc'], profile: 'readwrite', account: 'me@example.com' }, registry, capture().out, gscGoogle.deps(gscDir.cfg));
   assert.ok(gscGoogle.seen.scopes.includes(G('indexing')));
+});
+
+test('gdrive 2.1.0: an account that already holds the Books or Labels scopes keeps them, and a login that would drop them saves nothing', async () => {
+  const { cfg } = tempTokens();
+  for (const scope of [G('books'), G('drive.labels'), G('drive.admin.labels')]) {
+    assert.ok((await groupScopeUniverse(registry(), 'workspace-user', cfg, [], [])).has(scope), `${scope} is a scope of the group, so a stored one is never foreign`);
+  }
+
+  // Named with --account: the login asks for the stored Books scope again, so saving keeps it.
+  const named = tempTokens();
+  saveAccount('workspace-user', 'me@example.com', { refresh_token: 'r', scope: `${G('books')} ${G('drive.readonly')} ${EMAIL}` }, named.cfg);
+  const google = fakeGoogle('me@example.com');
+  const run = capture();
+  assert.equal(await runLogin({ group: 'workspace-user', servers: ['gdrive'], profile: 'readonly', account: 'me@example.com' }, registry, run.out, google.deps(named.cfg)), 0, run.text());
+  assert.ok(google.seen.scopes.includes(G('books')), google.seen.scopes.join(' '));
+  assert.ok(storedScopes(named.cfg, 'me@example.com').includes(G('books')));
+
+  // Not named and no --with: the login asks only for its own scopes, saving would drop books, so nothing is saved.
+  const unnamed = tempTokens();
+  saveAccount('workspace-user', 'me@example.com', { refresh_token: 'r', scope: `${G('books')} ${G('drive.readonly')} ${EMAIL}` }, unnamed.cfg);
+  const before = storedScopes(unnamed.cfg, 'me@example.com');
+  const other = fakeGoogle('me@example.com');
+  const refused = capture();
+  assert.equal(await runLogin({ group: 'workspace-user', servers: ['gdrive'], profile: 'readonly' }, registry, refused.out, other.deps(unnamed.cfg)), 1);
+  assert.equal(other.seen.scopes.includes(G('books')), false);
+  assert.match(refused.text(), /Not saved: me@example\.com is already signed in/);
+  assert.deepEqual(storedScopes(unnamed.cfg, 'me@example.com'), before, 'the stored token is unchanged');
 });
 
 test('gsm login --with keep asks for the Keep scopes; --with checks the part names of the server', async () => {
@@ -269,6 +318,15 @@ test('gen-servers copies the parts and the preferences, and refuses a part of an
   const unknownApi = genServersWith('gtasks', (p) => (p.scopePolicy.optional.keep = ['nokeep']));
   assert.notEqual(unknownApi.status, 0);
   assert.match(unknownApi.stderr, /scopePolicy\.optional\["keep"\] must list APIs of the product/);
+
+  // gdrive 2.1.0: the same check for a part that names a generated API (books) and one that names an API which is
+  // generated and reached through the gateway (drivelabels).
+  const driveOk = genServersWith('gdrive', () => undefined);
+  assert.equal(driveOk.status, 0, driveOk.stderr);
+  assert.deepEqual(driveOk.servers.servers.find((s) => s.name === 'gdrive').scopePolicy, { optional: { books: ['books'], labels: ['drivelabels'] } });
+  const driveUnknown = genServersWith('gdrive', (p) => (p.scopePolicy.optional.labels = ['nolabels']));
+  assert.notEqual(driveUnknown.status, 0);
+  assert.match(driveUnknown.stderr, /scopePolicy\.optional\["labels"\] must list APIs of the product/);
 
   const unused = genServersWith('gmeet', (p) => p.scopePolicy.prefer.readwrite.push(G('drive')));
   assert.notEqual(unused.status, 0);
