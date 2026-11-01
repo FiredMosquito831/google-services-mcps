@@ -2,6 +2,26 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 2.15.0 - 2026-11-01
+
+### Added: a manager account per call, and customer ids as the Ads UI shows them
+- The manager account Google Ads calls act through was one setting for the whole session (`GSM_ADS_LOGIN_CUSTOMER_ID`), so reaching a direct account and a manager's client, or two managers, needed a config change and a restart (adversarial review of gads, G3). `ads_search`, `ads_resource_metadata` and `ads_mutate` now take `login_customer_id`, sent as Google's `login-customer-id` header for that call only; without it the configured account applies, as before.
+- `customer_id` and `login_customer_id` are taken with or without dashes, and as a number: the Ads UI shows `123-456-7890` and Google's own tools strip the dashes, where this suite refused them (G9). A value that is not digits is still refused before any request, with a message that says dashes are allowed.
+
+### Added: an `ads_mutate` approval that lists every operation
+- The approval for a big mutate batch was the raw arguments as pretty-printed JSON, cut at 2,000 characters, so about 14 removals filled it and later operations went unseen (G5). The approval the server shows now lists one line per operation - the verb, the resource key and the target, with the update mask for an update - removals first, then the remaining count, then a per-operation tally. The request sent is the body built from the same operations, unchanged.
+- A dynamic tool's approval is built in the handler (`ctx.gate`), because `prepare` runs only for a write or destructive tool; the consent hook's own line is built from the raw arguments and is still cut at 2,000 characters, so the improvement is in the server's form and in the audit line. The page says so.
+
+### Fixed (docs): what the `google` list says, and the count
+- Its `ads_search` note said "The manager account is GSM_ADS_LOGIN_CUSTOMER_ID, not a per-call login_customer_id", which this release makes false. The page said 331 tools; the server registers 338. Both are corrected, and the page documents `login_customer_id` and what the approve step shows.
+
+### Not changed
+- No tool's kind, scope, name or toolset list: the map is byte-identical and the generated and gateway Ads tools still send the configured manager account (a per-call id there is a separate change). `gsm scopes` asks for the same scopes in every case (`adwords` only, in every profile and toolset). `tool-aliases.json` is untouched, and the frozen files and the goldens have no diff.
+- Reported, not changed: `ads_search` paging (`page_token` and `next_page_token`) was already added in 1.41.4, and the row cap of 500 is documented. Nothing here was run against live Google Ads; the header and the request shapes come from Google's tools and Discovery.
+
+### Tests
+- tests/ads.test.mjs: customer ids with dashes and as numbers, the exact path they build; `login_customer_id` on all three tools, its header, and the refusal before any request; `summariseOperations` (removals first, the update mask, the 15-line cap with the rest counted, and a malformed operation named rather than guessed at); the mutate approval's lines and tally; the mutation checks fail without the change. tests/ads-parity.test.mjs: the new argument on the three shapes.
+
 ## 2.14.0 - 2026-11-01
 
 ### Added: `gtm_publish_version`, whose approval says what goes live

@@ -8,7 +8,7 @@ import { OAuth2Client } from 'google-auth-library';
 const dist = (p) => new URL(`../dist/${p}`, import.meta.url).href;
 const ads = await import(dist('servers/gads.js'));
 const { describeError } = await import(dist('core/tools.js'));
-const { buildTools, assertSelectQuery, resourceOperation, riskOfOperations, adsError } = ads;
+const { buildTools, assertSelectQuery, resourceOperation, riskOfOperations, adsError, summariseOperations } = ads;
 
 const BASE = 'https://googleads.googleapis.com/v26';
 const ADWORDS = 'https://www.googleapis.com/auth/adwords';
@@ -207,7 +207,11 @@ test('ads_mutate with a remove operation calls the gate as destructive, with the
   // Changed on purpose: the gate names the real Discovery id of googleAds:mutate (it was googleads.customers.mutate),
   // so policy rules and the audit log match the same id as the generated and gateway mutate methods.
   assert.equal(gateCalls[0].methodId, 'googleads.customers.googleAds.mutate');
-  assert.deepEqual(gateCalls[0].args.operations, operations, 'the gate sees the exact operations');
+  // 2.15.0: the approval shows one line per operation, removals first, so a long batch is never cut mid-list (review G5).
+  assert.equal(gateCalls[0].args.operation_count, 1);
+  assert.deepEqual(gateCalls[0].args.operations, [`remove campaignOperation customers/${CUSTOMER}/campaigns/9`]);
+  assert.deepEqual(gateCalls[0].args.by_operation, { 'remove campaignOperation': 1 });
+  assert.equal(gateCalls[0].args.validate_only, false);
   assert.deepEqual(log, ['gate', 'request'], 'the gate ran before the request');
   assert.equal(calls[0].body.validateOnly, false);
 });
@@ -343,9 +347,69 @@ test('no error message carries the developer token, including network and valida
   assert.equal(adsError(new Error(`boom ${TOKEN}`), TOKEN).message, 'boom [developer token removed]');
 });
 
-test('customer IDs must be digits only', async () => {
+test('customer IDs are digits, and dashes are removed as the Ads UI shows them', async () => {
   reset(() => ({}));
-  await assert.rejects(tool('ads_search').handler({ customer_id: '123-456-7890', query: 'SELECT campaign.id FROM campaign' }));
-  await assert.rejects(tool('ads_mutate').handler({ customer_id: '12a', operations: [{ campaignOperation: { create: {} } }] }, gateContext().ctx));
+  // 2.15.0: the Ads UI shows 123-456-7890 and Google's own tools strip the dashes, so this does too.
+  await tool('ads_search').handler({ customer_id: '123-456-7890', query: 'SELECT campaign.id FROM campaign' });
+  assert.equal(calls[0].url, `https://googleads.googleapis.com/v26/customers/1234567890/googleAds:search`);
+  assert.equal('login-customer-id' in calls[0].headers, false, 'no manager account unless one is named');
+  // A number is taken as well.
+  await tool('ads_search').handler({ customer_id: 1234567890, query: 'SELECT campaign.id FROM campaign' });
+  reset(() => ({}));
+  await assert.rejects(tool('ads_search').handler({ customer_id: '12a', query: 'SELECT campaign.id FROM campaign' }), /must be the customer id, digits only/);
+  await assert.rejects(tool('ads_mutate').handler({ customer_id: '12a', operations: [{ campaignOperation: { create: {} } }] }, gateContext().ctx), /must be the customer id/);
+  assert.equal(calls.length, 0);
+});
+
+test('summariseOperations: one line per operation, removals first, the rest counted, and a bad shape named', () => {
+  const summary = summariseOperations([
+    { campaignOperation: { create: { name: 'New' } } },
+    { campaignOperation: { remove: 'customers/1/campaigns/9' } },
+    { adGroupOperation: { update: { resourceName: 'customers/1/adGroups/4', name: 'Renamed' }, updateMask: 'name' } },
+    { campaignOperation: { remove: 'customers/1/campaigns/8' } },
+  ]);
+  assert.equal(summary.operation_count, 4);
+  // The removals come first, then the update, then the create: the ones that cannot be undone are what the person reads.
+  assert.deepEqual(summary.operations, [
+    'remove campaignOperation customers/1/campaigns/9',
+    'remove campaignOperation customers/1/campaigns/8',
+    'update adGroupOperation customers/1/adGroups/4 (updateMask: name)',
+    'create campaignOperation',
+  ]);
+  assert.equal(summary.removes.length, 2);
+  assert.deepEqual(summary.by_operation, { 'remove campaignOperation': 2, 'update adGroupOperation': 1, 'create campaignOperation': 1 });
+  assert.equal(summary.remaining, 0);
+  // A long batch: at most 15 lines one by one, the rest counted, so the approval is never cut mid-list.
+  const many = Array.from({ length: 40 }, (_, i) => ({ campaignOperation: { remove: `customers/1/campaigns/${i}` } }));
+  const long = summariseOperations(many);
+  assert.equal(long.operation_count, 40);
+  assert.equal(long.operations.length, 15);
+  assert.equal(long.remaining, 25);
+  assert.equal(long.removes.length, 40, 'every removal is counted');
+  // A shape Google would refuse is named, not guessed at.
+  const bad = summariseOperations([{ campaignOperation: { create: {}, update: {} } }, { campaignOperation: {} }, {}]);
+  assert.deepEqual(bad.by_operation, {});
+  assert.equal(bad.operations.length, 3);
+  assert.match(bad.operations[0], /needs exactly one of create, update or remove/);
+  assert.match(bad.operations[1], /needs exactly one of create, update or remove \(it has none\)/);
+  assert.match(bad.operations[2], /an operation with 0 keys/);
+});
+
+test('login_customer_id: a manager account for one call, sent as the login-customer-id header', async () => {
+  reset(() => ({ results: [] }));
+  await tool('ads_search').handler({ customer_id: '111-222-3333', login_customer_id: '999-888-7777', query: 'SELECT campaign.id FROM campaign' });
+  assert.equal(calls[0].headers['login-customer-id'], '9998887777');
+  assert.equal(calls[0].url, 'https://googleads.googleapis.com/v26/customers/1112223333/googleAds:search');
+  // The field catalog takes it too, and the mutate call carries it.
+  reset(() => ({ results: [] }));
+  await tool('ads_resource_metadata').handler({ resource: 'campaign', login_customer_id: 4445556666 });
+  assert.equal(calls[0].headers['login-customer-id'], '4445556666');
+  reset(() => ({ mutateOperationResponses: [{}] }));
+  const { ctx } = gateContext();
+  await tool('ads_mutate').handler({ customer_id: CUSTOMER, login_customer_id: '111-111-1111', operations: [{ campaignBudgetOperation: { create: { name: 'B' } } }], validate_only: true }, ctx);
+  assert.equal(calls[0].headers['login-customer-id'], '1111111111');
+  // A bad id is refused before any request.
+  reset(() => ({}));
+  await assert.rejects(tool('ads_search').handler({ customer_id: CUSTOMER, login_customer_id: 'abc', query: 'SELECT campaign.id FROM campaign' }), /login_customer_id must be the customer id, digits only/);
   assert.equal(calls.length, 0);
 });

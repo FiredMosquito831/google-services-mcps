@@ -57,11 +57,11 @@ test('ads_resource_metadata and ads_search are reads with the adwords scope, and
     assert.equal(t.inputSchema.confirm, undefined, `${name}: no model-controlled confirm`);
     assert.ok(t.description.includes(`matches ${official} in Google's Google Ads MCP server`), name);
   }
-  // ads_list_customers and ads_mutate are unchanged: no new input, the same kinds.
+  // ads_list_customers is unchanged; 2.15.0 added login_customer_id to the other three.
   assert.deepEqual(Object.keys(tools.get('ads_list_customers').inputSchema), []);
-  assert.deepEqual(Object.keys(tools.get('ads_mutate').inputSchema), ['customer_id', 'operations', 'validate_only']);
+  assert.deepEqual(Object.keys(tools.get('ads_mutate').inputSchema), ['customer_id', 'login_customer_id', 'operations', 'validate_only']);
   assert.equal(tools.get('ads_mutate').kind, 'dynamic');
-  assert.deepEqual(Object.keys(tools.get('ads_search').inputSchema), ['customer_id', 'query', 'fields', 'resource', 'conditions', 'orderings', 'limit', 'page_token']);
+  assert.deepEqual(Object.keys(tools.get('ads_search').inputSchema), ['customer_id', 'login_customer_id', 'query', 'fields', 'resource', 'conditions', 'orderings', 'limit', 'page_token']);
 });
 
 // ---- GAQL from parts ----

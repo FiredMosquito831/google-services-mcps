@@ -2,7 +2,7 @@
 
 Install with the simplest command: `npx google-services-mcps install --agent claude --plugin <id>` (see docs/TUTORIAL.md).
 
-Google Ads API, with accounts, campaigns, ad groups, ads, keywords, budgets, conversions, assets and GAQL reporting. It also covers Search Ads 360, Display & Video 360, Campaign Manager 360, Ad Exchange Buyer, Real-time Bidding, AdSense, AdMob and more through the gateway. It has 331 tools.
+Google Ads API, with accounts, campaigns, ad groups, ads, keywords, budgets, conversions, assets and GAQL reporting. It also covers Search Ads 360, Display & Video 360, Campaign Manager 360, Ad Exchange Buyer, Real-time Bidding, AdSense, AdMob and more through the gateway. It has 338 tools.
 
 ## When to install it
 
@@ -37,11 +37,13 @@ Sign in with `--profile readwrite`. The Google Ads API has one scope, `adwords`,
 | Accounts (hand-written) | `ads_list_customers` | read | List the Google Ads accounts the user can reach |
 | Reporting (hand-written) | `ads_search` | read | Run a read-only GAQL query, as text or as fields, resource, conditions, orderings and limit. It accepts SELECT only. |
 | Fields (hand-written) | `ads_resource_metadata` | read | The fields a resource can select, filter by and sort by |
-| Changes (hand-written) | `ads_mutate` | dynamic | Change Google Ads resources. A validate-only check asks nothing. A removal is destructive. Any other change is a write. |
+| Changes (hand-written) | `ads_mutate` | dynamic | Change Google Ads resources. A validate-only check asks nothing. A removal is destructive. Any other change is a write, and the approval lists one line per operation, removals first. |
 | Per-method (323) | | mixed | Google Ads API (175 methods), Search Ads 360 (161), Display & Video 360 (179), AdMob, Bid Manager |
 | Gateway (25 APIs) | `api_search`, `api_describe`, `api_call` | read, read, dynamic | AdSense, Ad Exchange Buyer II, Campaign Manager 360, Real-time Bidding, Authorized Buyers, Data Manager and others |
 
 The full list is in `docs/capabilities/gads.md`.
+
+`ads_search`, `ads_resource_metadata` and `ads_mutate` each take `login_customer_id`, a manager account to act through for that call (Google's `login-customer-id` header). It replaces the configured one (`ads_login_customer_id`, `GSM_ADS_LOGIN_CUSTOMER_ID`) for that call, so one session can reach two managers or a manager's client and a direct account. Customer ids are taken with or without dashes, as the Ads UI shows them.
 
 ## Example requests
 
@@ -49,12 +51,13 @@ The full list is in `docs/capabilities/gads.md`.
 - "Which fields can I report on for ad groups?" Claude runs `ads_resource_metadata` with `resource: "ad_group"`. No prompt.
 - "List the Google Ads accounts I can use." Claude runs `ads_list_customers`. No prompt.
 - "Check whether this budget change would work." Claude runs `ads_mutate` with validate-only set. It asks nothing, and nothing changes.
-- "Raise the daily budget of Brand Search to 50 USD." Claude runs `ads_mutate`. It asks first. The change is live on the account.
+- "Raise the daily budget of Brand Search to 50 USD." Claude runs `ads_mutate`. It asks first, and the approval lists the operation (verb, resource and target) rather than a JSON body. The change is live on the account.
+- "Pull the numbers for the client account behind this manager." Claude runs `ads_search` with `login_customer_id` set to the manager and `customer_id` set to the client. No prompt.
 - "Remove the negative keyword list from the campaign." Claude runs `ads_mutate`. It asks twice.
 
 ## Safety
 
-- `ads_mutate` can change live campaigns. Validate first, then approve the real change.
+- `ads_mutate` can change live campaigns. Validate first, then approve the real change. The approval the server shows lists one line per operation (verb, resource, target and update mask), removals first, then a count of any it did not list; the consent hook's own line is built from the raw arguments and is still cut at 2,000 characters, so with the hook active read the server's form when it appears.
 - `ads_search` cannot change data. It rejects anything but SELECT, and checks the parts of a structured query before sending it.
 - With the plugin option `toolset` set to `google`, gads lists only `ads_list_customers`, `ads_search` and `ads_resource_metadata`, the tools of Google's read-only Google Ads MCP server.
 - Reads never ask. Writes ask first. Removals ask twice.
@@ -70,4 +73,5 @@ No cost is stated for the Google Ads access levels, but tools that fail Required
 - Explorer does not allow account creation, user management, Keyword Plan, Audience Insights, Reach Plan or billing.
 - Whether a validate-only mutate counts against the daily quota, and the per-second rules and reset time, are UNVERIFIED.
 - Google sunset developer tokens on 2026-09-09. The access level is what counts now.
+- Only the three hand-written tools take `login_customer_id`. The per-method and gateway tools send the configured manager account (`ads_login_customer_id`); a per-call one there is a separate change.
 - Not every resource has a per-method tool. Use `api_search` for the rest.
