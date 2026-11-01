@@ -210,13 +210,20 @@ const BUSINESS_LEAN = {
   ],
   gbusiness: [
     'mbaccount_accounts_list',
+    // 2.16.0: the admins list, so the list can complete its own category example.
+    'mbaccount_accounts_admins_list',
     'mbinfo_accounts_locations_list',
     'mbinfo_locations_get',
-    'bpperf_loc_get_dai_met_tim_seri',
     'bpperf_locations_time_series',
     'bpperf_impressions_monthly_list',
     'mbverify_verifications_list',
     'mbinfo_locations_patch',
+    // 2.16.0: the reads a category or attribute change needs, and what Google has changed on a location.
+    'mbinfo_categories_list',
+    'mbinfo_attributes_list',
+    'mbinfo_locations_get_attributes',
+    'mbinfo_get_google_updated',
+    'mbveri_locations_merchant_state',
   ],
 };
 /**

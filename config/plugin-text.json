@@ -188,7 +188,8 @@
         { "title": "Locations", "steps": ["{tool:mbaccount_accounts_list}, then {tool:mbinfo_accounts_locations_list} with parent accounts/<id> and readMask (such as name,title,storefrontAddress)."] },
         { "title": "One location", "steps": ["{tool:mbinfo_locations_get} with name locations/<id> and readMask."] },
         { "title": "Performance", "steps": ["{tool:bpperf_locations_time_series} with location, dailyMetrics and the dailyRange dates; {tool:bpperf_impressions_monthly_list} for search keywords."] },
-        { "title": "Update a listing", "steps": ["{tool:mbinfo_locations_patch} with updateMask naming the fields changed (a change: it asks first)."] }
+        { "title": "Update a listing", "steps": ["{tool:mbinfo_locations_patch} with updateMask naming the fields changed (a change: it asks first).", "A category change: {tool:mbinfo_categories_list} for the id (categories/gcid:...), read the location with {tool:mbinfo_locations_get} first (categories must be sent whole), then patch categories.primaryCategory."] },
+        { "title": "What Google changed, and whether the profile is healthy", "steps": ["{tool:mbinfo_get_google_updated} lists the fields Google changed; {tool:mbveri_locations_merchant_state} says whether the profile is verified or held."] }
       ],
       "notes": []
     },

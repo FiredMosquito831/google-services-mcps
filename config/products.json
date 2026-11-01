@@ -3295,33 +3295,48 @@
           "source": "No official Google MCP server for Google Business Profile was found (Google's Cloud and Workspace MCP lists and Google's GitHub organisations, 2026-10-29; a negative, not confirmed by Google); a lean set chosen here.",
           "tools": [
             "mbaccount_accounts_list",
+            "mbaccount_accounts_admins_list",
             "mbinfo_accounts_locations_list",
             "mbinfo_locations_get",
-            "bpperf_loc_get_dai_met_tim_seri",
             "bpperf_locations_time_series",
             "bpperf_impressions_monthly_list",
             "mbverify_verifications_list",
-            "mbinfo_locations_patch"
+            "mbinfo_locations_patch",
+            "mbinfo_categories_list",
+            "mbinfo_attributes_list",
+            "mbinfo_locations_get_attributes",
+            "mbinfo_get_google_updated",
+            "mbveri_locations_merchant_state"
           ],
           "matches": {
             "mbaccount_accounts_list": [],
+            "mbaccount_accounts_admins_list": [],
             "mbinfo_accounts_locations_list": [],
             "mbinfo_locations_get": [],
-            "bpperf_loc_get_dai_met_tim_seri": [],
             "bpperf_locations_time_series": [],
             "bpperf_impressions_monthly_list": [],
             "mbverify_verifications_list": [],
-            "mbinfo_locations_patch": []
+            "mbinfo_locations_patch": [],
+            "mbinfo_categories_list": [],
+            "mbinfo_attributes_list": [],
+            "mbinfo_locations_get_attributes": [],
+            "mbinfo_get_google_updated": [],
+            "mbveri_locations_merchant_state": []
           },
           "notes": {
             "mbaccount_accounts_list": "The Business Profile accounts the signed-in user can manage. Start here. Google's Business Profile Discovery documents list no OAuth scope; since 1.24.1 the product declares business.manage for them (scopeOverrides), so a readwrite login asks for it. It has no read-only form, so a readonly login covers none of these tools.",
+            "mbaccount_accounts_admins_list": "The people who manage an account, with their role (OWNER, MANAGER, SITE_MANAGER, COMMUNICATIONS_MANAGER) and whether they have accepted.",
             "mbinfo_accounts_locations_list": "The locations of an account; readMask names the fields to return, such as name,title,storefrontAddress.",
             "mbinfo_locations_get": "One location with the fields readMask names: hours, categories, phone, website and so on.",
-            "bpperf_loc_get_dai_met_tim_seri": "One daily metric of a location over a date range, such as calls or website clicks.",
-            "bpperf_locations_time_series": "Several daily metrics of a location over a date range in one call.",
+            "bpperf_locations_time_series": "Several daily metrics of a location over a date range in one call (Google's fetchMultiDailyMetricsTimeSeries). The single-metric call is the generated bpperf_loc_get_dai_met_tim_seri, in the all toolset.",
             "bpperf_impressions_monthly_list": "The search keywords that showed the location, with monthly impressions.",
             "mbverify_verifications_list": "The verifications of a location and their state.",
-            "mbinfo_locations_patch": "Changes the fields updateMask names. A write, so it asks first; the change is public on Google Search and Maps."
+            "mbinfo_locations_patch": "Changes the fields updateMask names. A write, so it asks first; the change is public on Google Search and Maps. Google allows 10 edits per minute per location, and categories and phoneNumbers must be sent whole. Use validateOnly to check first.",
+            "mbinfo_categories_list": "The categories a location can have, with their ids (categories/gcid:...) and display names; the ids are what a category change sends. Needed to change a location's primary category.",
+            "mbinfo_attributes_list": "The attributes a location can have (attributes/...), with their value types and whether they apply to a category; mbinfo_locations_get_attributes gives the values of one location.",
+            "mbinfo_locations_get_attributes": "The attribute values of a location, such as wheelchair accessible or outdoor seating.",
+            "mbinfo_get_google_updated": "The fields Google has changed on a location since it was last edited (locations.getGoogleUpdated); Google owns them and a normal edit does not overwrite them.",
+            "mbveri_locations_merchant_state": "A location's Voice of Merchant state: whether it is verified, whether it has a holding state (such as pending verification or a suspended profile) and what it needs (getVoiceOfMerchantState)."
           }
         }
       },

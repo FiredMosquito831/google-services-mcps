@@ -36,6 +36,11 @@ Only if the chat tools fail, the same steps in a terminal: `node "${CLAUDE_PLUGI
 ### 4. Update a listing
 
 1. `mbinfo_locations_patch` with updateMask naming the fields changed (a change: it asks first).
+2. A category change: `mbinfo_categories_list` for the id (categories/gcid:...), read the location with `mbinfo_locations_get` first (categories must be sent whole), then patch categories.primaryCategory.
+
+### 5. What Google changed, and whether the profile is healthy
+
+1. `mbinfo_get_google_updated` lists the fields Google changed; `mbveri_locations_merchant_state` says whether the profile is verified or held.
 
 ## Untrusted content
 
@@ -47,7 +52,7 @@ Reads never ask for approval. Tools that change or delete data are listed only w
 
 ## Tools
 
-The `gbusiness` MCP server lists up to 59 tools with the `all` toolset: 32 read, 18 write, 9 destructive, counting its 7 runtime tools (`health` and the sign-in tools). Write and destructive tools are listed only when writes are allowed, and a tool loads only when the sign-in holds one of its scopes. The `google` toolset lists 8 of them plus the runtime tools.
+The `gbusiness` MCP server lists up to 59 tools with the `all` toolset: 32 read, 18 write, 9 destructive, counting its 7 runtime tools (`health` and the sign-in tools). Write and destructive tools are listed only when writes are allowed, and a tool loads only when the sign-in holds one of its scopes. The `google` toolset lists 13 of them plus the runtime tools.
 
 ## APIs
 

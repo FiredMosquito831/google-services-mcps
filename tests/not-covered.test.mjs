@@ -98,7 +98,7 @@ test('gsm scopes: with the google toolset, readonly leaves gads (adwords has no 
   const lines = await notCoveredOf('business', undefined, 'google');
   assert.equal(lines.readonly.length, 2, lines.readonly.join('\n'));
   assert.match(lines.readonly.find((l) => / of gads /.test(l)), /covers none of the 3 tool\(s\) of gads .*The readwrite profile covers all 3/);
-  assert.match(lines.readonly.find((l) => / of gbusiness /.test(l)), /covers none of the 8 tool\(s\) of gbusiness/);
+  assert.match(lines.readonly.find((l) => / of gbusiness /.test(l)), /covers none of the 13 tool\(s\) of gbusiness/);
   assert.deepEqual(lines.readwrite, []);
 });
 

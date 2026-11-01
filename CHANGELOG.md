@@ -2,6 +2,24 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 2.16.0 - 2026-11-01
+
+### Added: the reads a Business Profile change needs, in the `google` toolset
+- The list could not complete its own documented example. Changing a location's primary category needs the category id, and a location's attribute values, what Google has changed and whether the profile is verified are the questions a listing owner asks most (adversarial review of gbusiness, C). Five reads join the list, and the noisy single-metric performance tool leaves it: `mbinfo_categories_list`, `mbinfo_attributes_list`, `mbinfo_locations_get_attributes`, `mbinfo_get_google_updated` and `mbveri_locations_merchant_state` (getVoiceOfMerchantState), plus `mbaccount_accounts_admins_list`. The list is 13 tools.
+- `bpperf_loc_get_dai_met_tim_seri` leaves the list because its 15-argument shape (six date parts and five `dailySubEntityType` fields, which Google's own text calls unsupported) is covered by `bpperf_locations_time_series`, which takes one metric or several and was already in the list. The generated tool stays in `all` and `curated`, so nothing is removed from the product.
+- The plugin's skill now walks the category change (list the categories, read the location, patch `categories.primaryCategory`) and names `getGoogleUpdated` and the Voice of Merchant state.
+
+### Fixed (docs): what the plugin does not cover, and why
+- The page said 52 tools; the server registers 59. It now says plainly that reviews, local posts and media are not covered, and why: they live in the older My Business API v4, which Google does not list in its Discovery directory, and its direct Discovery URL (`https://mybusiness.googleapis.com/$discovery/rest?version=v4`) answered 404 on 2026-11-01, so no snapshot can be made here; adding v4 also needs an `include` list and a decision on where those tools belong. It also says why the flat performance call left the `google` list and that the 15-argument form stays in `all`.
+
+### Not changed
+- No tool's kind, scope, name or request: the map is byte-identical, `gsm scopes` for the business group asks for the same scopes in every case (compared: no scope URL added or removed), and `tool-aliases.json` is untouched. The frozen files and the goldens have no diff.
+- Verified and left as they are: `admins.create`, `admins.patch`, `locations.transfer` and admin deletes have been destructive since 1.26.3, so they ask twice (review F6). Parameters Google's text marks "Required." — `readMask` and the masks on the Business Information reads — are required in the tools since 1.30.1 (`requiredByText`), checked on the snapshot's own text. `business.manage` and the `Not covered:` line came with 1.24.1 and 1.32.0.
+- Reported, not changed: a body object still strips fields the snapshot does not know (review F11), which could matter for a newer Location field named in `updateMask`; nothing was run against live Google.
+
+### Tests
+- tests/toolset.test.mjs (the 13-tool `google` list and every one of their kinds), tests/toolset-scopes.test.mjs (13 requirements, a readonly login covers none of them), tests/not-covered.test.mjs (the `Not covered:` line now says 13 tools).
+
 ## 2.15.0 - 2026-11-01
 
 ### Added: a manager account per call, and customer ids as the Ads UI shows them
