@@ -4,11 +4,11 @@ Google Classroom courses, coursework, submissions, students and teachers.
 
 - Plugin: `gclassroom`, MCP server: `gclassroom`, login: Desktop OAuth client, then `login workspace-user`
 - Install: `claude plugin install gclassroom@google-services-mcps`
-- Tools: 127 total. Curated 21, per-method 105, gateway 0. Read 59, write 47, destructive 21, dynamic 0.
+- Tools: 129 total. Curated 23, per-method 105, gateway 0. Read 59, write 49, destructive 21, dynamic 0.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 127, google 27, curated 21 tools, each counting the 7 runtime tools this server registers (`account_remove`, `account_set_default`, `accounts_list`, `auth_login`, `auth_setup_client`, `auth_status`, `health`). "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 129, google 26, curated 23 tools, each counting the 7 runtime tools this server registers (`account_remove`, `account_set_default`, `accounts_list`, `auth_login`, `auth_setup_client`, `auth_status`, `health`). "(all)" means the product has no such toolset yet, so it lists every tool.
 
 ## Not registered by this server (2)
 
@@ -16,7 +16,7 @@ The tool map (`plugins/<id>/tool-map.json`) also lists these, so the consent hoo
 
 - Sign-in tools of other sign-in kinds: `auth_setup_admin`, `auth_setup_service_account`.
 
-## Toolset google (20)
+## Toolset google (19)
 
 The tools that match Google's official MCP server for this product (https://developers.google.com/workspace/classroom/reference/mcp/tools_list).
 
@@ -29,10 +29,9 @@ The tools that match Google's official MCP server for this product (https://deve
 | `classroom_list_coursework` | `list_course_work_summaries` | Assignments, questions and materials of a course in one list (courseWork.list and courseWorkMaterials.list), published only unless include_drafts; include_submission_overview adds one studentSubmissions.list per item. Materials need a classroom.courseworkmaterials scope; without one the answer lists the coursework and says so. |
 | `classroom_get_coursework` | `get_course_work` |  |
 | `classroom_materials_list` | `list_course_work_summaries` | Generated from courseWorkMaterials.list. Kept so a readonly login of this toolset asks for classroom.courseworkmaterials.readonly, which classroom_list_coursework needs for the materials (one tool can declare only one any-of scope list). |
-| `classroom_courses_work_create` | `create_course_work` | Generated from courseWork.create (assignments and questions): a raw CourseWork body. Classroom makes it a DRAFT unless state is set. Not curated in this release. |
+| `classroom_create_coursework` | `create_course_work` | Hand-written in place of the generated courseWork.create, which took a raw CourseWork body and a clipped description. It takes a title, a type, the quiz choices, a due date as YYYY-MM-DD with a time zone, materials as links and Drive files, a topic, points, a schedule and assignees, makes a draft unless told to publish, and asks as destructive when it publishes. It matches create_course_work in part: Google's tool has its own date form and no time zone. |
 | `classroom_materials_create` | `create_course_work` | Generated from courseWorkMaterials.create (materials): a raw CourseWorkMaterial body. Classroom makes it a DRAFT unless state is set. |
-| `classroom_courses_work_patch` | `update_course_work` | Generated from courseWork.patch: updateMask names the fields to change. |
-| `classr_work_modify_assignees` | `update_course_work` | Generated from courseWork.modifyAssignees: adds or removes the students of a coursework item. |
+| `classroom_update_coursework` | `update_course_work` | Hand-written in place of the generated courseWork.patch and courseWork.modifyAssignees: the fields you pass build updateMask, clear takes a field away, and assignee_ids goes through modifyAssignees. Google's mask has no materials, so a link or a Drive file cannot be added to or removed from an item. It matches update_course_work in part. |
 | `classroom_materials_patch` | `update_course_work` | Generated from courseWorkMaterials.patch: updateMask names the fields to change. |
 | `classroom_list_submissions` | `list_course_work_submissions` |  |
 | `classroom_get_rubric` | `get_course_work_rubric` |  |
@@ -43,7 +42,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `classroom_create_announcement` | `create_announcement` |  |
 | `classroom_get_guardians` | `get_guardian_info` |  |
 
-## Curated tools (21)
+## Curated tools (23)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
@@ -54,6 +53,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `auth_setup_client` | write | Save the Google OAuth client | (none) |
 | `auth_status` | read | Sign-in status | (none) |
 | `classroom_create_announcement` | write | Create a Classroom announcement | classroom.announcements |
+| `classroom_create_coursework` | write | Create Classroom coursework | classroom.coursework.students |
 | `classroom_create_rubric` | write | Create a Classroom rubric | classroom.coursework.students |
 | `classroom_create_topic` | write | Create a Classroom topic | classroom.topics |
 | `classroom_get_announcements` | read | Get Classroom announcements | classroom.announcements, classroom.announcements.readonly |
@@ -67,6 +67,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `classroom_list_coursework` | read | List Classroom coursework | classroom.coursework.me, classroom.coursework.me.readonly |
 | `classroom_list_submissions` | read | List Classroom submissions | classroom.coursework.me, classroom.coursework.me.readonly |
 | `classroom_list_topics` | read | List Classroom topics | classroom.topics, classroom.topics.readonly |
+| `classroom_update_coursework` | write | Update Classroom coursework | classroom.coursework.students |
 | `health` | read | Server health | (none) |
 
 ## Per-method tools (105)

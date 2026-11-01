@@ -2,6 +2,29 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 2.9.0 - 2026-11-01
+
+### Added: two hand-written coursework writes in place of three raw generated tools
+- `classroom_create_coursework` makes an assignment, a question or a quiz in one call: a title, a type and its choices, instructions, up to 20 links and Drive files, a topic, points, a due date given as `YYYY-MM-DD` and `HH:MM` read in a time zone (Classroom keeps the pair in UTC), a schedule, individual students and the submission mode. It is a draft unless `publish` is true or `scheduled_time` is set, as Google's own tool is, and both of those ask as destructive calls, because they show the work to the students.
+- `classroom_update_coursework` changes only the fields you pass (they build Google's `updateMask`), takes a field away with `clear`, and sets the students through `courseWork.modifyAssignees` (the adds and removes worked out from a read of the item). Both work their approval out in `prepare`, so the form names the course, or the item as it is now and the fields that change, instead of a course id and a raw body.
+- They take the place of the generated `classroom_courses_work_create`, `classroom_courses_work_patch` and `classr_work_modify_assignees` in the `google` toolset, which now holds 19 tools: those three took a raw `CourseWork` body or a raw `updateMask`, with a description that had lost the field list and Google's project rule. Both tools match Google's `create_course_work` and `update_course_work` in part, which their notes say: Google's tool has its own date form, and no tool can add or remove a material on an item that exists, because Google's update mask has no such field.
+- Both need `classroom.coursework.students`, the one scope Discovery lists for `courseWork.create`, `patch` and `modifyAssignees`, so no login's scopes change: `gsm scopes` for gclassroom is identical in every profile and toolset, and only the tool and covered counts move.
+
+### Added: the same-project rule in the one generated tool that lacked it
+- Google allows only the Google Cloud project that made a coursework item or material to change, grade or delete it. Discovery states that in the text of `courseWork.create`, `patch`, `delete`, `studentSubmissions.patch` and `courseWorkMaterials.delete`, and those tools have carried it whole since 1.29.1 raised the description limit; `courseWorkMaterials.patch` leaves it out, so its tool carries a `methodNote` (config/products.json) that says it, with Google's guide (adversarial review of gclassroom, F3). The two new curated tools say it in their own descriptions.
+
+### Fixed (docs): the gclassroom page's counts, and its "no hand-written tools"
+- `docs/products/gclassroom.md` said the plugin has 119 tools, that the plugin option `google` lists 20, and that "there are no hand-written tools" (there have been 14 since 1.14.0, and 16 now). The page and the plugin's skill say what the server registers, what the two new tools do, and that the client-side filters look at one page.
+
+### Not changed
+- No tool's kind and no other product's tool map, scopes or `tools/list`. `classroom_materials_create` and `classroom_materials_patch` keep their generated form, so a material can still be made and changed with a raw body. `tool-aliases.json` is untouched (no generated tool was renamed), and the frozen files and the goldens have no diff.
+- The client-side filters of `classroom_list_courses` (`name_contains`), `classroom_list_coursework` (`types`, `topic_ids`, `title_contains`) and `classroom_list_announcements` (`text_contains`) still look at one page. Each description says so, since the honest and cheap option is to name the limit: reaching a match on a later page is what `next_page_token` is for, and looping would spend a caller's quota on pages nobody asked for (review F4).
+- Reported, not changed (owner decision needed): the destructive rule (docs/SECURITY.md, (b) sharing and permissions) may also cover `classroom.courses.students.create` and `classroom.courses.teachers.create`, which add a person to a course; `classroom.courses.students.delete` and both invitation creates already ask twice, and an announcement that publishes does too (1.26.3). Raising the two creates means entries in `config/tool-kinds.json`, which is frozen.
+- Reported, not changed: student answers, announcement text and coursework instructions come back as data with no note that they are untrusted text (review F10); the submission overview still calls a one-submission list "your_submission" (F7); `classwork_link` uses the raw course id (F12, UNVERIFIED); `checkRubric` does not check Google's "levels in the same order" rule (F13). Each wants its own change.
+
+### Tests
+- tests/classroom-parity.test.mjs: `dueFields` (UTC, a zone, an impossible date); `create_coursework` (a draft by default, the published quiz with its choices, materials, assignees, `destructiveWhen`, the five refusals that send nothing, and the `prepare` that names the course); `update_coursework` (the mask from the fields passed, `clear`, the `modifyAssignees` add and remove, three refusals, `destructiveWhen`, and the `prepare` that names the item); and the same-project text. tests/curated-contract.test.mjs: rows for both, against `courseWork.create`, `courseWork.patch` and `courseWork.modifyAssignees` (160 curated tools). tests/curated.test.mjs and tests/toolset.test.mjs: the 16 curated tools and the 19-tool `google` list.
+
 ## 2.8.0 - 2026-11-01
 
 ### Added: `contacts_list` pages through every contact

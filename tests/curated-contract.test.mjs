@@ -990,6 +990,39 @@ const CASES = {
   classroom_create_rubric: [
     { args: { course_id: '123', coursework_id: 'w1', criteria: [{ title: 'Clarity', description: 'Clear', levels: [{ title: 'Poor', points: 0 }, { title: 'Good', description: 'd', points: 2 }] }] }, expect: ['classroom.courses.courseWork.rubrics.create'] },
   ],
+  // 2.9.0: the two coursework writes, whose approvals read the course or the item first.
+  classroom_create_coursework: [
+    {
+      args: {
+        course_id: '123',
+        title: 'Essay',
+        work_type: 'MULTIPLE_CHOICE_QUESTION',
+        quiz_choices: ['A', 'B'],
+        description: 'Instructions',
+        links: ['https://example.com/a'],
+        drive_file_ids: ['f1'],
+        topic_id: 't1',
+        max_points: 10,
+        due_date: '2026-11-06',
+        due_time: '17:00',
+        time_zone: 'Europe/Berlin',
+        scheduled_time: '2026-11-02T07:00:00Z',
+        assignee_ids: ['s1'],
+        submission_modification_mode: 'MODIFIED',
+      },
+      prepare: true,
+      expect: ['classroom.courses.get', 'classroom.courses.courseWork.create'],
+    },
+  ],
+  classroom_update_coursework: [
+    {
+      args: { course_id: '123', coursework_id: 'w1', title: 'New', max_points: 5, due_date: '2026-11-06', due_time: '17:00', state: 'DRAFT', submission_modification_mode: 'MODIFIED', assignee_ids: ['s1'] },
+      prepare: true,
+      expect: ['classroom.courses.courseWork.get', 'classroom.courses.courseWork.patch', 'classroom.courses.courseWork.modifyAssignees'],
+    },
+    // clear: the fields go into the mask alone.
+    { args: { course_id: '123', coursework_id: 'w1', clear: ['description', 'topic', 'due', 'scheduled_time'] }, prepare: true, expect: ['classroom.courses.courseWork.get', 'classroom.courses.courseWork.patch'] },
+  ],
 
   // ganalytics (1.17.0)
   ga_run_report: [
@@ -1173,7 +1206,7 @@ test('every curated tool has a contract row, a skip reason or a known defect, an
   const listed = new Set([...Object.keys(CASES), ...Object.keys(SKIPPED), ...Object.keys(KNOWN_DEFECTS)]);
   assert.deepEqual([...tools.keys()].filter((name) => !listed.has(name)), [], 'curated tools without a row');
   assert.deepEqual([...listed].filter((name) => !tools.has(name)), [], 'rows for tools that do not exist');
-  assert.equal(tools.size, 158, 'the curated tool count; update the table when it changes');
+  assert.equal(tools.size, 160, 'the curated tool count; update the table when it changes');
 });
 
 for (const [name, cases] of Object.entries(CASES)) {

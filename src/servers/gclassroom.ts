@@ -18,7 +18,7 @@ import { z } from 'zod';
 import type { RuntimeConfig } from '../core/config.js';
 import { getAuthClient, googleScopes } from '../core/auth.js';
 import { defineTool, type ToolDef } from '../core/tools.js';
-import { formatInZone, ianaZone, type Zone } from './calendar-time.js';
+import { formatInZone, ianaZone, minuteOfDay, zonedToUtc, type Zone } from './calendar-time.js';
 import { makeCloudCall, statusOf, type CloudCall } from './cloud-http.js';
 
 const API = 'https://classroom.googleapis.com/v1';
@@ -37,6 +37,8 @@ const SUBMISSIONS_READ = googleScopes(
   'classroom.student-submissions.students.readonly',
 );
 const RUBRIC_WRITE = googleScopes('classroom.coursework.students');
+/** The scope of courseWork.create, patch and modifyAssignees: the one Discovery lists for all three. */
+const COURSEWORK_WRITE = googleScopes('classroom.coursework.students');
 const ROSTER_READ = googleScopes('classroom.rosters', 'classroom.rosters.readonly', 'classroom.profile.emails', 'classroom.profile.photos');
 const ANNOUNCEMENTS_READ = googleScopes('classroom.announcements', 'classroom.announcements.readonly');
 const ANNOUNCEMENTS_WRITE = googleScopes('classroom.announcements');
@@ -115,6 +117,25 @@ const timeIn = (value: string | undefined, zone: Zone | undefined): string | und
   value && zone && !Number.isNaN(Date.parse(value)) ? formatInZone(Date.parse(value), zone) : value;
 
 const zoneOf = (timeZone: string | undefined): Zone | undefined => (timeZone === undefined ? undefined : ianaZone(timeZone));
+
+/**
+ * The Date and TimeOfDay Classroom stores for a due date (2.9.0): a YYYY-MM-DD and an optional HH:MM, read as a local
+ * wall clock in the zone (UTC when none is given) and converted to the UTC pair Google keeps (CourseWork.dueDate and
+ * dueTime: "in UTC"). Both are sent together, because Discovery requires each when the other is set.
+ */
+export function dueFields(date: string, time: string | undefined, zone: Zone | undefined): { dueDate: GDate; dueTime: GTime } {
+  const parts = /^(\d{4})-(\d{2})-(\d{2})$/.exec(date.trim());
+  if (!parts) throw new Error(`due_date must be YYYY-MM-DD, for example 2026-11-06, got "${date}".`);
+  const [year, month, day] = [Number(parts[1]), Number(parts[2]), Number(parts[3])];
+  const minutes = time === undefined ? 0 : minuteOfDay(time, 'due_time');
+  const utcDay = new Date(Date.UTC(year, month - 1, day));
+  if (utcDay.getUTCMonth() !== month - 1 || utcDay.getUTCDate() !== day) throw new Error(`due_date ${date} is not a real date.`);
+  const utc = new Date(zone ? zonedToUtc(year, month, day, minutes, zone) : Date.UTC(year, month - 1, day, 0, minutes));
+  return {
+    dueDate: { year: utc.getUTCFullYear(), month: utc.getUTCMonth() + 1, day: utc.getUTCDate() },
+    dueTime: { hours: utc.getUTCHours(), minutes: utc.getUTCMinutes() },
+  };
+}
 
 // ---------- Answers ----------
 
@@ -272,6 +293,28 @@ const timeZone = z
 const pageSize = (def: number) => z.number().int().min(1).optional().describe(`Items per page. Default ${def}.`);
 const pageToken = z.string().optional().describe('next_page_token from the previous call, with the same other arguments.');
 const ids = (what: string) => z.array(z.string().min(1)).min(1).max(CLASSROOM_BATCH_MAX).describe(`${what}, 1 to ${CLASSROOM_BATCH_MAX}.`);
+/** A time zone the caller writes a due date and time in (2.9.0), rather than the zone of the answer. */
+const inputZone = z
+  .string()
+  .optional()
+  .describe('IANA time zone in which due_date and due_time are meant, for example Europe/Berlin. Default: UTC (Classroom keeps them in UTC).');
+const dueDateArg = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'due_date must be YYYY-MM-DD').optional().describe('The date submissions are due, YYYY-MM-DD. Classroom keeps the date with a time of day.');
+const dueTimeArg = z.string().regex(/^\d{2}:\d{2}$/, 'due_time must be HH:MM').optional().describe('The time of day submissions are due, HH:MM (24-hour clock). Needs due_date.');
+const scheduledArg = z
+  .string()
+  .regex(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2}(\.\d+)?)?(Z|[+-]\d{2}:\d{2})$/i, 'scheduled_time must be RFC 3339 with an offset')
+  .optional()
+  .describe('Publish it at this time (RFC 3339). It stays a draft until then.');
+const materialArgs = {
+  links: z.array(z.string().url()).optional().describe('Web links to attach (Google turns a YouTube link into a video attachment).'),
+  drive_file_ids: z.array(z.string().min(1)).optional().describe('Drive file ids to attach (students can view them).'),
+};
+/**
+ * Google's rule that a coursework item may only be changed by the Cloud project that made it, from Discovery's own
+ * courseWork.patch and courseWork.delete text and the Classroom guide on course work.
+ */
+export const SAME_PROJECT =
+  "Google allows only the Google Cloud project that made a coursework item to change, grade or delete it, so an item made in the Classroom website answers PERMISSION_DENIED (Discovery's courseWork.patch text; https://developers.google.com/workspace/classroom/guides/manage-coursework).";
 
 export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
   // The account is chosen per call (see account-context.ts), so the client is not cached here.
@@ -800,6 +843,260 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
           })
         ).data;
         return { id: r.id, criteria: (r.criteria ?? []).map((c) => ({ id: c.id, title: c.title, levels: (c.levels ?? []).length })) };
+      },
+    }),
+    defineTool({
+      name: 'classroom_create_coursework',
+      title: 'Create Classroom coursework',
+      description: `Create an assignment, a question or a quiz in a course (matches create_course_work in Google's Classroom MCP server). It is a draft students do not see unless publish is true or scheduled_time is set. Give a title and, for a quiz, the choices; add instructions, up to ${CLASSROOM_MATERIALS_MAX} links and Drive files, a topic, points and a due date. assignee_ids limits it to some students. Google's tool takes the due date in its own form; this one takes YYYY-MM-DD and an optional HH:MM, read in time_zone. Materials cannot be added to or removed from an item later (Google's update mask has no materials). ${SAME_PROJECT} It asks first; with publish or scheduled_time it posts to the students, so that call asks as a destructive action.`,
+      kind: 'write',
+      // Publishing, now or at scheduled_time, shows it to the students: a send to other people (the destructive rule).
+      destructiveWhen: ({ publish, scheduled_time }) => publish === true || scheduled_time !== undefined,
+      scopes: COURSEWORK_WRITE,
+      inputSchema: {
+        course_id: courseId,
+        title: z.string().trim().min(1).max(3000).describe('The title, 1 to 3,000 characters.'),
+        work_type: z
+          .enum(['ASSIGNMENT', 'SHORT_ANSWER_QUESTION', 'MULTIPLE_CHOICE_QUESTION'])
+          .optional()
+          .describe('ASSIGNMENT (the default), SHORT_ANSWER_QUESTION, or MULTIPLE_CHOICE_QUESTION for a quiz.'),
+        quiz_choices: z.array(z.string().trim().min(1)).min(1).optional().describe('The answer choices of a MULTIPLE_CHOICE_QUESTION.'),
+        description: z.string().max(30000).optional().describe('The instructions, at most 30,000 characters.'),
+        ...materialArgs,
+        topic_id: z.string().min(1).optional().describe('The topic to file it under (from classroom_list_topics).'),
+        max_points: z.number().min(0).optional().describe('The maximum grade; 0 or unset means ungraded.'),
+        due_date: dueDateArg,
+        due_time: dueTimeArg,
+        time_zone: inputZone,
+        scheduled_time: scheduledArg,
+        publish: z.boolean().optional().describe('Publish now, so students see it at once. Default false: a draft. Not with scheduled_time.'),
+        assignee_ids: z.array(z.string().min(1)).optional().describe('Only these students see it (ids from classroom_get_roster). Default: all students.'),
+        submission_modification_mode: z
+          .enum(['MODIFIED', 'MODIFIABLE_UNTIL_TURNED_IN'])
+          .optional()
+          .describe('Whether students may change a turned-in submission. Default MODIFIABLE_UNTIL_TURNED_IN (Google\'s).'),
+      },
+      async prepare({ course_id, title, work_type, publish, scheduled_time, due_date, due_time, time_zone, links, drive_file_ids, assignee_ids }) {
+        const c = (await call<Course>({ url: course(course_id) })).data;
+        return {
+          preview: {
+            course: { id: c.id ?? course_id, name: c.name, ...(c.section ? { section: c.section } : {}) },
+            coursework: {
+              title,
+              type: work_type ?? 'ASSIGNMENT',
+              state: publish === true ? 'PUBLISHED' : scheduled_time ? `draft until ${scheduled_time}` : 'DRAFT',
+              ...(due_date ? { due: due_time ? `${due_date} ${due_time}` : due_date, ...(time_zone ? { time_zone } : {}) } : {}),
+              materials: (links?.length ?? 0) + (drive_file_ids?.length ?? 0),
+              assignees: assignee_ids?.length ? `${[...new Set(assignee_ids)].length} students` : 'all students',
+            },
+          },
+        };
+      },
+      async handler({
+        course_id,
+        title,
+        work_type,
+        quiz_choices,
+        description,
+        links,
+        drive_file_ids,
+        topic_id,
+        max_points,
+        due_date,
+        due_time,
+        time_zone,
+        scheduled_time,
+        publish,
+        assignee_ids,
+        submission_modification_mode,
+      }) {
+        const type = work_type ?? 'ASSIGNMENT';
+        const choices = quiz_choices?.length ? [...new Set(quiz_choices)] : undefined;
+        if (choices && type !== 'MULTIPLE_CHOICE_QUESTION') throw new Error('quiz_choices belong to work_type MULTIPLE_CHOICE_QUESTION.');
+        if (type === 'MULTIPLE_CHOICE_QUESTION' && !choices) throw new Error('A MULTIPLE_CHOICE_QUESTION needs quiz_choices: Google requires multipleChoiceQuestion.choices.');
+        if (due_time !== undefined && due_date === undefined) throw new Error('due_time needs due_date: Classroom keeps a due date and a time of day together.');
+        if (publish === true && scheduled_time !== undefined) throw new Error('Give publish or scheduled_time, not both: a scheduled item stays a draft until its time.');
+        const materials = [
+          ...(links ?? []).map((url) => ({ link: { url } })),
+          ...(drive_file_ids ?? []).map((id) => ({ driveFile: { driveFile: { id }, shareMode: 'VIEW' } })),
+        ];
+        if (materials.length > CLASSROOM_MATERIALS_MAX) throw new Error(`At most ${CLASSROOM_MATERIALS_MAX} materials per item (Classroom API); ${materials.length} were given.`);
+        const due = due_date === undefined ? {} : dueFields(due_date, due_time, zoneOf(time_zone));
+        const w = (
+          await call<CourseWorkItem>({
+            url: `${course(course_id)}/courseWork`,
+            method: 'POST',
+            body: {
+              title,
+              workType: type,
+              state: publish === true ? 'PUBLISHED' : 'DRAFT',
+              ...(description !== undefined ? { description } : {}),
+              ...(materials.length ? { materials } : {}),
+              ...(topic_id !== undefined ? { topicId: topic_id } : {}),
+              ...(max_points !== undefined ? { maxPoints: max_points } : {}),
+              ...due,
+              ...(scheduled_time !== undefined ? { scheduledTime: scheduled_time } : {}),
+              ...(choices ? { multipleChoiceQuestion: { choices } } : {}),
+              ...(assignee_ids?.length ? { assigneeMode: 'INDIVIDUAL_STUDENTS', individualStudentsOptions: { studentIds: [...new Set(assignee_ids)] } } : {}),
+              ...(submission_modification_mode !== undefined ? { submissionModificationMode: submission_modification_mode } : {}),
+            },
+          })
+        ).data;
+        return {
+          id: w.id,
+          title: w.title,
+          state: w.state,
+          ...(w.dueDate ? { due: dueOf(w.dueDate, w.dueTime, zoneOf(time_zone)) } : {}),
+          link: w.alternateLink ?? courseLinks(course_id).classwork,
+          ...(w.state !== 'PUBLISHED' ? { note: 'A draft: students do not see it yet. Publish it with classroom_update_coursework and publish true, or state PUBLISHED.' } : {}),
+        };
+      },
+    }),
+    defineTool({
+      name: 'classroom_update_coursework',
+      title: 'Update Classroom coursework',
+      description: `Change the fields of one coursework item and leave the others as they are (matches update_course_work in Google's Classroom MCP server): title, description, state, topic, points, due date, schedule, submission mode, and the students it is for. Only the fields you pass go into Google's update mask; clear takes a field away. The mask has no materials, so a link or a Drive file cannot be added to or removed from an item that exists. ${SAME_PROJECT} It asks once, but as a destructive action when state is PUBLISHED or a time is scheduled, because students can then see it.`,
+      kind: 'write',
+      // Publishing, now or at scheduled_time, shows it to the students (the destructive rule).
+      destructiveWhen: ({ state, publish, scheduled_time }) => publish === true || state === 'PUBLISHED' || scheduled_time !== undefined,
+      scopes: COURSEWORK_WRITE,
+      inputSchema: {
+        course_id: courseId,
+        coursework_id: z.string().min(1).describe('The coursework id (from classroom_list_coursework).'),
+        title: z.string().trim().min(1).max(3000).optional().describe('A new title.'),
+        description: z.string().max(30000).optional().describe('New instructions, at most 30,000 characters.'),
+        topic_id: z.string().min(1).optional().describe('Move it to this topic (from classroom_list_topics).'),
+        max_points: z.number().min(0).optional().describe('A new maximum grade; 0 means ungraded.'),
+        due_date: dueDateArg,
+        due_time: dueTimeArg,
+        time_zone: inputZone,
+        scheduled_time: scheduledArg,
+        state: z.enum(['DRAFT', 'PUBLISHED']).optional().describe('PUBLISHED shows it to the students; DRAFT takes it back.'),
+        publish: z.boolean().optional().describe('Publish it now: the same as state PUBLISHED.'),
+        submission_modification_mode: z
+          .enum(['MODIFIED', 'MODIFIABLE_UNTIL_TURNED_IN'])
+          .optional()
+          .describe('Whether students may change a turned-in submission.'),
+        clear: z
+          .array(z.enum(['description', 'topic', 'due', 'scheduled_time']))
+          .optional()
+          .describe('Fields to take away: each goes into the update mask with no value, as Google asks. Google refuses one that cannot be empty (INVALID_ARGUMENT).'),
+        assignee_ids: z
+          .array(z.string().min(1))
+          .optional()
+          .describe('Set exactly these students (ids from classroom_get_roster), through courseWork.modifyAssignees; an empty list opens it to every student.'),
+      },
+      async prepare({ course_id, coursework_id, title, description, topic_id, max_points, due_date, state, publish, scheduled_time, clear, assignee_ids }) {
+        const w = (await call<CourseWorkItem>({ url: `${course(course_id)}/courseWork/${enc(coursework_id)}` })).data;
+        const changes = [
+          ...(title !== undefined ? ['title'] : []),
+          ...(description !== undefined ? ['description'] : []),
+          ...(topic_id !== undefined ? ['topic'] : []),
+          ...(max_points !== undefined ? ['max_points'] : []),
+          ...(due_date !== undefined ? ['due'] : []),
+          ...(state !== undefined ? ['state'] : []),
+          ...(publish === true ? ['state'] : []),
+          ...(scheduled_time !== undefined ? ['schedule'] : []),
+          ...(clear ?? []),
+          ...(assignee_ids !== undefined ? ['students'] : []),
+        ];
+        return {
+          preview: {
+            coursework: { id: w.id ?? coursework_id, title: w.title, state: w.state },
+            changes: [...new Set(changes)],
+            ...(publish === true || state === 'PUBLISHED' ? { note: 'Students will see it.' } : {}),
+            ...(assignee_ids !== undefined ? { assignees: assignee_ids.length ? `${[...new Set(assignee_ids)].length} students` : 'all students' } : {}),
+          },
+        };
+      },
+      async handler({ course_id, coursework_id, title, description, topic_id, max_points, due_date, due_time, time_zone, scheduled_time, state, publish, submission_modification_mode, clear, assignee_ids }) {
+        const cleared = new Set<string>();
+        for (const field of clear ?? []) {
+          if (field === 'description') cleared.add('description');
+          else if (field === 'topic') cleared.add('topic_id');
+          else if (field === 'due') {
+            cleared.add('due_date');
+            cleared.add('due_time');
+          } else cleared.add('scheduled_time');
+        }
+        const mask: string[] = [];
+        const body: Record<string, unknown> = {};
+        const set = (field: string) => {
+          if (cleared.has(field)) throw new Error(`Give ${field} or clear it, not both.`);
+          mask.push(field);
+        };
+        if (title !== undefined) {
+          set('title');
+          body.title = title;
+        }
+        if (description !== undefined) {
+          set('description');
+          body.description = description;
+        }
+        if (topic_id !== undefined) {
+          set('topic_id');
+          body.topicId = topic_id;
+        }
+        if (max_points !== undefined) {
+          set('max_points');
+          body.maxPoints = max_points;
+        }
+        const wantedState = publish === true ? 'PUBLISHED' : state;
+        if (wantedState !== undefined) {
+          set('state');
+          body.state = wantedState;
+        }
+        if (submission_modification_mode !== undefined) {
+          set('submission_modification_mode');
+          body.submissionModificationMode = submission_modification_mode;
+        }
+        if (scheduled_time !== undefined) {
+          set('scheduled_time');
+          body.scheduledTime = scheduled_time;
+        }
+        if (due_time !== undefined && due_date === undefined) throw new Error('due_time needs due_date: Classroom keeps a due date and a time of day together.');
+        if (due_date !== undefined) {
+          set('due_date');
+          if (cleared.has('due_time')) throw new Error('Give due_date or clear it, not both.');
+          mask.push('due_time');
+          Object.assign(body, dueFields(due_date, due_time, zoneOf(time_zone)));
+        }
+        mask.push(...cleared);
+        if (mask.length === 0 && assignee_ids === undefined) throw new Error('Give a field to change or clear, or assignee_ids.');
+        const uniqueMask = [...new Set(mask)];
+        let w: CourseWorkItem = mask.length
+          ? (await call<CourseWorkItem>({ url: `${course(course_id)}/courseWork/${enc(coursework_id)}`, method: 'PATCH', query: { updateMask: uniqueMask.join(',') }, body })).data
+          : (await call<CourseWorkItem>({ url: `${course(course_id)}/courseWork/${enc(coursework_id)}` })).data;
+        let assignees: string | number | undefined;
+        if (assignee_ids !== undefined) {
+          const wanted = new Set(assignee_ids);
+          const individual = w.assigneeMode === 'INDIVIDUAL_STUDENTS';
+          const now = new Set(individual ? (w.individualStudentsOptions?.studentIds ?? []) : []);
+          const add = [...wanted].filter((id) => !now.has(id));
+          const remove = [...now].filter((id) => !wanted.has(id));
+          const changes = add.length > 0 || remove.length > 0 || individual !== wanted.size > 0;
+          if (changes) {
+            w = (
+              await call<CourseWorkItem>({
+                url: `${course(course_id)}/courseWork/${enc(coursework_id)}:modifyAssignees`,
+                method: 'POST',
+                body: {
+                  assigneeMode: wanted.size ? 'INDIVIDUAL_STUDENTS' : 'ALL_STUDENTS',
+                  ...(wanted.size ? { modifyIndividualStudentsOptions: { addStudentIds: add, removeStudentIds: remove } } : {}),
+                },
+              })
+            ).data;
+          }
+          assignees = wanted.size ? wanted.size : 'all students';
+        }
+        return {
+          id: w.id ?? coursework_id,
+          title: w.title,
+          state: w.state,
+          changed: uniqueMask,
+          ...(assignees !== undefined ? { assignees } : {}),
+          link: w.alternateLink ?? courseLinks(course_id).classwork,
+        };
       },
     }),
   ];

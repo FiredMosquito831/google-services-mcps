@@ -85,10 +85,10 @@ const CLASSROOM_GOOGLE = [
   'classroom_list_coursework',
   'classroom_get_coursework',
   'classroom_materials_list',
-  'classroom_courses_work_create',
+  // 2.9.0: the two hand-written coursework writes replace the generated create, patch and assignee tools.
+  'classroom_create_coursework',
   'classroom_materials_create',
-  'classroom_courses_work_patch',
-  'classr_work_modify_assignees',
+  'classroom_update_coursework',
   'classroom_materials_patch',
   'classroom_list_submissions',
   'classroom_get_rubric',
@@ -907,7 +907,7 @@ test('runServer: google on gcontacts lists its 3 tools and the runtime tools, wi
   for (const name of CONTACTS_GOOGLE) assert.equal(google.find((t) => t.name === name).annotations.readOnlyHint, true, name);
 });
 
-test('runServer: google on gclassroom lists its 20 tools and the runtime tools, with the same schemas as all', async () => {
+test('runServer: google on gclassroom lists its 19 tools and the runtime tools, with the same schemas as all', async () => {
   const dir = tempDir('gsm-toolset-gclassroom-');
   const entry = curatedEntry(dir, 'gclassroom', 'gclassroom');
   const tokenDir = fakeLogin(dir, 'gclassroom', 'workspace-user');

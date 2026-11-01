@@ -3,7 +3,7 @@
 // nothing leaves the machine. Fake tokens in a temp folder only.
 import { test, after } from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -53,17 +53,24 @@ const httpError = (status, message = 'error') => {
 const G = (s) => `https://www.googleapis.com/auth/${s}`;
 
 const READS = ['classroom_list_courses', 'classroom_get_course', 'classroom_list_topics', 'classroom_list_coursework', 'classroom_get_coursework', 'classroom_get_roster', 'classroom_list_announcements', 'classroom_get_announcements', 'classroom_list_submissions', 'classroom_get_rubric', 'classroom_get_guardians'];
-const WRITES = { classroom_create_topic: 'classroom.courses.topics.create', classroom_create_announcement: 'classroom.courses.announcements.create', classroom_create_rubric: 'classroom.courses.courseWork.rubrics.create' };
+const WRITES = {
+  classroom_create_topic: 'classroom.courses.topics.create',
+  classroom_create_announcement: 'classroom.courses.announcements.create',
+  classroom_create_rubric: 'classroom.courses.courseWork.rubrics.create',
+  // 2.9.0: the two coursework writes (courseWork.patch is a PATCH, not a POST).
+  classroom_create_coursework: 'classroom.courses.courseWork.create',
+  classroom_update_coursework: 'classroom.courses.courseWork.patch',
+};
 
 // ---------------------------------------------------------------------------
 // Kinds, scopes, names
 
-test('eleven reads and three writes that follow classifyMethod; readable names within the budget; no confirm', () => {
+test('eleven reads and five writes that follow classifyMethod; readable names within the budget; no confirm', () => {
   assert.deepEqual([...tools.keys()].sort(), [...READS, ...Object.keys(WRITES)].sort());
   for (const name of READS) assert.equal(tools.get(name).kind, 'read', name);
   for (const [name, id] of Object.entries(WRITES)) {
     assert.equal(tools.get(name).kind, 'write', name);
-    assert.equal(classifyMethod('POST', 'create', id), 'write', id);
+    assert.equal(classifyMethod(name === 'classroom_update_coursework' ? 'PATCH' : 'POST', name === 'classroom_update_coursework' ? 'patch' : 'create', id), 'write', id);
   }
   for (const t of tools.values()) {
     // mcp__plugin_gclassroom_gclassroom__ leaves 29 characters.
@@ -345,4 +352,126 @@ test('rubrics: get returns the criteria or null; create checks the rules before 
   assert.equal(calls.length, 0);
   const tooMany = Array.from({ length: cls.CLASSROOM_RUBRIC_CRITERIA_MAX + 1 }, (_, i) => ({ title: `c${i}`, levels: [{ title: 'x' }] }));
   assert.equal(parse('classroom_create_rubric', { course_id: '10', coursework_id: 'w1', criteria: tooMany }).success, false);
+});
+
+// ---------------------------------------------------------------------------
+// The two coursework writes (2.9.0)
+
+test('dueFields: a YYYY-MM-DD and HH:MM become the UTC Date and TimeOfDay Classroom keeps', () => {
+  assert.deepEqual(cls.dueFields('2026-11-06', undefined, undefined), { dueDate: { year: 2026, month: 11, day: 6 }, dueTime: { hours: 0, minutes: 0 } });
+  assert.deepEqual(cls.dueFields('2026-11-06', '17:30', undefined), { dueDate: { year: 2026, month: 11, day: 6 }, dueTime: { hours: 17, minutes: 30 } });
+  // Europe/Berlin is +01:00 in November, so 17:30 local is 16:30 UTC.
+  assert.deepEqual(cls.dueFields('2026-11-06', '17:30', ianaZone('Europe/Berlin')), { dueDate: { year: 2026, month: 11, day: 6 }, dueTime: { hours: 16, minutes: 30 } });
+  assert.throws(() => cls.dueFields('2026-02-30', undefined, undefined), /not a real date/);
+  assert.throws(() => cls.dueFields('06.11.2026', undefined, undefined), /YYYY-MM-DD/);
+});
+
+test('create_coursework: a draft by default, publish and a schedule, a quiz, materials, assignees, refusals', async () => {
+  reset(() => ({ id: 'w9', title: 'Essay', state: 'DRAFT' }));
+  const draft = await run('classroom_create_coursework', { course_id: '10', title: 'Essay', links: ['https://example.com/a'], drive_file_ids: ['f1'], due_date: '2026-11-06', due_time: '17:00' });
+  const body = calls[0].body;
+  assert.deepEqual(calls.map((c) => [c.method, c.path]), [['POST', '/v1/courses/10/courseWork']]);
+  assert.equal(body.state, 'DRAFT');
+  assert.deepEqual([body.title, body.workType], ['Essay', 'ASSIGNMENT']);
+  assert.deepEqual(body.materials, [{ link: { url: 'https://example.com/a' } }, { driveFile: { driveFile: { id: 'f1' }, shareMode: 'VIEW' } }]);
+  assert.deepEqual([body.dueDate, body.dueTime], [{ year: 2026, month: 11, day: 6 }, { hours: 17, minutes: 0 }]);
+  assert.match(draft.note, /A draft/);
+  const create = tools.get('classroom_create_coursework');
+  assert.equal(create.destructiveWhen({}), false);
+  assert.equal(create.destructiveWhen({ publish: true }), true);
+  assert.equal(create.destructiveWhen({ scheduled_time: '2026-11-02T07:00:00Z' }), true);
+
+  reset(() => ({ id: 'w9', title: 'Quiz', state: 'PUBLISHED', workType: 'MULTIPLE_CHOICE_QUESTION' }));
+  await run('classroom_create_coursework', {
+    course_id: '10',
+    title: 'Quiz',
+    work_type: 'MULTIPLE_CHOICE_QUESTION',
+    quiz_choices: ['A', 'B', 'A'],
+    publish: true,
+    assignee_ids: ['s1', 's1'],
+    topic_id: 't1',
+    max_points: 3,
+    submission_modification_mode: 'MODIFIED',
+  });
+  const live = calls[0].body;
+  assert.equal(live.state, 'PUBLISHED');
+  assert.deepEqual(live.multipleChoiceQuestion, { choices: ['A', 'B'] }, 'choices once each');
+  assert.deepEqual([live.assigneeMode, live.individualStudentsOptions], ['INDIVIDUAL_STUDENTS', { studentIds: ['s1'] }]);
+  assert.deepEqual([live.topicId, live.maxPoints, live.submissionModificationMode], ['t1', 3, 'MODIFIED']);
+
+  reset(() => ({}));
+  const errors = [
+    [{ course_id: '10', title: 'x', quiz_choices: ['A'] }, /quiz_choices belong to work_type/],
+    [{ course_id: '10', title: 'x', work_type: 'MULTIPLE_CHOICE_QUESTION' }, /needs quiz_choices/],
+    [{ course_id: '10', title: 'x', due_time: '17:00' }, /due_time needs due_date/],
+    [{ course_id: '10', title: 'x', publish: true, scheduled_time: '2026-11-02T07:00:00Z' }, /not both/],
+    [{ course_id: '10', title: 'x', links: Array.from({ length: 21 }, (_, i) => `https://example.com/${i}`) }, /At most 20 materials/],
+  ];
+  for (const [args, error] of errors) await assert.rejects(() => run('classroom_create_coursework', args), error);
+  assert.equal(calls.length, 0, 'a refused call sends nothing');
+});
+
+test('create_coursework: the approval names the course it goes into and what the students will see', async () => {
+  reset(() => ({ id: '10', name: 'Biology', section: 'Period 2' }));
+  const prepared = await tools.get('classroom_create_coursework').prepare({ course_id: '10', title: 'Essay', publish: true }, ctx);
+  assert.deepEqual(prepared.preview.course, { id: '10', name: 'Biology', section: 'Period 2' });
+  assert.equal(prepared.preview.coursework.state, 'PUBLISHED');
+  assert.equal(prepared.preview.coursework.assignees, 'all students');
+  assert.equal(prepared.preview.coursework.type, 'ASSIGNMENT');
+  // The read only: a prepare changes nothing.
+  assert.deepEqual(calls.map((c) => c.method), ['GET']);
+});
+
+test('update_coursework: only the fields passed go into updateMask; clear takes one away; students through modifyAssignees', async () => {
+  reset((call) => (call.method === 'PATCH' ? { id: 'w1', title: 'New', state: 'DRAFT' } : { id: 'w1', title: 'Old', state: 'DRAFT' }));
+  const res = await run('classroom_update_coursework', { course_id: '10', coursework_id: 'w1', title: 'New', max_points: 5 });
+  const patch = calls.find((c) => c.method === 'PATCH');
+  assert.deepEqual(patch.query, { updateMask: 'title,max_points' });
+  assert.deepEqual(patch.body, { title: 'New', maxPoints: 5 });
+  assert.deepEqual(res.changed, ['title', 'max_points']);
+
+  // Clearing: the field is in the mask and nowhere in the body.
+  reset(() => ({ id: 'w1', title: 'Old' }));
+  await run('classroom_update_coursework', { course_id: '10', coursework_id: 'w1', clear: ['description', 'topic', 'due', 'scheduled_time'] });
+  assert.equal(calls[0].query.updateMask, 'description,topic_id,due_date,due_time,scheduled_time');
+  assert.deepEqual(calls[0].body, {});
+
+  // Students: read the item, then modifyAssignees with only what changed.
+  reset((call) => {
+    if (call.path.endsWith(':modifyAssignees')) return { id: 'w1', title: 'Old', assigneeMode: 'INDIVIDUAL_STUDENTS', individualStudentsOptions: { studentIds: ['s2', 's3'] } };
+    return { id: 'w1', title: 'Old', assigneeMode: 'INDIVIDUAL_STUDENTS', individualStudentsOptions: { studentIds: ['s1', 's2'] } };
+  });
+  const assigned = await run('classroom_update_coursework', { course_id: '10', coursework_id: 'w1', assignee_ids: ['s2', 's3'] });
+  const modify = calls.find((c) => c.path.endsWith(':modifyAssignees'));
+  assert.deepEqual(modify.body, { assigneeMode: 'INDIVIDUAL_STUDENTS', modifyIndividualStudentsOptions: { addStudentIds: ['s3'], removeStudentIds: ['s1'] } });
+  assert.equal(assigned.assignees, 2);
+
+  reset(() => ({}));
+  await assert.rejects(() => run('classroom_update_coursework', { course_id: '10', coursework_id: 'w1' }), /Give a field to change/);
+  await assert.rejects(() => run('classroom_update_coursework', { course_id: '10', coursework_id: 'w1', description: 'x', clear: ['description'] }), /not both/);
+  await assert.rejects(() => run('classroom_update_coursework', { course_id: '10', coursework_id: 'w1', due_time: '17:00' }), /due_time needs due_date/);
+  assert.equal(calls.length, 0, 'a refused call sends nothing');
+
+  const tool = tools.get('classroom_update_coursework');
+  assert.equal(tool.destructiveWhen({ state: 'PUBLISHED' }), true);
+  assert.equal(tool.destructiveWhen({ publish: true }), true);
+  assert.equal(tool.destructiveWhen({ scheduled_time: '2026-11-02T07:00:00Z' }), true);
+  assert.equal(tool.destructiveWhen({ title: 'x' }), false);
+});
+
+test('update_coursework: the approval names the item as it is now, and the fields that change', async () => {
+  reset(() => ({ id: 'w1', title: 'Essay', state: 'DRAFT' }));
+  const prepared = await tools.get('classroom_update_coursework').prepare({ course_id: '10', coursework_id: 'w1', title: 'New', state: 'PUBLISHED' }, ctx);
+  assert.deepEqual(prepared.preview.coursework, { id: 'w1', title: 'Essay', state: 'DRAFT' });
+  assert.deepEqual(prepared.preview.changes, ['title', 'state']);
+  assert.match(prepared.preview.note, /Students will see it/);
+  assert.deepEqual(calls.map((c) => c.method), ['GET'], 'the read only');
+});
+
+test("the same-project rule is in the two writes' descriptions and in the one generated tool that left it out", () => {
+  for (const name of ['classroom_create_coursework', 'classroom_update_coursework']) {
+    assert.match(tools.get(name).description, /only the Google Cloud project that made a coursework item/);
+  }
+  const note = JSON.parse(readFileSync(join(REPO, 'config', 'products.json'), 'utf8')).products.gclassroom.methodNotes.classroom.methods['classroom.courses.courseWorkMaterials.patch'];
+  assert.match(note, /PERMISSION_DENIED/);
 });

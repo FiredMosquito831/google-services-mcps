@@ -647,6 +647,14 @@
     "title": "Create a Classroom announcement"
   },
   {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_create_coursework",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.coursework.students"
+    ],
+    "title": "Create Classroom coursework"
+  },
+  {
     "name": "mcp__plugin_gclassroom_gclassroom__classroom_create_rubric",
     "kind": "write",
     "scopes": [
@@ -1147,6 +1155,14 @@
     ],
     "methodId": "classroom.courses.topics.patch",
     "title": "classroom.courses.topics.patch"
+  },
+  {
+    "name": "mcp__plugin_gclassroom_gclassroom__classroom_update_coursework",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/classroom.coursework.students"
+    ],
+    "title": "Update Classroom coursework"
   },
   {
     "name": "mcp__plugin_gclassroom_gclassroom__classroom_use_pro_gua_inv_cre",

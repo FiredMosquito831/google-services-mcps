@@ -292,7 +292,9 @@ test('requirements: the gcontacts google list resolves to contacts and directory
 test('requirements: the gclassroom google list resolves to the Classroom read-only scopes, materials included', async () => {
   const { cfg } = tempTokens();
   const google = await requirementsFor(['gclassroom'], cfg, { ...quiet, toolset: 'google' });
-  assert.equal(google.length, 20);
+  // 19 since 2.9.0: the two hand-written coursework writes replace the generated create, patch and assignee tools, and
+  // all five need the one classroom.coursework.students scope, so the lists below do not move.
+  assert.equal(google.length, 19);
   const C = (s) => G(`classroom.${s}`);
   // Since 1.33.0 the product prefers both coursework scopes for readonly (scopePolicy.prefer): a teacher's taught classes
   // beside a student's own work.

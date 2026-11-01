@@ -97,6 +97,7 @@
       "whenToUse": "Use to find someone's email address or phone number, look up a coworker in the company directory, or manage Google Contacts. Examples: \"what's Ana's email\", \"find Ben in the directory\", \"add this person to my contacts\".",
       "flows": [
         { "title": "Find a person", "steps": ["{tool:contacts_search} searches your contacts; {tool:contacts_search_directory} searches your organization."] },
+        { "title": "Every contact", "steps": ["{tool:contacts_list} pages through all of them with names, emails, phones and organization; {tool:contacts_delete} deletes one by its resource_name, and asks twice."] },
         { "title": "Who is signed in", "steps": ["{tool:profile_me}."] },
         { "title": "Change a contact", "steps": ["Find the People API tool with {tool:api_methods}; read the contact first (its etag), then update with updatePersonFields listing every field you send."] }
       ],
@@ -122,6 +123,7 @@
       "flows": [
         { "title": "Courses and students", "steps": ["{tool:classroom_list_courses} (role teacher or student) gives course_id; {tool:classroom_get_roster} lists the students and teachers."] },
         { "title": "Assignments and submissions", "steps": ["{tool:classroom_list_coursework} with course_id, then {tool:classroom_list_submissions} with course_id and coursework_id (states, late)."] },
+        { "title": "Set coursework", "steps": ["{tool:classroom_create_coursework} with course_id and a title: a draft unless you pass publish, with an optional due date (YYYY-MM-DD and HH:MM in a time zone), materials, points and students.", "{tool:classroom_update_coursework} changes only the fields you pass, and takes one away with clear."] },
         { "title": "Post to a class", "steps": ["{tool:classroom_create_announcement} with course_id and text (a change: it asks first)."] }
       ],
       "notes": ["Google lets only the Cloud project that created a coursework item change or grade it: items made in the Classroom website return PERMISSION_DENIED here."]
