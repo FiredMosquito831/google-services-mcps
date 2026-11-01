@@ -219,6 +219,7 @@
       "flows": [
         { "title": "Reviews", "steps": ["{tool:androidpub_reviews_list} with packageName, then {tool:androidpub_reviews_reply} (a change: it asks first)."] },
         { "title": "Releases", "steps": ["{tool:androidpub_tracks_releases_list} with parent. Changes to tracks go through an edit: insert, change, validate, commit."] },
+        { "title": "Upload a build", "steps": ["{tool:androidpub_upload_bundle} with package_name, the full path of the .aab and a track: it uploads the bundle and stages the release in an open edit, and with commit: true it publishes it (that asks twice)."] },
         { "title": "Android Management", "steps": ["{tool:androidmgmt_list_enterprises} with project_id, then {tool:androidmgmt_list_devices} with enterprise and {tool:androidmgmt_list_policies}."] }
       ],
       "notes": ["The service account must be invited in Play Console (Users and permissions)."]

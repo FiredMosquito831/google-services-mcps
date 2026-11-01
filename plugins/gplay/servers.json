@@ -114,7 +114,8 @@
         ]
       },
       "scopes": [
-        "https://www.googleapis.com/auth/androidmanagement"
+        "https://www.googleapis.com/auth/androidmanagement",
+        "https://www.googleapis.com/auth/androidpublisher"
       ],
       "label": "Google Play: Google Play developer publishing and reporting, Play Games Services, Android Enterprise and Management, Play Integrity and device APIs."
     }

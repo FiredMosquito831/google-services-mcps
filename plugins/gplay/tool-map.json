@@ -2149,6 +2149,14 @@
     "title": "androidpublisher.appstoreappsreview.updateappstorehostedapp"
   },
   {
+    "name": "mcp__plugin_gplay_gplay__androidpub_upload_bundle",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/androidpublisher"
+    ],
+    "title": "Upload an Android App Bundle and set its release"
+  },
+  {
     "name": "mcp__plugin_gplay_gplay__androidpub_users_create",
     "kind": "write",
     "scopes": [

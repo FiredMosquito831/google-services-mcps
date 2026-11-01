@@ -4,11 +4,11 @@ Google Play developer publishing and reporting, Play Games Services, Android Ent
 
 - Plugin: `gplay`, MCP server: `gplay`, login: Service account key, then `setup-service-account` (no login)
 - Install: `claude plugin install gplay@google-services-mcps`
-- Tools: 365 total. Curated 12, per-method 349, gateway 3. Read 170, write 147, destructive 47, dynamic 1.
+- Tools: 366 total. Curated 13, per-method 349, gateway 3. Read 170, write 148, destructive 47, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 365, google 19, curated 15 tools, each counting the 3 runtime tools this server registers (`auth_setup_service_account`, `auth_status`, `health`). "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 366, google 19, curated 16 tools, each counting the 3 runtime tools this server registers (`auth_setup_service_account`, `auth_status`, `health`). "(all)" means the product has no such toolset yet, so it lists every tool.
 
 ## Not registered by this server (6)
 
@@ -39,7 +39,7 @@ The tools that match Google's official MCP server for this product (https://andr
 | `androidpub_monetization_subs_list` | (none) | The app's subscription products (monetization.subscriptions.list). |
 | `androidpub_orders_get` | (none) | One order by its id (orders.get). |
 
-## Curated tools (12)
+## Curated tools (13)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
@@ -52,6 +52,7 @@ The tools that match Google's official MCP server for this product (https://andr
 | `androidmgmt_list_enterprises` | read | List Android Management enterprises | androidmanagement |
 | `androidmgmt_list_policies` | read | List the policies of an enterprise | androidmanagement |
 | `androidmgmt_list_web_apps` | read | List the web apps of an enterprise | androidmanagement |
+| `androidpub_upload_bundle` | write | Upload an Android App Bundle and set its release | androidpublisher |
 | `auth_setup_service_account` | write | Set up the service account key | (none) |
 | `auth_status` | read | Sign-in status | (none) |
 | `health` | read | Server health | (none) |

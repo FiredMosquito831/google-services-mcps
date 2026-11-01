@@ -2,6 +2,29 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 2.12.0 - 2026-11-01
+
+### Added: `androidpub_upload_bundle`, so a new build can be released
+- The per-method tools leave out every media-upload method (`src/core/discovery/tools.ts` skips them, and `api_call` refuses them), and Play's `edits.bundles.upload` is one of them: a new Android App Bundle could not reach a track by any route, so "release a build" was impossible from here (adversarial review of gplay, F3). The new hand-written tool does that one step: it takes a package name, the full path of an `.aab` and, optionally, an `edit_id`, a `track`, the release's status, `user_fraction`, a name and release notes, and `commit`.
+  - It creates an edit when none is given (or uses the one given), uploads the file as a stream through the media-upload endpoint (`uploadType=media`, `Content-Type: application/octet-stream`), reads the track, writes the new version code at the front of the track's releases (the releases already there are kept, never cleared), and commits the edit only when `commit` is true. Without it the edit stays open and the answer says how to finish it: `androidpub_edits_commit` publishes, `androidpub_edits_delete` drops it, and Google discards an edit nobody commits.
+  - A staged rollout is `release_status: "inProgress"` with `user_fraction` (0 to 1); a call with one and not the other is refused before any request, as is a file that is not `.aab` and a path in the folder that holds the Google sign-in data.
+  - It works its approval out in `prepare`: the file (path, size, SHA-256), the track and the releases it holds right now, the release that would be added, and what committing does. The SHA-256 is of the local file, read in chunks. A write: it asks first, and a call with `commit: true` is gated as destructive (publishing is), so it asks twice.
+
+### Fixed (docs): the build upload, the zero-touch tools and a stale kind
+- The product page said nothing about uploading, so `androidpub_edits_commit` could never be reached with a build of your own. It now describes the new tool, names the classic flow it completes, and gives an example.
+- The page listed `androidpub_edits_commit` as a plain write; it has been destructive since 1.26.3.
+- The 27 `androiddeviceprovisioning` tools are described: Google's Discovery document for that API lists no scope, so they load at any profile and with any key, but the key's token does not ask for `androidworkzerotouchemm` or `androidworkprovisioning`, and Google answers 403 (review F4). Making them work needs a `scopeOverrides` entry that would add those scopes to the key's single token request, where one refused scope fails every request of the product; that is reported for the owner and not done.
+
+### Not changed
+- No tool's kind, scope, name or request: the tool map gains one entry (`androidpub_upload_bundle`, a write, with `androidpublisher`), and every other entry is byte-identical. The `google` toolset still lists its 16 tools. `gsm scopes` asks for the same scopes in every case but one: with the `curated` toolset, `readwrite` and `full` now list `androidpublisher`, because the new tool needs it — the same scope the key already asks for, so no login asks Google for anything new, and the generated service-account scope list is unchanged (`node scripts/gen-service-account-scopes.mjs --check`: 13 scopes). Only the counts move (`curated` 9 → 10 tools). `tool-aliases.json` is untouched, and the frozen files and the goldens have no diff.
+- `src/servers/cloud-http.ts` takes `PUT` among the methods a curated tool may send: the track update is a PUT, as Discovery says. Nothing else in that module changed.
+
+### Reported, not changed
+- The review's F1 (Vitals `query` reads) was fixed in 1.26.3, and F2 (`getServiceAccount` as a write) in 1.26.2. F5's kinds are the decision of 1.26.3: `edits.commit`, `orders.refund`, the external-transaction refund, `basePlans.migratePrices` (and `batchMigratePrices`) and `androidmanagement.devices.issueCommand` all ask twice; the AMAPI command is destructive for every command type, so the per-type rule the review suggested is not needed. F6's paging is already solved by the shaping of 1.28.0, which moves `next_page_token` to the front of a result; a test now proves it for these answers. Still open and reported: the `google` list's Publishing half (the review would drop `androidpub_edits_tracks_list` and `androidpub_reviews_reply` and add the Vitals reads), the Reporting limits in the reviews and vitals descriptions (F8), the service-account key's 12 fixed scopes (F9, touches `auth.ts`), and whether the Games and Smart Device Management tools can work with a service account at all (F11, UNVERIFIED).
+
+### Tests
+- tests/play-parity.test.mjs: the upload end to end (the edit, the streamed upload, the track read and its merged body with the existing release kept, the open-edit note), the commit case with a staged rollout and release notes, the no-track case, the approval preview (nothing read for a new edit, the track read for a given one, the refusal cases before any request), and the page-token order through `shapeResult`. tests/curated-contract.test.mjs: two rows against `edits.bundles.upload`, `edits.insert`, `edits.tracks.get`, `edits.tracks.update` and `edits.commit`, with `androidpublisher.v3` added to the documents it checks (162 curated tools). tests/curated.test.mjs: the gplay module count.
+
 ## 2.11.1 - 2026-11-01
 
 ### Fixed (docs and wording): the Merchant Center access rights the key needs
