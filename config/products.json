@@ -2281,7 +2281,7 @@
       "group": "workspace-user",
       "server": {
         "name": "gmeet",
-        "curated": null
+        "curated": "meet"
       },
       "generated": [
         {
@@ -2306,38 +2306,41 @@
           "tools": [
             "meet_spaces_create",
             "meet_spaces_get",
+            "meet_find_conference",
+            "meet_get_transcript",
             "meet_conference_records_list",
             "meet_conference_records_get",
             "meet_records_participants_list",
             "meet_records_transcripts_list",
             "meet_records_transcripts_entries_list",
             "meet_conference_records_recordings_list",
-            "meet_records_smart_notes_list",
-            "meet_conference_records_smart_notes_get"
+            "meet_records_smart_notes_list"
           ],
           "matches": {
             "meet_spaces_create": [],
             "meet_spaces_get": [],
+            "meet_find_conference": [],
+            "meet_get_transcript": [],
             "meet_conference_records_list": [],
             "meet_conference_records_get": [],
             "meet_records_participants_list": [],
             "meet_records_transcripts_list": [],
             "meet_records_transcripts_entries_list": [],
             "meet_conference_records_recordings_list": [],
-            "meet_records_smart_notes_list": [],
-            "meet_conference_records_smart_notes_get": []
+            "meet_records_smart_notes_list": []
           },
           "notes": {
             "meet_spaces_create": "Makes a new meeting space and returns its meeting link and code. A write, so it asks first.",
             "meet_spaces_get": "A meeting space by its name (spaces/{space}) or meeting code: its link, code and settings.",
+            "meet_find_conference": "Start here for a meeting that took place: a meeting code, a space or a time range to conference records, with the meeting code and link of each space and who joined. It replaces several calls (the record list, the space, the participants) and resolves the names. Read only.",
+            "meet_get_transcript": "The spoken text of a conference, entry by entry with the speaker's name and time, paged. The speaker comes from the conference participants (an entry names only a participant resource); the transcript's Google Doc id is there for the gdrive plugin. Read only.",
             "meet_conference_records_list": "Past and current conferences (one per meeting held in a space), newest first; filter by space or time. Start here for a meeting that took place.",
             "meet_conference_records_get": "One conference: its space, start and end time.",
             "meet_records_participants_list": "Who joined a conference, with join and leave times.",
             "meet_records_transcripts_list": "The transcripts of a conference and their Google Docs.",
             "meet_records_transcripts_entries_list": "The spoken text of a transcript, entry by entry with the speaker and time.",
             "meet_conference_records_recordings_list": "The recordings of a conference and their Drive files.",
-            "meet_records_smart_notes_list": "The notes Gemini took in a conference (smart notes) and their Google Docs.",
-            "meet_conference_records_smart_notes_get": "One smart notes entry and the Google Doc that holds it."
+            "meet_records_smart_notes_list": "The notes Gemini took in a conference (smart notes) and their Google Docs."
           }
         }
       },
@@ -2456,6 +2459,16 @@
           ]
         }
       },
+      "methodNotes": {
+        "tasks": {
+          "source": "Google's Tasks reference (https://developers.google.com/workspace/tasks/reference/rest/v1/tasks, read 2026-11-01) and Discovery's Task schema in data/discovery/tasks.v1.json",
+          "reason": "The generated schema types `completed` as a string and takes no null, and the tool said nothing about what that means, about `status`, or about `due` keeping the date only. Google's reference says it; no other tool of the API is affected, so the note goes on the two methods that write a task (adversarial review of gtasks, F6).",
+          "methods": {
+            "tasks.tasks.update": "`completed` is a timestamp string and the schema takes no null: mark a task completed or not with `status` (`completed` or `needsAction`). `due` keeps the date only, because Google discards the time of day. This method is a PUT and sends the whole task, so read it first with tasks_tasks_get and send back what you keep, or use tasks_tasks_patch to change one field.",
+            "tasks.tasks.patch": "`completed` is a timestamp string and the schema takes no null: mark a task completed or not with `status` (`completed` or `needsAction`). `due` keeps the date only, because Google discards the time of day."
+          }
+        }
+      },
       "toolsets": {
         "google": {
           "source": "No official Google MCP server for Google Tasks or Google Keep was found (Google's Cloud and Workspace MCP lists, 2026-10-29; a negative, not confirmed by Google); a lean set chosen here.",
@@ -2471,6 +2484,8 @@
             "tasks_tasks_insert",
             "tasks_tasks_patch",
             "tasks_tasks_delete",
+            "tasks_tasks_move",
+            "tasks_tasklists_insert",
             "keep_notes_list",
             "keep_notes_get"
           ],
@@ -2481,16 +2496,20 @@
             "tasks_tasks_insert": [],
             "tasks_tasks_patch": [],
             "tasks_tasks_delete": [],
+            "tasks_tasks_move": [],
+            "tasks_tasklists_insert": [],
             "keep_notes_list": [],
             "keep_notes_get": []
           },
           "notes": {
             "tasks_tasklists_list": "Your task lists and their ids. Start here; @default is your first list.",
-            "tasks_tasks_list": "The tasks of one list, with due dates and status; showCompleted and dueMin/dueMax narrow it.",
+            "tasks_tasks_list": "The tasks of one list, with due dates and status. Completed tasks need showHidden true as well as showCompleted; dueMin and dueMax narrow by date.",
             "tasks_tasks_get": "One task with its notes, due date, status and links.",
             "tasks_tasks_insert": "Adds a task to a list (as a subtask with parent). A write, so it asks first.",
             "tasks_tasks_patch": "Changes only the fields given: title, notes, due date, or status completed. A write, so it asks first.",
             "tasks_tasks_delete": "Deletes a task. Destructive, so it asks twice.",
+            "tasks_tasks_move": "Reorders a task: another position in its list, under a parent (a subtask), or into another list (destinationTasklist). A write, so it asks first.",
+            "tasks_tasklists_insert": "Makes a new task list. A write, so it asks first.",
             "keep_notes_list": "Google Keep notes, read only here (filter by trashed or create and update time). Google documents the Keep API for Google Workspace; whether a personal account can use it is not verified.",
             "keep_notes_get": "One Keep note with its text or list items."
           }
@@ -2513,6 +2532,15 @@
         }
       ],
       "gateway": [],
+      "methodNotes": {
+        "classroom": {
+          "source": "Discovery's own text of classroom.courses.courseWork.patch, courseWork.delete and courseWorkMaterials.delete (data/discovery/classroom.v1.json) and Google's guide https://developers.google.com/workspace/classroom/guides/manage-coursework, read 2026-11-01",
+          "reason": "Google allows only the Google Cloud project that made a coursework item or material to change, grade or delete it. Discovery states it on most of the write methods, so their tools carry it already; courseWorkMaterials.patch is the one whose own text leaves it out, and a model reading that tool would not know why an item made in the Classroom website answers PERMISSION_DENIED (adversarial review of gclassroom, F3).",
+          "methods": {
+            "classroom.courses.courseWorkMaterials.patch": "Only the Google Cloud project that made this material may change it: a material created in the Classroom website answers PERMISSION_DENIED (Google's courseWork and courseWorkMaterials text, and the guide on managing course work)."
+          }
+        }
+      },
       "scopePolicy": {
         "prefer": {
           "readonly": [
@@ -2539,10 +2567,9 @@
             "classroom_list_coursework",
             "classroom_get_coursework",
             "classroom_materials_list",
-            "classroom_courses_work_create",
+            "classroom_create_coursework",
             "classroom_materials_create",
-            "classroom_courses_work_patch",
-            "classr_work_modify_assignees",
+            "classroom_update_coursework",
             "classroom_materials_patch",
             "classroom_list_submissions",
             "classroom_get_rubric",
@@ -2573,16 +2600,13 @@
             "classroom_materials_list": [
               "list_course_work_summaries"
             ],
-            "classroom_courses_work_create": [
+            "classroom_create_coursework": [
               "create_course_work"
             ],
             "classroom_materials_create": [
               "create_course_work"
             ],
-            "classroom_courses_work_patch": [
-              "update_course_work"
-            ],
-            "classr_work_modify_assignees": [
+            "classroom_update_coursework": [
               "update_course_work"
             ],
             "classroom_materials_patch": [
@@ -2617,10 +2641,9 @@
             "classroom_get_course": "One course by id, with its description and links. Google's list_courses returns these fields per course and has no get; kept so a known course id needs no list.",
             "classroom_list_coursework": "Assignments, questions and materials of a course in one list (courseWork.list and courseWorkMaterials.list), published only unless include_drafts; include_submission_overview adds one studentSubmissions.list per item. Materials need a classroom.courseworkmaterials scope; without one the answer lists the coursework and says so.",
             "classroom_materials_list": "Generated from courseWorkMaterials.list. Kept so a readonly login of this toolset asks for classroom.courseworkmaterials.readonly, which classroom_list_coursework needs for the materials (one tool can declare only one any-of scope list).",
-            "classroom_courses_work_create": "Generated from courseWork.create (assignments and questions): a raw CourseWork body. Classroom makes it a DRAFT unless state is set. Not curated in this release.",
+            "classroom_create_coursework": "Hand-written in place of the generated courseWork.create, which took a raw CourseWork body and a clipped description. It takes a title, a type, the quiz choices, a due date as YYYY-MM-DD with a time zone, materials as links and Drive files, a topic, points, a schedule and assignees, makes a draft unless told to publish, and asks as destructive when it publishes. It matches create_course_work in part: Google's tool has its own date form and no time zone.",
             "classroom_materials_create": "Generated from courseWorkMaterials.create (materials): a raw CourseWorkMaterial body. Classroom makes it a DRAFT unless state is set.",
-            "classroom_courses_work_patch": "Generated from courseWork.patch: updateMask names the fields to change.",
-            "classr_work_modify_assignees": "Generated from courseWork.modifyAssignees: adds or removes the students of a coursework item.",
+            "classroom_update_coursework": "Hand-written in place of the generated courseWork.patch and courseWork.modifyAssignees: the fields you pass build updateMask, clear takes a field away, and assignee_ids goes through modifyAssignees. Google's mask has no materials, so a link or a Drive file cannot be added to or removed from an item. It matches update_course_work in part.",
             "classroom_materials_patch": "Generated from courseWorkMaterials.patch: updateMask names the fields to change.",
             "classroom_create_rubric": "Google's learningGoalId comes from search_course_standards, which has no public REST method (no learning-standards method in Classroom v1 Discovery), so no tool here matches search_course_standards. Google takes rubrics only for coursework of the same Cloud project."
           }

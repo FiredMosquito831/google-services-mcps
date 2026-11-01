@@ -85,10 +85,10 @@ const CLASSROOM_GOOGLE = [
   'classroom_list_coursework',
   'classroom_get_coursework',
   'classroom_materials_list',
-  'classroom_courses_work_create',
+  // 2.9.0: the two hand-written coursework writes replace the generated create, patch and assignee tools.
+  'classroom_create_coursework',
   'classroom_materials_create',
-  'classroom_courses_work_patch',
-  'classr_work_modify_assignees',
+  'classroom_update_coursework',
   'classroom_materials_patch',
   'classroom_list_submissions',
   'classroom_get_rubric',
@@ -104,6 +104,10 @@ const LEAN_GOOGLE = {
   gmeet: [
     'meet_spaces_create',
     'meet_spaces_get',
+    // 2.6.0: the two hand-written tools (a find and a transcript read) replace a run of generated calls, and the smart
+    // notes get left the list (the list returns the same fields).
+    'meet_find_conference',
+    'meet_get_transcript',
     'meet_conference_records_list',
     'meet_conference_records_get',
     'meet_records_participants_list',
@@ -111,9 +115,20 @@ const LEAN_GOOGLE = {
     'meet_records_transcripts_entries_list',
     'meet_conference_records_recordings_list',
     'meet_records_smart_notes_list',
-    'meet_conference_records_smart_notes_get',
   ],
-  gtasks: ['tasks_tasklists_list', 'tasks_tasks_list', 'tasks_tasks_get', 'tasks_tasks_insert', 'tasks_tasks_patch', 'tasks_tasks_delete', 'keep_notes_list', 'keep_notes_get'],
+  // 2.7.0: the move and the task list create join the list (review of gtasks, section C).
+  gtasks: [
+    'tasks_tasklists_list',
+    'tasks_tasks_list',
+    'tasks_tasks_get',
+    'tasks_tasks_insert',
+    'tasks_tasks_patch',
+    'tasks_tasks_delete',
+    'tasks_tasks_move',
+    'tasks_tasklists_insert',
+    'keep_notes_list',
+    'keep_notes_get',
+  ],
   gapps: [
     'appsscript_projects_get',
     'appsscript_projects_get_content',
@@ -892,7 +907,7 @@ test('runServer: google on gcontacts lists its 3 tools and the runtime tools, wi
   for (const name of CONTACTS_GOOGLE) assert.equal(google.find((t) => t.name === name).annotations.readOnlyHint, true, name);
 });
 
-test('runServer: google on gclassroom lists its 20 tools and the runtime tools, with the same schemas as all', async () => {
+test('runServer: google on gclassroom lists its 19 tools and the runtime tools, with the same schemas as all', async () => {
   const dir = tempDir('gsm-toolset-gclassroom-');
   const entry = curatedEntry(dir, 'gclassroom', 'gclassroom');
   const tokenDir = fakeLogin(dir, 'gclassroom', 'workspace-user');
@@ -1151,8 +1166,10 @@ test('runServer: google on gplay (service account key) lists its 16 tools and th
   assert.equal(google.health.toolset.effective, 'google');
 });
 
-test('runServer: google on gmeet, gtasks and gapps lists the lean list and the runtime tools, with the same schemas as all', async () => {
-  for (const [id, tools] of Object.entries(LEAN_GOOGLE)) {
+test('runServer: google on gtasks and gapps lists the lean list and the runtime tools, with the same schemas as all', async () => {
+  // gmeet left this loop in 2.6.0: it has hand-written tools now, so its entry builds them too (the next test).
+  const lean = Object.fromEntries(Object.entries(LEAN_GOOGLE).filter(([id]) => id !== 'gmeet'));
+  for (const [id, tools] of Object.entries(lean)) {
     const dir = tempDir(`gsm-toolset-${id}-`);
     const entry = generatedEntry(dir, id);
     const tokenDir = fakeLogin(dir, id, 'workspace-user');
@@ -1162,4 +1179,19 @@ test('runServer: google on gmeet, gtasks and gapps lists the lean list and the r
     for (const t of google.tools) assert.deepEqual(t, unset.find((u) => u.name === t.name), `${id}/${t.name}`);
     assert.deepEqual(google.health.toolset, { requested: 'google', effective: 'google', outsideToolset: unset.length - google.tools.length }, id);
   }
+});
+
+test('runServer: google on gmeet lists its 11 tools and the runtime tools (2.6.0)', async () => {
+  const dir = tempDir('gsm-toolset-gmeet-');
+  const entry = curatedEntry(dir, 'gmeet', 'meet');
+  const tokenDir = fakeLogin(dir, 'gmeet', 'workspace-user');
+  const unset = await withClient(entry, childEnv(dir, tokenDir), listTools);
+  const google = await withClient(entry, childEnv(dir, tokenDir, { GSM_TOOLSET: 'google' }), async (c) => ({ tools: await listTools(c), health: await health(c) }));
+  assert.deepEqual(google.tools.map((t) => t.name), [...LEAN_GOOGLE.gmeet, ...RUNTIME_OAUTH].sort());
+  for (const t of google.tools) assert.deepEqual(t, unset.find((u) => u.name === t.name), t.name);
+  for (const name of ['meet_find_conference', 'meet_get_transcript']) assert.equal(google.tools.find((t) => t.name === name).annotations.readOnlyHint, true, name);
+  assert.deepEqual(google.health.toolset, { requested: 'google', effective: 'google', outsideToolset: unset.length - google.tools.length });
+  // The curated toolset holds the two hand-written tools and nothing else.
+  const curated = await withClient(entry, childEnv(dir, tokenDir, { GSM_TOOLSET: 'curated' }), listTools);
+  assert.deepEqual(curated.map((t) => t.name), ['meet_find_conference', 'meet_get_transcript', ...RUNTIME_OAUTH].sort());
 });

@@ -11,8 +11,8 @@
       "name": "gmeet",
       "plugin": "gmeet",
       "group": "workspace-user",
-      "kind": "discovery",
-      "curated": null,
+      "kind": "curated+discovery",
+      "curated": "src/servers/meet.ts",
       "apis": [
         {
           "api": "meet",
@@ -33,16 +33,21 @@
         "google": [
           "meet_spaces_create",
           "meet_spaces_get",
+          "meet_find_conference",
+          "meet_get_transcript",
           "meet_conference_records_list",
           "meet_conference_records_get",
           "meet_records_participants_list",
           "meet_records_transcripts_list",
           "meet_records_transcripts_entries_list",
           "meet_conference_records_recordings_list",
-          "meet_records_smart_notes_list",
-          "meet_conference_records_smart_notes_get"
+          "meet_records_smart_notes_list"
         ]
       },
+      "scopes": [
+        "https://www.googleapis.com/auth/meetings.space.created",
+        "https://www.googleapis.com/auth/meetings.space.readonly"
+      ],
       "label": "Google Meet: Google Meet spaces, conference records, participants and recordings."
     }
   ],

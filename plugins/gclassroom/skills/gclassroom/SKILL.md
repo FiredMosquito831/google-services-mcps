@@ -29,7 +29,12 @@ Only if the chat tools fail, the same steps in a terminal: `node "${CLAUDE_PLUGI
 
 1. `classroom_list_coursework` with course_id, then `classroom_list_submissions` with course_id and coursework_id (states, late).
 
-### 3. Post to a class
+### 3. Set coursework
+
+1. `classroom_create_coursework` with course_id and a title: a draft unless you pass publish, with an optional due date (YYYY-MM-DD and HH:MM in a time zone), materials, points and students.
+2. `classroom_update_coursework` changes only the fields you pass, and takes one away with clear.
+
+### 4. Post to a class
 
 1. `classroom_create_announcement` with course_id and text (a change: it asks first).
 
@@ -47,7 +52,7 @@ Reads never ask for approval. Tools that change or delete data are listed only w
 
 ## Tools
 
-The `gclassroom` MCP server lists up to 127 tools with the `all` toolset: 59 read, 47 write, 21 destructive, counting its 7 runtime tools (`health` and the sign-in tools). Write and destructive tools are listed only when writes are allowed, and a tool loads only when the sign-in holds one of its scopes. The `google` toolset lists 20 of them plus the runtime tools.
+The `gclassroom` MCP server lists up to 129 tools with the `all` toolset: 59 read, 49 write, 21 destructive, counting its 7 runtime tools (`health` and the sign-in tools). Write and destructive tools are listed only when writes are allowed, and a tool loads only when the sign-in holds one of its scopes. The `google` toolset lists 19 of them plus the runtime tools.
 
 ## APIs
 

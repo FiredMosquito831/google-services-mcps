@@ -292,7 +292,9 @@ test('requirements: the gcontacts google list resolves to contacts and directory
 test('requirements: the gclassroom google list resolves to the Classroom read-only scopes, materials included', async () => {
   const { cfg } = tempTokens();
   const google = await requirementsFor(['gclassroom'], cfg, { ...quiet, toolset: 'google' });
-  assert.equal(google.length, 20);
+  // 19 since 2.9.0: the two hand-written coursework writes replace the generated create, patch and assignee tools, and
+  // all five need the one classroom.coursework.students scope, so the lists below do not move.
+  assert.equal(google.length, 19);
   const C = (s) => G(`classroom.${s}`);
   // Since 1.33.0 the product prefers both coursework scopes for readonly (scopePolicy.prefer): a teacher's taught classes
   // beside a student's own work.
@@ -338,12 +340,16 @@ test('requirements: the lean gmeet, gtasks and gapps lists resolve to the narrow
     return { n: reqs.length, readonly: resolveScopes(reqs, 'readonly', include), readwrite: resolveScopes(reqs, 'readwrite', include).scopes, full: resolveScopes(reqs, 'full', include).scopes };
   };
   const meet = await resolved('gmeet');
-  assert.equal(meet.n, 10);
+  // 11 since 2.6.0: meet_find_conference and meet_get_transcript join the list and the smart notes get leaves it. Both
+  // new tools are reads with the two Meet scopes, so the scope lists below do not move.
+  assert.equal(meet.n, 11);
   assert.deepEqual(meet.readonly.scopes, [G('meetings.space.readonly')]);
   // Since 1.33.0 readwrite keeps the reads' reach over every space the user can see (scopePolicy.prefer).
   assert.deepEqual(meet.readwrite, [G('meetings.space.created'), G('meetings.space.readonly')]);
   const tasks = await resolved('gtasks', ['keep']);
-  assert.equal(tasks.n, 8);
+  // 10 since 2.7.0: tasks_tasks_move and tasks_tasklists_insert join the list. Both need only the tasks scope the list
+  // already asks for, so the scope lists below do not move.
+  assert.equal(tasks.n, 10);
   assert.deepEqual(tasks.readonly.scopes, [G('keep.readonly'), G('tasks.readonly')]);
   // The Keep reads list keep and keep.readonly; the greedy rule takes the write scope on a tie, as in the all toolset.
   // The list has no Keep write, so since 1.25.0 it prefers keep.readonly.

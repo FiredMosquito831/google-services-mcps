@@ -2,6 +2,98 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 2.9.0 - 2026-11-01
+
+### Added: two hand-written coursework writes in place of three raw generated tools
+- `classroom_create_coursework` makes an assignment, a question or a quiz in one call: a title, a type and its choices, instructions, up to 20 links and Drive files, a topic, points, a due date given as `YYYY-MM-DD` and `HH:MM` read in a time zone (Classroom keeps the pair in UTC), a schedule, individual students and the submission mode. It is a draft unless `publish` is true or `scheduled_time` is set, as Google's own tool is, and both of those ask as destructive calls, because they show the work to the students.
+- `classroom_update_coursework` changes only the fields you pass (they build Google's `updateMask`), takes a field away with `clear`, and sets the students through `courseWork.modifyAssignees` (the adds and removes worked out from a read of the item). Both work their approval out in `prepare`, so the form names the course, or the item as it is now and the fields that change, instead of a course id and a raw body.
+- They take the place of the generated `classroom_courses_work_create`, `classroom_courses_work_patch` and `classr_work_modify_assignees` in the `google` toolset, which now holds 19 tools: those three took a raw `CourseWork` body or a raw `updateMask`, with a description that had lost the field list and Google's project rule. Both tools match Google's `create_course_work` and `update_course_work` in part, which their notes say: Google's tool has its own date form, and no tool can add or remove a material on an item that exists, because Google's update mask has no such field.
+- Both need `classroom.coursework.students`, the one scope Discovery lists for `courseWork.create`, `patch` and `modifyAssignees`, so no login's scopes change: `gsm scopes` for gclassroom is identical in every profile and toolset, and only the tool and covered counts move.
+
+### Added: the same-project rule in the one generated tool that lacked it
+- Google allows only the Google Cloud project that made a coursework item or material to change, grade or delete it. Discovery states that in the text of `courseWork.create`, `patch`, `delete`, `studentSubmissions.patch` and `courseWorkMaterials.delete`, and those tools have carried it whole since 1.29.1 raised the description limit; `courseWorkMaterials.patch` leaves it out, so its tool carries a `methodNote` (config/products.json) that says it, with Google's guide (adversarial review of gclassroom, F3). The two new curated tools say it in their own descriptions.
+
+### Fixed (docs): the gclassroom page's counts, and its "no hand-written tools"
+- `docs/products/gclassroom.md` said the plugin has 119 tools, that the plugin option `google` lists 20, and that "there are no hand-written tools" (there have been 14 since 1.14.0, and 16 now). The page and the plugin's skill say what the server registers, what the two new tools do, and that the client-side filters look at one page.
+
+### Not changed
+- No tool's kind and no other product's tool map, scopes or `tools/list`. `classroom_materials_create` and `classroom_materials_patch` keep their generated form, so a material can still be made and changed with a raw body. `tool-aliases.json` is untouched (no generated tool was renamed), and the frozen files and the goldens have no diff.
+- The client-side filters of `classroom_list_courses` (`name_contains`), `classroom_list_coursework` (`types`, `topic_ids`, `title_contains`) and `classroom_list_announcements` (`text_contains`) still look at one page. Each description says so, since the honest and cheap option is to name the limit: reaching a match on a later page is what `next_page_token` is for, and looping would spend a caller's quota on pages nobody asked for (review F4).
+- Reported, not changed (owner decision needed): the destructive rule (docs/SECURITY.md, (b) sharing and permissions) may also cover `classroom.courses.students.create` and `classroom.courses.teachers.create`, which add a person to a course; `classroom.courses.students.delete` and both invitation creates already ask twice, and an announcement that publishes does too (1.26.3). Raising the two creates means entries in `config/tool-kinds.json`, which is frozen.
+- Reported, not changed: student answers, announcement text and coursework instructions come back as data with no note that they are untrusted text (review F10); the submission overview still calls a one-submission list "your_submission" (F7); `classwork_link` uses the raw course id (F12, UNVERIFIED); `checkRubric` does not check Google's "levels in the same order" rule (F13). Each wants its own change.
+
+### Tests
+- tests/classroom-parity.test.mjs: `dueFields` (UTC, a zone, an impossible date); `create_coursework` (a draft by default, the published quiz with its choices, materials, assignees, `destructiveWhen`, the five refusals that send nothing, and the `prepare` that names the course); `update_coursework` (the mask from the fields passed, `clear`, the `modifyAssignees` add and remove, three refusals, `destructiveWhen`, and the `prepare` that names the item); and the same-project text. tests/curated-contract.test.mjs: rows for both, against `courseWork.create`, `courseWork.patch` and `courseWork.modifyAssignees` (160 curated tools). tests/curated.test.mjs and tests/toolset.test.mjs: the 16 curated tools and the 19-tool `google` list.
+
+## 2.8.0 - 2026-11-01
+
+### Added: `contacts_list` pages through every contact
+- Google's People MCP server has three tools and no way to walk the contact list; its two searches find a person from the start of a name, email, phone or organization, and the generated `people_people_connections_list` wants a raw readMask, a sort order and a page size from the caller. `contacts_list` sets the readMask (names, email addresses, phone numbers, organizations; `fields` picks others), takes Google's own page size (up to 1,000, 100 by default) and sort order, and answers short entries with the total when Google sends it (adversarial review of gcontacts, F4).
+- A read, with the scopes of `people.connections.list` (`contacts`, `contacts.readonly`), so a `readonly` login lists it.
+
+### Added: a contact delete whose approval names the contact
+- A generated write or destructive tool reads its target first and adds a few naming fields to the approval (1.27.0), but a Person has no top-level title, display name or subject, so the approval of `people.deleteContact` showed `people/c123...` and nothing else (review F5). `contacts_delete` works the read out in `prepare` instead: the approval names the contact with its email addresses and phones, and the handler sends the same DELETE the generated tool sends.
+- It is destructive, so it asks twice, and it needs the `contacts` write scope. `src/servers/cloud-http.ts` takes `DELETE` for it (no curated tool sent one before).
+
+### Fixed (docs and wording): the warm-up search does not promise a new contact
+- `contacts_search`'s description and `docs/USING.md` said the warm-up search means "new contacts are found". Google only says "Before searching, clients should send a warmup request with an empty query to update the cache" (Discovery's `searchContacts` text), so both now say that the warm-up refreshes the cache and that a contact added a moment before can still take a moment to appear. It also no longer claims to be what makes a search work.
+
+### Not changed
+- No tool's kind and no other product's tool map, scopes or `tools/list`. The gcontacts `google` toolset is still Google's three reads: the two new tools are not in it. `tool-aliases.json` is untouched, and the frozen files and the goldens have no diff.
+- The other findings of the gcontacts review were already fixed and are left as they are: `health.*.rollUp` and `dailyRollUp` are reads (1.26.3, F1); Health webhooks and Data Portability are optional parts, so a contacts login no longer asks for `cloud-platform` or a Data Portability scope (1.35.0, F2); the clipped readMask lists are whole since 1.29.1 (F3); results are compact, budgeted and keep their page token since 1.28.0 (F4); `userinfo.profile` is preferred by every profile since 1.35.1, so `profile_me` returns the name (F6); the docs' counts follow the server since 1.38.3 (F9).
+- Reported, not changed (owner decision needed): a Person-shaped target would name a contact in a search result or an update's approval too if the generic target preview looked one level into `names[0].displayName` and `emailAddresses[0].value`. That is `src/core/target-preview.ts`, a rule for every product's approvals, so it is not here.
+- Reported, not changed: `personSummary` still returns emails and phones as plain values, without the type label Google gives each (review F11). Adding the label changes the shape of an answer that callers may already parse, so it wants its own change. `people.people.batchDeleteContacts` and `people.contactGroups.delete` keep their generated form: the group delete already names the group from its target read.
+
+### Tests
+- tests/contacts-parity.test.mjs: `contacts_list` (the connections list for `people/me`, the readMask, the page size, the sort order, the page token, the total, the schema limits), `contacts_delete` (the `prepare` read and the names it shows, the DELETE alone, and the same request when called without `prepare`), and the corrected warm-up wording. tests/curated-contract.test.mjs: rows for both (158 curated tools). tests/curated.test.mjs: the gcontacts count, and the `meet` module of 2.6.0 joins the module list it was missing from.
+
+## 2.7.0 - 2026-11-01
+
+### Added: the move and the list create in the gtasks `google` toolset
+- `tasks_tasks_move` and `tasks_tasklists_insert` join the list, which now holds 10 tools (adversarial review of gtasks, section C). Both already existed in the `all` toolset: without the move a model could not reorder a task, make it a subtask or move it to another list, and without the insert it could not make a list. Both need only the `tasks` scope the list already asks for, so `gsm scopes` for gtasks is identical in every profile and toolset; only the covered counts and the `google` tool count move.
+
+### Added: what `completed` and `due` are, in the two tools that write a task
+- The generated schema types `completed` as a string, so a call cannot send null, and the tool said nothing about it; `due` keeps the date only, and the tool did not say that either (review F6). The Tasks reference states both (https://developers.google.com/workspace/tasks/reference/rest/v1/tasks, read 2026-11-01), so `tasks.tasks.update` and `tasks.tasks.patch` carry a `methodNote` (config/products.json): mark a task completed or not with `status` (`completed` or `needsAction`), because `completed` is a timestamp and takes no null; `due` keeps the date only. The update's note adds that it is a PUT which sends the whole task, so read the task first or patch one field.
+- The schema is unchanged: Google's Discovery document and its reference page type `completed` as a string and say nothing about null, so the tool does not accept one (the review asked for a check first, not a widening).
+
+### Fixed (docs): Keep sharing is destructive, and the tool count was stale
+- `docs/products/gtasks.md` listed `keep_notes_permissions_batch_create` as a write; it has been destructive since 1.26.3, since it shows a private note to other people. The page also said the plugin has 22 tools (it registers 29), and did not say that a task's due date keeps the date only. All three are fixed, and the page says how `keep_media_download` returns an attachment's file (`alt: "media"`, since 1.31.0).
+- The plugin's skill gains a reorder and move flow and the due-date note.
+
+### Not changed
+- No tool's kind and no other product's tool map, scopes or `tools/list`. `tool-aliases.json` is untouched, and the frozen files and the goldens have no diff.
+- The other findings of the gtasks review were already fixed by earlier releases and are left as they are: Keep is an optional part (1.34.0) so a personal-account sign-in no longer asks for a Keep scope (F1); a delete's approval names the task, its list and its ids from a read of it (1.27.0 target preview, F2, pinned by tests/approval-previews.test.mjs); the clipped descriptions are whole since 1.29.1 (F3); `keep_media_download` takes `alt` and `offset` since 1.31.0 (F4); results are compact, budgeted and keep their page token since 1.28.0 (F5); the docs' counts follow the server since 1.38.3 (F8); and Keep sharing is destructive since 1.26.3 (F9).
+- Reported, not changed (owner decision needed): the generated body schema still carries read-only properties (`position`, `parent`, `links`, `webViewLink`, `assignmentInfo`) because `src/core/discovery/schema.ts` ignores Discovery's `readOnly`, so a caller can send them and Google ignores them. Dropping them is a change to the shared schema derivation, for its own release.
+
+### Tests
+- tests/method-notes.test.mjs: the two gtasks notes reach exactly the update and patch tools, state each fact, stay under the description limit, and are carried by the plugin's servers.json. tests/toolset.test.mjs and tests/toolset-scopes.test.mjs: the 10-tool `google` list and the scopes it resolves to. tests/approval-previews.test.mjs already pins the delete approval's target read and is unchanged.
+
+## 2.6.0 - 2026-11-01
+
+### Added: two hand-written Meet tools that answer the questions the generated ones left open
+- `meet_find_conference` finds meetings by a meeting code, a space or a time range, and answers each conference record with its starting and ending time, whether it is still running, when Google deletes it, the meeting code and meeting link of its space (one `spaces.get` per space, not per record), and the people who joined with the times they did. Before, that took the record list, one space read per record, and a participants list per record, and the record named `spaces/AAA` rather than the code people know.
+- `meet_get_transcript` reads the spoken text of a conference, entry by entry, with the speaker's name and the time. A transcript entry names its speaker only by a participant resource, so the names come from the conference's participants (a signed-in user, an anonymous guest or a phone number, whichever the call has); an entry whose speaker has no name keeps the participant id. It also gives the transcript's Google Doc id and export link, for the gdrive plugin. Both paginate, and the transcript page size times its per-entry character cap is kept under the result limit by default (20 entries of 800 characters).
+- Both are reads with the two Meet scopes (`meetings.space.created`, `meetings.space.readonly`), so a login of either profile registers them. They take the finding of the adversarial review of gmeet (F3).
+
+### Changed: the gmeet `google` toolset holds 11 tools
+- It loses `meet_conference_records_smart_notes_get` (the smart notes list returns the same fields, and transcripts and recordings have no get, so the set was uneven) and gains the two hand-written tools. The server still registers every generated tool in `all`, so nothing is lost there. `gmeet` has a real `curated` toolset now (the two tools) instead of falling back to `all`.
+
+### Changed: a curated Meet login asks for the read scope only
+- With the `curated` toolset, a `readwrite` or `full` login used to ask for `meetings.space.created` as well, because the toolset fell back to every tool of the product and the writes need it. The two curated tools are reads, so that toolset's login now asks for `meetings.space.readonly` alone. The `all` and `google` toolsets are unchanged (both still ask for `meetings.space.created` and `meetings.space.readonly`), and the scope stays in the group's universe, so an account that already holds it keeps it on a sign-in that names the account.
+
+### Fixed (docs): what the Meet limits are, and where a recording and a transcript go
+- `docs/products/gmeet.md` said the recording and transcript limits were UNVERIFIED and gave no route to their content. Google's limits page (https://developers.google.com/workspace/meet/api/guides/limits, read 2026-11-01) gives 6,000 reads per minute per project and 600 per user, 1,000 writes per project and 100 per user, and 100/10 for `spaces.create`; its artifacts guide (https://developers.google.com/workspace/meet/api/guides/artifacts, read 2026-11-01) says transcript entries are deleted 30 days after the conference ends and that recordings, transcripts and notes are saved to the organizer's Drive. The page and the plugin's skill now say both, and point at the gdrive plugin for the file itself.
+- The page also listed `meet_spaces_end_active_conference` as a plain write; it has been destructive since 1.26.3.
+
+### Not changed
+- No tool's kind and no other product's tool map, scopes or `tools/list`. `meet_conference_records_smart_notes_get` keeps its kind and stays in `all`; `meet_spaces_end_active_conference` and `meet_spaces_members_delete` stay destructive; `tool-aliases.json` is untouched (no generated tool was renamed).
+- The filter syntax the review found clipped (F2) is whole since 1.29.1: `meet.conferenceRecords.list` documents `space.meeting_code`, `space.name`, `start_time` and `end_time` in the snapshot, and `meet_find_conference` builds exactly that syntax. Nothing was needed beyond the new tool.
+- Reported, not changed (owner decision needed): `meet.spaces.members.create`, `meet.spaces.members.batchUpdate` and `meet.spaces.members.patch` grant access to a meeting space, and `meet.spaces.patch` can set `accessType: OPEN`; the destructive rule (docs/SECURITY.md, (b) sharing and permissions) may cover all four, and none is listed. Raising them means entries in `config/tool-kinds.json`, which is frozen.
+
+### Tests
+- tests/meet-tools.test.mjs: both tools are reads with the two scopes; the filter builder (meeting code, space id, space name, time bounds, AND-joined); the space name a code resolves to; participant names from the three ways of joining; the entry text cut and its truncation fields; the record list with one space read per distinct space, the participants, a space that cannot be read, an ongoing meeting, a zone; the transcript path from a record, a bare id, a space or a code, with a page token, without a transcript, with an unknown transcript; the page and character caps; and the bundled plugin's tool map, `servers.json` and 11-tool `google` list.
+- tests/toolset.test.mjs: the 11-tool `google` list, the `google` and `curated` sets a running server lists, and the gmeet case moved out of the generated-entry loop (it has hand-written tools now). tests/toolset-scopes.test.mjs: 11 tools in the list, same scopes. tests/scope-policy-prefer.test.mjs: the `curated` toolset's readwrite and full resolve to the read scope alone. tests/curated-contract.test.mjs: rows for both tools against `meet.conferenceRecords.list`, `meet.spaces.get`, the participants list, the transcripts list and the entries list (156 curated tools).
+
 ## 2.5.0 - 2026-11-01
 
 ### Added: what `scripts.run` needs before it works, in the tool that runs it

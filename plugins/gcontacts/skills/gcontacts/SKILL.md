@@ -25,11 +25,15 @@ Only if the chat tools fail, the same steps in a terminal: `node "${CLAUDE_PLUGI
 
 1. `contacts_search` searches your contacts; `contacts_search_directory` searches your organization.
 
-### 2. Who is signed in
+### 2. Every contact
+
+1. `contacts_list` pages through all of them with names, emails, phones and organization; `contacts_delete` deletes one by its resource_name, and asks twice.
+
+### 3. Who is signed in
 
 1. `profile_me`.
 
-### 3. Change a contact
+### 4. Change a contact
 
 1. Find the People API tool with `api_methods`; read the contact first (its etag), then update with updatePersonFields listing every field you send.
 
@@ -43,7 +47,7 @@ Reads never ask for approval. Tools that change or delete data are listed only w
 
 ## Tools
 
-The `gcontacts` MCP server lists up to 73 tools with the `all` toolset: 40 read, 23 write, 9 destructive and 1 dynamic (decided per call), counting its 7 runtime tools (`health` and the sign-in tools). Write and destructive tools are listed only when writes are allowed, and a tool loads only when the sign-in holds one of its scopes. The `google` toolset lists 3 of them plus the runtime tools. The gateway APIs below are reached through `api_search` (find a method), `api_describe` (its parameters) and `api_call` (run it).
+The `gcontacts` MCP server lists up to 75 tools with the `all` toolset: 41 read, 23 write, 10 destructive and 1 dynamic (decided per call), counting its 7 runtime tools (`health` and the sign-in tools). Write and destructive tools are listed only when writes are allowed, and a tool loads only when the sign-in holds one of its scopes. The `google` toolset lists 3 of them plus the runtime tools. The gateway APIs below are reached through `api_search` (find a method), `api_describe` (its parameters) and `api_call` (run it).
 
 ## APIs
 

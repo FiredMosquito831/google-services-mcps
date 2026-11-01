@@ -42,6 +42,7 @@ In the chat: `auth_login` with `"with": ["health"]` (or `["portability"]`, or bo
 | Area | Tools | Safety | What it does |
 |---|---|---|---|
 | People (short answers) | `contacts_search_directory`, `contacts_search`, `profile_me` | read | Search the Workspace directory or your contacts with a ready readMask, read your own name and email |
+| | `contacts_list`, `contacts_delete` | read, destructive | List every contact, page by page (hand-written, 2.8.0); delete one, named in its approval |
 | Contacts | `people_people_search_contacts`, `people_people_get`, `people_contact_groups_list` | read | Search contacts, read a contact, list groups |
 | | `people_search_directory_people`, `people_list_directory_people` | read | Search and list people in the directory |
 | | `people_people_create_contact`, `people_people_update_contact` | write | Create or change a contact |
@@ -58,6 +59,8 @@ In the chat: `auth_login` with `"with": ["health"]` (or `["portability"]`, or bo
 The full list is in `docs/capabilities/gcontacts.md`.
 
 The first three tools match the tools of Google's People MCP server (https://developers.google.com/people/api/mcp/tools_list). They set the person fields (names, email addresses, phone numbers, organizations; `fields` picks others), send the warm-up search Google asks for before a contact search, and tell the agent to let you confirm the person before a result goes into another tool. With the plugin option `toolset: google`, the server lists these three, plus `health` and the sign-in tools. A `readonly` login with that toolset asks for `contacts.readonly`, `directory.readonly` and (since 1.35.1) `userinfo.profile`; a `readwrite` login for `contacts.readonly` (since 1.25.0; before, `contacts`), `directory.readonly` and `userinfo.profile`, since no tool of the three changes a contact. Every sign-in adds `userinfo.email`, so `profile_me` always shows your email. Your name and picture need `userinfo.profile` ("See your personal info, including any personal info you've made publicly available"): before 1.35.1 no profile asked for it (the shorter `userinfo.email` or `openid` covered `profile_me`), so the name was missing; since 1.35.1 every profile of a gcontacts sign-in asks for it, with every toolset (it counts as view-only, and `readwrite` and `full` prefer it). A token from an earlier sign-in lacks it until you sign in again; `profile_me` says so.
+
+Two hand-written tools since 2.8.0 do what the generated ones left raw. `contacts_list` pages through every contact (`people.connections.list`), which Google's server does not cover: its two searches find a person from the start of a name, email, phone or organization, and nothing walks the list. `contacts_delete` deletes one contact by its resource name and asks twice; its approval names the contact from a read of it, because an approval over a generated `people.deleteContact` can only show `people/c123...` (a Person has no title or display name field at the top, so the generic target preview has nothing to show). Deleting does not remove a person from Other contacts.
 
 ## Example requests
 

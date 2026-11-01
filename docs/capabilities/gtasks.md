@@ -8,7 +8,7 @@ Google Tasks task lists and tasks, plus Google Keep notes.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 29, google 15, curated 29 (all) tools, each counting the 7 runtime tools this server registers (`account_remove`, `account_set_default`, `accounts_list`, `auth_login`, `auth_setup_client`, `auth_status`, `health`). "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 29, google 17, curated 29 (all) tools, each counting the 7 runtime tools this server registers (`account_remove`, `account_set_default`, `accounts_list`, `auth_login`, `auth_setup_client`, `auth_status`, `health`). "(all)" means the product has no such toolset yet, so it lists every tool.
 
 ## Not registered by this server (2)
 
@@ -16,18 +16,20 @@ The tool map (`plugins/<id>/tool-map.json`) also lists these, so the consent hoo
 
 - Sign-in tools of other sign-in kinds: `auth_setup_admin`, `auth_setup_service_account`.
 
-## Toolset google (8)
+## Toolset google (10)
 
 Google has no official MCP server for this product. The google toolset is a lean set chosen here: No official Google MCP server for Google Tasks or Google Keep was found (Google's Cloud and Workspace MCP lists, 2026-10-29; a negative, not confirmed by Google); a lean set chosen here.
 
 | Tool | Google's tool | Note |
 |---|---|---|
 | `tasks_tasklists_list` | (none) | Your task lists and their ids. Start here; @default is your first list. |
-| `tasks_tasks_list` | (none) | The tasks of one list, with due dates and status; showCompleted and dueMin/dueMax narrow it. |
+| `tasks_tasks_list` | (none) | The tasks of one list, with due dates and status. Completed tasks need showHidden true as well as showCompleted; dueMin and dueMax narrow by date. |
 | `tasks_tasks_get` | (none) | One task with its notes, due date, status and links. |
 | `tasks_tasks_insert` | (none) | Adds a task to a list (as a subtask with parent). A write, so it asks first. |
 | `tasks_tasks_patch` | (none) | Changes only the fields given: title, notes, due date, or status completed. A write, so it asks first. |
 | `tasks_tasks_delete` | (none) | Deletes a task. Destructive, so it asks twice. |
+| `tasks_tasks_move` | (none) | Reorders a task: another position in its list, under a parent (a subtask), or into another list (destinationTasklist). A write, so it asks first. |
+| `tasks_tasklists_insert` | (none) | Makes a new task list. A write, so it asks first. |
 | `keep_notes_list` | (none) | Google Keep notes, read only here (filter by trashed or create and update time). Google documents the Keep API for Google Workspace; whether a personal account can use it is not verified. |
 | `keep_notes_get` | (none) | One Keep note with its text or list items. |
 

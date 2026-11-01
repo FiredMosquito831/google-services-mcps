@@ -27,6 +27,15 @@
           ]
         }
       },
+      "methodNotes": {
+        "classroom": {
+          "source": "Discovery's own text of classroom.courses.courseWork.patch, courseWork.delete and courseWorkMaterials.delete (data/discovery/classroom.v1.json) and Google's guide https://developers.google.com/workspace/classroom/guides/manage-coursework, read 2026-11-01",
+          "reason": "Google allows only the Google Cloud project that made a coursework item or material to change, grade or delete it. Discovery states it on most of the write methods, so their tools carry it already; courseWorkMaterials.patch is the one whose own text leaves it out, and a model reading that tool would not know why an item made in the Classroom website answers PERMISSION_DENIED (adversarial review of gclassroom, F3).",
+          "methods": {
+            "classroom.courses.courseWorkMaterials.patch": "Only the Google Cloud project that made this material may change it: a material created in the Classroom website answers PERMISSION_DENIED (Google's courseWork and courseWorkMaterials text, and the guide on managing course work)."
+          }
+        }
+      },
       "toolsets": {
         "google": [
           "classroom_list_courses",
@@ -36,10 +45,9 @@
           "classroom_list_coursework",
           "classroom_get_coursework",
           "classroom_materials_list",
-          "classroom_courses_work_create",
+          "classroom_create_coursework",
           "classroom_materials_create",
-          "classroom_courses_work_patch",
-          "classr_work_modify_assignees",
+          "classroom_update_coursework",
           "classroom_materials_patch",
           "classroom_list_submissions",
           "classroom_get_rubric",

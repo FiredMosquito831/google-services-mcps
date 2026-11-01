@@ -87,16 +87,17 @@
       "whenToUse": "Use for Google Meet: a new meeting link, who joined a past meeting, its recording, transcript or notes. Examples: \"create a Meet link\", \"who attended yesterday's meeting\", \"get the transcript of the last call\".",
       "flows": [
         { "title": "New meeting", "steps": ["{tool:meet_spaces_create} returns the meeting link."] },
-        { "title": "A past meeting", "steps": ["{tool:meet_conference_records_list} (filter by meeting code or time), then {tool:meet_records_participants_list} with parent conferenceRecords/<id>."] },
-        { "title": "Transcript and recording", "steps": ["{tool:meet_records_transcripts_list} with parent, then {tool:meet_records_transcripts_entries_list}.", "{tool:meet_conference_records_recordings_list}: the recording and transcript files are in Drive; read them with the gdrive plugin and the file id."] }
+        { "title": "A past meeting", "steps": ["{tool:meet_find_conference} with the meeting code, a space or a time range: the conference records, each with its meeting link and who joined."] },
+        { "title": "Transcript and recording", "steps": ["{tool:meet_get_transcript} with the conference record, or the meeting code: the entries with the speakers' names, paged.", "Materials: {tool:meet_records_transcripts_list} and {tool:meet_conference_records_recordings_list} give the Google Doc and the Drive file ids; read them with the gdrive plugin."] }
       ],
-      "notes": ["Google keeps conference records, transcripts and recordings entries for a limited time (30 days per its artifacts guide)."]
+      "notes": ["Meet deletes a conference record and its transcript entries 30 days after the meeting ends; recordings, transcripts and notes are saved to the organizer's Drive and kept by Drive and Vault rules."]
     },
     "gcontacts": {
       "description": "Look up people: search your Google contacts and your organization's directory, and read your own profile; plus the People API (contact groups, creating and updating contacts), personal Health metrics and Data Portability.",
       "whenToUse": "Use to find someone's email address or phone number, look up a coworker in the company directory, or manage Google Contacts. Examples: \"what's Ana's email\", \"find Ben in the directory\", \"add this person to my contacts\".",
       "flows": [
         { "title": "Find a person", "steps": ["{tool:contacts_search} searches your contacts; {tool:contacts_search_directory} searches your organization."] },
+        { "title": "Every contact", "steps": ["{tool:contacts_list} pages through all of them with names, emails, phones and organization; {tool:contacts_delete} deletes one by its resource_name, and asks twice."] },
         { "title": "Who is signed in", "steps": ["{tool:profile_me}."] },
         { "title": "Change a contact", "steps": ["Find the People API tool with {tool:api_methods}; read the contact first (its etag), then update with updatePersonFields listing every field you send."] }
       ],
@@ -108,9 +109,13 @@
       "flows": [
         { "title": "Read tasks", "steps": ["{tool:tasks_tasklists_list}, then {tool:tasks_tasks_list} with tasklist (showCompleted and showHidden true to include completed tasks)."] },
         { "title": "Add or complete", "steps": ["{tool:tasks_tasks_insert} with tasklist and a body with title, notes and due (a date, such as 2026-11-06T00:00:00.000Z).", "Complete a task with {tool:tasks_tasks_patch} and the body {\"status\": \"completed\"}."] },
+        { "title": "Reorder or move a task", "steps": ["{tool:tasks_tasks_move} with tasklist and task: previous for another position, parent to make it a subtask, destinationTasklist to move it to another list.", "A new list: {tool:tasks_tasklists_insert} with a title."] },
         { "title": "Keep notes", "steps": ["{tool:keep_notes_list}, then {tool:keep_notes_get}."] }
       ],
-      "notes": ["The Keep API works for Google Workspace accounts."]
+      "notes": [
+        "A task's due date keeps the date only: Google discards the time of day.",
+        "The Keep API works for Google Workspace accounts."
+      ]
     },
     "gclassroom": {
       "description": "Google Classroom for teachers and students: courses, rosters, coursework and submissions, topics, announcements, rubrics and guardians.",
@@ -118,6 +123,7 @@
       "flows": [
         { "title": "Courses and students", "steps": ["{tool:classroom_list_courses} (role teacher or student) gives course_id; {tool:classroom_get_roster} lists the students and teachers."] },
         { "title": "Assignments and submissions", "steps": ["{tool:classroom_list_coursework} with course_id, then {tool:classroom_list_submissions} with course_id and coursework_id (states, late)."] },
+        { "title": "Set coursework", "steps": ["{tool:classroom_create_coursework} with course_id and a title: a draft unless you pass publish, with an optional due date (YYYY-MM-DD and HH:MM in a time zone), materials, points and students.", "{tool:classroom_update_coursework} changes only the fields you pass, and takes one away with clear."] },
         { "title": "Post to a class", "steps": ["{tool:classroom_create_announcement} with course_id and text (a change: it asks first)."] }
       ],
       "notes": ["Google lets only the Cloud project that created a coursework item change or grade it: items made in the Classroom website return PERMISSION_DENIED here."]

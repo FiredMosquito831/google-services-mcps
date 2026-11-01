@@ -12,7 +12,7 @@ type Auth = OAuth2Client | JWT;
 
 export interface CloudRequest {
   url: string;
-  method?: 'GET' | 'POST' | 'PATCH';
+  method?: 'GET' | 'POST' | 'PATCH' | 'DELETE';
   /** Query parameters; undefined values are left out. A list is sent as the parameter repeated, once per value. */
   query?: Record<string, string | number | boolean | readonly string[] | undefined>;
   /** A JSON body (an object), or raw bytes for a media upload (a string, a Buffer or a stream). */

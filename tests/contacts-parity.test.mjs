@@ -55,11 +55,17 @@ const ANA = {
 
 test('three reads; the scopes of the People methods; profile_me has the userinfo scopes as Discovery spells them', () => {
   for (const t of tools.values()) {
-    assert.equal(t.kind, 'read', t.name);
     assert.equal(t.inputSchema.confirm, undefined, `${t.name}: no model-controlled confirm`);
+    // 2.8.0: contacts_list and contacts_delete are hand-written tools of this server, not ports of Google's three.
+    if (['contacts_list', 'contacts_delete'].includes(t.name)) continue;
+    assert.equal(t.kind, 'read', t.name);
     assert.match(t.description, /Google's People MCP server/, `${t.name} names the official tool it matches`);
   }
-  assert.deepEqual([...tools.keys()], ['contacts_search_directory', 'contacts_search', 'profile_me']);
+  assert.deepEqual([...tools.keys()], ['contacts_search_directory', 'contacts_search', 'contacts_list', 'contacts_delete', 'profile_me']);
+  assert.equal(tools.get('contacts_list').kind, 'read');
+  assert.deepEqual(tools.get('contacts_list').scopes, [G('contacts'), G('contacts.readonly')]);
+  assert.equal(tools.get('contacts_delete').kind, 'destructive');
+  assert.deepEqual(tools.get('contacts_delete').scopes, [G('contacts')]);
   assert.deepEqual(tools.get('contacts_search_directory').scopes, [G('directory.readonly')]);
   assert.deepEqual(tools.get('contacts_search').scopes, [G('contacts'), G('contacts.readonly')]);
   // The same strings as the generated oauth2_userinfo_get: openid is a bare name, not https://www.googleapis.com/auth/openid.
@@ -122,6 +128,43 @@ test('search: the empty warm-up request first, then the search, with the same re
   assert.deepEqual(calls.map((c) => c.query.readMask), ['nicknames', 'nicknames']);
   assert.equal(calls[1].query.pageSize, '30');
   assert.equal(parse('contacts_search', { query: 'bo', max_results: 31 }).success, false);
+});
+
+test('contacts_list (2.8.0): people.connections.list for people/me, the readMask, the sort order and the page token', async () => {
+  reset(() => ({ connections: [ANA, { resourceName: 'people/2', names: [{ givenName: 'Bo', familyName: 'Lee' }] }], nextPageToken: 'n', totalPeople: 42 }));
+  const res = await run('contacts_list', {});
+  assert.deepEqual(calls.map((c) => [c.host, c.path]), [['people.googleapis.com', '/v1/people/me/connections']]);
+  assert.deepEqual(calls[0].query, { personFields: 'names,emailAddresses,phoneNumbers,organizations', pageSize: '100' });
+  assert.deepEqual(res.contacts.map((p) => p.name), ['Ana Moreau', 'Bo Lee']);
+  assert.equal(res.total_people, 42);
+  assert.equal(res.next_page_token, 'n');
+  reset(() => ({ connections: [] }));
+  await run('contacts_list', { fields: ['photos'], page_size: 1000, page_token: 'p', sort_order: 'FIRST_NAME_ASCENDING' });
+  assert.deepEqual(calls[0].query, { personFields: 'photos', pageSize: '1000', pageToken: 'p', sortOrder: 'FIRST_NAME_ASCENDING' });
+  assert.equal(parse('contacts_list', { page_size: 1001 }).success, false);
+  assert.equal(parse('contacts_list', { sort_order: 'RANDOM' }).success, false);
+});
+
+test('contacts_delete (2.8.0): the approval names the contact from a read of it, and the handler sends only the DELETE', async () => {
+  reset(() => ({ resourceName: 'people/1', etag: 'e', names: ANA.names, emailAddresses: ANA.emailAddresses, phoneNumbers: ANA.phoneNumbers }));
+  const prepared = await tools.get('contacts_delete').prepare({ resource_name: 'people/1' }, ctx);
+  assert.deepEqual(prepared.preview, { contact: { resource_name: 'people/1', name: 'Ana Moreau', emails: ['ana@example.com', 'ana@old.example'], phones: ['+15550100'] } });
+  assert.deepEqual(calls.map((c) => [c.method, c.path, c.query]), [['GET', '/v1/people/1', { personFields: 'names,emailAddresses,phoneNumbers' }]], 'the read only');
+  reset(() => ({}));
+  const res = await run('contacts_delete', { resource_name: 'people/1' });
+  assert.deepEqual(calls.map((c) => [c.method, c.path]), [['DELETE', '/v1/people/1:deleteContact']]);
+  assert.equal(res.deleted, 'people/1');
+  // Called without prepare (the contract test's shape), the handler still sends the same request.
+  reset(() => ({}));
+  await run('contacts_delete', { resource_name: 'people/2' });
+  assert.deepEqual(calls.map((c) => [c.method, c.path]), [['DELETE', '/v1/people/2:deleteContact']]);
+});
+
+test("the warm-up claim: the search refreshes Google's cache, and nothing says a new contact is found", () => {
+  const d = tools.get('contacts_search').description;
+  assert.doesNotMatch(d, /so new contacts are found/);
+  assert.match(d, /warm-up request Google asks for before a search/);
+  assert.match(d, /can still take a moment to appear/);
 });
 
 test("profile_me: name, email and picture from userinfo; without the profile scope, the email and a note", async () => {

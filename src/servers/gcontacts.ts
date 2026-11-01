@@ -1,11 +1,14 @@
 /**
- * Curated Contacts and profile tools of the gcontacts server. They match the tools of Google's People MCP server
- * (developers.google.com/people/api/mcp/tools_list): search the Workspace directory, search your contacts, and read your
- * own profile. The generated people_* tools need a readMask and the right sources from the caller; these set sensible
- * ones, send the warm-up request Google asks for before a contact search, and return short entries.
+ * Curated Contacts and profile tools of the gcontacts server. Three of them match the tools of Google's People MCP
+ * server (developers.google.com/people/api/mcp/tools_list): search the Workspace directory, search your contacts, and
+ * read your own profile. The generated people_* tools need a readMask and the right sources from the caller; these set
+ * sensible ones, send the warm-up request Google asks for before a contact search, and return short entries.
+ * Since 2.8.0 two more do what the generated tools left raw: contacts_list pages through every contact, and
+ * contacts_delete names the contact in its approval from a read of it (the generic target preview of a generated tool
+ * finds nothing to show for a Person, which has no top-level title or name).
  *
- * All three are reads. Like Google's tools, the search descriptions tell the model to show the people found and let the
- * person confirm which one is meant before a result goes into another tool.
+ * All but contacts_delete are reads. Like Google's tools, the search descriptions tell the model to show the people
+ * found and let the person confirm which one is meant before a result goes into another tool.
  *
  * Auth: OAuth user token from `gsm login workspace-user`.
  */
@@ -140,7 +143,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
     defineTool({
       name: 'contacts_search',
       title: 'Search your contacts',
-      description: `Search your Google Contacts by the start of a name, nickname, email address, phone number or organization (matches search_contacts in Google's People MCP server). It sends the warm-up request Google asks for before a search, so new contacts are found. ${CAUTION}`,
+      description: `Search your Google Contacts by the start of a name, nickname, email address, phone number or organization (matches search_contacts in Google's People MCP server). It sends the empty warm-up request Google asks for before a search, which refreshes its search cache; a contact added a moment before can still take a moment to appear (Discovery's searchContacts text). ${CAUTION}`,
       kind: 'read',
       scopes: googleScopes('contacts', 'contacts.readonly'),
       inputSchema: {
@@ -158,6 +161,58 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
         });
         const people = (res.data.results ?? []).map((r) => r.person).filter((p): p is Person => !!p).map(personSummary);
         return { people, ...(people.length > 1 ? { note: 'Several people match: ask which one is meant.' } : {}) };
+      },
+    }),
+    defineTool({
+      name: 'contacts_list',
+      title: 'List your contacts',
+      description: `List your Google Contacts page by page: the name, email addresses, phone numbers and organization of each (people.connections.list, which no tool of Google's People MCP server covers; its search tools find a person from the start of a name, email, phone or organization, but nothing pages through everyone). \`fields\` picks other person fields and \`sort_order\` the order; at most 1,000 contacts per page. Use a resource_name from here with contacts_delete or people_people_update_contact. Read only.`,
+      kind: 'read',
+      scopes: googleScopes('contacts', 'contacts.readonly'),
+      inputSchema: {
+        fields,
+        page_size: z.number().int().min(1).max(1000).optional().describe("Contacts per page, 1 to 1,000. Default 100 (Google's)."),
+        page_token: z.string().optional().describe('next_page_token from the previous call, with the same other arguments.'),
+        sort_order: z
+          .enum(['LAST_MODIFIED_ASCENDING', 'LAST_MODIFIED_DESCENDING', 'FIRST_NAME_ASCENDING', 'LAST_NAME_ASCENDING'])
+          .optional()
+          .describe("The order of the contacts. Default LAST_MODIFIED_ASCENDING (Google's)."),
+      },
+      async handler({ fields: wanted, page_size, page_token, sort_order }) {
+        const res = await call<{ connections?: Person[]; nextPageToken?: string; totalPeople?: number; totalItems?: number }>({
+          url: `${PEOPLE}/people/me/connections`,
+          query: { personFields: readMaskOf(wanted), pageSize: page_size ?? 100, pageToken: page_token, sortOrder: sort_order },
+        });
+        return {
+          contacts: (res.data.connections ?? []).map(personSummary),
+          ...(res.data.totalPeople !== undefined ? { total_people: res.data.totalPeople } : {}),
+          next_page_token: res.data.nextPageToken || undefined,
+        };
+      },
+    }),
+    defineTool({
+      name: 'contacts_delete',
+      title: 'Delete a contact',
+      description: `Delete one of your Google Contacts by its resource name (people/c..., from contacts_search or contacts_list). Destructive, so it asks twice, and the approval names the contact from a read of it. Google keeps a person you have written to in Other contacts; this deletes from your contacts only.`,
+      kind: 'destructive',
+      scopes: googleScopes('contacts'),
+      inputSchema: { resource_name: z.string().min(1).describe('The resource name of the contact, people/c... .') },
+      async prepare({ resource_name }) {
+        const p = (await call<Person>({ url: `${PEOPLE}/${resource_name}`, query: { personFields: 'names,emailAddresses,phoneNumbers' } })).data;
+        return {
+          preview: {
+            contact: {
+              resource_name: p.resourceName ?? resource_name,
+              ...(p.names?.length ? { name: primaryFirst(p.names)[0]?.displayName } : {}),
+              ...(p.emailAddresses?.length ? { emails: primaryFirst(p.emailAddresses).map((e) => e.value).filter(Boolean) } : {}),
+              ...(p.phoneNumbers?.length ? { phones: p.phoneNumbers.map((ph) => ph.canonicalForm ?? ph.value).filter(Boolean) } : {}),
+            },
+          },
+        };
+      },
+      async handler({ resource_name }, _ctx, prepared) {
+        await call({ url: `${PEOPLE}/${resource_name}:deleteContact`, method: 'DELETE' });
+        return { deleted: resource_name, ...(prepared?.preview ? { contact: (prepared.preview as { contact?: unknown }).contact } : {}) };
       },
     }),
     defineTool({

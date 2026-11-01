@@ -1846,8 +1846,8 @@
       "name": "gmeet",
       "plugin": "gmeet",
       "group": "workspace-user",
-      "kind": "discovery",
-      "curated": null,
+      "kind": "curated+discovery",
+      "curated": "src/servers/meet.ts",
       "apis": [
         {
           "api": "meet",
@@ -1868,14 +1868,15 @@
         "google": [
           "meet_spaces_create",
           "meet_spaces_get",
+          "meet_find_conference",
+          "meet_get_transcript",
           "meet_conference_records_list",
           "meet_conference_records_get",
           "meet_records_participants_list",
           "meet_records_transcripts_list",
           "meet_records_transcripts_entries_list",
           "meet_conference_records_recordings_list",
-          "meet_records_smart_notes_list",
-          "meet_conference_records_smart_notes_get"
+          "meet_records_smart_notes_list"
         ]
       },
       "label": "Google Meet: Google Meet spaces, conference records, participants and recordings."
@@ -1971,6 +1972,16 @@
           ]
         }
       },
+      "methodNotes": {
+        "tasks": {
+          "source": "Google's Tasks reference (https://developers.google.com/workspace/tasks/reference/rest/v1/tasks, read 2026-11-01) and Discovery's Task schema in data/discovery/tasks.v1.json",
+          "reason": "The generated schema types `completed` as a string and takes no null, and the tool said nothing about what that means, about `status`, or about `due` keeping the date only. Google's reference says it; no other tool of the API is affected, so the note goes on the two methods that write a task (adversarial review of gtasks, F6).",
+          "methods": {
+            "tasks.tasks.update": "`completed` is a timestamp string and the schema takes no null: mark a task completed or not with `status` (`completed` or `needsAction`). `due` keeps the date only, because Google discards the time of day. This method is a PUT and sends the whole task, so read it first with tasks_tasks_get and send back what you keep, or use tasks_tasks_patch to change one field.",
+            "tasks.tasks.patch": "`completed` is a timestamp string and the schema takes no null: mark a task completed or not with `status` (`completed` or `needsAction`). `due` keeps the date only, because Google discards the time of day."
+          }
+        }
+      },
       "toolsets": {
         "google": [
           "tasks_tasklists_list",
@@ -1979,6 +1990,8 @@
           "tasks_tasks_insert",
           "tasks_tasks_patch",
           "tasks_tasks_delete",
+          "tasks_tasks_move",
+          "tasks_tasklists_insert",
           "keep_notes_list",
           "keep_notes_get"
         ]
@@ -2012,6 +2025,15 @@
           ]
         }
       },
+      "methodNotes": {
+        "classroom": {
+          "source": "Discovery's own text of classroom.courses.courseWork.patch, courseWork.delete and courseWorkMaterials.delete (data/discovery/classroom.v1.json) and Google's guide https://developers.google.com/workspace/classroom/guides/manage-coursework, read 2026-11-01",
+          "reason": "Google allows only the Google Cloud project that made a coursework item or material to change, grade or delete it. Discovery states it on most of the write methods, so their tools carry it already; courseWorkMaterials.patch is the one whose own text leaves it out, and a model reading that tool would not know why an item made in the Classroom website answers PERMISSION_DENIED (adversarial review of gclassroom, F3).",
+          "methods": {
+            "classroom.courses.courseWorkMaterials.patch": "Only the Google Cloud project that made this material may change it: a material created in the Classroom website answers PERMISSION_DENIED (Google's courseWork and courseWorkMaterials text, and the guide on managing course work)."
+          }
+        }
+      },
       "toolsets": {
         "google": [
           "classroom_list_courses",
@@ -2021,10 +2043,9 @@
           "classroom_list_coursework",
           "classroom_get_coursework",
           "classroom_materials_list",
-          "classroom_courses_work_create",
+          "classroom_create_coursework",
           "classroom_materials_create",
-          "classroom_courses_work_patch",
-          "classr_work_modify_assignees",
+          "classroom_update_coursework",
           "classroom_materials_patch",
           "classroom_list_submissions",
           "classroom_get_rubric",

@@ -21,6 +21,7 @@ import { buildTools as buildGfirebase } from './gfirebase.js';
 import { buildTools as buildGmail } from './gmail.js';
 import { buildTools as buildGmaps } from './gmaps.js';
 import { buildTools as buildGplay } from './gplay.js';
+import { buildTools as buildMeet } from './meet.js';
 import { buildTools as buildSearchConsole } from './searchconsole.js';
 import { buildTools as buildWorkspaceAdmin } from './workspace-admin.js';
 
@@ -41,6 +42,7 @@ const CURATED: Record<string, Builder> = {
   'src/servers/gfirebase.ts': buildGfirebase,
   'src/servers/gai.ts': buildGai,
   'src/servers/gmaps.ts': buildGmaps,
+  'src/servers/meet.ts': buildMeet,
   'src/servers/gplay.ts': buildGplay,
 };
 
