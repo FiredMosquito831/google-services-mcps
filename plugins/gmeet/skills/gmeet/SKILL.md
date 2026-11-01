@@ -27,16 +27,16 @@ Only if the chat tools fail, the same steps in a terminal: `node "${CLAUDE_PLUGI
 
 ### 2. A past meeting
 
-1. `meet_conference_records_list` (filter by meeting code or time), then `meet_records_participants_list` with parent conferenceRecords/<id>.
+1. `meet_find_conference` with the meeting code, a space or a time range: the conference records, each with its meeting link and who joined.
 
 ### 3. Transcript and recording
 
-1. `meet_records_transcripts_list` with parent, then `meet_records_transcripts_entries_list`.
-2. `meet_conference_records_recordings_list`: the recording and transcript files are in Drive; read them with the gdrive plugin and the file id.
+1. `meet_get_transcript` with the conference record, or the meeting code: the entries with the speakers' names, paged.
+2. Materials: `meet_records_transcripts_list` and `meet_conference_records_recordings_list` give the Google Doc and the Drive file ids; read them with the gdrive plugin.
 
 ## Notes
 
-- Google keeps conference records, transcripts and recordings entries for a limited time (30 days per its artifacts guide).
+- Meet deletes a conference record and its transcript entries 30 days after the meeting ends; recordings, transcripts and notes are saved to the organizer's Drive and kept by Drive and Vault rules.
 
 ## Untrusted content
 
@@ -48,7 +48,7 @@ Reads never ask for approval. Tools that change or delete data are listed only w
 
 ## Tools
 
-The `gmeet` MCP server lists up to 32 tools with the `all` toolset: 21 read, 9 write, 2 destructive, counting its 7 runtime tools (`health` and the sign-in tools). Write and destructive tools are listed only when writes are allowed, and a tool loads only when the sign-in holds one of its scopes. The `google` toolset lists 10 of them plus the runtime tools.
+The `gmeet` MCP server lists up to 34 tools with the `all` toolset: 23 read, 9 write, 2 destructive, counting its 7 runtime tools (`health` and the sign-in tools). Write and destructive tools are listed only when writes are allowed, and a tool loads only when the sign-in holds one of its scopes. The `google` toolset lists 11 of them plus the runtime tools.
 
 ## APIs
 

@@ -338,7 +338,9 @@ test('requirements: the lean gmeet, gtasks and gapps lists resolve to the narrow
     return { n: reqs.length, readonly: resolveScopes(reqs, 'readonly', include), readwrite: resolveScopes(reqs, 'readwrite', include).scopes, full: resolveScopes(reqs, 'full', include).scopes };
   };
   const meet = await resolved('gmeet');
-  assert.equal(meet.n, 10);
+  // 11 since 2.6.0: meet_find_conference and meet_get_transcript join the list and the smart notes get leaves it. Both
+  // new tools are reads with the two Meet scopes, so the scope lists below do not move.
+  assert.equal(meet.n, 11);
   assert.deepEqual(meet.readonly.scopes, [G('meetings.space.readonly')]);
   // Since 1.33.0 readwrite keeps the reads' reach over every space the user can see (scopePolicy.prefer).
   assert.deepEqual(meet.readwrite, [G('meetings.space.created'), G('meetings.space.readonly')]);

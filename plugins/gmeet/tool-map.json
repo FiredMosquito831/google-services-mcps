@@ -120,6 +120,24 @@
     "title": "meet.conferenceRecords.transcripts.get"
   },
   {
+    "name": "mcp__plugin_gmeet_gmeet__meet_find_conference",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/meetings.space.created",
+      "https://www.googleapis.com/auth/meetings.space.readonly"
+    ],
+    "title": "Find a Meet conference"
+  },
+  {
+    "name": "mcp__plugin_gmeet_gmeet__meet_get_transcript",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/meetings.space.created",
+      "https://www.googleapis.com/auth/meetings.space.readonly"
+    ],
+    "title": "Read a Meet transcript"
+  },
+  {
     "name": "mcp__plugin_gmeet_gmeet__meet_records_participants_get",
     "kind": "read",
     "scopes": [

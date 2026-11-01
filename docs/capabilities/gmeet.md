@@ -4,11 +4,11 @@ Google Meet spaces, conference records, participants and recordings.
 
 - Plugin: `gmeet`, MCP server: `gmeet`, login: Desktop OAuth client, then `login workspace-user`
 - Install: `claude plugin install gmeet@google-services-mcps`
-- Tools: 32 total. Curated 7, per-method 24, gateway 0. Read 21, write 9, destructive 2, dynamic 0.
+- Tools: 34 total. Curated 9, per-method 24, gateway 0. Read 23, write 9, destructive 2, dynamic 0.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 32, google 17, curated 32 (all) tools, each counting the 7 runtime tools this server registers (`account_remove`, `account_set_default`, `accounts_list`, `auth_login`, `auth_setup_client`, `auth_status`, `health`). "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 34, google 18, curated 9 tools, each counting the 7 runtime tools this server registers (`account_remove`, `account_set_default`, `accounts_list`, `auth_login`, `auth_setup_client`, `auth_status`, `health`). "(all)" means the product has no such toolset yet, so it lists every tool.
 
 ## Not registered by this server (2)
 
@@ -16,7 +16,7 @@ The tool map (`plugins/<id>/tool-map.json`) also lists these, so the consent hoo
 
 - Sign-in tools of other sign-in kinds: `auth_setup_admin`, `auth_setup_service_account`.
 
-## Toolset google (10)
+## Toolset google (11)
 
 Google has no official MCP server for this product. The google toolset is a lean set chosen here: No official Google MCP server for Google Meet was found (Google's Cloud and Workspace MCP lists, 2026-10-29; a negative, not confirmed by Google); a lean set chosen here.
 
@@ -24,6 +24,8 @@ Google has no official MCP server for this product. The google toolset is a lean
 |---|---|---|
 | `meet_spaces_create` | (none) | Makes a new meeting space and returns its meeting link and code. A write, so it asks first. |
 | `meet_spaces_get` | (none) | A meeting space by its name (spaces/{space}) or meeting code: its link, code and settings. |
+| `meet_find_conference` | (none) | Start here for a meeting that took place: a meeting code, a space or a time range to conference records, with the meeting code and link of each space and who joined. It replaces several calls (the record list, the space, the participants) and resolves the names. Read only. |
+| `meet_get_transcript` | (none) | The spoken text of a conference, entry by entry with the speaker's name and time, paged. The speaker comes from the conference participants (an entry names only a participant resource); the transcript's Google Doc id is there for the gdrive plugin. Read only. |
 | `meet_conference_records_list` | (none) | Past and current conferences (one per meeting held in a space), newest first; filter by space or time. Start here for a meeting that took place. |
 | `meet_conference_records_get` | (none) | One conference: its space, start and end time. |
 | `meet_records_participants_list` | (none) | Who joined a conference, with join and leave times. |
@@ -31,9 +33,8 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `meet_records_transcripts_entries_list` | (none) | The spoken text of a transcript, entry by entry with the speaker and time. |
 | `meet_conference_records_recordings_list` | (none) | The recordings of a conference and their Drive files. |
 | `meet_records_smart_notes_list` | (none) | The notes Gemini took in a conference (smart notes) and their Google Docs. |
-| `meet_conference_records_smart_notes_get` | (none) | One smart notes entry and the Google Doc that holds it. |
 
-## Curated tools (7)
+## Curated tools (9)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
@@ -44,6 +45,8 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `auth_setup_client` | write | Save the Google OAuth client | (none) |
 | `auth_status` | read | Sign-in status | (none) |
 | `health` | read | Server health | (none) |
+| `meet_find_conference` | read | Find a Meet conference | meetings.space.created, meetings.space.readonly |
+| `meet_get_transcript` | read | Read a Meet transcript | meetings.space.created, meetings.space.readonly |
 
 ## Per-method tools (24)
 

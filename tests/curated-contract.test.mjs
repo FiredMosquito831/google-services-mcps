@@ -148,6 +148,7 @@ const DOCS = [
   'people.v1',
   'oauth2.v2',
   'classroom.v1',
+  'meet.v2',
   'analyticsdata.v1beta',
 ];
 
@@ -309,7 +310,7 @@ function problemsOf(call) {
 // ---------------------------------------------------------------------------
 // The servers and their tools.
 
-const SERVERS = ['gmail', 'gcalendar', 'gdrive', 'searchconsole', 'cloud', 'gads', 'workspace-admin', 'gchat', 'gcontacts', 'gclassroom', 'ganalytics', 'gfirebase', 'gai', 'gmaps', 'gplay'];
+const SERVERS = ['gmail', 'gcalendar', 'gdrive', 'searchconsole', 'cloud', 'gads', 'workspace-admin', 'gchat', 'gcontacts', 'gclassroom', 'ganalytics', 'gfirebase', 'gai', 'gmaps', 'gplay', 'meet'];
 const tools = new Map();
 for (const mod of SERVERS) {
   const { buildTools } = await import(DIST(`servers/${mod}.js`));
@@ -900,6 +901,44 @@ const CASES = {
     { args: { conversation_id: 'spaces/AAA', mute_setting: 'UNMUTED' }, expect: ['chat.users.spaces.spaceNotificationSetting.patch'], sends: { updateMask: 'mute_setting' } },
   ],
 
+  // gmeet (2.6.0)
+  meet_find_conference: [
+    {
+      args: { space: 'abc-mnop-xyz', start_from: '2026-10-01T00:00:00Z', start_to: '2026-10-02T00:00:00Z', page_size: 5, page_token: 'p1' },
+      expect: ['meet.conferenceRecords.list', 'meet.spaces.get', 'meet.conferenceRecords.participants.list'],
+      sends: { filter: 'space.meeting_code = "abc-mnop-xyz" AND start_time >= "2026-10-01T00:00:00Z" AND start_time <= "2026-10-02T00:00:00Z"', pageSize: '5' },
+      respond: (call) => {
+        if (call.url.endsWith('/v2/conferenceRecords')) return { conferenceRecords: [{ name: 'conferenceRecords/cr1', space: 'spaces/AAA', startTime: '2026-10-01T09:00:00Z' }] };
+        if (call.url.endsWith('/participants')) return { participants: [{ name: 'conferenceRecords/cr1/participants/p1', signedinUser: { displayName: 'Ana' } }] };
+        return { meetingCode: 'abc-mnop-xyz', meetingUri: 'https://meet.google.com/abc-mnop-xyz' };
+      },
+    },
+    // No participants: the record list and the space read only.
+    { args: { include_participants: false }, expect: ['meet.conferenceRecords.list', 'meet.spaces.get'], respond: (call) => (call.url.endsWith('/v2/conferenceRecords') ? { conferenceRecords: [{ name: 'conferenceRecords/cr1', space: 'spaces/AAA' }] } : { meetingCode: 'abc-mnop-xyz' }) },
+  ],
+  meet_get_transcript: [
+    {
+      args: { conference: 'conferenceRecords/cr1', page_size: 5, page_token: 'p1', max_chars: 400 },
+      expect: ['meet.conferenceRecords.transcripts.list', 'meet.conferenceRecords.participants.list', 'meet.conferenceRecords.transcripts.entries.list'],
+      respond: (call) => {
+        if (call.url.endsWith('/transcripts')) return { transcripts: [{ name: 'conferenceRecords/cr1/transcripts/t1', state: 'ENDED' }] };
+        if (call.url.endsWith('/participants')) return { participants: [{ name: 'conferenceRecords/cr1/participants/p1', signedinUser: { displayName: 'Ana' } }] };
+        return { transcriptEntries: [{ name: 'conferenceRecords/cr1/transcripts/t1/entries/e1', participant: 'conferenceRecords/cr1/participants/p1', startTime: '2026-10-01T09:05:00Z', text: 'Hello' }] };
+      },
+    },
+    // A meeting code reads the newest conference of that space first.
+    {
+      args: { space: 'abc-mnop-xyz' },
+      expect: ['meet.conferenceRecords.list', 'meet.conferenceRecords.transcripts.list', 'meet.conferenceRecords.participants.list', 'meet.conferenceRecords.transcripts.entries.list'],
+      respond: (call) => {
+        if (call.url.endsWith('/v2/conferenceRecords')) return { conferenceRecords: [{ name: 'conferenceRecords/cr1', space: 'spaces/AAA' }] };
+        if (call.url.endsWith('/transcripts')) return { transcripts: [{ name: 'conferenceRecords/cr1/transcripts/t1' }] };
+        if (call.url.endsWith('/participants')) return { participants: [] };
+        return { transcriptEntries: [] };
+      },
+    },
+  ],
+
   // gcontacts (1.13.0)
   contacts_search_directory: [
     { args: { query: 'ana' }, expect: ['people.people.searchDirectoryPeople'] },
@@ -1128,7 +1167,7 @@ test('every curated tool has a contract row, a skip reason or a known defect, an
   const listed = new Set([...Object.keys(CASES), ...Object.keys(SKIPPED), ...Object.keys(KNOWN_DEFECTS)]);
   assert.deepEqual([...tools.keys()].filter((name) => !listed.has(name)), [], 'curated tools without a row');
   assert.deepEqual([...listed].filter((name) => !tools.has(name)), [], 'rows for tools that do not exist');
-  assert.equal(tools.size, 154, 'the curated tool count; update the table when it changes');
+  assert.equal(tools.size, 156, 'the curated tool count; update the table when it changes');
 });
 
 for (const [name, cases] of Object.entries(CASES)) {

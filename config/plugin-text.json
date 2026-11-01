@@ -87,10 +87,10 @@
       "whenToUse": "Use for Google Meet: a new meeting link, who joined a past meeting, its recording, transcript or notes. Examples: \"create a Meet link\", \"who attended yesterday's meeting\", \"get the transcript of the last call\".",
       "flows": [
         { "title": "New meeting", "steps": ["{tool:meet_spaces_create} returns the meeting link."] },
-        { "title": "A past meeting", "steps": ["{tool:meet_conference_records_list} (filter by meeting code or time), then {tool:meet_records_participants_list} with parent conferenceRecords/<id>."] },
-        { "title": "Transcript and recording", "steps": ["{tool:meet_records_transcripts_list} with parent, then {tool:meet_records_transcripts_entries_list}.", "{tool:meet_conference_records_recordings_list}: the recording and transcript files are in Drive; read them with the gdrive plugin and the file id."] }
+        { "title": "A past meeting", "steps": ["{tool:meet_find_conference} with the meeting code, a space or a time range: the conference records, each with its meeting link and who joined."] },
+        { "title": "Transcript and recording", "steps": ["{tool:meet_get_transcript} with the conference record, or the meeting code: the entries with the speakers' names, paged.", "Materials: {tool:meet_records_transcripts_list} and {tool:meet_conference_records_recordings_list} give the Google Doc and the Drive file ids; read them with the gdrive plugin."] }
       ],
-      "notes": ["Google keeps conference records, transcripts and recordings entries for a limited time (30 days per its artifacts guide)."]
+      "notes": ["Meet deletes a conference record and its transcript entries 30 days after the meeting ends; recordings, transcripts and notes are saved to the organizer's Drive and kept by Drive and Vault rules."]
     },
     "gcontacts": {
       "description": "Look up people: search your Google contacts and your organization's directory, and read your own profile; plus the People API (contact groups, creating and updating contacts), personal Health metrics and Data Portability.",

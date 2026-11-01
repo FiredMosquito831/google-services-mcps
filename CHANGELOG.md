@@ -2,6 +2,32 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 2.6.0 - 2026-11-01
+
+### Added: two hand-written Meet tools that answer the questions the generated ones left open
+- `meet_find_conference` finds meetings by a meeting code, a space or a time range, and answers each conference record with its starting and ending time, whether it is still running, when Google deletes it, the meeting code and meeting link of its space (one `spaces.get` per space, not per record), and the people who joined with the times they did. Before, that took the record list, one space read per record, and a participants list per record, and the record named `spaces/AAA` rather than the code people know.
+- `meet_get_transcript` reads the spoken text of a conference, entry by entry, with the speaker's name and the time. A transcript entry names its speaker only by a participant resource, so the names come from the conference's participants (a signed-in user, an anonymous guest or a phone number, whichever the call has); an entry whose speaker has no name keeps the participant id. It also gives the transcript's Google Doc id and export link, for the gdrive plugin. Both paginate, and the transcript page size times its per-entry character cap is kept under the result limit by default (20 entries of 800 characters).
+- Both are reads with the two Meet scopes (`meetings.space.created`, `meetings.space.readonly`), so a login of either profile registers them. They take the finding of the adversarial review of gmeet (F3).
+
+### Changed: the gmeet `google` toolset holds 11 tools
+- It loses `meet_conference_records_smart_notes_get` (the smart notes list returns the same fields, and transcripts and recordings have no get, so the set was uneven) and gains the two hand-written tools. The server still registers every generated tool in `all`, so nothing is lost there. `gmeet` has a real `curated` toolset now (the two tools) instead of falling back to `all`.
+
+### Changed: a curated Meet login asks for the read scope only
+- With the `curated` toolset, a `readwrite` or `full` login used to ask for `meetings.space.created` as well, because the toolset fell back to every tool of the product and the writes need it. The two curated tools are reads, so that toolset's login now asks for `meetings.space.readonly` alone. The `all` and `google` toolsets are unchanged (both still ask for `meetings.space.created` and `meetings.space.readonly`), and the scope stays in the group's universe, so an account that already holds it keeps it on a sign-in that names the account.
+
+### Fixed (docs): what the Meet limits are, and where a recording and a transcript go
+- `docs/products/gmeet.md` said the recording and transcript limits were UNVERIFIED and gave no route to their content. Google's limits page (https://developers.google.com/workspace/meet/api/guides/limits, read 2026-11-01) gives 6,000 reads per minute per project and 600 per user, 1,000 writes per project and 100 per user, and 100/10 for `spaces.create`; its artifacts guide (https://developers.google.com/workspace/meet/api/guides/artifacts, read 2026-11-01) says transcript entries are deleted 30 days after the conference ends and that recordings, transcripts and notes are saved to the organizer's Drive. The page and the plugin's skill now say both, and point at the gdrive plugin for the file itself.
+- The page also listed `meet_spaces_end_active_conference` as a plain write; it has been destructive since 1.26.3.
+
+### Not changed
+- No tool's kind and no other product's tool map, scopes or `tools/list`. `meet_conference_records_smart_notes_get` keeps its kind and stays in `all`; `meet_spaces_end_active_conference` and `meet_spaces_members_delete` stay destructive; `tool-aliases.json` is untouched (no generated tool was renamed).
+- The filter syntax the review found clipped (F2) is whole since 1.29.1: `meet.conferenceRecords.list` documents `space.meeting_code`, `space.name`, `start_time` and `end_time` in the snapshot, and `meet_find_conference` builds exactly that syntax. Nothing was needed beyond the new tool.
+- Reported, not changed (owner decision needed): `meet.spaces.members.create`, `meet.spaces.members.batchUpdate` and `meet.spaces.members.patch` grant access to a meeting space, and `meet.spaces.patch` can set `accessType: OPEN`; the destructive rule (docs/SECURITY.md, (b) sharing and permissions) may cover all four, and none is listed. Raising them means entries in `config/tool-kinds.json`, which is frozen.
+
+### Tests
+- tests/meet-tools.test.mjs: both tools are reads with the two scopes; the filter builder (meeting code, space id, space name, time bounds, AND-joined); the space name a code resolves to; participant names from the three ways of joining; the entry text cut and its truncation fields; the record list with one space read per distinct space, the participants, a space that cannot be read, an ongoing meeting, a zone; the transcript path from a record, a bare id, a space or a code, with a page token, without a transcript, with an unknown transcript; the page and character caps; and the bundled plugin's tool map, `servers.json` and 11-tool `google` list.
+- tests/toolset.test.mjs: the 11-tool `google` list, the `google` and `curated` sets a running server lists, and the gmeet case moved out of the generated-entry loop (it has hand-written tools now). tests/toolset-scopes.test.mjs: 11 tools in the list, same scopes. tests/scope-policy-prefer.test.mjs: the `curated` toolset's readwrite and full resolve to the read scope alone. tests/curated-contract.test.mjs: rows for both tools against `meet.conferenceRecords.list`, `meet.spaces.get`, the participants list, the transcripts list and the entries list (156 curated tools).
+
 ## 2.5.0 - 2026-11-01
 
 ### Added: what `scripts.run` needs before it works, in the tool that runs it

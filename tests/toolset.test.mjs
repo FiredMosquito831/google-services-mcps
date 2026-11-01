@@ -104,6 +104,10 @@ const LEAN_GOOGLE = {
   gmeet: [
     'meet_spaces_create',
     'meet_spaces_get',
+    // 2.6.0: the two hand-written tools (a find and a transcript read) replace a run of generated calls, and the smart
+    // notes get left the list (the list returns the same fields).
+    'meet_find_conference',
+    'meet_get_transcript',
     'meet_conference_records_list',
     'meet_conference_records_get',
     'meet_records_participants_list',
@@ -111,7 +115,6 @@ const LEAN_GOOGLE = {
     'meet_records_transcripts_entries_list',
     'meet_conference_records_recordings_list',
     'meet_records_smart_notes_list',
-    'meet_conference_records_smart_notes_get',
   ],
   gtasks: ['tasks_tasklists_list', 'tasks_tasks_list', 'tasks_tasks_get', 'tasks_tasks_insert', 'tasks_tasks_patch', 'tasks_tasks_delete', 'keep_notes_list', 'keep_notes_get'],
   gapps: [
@@ -1151,8 +1154,10 @@ test('runServer: google on gplay (service account key) lists its 16 tools and th
   assert.equal(google.health.toolset.effective, 'google');
 });
 
-test('runServer: google on gmeet, gtasks and gapps lists the lean list and the runtime tools, with the same schemas as all', async () => {
-  for (const [id, tools] of Object.entries(LEAN_GOOGLE)) {
+test('runServer: google on gtasks and gapps lists the lean list and the runtime tools, with the same schemas as all', async () => {
+  // gmeet left this loop in 2.6.0: it has hand-written tools now, so its entry builds them too (the next test).
+  const lean = Object.fromEntries(Object.entries(LEAN_GOOGLE).filter(([id]) => id !== 'gmeet'));
+  for (const [id, tools] of Object.entries(lean)) {
     const dir = tempDir(`gsm-toolset-${id}-`);
     const entry = generatedEntry(dir, id);
     const tokenDir = fakeLogin(dir, id, 'workspace-user');
@@ -1162,4 +1167,19 @@ test('runServer: google on gmeet, gtasks and gapps lists the lean list and the r
     for (const t of google.tools) assert.deepEqual(t, unset.find((u) => u.name === t.name), `${id}/${t.name}`);
     assert.deepEqual(google.health.toolset, { requested: 'google', effective: 'google', outsideToolset: unset.length - google.tools.length }, id);
   }
+});
+
+test('runServer: google on gmeet lists its 11 tools and the runtime tools (2.6.0)', async () => {
+  const dir = tempDir('gsm-toolset-gmeet-');
+  const entry = curatedEntry(dir, 'gmeet', 'meet');
+  const tokenDir = fakeLogin(dir, 'gmeet', 'workspace-user');
+  const unset = await withClient(entry, childEnv(dir, tokenDir), listTools);
+  const google = await withClient(entry, childEnv(dir, tokenDir, { GSM_TOOLSET: 'google' }), async (c) => ({ tools: await listTools(c), health: await health(c) }));
+  assert.deepEqual(google.tools.map((t) => t.name), [...LEAN_GOOGLE.gmeet, ...RUNTIME_OAUTH].sort());
+  for (const t of google.tools) assert.deepEqual(t, unset.find((u) => u.name === t.name), t.name);
+  for (const name of ['meet_find_conference', 'meet_get_transcript']) assert.equal(google.tools.find((t) => t.name === name).annotations.readOnlyHint, true, name);
+  assert.deepEqual(google.health.toolset, { requested: 'google', effective: 'google', outsideToolset: unset.length - google.tools.length });
+  // The curated toolset holds the two hand-written tools and nothing else.
+  const curated = await withClient(entry, childEnv(dir, tokenDir, { GSM_TOOLSET: 'curated' }), listTools);
+  assert.deepEqual(curated.map((t) => t.name), ['meet_find_conference', 'meet_get_transcript', ...RUNTIME_OAUTH].sort());
 });

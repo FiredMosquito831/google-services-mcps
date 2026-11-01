@@ -2281,7 +2281,7 @@
       "group": "workspace-user",
       "server": {
         "name": "gmeet",
-        "curated": null
+        "curated": "meet"
       },
       "generated": [
         {
@@ -2306,38 +2306,41 @@
           "tools": [
             "meet_spaces_create",
             "meet_spaces_get",
+            "meet_find_conference",
+            "meet_get_transcript",
             "meet_conference_records_list",
             "meet_conference_records_get",
             "meet_records_participants_list",
             "meet_records_transcripts_list",
             "meet_records_transcripts_entries_list",
             "meet_conference_records_recordings_list",
-            "meet_records_smart_notes_list",
-            "meet_conference_records_smart_notes_get"
+            "meet_records_smart_notes_list"
           ],
           "matches": {
             "meet_spaces_create": [],
             "meet_spaces_get": [],
+            "meet_find_conference": [],
+            "meet_get_transcript": [],
             "meet_conference_records_list": [],
             "meet_conference_records_get": [],
             "meet_records_participants_list": [],
             "meet_records_transcripts_list": [],
             "meet_records_transcripts_entries_list": [],
             "meet_conference_records_recordings_list": [],
-            "meet_records_smart_notes_list": [],
-            "meet_conference_records_smart_notes_get": []
+            "meet_records_smart_notes_list": []
           },
           "notes": {
             "meet_spaces_create": "Makes a new meeting space and returns its meeting link and code. A write, so it asks first.",
             "meet_spaces_get": "A meeting space by its name (spaces/{space}) or meeting code: its link, code and settings.",
+            "meet_find_conference": "Start here for a meeting that took place: a meeting code, a space or a time range to conference records, with the meeting code and link of each space and who joined. It replaces several calls (the record list, the space, the participants) and resolves the names. Read only.",
+            "meet_get_transcript": "The spoken text of a conference, entry by entry with the speaker's name and time, paged. The speaker comes from the conference participants (an entry names only a participant resource); the transcript's Google Doc id is there for the gdrive plugin. Read only.",
             "meet_conference_records_list": "Past and current conferences (one per meeting held in a space), newest first; filter by space or time. Start here for a meeting that took place.",
             "meet_conference_records_get": "One conference: its space, start and end time.",
             "meet_records_participants_list": "Who joined a conference, with join and leave times.",
             "meet_records_transcripts_list": "The transcripts of a conference and their Google Docs.",
             "meet_records_transcripts_entries_list": "The spoken text of a transcript, entry by entry with the speaker and time.",
             "meet_conference_records_recordings_list": "The recordings of a conference and their Drive files.",
-            "meet_records_smart_notes_list": "The notes Gemini took in a conference (smart notes) and their Google Docs.",
-            "meet_conference_records_smart_notes_get": "One smart notes entry and the Google Doc that holds it."
+            "meet_records_smart_notes_list": "The notes Gemini took in a conference (smart notes) and their Google Docs."
           }
         }
       },

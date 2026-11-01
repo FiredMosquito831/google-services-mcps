@@ -60,7 +60,7 @@ test('resolveScopes: a preferred scope is asked for beside a scope that already 
 });
 
 test('gmeet: readwrite and full ask for meetings.space.readonly beside meetings.space.created, in every toolset; readonly is unchanged', async () => {
-  for (const toolset of ['all', 'google', 'curated']) {
+  for (const toolset of ['all', 'google']) {
     const reqs = await reqsOf('gmeet', toolset);
     assert.deepEqual(resolveScopes(reqs, 'readonly').scopes, [G('meetings.space.readonly')], toolset);
     for (const profile of ['readwrite', 'full']) {
@@ -68,6 +68,13 @@ test('gmeet: readwrite and full ask for meetings.space.readonly beside meetings.
       assert.deepEqual(resolveScopes(without(reqs), profile).scopes, [G('meetings.space.created')], `${toolset} ${profile} as before`);
     }
   }
+  // 2.6.0: the curated toolset holds the two hand-written Meet tools and nothing else. Both are reads, so a login of that
+  // toolset needs no write scope any more, and the preferred read scope covers them: no meetings.space.created.
+  const curated = await reqsOf('gmeet', 'curated');
+  assert.deepEqual(resolveScopes(curated, 'readonly').scopes, [G('meetings.space.readonly')]);
+  for (const profile of ['readwrite', 'full']) assert.deepEqual(resolveScopes(curated, profile).scopes, [G('meetings.space.readonly')], `${profile}`);
+  // The scope stays in the group's universe, so a token that already holds it keeps it on a sign-in that names the account.
+  assert.ok(curated.some((r) => r.scopes?.includes(G('meetings.space.created'))), 'only the write tools of the other toolsets need it');
 });
 
 test('gclassroom: readonly asks for the coursework scopes of taught classes beside your own, in every toolset', async () => {
