@@ -2,6 +2,29 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 2.10.0 - 2026-11-01
+
+### Fixed: `vertex_generate_content` no longer drops the images a model returns
+- The answer kept only the text parts and the function calls, so an image (or any other inline data) the model returned disappeared without a word, and asking again cost another billed call (adversarial review of gai, F4). It now reports every part: `images` lists each image with its index, type and size, and the bytes of the one at the new `image_index` argument (0 by default) come back as `image` in the part form of 1.31.0 (`mime_type`, `size_bytes`, `offset`, `bytes_read`, `next_offset`, `data_base64`), so a large image is read in as many calls as it needs with the new `offset` argument, and the note says where to continue. A file reference Google returns instead of bytes (`fileData`) is listed in `files`, and any other kind of part in `other_parts`. A text-only answer is byte-identical to before.
+
+### Fixed: `vertex_embed_content` no longer overflows the result limit
+- A 3,072-value vector is about 60,000 characters, and the answer was cut by the runtime in the middle of the numbers, so the values a caller saw had no marker and no way to continue (F5). The tool now returns as many values as fit this server's result limit (GSM_MAX_RESULT_CHARS, 25,000 characters by default) and, when the vector is longer, `next_offset` and `values_omitted` with a note that says how many values are left and how to read them. A new `offset` argument continues the vector, and the parts join in order. No value is ever rounded or cut: a number is either whole or not shown.
+
+### Added: the model ids and multi-regions Google documents
+- `modelResource` refused the full resource name Google prints (`projects/<p>/locations/<l>/publishers/google/models/<id>`), which Google's own reference and MCP examples use, and the region check needed a hyphen, so the multi-regions `us` and `eu` could not be used (F6). The new `modelTarget` accepts a full name, takes its location as the one that picks the host, and refuses a name whose location or project disagrees with `region` and `project_id` instead of silently calling somewhere else. `us` and `eu` ask for `aiplatform.us.rep.googleapis.com` and `aiplatform.eu.rep.googleapis.com`, the hosts Discovery lists in the document's `endpoints` (not `<location>-aiplatform.googleapis.com`, which is for regions).
+
+### Fixed: `project_readiness` covers the APIs gai needs
+- The cloud group's list held only gcloud's services, so the readiness check said nothing about the APIs gai's tools call (F7). It now lists Vertex AI (`aiplatform`, which the three hand-written tools call directly), Discovery Engine, Vision, Speech, Text-to-Speech, Natural Language and Video Intelligence. `project_enable_missing` enables them in the same batches of 20.
+
+### Not changed
+- No tool's kind, scope, name or request when the new arguments are not used: the three tools send the same request as before, the `google` toolset still lists its six tools, and `gsm scopes` for gai asks for the same scopes in every profile and toolset. `tool-aliases.json` is untouched, and the frozen files and the goldens have no diff.
+- Not checked against live Google. The multi-region hosts are the ones the Discovery document lists, the image part sizes follow 1.31.0's and the vector sizes are measured on the JSON.
+- The other findings of the gai review were already fixed and are left as they are: the compute-only POSTs are reads since 1.26.3 (F3); the readable names came with 2.0.0, so Discovery Engine's tools read `discoverye_engines_serving_configs_search` and its neighbours instead of hashed names, and the `google` note says "match" rather than "parity" (F8, and section C); the sign-in advice is `readwrite` since 1.32.0 and the docs say why (F2); the tools' descriptions are whole since 1.29.1 and results compact and budgeted since 1.28.0 (F8); `docs/USING.md` no longer says the answer tool asks first (F11); the gateway reaches the AI APIs, which the product page names (F12); `input` regions go to their own host since 1.31.1 (F1).
+- Reported, not changed: `modelArmorConfig` is a field of the v1 request that the tool does not expose, and no `x-goog-user-project` header is sent, so a `project_id` other than the quota project is untested (F13). The gateway refuses upload methods, so the Gemini file upload reads that the `all` toolset lists `devstorage.read_only` for stay out of reach there (F14). Both want their own change.
+
+### Tests
+- tests/ai-parity.test.mjs: `hostOf` for `global`, a region and the two multi-regions; `modelTarget` for ids, publisher models, endpoints and full resource names, with the two refusals and the bad inputs; an image answer (the part of its bytes, the second part with `offset`, `image_index` past the last, `files` and `other_parts`, a text-only answer unchanged); a 3,072-value vector read in parts that join into the whole vector, with `values_omitted` and the offset past the end refused; and the cloud readiness group listing gai's APIs. tests/readiness.test.mjs is unchanged (it checks product membership and well-formedness).
+
 ## 2.9.0 - 2026-11-01
 
 ### Added: two hand-written coursework writes in place of three raw generated tools

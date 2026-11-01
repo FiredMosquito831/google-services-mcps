@@ -23,11 +23,11 @@ Only if the chat tools fail, the same steps in a terminal: `node "${CLAUDE_PLUGI
 
 ### 1. Generate
 
-1. `vertex_count_tokens` for a long prompt, then `vertex_generate_content` with project_id, model and prompt (billed per token by Google).
+1. `vertex_count_tokens` for a long prompt, then `vertex_generate_content` with project_id, model and prompt (billed per token by Google). An image the model returns comes back as parts of its bytes in image: read on with offset and next_offset.
 
 ### 2. Embeddings
 
-1. `vertex_embed_content` with project_id, model and text.
+1. `vertex_embed_content` with project_id, model and text. A vector longer than the result limit comes in parts: next_offset continues it, and values_omitted says how many were not shown.
 
 ### 3. Vertex AI Search
 

@@ -248,8 +248,8 @@
       "description": "Vertex AI generation, token counting and embeddings with Gemini and other models, Vertex AI Search (Discovery Engine), plus Vision, Speech, Text-to-Speech, Translate, Natural Language, Document AI and Dialogflow.",
       "whenToUse": "Use to call Google's AI APIs in a Cloud project: generate text with a model on Vertex AI, count tokens, make embeddings, search a Vertex AI Search app, or run Vision, Speech, Translate, Natural Language or Document AI. Examples: \"ask Gemini on Vertex to summarize this\", \"embed these sentences\", \"detect the text in this image\".",
       "flows": [
-        { "title": "Generate", "steps": ["{tool:vertex_count_tokens} for a long prompt, then {tool:vertex_generate_content} with project_id, model and prompt (billed per token by Google)."] },
-        { "title": "Embeddings", "steps": ["{tool:vertex_embed_content} with project_id, model and text."] },
+        { "title": "Generate", "steps": ["{tool:vertex_count_tokens} for a long prompt, then {tool:vertex_generate_content} with project_id, model and prompt (billed per token by Google). An image the model returns comes back as parts of its bytes in image: read on with offset and next_offset."] },
+        { "title": "Embeddings", "steps": ["{tool:vertex_embed_content} with project_id, model and text. A vector longer than the result limit comes in parts: next_offset continues it, and values_omitted says how many were not shown."] },
         { "title": "Vertex AI Search", "steps": ["{tool:discoverye_collections_engines_list} lists the apps (engines); then the engine's search or answer tool."] },
         { "title": "Other AI APIs", "steps": ["{tool:api_search} (\"vision images annotate\", \"translate text\"), then {tool:api_describe} and {tool:api_call}."] }
       ],

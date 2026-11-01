@@ -96,6 +96,14 @@ export const READINESS_GROUPS: ReadinessGroup[] = [
       'bigquery.googleapis.com',
       'iam.googleapis.com',
       'cloudtrace.googleapis.com',
+      // gai: the curated Vertex AI tools call aiplatform directly, and its per-method tools cover these APIs.
+      'aiplatform.googleapis.com',
+      'discoveryengine.googleapis.com',
+      'vision.googleapis.com',
+      'speech.googleapis.com',
+      'texttospeech.googleapis.com',
+      'language.googleapis.com',
+      'videointelligence.googleapis.com',
     ],
   },
   {
