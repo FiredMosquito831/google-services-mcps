@@ -28,7 +28,7 @@ Only if the chat tools fail, the same steps in a terminal: `node "${CLAUDE_PLUGI
 
 ### 2. Read a file
 
-1. `drive_read_text` with file_id: Docs and Slides as text, Sheets as CSV, Word, Excel, PowerPoint and OpenDocument files; pass next_offset as offset to read on.
+1. `drive_read_text` with file_id: Docs and Slides as text, Sheets as CSV, text, JSON, XML, Word, Excel, PowerPoint and OpenDocument files; pass next_offset as offset to read on, and sheet to read another sheet of a spreadsheet.
 2. PDFs and images are not read as text: `drive_download` gives the bytes.
 
 ### 3. Work in a Sheet
@@ -40,14 +40,15 @@ Only if the chat tools fail, the same steps in a terminal: `node "${CLAUDE_PLUGI
 
 1. `docs_documents_get` for its structure, then `docs_documents_batch_update` (it can delete content, so it asks twice). replaceAllText needs no index; inserts need one from the structure.
 
-### 5. Create or remove
+### 5. Create, change or remove
 
 1. `drive_create_file` makes a blank Doc, Sheet or Slides deck, or uploads text, base64 or a local file; `drive_create_folder` makes a folder.
-2. `drive_trash_file` moves a file to the trash (it asks twice; the file can be restored).
+2. `drive_update_file` renames (name), moves (parent_id, or add_parent_id and remove_parent_id), stars or describes a file; it never changes the file's type.
+3. `drive_trash_file` moves a file to the trash (it asks twice); `drive_untrash_file` restores it.
 
 ## Notes
 
-- Rename, move and restore from trash go through the gateway (Drive v2): `api_search` "drive files patch".
+- Renaming and moving are drive_update_file, not the Drive v2 gateway; restore is drive_untrash_file. Books and Drive Labels are optional parts: their tools load only for a login that named them (--with books,labels).
 
 ## Untrusted content
 
@@ -59,7 +60,7 @@ Reads never ask for approval. Tools that change or delete data are listed only w
 
 ## Tools
 
-The `gdrive` MCP server lists up to 198 tools with the `all` toolset: 94 read, 76 write, 27 destructive and 1 dynamic (decided per call), counting its 7 runtime tools (`health` and the sign-in tools). Write and destructive tools are listed only when writes are allowed, and a tool loads only when the sign-in holds one of its scopes. The `google` toolset lists 19 of them plus the runtime tools. The gateway APIs below are reached through `api_search` (find a method), `api_describe` (its parameters) and `api_call` (run it).
+The `gdrive` MCP server lists up to 200 tools with the `all` toolset: 94 read, 78 write, 27 destructive and 1 dynamic (decided per call), counting its 7 runtime tools (`health` and the sign-in tools). Write and destructive tools are listed only when writes are allowed, and a tool loads only when the sign-in holds one of its scopes. The `google` toolset lists 19 of them plus the runtime tools. The gateway APIs below are reached through `api_search` (find a method), `api_describe` (its parameters) and `api_call` (run it).
 
 ## APIs
 

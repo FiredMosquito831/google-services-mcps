@@ -4,11 +4,11 @@ Google Drive files, labels and activity, plus Docs, Sheets, Slides, Forms and Bo
 
 - Plugin: `gdrive`, MCP server: `gdrive`, login: Desktop OAuth client, then `login workspace-user`
 - Install: `claude plugin install gdrive@google-services-mcps`
-- Tools: 198 total. Curated 19, per-method 175, gateway 3. Read 94, write 76, destructive 27, dynamic 1.
+- Tools: 200 total. Curated 21, per-method 175, gateway 3. Read 94, write 78, destructive 27, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 198, google 26, curated 22 tools, each counting the 7 runtime tools this server registers (`account_remove`, `account_set_default`, `accounts_list`, `auth_login`, `auth_setup_client`, `auth_status`, `health`). "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 200, google 26, curated 24 tools, each counting the 7 runtime tools this server registers (`account_remove`, `account_set_default`, `accounts_list`, `auth_login`, `auth_setup_client`, `auth_status`, `health`). "(all)" means the product has no such toolset yet, so it lists every tool.
 
 ## Not registered by this server (2)
 
@@ -18,7 +18,7 @@ The tool map (`plugins/<id>/tool-map.json`) also lists these, so the consent hoo
 
 ## Toolset google (19)
 
-The tools that match Google's official MCP server for this product (https://developers.google.com/workspace/drive/api/reference/mcp/tools_list).
+The tools that match Google's official MCP server for this product (https://developers.google.com/workspace/drive/api/reference/mcp).
 
 | Tool | Google's tool | Note |
 |---|---|---|
@@ -42,7 +42,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `slides_pages_get_thumbnail` | `read_slide_page_thumbnail` | The generated name is cut to fit the 64-character tool name budget. |
 | `slides_presentations_batch_update` | `update_presentation` |  |
 
-## Curated tools (19)
+## Curated tools (21)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
@@ -61,6 +61,8 @@ The tools that match Google's official MCP server for this product (https://deve
 | `drive_read_text` | read | Read Drive file as text | drive, drive.readonly |
 | `drive_search` | read | Search Drive | drive, drive.metadata |
 | `drive_trash_file` | destructive | Trash Drive file | drive, drive.file |
+| `drive_untrash_file` | write | Restore Drive file from trash | drive, drive.file |
+| `drive_update_file` | write | Update Drive file metadata | drive, drive.file |
 | `health` | read | Server health | (none) |
 | `sheets_get_values` | read | Read spreadsheet values | drive, drive.file |
 | `sheets_insert_rows` | write | Insert spreadsheet rows or columns | drive, drive.file |

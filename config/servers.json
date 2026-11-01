@@ -1565,6 +1565,16 @@
           "version": "v2beta"
         }
       ],
+      "scopePolicy": {
+        "optional": {
+          "books": [
+            "books"
+          ],
+          "labels": [
+            "drivelabels"
+          ]
+        }
+      },
       "fieldsDefaults": {
         "drive": {
           "value": "*",

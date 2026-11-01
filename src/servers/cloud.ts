@@ -281,12 +281,15 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
     defineTool({
       name: 'cloud_project_iam_policy',
       title: 'Get project IAM policy',
-      description: 'Read the IAM policy (who has which role) on a project.',
+      description:
+        'Read the IAM policy (who has which role) on a project, in policy version 3, so role bindings that carry an IAM condition come back whole: with a condition and under the role’s own name. Without that request version IAM answers in version 1, where a conditional binding’s condition is missing and its role is renamed `_withcond_<hash>`. The answer is the project’s Policy object (version, etag, bindings, auditConfigs).',
       kind: 'read',
       scopes: googleScopes('cloud-platform', 'cloud-platform.read-only'),
       inputSchema: { project_id: projectId },
       async handler({ project_id }) {
-        const res = await (await rm()).projects.getIamPolicy({ resource: `projects/${project_id}`, requestBody: {} });
+        // GetPolicyOptions.requestedPolicyVersion (cloudresourcemanager v3): "Requests for policies with any conditional
+        // role bindings must specify version 3."
+        const res = await (await rm()).projects.getIamPolicy({ resource: `projects/${project_id}`, requestBody: { options: { requestedPolicyVersion: 3 } } });
         return res.data;
       },
     }),

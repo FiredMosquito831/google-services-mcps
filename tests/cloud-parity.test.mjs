@@ -567,3 +567,26 @@ test('bucket names are checked by the schema', async () => {
   assert.equal(schema.safeParse({ bucket: 'my.bucket_1', object: 'a' }).success, true);
   assert.equal(schema.safeParse({ bucket: 'my-bucket', object: 'a', max_bytes: gcs.GCS_READ_MAX_BYTES + 1 }).success, false);
 });
+
+// ---------------------------------------------------------------------------
+// 2.2.0: the IAM policy is read in version 3
+
+test('cloud_project_iam_policy asks for policy version 3, so a conditional binding comes back with its condition', async () => {
+  const conditional = {
+    version: 3,
+    etag: 'BwX=',
+    bindings: [{ role: 'roles/storage.objectViewer', members: ['user:a@example.com'], condition: { title: 'expiry', expression: 'request.time < timestamp("2026-12-01T00:00:00Z")' } }],
+  };
+  reset(() => conditional);
+  const out = await run('cloud_project_iam_policy', { project_id: 'my-project-123' });
+  assert.equal(calls[0].method, 'POST');
+  assert.equal(calls[0].path, '/v3/projects/my-project-123:getIamPolicy');
+  assert.deepEqual(calls[0].body, { options: { requestedPolicyVersion: 3 } });
+  assert.deepEqual(out, conditional, 'the Policy object Google sends, unchanged');
+
+  // A policy with no conditions comes back as version 1 with the same shape: the answer is whatever Google sends.
+  const plain = { version: 1, etag: 'BwY=', bindings: [{ role: 'roles/owner', members: ['user:b@example.com'] }] };
+  reset(() => plain);
+  assert.deepEqual(await run('cloud_project_iam_policy', { project_id: 'my-project-123' }), plain);
+  assert.deepEqual(calls[0].body, { options: { requestedPolicyVersion: 3 } });
+});

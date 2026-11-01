@@ -2,6 +2,46 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 2.2.0 - 2026-11-01
+
+### Fixed: the project IAM policy is read in version 3, so IAM conditions come back
+- `cloud_project_iam_policy` sent an empty `GetIamPolicyRequest`, so IAM answered in policy version 1: a role binding that carries an IAM condition lost its condition and had its role renamed `_withcond_<hash>`, which hides who has conditional access (review of gcloud, F5). It now sends `options.requestedPolicyVersion: 3`, the field Discovery's `GetPolicyOptions` documents ("Requests for policies with any conditional role bindings must specify version 3"). The answer is the same Policy object as before: a policy with no conditions still comes back as version 1, unchanged.
+- The six `google` toolset `source` URLs under `docs.cloud.google.com` that ended in `/tools_list` answered 404; they are now the parent reference pages, which answer 200 and carry the tool table for API Keys, BigQuery, Cloud Billing, IAM, Logging and Monitoring (checked with curl, 2026-11-01). Resource Manager, Storage and the two `.../tools_list/<tool>` pages already answered 200 and are unchanged.
+
+### Reported, not changed (owner decision needed)
+- `bigquery_jobs_query` (method `bigquery.jobs.query`) is a plain `write`, so under `confirmation: destructive-only` a `DROP TABLE`, `DELETE`, `MERGE` or script runs without a prompt: a write runs unasked in that mode and only `destructive` asks (src/core/policy.ts, `defaultDecision`). The 12 `setIamPolicy` tools of this server already ask twice since 1.26.3, and the gateway's `api_call` asks for a write method through the hook, so the hole is this one per-method tool. Raising it means `"bigquery.jobs.query": "destructive"` in config/tool-kinds.json (frozen, a double prompt for every query through that tool, SELECTs included) or a curated write tool that decides by the statement, neither of which this release does.
+- `bq_query_read`'s dry run calls `bigquery.jobs.insert`, whose Discovery scopes are `bigquery`, `cloud-platform` and `devstorage.*` only: a `readonly` login holds `cloud-platform.read-only`, which that method does not accept, while `bigquery.jobs.query` does list `cloud-platform.read-only` (data/discovery/bigquery.v2.json, checked 2026-11-01). So the dry run may be refused with a readonly login (NOT checked live). The fix would move the dry run to `jobs.query` with `dryRun`, or change the tool's scopes; both change behaviour, so neither is here.
+- Google's `google` toolset parity: 21 official tools (5 Logging, 12 Cloud Billing, 4 IAM role) have no tool here and are reachable only through `api_call`; a toolset list can name only tools the server defines. The 16 tools the review calls noise (10 Cloud Billing A2A agent methods, 2 write-only Cloud Trace methods, 4 Cloud Profiler methods) sit in the 350-tool generated budget, not in the `google` list, and only the Profiler four have no gateway route, so dropping them would lose coverage unless the profiler API joins the gateway. Proposal in the product page.
+
+### Not changed
+- No tool's kind, scopes or request other than the IAM policy body; the gcloud tool map, the gateway method kinds and `gsm scopes` are byte-identical, and the frozen files and goldens are untouched.
+
+### Tests
+- tests/cloud-parity.test.mjs: `cloud_project_iam_policy` sends `{ options: { requestedPolicyVersion: 3 } }` to `projects/{id}:getIamPolicy`, answers the conditional Policy unchanged, and answers a version 1 policy unchanged too.
+
+## 2.1.0 - 2026-11-01
+
+### Added: rename, move and restore a Drive file
+- `drive_update_file` renames a file (`name`), moves it (`parent_id`, or `add_parent_id` and `remove_parent_id` one folder at a time), stars or unstars it and sets its description. Google's Drive MCP server has no such tool, so it is not in the `google` toolset. It sends Drive's `files.update`, which is a PATCH: only the fields given change, and every other field keeps its value. `parent_id` reads the file's folders first, adds the new one and takes out the others (the new one stays if the file is there already). The tool takes no `mime_type`, because Drive converts a Google file when that field changes (review of gdrive, G2).
+- `drive_untrash_file` restores a file from the trash, the inverse of `drive_trash_file`, with its folder and sharing kept. Both work their approval out in `prepare`, so the form names the file from a read of it: `drive_trash_file`'s preview was never shown before (a preview alone does not reach the gate; learning of 2026-10-31).
+
+### Added: the text types and the sheets of `drive_read_text`
+- `drive_read_text` reads JSON, XML (SVG included), YAML, TOML, CSV and source-code types as text, as it read `text/*`: the check is `isTextMime`, so `application/json` no longer falls through to the refusal. It still refuses a PDF or an image rather than return nonsense, and the refusal now says why and names `drive_download`.
+- A spreadsheet is read one sheet deep, which is all Drive's CSV export gives. The answer now names the sheet it read (`sheet`), lists the others (`sheets`), and says so in `sheet_note` when there is more than one. A new `sheet` argument reads a named sheet through `spreadsheets.values.get` and renders it as the same CSV text, in parts like any other text (`offset`, `next_offset`). When the sheet list cannot be read (the Sheets API is off, say), the export is returned as before, without those fields.
+
+### Changed: Books and Drive Labels are optional parts of a gdrive login
+- The `all` toolset carries Google Books (51 tools) and the Drive Labels API (25 tools and 25 gateway methods), so an `all` login used to ask for `books`, `drive.labels` and `drive.labels.readonly` (review of gdrive, G8). They are now optional parts (`scopePolicy.optional` in config/products.json), like Gmail's `postmaster`: no profile asks for their scopes unless the login names them with `--with books,labels` (in the chat, `auth_login` with `"with"`). An `all` `readwrite` or `full` login now asks for `drive`, `drive.activity` and `drive.apps.readonly`; a `readonly` one for `drive.readonly`, `drive.activity.readonly`, `drive.apps.readonly` and `forms.responses.readonly`.
+- Named, a login asks exactly what it asked before: `gsm scopes` for gdrive over three profiles and three toolsets is identical with `--with books,labels`, so no tool is lost for someone who wants them. An account that already holds those scopes keeps them (the stored-scope merge), and the tools load for it; a login that names no account and would drop them saves nothing and says so. The `google` and `curated` toolsets list no Books or Labels tool and resolve exactly as before.
+- The `google` toolset's `source` was a documentation URL that answers 404 (`.../workspace/drive/api/reference/mcp/tools_list`). It is now `.../workspace/drive/api/reference/mcp`, which answers 200 and carries the tool table (checked with curl, 2026-11-01). The same URL shape on Chat and Classroom is also 404; those products are not in this change.
+
+### Not changed
+- `drive_download` already reads a file in parts (`offset`, `next_offset`, 1.28.0), so the 36 KB problem the review names (G4) has no code change; it needed no `save_to_path` and got none.
+- No other tool's kind, scopes or request. The tool map of gdrive gains exactly the two new tools (both `write`); every other entry is byte-identical. The curated toolset counts 14 tools instead of 12, and the server registers 200 instead of 198 (the two new tools).
+
+### Tests
+- tests/drive-update.test.mjs (14): `isTextMime` and the CSV renderer; `drive_update_file` (a rename and a star in one PATCH with no read, a move that reads the folders then sends `addParents`/`removeParents`, a move to the folder the file is already in, one folder at a time, an empty description, and the three refusals before any request); `drive_untrash_file` and `drive_trash_file` approvals (`prepare` reads, sizes and effects, and the same request as before); `drive_read_text` for every text type, for the PDF and image refusals, for a spreadsheet's sheet names and note, and for a named sheet read as CSV in parts.
+- tests/optional-parts.test.mjs: gdrive joins the parts (the server map, the pinned scope lists with and without `books,labels`, the `Held back:` lines, the stored-scope merge, and gen-servers refusing a part of an unknown API); tests/gmail-scopes.test.mjs lists gdrive among the servers with a policy; tests/curated.test.mjs and tests/curated-contract.test.mjs carry the two new tools (152 curated tools, request rows for the update, the restore, the spreadsheet and the named sheet).
+
 ## 2.0.0 - 2026-11-01
 
 ### Changed (breaking): readable names for the generated tools

@@ -1389,6 +1389,25 @@
     "title": "Trash Drive file"
   },
   {
+    "name": "mcp__plugin_gdrive_gdrive__drive_untrash_file",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.metadata"
+    ],
+    "title": "Restore Drive file from trash"
+  },
+  {
+    "name": "mcp__plugin_gdrive_gdrive__drive_update_file",
+    "kind": "write",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.file"
+    ],
+    "title": "Update Drive file metadata"
+  },
+  {
     "name": "mcp__plugin_gdrive_gdrive__driveactiv_activity_query",
     "kind": "read",
     "scopes": [

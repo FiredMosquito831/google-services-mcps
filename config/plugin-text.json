@@ -41,12 +41,12 @@
       "whenToUse": "Use when the person mentions Google Drive, a Google Doc, Sheet or Slides deck, a shared file or folder, uploading a file, or a spreadsheet range. Examples: \"find the budget spreadsheet\", \"summarize this Google Doc\", \"add a row to the sheet\", \"upload this file to Drive\".",
       "flows": [
         { "title": "Find a file", "steps": ["{tool:drive_search} with Drive's q, such as name contains 'budget' and mimeType = 'application/vnd.google-apps.spreadsheet', or {tool:drive_list_recent}.", "{tool:drive_get_file} for one file's metadata."] },
-        { "title": "Read a file", "steps": ["{tool:drive_read_text} with file_id: Docs and Slides as text, Sheets as CSV, Word, Excel, PowerPoint and OpenDocument files; pass next_offset as offset to read on.", "PDFs and images are not read as text: {tool:drive_download} gives the bytes."] },
+        { "title": "Read a file", "steps": ["{tool:drive_read_text} with file_id: Docs and Slides as text, Sheets as CSV, text, JSON, XML, Word, Excel, PowerPoint and OpenDocument files; pass next_offset as offset to read on, and sheet to read another sheet of a spreadsheet.", "PDFs and images are not read as text: {tool:drive_download} gives the bytes."] },
         { "title": "Work in a Sheet", "steps": ["{tool:sheets_get_values} with a range such as Sheet1!A1:D20.", "{tool:sheets_write_values} (value_input data stores the values as given; formulas parses them as if typed) or {tool:sheets_insert_rows}."] },
         { "title": "Edit a Doc", "steps": ["{tool:docs_documents_get} for its structure, then {tool:docs_documents_batch_update} (it can delete content, so it asks twice). replaceAllText needs no index; inserts need one from the structure."] },
-        { "title": "Create or remove", "steps": ["{tool:drive_create_file} makes a blank Doc, Sheet or Slides deck, or uploads text, base64 or a local file; {tool:drive_create_folder} makes a folder.", "{tool:drive_trash_file} moves a file to the trash (it asks twice; the file can be restored)."] }
+        { "title": "Create, change or remove", "steps": ["{tool:drive_create_file} makes a blank Doc, Sheet or Slides deck, or uploads text, base64 or a local file; {tool:drive_create_folder} makes a folder.", "{tool:drive_update_file} renames (name), moves (parent_id, or add_parent_id and remove_parent_id), stars or describes a file; it never changes the file's type.", "{tool:drive_trash_file} moves a file to the trash (it asks twice); {tool:drive_untrash_file} restores it."] }
       ],
-      "notes": ["Rename, move and restore from trash go through the gateway (Drive v2): {tool:api_search} \"drive files patch\"."]
+      "notes": ["Renaming and moving are drive_update_file, not the Drive v2 gateway; restore is drive_untrash_file. Books and Drive Labels are optional parts: their tools load only for a login that named them (--with books,labels)."]
     },
     "gmail": {
       "description": "Search, read, draft, send, reply to, label and trash Gmail messages and threads, read attachments, manage labels, filters and mail settings, and read Gmail Postmaster Tools domain stats.",

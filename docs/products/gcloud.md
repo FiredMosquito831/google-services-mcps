@@ -6,7 +6,7 @@ Google Cloud console APIs for projects, service enablement, API keys, billing, m
 
 ## When to install it
 
-- You query BigQuery or inspect tables and schemas. The BigQuery tools are read-only.
+- You query BigQuery or inspect tables and schemas. `bq_query_read` runs one SELECT (a dry run refuses anything else, with a cost cap); the per-method `bigquery_jobs_query` is the write path, and BigQuery is not read-only: writes are listed with `allow_writes` on and ask first.
 - You list projects, read IAM policies, or check which APIs a project has enabled.
 - You enable or disable APIs, or create and delete API keys.
 - You read logs, metrics or asset inventory across a project.
@@ -35,7 +35,7 @@ Start with `--profile readonly`. It grants read scopes only. Writes need a `read
 | Area | Tools | Safety | What it does |
 |---|---|---|---|
 | BigQuery | `bq_dataset_list`, `bq_table_list`, `bq_table_get`, `bq_table_preview`, `bq_query_read`, `bq_job_get` | read | List datasets and tables, read schemas, preview rows, run a read-only query |
-| Projects and services | `cloud_projects_search`, `cloud_project_get`, `cloud_project_iam_policy`, `cloud_services_list`, `cloud_operation_get` | read | Find projects, read IAM policy, list enabled APIs, check operations |
+| Projects and services | `cloud_projects_search`, `cloud_project_get`, `cloud_project_iam_policy`, `cloud_services_list`, `cloud_operation_get` | read | Find projects, read IAM policy (in policy version 3, so role bindings with an IAM condition come back whole), list enabled APIs, check operations |
 | | `cloud_project_create`, `cloud_service_enable` | write | Create a project, enable an API |
 | | `cloud_project_delete`, `cloud_service_disable` | destructive | Delete a project, disable an API |
 | API keys | `cloud_apikeys_list`, `cloud_apikey_get` | read | List keys, read one |
@@ -52,6 +52,8 @@ Start with `--profile readonly`. It grants read scopes only. Writes need a `read
 The full list is in `docs/capabilities/gcloud.md`.
 
 With the plugin option `toolset: google`, the server lists 59 tools that match Google's Cloud MCP servers for Resource Manager, API Keys, BigQuery, Cloud Billing, IAM, Cloud Logging, Cloud Monitoring and Cloud Storage, plus `health` and the sign-in tools. Google's `run_gcloud_command` is not copied: a shell command would bypass the approval of each change. A `readonly` login with that toolset asks for `cloud-platform.read-only`, `cloud-billing.readonly` and, since 1.32.1, `monitoring.read` (Google: "View monitoring data for all of your Google Cloud and third-party projects"), so the Monitoring reads load too; the IAM role and deny-policy reads still need a `readwrite` login, because IAM lists only `cloud-platform`.
+
+That list is not full parity with Google's servers (review of gcloud, 2026-10-30). Twenty-one official tools have no tool here and are reachable only through `api_call`: 5 Logging (`list_log_names`, `get_bucket`, `list_buckets`, `get_view`, `list_views`), 12 Cloud Billing (billing-account services, SKU groups and SKUs, which the Cloud Billing v1beta methods behind `api_call` serve) and 4 IAM role writes (`create_role`, `update_role`, `delete_role`, `undelete_role`, IAM v1). A toolset list can only name tools the server defines, so they cannot be listed until a curated tool wraps each one.
 
 ## Example requests
 
