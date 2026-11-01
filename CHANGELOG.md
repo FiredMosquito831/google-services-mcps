@@ -2,6 +2,29 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 2.13.0 - 2026-11-01
+
+### Added: `psi_run`, which answers a page-speed question instead of returning Lighthouse
+- The generated `pagespeed_pagespeedapi_runpagespeed` returned Google's whole Lighthouse report: about 150 audits come before `lighthouseResult.categories`, so the runtime's result limit cut the category scores off, and the answer to "how fast is this page" was lost (adversarial review of gsearch, F1). The new hand-written `psi_run` runs one PageSpeed Insights analysis and leads with what a caller asks for: the category scores as 0 to 100 (`performance`, `accessibility`, `best_practices`, `seo`, null for a category that did not run), the field data Google has from real visitors (Core Web Vitals at the 75th percentile and their rating), the six lab metrics with Lighthouse's display text and number, and the worst opportunities with the time or bytes each would save. `include_raw` adds Google's whole report as `raw`, which the runtime shapes as before.
+- Its arguments are the URL, `strategy` (mobile or desktop, Google's default), `categories` (Performance only by default, as Google does), `locale`, `top_opportunities` (5 by default, 0 for none) and `include_raw`. It sends only parameters Discovery lists, with `category` repeated once per category. A Lighthouse `runtimeError` is an error with Google's message, not an empty answer, and an answer without field data says why (too little traffic for CrUX).
+- It matches no tool of Google's Developer Knowledge MCP server and the note says so; in the `google` toolset it takes the place of the generated PageSpeed tool, which stays in `all` and `curated`.
+
+### Fixed: the `curated` toolset of gsearch reaches all 15 APIs
+- gsearch has no place for gateway tools beyond the two its `gateway` list held (Developer Knowledge v1alpha and the legacy Safe Browsing v4), so the `curated` toolset could not reach PageSpeed, CrUX, Web Risk, Knowledge Graph, Custom Search, Fact Check, Civic Information, Digital Asset Links, Version History or the other report APIs (review F2). The `gateway` list now names every API the product generates, at the version it generates, so `api_search`, `api_describe` and `api_call` reach all of them.
+
+### Fixed: `project_readiness` covers the APIs gsearch calls
+- The apikey group's list held six services, so the readiness check said nothing about Custom Search, Developer Knowledge, Fact Check Tools, Civic Information, Digital Asset Links, Web Fonts, Version History, the two experience reports or the Accelerated Mobile Pages URL API (review F9). It now lists all sixteen.
+
+### Fixed (docs): the gsearch page's claims
+- It said the answer tool asks first; `answerQuery` is a read since 1.24.2, and the toolset note that leaked the internal label "D2" now says why it does not ask. It said the plugin has no hand-written tools (it has `psi_run` since this release) and that the gateway holds 2 APIs (now all 15). docs/USING.md carried the same "still asks first" sentence.
+
+### Not changed
+- No other tool's kind, scope, name, request or toolset list: every existing tool's map entry is byte-identical (`psi_run` is the one addition, a read with the `openid` scope Discovery lists), and the generated tool is untouched in `all` and `curated`. `gsm scopes` is byte-identical for every group, profile and toolset: gsearch is in the apikey group, which has no profiles. `tool-aliases.json` is untouched, and the frozen files and the goldens have no diff.
+- Reported, not changed: the generated tools of this product still return raw JSON (only `psi_run` projects its answer); `psi_run` was not run against live Google, so its request shape comes from Discovery and its answer shape from Google's response schemas.
+
+### Tests
+- tests/search-parity.test.mjs: the summary (scores, field data, lab metrics, opportunities in order, the note for the default category, no raw report, the key only in the query and never in the answer), the arguments sent (categories repeated, strategy, locale, `top_opportunities`), `include_raw` adding the report with the same summary, no field data, a Lighthouse runtime error, and the refusals before any request. tests/curated-contract.test.mjs: two `psi_run` rows against `pagespeedonline.pagespeedapi.runpagespeed` with `pagespeedonline.v5` added to the documents it checks (163 curated tools). tests/curated.test.mjs, tests/toolset.test.mjs (the `google` list and the runServer check), tests/method-notes.test.mjs, tests/gateway.test.mjs (411 gateway APIs), tests/kinds-destructive.test.mjs (the gateway now carries `bulkCheck`).
+
 ## 2.12.1 - 2026-11-01
 
 ### Fixed: every Street View Publish tool says it cannot work here

@@ -30,7 +30,7 @@
       "whenToUse": "Use for Google developer docs, a page's speed or Core Web Vitals, whether a URL is unsafe, a Knowledge Graph entity, or fact checks of a claim. Examples: \"run PageSpeed on example.com\", \"what are this site's Core Web Vitals\", \"is this link malicious\", \"find Google's docs on OAuth scopes\".",
       "flows": [
         { "title": "Google developer docs", "steps": ["{tool:developerk_docs_search_doc_chunks} with query, then {tool:developerk_documents_batch_get} with the document names it returned for the full text.", "{tool:developerk_v1_answer_query} answers a question from the docs."] },
-        { "title": "Page speed and Core Web Vitals", "steps": ["{tool:pagespeed_pagespeedapi_runpagespeed} with url and strategy (mobile or desktop).", "{tool:chromeuxre_records_query_record} with a body naming url or origin, for real-user data."] },
+        { "title": "Page speed and Core Web Vitals", "steps": ["{tool:psi_run} with url and strategy (mobile or desktop): the Lighthouse scores, the field data Google has from real visitors, the six lab metrics and the worst opportunities, in that order.", "{tool:chromeuxre_records_query_record} with a body naming url or origin, for the raw CrUX field data."] },
         { "title": "Is a URL safe", "steps": ["{tool:webrisk_uris_search} with uri and threatTypes (MALWARE, SOCIAL_ENGINEERING, UNWANTED_SOFTWARE)."] },
         { "title": "Entities and fact checks", "steps": ["{tool:kgsearch_entities_search} with query; {tool:factcheckt_claims_search} with query."] }
       ],

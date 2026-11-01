@@ -1606,7 +1606,7 @@
       "group": "apikey",
       "server": {
         "name": "gsearch",
-        "curated": null
+        "curated": "search"
       },
       "generated": [
         {
@@ -1678,6 +1678,66 @@
         {
           "api": "safebrowsing",
           "version": "v4"
+        },
+        {
+          "api": "customsearch",
+          "version": "v1"
+        },
+        {
+          "api": "pagespeedonline",
+          "version": "v5"
+        },
+        {
+          "api": "chromeuxreport",
+          "version": "v1"
+        },
+        {
+          "api": "kgsearch",
+          "version": "v1"
+        },
+        {
+          "api": "safebrowsing",
+          "version": "v5"
+        },
+        {
+          "api": "factchecktools",
+          "version": "v1alpha1"
+        },
+        {
+          "api": "acceleratedmobilepageurl",
+          "version": "v1"
+        },
+        {
+          "api": "abusiveexperiencereport",
+          "version": "v1"
+        },
+        {
+          "api": "adexperiencereport",
+          "version": "v1"
+        },
+        {
+          "api": "webfonts",
+          "version": "v1"
+        },
+        {
+          "api": "webrisk",
+          "version": "v1"
+        },
+        {
+          "api": "civicinfo",
+          "version": "v2"
+        },
+        {
+          "api": "digitalassetlinks",
+          "version": "v1"
+        },
+        {
+          "api": "versionhistory",
+          "version": "v1"
+        },
+        {
+          "api": "developerknowledge",
+          "version": "v1"
         }
       ],
       "methodNotes": {
@@ -1711,7 +1771,7 @@
             "developerk_docs_search_doc_chunks",
             "developerk_documents_batch_get",
             "developerk_v1_answer_query",
-            "pagespeed_pagespeedapi_runpagespeed",
+            "psi_run",
             "chromeuxre_records_query_record",
             "kgsearch_entities_search",
             "factcheckt_claims_search",
@@ -1727,7 +1787,7 @@
             "developerk_v1_answer_query": [
               "answer_query"
             ],
-            "pagespeed_pagespeedapi_runpagespeed": [],
+            "psi_run": [],
             "chromeuxre_records_query_record": [],
             "kgsearch_entities_search": [],
             "factcheckt_claims_search": [],
@@ -1736,8 +1796,8 @@
           "notes": {
             "developerk_docs_search_doc_chunks": "Searches Google's developer documentation (Developer Knowledge API searchDocumentChunks): matching chunks with their document names.",
             "developerk_documents_batch_get": "The full text of up to 20 documents by name (Developer Knowledge API documents.batchGet), after a search.",
-            "developerk_v1_answer_query": "A grounded answer about Google developer products (Developer Knowledge API answerQuery). Google marks it read-only, and since 1.24.2 (D2) the suite counts it as a read too, so it does not ask.",
-            "pagespeed_pagespeedapi_runpagespeed": "No official Google MCP server covers PageSpeed Insights; kept for the Lighthouse scores and Core Web Vitals of a page (PageSpeed Insights API runpagespeed).",
+            "developerk_v1_answer_query": "A grounded answer about Google developer products (Developer Knowledge API answerQuery). Google marks it read-only, and so does this suite, so it does not ask.",
+            "psi_run": "No official Google MCP server covers PageSpeed Insights; the summary leads with the Lighthouse category scores, the field data Google has from real visitors, the six lab metrics and the worst opportunities, and include_raw adds Google's whole report. Each call uses one of the API's 25,000 daily queries; name categories to run more than Performance, which is Google's default.",
             "chromeuxre_records_query_record": "No official Google MCP server covers the Chrome UX Report; kept for real-user Core Web Vitals of an origin or URL (CrUX API records.queryRecord).",
             "kgsearch_entities_search": "No official Google MCP server covers the Knowledge Graph; kept to look up an entity by name (Knowledge Graph Search API entities.search).",
             "factcheckt_claims_search": "No official Google MCP server covers Fact Check Tools; kept to find published fact checks of a claim (Fact Check Tools API claims.search).",

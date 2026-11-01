@@ -31,20 +31,22 @@ There is no scopes profile, because a key is not an OAuth token. The write and d
 
 | Area | Tools | Safety | What it does |
 |---|---|---|---|
-| Hand-written | none | | This plugin has no hand-written tools. |
+| Hand-written | `psi_run` | read | One PageSpeed Insights analysis: the Lighthouse category scores first, then the field data Google has from real visitors, the six lab metrics and the worst opportunities; `include_raw` adds Google's whole report |
 | Per-method (47) | | mostly read | Safe Browsing and Web Risk lookups, PageSpeed Insights, Chrome UX Report, Fact Check Tools, Knowledge Graph, Civic Information, Digital Asset Links, Version History, Developer Knowledge |
 | Per-method writes | | write | Fact-check page create and update, Web Risk submissions. Digital Asset Links bulk check (since 1.26.3), Developer Knowledge answer query (since 1.24.2) and the Safe Browsing v4 finds in the gateway (since 1.26.3) are reads. |
 | Per-method deletes | | destructive | Fact-check page delete, Web Risk operation cancel and delete |
-| Gateway (2 APIs) | `api_search`, `api_describe`, `api_call` | read, read, dynamic | Developer Knowledge v1alpha and Safe Browsing v4 |
+| Gateway (all 15 APIs) | `api_search`, `api_describe`, `api_call` | read, read, dynamic | Every API this plugin generates, so the `curated` toolset reaches all of them |
 
 The full list is in `docs/capabilities/gsearch.md`.
 
-With the plugin option `toolset: google`, the server lists the three Developer Knowledge tools that match Google's Developer Knowledge MCP server (https://developerknowledge.googleapis.com/mcp: `search_documents`, `get_documents`, `answer_query`), and a small set chosen here for the APIs no official server covers: PageSpeed Insights, the Chrome UX Report record query, Knowledge Graph search, Fact Check claims search and Web Risk URL search. 8 tools, with `health`. The answer tool asks first (it is a POST the suite counts as a write; Google marks it read-only).
+With the plugin option `toolset: google`, the server lists the three Developer Knowledge tools that match Google's Developer Knowledge MCP server (https://developerknowledge.googleapis.com/mcp: `search_documents`, `get_documents`, `answer_query`), and a small set chosen here for the APIs no official server covers: `psi_run` for PageSpeed Insights, the Chrome UX Report record query, Knowledge Graph search, Fact Check claims search and Web Risk URL search. 8 tools, with `health`. Every one of them is a read, so none asks: the answer tool is a POST that Google marks read-only, and the suite counts it as a read since 1.24.2.
+
+Google has no MCP server for the other APIs of this plugin, and the gateway now reaches every one of them, so the `curated` toolset (hand-written and gateway tools) can search and call all 15 APIs, not only the two the gateway held before 2.13.0.
 
 ## Example requests
 
 - "Is https://example-shop.test/login flagged for malware?" Claude runs the Safe Browsing URL search. No prompt.
-- "Give me the PageSpeed score for our homepage on mobile." Claude runs the PageSpeed Insights call. No prompt.
+- "Give me the PageSpeed score for our homepage on mobile." Claude runs `psi_run` with `strategy: "mobile"`: the performance score, the Core Web Vitals of real visitors and the worst opportunities. No prompt. `include_raw` returns Google's whole Lighthouse report when the summary is not enough; it is large, and the runtime cuts it.
 - "Find fact checks about this claim: the bridge closed in June." Claude runs the Fact Check claims search. No prompt.
 - "Search the Google developer docs for the Drive quota page." Claude runs a Developer Knowledge search. No prompt.
 

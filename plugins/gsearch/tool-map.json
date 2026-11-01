@@ -301,6 +301,14 @@
     "title": "pagespeedonline.pagespeedapi.runpagespeed"
   },
   {
+    "name": "mcp__plugin_gsearch_gsearch__psi_run",
+    "kind": "read",
+    "scopes": [
+      "openid"
+    ],
+    "title": "Run PageSpeed Insights"
+  },
+  {
     "name": "mcp__plugin_gsearch_gsearch__safebrowsi_hash_list_get",
     "kind": "read",
     "scopes": [],

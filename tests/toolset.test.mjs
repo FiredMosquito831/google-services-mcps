@@ -274,7 +274,8 @@ const SEARCH_GOOGLE = [
   'developerk_docs_search_doc_chunks',
   'developerk_documents_batch_get',
   'developerk_v1_answer_query',
-  'pagespeed_pagespeedapi_runpagespeed',
+  // 2.13.0: the curated psi_run takes the place of the generated pagespeed_pagespeedapi_runpagespeed.
+  'psi_run',
   'chromeuxre_records_query_record',
   'kgsearch_entities_search',
   'factcheckt_claims_search',
@@ -997,7 +998,7 @@ test("the gsearch google list: Google's three Developer Knowledge tools, and a l
   const kindOf = (tool) => readJson('plugins', 'gsearch', 'tool-map.json').find((t) => t.name === `mcp__plugin_gsearch_gsearch__${tool}`).kind;
   // answerQuery is a POST that Google marks read-only, and a read here since D2 (1.24.2): every tool of the list is a read.
   for (const tool of SEARCH_GOOGLE) assert.equal(kindOf(tool), 'read', tool);
-  assert.match(google.notes.developerk_v1_answer_query, /D2/);
+  assert.match(google.notes.developerk_v1_answer_query, /read-only/);
 });
 
 test('the gadmin google list is a lean set: no official server, every tool says why it is kept; two writes, no delete', () => {
@@ -1118,9 +1119,10 @@ test('runServer: google on gmerchant (service account key) lists its 13 tools an
 });
 
 test('runServer: google on gsearch (API key) and gadmin lists the list and the runtime tools, with the same schemas as all', async () => {
-  // gsearch: generated tools only, the apikey group (a fake key, never sent: tools/list and health only).
+  // gsearch: the curated psi_run and the generated tools, the apikey group (a fake key, never sent: tools/list and
+  // health only). Since 2.13.0 the product has a hand-written tool, so the entry carries both parts.
   const sdir = tempDir('gsm-toolset-gsearch-');
-  const sentry = generatedEntry(sdir, 'gsearch');
+  const sentry = curatedEntry(sdir, 'gsearch', 'gsearch');
   const stokens = join(sdir, 'tokens');
   mkdirSync(stokens, { recursive: true });
   const senv = (extra = {}) => childEnv(sdir, stokens, { GSM_API_KEY: 'fake-key-for-tools-list', ...extra });

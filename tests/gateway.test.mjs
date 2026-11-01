@@ -616,5 +616,6 @@ test('every gateway API of every built plugin has a host to fall back to, or its
       checked += 1;
     }
   }
-  assert.equal(checked, 396);
+  // 2.13.0: gsearch's gateway lists all 15 APIs it generates (396 + 15).
+  assert.equal(checked, 411);
 });

@@ -154,6 +154,8 @@ const DOCS = [
   'firebase.v1beta1',
   // 2.12.0: the curated androidpub_upload_bundle uploads an app bundle and writes a track here.
   'androidpublisher.v3',
+  // 2.13.0: the curated psi_run runs one PageSpeed Insights analysis here.
+  'pagespeedonline.v5',
 ];
 
 /**
@@ -314,7 +316,7 @@ function problemsOf(call) {
 // ---------------------------------------------------------------------------
 // The servers and their tools.
 
-const SERVERS = ['gmail', 'gcalendar', 'gdrive', 'searchconsole', 'cloud', 'gads', 'workspace-admin', 'gchat', 'gcontacts', 'gclassroom', 'ganalytics', 'gfirebase', 'gai', 'gmaps', 'gplay', 'meet'];
+const SERVERS = ['gmail', 'gcalendar', 'gdrive', 'searchconsole', 'cloud', 'gads', 'workspace-admin', 'gchat', 'gcontacts', 'gclassroom', 'ganalytics', 'gfirebase', 'gai', 'gmaps', 'gplay', 'meet', 'gsearch'];
 const tools = new Map();
 for (const mod of SERVERS) {
   const { buildTools } = await import(DIST(`servers/${mod}.js`));
@@ -1200,6 +1202,12 @@ const CASES = {
     { args: { latitude: 48.85, longitude: 2.35, forecast: 'daily', days: 3, page_size: 3 }, expect: ['weather.forecast.days.lookup'] },
   ],
 
+  // gsearch (2.13.0), with the API key
+  psi_run: [
+    { args: { url: 'https://example.com/' }, expect: ['pagespeedonline.pagespeedapi.runpagespeed'], sends: { url: 'https://example.com/', category: 'performance' } },
+    { args: { url: 'https://example.com/', strategy: 'mobile', categories: ['performance', 'seo', 'accessibility', 'best-practices'], locale: 'fr', include_raw: true }, expect: ['pagespeedonline.pagespeedapi.runpagespeed'] },
+  ],
+
   // gplay (1.24.0), with the service account key
   androidmgmt_list_enterprises: [{ args: { project_id: 'my-emm-project', view: 'BASIC', page_size: 10, page_token: 'p1' }, expect: ['androidmanagement.enterprises.list'] }],
   androidmgmt_get_enterprise: [{ args: { enterprise: 'LC0123abcd' }, expect: ['androidmanagement.enterprises.get'] }],
@@ -1247,7 +1255,7 @@ test('every curated tool has a contract row, a skip reason or a known defect, an
   const listed = new Set([...Object.keys(CASES), ...Object.keys(SKIPPED), ...Object.keys(KNOWN_DEFECTS)]);
   assert.deepEqual([...tools.keys()].filter((name) => !listed.has(name)), [], 'curated tools without a row');
   assert.deepEqual([...listed].filter((name) => !tools.has(name)), [], 'rows for tools that do not exist');
-  assert.equal(tools.size, 162, 'the curated tool count; update the table when it changes');
+  assert.equal(tools.size, 163, 'the curated tool count; update the table when it changes');
 });
 
 for (const [name, cases] of Object.entries(CASES)) {
