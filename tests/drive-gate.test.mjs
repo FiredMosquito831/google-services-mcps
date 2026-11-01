@@ -99,20 +99,27 @@ test('declined: drive_create_file, sheets_write_values and sheets_insert_rows se
       ['drive_create_file', { name: 'report.txt', local_path: s.file }],
       ['sheets_write_values', { spreadsheet_id: 's1', range: 'A1', values: [['x']], value_input: 'data' }],
       ['sheets_insert_rows', { spreadsheet_id: 's1', sheet_id: 0, start_index: 1, end_index: 2 }],
+      // 2.1.0: a metadata change is a write like any other, and a restore reads the file (prepare) but changes nothing.
+      ['drive_update_file', { file_id: 'f1', name: 'renamed.txt' }],
+      ['drive_untrash_file', { file_id: 'f1' }],
     ];
     for (const [name, args] of writes) {
       const res = await client.callTool({ name, arguments: args });
       assert.equal(res.isError, true, name);
       assert.match(res.content[0].text, /You declined this action\. Nothing was changed\./);
     }
-    assert.equal(asked.length, 3);
+    assert.equal(asked.length, 5);
     assert.match(asked[0].message, /report\.txt/);
-    assert.equal(callsIn(s.callsFile).length, 0, 'declined: no request at all');
+    // The restore's approval shows the name read from the file, not the raw id.
+    assert.match(asked[4].message, /"name": "a\.txt"/);
+    const called = callsIn(s.callsFile);
+    assert.deepEqual(called.filter((c) => c.method !== 'GET'), [], 'declined: no request that changes anything');
+    assert.deepEqual(called.map((c) => [c.method, c.path]), [['GET', '/drive/v3/files/f1']], 'the restore read the file to name it, and nothing else');
 
     const read = await client.callTool({ name: 'drive_download', arguments: { file_id: 'f1' } });
     assert.notEqual(read.isError, true, read.content[0].text);
     assert.equal(JSON.parse(read.content[0].text).data_base64, Buffer.from('hello').toString('base64'));
-    assert.equal(asked.length, 3, 'a read does not ask');
+    assert.equal(asked.length, 5, 'a read does not ask');
   } finally {
     await client.close();
   }
