@@ -2647,6 +2647,15 @@
         }
       ],
       "gateway": [],
+      "methodNotes": {
+        "script": {
+          "source": "Google's Apps Script guide \"Execute functions with the Google Apps Script API\" (https://developers.google.com/apps-script/api/how-tos/execute), read 2026-11-01, and Discovery's own scriptId parameter text of scripts.run",
+          "reason": "Discovery gives scripts.run an empty description (live revision 20261011 too), so its tool said only that it calls the method, and the scriptId text does not say what a call needs. Google's guide states the deployment, Cloud-project and scope requirements a call needs before it works (adversarial review of gapps, F1); no other tool of the API is affected.",
+          "methods": {
+            "script.scripts.run": "Before a call works: deploy the script as an API executable and pass the DEPLOYMENT id here, not the script id (the new editor keeps one per deployment; Discovery's scriptId text says the same). The script and this OAuth client must share a standard Google Cloud project with the Apps Script API enabled: a default Apps Script project is not enough. The sign-in must hold every scope the script uses, not only the scope of the function called. A run may take six minutes, passes and returns basic types only (string, number, boolean, array, object), and the Apps Script API does not work with service accounts."
+          }
+        }
+      },
       "scopePolicy": {
         "optional": {
           "mail": [
@@ -2667,8 +2676,10 @@
             "appsscript_projects_get_content",
             "appsscript_projects_update_content",
             "appsscript_projects_versions_create",
+            "appsscript_projects_versions_list",
             "appsscript_projects_deployments_list",
             "appsscript_projects_deployments_create",
+            "appsscript_projects_deployments_update",
             "appsscript_processes_list",
             "appsscript_scripts_run"
           ],
@@ -2677,8 +2688,10 @@
             "appsscript_projects_get_content": [],
             "appsscript_projects_update_content": [],
             "appsscript_projects_versions_create": [],
+            "appsscript_projects_versions_list": [],
             "appsscript_projects_deployments_list": [],
             "appsscript_projects_deployments_create": [],
+            "appsscript_projects_deployments_update": [],
             "appsscript_processes_list": [],
             "appsscript_scripts_run": []
           },
@@ -2687,10 +2700,12 @@
             "appsscript_projects_get_content": "The files of a script project: name, type and source.",
             "appsscript_projects_update_content": "Replaces every file of a script project with the files given. Destructive since 1.26.3 (Google: it clears all the existing files), so it asks twice; send the files you keep too.",
             "appsscript_projects_versions_create": "Saves the current code as a numbered version, for a deployment. A write, so it asks first.",
+            "appsscript_projects_versions_list": "The saved versions of a script project, newest first, with their numbers and times: which one a deployment points at.",
             "appsscript_projects_deployments_list": "The deployments of a script project and their entry points.",
-            "appsscript_projects_deployments_create": "Deploys a version (as an API executable, web app or add-on, by its manifest). A write, so it asks first.",
+            "appsscript_projects_deployments_create": "Deploys a version (as an API executable, web app or add-on, by its manifest). A write, so it asks first. It makes a NEW deployment each time, with a new id and a new web-app URL; to ship a new version of an existing one, use appsscript_projects_deployments_update.",
+            "appsscript_projects_deployments_update": "Points an existing deployment at another version, or changes its manifest fields; its id and web-app URL stay the same. A write, so it asks first.",
             "appsscript_processes_list": "Your recent script runs: function, status, start time and duration.",
-            "appsscript_scripts_run": "Runs a function of a script deployed as an API executable. Destructive, so it asks twice: the script can do anything its own scopes allow, and the sign-in needs those scopes (the login asks for one of them here, userinfo.email)."
+            "appsscript_scripts_run": "Runs a function of a script deployed as an API executable; pass the deployment id, not the script id. Destructive, so it asks twice: the script can do anything its own scopes allow, and the sign-in needs the scopes the script uses (the login asks for one of them here, userinfo.email). The script and this OAuth client must share a standard Google Cloud project with the Apps Script API enabled."
           }
         }
       },

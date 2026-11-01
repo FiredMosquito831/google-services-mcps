@@ -123,12 +123,12 @@
       "notes": ["Google lets only the Cloud project that created a coursework item change or grade it: items made in the Classroom website return PERMISSION_DENIED here."]
     },
     "gapps": {
-      "description": "Apps Script: read and update a script project's files, create versions and deployments, run a function through the Apps Script API, and list executions; plus the Workspace Marketplace SDK.",
+      "description": "Apps Script: read and update a script project's files, create versions and deployments, redeploy an existing deployment, run a function through the Apps Script API, and list executions; plus the Workspace Marketplace SDK.",
       "whenToUse": "Use for Google Apps Script projects: read or change a script's code, deploy it, run a function, or check recent executions and errors. Examples: \"show me the code of my script\", \"run the cleanup function\", \"why did my trigger fail\".",
       "flows": [
         { "title": "Read the code", "steps": ["{tool:appsscript_projects_get_content} with scriptId (from the script editor's URL)."] },
-        { "title": "Change and deploy", "steps": ["Read every file first: {tool:appsscript_projects_update_content} replaces the whole project with the files sent (it asks twice).", "{tool:appsscript_projects_versions_create}, then {tool:appsscript_projects_deployments_create}."] },
-        { "title": "Run a function", "steps": ["{tool:appsscript_scripts_run} with scriptId and a body naming function (and parameters). Google requires the script to be deployed as an API executable and to use the same Cloud project as this suite's OAuth client."] },
+        { "title": "Change and deploy", "steps": ["Read every file first: {tool:appsscript_projects_update_content} replaces the whole project with the files sent (it asks twice).", "{tool:appsscript_projects_versions_create}, then {tool:appsscript_projects_deployments_create} for a new deployment (new id and URL), or {tool:appsscript_projects_versions_list} and {tool:appsscript_projects_deployments_update} to point an existing one at the new version and keep its id and URL."] },
+        { "title": "Run a function", "steps": ["{tool:appsscript_scripts_run} with the DEPLOYMENT id (not the script id) and a body naming function (and parameters). The script must be deployed as an API executable and share a standard Google Cloud project with this suite's OAuth client; the sign-in must hold every scope the script uses."] },
         { "title": "Executions", "steps": ["{tool:appsscript_processes_list} for recent runs and their status."] }
       ],
       "notes": ["The person must turn on the Apps Script API in their Apps Script settings (https://script.google.com/home/usersettings)."]

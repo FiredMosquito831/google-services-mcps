@@ -355,11 +355,18 @@ test('requirements: the lean gmeet, gtasks and gapps lists resolve to the narrow
   assert.deepEqual(tasksOnly.readwrite, [G('tasks')]);
   assert.deepEqual(tasksOnly.full, [G('tasks')]);
   const apps = await resolved('gapps');
-  assert.equal(apps.n, 8);
+  // 10 since 2.5.0: appsscript_projects_versions_list and appsscript_projects_deployments_update join the list, with
+  // scopes the cover already holds, so the scope lists below do not move.
+  assert.equal(apps.n, 10);
   // script.processes is view-only by Google's description ("View Google Apps Script processes"), so since 1.32.1 the
   // processes list joins a readonly login.
   assert.deepEqual(apps.readonly.scopes, [G('script.deployments.readonly'), G('script.processes'), G('script.projects.readonly')]);
   assert.ok(apps.readonly.covered.includes('gapps/appsscript_processes_list'));
+  // The two tools 2.5.0 adds register with the scopes already asked for: the versions list with the readonly scopes,
+  // the redeploy with the readwrite ones.
+  assert.ok(apps.readonly.covered.includes('gapps/appsscript_projects_versions_list'));
+  const appsReadwrite = resolveScopes(await requirementsFor(['gapps'], cfg, { ...quiet, toolset: 'google' }), 'readwrite');
+  assert.ok(appsReadwrite.covered.includes('gapps/appsscript_projects_deployments_update'));
   assert.deepEqual(apps.readwrite, [G('script.deployments'), G('script.processes'), G('script.projects'), EMAIL]);
   // Until 1.36.0 full took the broadest scope scripts.run lists, the full Gmail scope. Now that scope is the optional part
   // mail of gapps and full prefers userinfo.email for scripts.run (scopePolicy), as readwrite picks it: neither asks for

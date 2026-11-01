@@ -2,6 +2,24 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 2.5.0 - 2026-11-01
+
+### Added: what `scripts.run` needs before it works, in the tool that runs it
+- Discovery gives `scripts.run` an empty description, so the generated tool said only that it calls the method, and the `scriptId` text Google ships does not say what the call needs. Google's guide, "Execute functions with the Google Apps Script API" (https://developers.google.com/apps-script/api/how-tos/execute, read 2026-11-01), states it: the script project is deployed as an API executable and the call passes the DEPLOYMENT id, not the script id; the script and the calling OAuth client share a **standard** Google Cloud project with the Apps Script API enabled (a default Apps Script project is not enough); the sign-in holds every scope the script uses, not only the called function's; a run may take six minutes, passes and returns basic types only, and the Apps Script API does not work with service accounts. That text is a `methodNote` (config/products.json), so it reaches the one tool it describes and no other, after the API's own note (adversarial review of gapps, F1 and F9).
+
+### Added: redeploying and listing versions in the gapps `google` toolset
+- `appsscript_projects_deployments_update` (a write) and `appsscript_projects_versions_list` (a read) join the `google` toolset, which now holds 10 tools (review F8). Redeploying needs the update: `deployments.create` makes a new deployment each time, with a new id and a new web-app URL, while `deployments.update` keeps the deployment id and its URL and points it at another version. Both tools already existed in the `all` toolset and need no new scope (`script.deployments` and `script.projects.readonly` are already in the cover), so `gsm scopes` for gapps is identical in every profile and toolset; the covered counts move (google `readonly` 4 → 5 of 10, `readwrite` and `full` 8 → 10 of 10).
+
+### Fixed (docs): how to set up a script for `scripts.run`
+- `docs/products/gapps.md` said the setup `scripts.run` needs was UNVERIFIED. Google states it, so the page now lists it and cites the page above, and the plugin's skill names the deployment id and the standard Cloud project in its run flow.
+
+### Not changed
+- No tool's kind, scope or request: the tool map of gapps is byte-identical (the two tools were already there), `tool-aliases.json` is untouched, and every other product is unchanged. `gsm scopes` for gapps: the same scope lists in all nine profile and toolset cases.
+- Reported, not changed (owner decision needed): a script error comes back as HTTP 200 with an `error` on the Operation, so `isError` is false and the model sees a normal result; and a 503 on the POST is retried, which could run a function twice if Google answered after dispatch (the same `requestId` reasoning as Chat does not exist here).
+
+### Tests
+- tests/method-notes.test.mjs: the `script.scripts.run` note reaches that tool and only that tool, after the API note from config/tool-kinds.json, and the plugin's servers.json carries it unchanged. tests/toolset.test.mjs: the 10-tool list, its notes and the kinds (the update is a write, the versions list a read).
+
 ## 2.4.0 - 2026-11-01
 
 ### Added: two reads in the gadmin `google` toolset

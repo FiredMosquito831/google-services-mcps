@@ -1,6 +1,6 @@
 ---
 name: gapps
-description: "Apps Script: read and update a script project's files, create versions and deployments, run a function through the Apps Script API, and list executions; plus the Workspace Marketplace SDK."
+description: "Apps Script: read and update a script project's files, create versions and deployments, redeploy an existing deployment, run a function through the Apps Script API, and list executions; plus the Workspace Marketplace SDK."
 when_to_use: "Use for Google Apps Script projects: read or change a script's code, deploy it, run a function, or check recent executions and errors. Examples: \"show me the code of my script\", \"run the cleanup function\", \"why did my trigger fail\"."
 ---
 
@@ -28,11 +28,11 @@ Only if the chat tools fail, the same steps in a terminal: `node "${CLAUDE_PLUGI
 ### 2. Change and deploy
 
 1. Read every file first: `appsscript_projects_update_content` replaces the whole project with the files sent (it asks twice).
-2. `appsscript_projects_versions_create`, then `appsscript_projects_deployments_create`.
+2. `appsscript_projects_versions_create`, then `appsscript_projects_deployments_create` for a new deployment (new id and URL), or `appsscript_projects_versions_list` and `appsscript_projects_deployments_update` to point an existing one at the new version and keep its id and URL.
 
 ### 3. Run a function
 
-1. `appsscript_scripts_run` with scriptId and a body naming function (and parameters). Google requires the script to be deployed as an API executable and to use the same Cloud project as this suite's OAuth client.
+1. `appsscript_scripts_run` with the DEPLOYMENT id (not the script id) and a body naming function (and parameters). The script must be deployed as an API executable and share a standard Google Cloud project with this suite's OAuth client; the sign-in must hold every scope the script uses.
 
 ### 4. Executions
 
@@ -52,7 +52,7 @@ Reads never ask for approval. Tools that change or delete data are listed only w
 
 ## Tools
 
-The `gapps` MCP server lists up to 26 tools with the `all` toolset: 15 read, 8 write, 3 destructive, counting its 7 runtime tools (`health` and the sign-in tools). Write and destructive tools are listed only when writes are allowed, and a tool loads only when the sign-in holds one of its scopes. The `google` toolset lists 8 of them plus the runtime tools.
+The `gapps` MCP server lists up to 26 tools with the `all` toolset: 15 read, 8 write, 3 destructive, counting its 7 runtime tools (`health` and the sign-in tools). Write and destructive tools are listed only when writes are allowed, and a tool loads only when the sign-in holds one of its scopes. The `google` toolset lists 10 of them plus the runtime tools.
 
 ## APIs
 

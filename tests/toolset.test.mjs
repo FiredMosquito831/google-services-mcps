@@ -119,8 +119,11 @@ const LEAN_GOOGLE = {
     'appsscript_projects_get_content',
     'appsscript_projects_update_content',
     'appsscript_projects_versions_create',
+    // 2.5.0: the versions list and the redeploy (deployments.update keeps the id and the URL; create makes a new one).
+    'appsscript_projects_versions_list',
     'appsscript_projects_deployments_list',
     'appsscript_projects_deployments_create',
+    'appsscript_projects_deployments_update',
     'appsscript_processes_list',
     'appsscript_scripts_run',
   ],
@@ -583,7 +586,10 @@ test('the gmeet, gtasks and gapps google lists are lean sets: no official server
   // deployment delete and the Marketplace licence reads.
   for (const name of ['meet_spaces_members_delete', 'meet_spaces_end_active_conference']) assert.equal(LEAN_GOOGLE.gmeet.includes(name), false, name);
   for (const name of ['tasks_tasklists_delete', 'tasks_tasks_clear', 'keep_notes_create', 'keep_notes_delete']) assert.equal(LEAN_GOOGLE.gtasks.includes(name), false, name);
-  for (const name of ['appsscript_projects_deployments_delete', 'appsmarket_user_license_get']) assert.equal(LEAN_GOOGLE.gapps.includes(name), false, name);
+  for (const name of ['appsscript_projects_deployments_delete', 'appsmarket_user_license_get', 'appsscript_projects_create']) assert.equal(LEAN_GOOGLE.gapps.includes(name), false, name);
+  // Since 2.5.0 the redeploy is in it, and the create says why it is not the way to ship a new version.
+  assert.equal(LEAN_GOOGLE.gapps.length, 10);
+  assert.match(products.gapps.toolsets.google.notes.appsscript_projects_deployments_create, /NEW deployment/);
   // The kinds in the plugin tool maps: scripts.run is destructive, tasks.delete is destructive, the rest as classified.
   const kindOf = (id, tool) => readJson('plugins', id, 'tool-map.json').find((t) => t.name === `mcp__plugin_${id}_${id}__${tool}`).kind;
   assert.equal(kindOf('gapps', 'appsscript_scripts_run'), 'destructive');

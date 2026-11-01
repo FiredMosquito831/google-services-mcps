@@ -26,7 +26,16 @@ node <plugin>/bin/gsm.mjs status
 2. Set up the OAuth consent screen. Use Internal for a Workspace domain. Create an OAuth client ID of type Desktop app and download the JSON file.
 3. Run `setup-client`, then `login workspace-user`. Restart the MCP server (`/mcp`) after login.
 
-Start with `--profile readonly`. Writes need a `readwrite` login and the plugin option `allow_writes`. The setup a script needs before `scripts.run` works is UNVERIFIED.
+Start with `--profile readonly`. Writes need a `readwrite` login and the plugin option `allow_writes`.
+
+Running a function needs more than a sign-in. Google's guide, "Execute functions with the Google Apps Script API" (https://developers.google.com/apps-script/api/how-tos/execute, read 2026-11-01), lists what `scripts.run` needs before a call works:
+
+- the script is deployed as an API executable, and the call passes the **deployment id**, not the script id (the new editor keeps one per deployment);
+- the script and this OAuth client share a **standard** Google Cloud project with the Apps Script API enabled; a default Apps Script project is not enough;
+- the sign-in holds every scope the script uses, not only the scope of the function called (`readwrite` asks for one of them, `userinfo.email`; sign in with an explicit scope list for the rest);
+- a run may take six minutes, passes and returns basic types only, and the Apps Script API does not work with service accounts.
+
+Since 2.5.0 that text is in the `appsscript_scripts_run` tool itself (a method note), so the model sees it without this page.
 
 ## What it can do
 
@@ -44,7 +53,9 @@ Start with `--profile readonly`. Writes need a `readwrite` login and the plugin 
 
 The full list is in `docs/capabilities/gapps.md`.
 
-Google has no official MCP server for Apps Script (none was found on 2026-10-29). With the plugin option `toolset: google`, the server lists a small set chosen here instead: `appsscript_projects_get`, `appsscript_projects_get_content`, `appsscript_projects_update_content`, `appsscript_projects_versions_create`, `appsscript_projects_deployments_list`, `appsscript_projects_deployments_create`, `appsscript_processes_list` and `appsscript_scripts_run` (destructive: it asks twice) (8 tools), plus `health` and the sign-in tools. A `readonly` login with that toolset asks for `script.projects.readonly`, `script.deployments.readonly` and, since 1.32.1, `script.processes` (Google: "View Google Apps Script processes"), so recent runs load too; with the `all` toolset it also asks for `script.metrics` ("View Google Apps Script project's metrics"); a `readwrite` login for `script.projects`, `script.deployments`, `script.processes` and `userinfo.email`. A function run with `appsscript_scripts_run` needs the scopes the script itself uses; sign in with those as an explicit scope list.
+Google has no official MCP server for Apps Script (none was found on 2026-10-29). With the plugin option `toolset: google`, the server lists a small set chosen here instead: `appsscript_projects_get`, `appsscript_projects_get_content`, `appsscript_projects_update_content`, `appsscript_projects_versions_create`, `appsscript_projects_versions_list` (2.5.0), `appsscript_projects_deployments_list`, `appsscript_projects_deployments_create`, `appsscript_projects_deployments_update` (2.5.0), `appsscript_processes_list` and `appsscript_scripts_run` (destructive: it asks twice) (10 tools), plus `health` and the sign-in tools. A `readonly` login with that toolset asks for `script.projects.readonly`, `script.deployments.readonly` and, since 1.32.1, `script.processes` (Google: "View Google Apps Script processes"), so recent runs load too; with the `all` toolset it also asks for `script.metrics` ("View Google Apps Script project's metrics"); a `readwrite` login for `script.projects`, `script.deployments`, `script.processes` and `userinfo.email`. The two tools 2.5.0 adds need no new scope: their scopes are already in the cover. A function run with `appsscript_scripts_run` needs the scopes the script itself uses; sign in with those as an explicit scope list.
+
+`appsscript_projects_deployments_create` makes a **new** deployment every time, with a new id and a new web-app URL. To ship a new version of an existing deployment, read the version number from `appsscript_projects_versions_list` and pass it to `appsscript_projects_deployments_update`: the deployment id and its URL stay the same. That flow is what the plugin's skill describes.
 
 **The full Gmail scope is an optional part (since 1.36.0).** `scripts.run` lists twelve scopes Google accepts for it, among them `https://mail.google.com/` (read, send and delete all mail). Until 1.36.0 a `full` login picked that one, the shortest, so every `--profile full` gapps sign-in asked for the whole mailbox only to run scripts. Now `full` asks for `userinfo.email` for `scripts.run`, as `readwrite` does, and the full Gmail scope only when you name the part:
 
@@ -59,6 +70,7 @@ In the chat: `auth_login` with `"with": ["mail"]`. Without it, `gsm scopes` and 
 - "Show me the code of my Sheets expense script." Claude runs the project content read tool. No prompt.
 - "List the recent executions of my reporting script and any errors." Claude runs the process list tool. No prompt.
 - "Create a new version of the Expenses project." Claude runs the version create tool. It asks first.
+- "Ship that version to the deployment the team already uses." Claude lists the versions, then runs `appsscript_projects_deployments_update`: the deployment id and its web-app URL stay the same (a create would make a new deployment). It asks first.
 - "Run the sendWeeklyReport function." Claude runs `appsscript_scripts_run`. It asks twice.
 
 ## Safety
