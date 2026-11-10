@@ -1112,6 +1112,9 @@ def build(output: Path) -> dict:
         "User-agent: *\nAllow: /\n\nSitemap: %s/sitemap.xml\n" % prefix, encoding="utf-8", newline="\n"
     )
     (output / "CNAME").write_text(site["cname"] + "\n", encoding="utf-8", newline="\n")
+    # GitHub Pages runs Jekyll by default, and Jekyll drops dot-directories, so
+    # /.well-known/security.txt would 404. An empty .nojekyll serves docs/ as-is.
+    (output / ".nojekyll").write_text("", encoding="utf-8", newline="\n")
     (output / "llms.txt").write_text(
         render_llms_txt(dict(site, harness_pages=seo["site"]["harness_pages"]), products),
         encoding="utf-8",
