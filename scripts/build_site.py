@@ -184,6 +184,14 @@ def load_products() -> list[dict]:
         for api in sorted(scopes):
             for scope in scopes[api]:
                 scope_rows.append({"api": api, "scope": scope})
+        overrides = sorted(
+            {
+                scope
+                for values in (server.get("scopeOverrides") or {}).values()
+                for scope in values
+            }
+        )
+        server_scopes = list(server.get("scopes") or []) or overrides
         toolsets = server.get("toolsets") or {}
         google_list = toolsets.get("google") if isinstance(toolsets, dict) else None
         market = market_by_name.get(pid, {})
@@ -204,6 +212,7 @@ def load_products() -> list[dict]:
                 "scopes": scope_rows,
                 "scope_count": len(scope_rows),
                 "scope_apis": sorted(scopes),
+                "server_scopes": server_scopes,
                 "google_toolset_count": len(google_list) if isinstance(google_list, list) else None,
                 "category": market.get("category", ""),
                 "tags": market.get("tags", []),
@@ -447,21 +456,43 @@ def product_blocks(product: dict, groups: dict) -> list[dict]:
             "text": "`%s` belongs to the `%s` login group. %s"
             % (product["id"], product["group"], group["setup"]),
         },
-        {
-            "t": "p",
-            "text": "The plugin's scope file lists **%d OAuth scopes** for %d APIs. A login asks only for the scopes of its profile: `readonly` (the default), `readwrite`, `full`, or an exact list."
-            % (product["scope_count"], len(product["scope_apis"]))
-            if product["scope_count"]
-            else "The plugin's scope file lists no OAuth scopes for this product. Its calls are covered by the login group's other setup, or by the API key or service account the group uses.",
-        },
     ]
-    if product["scopes"]:
+    if product["scope_count"]:
+        blocks.append(
+            {
+                "t": "p",
+                "text": "The plugin's scope file lists **%d OAuth scopes** for %d APIs. A login asks only for the scopes of its profile: `readonly` (the default), `readwrite`, `full`, or an exact list."
+                % (product["scope_count"], len(product["scope_apis"])),
+            }
+        )
         blocks.append(
             {
                 "t": "table",
                 "caption": "OAuth scopes in the plugin's scope file",
                 "head": ["API", "Scope"],
                 "rows": [[row["api"], row["scope"]] for row in product["scopes"]],
+            }
+        )
+    elif product["server_scopes"]:
+        blocks.append(
+            {
+                "t": "p",
+                "text": "The plugin's scope file (`scopes.json`) lists no OAuth scopes for this product. Its server file (`servers.json`) declares the scopes its APIs ask for, listed below, because the APIs' Discovery documents list none; the login asks only for those its profile needs.",
+            }
+        )
+        blocks.append(
+            {
+                "t": "table",
+                "caption": "OAuth scopes in the server's scope list",
+                "head": ["Scope"],
+                "rows": [[scope] for scope in product["server_scopes"]],
+            }
+        )
+    else:
+        blocks.append(
+            {
+                "t": "p",
+                "text": "Neither the plugin's scope file nor its server file lists OAuth scopes for this product. Its login group decides the credential.",
             }
         )
     blocks += [
@@ -691,6 +722,11 @@ def build(output: Path) -> dict:
                 {
                     "text": "%d OAuth scopes" % product["scope_count"],
                     "evidence": "plugins/%s/scopes.json" % product["id"],
+                    "status": "verified",
+                },
+                {
+                    "text": "server scope list: %s" % (", ".join(product["server_scopes"]) or "none"),
+                    "evidence": "plugins/%s/servers.json (scopes or scopeOverrides)" % product["id"],
                     "status": "verified",
                 },
                 {

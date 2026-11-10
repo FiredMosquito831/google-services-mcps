@@ -118,7 +118,8 @@
 <p>The plugin option <code>toolset</code> can list fewer tools. <code>google</code> lists 13 tools that do the same jobs as Google's official MCP server for this product; <code>curated</code> lists the hand-written and gateway tools; <code>all</code> is the default.</p>
 <h2 id="sign-in">Sign-in</h2>
 <p><code>gbusiness</code> belongs to the <code>business</code> login group. Log in once for the group: create a Desktop OAuth client in a Google Cloud project, save its file with <code>npx google-services-mcps setup-client</code>, then run <code>npx google-services-mcps login business</code>.</p>
-<p>The plugin's scope file lists no OAuth scopes for this product. Its calls are covered by the login group's other setup, or by the API key or service account the group uses.</p>
+<p>The plugin's scope file (<code>scopes.json</code>) lists no OAuth scopes for this product. Its server file (<code>servers.json</code>) declares the scopes its APIs ask for, listed below, because the APIs' Discovery documents list none; the login asks only for those its profile needs.</p>
+<div class="table-wrap"><table><caption>OAuth scopes in the server's scope list</caption><thead><tr><th scope="col">Scope</th></tr></thead><tbody><tr><td>https://www.googleapis.com/auth/business.manage</td></tr></tbody></table></div>
 <h2 id="plugin-details">Plugin details</h2>
 <dl class="keyvals"><dt>Plugin</dt><dd>gbusiness</dd><dt>MCP server</dt><dd>gbusiness</dd><dt>Display name</dt><dd>Business Profile</dd><dt>Version</dt><dd>2.17.0</dd><dt>Marketplace</dt><dd>google-services-mcps</dd><dt>Login group</dt><dd>business</dd><dt>Marketplace category</dt><dd>marketing</dd><dt>Plugin options</dt><dd>allow_writes, confirmation, token_dir, toolset</dd><dt>Server kind</dt><dd>discovery</dd></dl>
 <h2 id="related">Related</h2>
