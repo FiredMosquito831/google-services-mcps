@@ -277,7 +277,7 @@
       "description": "Chat for your agent: list spaces, read and send messages, manage members, and subscribe to Workspace Events. {tools} tools, one plugin.",
       "keywords": [
         "google chat mcp",
-        "google chat bot mcp",
+        "google chat messages mcp",
         "chat automation",
         "workspace events mcp",
         "google chat claude code",
@@ -844,7 +844,7 @@
         "google maps mcp",
         "places api mcp",
         "maps automation",
-        "geocoding mcp",
+        "places autocomplete mcp",
         "google maps claude code",
         "google maps mcp server",
         "google places api mcp",
@@ -1092,7 +1092,8 @@
         "google oauth error",
         "gsm doctor",
         "mcp server debug",
-        "claude code plugins google"
+        "claude code plugins google",
+        "google oauth consent screen"
       ]
     },
     "/about/": {

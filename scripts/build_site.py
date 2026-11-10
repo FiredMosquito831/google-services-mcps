@@ -1280,6 +1280,8 @@ def gate_keywords(rendered: dict, meta: dict) -> list[str]:
             continue
         if 'name="keywords"' not in body:
             errors.append("%s: no keywords meta tag" % rel)
+        if len(keywords) < 8:
+            errors.append("%s: %d keywords, under 8" % (rel, len(keywords)))
         if len(keywords) > 14:
             errors.append("%s: %d keywords, over 14" % (rel, len(keywords)))
         if len(set(keywords)) != len(keywords):
