@@ -1162,8 +1162,9 @@ def run_gates(output: Path, result: dict) -> list[str]:
     errors += gate_faq(rendered)
     errors += gate_claims(meta)
     errors += gate_owned_files(output, rendered)
-    scanned = [SRC / "content" / "site.json"]
+    scanned = [SRC / "content" / "site.json", SRC / "design-tokens.json"]
     scanned += sorted((SRC / "content" / "pages").glob("*.json"))
+    scanned += sorted((SRC / "templates").glob("*.html"))
     scanned += [SRC / "static" / "style.css", SRC / "static" / "site.js", SRC / "static" / "favicon.svg"]
     scanned += sorted((SRC / "static" / "diagrams").glob("*.svg"))
     scanned += [output / rel for rel in sorted(rendered)]
