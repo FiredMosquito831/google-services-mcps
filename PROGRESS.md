@@ -24,3 +24,14 @@ Base: `b8f114ef45e6d3a2550619438e4529912bca28ca` (main). Worktree: `D:\Projects2
 ## Log
 
 - 2026-11-10: read the brief, spec, recon, playbook references; inspected the repository data model; wrote the analysis scripts under `_revamp/google-services-mcps/`; created the worktree skeleton.
+- 2026-11-10: builder, tokens, templates, CSS, JS, favicon, three diagrams, og.png, all 11 static pages, 23 generated product pages. All gates pass; `--check` byte-identical.
+- 2026-11-10: 17 gate proofs, each on a deliberately broken input; all fail as expected.
+- 2026-11-10: local serve on 8130; 113 paths, all 200; responsive matrix 34 pages at 390/768/1440 plus 8 pages at 360/1024/1280/1920, no overflow; accessibility checks clean; screenshots reviewed at 390/768/1440.
+- 2026-11-10: claims ledger generated (244 rows); README site link added.
+
+## Commits
+
+- `ee84ce5f` site: add the revamp source, builder and site workflow
+- `1e4342bb` site: generate the docs site into docs/
+- `624160ca` site: add section headings before the product cards and the FAQ
+- next: README site link and progress notes, then push and the draft PR.
