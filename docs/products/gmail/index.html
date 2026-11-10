@@ -3,15 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Gmail | google-services-mcps</title>
-<meta name="description" content="Gmail mailboxes, messages, labels and settings, plus Gmail Postmaster Tools. The gmail plugin registers 114 tools in the workspace-user login group.">
+<title>Gmail MCP server for Claude Code, Codex and OpenCode</title>
+<meta name="description" content="Give your AI agent Gmail: read mailboxes, search messages, manage labels and settings, and query Postmaster Tools. 114 tools, one plugin.">
+<meta name="keywords" content="gmail mcp, gmail mcp server, gmail claude code, gmail codex, gmail opencode, gmail automation, gmail ai agent, automate gmail, gmail api mcp, gmail postmaster tools mcp, read email with claude, send email claude code, gmail plugin claude code">
 <link rel="canonical" href="https://googleservices.danubelabs.net/products/gmail/">
 <meta name="theme-color" content="#0B1020" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#F8FAFC" media="(prefers-color-scheme: light)">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="google-services-mcps">
-<meta property="og:title" content="Gmail | google-services-mcps">
-<meta property="og:description" content="Gmail mailboxes, messages, labels and settings, plus Gmail Postmaster Tools. The gmail plugin registers 114 tools in the workspace-user login group.">
+<meta property="og:title" content="Gmail MCP server for Claude Code, Codex and OpenCode">
+<meta property="og:description" content="Give your AI agent Gmail: read mailboxes, search messages, manage labels and settings, and query Postmaster Tools. 114 tools, one plugin.">
 <meta property="og:url" content="https://googleservices.danubelabs.net/products/gmail/">
 <meta property="og:image" content="https://googleservices.danubelabs.net/og.png">
 <meta property="og:image:width" content="1200">
@@ -19,8 +20,8 @@
 <meta property="og:image:alt" content="google-services-mcps: 23 Google products as MCP servers, one plugin each">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Gmail | google-services-mcps">
-<meta name="twitter:description" content="Gmail mailboxes, messages, labels and settings, plus Gmail Postmaster Tools. The gmail plugin registers 114 tools in the workspace-user login group.">
+<meta name="twitter:title" content="Gmail MCP server for Claude Code, Codex and OpenCode">
+<meta name="twitter:description" content="Give your AI agent Gmail: read mailboxes, search messages, manage labels and settings, and query Postmaster Tools. 114 tools, one plugin.">
 <meta name="twitter:image" content="https://googleservices.danubelabs.net/og.png">
 <meta name="twitter:image:alt" content="google-services-mcps: 23 Google products as MCP servers, one plugin each">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -29,9 +30,9 @@
 {
   "@context": "https://schema.org",
   "@type": "WebPage",
-  "name": "Gmail | google-services-mcps",
+  "name": "Gmail MCP server for Claude Code, Codex and OpenCode",
   "url": "https://googleservices.danubelabs.net/products/gmail/",
-  "description": "Gmail mailboxes, messages, labels and settings, plus Gmail Postmaster Tools. The gmail plugin registers 114 tools in the workspace-user login group."
+  "description": "Give your AI agent Gmail: read mailboxes, search messages, manage labels and settings, and query Postmaster Tools. 114 tools, one plugin."
 }
 </script>
 <script type="application/ld+json">
@@ -58,6 +59,37 @@
       "item": "https://googleservices.danubelabs.net/products/gmail/"
     }
   ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Gmail MCP server",
+  "alternateName": "gmail",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Claude Code, Codex, OpenCode, Antigravity",
+  "softwareVersion": "2.17.0",
+  "description": "Give your AI agent Gmail: read mailboxes, search messages, manage labels and settings, and query Postmaster Tools.",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "isAccessibleForFree": true,
+  "featureList": [
+    "Search a mailbox for a sender, subject or label",
+    "Read a thread and summarise it",
+    "Apply or remove a label",
+    "Draft and send a message",
+    "Check Postmaster Tools reputation"
+  ],
+  "url": "https://googleservices.danubelabs.net/products/gmail/",
+  "author": {
+    "@type": "Person",
+    "name": "FiredMosquito831",
+    "url": "https://github.com/FiredMosquito831"
+  }
 }
 </script>
 </head>
@@ -108,6 +140,9 @@
 <h2 id="install">Install</h2>
 <p><code>gmail</code> is one plugin in the <code>google-services-mcps</code> marketplace, and it runs one MCP server with the same name. Install it for Claude Code with the command below. For Codex, OpenCode or Antigravity, change <code>--agent</code>; the product id stays the same.</p>
 <div class="codeblock"><p class="code-label">Install for Claude Code</p><pre><code>npx google-services-mcps install --agent claude --plugin gmail</code></pre></div>
+<h2 id="what-you-can-do-with-it">What you can do with it</h2>
+<p>Each task below is one the server can do, with the tool that does it in brackets. A task marked through <code>api_call</code> is one gateway method of an API the product already carries; the gateway tools reach every method of those APIs.</p>
+<ul><li>Search a mailbox for a sender, subject or label (<code>gmail_search</code>)</li><li>Read a thread and summarise it (<code>gmail_get_thread</code>)</li><li>Apply or remove a label (<code>gmail_label</code>)</li><li>Draft and send a message (<code>gmail_create_draft</code>)</li><li>Check Postmaster Tools reputation (<code>gmailpostm_domains_domain_stats_query</code>)</li></ul>
 <h2 id="what-it-manages">What it manages</h2>
 <p>The server carries 2 generated API bindings and 2 gateway APIs. Gateway APIs are reached through <code>api_search</code>, <code>api_describe</code> and <code>api_call</code>, which every product with gateway APIs lists.</p>
 <div class="table-wrap"><table><caption>Generated API bindings</caption><thead><tr><th scope="col">API</th><th scope="col">Version</th></tr></thead><tbody><tr><td>gmail</td><td>v1</td></tr><tr><td>gmailpostmastertools</td><td>v2</td></tr></tbody></table></div>
@@ -137,6 +172,14 @@
         <li><a href="/products/">Products</a></li>
         <li><a href="https://github.com/FiredMosquito831/google-services-mcps">Repository</a></li>
         <li><a href="https://github.com/FiredMosquito831/google-services-mcps/issues">Issues</a></li>
+      </ul>
+    </nav>
+    <nav aria-label="Harnesses">
+      <ul>
+        <li><a href="/for/claude-code/">For Claude Code</a></li>
+        <li><a href="/for/codex/">For Codex</a></li>
+        <li><a href="/for/opencode/">For OpenCode</a></li>
+        <li><a href="/for/antigravity/">For Antigravity</a></li>
       </ul>
     </nav>
     <p>google-services-mcps is an independent project. It is not affiliated with, endorsed by, or sponsored by Google LLC. Google and the Google product names are trademarks of Google LLC.</p>

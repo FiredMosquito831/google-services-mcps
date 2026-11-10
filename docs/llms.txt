@@ -1,0 +1,49 @@
+# google-services-mcps
+
+> 23 MCP servers for Google products, one Claude Code plugin each, with installers for Codex, OpenCode and Antigravity.
+
+Each product is one plugin in the `google-services-mcps` marketplace and one MCP server with the same name. The suite is licensed under the Apache License, Version 2.0, and the plugins are version 2.17.0. The servers run on your machine and call Google's APIs with your own credentials; reads never prompt, writes ask first.
+
+## Docs
+
+- [Install](https://googleservices.danubelabs.net/install/): every route, flag and scope, for all four harnesses
+- [Quick start](https://googleservices.danubelabs.net/quick-start/): the first server in five steps
+- [Products](https://googleservices.danubelabs.net/products/): all 23 products, with their tools and login groups
+- [Architecture](https://googleservices.danubelabs.net/architecture/): the marketplace, the plugin, the server and the consent hook
+- [Configuration](https://googleservices.danubelabs.net/configuration/): the plugin options, the environment variables and the policy file
+- [FAQ](https://googleservices.danubelabs.net/faq/): cost, accounts, data and the comparison with Google's own MCP servers
+- [Troubleshooting](https://googleservices.danubelabs.net/troubleshooting/): what to check when a server does not load
+- [License](https://googleservices.danubelabs.net/license/): Apache-2.0, with the attribution and the trademarks
+
+## Harnesses
+
+- [Google MCP servers for Claude Code](https://googleservices.danubelabs.net/for/claude-code/): Install any of the 23 Google MCP servers as Claude Code plugins with --agent claude: one plugin per product, one marketplace, one command.
+- [Google MCP servers for Codex](https://googleservices.danubelabs.net/for/codex/): Install any of the 23 Google MCP servers into Codex: one plugin per product, the same install command with --agent codex.
+- [Google MCP servers for OpenCode](https://googleservices.danubelabs.net/for/opencode/): Install any of the 23 Google MCP servers into OpenCode: one plugin per product, the same install command with --agent opencode.
+- [Google MCP servers for Antigravity](https://googleservices.danubelabs.net/for/antigravity/): Install any of the 23 Google MCP servers into Google Antigravity: one plugin per product, the same install command with --agent agy.
+
+## Products
+
+- [Workspace Admin](https://googleservices.danubelabs.net/products/gadmin/): Google Workspace administration: Cloud Identity, Chrome management and policy, Groups Settings, licensing, reports, alerts, Vault, reseller and Cloud Search admin, 368 registered tools, workspace-admin login group
+- [Ads and Publisher](https://googleservices.danubelabs.net/products/gads/): Google Ads API (accounts, campaigns, ad groups, ads, keywords, budgets, conversions, assets and GAQL reporting, with every other method through the gateway), plus advertising and publisher APIs: Search Ads 360, Display & Video 360, Campaign Manager, Ad Exchange, AdSense, AdMob, Real-time Bidding and more, 338 registered tools, business login group
+- [AI and ML](https://googleservices.danubelabs.net/products/gai/): Generative and classic AI APIs: Discovery Engine, Vertex AI, Dialogflow, Vision, Speech, Translate, Document AI and agent services, 364 registered tools, cloud login group
+- [Google Analytics](https://googleservices.danubelabs.net/products/ganalytics/): Google Analytics admin and data APIs for GA4 properties, configuration and reports, 83 registered tools, business login group
+- [Apps Script](https://googleservices.danubelabs.net/products/gapps/): Apps Script projects and execution, plus the Workspace Marketplace SDK, 26 registered tools, workspace-user login group
+- [Business Profile](https://googleservices.danubelabs.net/products/gbusiness/): Business Profile accounts, locations, verifications, lodging, place actions, notifications and performance, 59 registered tools, business login group
+- [Google Calendar](https://googleservices.danubelabs.net/products/gcalendar/): Google Calendar calendars, events and calendar settings, 55 registered tools, workspace-user login group
+- [Google Chat](https://googleservices.danubelabs.net/products/gchat/): Google Chat spaces, messages and members, plus Workspace Events subscriptions, 78 registered tools, workspace-user login group
+- [Google Classroom](https://googleservices.danubelabs.net/products/gclassroom/): Google Classroom courses, coursework, submissions, students and teachers, 129 registered tools, workspace-user login group
+- [Google Cloud](https://googleservices.danubelabs.net/products/gcloud/): Google Cloud console APIs: projects, service enablement, API keys, billing, monitoring, storage, BigQuery and IAM, plus the rest of the infrastructure, data, devops, networking, security and governance APIs, 393 registered tools, cloud login group
+- [Contacts and Profile](https://googleservices.danubelabs.net/products/gcontacts/): Google Contacts and People, personal health metrics, Data Portability, and the OAuth2 userinfo endpoints, 75 registered tools, workspace-user login group
+- [Google Drive and Docs](https://googleservices.danubelabs.net/products/gdrive/): Google Drive files, labels and activity, plus Docs, Sheets, Slides, Forms and Books, 200 registered tools, workspace-user login group
+- [Firebase](https://googleservices.danubelabs.net/products/gfirebase/): Firebase management, App Check, App Distribution, Crashlytics, Hosting, Data Connect, Rules, Test Lab, FCM and Identity Toolkit, 315 registered tools, developer login group
+- [Gmail](https://googleservices.danubelabs.net/products/gmail/): Gmail mailboxes, messages, labels and settings, plus Gmail Postmaster Tools, 114 registered tools, workspace-user login group
+- [Maps and Location](https://googleservices.danubelabs.net/products/gmaps/): Maps Platform and location APIs: Places, Address Validation, Solar, Air Quality, Pollen, Street View Publish and related datasets, 39 registered tools, apikey login group
+- [Google Meet](https://googleservices.danubelabs.net/products/gmeet/): Google Meet spaces, conference records, participants and recordings, 34 registered tools, workspace-user login group
+- [Merchant Center](https://googleservices.danubelabs.net/products/gmerchant/): Merchant Center: Merchant API and Comparison Shopping Service, through a service account key, 153 registered tools, service-account login group
+- [Google Play](https://googleservices.danubelabs.net/products/gplay/): Google Play developer publishing and reporting, Play Games Services, Android Enterprise and Management, Play Integrity and device APIs, 366 registered tools, service-account login group
+- [Search Console](https://googleservices.danubelabs.net/products/gsc/): Search Console sites, sitemaps, search analytics, URL indexing and site verification, 37 registered tools, searchconsole login group
+- [Search and Web Quality](https://googleservices.danubelabs.net/products/gsearch/): Public search and web-quality APIs (Custom Search, PageSpeed, CrUX, Safe Browsing, Web Risk, Fact Check) that take an API key instead of OAuth. The Custom Search JSON API is closed to new customers and is scheduled to be discontinued on 2027-01-01, 53 registered tools, apikey login group
+- [Tasks and Keep](https://googleservices.danubelabs.net/products/gtasks/): Google Tasks task lists and tasks, plus Google Keep notes, 29 registered tools, workspace-user login group
+- [Tag Manager](https://googleservices.danubelabs.net/products/gtm/): Google Tag Manager accounts, containers, tags, triggers and variables, 118 registered tools, business login group
+- [YouTube and Blogger](https://googleservices.danubelabs.net/products/gyoutube/): YouTube Data, YouTube Analytics and YouTube Reporting APIs, plus Blogger, 132 registered tools, business login group

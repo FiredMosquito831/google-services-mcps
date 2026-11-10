@@ -3,15 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Workspace Admin | google-services-mcps</title>
-<meta name="description" content="Google Workspace administration: Cloud Identity, Chrome management and policy, Groups Settings, licensing, reports gadmin: 368 tools, workspace-admin login.">
+<title>Google Workspace Admin MCP server for Claude Code</title>
+<meta name="description" content="Workspace administration for your agent: users, groups, Chrome policies, licensing, reports, alerts, Vault and Cloud Identity. 368 tools.">
+<meta name="keywords" content="google workspace admin mcp, google admin mcp, workspace administration automation, chrome management mcp, vault mcp, google admin claude code, gadmin mcp, google workspace admin automation">
 <link rel="canonical" href="https://googleservices.danubelabs.net/products/gadmin/">
 <meta name="theme-color" content="#0B1020" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#F8FAFC" media="(prefers-color-scheme: light)">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="google-services-mcps">
-<meta property="og:title" content="Workspace Admin | google-services-mcps">
-<meta property="og:description" content="Google Workspace administration: Cloud Identity, Chrome management and policy, Groups Settings, licensing, reports gadmin: 368 tools, workspace-admin login.">
+<meta property="og:title" content="Google Workspace Admin MCP server for Claude Code">
+<meta property="og:description" content="Workspace administration for your agent: users, groups, Chrome policies, licensing, reports, alerts, Vault and Cloud Identity. 368 tools.">
 <meta property="og:url" content="https://googleservices.danubelabs.net/products/gadmin/">
 <meta property="og:image" content="https://googleservices.danubelabs.net/og.png">
 <meta property="og:image:width" content="1200">
@@ -19,8 +20,8 @@
 <meta property="og:image:alt" content="google-services-mcps: 23 Google products as MCP servers, one plugin each">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Workspace Admin | google-services-mcps">
-<meta name="twitter:description" content="Google Workspace administration: Cloud Identity, Chrome management and policy, Groups Settings, licensing, reports gadmin: 368 tools, workspace-admin login.">
+<meta name="twitter:title" content="Google Workspace Admin MCP server for Claude Code">
+<meta name="twitter:description" content="Workspace administration for your agent: users, groups, Chrome policies, licensing, reports, alerts, Vault and Cloud Identity. 368 tools.">
 <meta name="twitter:image" content="https://googleservices.danubelabs.net/og.png">
 <meta name="twitter:image:alt" content="google-services-mcps: 23 Google products as MCP servers, one plugin each">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -29,9 +30,9 @@
 {
   "@context": "https://schema.org",
   "@type": "WebPage",
-  "name": "Workspace Admin | google-services-mcps",
+  "name": "Google Workspace Admin MCP server for Claude Code",
   "url": "https://googleservices.danubelabs.net/products/gadmin/",
-  "description": "Google Workspace administration: Cloud Identity, Chrome management and policy, Groups Settings, licensing, reports gadmin: 368 tools, workspace-admin login."
+  "description": "Workspace administration for your agent: users, groups, Chrome policies, licensing, reports, alerts, Vault and Cloud Identity. 368 tools."
 }
 </script>
 <script type="application/ld+json">
@@ -58,6 +59,37 @@
       "item": "https://googleservices.danubelabs.net/products/gadmin/"
     }
   ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Workspace Admin MCP server",
+  "alternateName": "gadmin",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Claude Code, Codex, OpenCode, Antigravity",
+  "softwareVersion": "2.17.0",
+  "description": "Workspace administration for your agent: users, groups, Chrome policies, licensing, reports, alerts, Vault and Cloud Identity.",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "isAccessibleForFree": true,
+  "featureList": [
+    "List users in the directory",
+    "Create a group",
+    "Read an audit report",
+    "Read the Chrome policy schemas",
+    "List Vault matters and holds"
+  ],
+  "url": "https://googleservices.danubelabs.net/products/gadmin/",
+  "author": {
+    "@type": "Person",
+    "name": "FiredMosquito831",
+    "url": "https://github.com/FiredMosquito831"
+  }
 }
 </script>
 </head>
@@ -108,6 +140,9 @@
 <h2 id="install">Install</h2>
 <p><code>gadmin</code> is one plugin in the <code>google-services-mcps</code> marketplace, and it runs one MCP server with the same name. Install it for Claude Code with the command below. For Codex, OpenCode or Antigravity, change <code>--agent</code>; the product id stays the same.</p>
 <div class="codeblock"><p class="code-label">Install for Claude Code</p><pre><code>npx google-services-mcps install --agent claude --plugin gadmin</code></pre></div>
+<h2 id="what-you-can-do-with-it">What you can do with it</h2>
+<p>Each task below is one the server can do, with the tool that does it in brackets. A task marked through <code>api_call</code> is one gateway method of an API the product already carries; the gateway tools reach every method of those APIs.</p>
+<ul><li>List users in the directory (<code>admin_users_list</code>)</li><li>Create a group (<code>admin_group_create</code>)</li><li>Read an audit report (<code>admin_activities_list</code>)</li><li>Read the Chrome policy schemas (<code>chromepoli_policy_schemas_list</code>)</li><li>List Vault matters and holds (<code>vault_matters_list</code>)</li></ul>
 <h2 id="what-it-manages">What it manages</h2>
 <p>The server carries 12 generated API bindings and 4 gateway APIs. Gateway APIs are reached through <code>api_search</code>, <code>api_describe</code> and <code>api_call</code>, which every product with gateway APIs lists.</p>
 <div class="table-wrap"><table><caption>Generated API bindings</caption><thead><tr><th scope="col">API</th><th scope="col">Version</th></tr></thead><tbody><tr><td>admin</td><td>datatransfer_v1</td></tr><tr><td>admin</td><td>directory_v1</td></tr><tr><td>admin</td><td>reports_v1</td></tr><tr><td>alertcenter</td><td>v1beta1</td></tr><tr><td>chromepolicy</td><td>v1</td></tr><tr><td>cloudidentity</td><td>v1</td></tr><tr><td>cloudsearch</td><td>v1</td></tr><tr><td>groupssettings</td><td>v1</td></tr><tr><td>licensing</td><td>v1</td></tr><tr><td>reseller</td><td>v1</td></tr><tr><td>vault</td><td>v1</td></tr><tr><td>verifiedaccess</td><td>v2</td></tr></tbody></table></div>
@@ -137,6 +172,14 @@
         <li><a href="/products/">Products</a></li>
         <li><a href="https://github.com/FiredMosquito831/google-services-mcps">Repository</a></li>
         <li><a href="https://github.com/FiredMosquito831/google-services-mcps/issues">Issues</a></li>
+      </ul>
+    </nav>
+    <nav aria-label="Harnesses">
+      <ul>
+        <li><a href="/for/claude-code/">For Claude Code</a></li>
+        <li><a href="/for/codex/">For Codex</a></li>
+        <li><a href="/for/opencode/">For OpenCode</a></li>
+        <li><a href="/for/antigravity/">For Antigravity</a></li>
       </ul>
     </nav>
     <p>google-services-mcps is an independent project. It is not affiliated with, endorsed by, or sponsored by Google LLC. Google and the Google product names are trademarks of Google LLC.</p>

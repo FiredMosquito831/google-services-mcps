@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Google MCP servers for Antigravity</title>
+<meta name="description" content="Install any of the 23 Google MCP servers into Google Antigravity: one plugin per product, the same install command with --agent agy.">
+<meta name="keywords" content="antigravity mcp servers, google mcp for antigravity, google antigravity mcp, agy mcp config, install google mcp antigravity, antigravity google api, gmail mcp antigravity, antigravity mcp_config.json">
+<link rel="canonical" href="https://googleservices.danubelabs.net/for/antigravity/">
+<meta name="theme-color" content="#0B1020" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F8FAFC" media="(prefers-color-scheme: light)">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="google-services-mcps">
+<meta property="og:title" content="Google MCP servers for Antigravity">
+<meta property="og:description" content="Install any of the 23 Google MCP servers into Google Antigravity: one plugin per product, the same install command with --agent agy.">
+<meta property="og:url" content="https://googleservices.danubelabs.net/for/antigravity/">
+<meta property="og:image" content="https://googleservices.danubelabs.net/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="google-services-mcps: 23 Google products as MCP servers, one plugin each">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Google MCP servers for Antigravity">
+<meta name="twitter:description" content="Install any of the 23 Google MCP servers into Google Antigravity: one plugin per product, the same install command with --agent agy.">
+<meta name="twitter:image" content="https://googleservices.danubelabs.net/og.png">
+<meta name="twitter:image:alt" content="google-services-mcps: 23 Google products as MCP servers, one plugin each">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Google MCP servers for Antigravity",
+  "url": "https://googleservices.danubelabs.net/for/antigravity/",
+  "description": "Install any of the 23 Google MCP servers into Google Antigravity: one plugin per product, the same install command with --agent agy."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://googleservices.danubelabs.net/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "For",
+      "item": "https://googleservices.danubelabs.net/for/antigravity/"
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/">
+      <svg class="brand-mark" viewBox="0 0 32 32" width="22" height="22" aria-hidden="true" focusable="false">
+        <rect width="32" height="32" rx="7" fill="var(--surface-2)"/>
+        <path d="M7 11h6M19 11h6M7 21h6M19 21h6" stroke="var(--accent)" stroke-width="2.4" stroke-linecap="round"/>
+        <circle cx="16" cy="11" r="3" fill="var(--warning)"/>
+        <circle cx="16" cy="21" r="3" fill="var(--accent)"/>
+      </svg>
+      <span>google-services-mcps</span>
+    </a>
+    <nav class="site-nav" aria-label="Main">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/install/">Install</a></li>
+        <li><a href="/quick-start/">Quick start</a></li>
+        <li><a href="/products/">Products</a></li>
+        <li><a href="/architecture/">Architecture</a></li>
+        <li><a href="/configuration/">Configuration</a></li>
+        <li><a href="/faq/">FAQ</a></li>
+        <li><a href="/troubleshooting/">Troubleshooting</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <div class="wrap">
+    <ol>
+      <li><a href="/">Home</a></li>
+      <li><span aria-current="page">For</span></li>
+    </ol>
+  </div>
+</nav>
+<main id="main">
+<div class="wrap">
+  <div class="page-head">
+    <p class="eyebrow">Harness</p>
+    <h1>Google MCP servers for Antigravity</h1>
+  </div>
+  <div class="prose">
+<p>The suite is 23 MCP servers for Google products, one plugin per product, and the same servers run in Antigravity. This page covers the install command for Antigravity, where it writes, and what Antigravity does and does not do about approvals.</p>
+<h2 id="install-a-product-for-antigravity">Install a product for Antigravity</h2>
+<p>Every product uses the same command. Change the product id to install another one, or pass <code>--plugin all</code> to install every product at once.</p>
+<div class="codeblock"><p class="code-label">Install Gmail for Antigravity</p><pre><code>npx google-services-mcps install --agent agy --plugin gmail</code></pre></div>
+<p>The installer copies each product's server files to <code>~/.google-services-mcps/runtime/&lt;product&gt;/</code> and adds one entry per server under <code>mcpServers</code> in <code>mcp_config.json</code>. A project or local scope is refused with exit code 2, because Antigravity has no verified project config file.</p>
+<p>The default scope is <code>global</code>, which is your account. The installer writes <code>~/.gemini/config/mcp_config.json</code>, global scope only. Add <code>--dry-run</code> to see every change without writing one.</p>
+<h2 id="where-it-writes">Where it writes</h2>
+<div class="table-wrap"><table><caption>The Antigravity configuration files</caption><thead><tr><th scope="col">Scope</th><th scope="col">File</th></tr></thead><tbody><tr><td><code>global</code> (default)</td><td><code>~/.gemini/config/mcp_config.json</code></td></tr></tbody></table></div>
+<h2 id="approvals-in-antigravity">Approvals in Antigravity</h2>
+<p>Antigravity has no consent hook in this suite. A client that cannot ask for approval is refused every change, so nothing runs without a confirmation.</p>
+<p>Reads never ask. A write is listed only when <strong>Allow write tools</strong> is on, and a destructive action asks twice in Claude Code. The full consent model is on the <a href="/architecture/">architecture page</a>.</p>
+<h2 id="what-you-need">What you need</h2>
+<p>Antigravity, started once so that its config folder exists, and Node.js 20 or newer. An install stops with a message when the folder is missing.</p>
+<h2 id="the-23-products">The 23 products</h2>
+<p>Each product is one plugin and one MCP server. The list is generated from the plugin folders at build time; every product page shows the tools that server registers.</p>
+<ul class="cards product-grid"><li class="card product-card"><h3><a href="/products/gadmin/">Workspace Admin</a></h3><p class="product-id"><code>gadmin</code></p><p>Google Workspace administration: Cloud Identity, Chrome management and policy, Groups Settings, licensing, reports, alerts, Vault, reseller and Cloud Search admin.</p><p class="card-meta">368 tools &middot; workspace-admin login</p></li><li class="card product-card"><h3><a href="/products/gads/">Ads and Publisher</a></h3><p class="product-id"><code>gads</code></p><p>Google Ads API (accounts, campaigns, ad groups, ads, keywords, budgets, conversions, assets and GAQL reporting, with every other method through the gateway), plus advertising and publisher APIs: Search Ads 360, Display &amp; Video 360, Campaign Manager, Ad Exchange, AdSense, AdMob, Real-time Bidding and more.</p><p class="card-meta">338 tools &middot; business login</p></li><li class="card product-card"><h3><a href="/products/gai/">AI and ML</a></h3><p class="product-id"><code>gai</code></p><p>Generative and classic AI APIs: Discovery Engine, Vertex AI, Dialogflow, Vision, Speech, Translate, Document AI and agent services.</p><p class="card-meta">364 tools &middot; cloud login</p></li><li class="card product-card"><h3><a href="/products/ganalytics/">Google Analytics</a></h3><p class="product-id"><code>ganalytics</code></p><p>Google Analytics admin and data APIs for GA4 properties, configuration and reports.</p><p class="card-meta">83 tools &middot; business login</p></li><li class="card product-card"><h3><a href="/products/gapps/">Apps Script</a></h3><p class="product-id"><code>gapps</code></p><p>Apps Script projects and execution, plus the Workspace Marketplace SDK.</p><p class="card-meta">26 tools &middot; workspace-user login</p></li><li class="card product-card"><h3><a href="/products/gbusiness/">Business Profile</a></h3><p class="product-id"><code>gbusiness</code></p><p>Business Profile accounts, locations, verifications, lodging, place actions, notifications and performance.</p><p class="card-meta">59 tools &middot; business login</p></li><li class="card product-card"><h3><a href="/products/gcalendar/">Google Calendar</a></h3><p class="product-id"><code>gcalendar</code></p><p>Google Calendar calendars, events and calendar settings.</p><p class="card-meta">55 tools &middot; workspace-user login</p></li><li class="card product-card"><h3><a href="/products/gchat/">Google Chat</a></h3><p class="product-id"><code>gchat</code></p><p>Google Chat spaces, messages and members, plus Workspace Events subscriptions.</p><p class="card-meta">78 tools &middot; workspace-user login</p></li><li class="card product-card"><h3><a href="/products/gclassroom/">Google Classroom</a></h3><p class="product-id"><code>gclassroom</code></p><p>Google Classroom courses, coursework, submissions, students and teachers.</p><p class="card-meta">129 tools &middot; workspace-user login</p></li><li class="card product-card"><h3><a href="/products/gcloud/">Google Cloud</a></h3><p class="product-id"><code>gcloud</code></p><p>Google Cloud console APIs: projects, service enablement, API keys, billing, monitoring, storage, BigQuery and IAM, plus the rest of the infrastructure, data, devops, networking, security and governance APIs.</p><p class="card-meta">393 tools &middot; cloud login</p></li><li class="card product-card"><h3><a href="/products/gcontacts/">Contacts and Profile</a></h3><p class="product-id"><code>gcontacts</code></p><p>Google Contacts and People, personal health metrics, Data Portability, and the OAuth2 userinfo endpoints.</p><p class="card-meta">75 tools &middot; workspace-user login</p></li><li class="card product-card"><h3><a href="/products/gdrive/">Google Drive and Docs</a></h3><p class="product-id"><code>gdrive</code></p><p>Google Drive files, labels and activity, plus Docs, Sheets, Slides, Forms and Books.</p><p class="card-meta">200 tools &middot; workspace-user login</p></li><li class="card product-card"><h3><a href="/products/gfirebase/">Firebase</a></h3><p class="product-id"><code>gfirebase</code></p><p>Firebase management, App Check, App Distribution, Crashlytics, Hosting, Data Connect, Rules, Test Lab, FCM and Identity Toolkit.</p><p class="card-meta">315 tools &middot; developer login</p></li><li class="card product-card"><h3><a href="/products/gmail/">Gmail</a></h3><p class="product-id"><code>gmail</code></p><p>Gmail mailboxes, messages, labels and settings, plus Gmail Postmaster Tools.</p><p class="card-meta">114 tools &middot; workspace-user login</p></li><li class="card product-card"><h3><a href="/products/gmaps/">Maps and Location</a></h3><p class="product-id"><code>gmaps</code></p><p>Maps Platform and location APIs: Places, Address Validation, Solar, Air Quality, Pollen, Street View Publish and related datasets.</p><p class="card-meta">39 tools &middot; apikey login</p></li><li class="card product-card"><h3><a href="/products/gmeet/">Google Meet</a></h3><p class="product-id"><code>gmeet</code></p><p>Google Meet spaces, conference records, participants and recordings.</p><p class="card-meta">34 tools &middot; workspace-user login</p></li><li class="card product-card"><h3><a href="/products/gmerchant/">Merchant Center</a></h3><p class="product-id"><code>gmerchant</code></p><p>Merchant Center: Merchant API and Comparison Shopping Service, through a service account key.</p><p class="card-meta">153 tools &middot; service-account login</p></li><li class="card product-card"><h3><a href="/products/gplay/">Google Play</a></h3><p class="product-id"><code>gplay</code></p><p>Google Play developer publishing and reporting, Play Games Services, Android Enterprise and Management, Play Integrity and device APIs.</p><p class="card-meta">366 tools &middot; service-account login</p></li><li class="card product-card"><h3><a href="/products/gsc/">Search Console</a></h3><p class="product-id"><code>gsc</code></p><p>Search Console sites, sitemaps, search analytics, URL indexing and site verification.</p><p class="card-meta">37 tools &middot; searchconsole login</p></li><li class="card product-card"><h3><a href="/products/gsearch/">Search and Web Quality</a></h3><p class="product-id"><code>gsearch</code></p><p>Public search and web-quality APIs (Custom Search, PageSpeed, CrUX, Safe Browsing, Web Risk, Fact Check) that take an API key instead of OAuth. The Custom Search JSON API is closed to new customers and is scheduled to be discontinued on 2027-01-01.</p><p class="card-meta">53 tools &middot; apikey login</p></li><li class="card product-card"><h3><a href="/products/gtasks/">Tasks and Keep</a></h3><p class="product-id"><code>gtasks</code></p><p>Google Tasks task lists and tasks, plus Google Keep notes.</p><p class="card-meta">29 tools &middot; workspace-user login</p></li><li class="card product-card"><h3><a href="/products/gtm/">Tag Manager</a></h3><p class="product-id"><code>gtm</code></p><p>Google Tag Manager accounts, containers, tags, triggers and variables.</p><p class="card-meta">118 tools &middot; business login</p></li><li class="card product-card"><h3><a href="/products/gyoutube/">YouTube and Blogger</a></h3><p class="product-id"><code>gyoutube</code></p><p>YouTube Data, YouTube Analytics and YouTube Reporting APIs, plus Blogger.</p><p class="card-meta">132 tools &middot; business login</p></li></ul>
+<h2 id="keeping-it-current">Keeping it current</h2>
+<p>Run the install again after a new release, so the runtime copy and the config entry are refreshed.</p>
+<h2 id="related">Related</h2>
+<ul><li><a href="/install/">Install</a>: every route, flag and scope, for all four harnesses</li><li><a href="/products/">Products</a>: all 23 products, with their tools and login groups</li><li><a href="/architecture/">Architecture</a>: the marketplace, the plugin and the server</li><li><a href="/configuration/">Configuration</a>: the plugin options, the environment variables and the policy file</li><li><a href="/troubleshooting/">Troubleshooting</a>: what to check when a server does not load</li></ul>
+  </div>
+</div>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <nav aria-label="Footer">
+      <ul>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/license/">License</a></li>
+        <li><a href="/products/">Products</a></li>
+        <li><a href="https://github.com/FiredMosquito831/google-services-mcps">Repository</a></li>
+        <li><a href="https://github.com/FiredMosquito831/google-services-mcps/issues">Issues</a></li>
+      </ul>
+    </nav>
+    <nav aria-label="Harnesses">
+      <ul>
+        <li><a href="/for/claude-code/">For Claude Code</a></li>
+        <li><a href="/for/codex/">For Codex</a></li>
+        <li><a href="/for/opencode/">For OpenCode</a></li>
+        <li><a href="/for/antigravity/">For Antigravity</a></li>
+      </ul>
+    </nav>
+    <p>google-services-mcps is an independent project. It is not affiliated with, endorsed by, or sponsored by Google LLC. Google and the Google product names are trademarks of Google LLC.</p>
+    <p>Licensed under the Apache License, Version 2.0 (Apache-2.0). Based on google-services-mcps by FiredMosquito831 (https://github.com/FiredMosquito831/google-services-mcps, profile https://github.com/FiredMosquito831).</p>
+    <p>This site is generated from the repository by <code>scripts/build_site.py</code>. Version 2.17.0.</p>
+  </div>
+</footer>
+<script src="/assets/site.js" defer></script>
+</body>
+</html>

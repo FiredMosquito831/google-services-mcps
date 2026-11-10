@@ -1,0 +1,4 @@
+Contact: https://github.com/FiredMosquito831/google-services-mcps/security/advisories/new
+Expires: 2027-11-10
+Preferred-Languages: en
+Canonical: https://googleservices.danubelabs.net/.well-known/security.txt

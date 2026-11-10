@@ -3,15 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Search Console | google-services-mcps</title>
-<meta name="description" content="Search Console sites, sitemaps, search analytics, URL indexing and site verification. The gsc plugin registers 37 tools in the searchconsole login group.">
+<title>Search Console MCP server for Claude Code and Codex</title>
+<meta name="description" content="Search Console for your agent: list sites, submit sitemaps, run search analytics, inspect URLs and request indexing. 37 tools, one plugin.">
+<meta name="keywords" content="google search console mcp, search console mcp server, gsc mcp, google search console claude code, google search console codex, automate site index submission, google index api mcp, sitemap submission automation, search analytics mcp, url inspection mcp, google search console automation, gsc claude code">
 <link rel="canonical" href="https://googleservices.danubelabs.net/products/gsc/">
 <meta name="theme-color" content="#0B1020" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#F8FAFC" media="(prefers-color-scheme: light)">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="google-services-mcps">
-<meta property="og:title" content="Search Console | google-services-mcps">
-<meta property="og:description" content="Search Console sites, sitemaps, search analytics, URL indexing and site verification. The gsc plugin registers 37 tools in the searchconsole login group.">
+<meta property="og:title" content="Search Console MCP server for Claude Code and Codex">
+<meta property="og:description" content="Search Console for your agent: list sites, submit sitemaps, run search analytics, inspect URLs and request indexing. 37 tools, one plugin.">
 <meta property="og:url" content="https://googleservices.danubelabs.net/products/gsc/">
 <meta property="og:image" content="https://googleservices.danubelabs.net/og.png">
 <meta property="og:image:width" content="1200">
@@ -19,8 +20,8 @@
 <meta property="og:image:alt" content="google-services-mcps: 23 Google products as MCP servers, one plugin each">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Search Console | google-services-mcps">
-<meta name="twitter:description" content="Search Console sites, sitemaps, search analytics, URL indexing and site verification. The gsc plugin registers 37 tools in the searchconsole login group.">
+<meta name="twitter:title" content="Search Console MCP server for Claude Code and Codex">
+<meta name="twitter:description" content="Search Console for your agent: list sites, submit sitemaps, run search analytics, inspect URLs and request indexing. 37 tools, one plugin.">
 <meta name="twitter:image" content="https://googleservices.danubelabs.net/og.png">
 <meta name="twitter:image:alt" content="google-services-mcps: 23 Google products as MCP servers, one plugin each">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -29,9 +30,9 @@
 {
   "@context": "https://schema.org",
   "@type": "WebPage",
-  "name": "Search Console | google-services-mcps",
+  "name": "Search Console MCP server for Claude Code and Codex",
   "url": "https://googleservices.danubelabs.net/products/gsc/",
-  "description": "Search Console sites, sitemaps, search analytics, URL indexing and site verification. The gsc plugin registers 37 tools in the searchconsole login group."
+  "description": "Search Console for your agent: list sites, submit sitemaps, run search analytics, inspect URLs and request indexing. 37 tools, one plugin."
 }
 </script>
 <script type="application/ld+json">
@@ -58,6 +59,37 @@
       "item": "https://googleservices.danubelabs.net/products/gsc/"
     }
   ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Search Console MCP server",
+  "alternateName": "gsc",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Claude Code, Codex, OpenCode, Antigravity",
+  "softwareVersion": "2.17.0",
+  "description": "Search Console for your agent: list sites, submit sitemaps, run search analytics, inspect URLs and request indexing.",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "isAccessibleForFree": true,
+  "featureList": [
+    "List the verified sites on the account",
+    "Submit or resubmit a sitemap",
+    "Run a search analytics query by query, page or country",
+    "Inspect a URL's index status",
+    "Request indexing for a URL"
+  ],
+  "url": "https://googleservices.danubelabs.net/products/gsc/",
+  "author": {
+    "@type": "Person",
+    "name": "FiredMosquito831",
+    "url": "https://github.com/FiredMosquito831"
+  }
 }
 </script>
 </head>
@@ -108,6 +140,9 @@
 <h2 id="install">Install</h2>
 <p><code>gsc</code> is one plugin in the <code>google-services-mcps</code> marketplace, and it runs one MCP server with the same name. Install it for Claude Code with the command below. For Codex, OpenCode or Antigravity, change <code>--agent</code>; the product id stays the same.</p>
 <div class="codeblock"><p class="code-label">Install for Claude Code</p><pre><code>npx google-services-mcps install --agent claude --plugin gsc</code></pre></div>
+<h2 id="what-you-can-do-with-it">What you can do with it</h2>
+<p>Each task below is one the server can do, with the tool that does it in brackets. A task marked through <code>api_call</code> is one gateway method of an API the product already carries; the gateway tools reach every method of those APIs.</p>
+<ul><li>List the verified sites on the account (<code>sc_sites_list</code>)</li><li>Submit or resubmit a sitemap (<code>sc_sitemap_submit</code>)</li><li>Run a search analytics query by query, page or country (<code>sc_search_analytics_query</code>)</li><li>Inspect a URL's index status (<code>sc_url_inspect</code>)</li><li>Request indexing for a URL (<code>indexing_url_notifications_publish</code>)</li></ul>
 <h2 id="what-it-manages">What it manages</h2>
 <p>The server carries 3 generated API bindings and 0 gateway APIs. Gateway APIs are reached through <code>api_search</code>, <code>api_describe</code> and <code>api_call</code>, which every product with gateway APIs lists.</p>
 <div class="table-wrap"><table><caption>Generated API bindings</caption><thead><tr><th scope="col">API</th><th scope="col">Version</th></tr></thead><tbody><tr><td>indexing</td><td>v3</td></tr><tr><td>searchconsole</td><td>v1</td></tr><tr><td>siteVerification</td><td>v1</td></tr></tbody></table></div>
@@ -136,6 +171,14 @@
         <li><a href="/products/">Products</a></li>
         <li><a href="https://github.com/FiredMosquito831/google-services-mcps">Repository</a></li>
         <li><a href="https://github.com/FiredMosquito831/google-services-mcps/issues">Issues</a></li>
+      </ul>
+    </nav>
+    <nav aria-label="Harnesses">
+      <ul>
+        <li><a href="/for/claude-code/">For Claude Code</a></li>
+        <li><a href="/for/codex/">For Codex</a></li>
+        <li><a href="/for/opencode/">For OpenCode</a></li>
+        <li><a href="/for/antigravity/">For Antigravity</a></li>
       </ul>
     </nav>
     <p>google-services-mcps is an independent project. It is not affiliated with, endorsed by, or sponsored by Google LLC. Google and the Google product names are trademarks of Google LLC.</p>

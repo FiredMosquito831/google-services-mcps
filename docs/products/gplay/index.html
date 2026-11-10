@@ -3,15 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Google Play | google-services-mcps</title>
-<meta name="description" content="Google Play developer publishing and reporting, Play Games Services, Android Enterprise and Management, Play Integrity gplay: 366 tools, service-account login.">
+<title>Google Play MCP server for Claude Code</title>
+<meta name="description" content="Play for your agent: manage releases and tracks, read reporting, Play Games Services, Android Enterprise and Play Integrity. 366 tools.">
+<meta name="keywords" content="google play mcp, play console mcp, android enterprise mcp, play integrity mcp, google play claude code, app publishing automation, google play mcp server, android publisher mcp, play console releases mcp, play games services mcp">
 <link rel="canonical" href="https://googleservices.danubelabs.net/products/gplay/">
 <meta name="theme-color" content="#0B1020" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#F8FAFC" media="(prefers-color-scheme: light)">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="google-services-mcps">
-<meta property="og:title" content="Google Play | google-services-mcps">
-<meta property="og:description" content="Google Play developer publishing and reporting, Play Games Services, Android Enterprise and Management, Play Integrity gplay: 366 tools, service-account login.">
+<meta property="og:title" content="Google Play MCP server for Claude Code">
+<meta property="og:description" content="Play for your agent: manage releases and tracks, read reporting, Play Games Services, Android Enterprise and Play Integrity. 366 tools.">
 <meta property="og:url" content="https://googleservices.danubelabs.net/products/gplay/">
 <meta property="og:image" content="https://googleservices.danubelabs.net/og.png">
 <meta property="og:image:width" content="1200">
@@ -19,8 +20,8 @@
 <meta property="og:image:alt" content="google-services-mcps: 23 Google products as MCP servers, one plugin each">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Google Play | google-services-mcps">
-<meta name="twitter:description" content="Google Play developer publishing and reporting, Play Games Services, Android Enterprise and Management, Play Integrity gplay: 366 tools, service-account login.">
+<meta name="twitter:title" content="Google Play MCP server for Claude Code">
+<meta name="twitter:description" content="Play for your agent: manage releases and tracks, read reporting, Play Games Services, Android Enterprise and Play Integrity. 366 tools.">
 <meta name="twitter:image" content="https://googleservices.danubelabs.net/og.png">
 <meta name="twitter:image:alt" content="google-services-mcps: 23 Google products as MCP servers, one plugin each">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -29,9 +30,9 @@
 {
   "@context": "https://schema.org",
   "@type": "WebPage",
-  "name": "Google Play | google-services-mcps",
+  "name": "Google Play MCP server for Claude Code",
   "url": "https://googleservices.danubelabs.net/products/gplay/",
-  "description": "Google Play developer publishing and reporting, Play Games Services, Android Enterprise and Management, Play Integrity gplay: 366 tools, service-account login."
+  "description": "Play for your agent: manage releases and tracks, read reporting, Play Games Services, Android Enterprise and Play Integrity. 366 tools."
 }
 </script>
 <script type="application/ld+json">
@@ -58,6 +59,36 @@
       "item": "https://googleservices.danubelabs.net/products/gplay/"
     }
   ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Google Play MCP server",
+  "alternateName": "gplay",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Claude Code, Codex, OpenCode, Antigravity",
+  "softwareVersion": "2.17.0",
+  "description": "Play for your agent: manage releases and tracks, read reporting, Play Games Services, Android Enterprise and Play Integrity.",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "isAccessibleForFree": true,
+  "featureList": [
+    "List tracks",
+    "Read a release",
+    "Upload a bundle",
+    "Check Play Integrity"
+  ],
+  "url": "https://googleservices.danubelabs.net/products/gplay/",
+  "author": {
+    "@type": "Person",
+    "name": "FiredMosquito831",
+    "url": "https://github.com/FiredMosquito831"
+  }
 }
 </script>
 </head>
@@ -108,6 +139,9 @@
 <h2 id="install">Install</h2>
 <p><code>gplay</code> is one plugin in the <code>google-services-mcps</code> marketplace, and it runs one MCP server with the same name. Install it for Claude Code with the command below. For Codex, OpenCode or Antigravity, change <code>--agent</code>; the product id stays the same.</p>
 <div class="codeblock"><p class="code-label">Install for Claude Code</p><pre><code>npx google-services-mcps install --agent claude --plugin gplay</code></pre></div>
+<h2 id="what-you-can-do-with-it">What you can do with it</h2>
+<p>Each task below is one the server can do, with the tool that does it in brackets. A task marked through <code>api_call</code> is one gateway method of an API the product already carries; the gateway tools reach every method of those APIs.</p>
+<ul><li>List tracks (<code>androidpub_edits_tracks_list</code>)</li><li>Read a release (<code>androidpub_edits_tracks_get</code>)</li><li>Upload a bundle (<code>androidpub_upload_bundle</code>)</li><li>Check Play Integrity (<code>playintegr_v1_decode_integrity_token</code>)</li></ul>
 <h2 id="what-it-manages">What it manages</h2>
 <p>The server carries 12 generated API bindings and 7 gateway APIs. Gateway APIs are reached through <code>api_search</code>, <code>api_describe</code> and <code>api_call</code>, which every product with gateway APIs lists.</p>
 <div class="table-wrap"><table><caption>Generated API bindings</caption><thead><tr><th scope="col">API</th><th scope="col">Version</th></tr></thead><tbody><tr><td>androiddeveloperidstatus</td><td>v1</td></tr><tr><td>androiddeviceprovisioning</td><td>v1</td></tr><tr><td>androidenterprise</td><td>v1</td></tr><tr><td>androidpublisher</td><td>v3</td></tr><tr><td>chromewebstore</td><td>v2</td></tr><tr><td>games</td><td>v1</td></tr><tr><td>gamesConfiguration</td><td>v1configuration</td></tr><tr><td>gamesManagement</td><td>v1management</td></tr><tr><td>playdeveloperreporting</td><td>v1beta1</td></tr><tr><td>playgrouping</td><td>v1alpha1</td></tr><tr><td>playintegrity</td><td>v1</td></tr><tr><td>smartdevicemanagement</td><td>v1</td></tr></tbody></table></div>
@@ -137,6 +171,14 @@
         <li><a href="/products/">Products</a></li>
         <li><a href="https://github.com/FiredMosquito831/google-services-mcps">Repository</a></li>
         <li><a href="https://github.com/FiredMosquito831/google-services-mcps/issues">Issues</a></li>
+      </ul>
+    </nav>
+    <nav aria-label="Harnesses">
+      <ul>
+        <li><a href="/for/claude-code/">For Claude Code</a></li>
+        <li><a href="/for/codex/">For Codex</a></li>
+        <li><a href="/for/opencode/">For OpenCode</a></li>
+        <li><a href="/for/antigravity/">For Antigravity</a></li>
       </ul>
     </nav>
     <p>google-services-mcps is an independent project. It is not affiliated with, endorsed by, or sponsored by Google LLC. Google and the Google product names are trademarks of Google LLC.</p>

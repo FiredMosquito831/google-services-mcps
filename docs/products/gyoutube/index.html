@@ -3,15 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>YouTube and Blogger | google-services-mcps</title>
-<meta name="description" content="YouTube Data, YouTube Analytics and YouTube Reporting APIs, plus Blogger. The gyoutube plugin registers 132 tools in the business login group.">
+<title>YouTube MCP server for Claude Code and Codex</title>
+<meta name="description" content="YouTube Data, Analytics and Reporting plus Blogger for your agent: search videos, read channels, pull analytics, manage playlists. 132 tools.">
+<meta name="keywords" content="youtube mcp, youtube analytics mcp, youtube data api mcp, blogger mcp, youtube claude code, youtube automation, youtube mcp server, youtube reporting mcp, youtube playlists mcp">
 <link rel="canonical" href="https://googleservices.danubelabs.net/products/gyoutube/">
 <meta name="theme-color" content="#0B1020" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#F8FAFC" media="(prefers-color-scheme: light)">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="google-services-mcps">
-<meta property="og:title" content="YouTube and Blogger | google-services-mcps">
-<meta property="og:description" content="YouTube Data, YouTube Analytics and YouTube Reporting APIs, plus Blogger. The gyoutube plugin registers 132 tools in the business login group.">
+<meta property="og:title" content="YouTube MCP server for Claude Code and Codex">
+<meta property="og:description" content="YouTube Data, Analytics and Reporting plus Blogger for your agent: search videos, read channels, pull analytics, manage playlists. 132 tools.">
 <meta property="og:url" content="https://googleservices.danubelabs.net/products/gyoutube/">
 <meta property="og:image" content="https://googleservices.danubelabs.net/og.png">
 <meta property="og:image:width" content="1200">
@@ -19,8 +20,8 @@
 <meta property="og:image:alt" content="google-services-mcps: 23 Google products as MCP servers, one plugin each">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="YouTube and Blogger | google-services-mcps">
-<meta name="twitter:description" content="YouTube Data, YouTube Analytics and YouTube Reporting APIs, plus Blogger. The gyoutube plugin registers 132 tools in the business login group.">
+<meta name="twitter:title" content="YouTube MCP server for Claude Code and Codex">
+<meta name="twitter:description" content="YouTube Data, Analytics and Reporting plus Blogger for your agent: search videos, read channels, pull analytics, manage playlists. 132 tools.">
 <meta name="twitter:image" content="https://googleservices.danubelabs.net/og.png">
 <meta name="twitter:image:alt" content="google-services-mcps: 23 Google products as MCP servers, one plugin each">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -29,9 +30,9 @@
 {
   "@context": "https://schema.org",
   "@type": "WebPage",
-  "name": "YouTube and Blogger | google-services-mcps",
+  "name": "YouTube MCP server for Claude Code and Codex",
   "url": "https://googleservices.danubelabs.net/products/gyoutube/",
-  "description": "YouTube Data, YouTube Analytics and YouTube Reporting APIs, plus Blogger. The gyoutube plugin registers 132 tools in the business login group."
+  "description": "YouTube Data, Analytics and Reporting plus Blogger for your agent: search videos, read channels, pull analytics, manage playlists. 132 tools."
 }
 </script>
 <script type="application/ld+json">
@@ -58,6 +59,36 @@
       "item": "https://googleservices.danubelabs.net/products/gyoutube/"
     }
   ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "YouTube and Blogger MCP server",
+  "alternateName": "gyoutube",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Claude Code, Codex, OpenCode, Antigravity",
+  "softwareVersion": "2.17.0",
+  "description": "YouTube Data, Analytics and Reporting plus Blogger for your agent: search videos, read channels, pull analytics, manage playlists.",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "isAccessibleForFree": true,
+  "featureList": [
+    "Search videos",
+    "Read a channel's uploads",
+    "Pull YouTube Analytics",
+    "Create or edit a playlist"
+  ],
+  "url": "https://googleservices.danubelabs.net/products/gyoutube/",
+  "author": {
+    "@type": "Person",
+    "name": "FiredMosquito831",
+    "url": "https://github.com/FiredMosquito831"
+  }
 }
 </script>
 </head>
@@ -108,6 +139,9 @@
 <h2 id="install">Install</h2>
 <p><code>gyoutube</code> is one plugin in the <code>google-services-mcps</code> marketplace, and it runs one MCP server with the same name. Install it for Claude Code with the command below. For Codex, OpenCode or Antigravity, change <code>--agent</code>; the product id stays the same.</p>
 <div class="codeblock"><p class="code-label">Install for Claude Code</p><pre><code>npx google-services-mcps install --agent claude --plugin gyoutube</code></pre></div>
+<h2 id="what-you-can-do-with-it">What you can do with it</h2>
+<p>Each task below is one the server can do, with the tool that does it in brackets. A task marked through <code>api_call</code> is one gateway method of an API the product already carries; the gateway tools reach every method of those APIs.</p>
+<ul><li>Search videos (<code>youtube_search_list</code>)</li><li>Read a channel's uploads (<code>youtube_search_list</code>)</li><li>Pull YouTube Analytics (<code>ytanalyt_reports_query</code>)</li><li>Create or edit a playlist (<code>youtube_playlists_insert</code>)</li></ul>
 <h2 id="what-it-manages">What it manages</h2>
 <p>The server carries 4 generated API bindings and 0 gateway APIs. Gateway APIs are reached through <code>api_search</code>, <code>api_describe</code> and <code>api_call</code>, which every product with gateway APIs lists.</p>
 <div class="table-wrap"><table><caption>Generated API bindings</caption><thead><tr><th scope="col">API</th><th scope="col">Version</th></tr></thead><tbody><tr><td>blogger</td><td>v3</td></tr><tr><td>youtube</td><td>v3</td></tr><tr><td>youtubeAnalytics</td><td>v2</td></tr><tr><td>youtubereporting</td><td>v1</td></tr></tbody></table></div>
@@ -136,6 +170,14 @@
         <li><a href="/products/">Products</a></li>
         <li><a href="https://github.com/FiredMosquito831/google-services-mcps">Repository</a></li>
         <li><a href="https://github.com/FiredMosquito831/google-services-mcps/issues">Issues</a></li>
+      </ul>
+    </nav>
+    <nav aria-label="Harnesses">
+      <ul>
+        <li><a href="/for/claude-code/">For Claude Code</a></li>
+        <li><a href="/for/codex/">For Codex</a></li>
+        <li><a href="/for/opencode/">For OpenCode</a></li>
+        <li><a href="/for/antigravity/">For Antigravity</a></li>
       </ul>
     </nav>
     <p>google-services-mcps is an independent project. It is not affiliated with, endorsed by, or sponsored by Google LLC. Google and the Google product names are trademarks of Google LLC.</p>
