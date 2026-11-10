@@ -1,0 +1,40 @@
+{
+  "path": "/license/",
+  "title": "License | google-services-mcps",
+  "description": "google-services-mcps is licensed under the Apache License, Version 2.0. The NOTICE text, the attribution sentence, and what the licence requires of copies.",
+  "h1": "License",
+  "eyebrow": "License",
+  "breadcrumbs": [["License", "/license/"]],
+  "words_min": 300,
+  "priority": "0.4",
+  "blocks": [
+    { "t": "p", "text": "google-services-mcps is licensed under the **Apache License, Version 2.0** (SPDX identifier: `Apache-2.0`). The full text is in the repository's `LICENSE` file." },
+    { "t": "h2", "text": "The NOTICE file" },
+    { "t": "p", "text": "Apache-2.0 section 4(d) requires the notice to travel with every copy, derived work, package and distribution. This is the notice, verbatim:" },
+    { "t": "code", "label": "NOTICE", "text": "google-services-mcps\nCopyright 2026 FiredMosquito831\n\nBased on google-services-mcps by FiredMosquito831 (https://github.com/FiredMosquito831/google-services-mcps, profile https://github.com/FiredMosquito831).\n\nProject:    google-services-mcps\nAuthor:     FiredMosquito831\nRepository: https://github.com/FiredMosquito831/google-services-mcps\nProfile:    https://github.com/FiredMosquito831\nLicense:    Apache License, Version 2.0 (SPDX: Apache-2.0). The full text is in the LICENSE file.\n\nKeep this notice in every copy, derived work, package and distribution of google-services-mcps, as Apache License 2.0 section 4(d) requires. It is for attribution only and does not change the license." },
+    { "t": "h2", "text": "What the licence requires" },
+    { "t": "p", "text": "The repository's `docs/LICENSE-AND-ATTRIBUTION.md` explains why this licence was chosen and what it does and does not require. The npm package ships the `LICENSE` and `NOTICE` files, and each plugin's server is bundled so it needs no `node_modules`, so a copy carries its attribution with it. The licence includes the standard disclaimer of warranty: the software is provided as is, without warranties or conditions of any kind." },
+    { "t": "ul", "items": [
+      "Keep the `LICENSE` and `NOTICE` files with any copy you distribute or package.",
+      "Say that you changed any file you changed.",
+      "Private use needs no credit. No open-source licence can make people mention the project in every post, so the attribution sentence below is a request, not a legal duty."
+    ]},
+    { "t": "h2", "text": "Attribution sentence" },
+    { "t": "p", "text": "If you write about the project, this sentence credits it:" },
+    { "t": "code", "label": "Attribution", "text": "Based on google-services-mcps by FiredMosquito831 (https://github.com/FiredMosquito831/google-services-mcps, profile https://github.com/FiredMosquito831). Licensed under Apache-2.0." },
+    { "t": "h2", "text": "Contributions" },
+    { "t": "p", "text": "Contributions are under the same licence. The repository's `CONTRIBUTING.md` says how to file an issue and what to run before a pull request." },
+    { "t": "h2", "text": "Trademarks" },
+    { "t": "p", "text": "google-services-mcps is an independent project. It is not affiliated with, endorsed by, or sponsored by Google LLC. Google and the Google product names are trademarks of Google LLC. The project uses no Google logo or brand artwork." }
+  ],
+  "claims": [
+    { "text": "The project is licensed under Apache-2.0", "evidence": "LICENSE; package.json license; README.md §License", "status": "verified" },
+    { "text": "The NOTICE text, verbatim", "evidence": "NOTICE", "status": "verified" },
+    { "text": "Apache-2.0 section 4(d) requires the notice to travel with copies", "evidence": "NOTICE; README.md §License", "status": "verified" },
+    { "text": "Changed files must say that they were changed", "evidence": "README.md §License (\"changed files must say that they were changed\")", "status": "verified" },
+    { "text": "Contributions are under the same licence", "evidence": "README.md §License; CONTRIBUTING.md", "status": "verified" },
+    { "text": "The package ships the LICENSE and NOTICE files, and each plugin's server is bundled", "evidence": "package.json files; scripts/bundle.mjs; docs/INSTALL.md §Before you start", "status": "verified" },
+    { "text": "The licence includes the standard disclaimer of warranty", "evidence": "LICENSE §7 (Disclaimer of Warranty)", "status": "verified" },
+    { "text": "The project is not affiliated with Google and uses no Google brand artwork", "evidence": "README.md §Acknowledgements and trademarks", "status": "verified" }
+  ]
+}

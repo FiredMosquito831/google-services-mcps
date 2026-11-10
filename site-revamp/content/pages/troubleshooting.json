@@ -1,0 +1,68 @@
+{
+  "path": "/troubleshooting/",
+  "title": "Troubleshooting | google-services-mcps",
+  "description": "The messages the suite prints and what to do next: missing tools, login errors, refused scopes, throttling, install problems and approval prompts.",
+  "h1": "Troubleshooting",
+  "eyebrow": "Troubleshooting",
+  "breadcrumbs": [["Troubleshooting", "/troubleshooting/"]],
+  "words_min": 600,
+  "priority": "0.7",
+  "blocks": [
+    { "t": "p", "text": "Start with the two checks that answer most questions. `npx google-services-mcps doctor --plugin <id>` checks the plugin folder, the hook, the tool names and the credentials, and exits 1 when a check fails. `npx google-services-mcps status` shows the logins, the API key and the setup of each group." },
+    { "t": "h2", "text": "The plugin is installed but its tools do not appear" },
+    { "t": "ol", "items": [
+      "Run `claude plugin list`. If the status is `disabled`, enable it: `claude plugin enable gmail@google-services-mcps --scope user`.",
+      "Run `claude plugin validate` on the plugin folder.",
+      "Run `/mcp` in Claude Code. If the server shows as failed, read the message there.",
+      "Run `npx google-services-mcps doctor --plugin gmail` and fix each `FAIL` line."
+    ]},
+    { "t": "h2", "text": "The server shows no tools" },
+    { "t": "ul", "items": [
+      "The server is switched off for this session. Turn it on in `/mcp`.",
+      "The plugin is disabled. See the check above.",
+      "The login uses the `readonly` profile, so only read tools with read-only scopes are listed. This is expected. Log in with `--profile readwrite` if you need changes.",
+      "The group is not logged in. Every tool is listed, but each call fails with `Not logged in for \"<group>\".` Set up the client and log in."
+    ]},
+    { "t": "h2", "text": "Common messages" },
+    { "t": "table", "caption": "The message, what it means, and what to do", "head": ["Message", "Meaning", "What to do"], "rows": [
+      ["`Writes are turned off for this server (GSM_ALLOW_WRITES is not \"true\"), so <tool> was not run.`", "**Allow write tools** is off.", "Turn it on in the plugin options and restart the server."],
+      ["`Denied by policy rule \"<match>\". Nothing was changed.`", "A deny rule matched.", "Change or remove the rule in `policy.json`, if you meant to allow the call."],
+      ["`Invalid policy file <path>: ...`", "`policy.json` is not valid.", "Fix the JSON or the field named in the error. Changes now ask."],
+      ["`You declined this action. Nothing was changed.`", "You declined the second approval.", "Nothing to fix. Run the action again if you want it."],
+      ["`This client cannot ask for confirmation, so the action was not run.`", "The client has no approval step.", "Use Claude Code for changes. Turning confirmation off to get past this is not recommended."],
+      ["`Not logged in for \"<group>\".`", "No token for the group.", "Set up the client, then log in for the group."],
+      ["`The token lacks a scope for this tool.`", "The token does not have the scope for this tool.", "Log in again with `--profile readwrite`, then restart the server."],
+      ["`HTTP 429` or `HTTP 503`", "Google is throttling the call; the suite retried it and it still failed.", "Wait, then try again. Check the quota in the Cloud console."],
+      ["A `truncated` object with `shown`, `omitted` and `how_to_continue`", "The result was longer than the result limit (25,000 characters by default).", "Follow `how_to_continue`: page on, use a smaller page size, or add a filter."],
+      ["`\"<name>\" is not a query parameter of this method.`", "`api_call` was given a query name the method does not declare.", "Use one of the allowed names from `api_describe`."],
+      ["`Unknown tool, asking to be safe.`", "The tool is not in this plugin's tool map.", "Reinstall or update the plugin, then run `doctor`."],
+      ["`Could not check this action, so asking to be safe.`", "The hook could not read its tool map or policy.", "Read the error after the message and fix the file it names."]
+    ]},
+    { "t": "h2", "text": "Install and login problems" },
+    { "t": "ul", "items": [
+      "**Marketplace not found.** Run the install again, which adds the marketplace, or add it by hand with `claude plugin marketplace add`.",
+      "**`setup-client` says the file already exists.** Use `--force`. The old client file is backed up first.",
+      "**The browser does not open for `login`.** Run the same login with `--no-browser`; it prints the URL. Open it on the same machine, because the redirect goes to `127.0.0.1`.",
+      "**`agy config folder not found`.** Run Antigravity once so that it creates its config folder, then run the install again.",
+      "**`--path must be an existing directory`.** Create the folder, or fix the path.",
+      "**OpenCode says the file is not strict JSON.** Remove the comments or trailing commas from `opencode.json`, or add the entry by hand. gsm does not change the file.",
+      "**Codex ignores a project config.** Codex reads a project `.codex/config.toml` only in trusted projects. Trust the folder in Codex.",
+      "**`--home does not apply to claude`.** Remove `--home` when you use `--agent claude`."
+    ]},
+    { "t": "h2", "text": "A login works but the tools still fail" },
+    { "t": "p", "text": "After a sign-in in the chat, the server uses the new login at once. After a login in a terminal, call `auth_status`: it reads the tokens again and loads the tools the new scopes allow. Tools whose scopes the new login lacks stay listed until the server restarts, so restart it in `/mcp` or restart Claude Code." },
+    { "t": "p", "text": "If Google refuses the login with a reauthentication request, a Workspace admin setting called Google Cloud session control has ended the session. Its default is 16 hours. Call `auth_login` to sign in again; to make it last longer, an admin changes the session length or exempts the app." },
+    { "t": "h2", "text": "Rate limits" },
+    { "t": "p", "text": "The suite retries throttled requests on its own, up to three attempts in all. The waits start at 0.5 seconds and double, with jitter; a `Retry-After` header is used instead, up to 60 seconds. After the last attempt the error text is returned. A quota that is used up resets on Google's schedule. Do not run a loop that retries on its own." },
+    { "t": "p", "text": "The [FAQ](/faq/) answers the broader questions. The [configuration page](/configuration/) lists the settings that decide when a prompt appears." }
+  ],
+  "claims": [
+    { "text": "doctor checks the plugin folder, hook, tool names and credentials, and exits 1 on a failure", "evidence": "docs/INSTALL.md §Check the install", "status": "verified" },
+    { "text": "The common error messages and their fixes", "evidence": "docs/USING.md §10 Common errors; docs/INSTALL.md §Troubleshooting: install and login", "status": "verified" },
+    { "text": "The result limit is 25,000 characters by default", "evidence": "docs/USING.md §10 Common errors; src/core/config.ts", "status": "verified" },
+    { "text": "After a terminal login, auth_status reloads the tools; a restart may still be needed", "evidence": "docs/INSTALL.md §Troubleshooting (\"Login works, but the tools still fail\")", "status": "verified" },
+    { "text": "Google Cloud session control defaults to 16 hours and refuses with a reauthentication request", "evidence": "docs/INSTALL.md §Troubleshooting (\"Your Google Workspace requires signing in to Google Cloud again\")", "status": "verified" },
+    { "text": "Retry waits start at 0.5 seconds and double, with jitter, capped by Retry-After at 60 seconds", "evidence": "docs/INSTALL.md §Troubleshooting (\"Rate limits and quota errors\")", "status": "verified" },
+    { "text": "The install and login fixes", "evidence": "docs/INSTALL.md §Troubleshooting: install and login", "status": "verified" }
+  ]
+}

@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block main %}
+<div class="wrap">
+  <div class="page-head">
+    <p class="eyebrow">Error 404</p>
+    <h1>Page not found</h1>
+    <p class="lead">The page you asked for does not exist, or it has moved.</p>
+  </div>
+  <div class="prose">
+    <p>Check the address, or start from one of these pages:</p>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/products/">Products: all {{ site.product_count }} plugins</a></li>
+      <li><a href="/install/">Install</a></li>
+      <li><a href="/faq/">FAQ</a></li>
+    </ul>
+    <p>If you followed a link from another page, the page may have moved. The product reference lists every plugin with its tools and login group, and the quick start walks through the first server in five steps.</p>
+  </div>
+</div>
+{% endblock %}

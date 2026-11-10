@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ page.title }}</title>
+<meta name="description" content="{{ page.description }}">
+{% if page.noindex %}
+<meta name="robots" content="noindex">
+{% endif %}
+{% if page.canonical %}
+<link rel="canonical" href="{{ page.canonical }}">
+{% endif %}
+<meta name="theme-color" content="{{ tokens.color_dark.bg }}" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="{{ tokens.color_light.bg }}" media="(prefers-color-scheme: light)">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="{{ site.name }}">
+<meta property="og:title" content="{{ page.title }}">
+<meta property="og:description" content="{{ page.description }}">
+<meta property="og:url" content="{{ page.canonical or site.url }}">
+<meta property="og:image" content="{{ site.url }}/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="{{ site.og_alt }}">
+<meta property="og:locale" content="{{ site.locale }}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ page.title }}">
+<meta name="twitter:description" content="{{ page.description }}">
+<meta name="twitter:image" content="{{ site.url }}/og.png">
+<meta name="twitter:image:alt" content="{{ site.og_alt }}">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/style.css">
+{% for block in page.jsonld %}
+<script type="application/ld+json">
+{{ block }}
+</script>
+{% endfor %}
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/">
+      <svg class="brand-mark" viewBox="0 0 32 32" width="22" height="22" aria-hidden="true" focusable="false">
+        <rect width="32" height="32" rx="7" fill="var(--surface-2)"/>
+        <path d="M7 11h6M19 11h6M7 21h6M19 21h6" stroke="var(--accent)" stroke-width="2.4" stroke-linecap="round"/>
+        <circle cx="16" cy="11" r="3" fill="var(--warning)"/>
+        <circle cx="16" cy="21" r="3" fill="var(--accent)"/>
+      </svg>
+      <span>google-services-mcps</span>
+    </a>
+    <nav class="site-nav" aria-label="Main">
+      <ul>
+{% for item in nav %}
+        <li><a href="{{ item.path }}"{% if page.section == item.path %} aria-current="page"{% endif %}>{{ item.label }}</a></li>
+{% endfor %}
+      </ul>
+    </nav>
+  </div>
+</header>
+{% if page.breadcrumbs %}
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <div class="wrap">
+    <ol>
+      <li><a href="/">Home</a></li>
+{% for name, href in page.breadcrumbs %}
+      <li>{% if loop.last %}<span aria-current="page">{{ name }}</span>{% else %}<a href="{{ href }}">{{ name }}</a>{% endif %}</li>
+{% endfor %}
+    </ol>
+  </div>
+</nav>
+{% endif %}
+<main id="main">
+{% block main %}{% endblock %}
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <nav aria-label="Footer">
+      <ul>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/license/">License</a></li>
+        <li><a href="/products/">Products</a></li>
+        <li><a href="{{ site.repository }}">Repository</a></li>
+        <li><a href="{{ site.issues }}">Issues</a></li>
+      </ul>
+    </nav>
+    <p>{{ legal.non_affiliation }}</p>
+    <p>{{ legal.licence }} {{ legal.attribution }}</p>
+    <p>This site is generated from the repository by <code>scripts/build_site.py</code>. Version {{ site.version }}.</p>
+  </div>
+</footer>
+<script src="/assets/site.js" defer></script>
+</body>
+</html>

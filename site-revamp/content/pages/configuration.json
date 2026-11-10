@@ -1,0 +1,62 @@
+{
+  "path": "/configuration/",
+  "title": "Configuration | google-services-mcps",
+  "description": "The plugin options, the environment variable names, the policy file and the audit log. Variable names and purposes only; no values and no secrets.",
+  "h1": "Configuration",
+  "eyebrow": "Configuration",
+  "breadcrumbs": [["Configuration", "/configuration/"]],
+  "words_min": 500,
+  "priority": "0.8",
+  "blocks": [
+    { "t": "p", "text": "Settings come from four places: the plugin options in Claude Code, the environment variables the servers read, the `policy.json` file in the token directory, and the confirmation setting. This page names them and says what each one does. It never shows a value for a secret-like setting." },
+    { "t": "h2", "text": "Plugin options" },
+    { "t": "p", "text": "Every Claude Code plugin has four options. Set them with `/plugin configure` in Claude Code, or from a terminal with `claude plugin configure <plugin>@google-services-mcps` and `--values-stdin`. Options you leave out keep their values." },
+    { "t": "table", "caption": "The four plugin options", "head": ["Option", "Purpose", "Default"], "rows": [
+      ["`allow_writes`", "lists the tools that create, change, delete or send", "off"],
+      ["`confirmation`", "when to ask before a change: `every-change`, `destructive-only` or `off`", "`every-change`"],
+      ["`toolset`", "which tools the server lists: `all`, `google` or `curated`", "`all`"],
+      ["`token_dir`", "the folder for tokens and the OAuth client", "empty, which means `~/.google-services-mcps`"]
+    ]},
+    { "t": "p", "text": "Two products add options. `gadmin` adds `admin_subject` (the super admin's address) and `service_account_key_file` (the key file's path). `gads` adds `ads_developer_token` (optional) and `ads_login_customer_id` (the manager account's id, when you reach client accounts through one)." },
+    { "t": "h2", "text": "Environment variables" },
+    { "t": "p", "text": "The plugin passes its options to the server as environment variables. The names below are the ones the code reads; the values are yours and are never shown here." },
+    { "t": "table", "caption": "Environment variable names", "head": ["Name", "What it controls", "Read by"], "rows": [
+      ["`GSM_ALLOW_WRITES`", "whether write and destructive tools are listed", "the server"],
+      ["`GSM_CONFIRMATION`", "the confirmation mode: `every-change`, `destructive-only` or `off`", "the server and the gate"],
+      ["`GSM_TOOLSET`", "the toolset: `all`, `google` or `curated`", "the server"],
+      ["`GSM_TOKEN_DIR`", "the token directory", "the server and the hook"],
+      ["`GSM_MAX_RESULT_CHARS`", "the result budget in characters; a longer result is cut at whole items", "the server"],
+      ["`GSM_ADMIN_SUBJECT`", "the super admin's address for the workspace-admin group", "the gadmin server"],
+      ["`GSM_SERVICE_ACCOUNT_KEY_FILE`", "the service account key file for the workspace-admin group", "the gadmin server"],
+      ["`GSM_ADS_DEVELOPER_TOKEN`", "the optional Google Ads developer token", "the gads server"],
+      ["`GSM_ADS_LOGIN_CUSTOMER_ID`", "the manager account id for Google Ads calls", "the gads server"],
+      ["`GSM_HOOK_ACTIVE`", "marks a hook process for the server", "the server"],
+      ["`GSM_VERBOSE`", "writes notices that are normally silent to standard error", "the server"],
+      ["`GSM_API_KEY_INPUT`", "the API key for `setup-apikey`, read instead of standard input", "the installer"],
+      ["`GOOGLE_APPLICATION_CREDENTIALS`", "a service account key used when none is set up for gplay or gmerchant", "the server"],
+      ["`GSM_DIR`", "the download folder for the one-line installers", "the installers"],
+      ["`GSM_REF`", "the branch, tag or commit the one-line installers download", "the installers"]
+    ]},
+    { "t": "p", "text": "The hook receives the plugin options as `CLAUDE_PLUGIN_OPTION_<KEY>` variables, not as the server's names. The hook resolves the token directory in the same order as the server: `GSM_TOKEN_DIR`, then the plugin's `token_dir` option, then the default. That way the hook and the gate read the same `policy.json`." },
+    { "t": "h2", "text": "The policy file" },
+    { "t": "p", "text": "`policy.json` in the token directory holds `allow`, `ask` and `deny` rules. A rule matches a tool name or a method id, by glob (`*`, `?`) or by a regular expression written `re:...`. The order is fixed: a matching deny wins, then a matching ask, then a matching allow. An allow rule skips the default question for a change or a delete, and never overrides a deny. A broken policy file makes the gate ask, and the error is shown." },
+    { "t": "p", "text": "Match narrowly. A rule for a whole product, such as `mcp__plugin_gcloud_gcloud__*` with `allow`, also skips the prompt for every gcloud change and delete." },
+    { "t": "h2", "text": "The token directory" },
+    { "t": "p", "text": "The default is `~/.google-services-mcps`, in your home folder. It holds the OAuth client file, one token file per login group, the API key, the workspace-admin setup, `policy.json`, `audit.log` and, when a service account is set up, the record of its key path. Files are written with mode 0600 where the platform supports it; on Windows the folder's access list is limited to your user, SYSTEM and Administrators, and `doctor` checks it." },
+    { "t": "p", "text": "`npx google-services-mcps protect` can move the saved secrets into the operating system's store: DPAPI on Windows, with Keychain and libsecret implemented but not run in this release. `protect --off` moves them back to plain files. Secret values are passed to the store on standard input, never in a command line." },
+    { "t": "h2", "text": "The audit log" },
+    { "t": "p", "text": "Each gated action writes one JSON line to `audit.log` in the token directory. The line holds the time, tool, method, decision and outcome, and a 16-character hash of the arguments. The arguments themselves are never written. Reads are not logged. The log is plain text and is not tamper-evident." },
+    { "t": "p", "text": "The [architecture page](/architecture/) shows where these settings sit in the request path. The [troubleshooting page](/troubleshooting/) covers the messages a refused call prints." }
+  ],
+  "claims": [
+    { "text": "Every plugin has the four options allow_writes, confirmation, toolset and token_dir", "evidence": "plugins/*/.claude-plugin/plugin.json (userConfig); README.md §Plugin options", "status": "verified" },
+    { "text": "gadmin adds admin_subject and service_account_key_file", "evidence": "plugins/gadmin/.claude-plugin/plugin.json; README.md §Plugin options", "status": "verified" },
+    { "text": "gads adds ads_developer_token and ads_login_customer_id", "evidence": "plugins/gads/.claude-plugin/plugin.json; README.md §Plugin options", "status": "verified" },
+    { "text": "The environment variable names and what reads them", "evidence": "src/core/config.ts:90-115; src/core/ads.ts:19-20; src/cli/apikey.ts:16; src/core/adc.ts:64; scripts/install.sh:10-12", "status": "verified" },
+    { "text": "The hook receives options as CLAUDE_PLUGIN_OPTION_<KEY>", "evidence": "CLAUDE.md §Plugin options reach the server; docs/SECURITY.md §Controls item 5", "status": "verified" },
+    { "text": "The policy order is deny, then ask, then allow", "evidence": "docs/SECURITY.md §Controls item 5; docs/USING.md §5", "status": "verified" },
+    { "text": "The token directory default and its contents", "evidence": "README.md §Token directory and Google rules; docs/INSTALL.md §Where the files go", "status": "verified" },
+    { "text": "protect moves secrets into the OS store; protect --off moves them back", "evidence": "docs/SECURITY.md §Controls item 7; docs/SETUP.md §Keeping the secrets in the OS store", "status": "verified" },
+    { "text": "The audit log holds a 16-character hash of the arguments and is not tamper-evident", "evidence": "docs/SECURITY.md §Controls item 6; §Known limits", "status": "verified" }
+  ]
+}
