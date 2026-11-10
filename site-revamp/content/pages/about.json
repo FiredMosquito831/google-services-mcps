@@ -1,0 +1,39 @@
+{
+  "path": "/about/",
+  "title": "About | google-services-mcps",
+  "description": "Who builds google-services-mcps, what state the project is in, how it is built from Google's Discovery documents, and what it is not.",
+  "h1": "About this project",
+  "eyebrow": "About",
+  "breadcrumbs": [["About", "/about/"]],
+  "words_min": 400,
+  "priority": "0.5",
+  "blocks": [
+    { "t": "p", "text": "**google-services-mcps** is an independent project by [FiredMosquito831](https://github.com/FiredMosquito831). It packages Google's APIs as Model Context Protocol servers, one plugin per product, so an AI agent can work with Google data under controls you set." },
+    { "t": "h2", "text": "Status" },
+    { "t": "p", "text": "Version 2.17.0, in beta. The code is built and tested offline: the unit and build tests pass, a smoke test starts all 23 servers over stdio, and Claude plugin validation passes for the marketplace and the Gmail plugin. Three products have run against live Google accounts: `gcloud`, `gsc` and `gmail`. Nothing else has, and no mail has been sent. The [home page](/) and the [FAQ](/faq/) say the same thing in their own words." },
+    { "t": "h2", "text": "How it is built" },
+    { "t": "p", "text": "The suite is built from Google's published Discovery documents and the Model Context Protocol specification. A product map in `config/products.json` is the source of truth: each product has a login group, a server name, a curated module or none, a list of generated APIs and a list of gateway APIs. The build turns that map and the Discovery snapshots into the plugin folders under `plugins/`, one per product." },
+    { "t": "p", "text": "The project studied community MCP projects for design ideas only, including googleapis/gcloud-mcp, taylorwilsdon/google_workspace_mcp and mikusnuz/gsc-mcp, and others. It copied no code from them." },
+    { "t": "h2", "text": "What it is not" },
+    { "t": "ul", "items": [
+      "It is not an official Google product. It is not affiliated with, endorsed by or sponsored by Google LLC.",
+      "It is not a hosted service. The servers run on your machine, as you, and call Google directly.",
+      "It is not a way around Google's rules. Quotas, billing, approval rules and restricted-scope verification apply to every call.",
+      "It is not finished. The approval hook and the approval form have not been exercised in a live Claude Code session, and most products have not run against a real account."
+    ]},
+    { "t": "h2", "text": "This site" },
+    { "t": "p", "text": "The site is generated from the repository by `scripts/build_site.py`, which reads the plugin manifests and writes the pages, the sitemap and the assets. The product reference on this site is computed at build time: the product count, the tool counts and the scope counts come from the plugin folders, not from a typed list. The site loads no external fonts, scripts, analytics or embeds." },
+    { "t": "h2", "text": "Licence and contact" },
+    { "t": "p", "text": "The project is licensed under the Apache License, Version 2.0. The [license page](/license/) has the notice and what the licence requires. Bug reports and questions go to the repository's [issue tracker](https://github.com/FiredMosquito831/google-services-mcps/issues); remove tokens, client secrets, API keys and account data before you post." }
+  ],
+  "claims": [
+    { "text": "The project is by FiredMosquito831", "evidence": "package.json author; NOTICE; README.md", "status": "verified" },
+    { "text": "Version 2.17.0, in beta", "evidence": "plugins/*/.claude-plugin/plugin.json (version); package.json version; README.md §Status and roadmap", "status": "verified" },
+    { "text": "Live tests: gcloud, gsc and gmail only; no mail has been sent", "evidence": "README.md §Status and roadmap", "status": "verified" },
+    { "text": "The suite is built from Google's Discovery documents and the MCP specification", "evidence": "README.md §Acknowledgements and trademarks", "status": "verified" },
+    { "text": "The product map in config/products.json is the source of truth", "evidence": "CLAUDE.md §Architecture; config/products.json", "status": "verified" },
+    { "text": "Community projects were studied for design ideas only and no code was copied", "evidence": "README.md §Acknowledgements and trademarks", "status": "verified" },
+    { "text": "The approval hook and form have not been exercised in a live Claude Code session", "evidence": "README.md §Known limits; docs/SECURITY.md §Known limits", "status": "verified" },
+    { "text": "The site loads no external fonts, scripts, analytics or embeds", "evidence": "site-revamp/templates/base.html; site-revamp/static/style.css (system font stacks only)", "status": "verified" }
+  ]
+}

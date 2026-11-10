@@ -1,0 +1,1126 @@
+{
+  "_readme": "Per-product SEO for google-services-mcps. Every keyword must be truthful: the product must actually do it. {tools} is replaced by the real registered tool count at build time; descriptions are validated at 120-160 characters AFTER substitution.",
+  "products": {
+    "gmail": {
+      "title": "Gmail MCP server for Claude Code, Codex and OpenCode",
+      "description": "Give your AI agent Gmail: read mailboxes, search messages, manage labels and settings, and query Postmaster Tools. {tools} tools, one plugin.",
+      "keywords": [
+        "gmail mcp",
+        "gmail mcp server",
+        "gmail claude code",
+        "gmail codex",
+        "gmail opencode",
+        "gmail automation",
+        "gmail ai agent",
+        "automate gmail",
+        "gmail api mcp",
+        "gmail postmaster tools mcp",
+        "read email with claude",
+        "send email claude code",
+        "gmail plugin claude code"
+      ],
+      "tasks": [
+        "Search a mailbox for a sender, subject or label",
+        "Read a thread and summarise it",
+        "Apply or remove a label",
+        "Draft and send a message",
+        "Check Postmaster Tools reputation"
+      ],
+      "trace": {
+        "Search a mailbox for a sender, subject or label": [
+          "gmail_search",
+          "gmail_search_threads"
+        ],
+        "Read a thread and summarise it": [
+          "gmail_get_thread",
+          "gmail_get_message"
+        ],
+        "Apply or remove a label": [
+          "gmail_label",
+          "gmail_unlabel"
+        ],
+        "Draft and send a message": [
+          "gmail_create_draft",
+          "gmail_send",
+          "gmail_send_draft"
+        ],
+        "Check Postmaster Tools reputation": [
+          "gmailpostm_domains_domain_stats_query",
+          "gmailpostm_domain_stats_batch_query",
+          "gmailpost_domains_get_compliance_status"
+        ]
+      }
+    },
+    "gsc": {
+      "title": "Search Console MCP server for Claude Code and Codex",
+      "description": "Search Console for your agent: list sites, submit sitemaps, run search analytics, inspect URLs and request indexing. {tools} tools, one plugin.",
+      "keywords": [
+        "google search console mcp",
+        "search console mcp server",
+        "gsc mcp",
+        "google search console claude code",
+        "google search console codex",
+        "automate site index submission",
+        "google index api mcp",
+        "sitemap submission automation",
+        "search analytics mcp",
+        "url inspection mcp",
+        "google search console automation",
+        "gsc claude code"
+      ],
+      "tasks": [
+        "List the verified sites on the account",
+        "Submit or resubmit a sitemap",
+        "Run a search analytics query by query, page or country",
+        "Inspect a URL's index status",
+        "Request indexing for a URL"
+      ],
+      "trace": {
+        "List the verified sites on the account": [
+          "sc_sites_list",
+          "searchcons_sites_list"
+        ],
+        "Submit or resubmit a sitemap": [
+          "sc_sitemap_submit",
+          "searchcons_sitemaps_submit"
+        ],
+        "Run a search analytics query by query, page or country": [
+          "sc_search_analytics_query",
+          "searchcons_searchanalytics_query"
+        ],
+        "Inspect a URL's index status": [
+          "sc_url_inspect",
+          "searchcons_url_inspection_index_inspect"
+        ],
+        "Request indexing for a URL": [
+          "indexing_url_notifications_publish"
+        ]
+      }
+    },
+    "gcloud": {
+      "title": "Google Cloud MCP server for Claude Code and Codex",
+      "description": "Google Cloud for your agent: projects, APIs, IAM, billing, monitoring, storage, BigQuery and the rest of the Cloud console APIs. {tools} tools.",
+      "keywords": [
+        "google cloud mcp",
+        "gcloud mcp server",
+        "google cloud claude code",
+        "gcp mcp",
+        "google cloud automation",
+        "google developer console mcp",
+        "google dev console automate",
+        "bigquery mcp",
+        "cloud run mcp",
+        "iam mcp",
+        "google cloud ai agent",
+        "gcloud claude code"
+      ],
+      "tasks": [
+        "Enable an API on a project",
+        "List projects and read their readiness",
+        "Read an IAM policy",
+        "Run a read-only BigQuery query",
+        "Read Cloud Logging entries"
+      ],
+      "trace": {
+        "Enable an API on a project": [
+          "cloud_service_enable"
+        ],
+        "List projects and read their readiness": [
+          "cloud_projects_search",
+          "project_readiness"
+        ],
+        "Read an IAM policy": [
+          "cloud_project_iam_policy"
+        ],
+        "Run a read-only BigQuery query": [
+          "bq_query_read"
+        ],
+        "Read Cloud Logging entries": [
+          "logging_entries_list"
+        ]
+      }
+    },
+    "gsearch": {
+      "title": "Google Search APIs MCP server for Claude Code",
+      "description": "Custom Search, PageSpeed Insights, CrUX, Safe Browsing, Web Risk and Fact Check for your agent, with an API key instead of OAuth. {tools} tools.",
+      "keywords": [
+        "google search mcp",
+        "custom search mcp",
+        "pagespeed insights mcp",
+        "crux mcp",
+        "safe browsing mcp",
+        "web risk mcp",
+        "google search api mcp",
+        "google search claude code",
+        "seo audit automation",
+        "pagespeed mcp server"
+      ],
+      "tasks": [
+        "Run a Programmable Search query",
+        "Measure a page's PageSpeed score",
+        "Query CrUX field data for an origin",
+        "Check a URL against Safe Browsing",
+        "Look up a claim with Fact Check"
+      ],
+      "trace": {
+        "Run a Programmable Search query": [
+          "cse_cse_list",
+          "cse_cse_siterestrict_list"
+        ],
+        "Measure a page's PageSpeed score": [
+          "psi_run",
+          "pagespeed_pagespeedapi_runpagespeed"
+        ],
+        "Query CrUX field data for an origin": [
+          "chromeuxre_records_query_record",
+          "chromeuxre_query_history_record"
+        ],
+        "Check a URL against Safe Browsing": [
+          "safebrowsi_urls_search",
+          "safebrowsi_hashes_search"
+        ],
+        "Look up a claim with Fact Check": [
+          "factcheckt_claims_search",
+          "factcheckt_claims_image_search"
+        ]
+      }
+    },
+    "gdrive": {
+      "title": "Google Drive and Docs MCP server for Claude Code",
+      "description": "Drive, Docs, Sheets, Slides, Forms and Books for your agent: list files, read and write documents, edit spreadsheets, manage labels. {tools} tools.",
+      "keywords": [
+        "google drive mcp",
+        "google docs mcp",
+        "google sheets mcp",
+        "google slides mcp",
+        "drive mcp server",
+        "google drive claude code",
+        "automate google sheets",
+        "google workspace mcp",
+        "gdrive mcp",
+        "google docs claude code"
+      ],
+      "tasks": [
+        "List files in a folder",
+        "Read a Google Doc",
+        "Append rows to a Sheet",
+        "Create a Form",
+        "Move or label a file"
+      ],
+      "trace": {
+        "List files in a folder": [
+          "drive_files_list",
+          "drive_search"
+        ],
+        "Read a Google Doc": [
+          "drive_read_text",
+          "docs_documents_get"
+        ],
+        "Append rows to a Sheet": [
+          "sheets_spreadsheets_values_append",
+          "sheets_insert_rows"
+        ],
+        "Create a Form": [
+          "forms_forms_create"
+        ],
+        "Move or label a file": [
+          "drive_update_file",
+          "drive_files_modify_labels"
+        ]
+      }
+    },
+    "gcalendar": {
+      "title": "Google Calendar MCP server for Claude Code",
+      "description": "Calendar for your agent: list calendars, create and move events, check free/busy, read calendar settings and set event reminders. {tools} tools.",
+      "keywords": [
+        "google calendar mcp",
+        "calendar mcp server",
+        "google calendar claude code",
+        "calendar automation",
+        "ai scheduling agent",
+        "gcal mcp",
+        "google calendar agent",
+        "calendar mcp"
+      ],
+      "tasks": [
+        "List calendars",
+        "Create an event with attendees",
+        "Move or reschedule an event",
+        "Check free/busy for a time range",
+        "Read a calendar setting"
+      ],
+      "trace": {
+        "List calendars": [
+          "calendar_list_calendars",
+          "calendar_calendar_list_list"
+        ],
+        "Create an event with attendees": [
+          "calendar_create_event",
+          "calendar_events_insert"
+        ],
+        "Move or reschedule an event": [
+          "calendar_update_event",
+          "calendar_events_move"
+        ],
+        "Check free/busy for a time range": [
+          "calendar_freebusy",
+          "calendar_suggest_time"
+        ],
+        "Read a calendar setting": [
+          "calendar_settings_list",
+          "calendar_settings_get"
+        ]
+      }
+    },
+    "gchat": {
+      "title": "Google Chat MCP server for Claude Code",
+      "description": "Chat for your agent: list spaces, read and send messages, manage members, and subscribe to Workspace Events. {tools} tools, one plugin.",
+      "keywords": [
+        "google chat mcp",
+        "google chat messages mcp",
+        "chat automation",
+        "workspace events mcp",
+        "google chat claude code",
+        "google workspace mcp",
+        "google chat mcp server",
+        "google chat api mcp",
+        "chat spaces mcp",
+        "chat messages mcp"
+      ],
+      "tasks": [
+        "List the spaces the account belongs to",
+        "Send a message to a space",
+        "Read a thread",
+        "Add or remove a member",
+        "Create a Workspace Events subscription"
+      ],
+      "trace": {
+        "List the spaces the account belongs to": [
+          "chat_spaces_list"
+        ],
+        "Send a message to a space": [
+          "chat_send_message"
+        ],
+        "Read a thread": [
+          "chat_list_messages",
+          "chat_search_messages"
+        ],
+        "Add or remove a member": [
+          "chat_spaces_members_create",
+          "chat_spaces_members_delete"
+        ],
+        "Create a Workspace Events subscription": [
+          "workspacee_subscriptions_create"
+        ]
+      }
+    },
+    "gmeet": {
+      "title": "Google Meet MCP server for Claude Code",
+      "description": "Meet for your agent: create spaces, list conference records, read participants, and find recordings. {tools} tools, one plugin.",
+      "keywords": [
+        "google meet mcp",
+        "meet recordings mcp",
+        "conference records mcp",
+        "google meet claude code",
+        "meeting automation",
+        "google meet mcp server",
+        "google meet api mcp",
+        "meet transcripts mcp",
+        "meet participants mcp"
+      ],
+      "tasks": [
+        "Create a meeting space",
+        "List conference records",
+        "List the participants of a conference",
+        "Find a recording"
+      ],
+      "trace": {
+        "Create a meeting space": [
+          "meet_spaces_create"
+        ],
+        "List conference records": [
+          "meet_conference_records_list"
+        ],
+        "List the participants of a conference": [
+          "meet_records_participants_list"
+        ],
+        "Find a recording": [
+          "meet_conference_records_recordings_list"
+        ]
+      }
+    },
+    "gcontacts": {
+      "title": "Google Contacts MCP server for Claude Code",
+      "description": "Contacts and People for your agent: search contacts, read profiles, manage groups, plus health metrics and Data Portability. {tools} tools.",
+      "keywords": [
+        "google contacts mcp",
+        "people api mcp",
+        "contacts automation",
+        "google contacts claude code",
+        "google people mcp",
+        "google contacts mcp server",
+        "google people api mcp",
+        "contact groups mcp",
+        "workspace directory mcp"
+      ],
+      "tasks": [
+        "Search contacts by name or email",
+        "Read a person's profile",
+        "Create or update a contact",
+        "List contact groups"
+      ],
+      "trace": {
+        "Search contacts by name or email": [
+          "contacts_search",
+          "contacts_list"
+        ],
+        "Read a person's profile": [
+          "profile_me"
+        ],
+        "Create or update a contact": [
+          "people_people_create_contact",
+          "people_people_update_contact"
+        ],
+        "List contact groups": [
+          "people_contact_groups_list"
+        ]
+      }
+    },
+    "gtasks": {
+      "title": "Google Tasks and Keep MCP server for Claude Code",
+      "description": "Tasks and Keep for your agent: list task lists, create and complete tasks, read notes, and manage due dates. {tools} tools, one plugin.",
+      "keywords": [
+        "google tasks mcp",
+        "google keep mcp",
+        "task automation",
+        "google tasks claude code",
+        "google tasks automation",
+        "google tasks mcp server",
+        "google tasks api mcp",
+        "google keep notes mcp",
+        "task lists mcp"
+      ],
+      "tasks": [
+        "List task lists",
+        "Create a task with a due date",
+        "Complete a task",
+        "Read a Keep note"
+      ],
+      "trace": {
+        "List task lists": [
+          "tasks_tasklists_list"
+        ],
+        "Create a task with a due date": [
+          "tasks_tasks_insert"
+        ],
+        "Complete a task": [
+          "tasks_tasks_patch",
+          "tasks_tasks_update"
+        ],
+        "Read a Keep note": [
+          "keep_notes_get",
+          "keep_notes_list"
+        ]
+      }
+    },
+    "gclassroom": {
+      "title": "Google Classroom MCP server for Claude Code",
+      "description": "Classroom for your agent: list courses, read coursework, check submissions, and manage students and teachers. {tools} tools, one plugin.",
+      "keywords": [
+        "google classroom mcp",
+        "classroom automation",
+        "education mcp",
+        "google classroom claude code",
+        "google classroom mcp server",
+        "student automation mcp",
+        "google classroom api mcp",
+        "classroom coursework mcp",
+        "classroom submissions mcp"
+      ],
+      "tasks": [
+        "List courses",
+        "Read coursework and materials",
+        "List submissions for an assignment",
+        "List students and teachers"
+      ],
+      "trace": {
+        "List courses": [
+          "classroom_list_courses",
+          "classroom_courses_list"
+        ],
+        "Read coursework and materials": [
+          "classroom_list_coursework",
+          "classroom_get_coursework"
+        ],
+        "List submissions for an assignment": [
+          "classroom_list_submissions",
+          "classr_work_submissions_list"
+        ],
+        "List students and teachers": [
+          "classroom_get_roster",
+          "classroom_teachers_list"
+        ]
+      }
+    },
+    "gapps": {
+      "title": "Apps Script MCP server for Claude Code",
+      "description": "Apps Script for your agent: list projects, read and update script files, run functions, and manage deployments and the Marketplace SDK. {tools} tools.",
+      "keywords": [
+        "google apps script mcp",
+        "apps script automation",
+        "workspace marketplace mcp",
+        "apps script claude code",
+        "google apps script mcp server",
+        "apps script api mcp",
+        "apps script deployments mcp",
+        "workspace marketplace sdk mcp"
+      ],
+      "tasks": [
+        "List script projects",
+        "Read a script's files",
+        "Run a function",
+        "Create a deployment"
+      ],
+      "trace": {
+        "List script projects": [
+          "appsscript_list_script_processes",
+          "appsscript_processes_list"
+        ],
+        "Read a script's files": [
+          "appsscript_projects_get_content"
+        ],
+        "Run a function": [
+          "appsscript_scripts_run"
+        ],
+        "Create a deployment": [
+          "appsscript_projects_deployments_create"
+        ]
+      }
+    },
+    "gadmin": {
+      "title": "Google Workspace Admin MCP server for Claude Code",
+      "description": "Workspace administration for your agent: users, groups, Chrome policies, licensing, reports, alerts, Vault and Cloud Identity. {tools} tools.",
+      "keywords": [
+        "google workspace admin mcp",
+        "google admin mcp",
+        "workspace administration automation",
+        "chrome management mcp",
+        "vault mcp",
+        "google admin claude code",
+        "gadmin mcp",
+        "google workspace admin automation"
+      ],
+      "tasks": [
+        "List users in the directory",
+        "Create a group",
+        "Read an audit report",
+        "Read the Chrome policy schemas",
+        "List Vault matters and holds"
+      ],
+      "trace": {
+        "List users in the directory": [
+          "admin_users_list"
+        ],
+        "Create a group": [
+          "admin_group_create",
+          "admin_groups_insert"
+        ],
+        "Read an audit report": [
+          "admin_activities_list",
+          "admin_customer_usage_reports_get"
+        ],
+        "Read the Chrome policy schemas": [
+          "chromepoli_policy_schemas_list",
+          "chromepoli_policy_schemas_get"
+        ],
+        "List Vault matters and holds": [
+          "vault_matters_list",
+          "vault_matters_holds_list"
+        ]
+      }
+    },
+    "ganalytics": {
+      "title": "Google Analytics MCP server for Claude Code",
+      "description": "GA4 for your agent: list properties, read configuration, run reports and read realtime data, all from one plugin. {tools} tools.",
+      "keywords": [
+        "google analytics mcp",
+        "ga4 mcp server",
+        "google analytics claude code",
+        "analytics automation",
+        "ga4 reporting mcp",
+        "google analytics mcp server",
+        "ga4 admin mcp",
+        "ga4 data api mcp",
+        "google analytics reports mcp"
+      ],
+      "tasks": [
+        "List GA4 properties",
+        "Run a report",
+        "Read realtime data",
+        "List data streams"
+      ],
+      "trace": {
+        "List GA4 properties": [
+          "gaadmin_properties_list"
+        ],
+        "Run a report": [
+          "ga_run_report"
+        ],
+        "Read realtime data": [
+          "ga_run_realtime_report"
+        ],
+        "List data streams": [
+          "gaadmin_props_streams_list"
+        ]
+      }
+    },
+    "gtm": {
+      "title": "Google Tag Manager MCP server for Claude Code",
+      "description": "Tag Manager for your agent: list accounts and containers, read and edit tags, triggers and variables, and publish versions. {tools} tools.",
+      "keywords": [
+        "google tag manager mcp",
+        "gtm mcp server",
+        "tag manager automation",
+        "gtm claude code",
+        "google tag manager claude code",
+        "google tag manager api mcp",
+        "gtm containers mcp",
+        "gtm tags and triggers mcp"
+      ],
+      "tasks": [
+        "List accounts and containers",
+        "Read a tag",
+        "Create a trigger",
+        "Publish a container version"
+      ],
+      "trace": {
+        "List accounts and containers": [
+          "tagmgr_accounts_list",
+          "tagmgr_accounts_containers_list"
+        ],
+        "Read a tag": [
+          "tagmgr_accts_ctrs_ws_tags_get",
+          "tagmgr_accts_ctrs_ws_tags_list"
+        ],
+        "Create a trigger": [
+          "tagmgr_accts_ctrs_ws_triggers_create"
+        ],
+        "Publish a container version": [
+          "gtm_publish_version",
+          "tagmgr_accounts_containers_versions_publish"
+        ]
+      }
+    },
+    "gyoutube": {
+      "title": "YouTube MCP server for Claude Code and Codex",
+      "description": "YouTube Data, Analytics and Reporting plus Blogger for your agent: search videos, read channels, pull analytics, manage playlists. {tools} tools.",
+      "keywords": [
+        "youtube mcp",
+        "youtube analytics mcp",
+        "youtube data api mcp",
+        "blogger mcp",
+        "youtube claude code",
+        "youtube automation",
+        "youtube mcp server",
+        "youtube reporting mcp",
+        "youtube playlists mcp"
+      ],
+      "tasks": [
+        "Search videos",
+        "Read a channel's uploads",
+        "Pull YouTube Analytics",
+        "Create or edit a playlist"
+      ],
+      "trace": {
+        "Search videos": [
+          "youtube_search_list"
+        ],
+        "Read a channel's uploads": [
+          "youtube_search_list",
+          "youtube_channels_list"
+        ],
+        "Pull YouTube Analytics": [
+          "ytanalyt_reports_query"
+        ],
+        "Create or edit a playlist": [
+          "youtube_playlists_insert",
+          "youtube_playlists_update"
+        ]
+      }
+    },
+    "gbusiness": {
+      "title": "Google Business Profile MCP server for Claude Code",
+      "description": "Business Profile for your agent: list accounts and locations, read attributes and place action links, manage verifications, and pull performance. {tools} tools.",
+      "keywords": [
+        "google business profile mcp",
+        "gbp mcp",
+        "local seo automation",
+        "business profile automation",
+        "google business claude code",
+        "google business profile mcp server",
+        "google business profile api mcp",
+        "business locations mcp",
+        "business performance mcp"
+      ],
+      "tasks": [
+        "List accounts and locations",
+        "Read a location's attributes",
+        "List place action links",
+        "Pull performance metrics"
+      ],
+      "trace": {
+        "List accounts and locations": [
+          "mbaccount_accounts_list",
+          "mbinfo_accounts_locations_list"
+        ],
+        "Read a location's attributes": [
+          "mbinfo_locations_get_attributes",
+          "mbinfo_get_google_updated"
+        ],
+        "List place action links": [
+          "mybusiness_links_list"
+        ],
+        "Pull performance metrics": [
+          "bpperf_loc_get_dai_met_tim_seri",
+          "bpperf_impressions_monthly_list"
+        ]
+      }
+    },
+    "gads": {
+      "title": "Google Ads MCP server for Claude Code and Codex",
+      "description": "Google Ads for your agent: list accounts, read campaigns and ad groups, run GAQL reports, and manage budgets and keywords. {tools} tools.",
+      "keywords": [
+        "google ads mcp",
+        "google ads claude code",
+        "ads automation",
+        "gaql mcp",
+        "campaign automation",
+        "google ads api mcp",
+        "google ads mcp server",
+        "google ads gaql mcp",
+        "google ads campaigns mcp"
+      ],
+      "tasks": [
+        "List accessible accounts",
+        "Run a GAQL report",
+        "Read campaigns and ad groups",
+        "Update a budget"
+      ],
+      "trace": {
+        "List accessible accounts": [
+          "ads_list_customers",
+          "googleads_list_accessible_customers"
+        ],
+        "Run a GAQL report": [
+          "ads_search",
+          "googleads_customers_google_ads_search"
+        ],
+        "Read campaigns and ad groups": [
+          "googleads_customers_google_ads_search"
+        ],
+        "Update a budget": [
+          "ads_mutate",
+          "googleads_campaign_budgets_mutate"
+        ]
+      }
+    },
+    "gmerchant": {
+      "title": "Merchant Center MCP server for Claude Code",
+      "description": "Merchant Center for your agent: manage products, feeds and accounts through the Merchant API, with a service account key. {tools} tools.",
+      "keywords": [
+        "google merchant center mcp",
+        "merchant api mcp",
+        "product feed automation",
+        "merchant center claude code",
+        "google merchant mcp server",
+        "merchant api products mcp",
+        "merchant center products mcp",
+        "merchant data sources mcp"
+      ],
+      "tasks": [
+        "List products",
+        "Read a feed",
+        "Update a product",
+        "List accounts"
+      ],
+      "trace": {
+        "List products": [
+          "merchantap_accts_products_list",
+          "css_accounts_css_products_list"
+        ],
+        "Read a feed": [
+          "merc_accounts_data_sources_list",
+          "merch_accounts_data_sources_get"
+        ],
+        "Update a product": [
+          "merchantap_accts_inputs_patch"
+        ],
+        "List accounts": [
+          "merchantap_accounts_list",
+          "css_accts_list_child_accts"
+        ]
+      }
+    },
+    "gplay": {
+      "title": "Google Play MCP server for Claude Code",
+      "description": "Play for your agent: manage releases and tracks, read reporting, Play Games Services, Android Enterprise and Play Integrity. {tools} tools.",
+      "keywords": [
+        "google play mcp",
+        "play console mcp",
+        "android enterprise mcp",
+        "play integrity mcp",
+        "google play claude code",
+        "app publishing automation",
+        "google play mcp server",
+        "android publisher mcp",
+        "play console releases mcp",
+        "play games services mcp"
+      ],
+      "tasks": [
+        "List tracks",
+        "Read a release",
+        "Upload a bundle",
+        "Check Play Integrity"
+      ],
+      "trace": {
+        "List tracks": [
+          "androidpub_edits_tracks_list"
+        ],
+        "Read a release": [
+          "androidpub_edits_tracks_get"
+        ],
+        "Upload a bundle": [
+          "androidpub_upload_bundle"
+        ],
+        "Check Play Integrity": [
+          "playintegr_v1_decode_integrity_token",
+          "playintegr_v1_decode_pc_integrity_token"
+        ]
+      }
+    },
+    "gfirebase": {
+      "title": "Firebase MCP server for Claude Code and Codex",
+      "description": "Firebase for your agent: projects, App Check, App Distribution, Crashlytics, Hosting, Data Connect, Rules, Test Lab and FCM. {tools} tools.",
+      "keywords": [
+        "firebase mcp",
+        "firebase claude code",
+        "crashlytics mcp",
+        "firebase hosting automation",
+        "firebase mcp server",
+        "firebase codex",
+        "firebase projects mcp",
+        "firebase app check mcp",
+        "firebase remote config mcp"
+      ],
+      "tasks": [
+        "List Firebase projects",
+        "Deploy Hosting",
+        "Read Crashlytics reports",
+        "Manage App Check"
+      ],
+      "trace": {
+        "List Firebase projects": [
+          "firebase_projects_list",
+          "fireba_available_projects_list"
+        ],
+        "Deploy Hosting": [
+          "firebasehosting.sites.versions.create",
+          "firebasehosting.sites.releases.create"
+        ],
+        "Read Crashlytics reports": [
+          "firebasecr_apps_reports_list",
+          "firebasecr_apps_issues_get"
+        ],
+        "Manage App Check": [
+          "firebaseap_services_list",
+          "firebasea_services_batch_update"
+        ]
+      }
+    },
+    "gmaps": {
+      "title": "Google Maps Platform MCP server for Claude Code",
+      "description": "Maps Platform for your agent: Places, Address Validation, Solar, Air Quality, Pollen and Street View Publish. {tools} tools, one plugin.",
+      "keywords": [
+        "google maps mcp",
+        "places api mcp",
+        "maps automation",
+        "places autocomplete mcp",
+        "google maps claude code",
+        "google maps mcp server",
+        "google places api mcp",
+        "address validation mcp",
+        "air quality mcp"
+      ],
+      "tasks": [
+        "Search for places",
+        "Validate an address",
+        "Read air quality for a location",
+        "Publish a Street View image"
+      ],
+      "trace": {
+        "Search for places": [
+          "places_places_search_text",
+          "places_places_search_nearby"
+        ],
+        "Validate an address": [
+          "addressval_v1_validate_address"
+        ],
+        "Read air quality for a location": [
+          "airquality_current_conditions_lookup",
+          "airquality_forecast_lookup"
+        ],
+        "Publish a Street View image": [
+          "streetview_photo_create",
+          "streetview_photo_start_upload"
+        ]
+      }
+    },
+    "gai": {
+      "title": "Google AI MCP server for Claude Code and Codex",
+      "description": "Google AI for your agent: Discovery Engine, Vertex AI, Dialogflow, Vision, Speech, Translate, Document AI and agent services. {tools} tools.",
+      "keywords": [
+        "google ai mcp",
+        "vertex ai mcp",
+        "gemini mcp",
+        "dialogflow mcp",
+        "vision api mcp",
+        "document ai mcp",
+        "google ai claude code",
+        "google ai mcp server"
+      ],
+      "tasks": [
+        "Run a Vision request",
+        "Translate text",
+        "Query Vertex AI",
+        "Run Document AI"
+      ],
+      "trace": {
+        "Run a Vision request": [
+          "vision_images_annotate",
+          "vision_files_annotate"
+        ],
+        "Translate text": [
+          "translate.projects.translateText",
+          "translate.projects.locations.translateText"
+        ],
+        "Query Vertex AI": [
+          "vertex_generate_content",
+          "aiplatform.projects.locations.endpoints.generateContent"
+        ],
+        "Run Document AI": [
+          "documentai.projects.locations.processors.process"
+        ]
+      }
+    }
+  },
+  "site": {
+    "title": "Google services MCP servers for Claude Code, Codex and OpenCode",
+    "description": "23 MCP servers for Google Workspace, Google Cloud, Search Console, Google Ads and more, as Claude Code plugins with installers for Codex, OpenCode and Antigravity.",
+    "keywords": [
+      "google mcp",
+      "google mcp server",
+      "google workspace mcp",
+      "google cloud mcp",
+      "google search console mcp",
+      "google ads mcp",
+      "mcp servers for claude code",
+      "claude code plugins google",
+      "google api mcp",
+      "mcp server codex",
+      "mcp server opencode",
+      "google automation mcp"
+    ],
+    "harness_pages": {
+      "claude-code": {
+        "title": "Google MCP servers for Claude Code",
+        "description": "Install any of the 23 Google MCP servers as Claude Code plugins with --agent claude: one plugin per product, one marketplace, one command.",
+        "keywords": [
+          "claude code mcp servers",
+          "google mcp for claude code",
+          "claude code plugins google",
+          "install google mcp claude code",
+          "claude code plugin marketplace",
+          "gmail mcp claude code",
+          "google workspace claude code",
+          "claude code google api"
+        ]
+      },
+      "codex": {
+        "title": "Google MCP servers for Codex",
+        "description": "Install any of the 23 Google MCP servers into Codex: one plugin per product, the same install command with --agent codex.",
+        "keywords": [
+          "codex mcp servers",
+          "google mcp for codex",
+          "mcp server codex",
+          "codex config.toml mcp",
+          "install google mcp codex",
+          "codex google api",
+          "gmail mcp codex",
+          "openai codex mcp"
+        ]
+      },
+      "opencode": {
+        "title": "Google MCP servers for OpenCode",
+        "description": "Install any of the 23 Google MCP servers into OpenCode: one plugin per product, the same install command with --agent opencode.",
+        "keywords": [
+          "opencode mcp servers",
+          "google mcp for opencode",
+          "mcp server opencode",
+          "opencode.json mcp",
+          "install google mcp opencode",
+          "opencode google api",
+          "gmail mcp opencode",
+          "opencode mcp config"
+        ]
+      },
+      "antigravity": {
+        "title": "Google MCP servers for Antigravity",
+        "description": "Install any of the 23 Google MCP servers into Google Antigravity: one plugin per product, the same install command with --agent agy.",
+        "keywords": [
+          "antigravity mcp servers",
+          "google mcp for antigravity",
+          "google antigravity mcp",
+          "agy mcp config",
+          "install google mcp antigravity",
+          "antigravity google api",
+          "gmail mcp antigravity",
+          "antigravity mcp_config.json"
+        ]
+      }
+    }
+  },
+  "pages": {
+    "/": {
+      "keywords": [
+        "google mcp",
+        "google mcp server",
+        "google cloud mcp",
+        "google search console mcp",
+        "google ads mcp",
+        "google api mcp",
+        "google automation mcp",
+        "mcp servers for claude code",
+        "claude code plugins google",
+        "mcp server codex",
+        "mcp server opencode",
+        "mcp servers for codex",
+        "google api automation"
+      ]
+    },
+    "/install/": {
+      "keywords": [
+        "install google mcp server",
+        "npx google-services-mcps",
+        "claude code plugin install",
+        "codex mcp install",
+        "opencode mcp install",
+        "antigravity mcp install",
+        "google mcp installer",
+        "mcp server setup",
+        "mcp servers for claude code",
+        "google mcp"
+      ]
+    },
+    "/quick-start/": {
+      "keywords": [
+        "mcp quick start",
+        "first google mcp server",
+        "gmail mcp quick start",
+        "claude code mcp setup",
+        "google mcp tutorial",
+        "google mcp server",
+        "mcp server setup",
+        "google oauth mcp"
+      ]
+    },
+    "/products/": {
+      "keywords": [
+        "google mcp servers list",
+        "all google mcp servers",
+        "mcp server catalog",
+        "gmail mcp",
+        "google drive mcp",
+        "google calendar mcp",
+        "google cloud mcp",
+        "google search console mcp",
+        "google ads mcp"
+      ]
+    },
+    "/architecture/": {
+      "keywords": [
+        "mcp server architecture",
+        "claude code plugin hook",
+        "mcp consent hook",
+        "mcp server stdio",
+        "google oauth mcp",
+        "mcp tool names",
+        "plugin marketplace",
+        "how mcp servers work",
+        "google api mcp"
+      ]
+    },
+    "/configuration/": {
+      "keywords": [
+        "mcp server configuration",
+        "claude code plugin options",
+        "mcp allow writes",
+        "mcp confirmation mode",
+        "mcp toolset",
+        "token directory",
+        "google oauth scopes",
+        "policy json mcp",
+        "google automation mcp"
+      ]
+    },
+    "/faq/": {
+      "keywords": [
+        "google mcp faq",
+        "mcp server questions",
+        "mcp server cost",
+        "google api quotas",
+        "claude code mcp",
+        "mcp data privacy",
+        "google mcp server",
+        "mcp servers for claude code"
+      ]
+    },
+    "/troubleshooting/": {
+      "keywords": [
+        "mcp server troubleshooting",
+        "claude code plugin not loading",
+        "mcp server error",
+        "google oauth error",
+        "gsm doctor",
+        "mcp server debug",
+        "claude code plugins google",
+        "google oauth consent screen"
+      ]
+    },
+    "/about/": {
+      "keywords": [
+        "about google-services-mcps",
+        "google mcp project",
+        "open source mcp servers",
+        "apache 2 mcp servers",
+        "google api automation",
+        "google mcp alternative",
+        "mcp server opencode",
+        "google mcp servers",
+        "mcp for google workspace"
+      ]
+    },
+    "/license/": {
+      "keywords": [
+        "apache license 2.0",
+        "mcp server license",
+        "google-services-mcps license",
+        "open source mcp",
+        "apache-2.0 terms",
+        "third party notices",
+        "google api mcp",
+        "open source google mcp",
+        "apache license mcp"
+      ]
+    }
+  }
+}

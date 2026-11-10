@@ -1,0 +1,44 @@
+{
+  "groups": {
+    "cloud": {
+      "label": "Cloud",
+      "setup": "Log in once for the group: create a Desktop OAuth client in a Google Cloud project, save its file with `npx google-services-mcps setup-client`, then run `npx google-services-mcps login cloud`. If no token is stored, the cloud servers fall back to Application Default Credentials.",
+      "products": ["gcloud", "gai"]
+    },
+    "searchconsole": {
+      "label": "Search Console",
+      "setup": "Log in once for the group: create a Desktop OAuth client in a Google Cloud project, save its file with `npx google-services-mcps setup-client`, then run `npx google-services-mcps login searchconsole`.",
+      "products": ["gsc"]
+    },
+    "workspace-user": {
+      "label": "Workspace users",
+      "setup": "Log in once for the group: create a Desktop OAuth client in a Google Cloud project, save its file with `npx google-services-mcps setup-client`, then run `npx google-services-mcps login workspace-user`. Products in this group share the one login.",
+      "products": ["gdrive", "gmail", "gcalendar", "gchat", "gmeet", "gcontacts", "gtasks", "gclassroom", "gapps"]
+    },
+    "workspace-admin": {
+      "label": "Workspace admin",
+      "setup": "This group uses a service account with domain-wide delegation, not a user login. Create the service account and its JSON key, allow its client ID in the Google Admin console under Domain-wide delegation, then run `npx google-services-mcps setup-admin`.",
+      "products": ["gadmin"]
+    },
+    "business": {
+      "label": "Business and advertising",
+      "setup": "Log in once for the group: create a Desktop OAuth client in a Google Cloud project, save its file with `npx google-services-mcps setup-client`, then run `npx google-services-mcps login business`.",
+      "products": ["ganalytics", "gtm", "gyoutube", "gbusiness", "gads"]
+    },
+    "developer": {
+      "label": "Developer platforms",
+      "setup": "Log in once for the group: create a Desktop OAuth client in a Google Cloud project, save its file with `npx google-services-mcps setup-client`, then run `npx google-services-mcps login developer`.",
+      "products": ["gfirebase"]
+    },
+    "service-account": {
+      "label": "Service account",
+      "setup": "This group uses a service account key, not a login. Create the key in the Google Cloud console, then run `npx google-services-mcps setup-service-account` with its path. The suite stores only the path, the account address and the time.",
+      "products": ["gplay", "gmerchant"]
+    },
+    "apikey": {
+      "label": "API key",
+      "setup": "This group uses an API key, not a login. Save the key with `npx google-services-mcps setup-apikey`; the key is read from the environment or standard input and is never a command-line argument.",
+      "products": ["gsearch", "gmaps"]
+    }
+  }
+}

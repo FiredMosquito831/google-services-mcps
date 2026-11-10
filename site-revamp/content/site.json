@@ -1,0 +1,53 @@
+{
+  "name": "google-services-mcps",
+  "url": "https://googleservices.danubelabs.net",
+  "cname": "googleservices.danubelabs.net",
+  "lastmod": "2026-11-10",
+  "locale": "en_US",
+  "author": "FiredMosquito831",
+  "author_url": "https://github.com/FiredMosquito831",
+  "repository": "https://github.com/FiredMosquito831/google-services-mcps",
+  "issues": "https://github.com/FiredMosquito831/google-services-mcps/issues",
+  "description": "MCP servers for Google Workspace, Google Cloud, Search Console, Google Ads and more, as Claude Code plugins, with installers for Codex, OpenCode and Antigravity.",
+  "og_alt": "google-services-mcps: 23 Google products as MCP servers, one plugin each",
+  "nav": [
+    {
+      "label": "Home",
+      "path": "/"
+    },
+    {
+      "label": "Install",
+      "path": "/install/"
+    },
+    {
+      "label": "Quick start",
+      "path": "/quick-start/"
+    },
+    {
+      "label": "Products",
+      "path": "/products/"
+    },
+    {
+      "label": "Architecture",
+      "path": "/architecture/"
+    },
+    {
+      "label": "Configuration",
+      "path": "/configuration/"
+    },
+    {
+      "label": "FAQ",
+      "path": "/faq/"
+    },
+    {
+      "label": "Troubleshooting",
+      "path": "/troubleshooting/"
+    }
+  ],
+  "legal": {
+    "non_affiliation": "google-services-mcps is an independent project. It is not affiliated with, endorsed by, or sponsored by Google LLC. Google and the Google product names are trademarks of Google LLC.",
+    "licence": "Licensed under the Apache License, Version 2.0 (Apache-2.0).",
+    "attribution": "Based on google-services-mcps by FiredMosquito831 (https://github.com/FiredMosquito831/google-services-mcps, profile https://github.com/FiredMosquito831)."
+  },
+  "security_expires": "2027-11-10"
+}

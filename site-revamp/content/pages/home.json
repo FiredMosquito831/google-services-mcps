@@ -1,0 +1,70 @@
+{
+  "path": "/",
+  "title": "Google services MCP servers | google-services-mcps",
+  "description": "23 Google products as MCP servers, one Claude Code plugin each, with an installer for Codex, OpenCode and Antigravity. Gmail, Drive, Cloud, Ads and more.",
+  "h1": "Google products as MCP servers for Claude Code, Codex, OpenCode and Antigravity",
+  "eyebrow": "Documentation",
+  "hero": true,
+  "lead": "One plugin per Google product, 23 in all. Install only the products you use, sign in with your own Google credentials, and let an agent read your data and, when you allow it, change it.",
+  "actions": [
+    { "label": "Install Gmail", "href": "/install/", "primary": true },
+    { "label": "Browse the 23 products", "href": "/products/" },
+    { "label": "Quick start", "href": "/quick-start/" }
+  ],
+  "words_min": 800,
+  "priority": "1.0",
+  "jsonld_extra": ["software_application"],
+  "blocks": [
+    { "t": "h2", "text": "What this is" },
+    { "t": "p", "text": "**google-services-mcps** is a suite of Model Context Protocol servers for Google products. Each product is one plugin in one marketplace, and each plugin runs one local MCP server with the same name. The agent starts the server over stdio, the server calls Google's APIs with the credentials you give it, and every tool name starts with `mcp__plugin_<product>_`, so a call always traces back to one product." },
+    { "t": "p", "text": "The same servers run in four harnesses. Claude Code installs them as plugins from the `google-services-mcps` marketplace. The `gsm` installer writes the same servers into a Codex, an OpenCode or an Antigravity configuration. There is no build step and no server of the suite's own: the servers run on your machine, as you." },
+    { "t": "h2", "text": "One plugin per product" },
+    { "t": "p", "text": "A single plugin for every Google API would load thousands of tool definitions into every session. This suite splits the work by product instead, so you install only what you use." },
+    { "t": "ul", "items": [
+      "**Install only what you use.** Each plugin adds its tools to your session. Fewer plugins means less to load.",
+      "**Each product has its own login group.** Products in one group share one login. A Search Console login does not reach Gmail.",
+      "**Switch one server off for a session.** Use `/mcp` to turn a server off and on again without uninstalling it.",
+      "**Tool names show the product.** Every tool name starts with `mcp__plugin_<product>_`, so a call always traces back to one product."
+    ]},
+    { "t": "h2", "text": "The 23 products" },
+    { "t": "p", "text": "Each product id is also its plugin name and its server name. The cards below are generated from the plugin folders at build time, and each one links to the product's page with its tools, its scopes and its login group." },
+    { "t": "products" },
+    { "t": "h2", "text": "How the pieces connect" },
+    { "t": "p", "text": "The marketplace lists the plugins. A plugin holds one MCP server, a consent hook for Claude Code, a tool map and a skill. The server reads your tokens from the token directory and calls Google over HTTPS. The hook runs before each tool call and asks before a change." },
+    { "t": "figure", "diagram": "plugin-harness", "caption": "One plugin per product, one MCP server per plugin, and four harnesses. The consent hook exists only in Claude Code." },
+    { "t": "p", "text": "Codex, OpenCode and Antigravity have no approval hook in this suite. A client that cannot ask for approval is refused every change, so nothing runs without a confirmation. The full model is on the [architecture page](/architecture/)." },
+    { "t": "h2", "text": "Install" },
+    { "t": "p", "text": "One command installs the suite and Gmail for Claude Code. It adds the marketplace and installs the `gmail` plugin for your user account, the default scope. It checks what Claude Code needs first and writes nothing until that is in place." },
+    { "t": "code", "label": "Install Gmail for Claude Code", "text": "npx google-services-mcps install --agent claude --plugin gmail" },
+    { "t": "p", "text": "Run the command with no arguments in a terminal to open a guided menu instead. The menu asks for the agent, the products and the scope, shows the exact command it will run, and previews it with `--dry-run`. Every route and every flag is on the [install page](/install/)." },
+    { "t": "h2", "text": "Safe by default" },
+    { "t": "p", "text": "The controls apply in order, and one failing layer does not let a change through." },
+    { "t": "ol", "items": [
+      "**Token scopes.** A login asks only for the scopes of its profile: `readonly` (the default), `readwrite`, `full`, or an exact list. Google rejects any call outside them.",
+      "**Tool registration.** A write or destructive tool is listed only when **Allow write tools** is on. It is off by default.",
+      "**Approval gate.** In Claude Code a `PreToolUse` hook asks before every change. The hook never allows a call, so your own permission rules still apply. Destructive actions ask twice: once in the hook and once in an **Approve this action?** form.",
+      "**Confirmation setting.** `every-change` is the default. `destructive-only` asks only before deleting, sending, sharing, publishing and the other destructive actions. `off` asks for nothing, and deny rules still apply.",
+      "**Policy file.** `policy.json` in the token directory holds `allow`, `ask` and `deny` rules. A matching deny always wins.",
+      "**Audit log.** Each gated action writes one JSON line with the time, tool, method, decision and outcome, and a hash of the arguments, never the values."
+    ]},
+    { "t": "p", "text": "The [configuration page](/configuration/) lists the settings by name, and the [troubleshooting page](/troubleshooting/) covers the messages the suite prints." },
+    { "t": "h2", "text": "Status" },
+    { "t": "p", "text": "The suite is in beta. The code is built and tested offline: the unit and build tests pass, a smoke test starts all 23 servers over stdio, and Claude plugin validation passes for the marketplace and the Gmail plugin. Live Google accounts have been tested for three products only: `gcloud` (the project readiness check and enabling APIs), `gsc` (reads and a live login check) and `gmail` (reads, on six accounts). Nothing else has run against a real account, and no mail has been sent." },
+    { "t": "p", "text": "Test one product at a time, starting with a read, on an account where a mistake does no harm. The [quick start](/quick-start/) walks through the first server." },
+    { "t": "h2", "text": "Questions" },
+    { "t": "p", "text": "The [FAQ](/faq/) answers the questions people ask most: what it costs, which accounts are needed, whether data leaves your machine, and how this compares with Google's own MCP servers." },
+    { "t": "p", "text": "The project is independent and is not affiliated with Google. It is licensed under the Apache License, Version 2.0." }
+  ],
+  "claims": [
+    { "text": "23 Google products, one plugin each", "evidence": "plugins/*/ (23 folders); .claude-plugin/marketplace.json (23 entries)", "status": "verified" },
+    { "text": "The same servers run in Claude Code, Codex, OpenCode and Antigravity", "evidence": "README.md §Install; scripts/install.sh, scripts/install.ps1, scripts/install.cmd; docs/INSTALL.md §Other agents", "status": "verified" },
+    { "text": "There is no build step", "evidence": "docs/INSTALL.md §Before you start (\"No build step. gsm.mjs in the repository root is the installer\")", "status": "verified" },
+    { "text": "A read never asks; a write is listed only when Allow write tools is on; a destructive action asks twice", "evidence": "docs/SECURITY.md §Controls, items 2 and 3; README.md §How it stays safe", "status": "verified" },
+    { "text": "The hook never allows a call", "evidence": "docs/SECURITY.md §Controls, item 3 (\"The hook never allows\")", "status": "verified" },
+    { "text": "The policy order is deny, then ask, then allow", "evidence": "docs/SECURITY.md §Controls, item 5; README.md §How it stays safe", "status": "verified" },
+    { "text": "The audit log holds a hash of the arguments, never the values", "evidence": "docs/SECURITY.md §Controls, item 6", "status": "verified" },
+    { "text": "The suite is in beta", "evidence": "README.md §Status and roadmap; package.json version 2.17.0", "status": "verified" },
+    { "text": "Live Google accounts have been tested for gcloud, gsc and gmail only", "evidence": "README.md §Status and roadmap (\"Tested against live Google accounts so far\")", "status": "verified" },
+    { "text": "The suite is licensed under Apache-2.0 and is not affiliated with Google", "evidence": "LICENSE; NOTICE; README.md §Acknowledgements and trademarks", "status": "verified" }
+  ]
+}

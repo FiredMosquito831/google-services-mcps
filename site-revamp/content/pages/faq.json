@@ -1,0 +1,49 @@
+{
+  "path": "/faq/",
+  "title": "FAQ | google-services-mcps",
+  "description": "What the suite costs, which Google accounts it needs, whether data leaves your machine, how it compares with Google's own MCP servers, and how to remove it.",
+  "h1": "Frequently asked questions",
+  "eyebrow": "FAQ",
+  "breadcrumbs": [["FAQ", "/faq/"]],
+  "words_min": 800,
+  "priority": "0.7",
+  "jsonld_extra": ["faq"],
+  "blocks": [
+    { "t": "p", "text": "These are the questions the project's own documentation answers. Every answer is mirrored in the page's structured data, so a search engine reads the same text a person does." },
+    { "t": "h2", "text": "The questions" },
+    { "t": "faq", "items": [
+      { "q": "Does it cost money?", "a": "The suite is free. Google's quotas, billing and approval rules apply to each call you make. Claude's own usage grows with each installed product, because every product adds tool definitions to the session. Install only the products you use." },
+      { "q": "Which Google accounts do I need?", "a": "A Google Workspace account is the main target. Each login group needs a Desktop OAuth client in a Google Cloud project. gadmin needs a super admin and a service account with domain-wide delegation. gsearch needs an API key. Personal accounts worked for Gmail reads in a live test on 2026-10-29; for the other products they are untested." },
+      { "q": "Is my data sent anywhere except Google?", "a": "As far as the source shows, the servers call only Google's API and OAuth endpoints, and the code has no separate telemetry path. Tokens stay in the token directory on your machine. Anything a tool returns, such as mail text, becomes part of the agent's conversation, so it goes to that agent's model provider as usual." },
+      { "q": "Can I use it with Codex, OpenCode or Antigravity?", "a": "Yes. Run npx google-services-mcps install --agent codex --plugin <id>, and change the agent name for the others. None of the three has an approval hook in this suite, and a client that cannot ask for approval is refused every change. How each one handles approvals has not been tested in a live session." },
+      { "q": "Why do I see approval prompts?", "a": "Changes and deletions ask by default, because confirmation is every-change. Destructive actions such as deletions, sends, shares and publishing also ask a second time, with an exact preview. To ask less, set Confirm before changes to destructive-only or off. Deny rules in policy.json still apply." },
+      { "q": "Why is a tool missing?", "a": "Usually one of these: Allow write tools is off, so write and destructive tools are hidden; the login uses the readonly profile, so the token lacks the write scopes; the server is switched off in /mcp; or the plugin is disabled. If the group is not logged in, the tool is listed but each call fails with a login message. Run npx google-services-mcps doctor --plugin <id> to check the install." },
+      { "q": "Why are there so many tools?", "a": "Google's APIs are large. Each plugin has a tool for many of the methods of its APIs, and generated tools are capped at 350 per plugin. Gateway tools reach the methods that have no tool of their own. Claude Code's tool search loads definitions when they are needed. To list fewer tools, set the plugin option toolset to google or curated." },
+      { "q": "How is this different from Google's official MCP servers?", "a": "Google runs MCP servers of its own for some products, and you can use them next to these. This suite adds changes with consent, several Google accounts per login group, personal Google accounts for Gmail reads, sending mail with two approvals, per-method tools for each product's main APIs, gateway tools for the rest, and no enrolment beyond a Desktop OAuth client in your own project. The project found no official MCP server for Search Console, Tag Manager, YouTube and Blogger, Google Play publishing, Business Profile, Meet, Tasks and Keep, Apps Script, or the Admin SDK; that comes from a search of Google's pages, so it is not proof." },
+      { "q": "Is this an official Google product?", "a": "No. It is an independent project and is not affiliated with, endorsed by or sponsored by Google. Google and the Google product names are trademarks of Google LLC." },
+      { "q": "Which licence applies?", "a": "The Apache License, Version 2.0 (Apache-2.0). Copies you pass on must include the LICENSE and NOTICE files, and changed files must say that they were changed. Contributions are under the same licence." },
+      { "q": "How do I remove everything?", "a": "Preview the removal with npx google-services-mcps uninstall --all --dry-run, then remove every install with --all --yes. Delete the token folder ~/.google-services-mcps by hand; no gsm command deletes it. Remove the marketplace with claude plugin marketplace remove google-services-mcps, then revoke the suite's access at myaccount.google.com/permissions." },
+      { "q": "What has been tested against real Google accounts?", "a": "Three products. gcloud: the project readiness check and enabling APIs, with an application-default login on a Workspace account. gsc: reads, and a live login check that found the login valid on 2026-10-29. gmail: reads on 2026-10-29, on six accounts, personal accounts among them. Nothing else has run against a real account, and no mail has been sent." },
+      { "q": "Why does a login ask for scopes I did not expect?", "a": "A login merges with the scopes the same account already holds for its group, so logging in for one product keeps the others. Name the account with --account to merge only that account's stored scopes. Use --replace to drop the stored scopes and keep only what the new login requests. A merge can leave write scopes from an earlier readwrite login in place." },
+      { "q": "What happens if Google throttles a call?", "a": "The suite retries throttled requests up to three attempts in all, with backoff. Only throttled requests are repeated: HTTP 429 and 503 for any method, and rate-limit 403s for reads only. A write is never repeated on a 403. After the last attempt, the error reaches the agent." },
+      { "q": "Can the agent see my tokens?", "a": "No. Tokens, the client file and the API key stay in the token directory, and the agent can list accounts by name, set the default and remove one, but never sees a token. Keys that look secret are redacted from prompts, logs and errors." }
+    ]},
+    { "t": "h2", "text": "Still stuck?" },
+    { "t": "p", "text": "The [troubleshooting page](/troubleshooting/) has the exact messages and their fixes. The repository's issue tracker is the place for a bug report; include the product id, the agent, the command or tool name and the error text, and remove tokens, client secrets, API keys and account data first." }
+  ],
+  "claims": [
+    { "text": "The suite is free; Google's quotas, billing and approval rules apply", "evidence": "README.md §FAQ (\"Does it cost money?\")", "status": "verified" },
+    { "text": "A Workspace account is the main target; personal accounts worked for Gmail reads on 2026-10-29", "evidence": "README.md §FAQ (\"Which Google accounts do I need?\")", "status": "verified" },
+    { "text": "The servers call only Google's API and OAuth endpoints; there is no separate telemetry path", "evidence": "README.md §FAQ (\"Is my data sent anywhere except Google?\")", "status": "verified" },
+    { "text": "Codex, OpenCode and Antigravity have no approval hook in this suite", "evidence": "README.md §How the pieces connect; docs/SECURITY.md §Known limits", "status": "verified" },
+    { "text": "Changes ask by default; destructive actions ask twice", "evidence": "README.md §How it stays safe; docs/SECURITY.md §Controls", "status": "verified" },
+    { "text": "Generated tools are capped at 350 per plugin", "evidence": "README.md §FAQ (\"Why are there so many tools?\")", "status": "verified" },
+    { "text": "The comparison with Google's official MCP servers, including the list of products with no official server", "evidence": "README.md §FAQ (\"Google's official MCP servers or these?\")", "status": "verified" },
+    { "text": "Apache-2.0 requires the LICENSE and NOTICE files to travel with copies, and changed files to say they were changed", "evidence": "README.md §License; NOTICE", "status": "verified" },
+    { "text": "The removal steps", "evidence": "README.md §FAQ (\"How do I remove everything?\")", "status": "verified" },
+    { "text": "Live tests: gcloud, gsc and gmail only", "evidence": "README.md §Status and roadmap", "status": "verified" },
+    { "text": "A login merges scopes per account; --replace drops them", "evidence": "docs/SETUP.md §Desktop OAuth client; README.md §Sign in", "status": "verified" },
+    { "text": "Retries: three attempts, 429 and 503 for any method, rate-limit 403s for reads only", "evidence": "docs/SECURITY.md §Controls item 9; docs/LIMITS-AND-COSTS.md §4", "status": "verified" },
+    { "text": "The agent never sees a token", "evidence": "docs/SECURITY.md §Controls item 7; README.md §Token directory and Google rules", "status": "verified" }
+  ]
+}

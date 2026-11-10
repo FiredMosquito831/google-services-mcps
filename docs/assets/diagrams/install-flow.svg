@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 460" role="img" aria-labelledby="if-title if-desc" font-family="ui-monospace, SFMono-Regular, Consolas, monospace">
+  <title id="if-title">The install flow</title>
+  <desc id="if-desc">The npx command runs the gsm installer, which checks the agent requirements before writing anything. Claude Code installs the marketplace and the plugin; Codex, OpenCode and Antigravity get a runtime copy and a config entry. The installer records the install and never touches the token directory.</desc>
+
+  <text x="16" y="26" fill="var(--text-muted)" font-size="12" letter-spacing="1.2">INSTALL FLOW</text>
+
+  <!-- Step 1 -->
+  <g>
+    <rect x="16" y="44" width="200" height="64" rx="10" fill="var(--surface)" stroke="var(--accent)" stroke-width="2"/>
+    <text x="34" y="70" fill="var(--text)" font-size="13" font-weight="700">1. command</text>
+    <text x="34" y="90" fill="var(--text-muted)" font-size="11">npx google-services-mcps</text>
+    <text x="34" y="104" fill="var(--text-muted)" font-size="11">install --agent … --plugin …</text>
+  </g>
+  <path d="M216 76 H252" stroke="var(--border)" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+  <!-- Step 2 -->
+  <g>
+    <rect x="252" y="44" width="200" height="64" rx="10" fill="var(--surface)" stroke="var(--border)"/>
+    <text x="270" y="70" fill="var(--text)" font-size="13" font-weight="700">2. requirements</text>
+    <text x="270" y="90" fill="var(--text-muted)" font-size="11">claude / codex / opencode</text>
+    <text x="270" y="104" fill="var(--text-muted)" font-size="11">git, when the marketplace is remote</text>
+  </g>
+  <path d="M452 76 H488" stroke="var(--border)" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+  <!-- Step 3 -->
+  <g>
+    <rect x="488" y="44" width="200" height="64" rx="10" fill="var(--surface)" stroke="var(--border)"/>
+    <text x="506" y="70" fill="var(--text)" font-size="13" font-weight="700">3. install</text>
+    <text x="506" y="90" fill="var(--text-muted)" font-size="11">plugin, or agent config</text>
+    <text x="506" y="104" fill="var(--text-muted)" font-size="11">and a runtime copy</text>
+  </g>
+  <path d="M688 76 H724" stroke="var(--border)" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+  <!-- Step 4 -->
+  <g>
+    <rect x="724" y="44" width="220" height="64" rx="10" fill="var(--surface)" stroke="var(--success)" stroke-width="2"/>
+    <text x="742" y="70" fill="var(--text)" font-size="13" font-weight="700">4. install record</text>
+    <text x="742" y="90" fill="var(--text-muted)" font-size="11">runtime/installs.json</text>
+    <text x="742" y="104" fill="var(--text-muted)" font-size="11">read by list and uninstall</text>
+  </g>
+
+  <!-- Branch: Claude Code -->
+  <g>
+    <rect x="16" y="150" width="440" height="130" rx="10" fill="var(--surface-2)" stroke="var(--accent)"/>
+    <text x="34" y="178" fill="var(--text)" font-size="14" font-weight="700">Claude Code</text>
+    <text x="34" y="202" fill="var(--text-muted)" font-size="11">claude plugin marketplace add google-services-mcps</text>
+    <text x="34" y="222" fill="var(--text-muted)" font-size="11">claude plugin install &lt;id&gt;@google-services-mcps --scope …</text>
+    <line x1="34" y1="238" x2="438" y2="238" stroke="var(--border)"/>
+    <text x="34" y="258" fill="var(--text-muted)" font-size="11">writes: Claude Code's own settings files</text>
+    <text x="34" y="272" fill="var(--text-muted)" font-size="11">the plugin is read from the marketplace</text>
+  </g>
+  <!-- Branch: other agents -->
+  <g>
+    <rect x="488" y="150" width="456" height="130" rx="10" fill="var(--surface-2)" stroke="var(--border)"/>
+    <text x="506" y="178" fill="var(--text)" font-size="14" font-weight="700">Codex, OpenCode, Antigravity</text>
+    <text x="506" y="202" fill="var(--text-muted)" font-size="11">copy plugins/&lt;id&gt; → ~/.google-services-mcps/runtime/&lt;id&gt;/</text>
+    <text x="506" y="222" fill="var(--text-muted)" font-size="11">write one entry into the agent's config file</text>
+    <line x1="506" y1="238" x2="926" y2="238" stroke="var(--border)"/>
+    <text x="506" y="258" fill="var(--text-muted)" font-size="11">config.toml · opencode.json · mcp_config.json</text>
+    <text x="506" y="272" fill="var(--text-muted)" font-size="11">a backup of each changed file is kept</text>
+  </g>
+
+  <!-- Arrows down -->
+  <path d="M236 108 V150" stroke="var(--border)" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+  <path d="M588 108 V150" stroke="var(--border)" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+  <!-- Token directory note -->
+  <g>
+    <rect x="16" y="316" width="928" height="56" rx="10" fill="var(--surface)" stroke="var(--border)" stroke-dasharray="6 4"/>
+    <text x="34" y="340" fill="var(--text)" font-size="13" font-weight="700">Never touched by install or uninstall</text>
+    <text x="34" y="360" fill="var(--text-muted)" font-size="11">the token directory (~/.google-services-mcps): OAuth client, login tokens, API key, policy.json, audit.log. Log in separately, once per group.</text>
+  </g>
+
+  <!-- Sign-in step -->
+  <g>
+    <rect x="16" y="392" width="928" height="52" rx="10" fill="var(--surface)" stroke="var(--warning)"/>
+    <text x="34" y="414" fill="var(--text)" font-size="13" font-weight="700">Sign in, once per login group</text>
+    <text x="34" y="432" fill="var(--text-muted)" font-size="11">setup-client, then login &lt;group&gt; · setup-admin · setup-service-account · setup-apikey</text>
+  </g>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="var(--border)"/>
+    </marker>
+  </defs>
+</svg>

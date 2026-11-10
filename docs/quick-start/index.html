@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quick start | google-services-mcps</title>
+<meta name="description" content="Install Gmail for Claude Code, save a Desktop OAuth client, log in with the read-only profile, and run one read. Five steps, no clone and no build.">
+<meta name="keywords" content="mcp quick start, first google mcp server, gmail mcp quick start, claude code mcp setup, google mcp tutorial, google mcp server, mcp server setup, google oauth mcp">
+<link rel="canonical" href="https://googleservices.danubelabs.net/quick-start/">
+<meta name="theme-color" content="#0B1020" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F8FAFC" media="(prefers-color-scheme: light)">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="google-services-mcps">
+<meta property="og:title" content="Quick start | google-services-mcps">
+<meta property="og:description" content="Install Gmail for Claude Code, save a Desktop OAuth client, log in with the read-only profile, and run one read. Five steps, no clone and no build.">
+<meta property="og:url" content="https://googleservices.danubelabs.net/quick-start/">
+<meta property="og:image" content="https://googleservices.danubelabs.net/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="google-services-mcps: 23 Google products as MCP servers, one plugin each">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Quick start | google-services-mcps">
+<meta name="twitter:description" content="Install Gmail for Claude Code, save a Desktop OAuth client, log in with the read-only profile, and run one read. Five steps, no clone and no build.">
+<meta name="twitter:image" content="https://googleservices.danubelabs.net/og.png">
+<meta name="twitter:image:alt" content="google-services-mcps: 23 Google products as MCP servers, one plugin each">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Quick start | google-services-mcps",
+  "url": "https://googleservices.danubelabs.net/quick-start/",
+  "description": "Install Gmail for Claude Code, save a Desktop OAuth client, log in with the read-only profile, and run one read. Five steps, no clone and no build."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://googleservices.danubelabs.net/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Quick start",
+      "item": "https://googleservices.danubelabs.net/quick-start/"
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/">
+      <svg class="brand-mark" viewBox="0 0 32 32" width="22" height="22" aria-hidden="true" focusable="false">
+        <rect width="32" height="32" rx="7" fill="var(--surface-2)"/>
+        <path d="M7 11h6M19 11h6M7 21h6M19 21h6" stroke="var(--accent)" stroke-width="2.4" stroke-linecap="round"/>
+        <circle cx="16" cy="11" r="3" fill="var(--warning)"/>
+        <circle cx="16" cy="21" r="3" fill="var(--accent)"/>
+      </svg>
+      <span>google-services-mcps</span>
+    </a>
+    <nav class="site-nav" aria-label="Main">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/install/">Install</a></li>
+        <li><a href="/quick-start/" aria-current="page">Quick start</a></li>
+        <li><a href="/products/">Products</a></li>
+        <li><a href="/architecture/">Architecture</a></li>
+        <li><a href="/configuration/">Configuration</a></li>
+        <li><a href="/faq/">FAQ</a></li>
+        <li><a href="/troubleshooting/">Troubleshooting</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <div class="wrap">
+    <ol>
+      <li><a href="/">Home</a></li>
+      <li><span aria-current="page">Quick start</span></li>
+    </ol>
+  </div>
+</nav>
+<main id="main">
+<div class="wrap">
+  <div class="page-head">
+    <p class="eyebrow">Quick start</p>
+    <h1>Quick start</h1>
+  </div>
+  <div class="prose">
+<p>This walkthrough sets up Gmail for Claude Code and proves the chain: marketplace, plugin, server, login and API call. It needs Node.js 20 or newer, Claude Code 2.1.271 or later, a Google account (a Google Workspace account is the main target) and no clone. The commands run with <code>npx</code>.</p>
+<h2 id="1-install-the-gmail-plugin">1. Install the Gmail plugin</h2>
+<p>The first install also adds the marketplace, so there is no separate step. Leave <strong>Allow write tools</strong> off for now, keep <strong>Confirm before changes</strong> at <code>every-change</code>, and leave the token directory empty.</p>
+<div class="codeblock"><p class="code-label">Install for your user account</p><pre><code>npx google-services-mcps install --agent claude --plugin gmail</code></pre></div>
+<h2 id="2-create-a-desktop-oauth-client">2. Create a Desktop OAuth client</h2>
+<p>In the Google Cloud console, create a project for the suite and enable the Gmail API. Configure the OAuth consent screen: use <strong>Internal</strong> for a Workspace domain, and publish an external app, because an app left in <strong>Testing</strong> loses its refresh token after 7 days. Create an OAuth client ID of type <strong>Desktop app</strong> and download its JSON file.</p>
+<h2 id="3-save-the-client-file-and-log-in">3. Save the client file and log in</h2>
+<p><code>setup-client</code> copies the file into the token directory as <code>client_secret.json</code>, with mode 0600 where the platform supports it. The login asks only for the scopes of its profile; <code>readonly</code> is the default.</p>
+<div class="codeblock"><p class="code-label">Save the client and log in</p><pre><code>npx google-services-mcps setup-client path/to/client_secret.json
+npx google-services-mcps login workspace-user --profile readonly --servers gmail
+npx google-services-mcps status</code></pre></div>
+<p>The login opens a browser. Approve the Google consent screen. The redirect goes to <code>127.0.0.1</code> on the machine that runs the command, so the browser must be on that machine. <code>status</code> then shows the group as logged in.</p>
+<h2 id="4-restart-claude-code-and-check-the-server">4. Restart Claude Code and check the server</h2>
+<p>Start Claude Code in your working folder and run <code>/mcp</code>. The <code>gmail</code> server should show as connected. If the server was already running before the login, reconnect it there or restart Claude Code. From a terminal, <code>claude plugin list</code> and <code>npx google-services-mcps list</code> show the install.</p>
+<h2 id="5-run-one-read">5. Run one read</h2>
+<p>Ask Claude:</p>
+<aside class="note"><p>Show the subjects of my five most recent Gmail messages.</p></aside>
+<p>Claude calls read tools such as <code>mcp__plugin_gmail_gmail__gmail_users_messages_list</code>. Reads never ask for approval. When this works, every layer is in place.</p>
+<h2 id="if-it-goes-wrong">If it goes wrong</h2>
+<ul><li><strong>The tools do not appear.</strong> Run <code>claude plugin list</code>; if the status is <code>disabled</code>, enable it with <code>claude plugin enable gmail@google-services-mcps --scope user</code>. Then run <code>/mcp</code> and read the message there.</li><li><strong>The server shows no tools.</strong> Check that the server is on in <code>/mcp</code>, that the plugin is enabled, and that the login profile covers the tools you expect. A <code>readonly</code> login lists only read tools.</li><li><strong>Every call fails with a login message.</strong> Set up the client and log in for the group. <code>npx google-services-mcps doctor --plugin gmail</code> checks the plugin folder and the credentials.</li><li><strong>The browser does not open.</strong> Run the login again with <code>--no-browser</code>; it prints the URL to open on the same machine.</li></ul>
+<p>The <a href="/troubleshooting/">troubleshooting page</a> has the exact messages and their fixes. The <a href="/install/">install page</a> covers the other agents and scopes, and the <a href="/products/">products page</a> lists what each plugin adds.</p>
+  </div>
+</div>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <nav aria-label="Footer">
+      <ul>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/license/">License</a></li>
+        <li><a href="/products/">Products</a></li>
+        <li><a href="https://github.com/FiredMosquito831/google-services-mcps">Repository</a></li>
+        <li><a href="https://github.com/FiredMosquito831/google-services-mcps/issues">Issues</a></li>
+      </ul>
+    </nav>
+    <nav aria-label="Harnesses">
+      <ul>
+        <li><a href="/for/claude-code/">For Claude Code</a></li>
+        <li><a href="/for/codex/">For Codex</a></li>
+        <li><a href="/for/opencode/">For OpenCode</a></li>
+        <li><a href="/for/antigravity/">For Antigravity</a></li>
+      </ul>
+    </nav>
+    <p>google-services-mcps is an independent project. It is not affiliated with, endorsed by, or sponsored by Google LLC. Google and the Google product names are trademarks of Google LLC.</p>
+    <p>Licensed under the Apache License, Version 2.0 (Apache-2.0). Based on google-services-mcps by FiredMosquito831 (https://github.com/FiredMosquito831/google-services-mcps, profile https://github.com/FiredMosquito831).</p>
+    <p>This site is generated from the repository by <code>scripts/build_site.py</code>. Version 2.17.0.</p>
+  </div>
+</footer>
+<script src="/assets/site.js" defer></script>
+</body>
+</html>

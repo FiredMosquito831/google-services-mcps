@@ -31,3 +31,7 @@ data/cache-discovery/
 *.stackdump
 # Orchestration notes (working-notes skill): kept out of git
 .orchestration/
+
+# Site build scratch (scripts/build_site.py writes only docs/)
+__pycache__/
+*.pyc

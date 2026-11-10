@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block main %}
+{% if page.hero %}
+<section class="hero">
+  <div class="wrap">
+{% if page.eyebrow %}
+    <p class="eyebrow">{{ page.eyebrow }}</p>
+{% endif %}
+    <h1>{{ page.h1 }}</h1>
+{% if page.lead %}
+    <p class="lead">{{ page.lead | inline }}</p>
+{% endif %}
+{% if page.actions %}
+    <div class="actions">
+{% for action in page.actions %}
+      <a class="btn{% if action.get('primary') %} btn-primary{% endif %}" href="{{ action.href }}">{{ action.label }}</a>
+{% endfor %}
+    </div>
+{% endif %}
+    <ul class="stats">
+{% for item in stats %}
+      <li class="stat"><span class="stat-value">{{ item.value }}</span><span class="stat-label">{{ item.label }}</span></li>
+{% endfor %}
+    </ul>
+  </div>
+</section>
+<div class="wrap">
+  <div class="prose">
+{{ content }}
+  </div>
+</div>
+{% else %}
+<div class="wrap">
+  <div class="page-head">
+{% if page.eyebrow %}
+    <p class="eyebrow">{{ page.eyebrow }}</p>
+{% endif %}
+    <h1>{{ page.h1 }}</h1>
+  </div>
+  <div class="prose">
+{{ content }}
+  </div>
+</div>
+{% endif %}
+{% endblock %}

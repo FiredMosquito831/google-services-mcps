@@ -1,0 +1,45 @@
+{
+  "path": "/quick-start/",
+  "title": "Quick start | google-services-mcps",
+  "description": "Install Gmail for Claude Code, save a Desktop OAuth client, log in with the read-only profile, and run one read. Five steps, no clone and no build.",
+  "h1": "Quick start",
+  "eyebrow": "Quick start",
+  "breadcrumbs": [["Quick start", "/quick-start/"]],
+  "words_min": 500,
+  "priority": "0.9",
+  "blocks": [
+    { "t": "p", "text": "This walkthrough sets up Gmail for Claude Code and proves the chain: marketplace, plugin, server, login and API call. It needs Node.js 20 or newer, Claude Code 2.1.271 or later, a Google account (a Google Workspace account is the main target) and no clone. The commands run with `npx`." },
+    { "t": "h2", "text": "1. Install the Gmail plugin" },
+    { "t": "p", "text": "The first install also adds the marketplace, so there is no separate step. Leave **Allow write tools** off for now, keep **Confirm before changes** at `every-change`, and leave the token directory empty." },
+    { "t": "code", "label": "Install for your user account", "text": "npx google-services-mcps install --agent claude --plugin gmail" },
+    { "t": "h2", "text": "2. Create a Desktop OAuth client" },
+    { "t": "p", "text": "In the Google Cloud console, create a project for the suite and enable the Gmail API. Configure the OAuth consent screen: use **Internal** for a Workspace domain, and publish an external app, because an app left in **Testing** loses its refresh token after 7 days. Create an OAuth client ID of type **Desktop app** and download its JSON file." },
+    { "t": "h2", "text": "3. Save the client file and log in" },
+    { "t": "p", "text": "`setup-client` copies the file into the token directory as `client_secret.json`, with mode 0600 where the platform supports it. The login asks only for the scopes of its profile; `readonly` is the default." },
+    { "t": "code", "label": "Save the client and log in", "text": "npx google-services-mcps setup-client path/to/client_secret.json\nnpx google-services-mcps login workspace-user --profile readonly --servers gmail\nnpx google-services-mcps status" },
+    { "t": "p", "text": "The login opens a browser. Approve the Google consent screen. The redirect goes to `127.0.0.1` on the machine that runs the command, so the browser must be on that machine. `status` then shows the group as logged in." },
+    { "t": "h2", "text": "4. Restart Claude Code and check the server" },
+    { "t": "p", "text": "Start Claude Code in your working folder and run `/mcp`. The `gmail` server should show as connected. If the server was already running before the login, reconnect it there or restart Claude Code. From a terminal, `claude plugin list` and `npx google-services-mcps list` show the install." },
+    { "t": "h2", "text": "5. Run one read" },
+    { "t": "p", "text": "Ask Claude:" },
+    { "t": "note", "text": "Show the subjects of my five most recent Gmail messages." },
+    { "t": "p", "text": "Claude calls read tools such as `mcp__plugin_gmail_gmail__gmail_users_messages_list`. Reads never ask for approval. When this works, every layer is in place." },
+    { "t": "h2", "text": "If it goes wrong" },
+    { "t": "ul", "items": [
+      "**The tools do not appear.** Run `claude plugin list`; if the status is `disabled`, enable it with `claude plugin enable gmail@google-services-mcps --scope user`. Then run `/mcp` and read the message there.",
+      "**The server shows no tools.** Check that the server is on in `/mcp`, that the plugin is enabled, and that the login profile covers the tools you expect. A `readonly` login lists only read tools.",
+      "**Every call fails with a login message.** Set up the client and log in for the group. `npx google-services-mcps doctor --plugin gmail` checks the plugin folder and the credentials.",
+      "**The browser does not open.** Run the login again with `--no-browser`; it prints the URL to open on the same machine."
+    ]},
+    { "t": "p", "text": "The [troubleshooting page](/troubleshooting/) has the exact messages and their fixes. The [install page](/install/) covers the other agents and scopes, and the [products page](/products/) lists what each plugin adds." }
+  ],
+  "claims": [
+    { "text": "The first install also adds the marketplace", "evidence": "README.md §Quick start step 1; docs/INSTALL.md §1. Add the marketplace", "status": "verified" },
+    { "text": "An external app left in Testing loses its refresh token after 7 days", "evidence": "README.md §Desktop OAuth client (most groups); docs/SECURITY.md §Known limits", "status": "verified" },
+    { "text": "setup-client copies the file as client_secret.json with mode 0600", "evidence": "docs/SETUP.md §Desktop OAuth client step 5", "status": "verified" },
+    { "text": "readonly is the default profile", "evidence": "README.md §Sign in (Profile table); docs/SETUP.md §Login options", "status": "verified" },
+    { "text": "The redirect goes to 127.0.0.1 on the machine that runs the command", "evidence": "docs/INSTALL.md §Troubleshooting (\"The redirect goes to 127.0.0.1\")", "status": "verified" },
+    { "text": "Reads never ask for approval", "evidence": "docs/SECURITY.md §Controls, item 3; README.md §Using it", "status": "verified" },
+    { "text": "The tool name mcp__plugin_gmail_gmail__gmail_users_messages_list", "evidence": "README.md §Tool names; plugins/gmail/tool-map.json", "status": "verified" }
+  ]
+}

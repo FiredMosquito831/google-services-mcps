@@ -1,0 +1,48 @@
+{
+  "path": "/products/",
+  "title": "Products | google-services-mcps",
+  "description": "All 23 Google products in the suite, generated from the plugin folders: each one's description, login group and registered tool count, with a link to its page.",
+  "h1": "Products",
+  "eyebrow": "Reference",
+  "breadcrumbs": [["Products", "/products/"]],
+  "words_min": 400,
+  "priority": "0.9",
+  "blocks": [
+    { "t": "p", "text": "The suite has one plugin per Google product. Each product id is also its plugin name and its MCP server name. This page is generated from the plugin folders at build time, so the list, the descriptions and the tool counts come from the manifests, not from a typed table." },
+    { "t": "p", "text": "The tool count is what the product's server registers: the plugin's tool map without the runtime tools of other sign-in kinds, and, for the service-account group, without tools the key's fixed scopes never cover. A product's page lists every registered tool, its OAuth scopes, its APIs and its login group." },
+    { "t": "h2", "text": "All products" },
+    { "t": "products" },
+    { "t": "h2", "text": "What a product page shows" },
+    { "t": "p", "text": "Each product page is generated from the plugin folder, so it cannot drift from the code. It shows the install command, the APIs the server carries and the gateway APIs it can reach, every tool the server registers with its safety class, the OAuth scopes in the plugin's scope file, and the plugin's own metadata: its name, server, version, login group and options." },
+    { "t": "ul", "items": [
+      "**Tools** are listed with the class the plugin's tool map gives them: read, write, destructive or dynamic.",
+      "**Scopes** come from the plugin's `scopes.json`, grouped by API. A login asks only for the scopes of its profile.",
+      "**APIs** come from the plugin's `servers.json`, which the build generates from the product map.",
+      "**The login group** decides which kind of credential the product uses."
+    ]},
+    { "t": "h2", "text": "Status" },
+    { "t": "p", "text": "The suite is in beta. Three products have run against live Google accounts: `gcloud`, `gsc` and `gmail`. The others are built and tested offline only, so test each one with a read first, on an account where a mistake does no harm." },
+    { "t": "h2", "text": "Login groups" },
+    { "t": "p", "text": "Products in one group share one login. Log in once per group, with the products of that group that you use." },
+    { "t": "table", "caption": "The login groups and their products", "head": ["Group", "Products", "Setup"], "rows": [
+      ["`cloud`", "`gcloud`, `gai`", "Desktop OAuth client, then `login cloud`"],
+      ["`searchconsole`", "`gsc`", "Desktop OAuth client, then `login searchconsole`"],
+      ["`workspace-user`", "`gdrive`, `gmail`, `gcalendar`, `gchat`, `gmeet`, `gcontacts`, `gtasks`, `gclassroom`, `gapps`", "Desktop OAuth client, then `login workspace-user`"],
+      ["`workspace-admin`", "`gadmin`", "Service account with domain-wide delegation, then `setup-admin`"],
+      ["`business`", "`ganalytics`, `gtm`, `gyoutube`, `gbusiness`, `gads`", "Desktop OAuth client, then `login business`"],
+      ["`developer`", "`gfirebase`", "Desktop OAuth client, then `login developer`"],
+      ["`service-account`", "`gplay`, `gmerchant`", "Service account key, then `setup-service-account` (no login)"],
+      ["`apikey`", "`gsearch`, `gmaps`", "API key, then `setup-apikey` (no login)"]
+    ]},
+    { "t": "h2", "text": "Choosing" },
+    { "t": "p", "text": "Install a product only when you have a use for it. Start with a read-only login and **Allow write tools** off, add one product at a time, and turn on changes later for one product at a time. `gadmin` and `gads` can change real users and spend real money, so they carry the highest risk." },
+    { "t": "p", "text": "The [install page](/install/) has the commands. The [configuration page](/configuration/) lists the settings by name." }
+  ],
+  "claims": [
+    { "text": "The suite has 23 products, one plugin each", "evidence": "plugins/*/ (23 folders); .claude-plugin/marketplace.json", "status": "verified" },
+    { "text": "The tool count is what the server registers, by registersEntry", "evidence": "src/core/runtime-tools.ts; CLAUDE.md §Tool counts (1.38.3)", "status": "verified" },
+    { "text": "The eight login groups and their products", "evidence": "plugins/*/servers.json (group); README.md §Sign in; docs/SURFACES.md §Login and setup per group", "status": "verified" },
+    { "text": "gadmin and gads carry the highest risk", "evidence": "README.md §Choosing products", "status": "verified" },
+    { "text": "Three products have run against live Google accounts: gcloud, gsc and gmail", "evidence": "README.md §Status and roadmap", "status": "verified" }
+  ]
+}

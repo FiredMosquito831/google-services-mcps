@@ -9,6 +9,8 @@
 
 **google-services-mcps** is a Google Workspace MCP, Google Cloud MCP and Search Console MCP suite. It includes a Gmail MCP, a Google Drive MCP, a Google Calendar MCP and a Google Ads MCP, plus 19 more Google products. Each product is one **Model Context Protocol** server, packaged as a **Claude Code plugin** in one marketplace. An installer adds the same servers to a Codex MCP, an OpenCode MCP and an Antigravity MCP setup. Use it to let an AI agent read your Google data and, when you allow it, change that data.
 
+**Documentation site:** <https://googleservices.danubelabs.net/> — install, the generated product reference for all 23 plugins with their tools and scopes, the architecture, configuration, FAQ and troubleshooting.
+
 > **Status: beta.** Built and tested offline: 646 passing tests (three are skipped: one downloads from GitHub and runs only with `GSM_NETWORK_TESTS=1`, and one checks the Windows folder access list only off Windows), a smoke test over all 23 servers, and Claude plugin validation. Not yet tested against live Google accounts. The repository is public. Licensed under Apache-2.0.
 
 ## At a glance

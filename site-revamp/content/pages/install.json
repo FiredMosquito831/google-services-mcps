@@ -1,0 +1,87 @@
+{
+  "path": "/install/",
+  "title": "Install | google-services-mcps",
+  "description": "Every way to install the Google services MCP servers: npx, a global npm install, a one-line installer, or a clone. Flags, scopes and what an install writes.",
+  "h1": "Install",
+  "eyebrow": "Install",
+  "breadcrumbs": [["Install", "/install/"]],
+  "words_min": 600,
+  "priority": "0.9",
+  "blocks": [
+    { "t": "p", "text": "Every route runs the same installer, `gsm`. Only the way you start it differs. The installer needs Node.js 20 or newer; the product's `engines` field requires `>=20`. It needs no build and no `npm install`." },
+    { "t": "h2", "text": "Routes" },
+    { "t": "table", "caption": "How to start the installer", "head": ["Route", "Command", "Needs"], "rows": [
+      ["npx (recommended)", "`npx google-services-mcps <command>`", "Node.js 20 or newer, npm"],
+      ["Global install", "`npm install -g google-services-mcps`, then `google-services-mcps <command>`", "Node.js 20 or newer, npm"],
+      ["One line, no npm", "the line for your shell, below", "Node.js 20 or newer"],
+      ["From a clone", "`node gsm.mjs <command>` in the repository folder", "Node.js 20 or newer, git"]
+    ]},
+    { "t": "p", "text": "The old package name `@firedmosquito831/google-services-mcps` is deprecated. It is the same installer; use `google-services-mcps`. A global install gives the commands `google-services-mcps` and `gsm`." },
+    { "t": "h2", "text": "The one-line installers" },
+    { "t": "p", "text": "Each line downloads the repository into `google-services-mcps` in your home folder and runs `node gsm.mjs` there with your arguments. The download folder is replaced on each run, and logins are not affected." },
+    { "t": "code", "label": "PowerShell", "text": "& ([scriptblock]::Create((irm \"https://raw.githubusercontent.com/FiredMosquito831/google-services-mcps/main/scripts/install.ps1\"))) install --agent claude --plugin gmail" },
+    { "t": "code", "label": "Command Prompt", "text": "curl -fsSL -o \"%TEMP%\\install-gsm.cmd\" https://raw.githubusercontent.com/FiredMosquito831/google-services-mcps/main/scripts/install.cmd && \"%TEMP%\\install-gsm.cmd\" install --agent claude --plugin gmail" },
+    { "t": "code", "label": "Linux, macOS and WSL", "text": "curl -fsSL \"https://raw.githubusercontent.com/FiredMosquito831/google-services-mcps/main/scripts/install.sh\" | sh -s -- install --agent claude --plugin gmail" },
+    { "t": "h2", "text": "Flags or the menu" },
+    { "t": "p", "text": "With all the flags given, or with no terminal, nothing is asked: the command runs as written, and a missing flag is a usage error with the valid values. In a terminal, `npx google-services-mcps` with no arguments opens a guided menu. It covers installing, uninstalling, signing in to a Google group, signing out, the install list, the sign-in status, the products, the APIs and methods, the scopes, the checks and the version. Each answer shows the exact command it will run, and the install previews it with `--dry-run`." },
+    { "t": "table", "caption": "Install options", "head": ["Option", "What it does", "Default"], "rows": [
+      ["`--agent <a>`", "`claude`, `codex`, `opencode`, `agy` (Antigravity) or `all`", "required"],
+      ["`--plugin <ids>`", "one product (`gmail`), several (`gmail,gcalendar`), or `all`. Unknown ids are refused", "required"],
+      ["`--scope <s>`", "`global`: your account, every project. `project`: the folder, shared when committed. `local`: the folder only. `folder` means `local`", "`global`"],
+      ["`--path <dir>`", "the folder for `project` and `local`. It must exist", "the current folder"],
+      ["`--allow-writes`", "allows the write tools. Each change still asks unless confirmation is off", "off"],
+      ["`--confirmation <mode>`", "`every-change`, `destructive-only` or `off`", "`every-change`"],
+      ["`--toolset <set>`", "`all`, `google` or `curated`: which tools each server lists. Written only when given", "`all`"],
+      ["`--install-missing`", "installs the requirements gsm can install, then checks again", "off"],
+      ["`--dry-run`", "prints every change and command, and writes nothing", "off"],
+      ["`--marketplace <src>`", "Claude Code only: `owner/repo`, a URL or a folder", "the clone folder, else GitHub"],
+      ["`--servers <a,b>`", "keeps only these servers of the products", "all"],
+      ["`--home <dir>`", "another home folder, for tests. Not for Claude Code", "your home folder"]
+    ]},
+    { "t": "h2", "text": "What an install does" },
+    { "t": "ol", "items": [
+      "**Checks the requirements** of the agents you chose: Claude Code (`claude`), Codex (`codex`), OpenCode (`opencode`), and git when the Claude Code marketplace comes from GitHub. A missing one stops the install before any file is written, and the message gives the command that installs it.",
+      "**Installs what is missing, if you ask** (`--install-missing`). npm installs Claude Code, Codex and OpenCode. git is installed with winget on Windows and Homebrew on macOS; on Linux gsm shows the command instead, because git needs sudo.",
+      "**Claude Code:** declares the `google-services-mcps` marketplace in the same scope as the plugin, then runs `claude plugin install <product>@google-services-mcps --scope <scope>`. Claude Code writes its own settings files.",
+      "**Codex, OpenCode and Antigravity:** copies each product's server files to `~/.google-services-mcps/runtime/<product>/`, and writes one entry per server into the agent's config file.",
+      "**Records the install** in `~/.google-services-mcps/runtime/installs.json`, so `list` and `uninstall` know what gsm did. Logins and tokens are never touched."
+    ]},
+    { "t": "h2", "text": "Scopes by agent" },
+    { "t": "table", "caption": "Where each agent reads its configuration", "head": ["Agent", "`global` (default)", "`project`", "`local`"], "rows": [
+      ["Claude Code", "`~/.claude/settings.json`, all your projects", "`.claude/settings.json` in the folder", "`.claude/settings.local.json` in the folder"],
+      ["Codex", "`~/.codex/config.toml`", "`.codex/config.toml` in the folder, read only for trusted projects", "the same file as `project`"],
+      ["OpenCode", "`~/.config/opencode/opencode.json`", "`opencode.json` in the folder", "the same file as `project`"],
+      ["Antigravity", "`~/.gemini/config/mcp_config.json`", "not supported (exit code 2)", "not supported (exit code 2)"]
+    ]},
+    { "t": "p", "text": "For Claude Code, the marketplace is declared in the same scope as the plugin. A `project` install writes both `extraKnownMarketplaces` and `enabledPlugins` into the folder's `.claude/settings.json`, so a teammate who clones the project gets both. An install from a clone records the clone folder, which is a local path, so do not commit that file." },
+    { "t": "h2", "text": "Plugin options" },
+    { "t": "p", "text": "Every Claude Code plugin has four options. `--allow-writes` and `--confirmation` set the first two at install time. The plugins need Claude Code 2.1.271 or later, because their options offer fixed choices." },
+    { "t": "table", "caption": "The four plugin options", "head": ["Option", "What it does", "Default"], "rows": [
+      ["`allow_writes`", "lists the tools that create, change, delete or send. Off, only reads are listed", "off"],
+      ["`confirmation`", "`every-change`, `destructive-only` or `off`", "`every-change`"],
+      ["`toolset`", "`all`, `google` or `curated`: which tools the server lists. It applies when the server starts again", "`all`"],
+      ["`token_dir`", "the folder for tokens and the OAuth client. Empty means `~/.google-services-mcps`", "empty"]
+    ]},
+    { "t": "p", "text": "`gadmin` adds `admin_subject` and `service_account_key_file`. `gads` adds `ads_developer_token` and `ads_login_customer_id`. Show the options with `claude plugin configure gmail@google-services-mcps`; change them by piping JSON to the same command with `--values-stdin`, or with `/plugin configure` in Claude Code." },
+    { "t": "h2", "text": "Update" },
+    { "t": "p", "text": "Claude Code does not update plugins from this marketplace on its own. After a new release, refresh the marketplace and update each plugin you use:" },
+    { "t": "code", "label": "Update the plugins", "text": "claude plugin marketplace update google-services-mcps\nclaude plugin update gmail@google-services-mcps" },
+    { "t": "p", "text": "Run the second line once per plugin. The new version loads in the next session, or after `/reload-plugins`. For Codex, OpenCode and Antigravity, run the install again so the runtime copy is refreshed." },
+    { "t": "h2", "text": "Check and remove" },
+    { "t": "p", "text": "`claude plugin list` shows each plugin with its scope and status. `npx google-services-mcps list` shows every install gsm made. `npx google-services-mcps doctor --plugin gmail` checks the plugin folder and the credentials, and exits 1 when a check fails." },
+    { "t": "p", "text": "To remove one install, run `uninstall` with the same `--agent`, `--plugin`, `--scope` and `--path`. To remove every install gsm recorded, preview and then remove:" },
+    { "t": "code", "label": "Remove every install", "text": "npx google-services-mcps uninstall --all --dry-run\nnpx google-services-mcps uninstall --all --yes" },
+    { "t": "p", "text": "Uninstall removes only gsm's own entries and leaves a backup of each changed config file. It never deletes the token directory. To remove logins, use `logout` for each group, then delete `~/.google-services-mcps` by hand." }
+  ],
+  "claims": [
+    { "text": "Node.js 20 or newer is required", "evidence": "package.json engines.node (>=20); docs/INSTALL.md §Before you start", "status": "verified" },
+    { "text": "There is no build step", "evidence": "docs/INSTALL.md §Before you start", "status": "verified" },
+    { "text": "The four routes are npx, a global install, the one-line installers and a clone", "evidence": "README.md §Install; docs/INSTALL.md §npm and npx commands", "status": "verified" },
+    { "text": "An install checks requirements, installs what is missing if asked, installs the plugin, copies runtime files for Codex, OpenCode and Antigravity, and records the install", "evidence": "README.md §What an install does (five numbered steps)", "status": "verified" },
+    { "text": "The scope paths per agent", "evidence": "README.md §Scopes by agent; docs/INSTALL.md §Scopes", "status": "verified" },
+    { "text": "Every plugin has the options allow_writes, confirmation, toolset and token_dir", "evidence": "plugins/*/.claude-plugin/plugin.json (userConfig); README.md §Plugin options", "status": "verified" },
+    { "text": "The plugins need Claude Code 2.1.271 or later", "evidence": "README.md §Plugin options (Claude Code)", "status": "verified" },
+    { "text": "Uninstall removes only gsm's own entries and leaves a backup", "evidence": "docs/INSTALL.md §Other agents (Uninstall); README.md §Install", "status": "verified" },
+    { "text": "Uninstall never deletes the token directory", "evidence": "docs/INSTALL.md §Where the files go; §Remove everything step 4", "status": "verified" }
+  ]
+}
