@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{ page.title }}</title>
 <meta name="description" content="{{ page.description }}">
+{% if page.keywords %}
+<meta name="keywords" content="{{ page.keywords | join(', ') }}">
+{% endif %}
 {% if page.noindex %}
 <meta name="robots" content="noindex">
 {% endif %}
@@ -82,6 +85,14 @@
         <li><a href="/products/">Products</a></li>
         <li><a href="{{ site.repository }}">Repository</a></li>
         <li><a href="{{ site.issues }}">Issues</a></li>
+      </ul>
+    </nav>
+    <nav aria-label="Harnesses">
+      <ul>
+        <li><a href="/for/claude-code/">For Claude Code</a></li>
+        <li><a href="/for/codex/">For Codex</a></li>
+        <li><a href="/for/opencode/">For OpenCode</a></li>
+        <li><a href="/for/antigravity/">For Antigravity</a></li>
       </ul>
     </nav>
     <p>{{ legal.non_affiliation }}</p>
