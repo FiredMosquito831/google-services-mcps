@@ -10,6 +10,7 @@
   "jsonld_extra": ["faq"],
   "blocks": [
     { "t": "p", "text": "These are the questions the project's own documentation answers. Every answer is mirrored in the page's structured data, so a search engine reads the same text a person does." },
+    { "t": "h2", "text": "The questions" },
     { "t": "faq", "items": [
       { "q": "Does it cost money?", "a": "The suite is free. Google's quotas, billing and approval rules apply to each call you make. Claude's own usage grows with each installed product, because every product adds tool definitions to the session. Install only the products you use." },
       { "q": "Which Google accounts do I need?", "a": "A Google Workspace account is the main target. Each login group needs a Desktop OAuth client in a Google Cloud project. gadmin needs a super admin and a service account with domain-wide delegation. gsearch needs an API key. Personal accounts worked for Gmail reads in a live test on 2026-10-29; for the other products they are untested." },

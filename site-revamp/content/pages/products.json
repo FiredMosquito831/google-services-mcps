@@ -10,6 +10,7 @@
   "blocks": [
     { "t": "p", "text": "The suite has one plugin per Google product. Each product id is also its plugin name and its MCP server name. This page is generated from the plugin folders at build time, so the list, the descriptions and the tool counts come from the manifests, not from a typed table." },
     { "t": "p", "text": "The tool count is what the product's server registers: the plugin's tool map without the runtime tools of other sign-in kinds, and, for the service-account group, without tools the key's fixed scopes never cover. A product's page lists every registered tool, its OAuth scopes, its APIs and its login group." },
+    { "t": "h2", "text": "All products" },
     { "t": "products" },
     { "t": "h2", "text": "What a product page shows" },
     { "t": "p", "text": "Each product page is generated from the plugin folder, so it cannot drift from the code. It shows the install command, the APIs the server carries and the gateway APIs it can reach, every tool the server registers with its safety class, the OAuth scopes in the plugin's scope file, and the plugin's own metadata: its name, server, version, login group and options." },
