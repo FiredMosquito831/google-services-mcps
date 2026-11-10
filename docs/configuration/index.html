@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Configuration | google-services-mcps</title>
+<meta name="description" content="The plugin options, the environment variable names, the policy file and the audit log. Variable names and purposes only; no values and no secrets.">
+<link rel="canonical" href="https://googleservices.danubelabs.net/configuration/">
+<meta name="theme-color" content="#0B1020" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F8FAFC" media="(prefers-color-scheme: light)">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="google-services-mcps">
+<meta property="og:title" content="Configuration | google-services-mcps">
+<meta property="og:description" content="The plugin options, the environment variable names, the policy file and the audit log. Variable names and purposes only; no values and no secrets.">
+<meta property="og:url" content="https://googleservices.danubelabs.net/configuration/">
+<meta property="og:image" content="https://googleservices.danubelabs.net/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="google-services-mcps: 23 Google products as MCP servers, one plugin each">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Configuration | google-services-mcps">
+<meta name="twitter:description" content="The plugin options, the environment variable names, the policy file and the audit log. Variable names and purposes only; no values and no secrets.">
+<meta name="twitter:image" content="https://googleservices.danubelabs.net/og.png">
+<meta name="twitter:image:alt" content="google-services-mcps: 23 Google products as MCP servers, one plugin each">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Configuration | google-services-mcps",
+  "url": "https://googleservices.danubelabs.net/configuration/",
+  "description": "The plugin options, the environment variable names, the policy file and the audit log. Variable names and purposes only; no values and no secrets."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://googleservices.danubelabs.net/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Configuration",
+      "item": "https://googleservices.danubelabs.net/configuration/"
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/">
+      <svg class="brand-mark" viewBox="0 0 32 32" width="22" height="22" aria-hidden="true" focusable="false">
+        <rect width="32" height="32" rx="7" fill="var(--surface-2)"/>
+        <path d="M7 11h6M19 11h6M7 21h6M19 21h6" stroke="var(--accent)" stroke-width="2.4" stroke-linecap="round"/>
+        <circle cx="16" cy="11" r="3" fill="var(--warning)"/>
+        <circle cx="16" cy="21" r="3" fill="var(--accent)"/>
+      </svg>
+      <span>google-services-mcps</span>
+    </a>
+    <nav class="site-nav" aria-label="Main">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/install/">Install</a></li>
+        <li><a href="/quick-start/">Quick start</a></li>
+        <li><a href="/products/">Products</a></li>
+        <li><a href="/architecture/">Architecture</a></li>
+        <li><a href="/configuration/" aria-current="page">Configuration</a></li>
+        <li><a href="/faq/">FAQ</a></li>
+        <li><a href="/troubleshooting/">Troubleshooting</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <div class="wrap">
+    <ol>
+      <li><a href="/">Home</a></li>
+      <li><span aria-current="page">Configuration</span></li>
+    </ol>
+  </div>
+</nav>
+<main id="main">
+<div class="wrap">
+  <div class="page-head">
+    <p class="eyebrow">Configuration</p>
+    <h1>Configuration</h1>
+  </div>
+  <div class="prose">
+<p>Settings come from four places: the plugin options in Claude Code, the environment variables the servers read, the <code>policy.json</code> file in the token directory, and the confirmation setting. This page names them and says what each one does. It never shows a value for a secret-like setting.</p>
+<h2 id="plugin-options">Plugin options</h2>
+<p>Every Claude Code plugin has four options. Set them with <code>/plugin configure</code> in Claude Code, or from a terminal with <code>claude plugin configure &lt;plugin&gt;@google-services-mcps</code> and <code>--values-stdin</code>. Options you leave out keep their values.</p>
+<div class="table-wrap"><table><caption>The four plugin options</caption><thead><tr><th scope="col">Option</th><th scope="col">Purpose</th><th scope="col">Default</th></tr></thead><tbody><tr><td><code>allow_writes</code></td><td>lists the tools that create, change, delete or send</td><td>off</td></tr><tr><td><code>confirmation</code></td><td>when to ask before a change: <code>every-change</code>, <code>destructive-only</code> or <code>off</code></td><td><code>every-change</code></td></tr><tr><td><code>toolset</code></td><td>which tools the server lists: <code>all</code>, <code>google</code> or <code>curated</code></td><td><code>all</code></td></tr><tr><td><code>token_dir</code></td><td>the folder for tokens and the OAuth client</td><td>empty, which means <code>~/.google-services-mcps</code></td></tr></tbody></table></div>
+<p>Two products add options. <code>gadmin</code> adds <code>admin_subject</code> (the super admin's address) and <code>service_account_key_file</code> (the key file's path). <code>gads</code> adds <code>ads_developer_token</code> (optional) and <code>ads_login_customer_id</code> (the manager account's id, when you reach client accounts through one).</p>
+<h2 id="environment-variables">Environment variables</h2>
+<p>The plugin passes its options to the server as environment variables. The names below are the ones the code reads; the values are yours and are never shown here.</p>
+<div class="table-wrap"><table><caption>Environment variable names</caption><thead><tr><th scope="col">Name</th><th scope="col">What it controls</th><th scope="col">Read by</th></tr></thead><tbody><tr><td><code>GSM_ALLOW_WRITES</code></td><td>whether write and destructive tools are listed</td><td>the server</td></tr><tr><td><code>GSM_CONFIRMATION</code></td><td>the confirmation mode: <code>every-change</code>, <code>destructive-only</code> or <code>off</code></td><td>the server and the gate</td></tr><tr><td><code>GSM_TOOLSET</code></td><td>the toolset: <code>all</code>, <code>google</code> or <code>curated</code></td><td>the server</td></tr><tr><td><code>GSM_TOKEN_DIR</code></td><td>the token directory</td><td>the server and the hook</td></tr><tr><td><code>GSM_MAX_RESULT_CHARS</code></td><td>the result budget in characters; a longer result is cut at whole items</td><td>the server</td></tr><tr><td><code>GSM_ADMIN_SUBJECT</code></td><td>the super admin's address for the workspace-admin group</td><td>the gadmin server</td></tr><tr><td><code>GSM_SERVICE_ACCOUNT_KEY_FILE</code></td><td>the service account key file for the workspace-admin group</td><td>the gadmin server</td></tr><tr><td><code>GSM_ADS_DEVELOPER_TOKEN</code></td><td>the optional Google Ads developer token</td><td>the gads server</td></tr><tr><td><code>GSM_ADS_LOGIN_CUSTOMER_ID</code></td><td>the manager account id for Google Ads calls</td><td>the gads server</td></tr><tr><td><code>GSM_HOOK_ACTIVE</code></td><td>marks a hook process for the server</td><td>the server</td></tr><tr><td><code>GSM_VERBOSE</code></td><td>writes notices that are normally silent to standard error</td><td>the server</td></tr><tr><td><code>GSM_API_KEY_INPUT</code></td><td>the API key for <code>setup-apikey</code>, read instead of standard input</td><td>the installer</td></tr><tr><td><code>GOOGLE_APPLICATION_CREDENTIALS</code></td><td>a service account key used when none is set up for gplay or gmerchant</td><td>the server</td></tr><tr><td><code>GSM_DIR</code></td><td>the download folder for the one-line installers</td><td>the installers</td></tr><tr><td><code>GSM_REF</code></td><td>the branch, tag or commit the one-line installers download</td><td>the installers</td></tr></tbody></table></div>
+<p>The hook receives the plugin options as <code>CLAUDE_PLUGIN_OPTION_&lt;KEY&gt;</code> variables, not as the server's names. The hook resolves the token directory in the same order as the server: <code>GSM_TOKEN_DIR</code>, then the plugin's <code>token_dir</code> option, then the default. That way the hook and the gate read the same <code>policy.json</code>.</p>
+<h2 id="the-policy-file">The policy file</h2>
+<p><code>policy.json</code> in the token directory holds <code>allow</code>, <code>ask</code> and <code>deny</code> rules. A rule matches a tool name or a method id, by glob (<code>*</code>, <code>?</code>) or by a regular expression written <code>re:...</code>. The order is fixed: a matching deny wins, then a matching ask, then a matching allow. An allow rule skips the default question for a change or a delete, and never overrides a deny. A broken policy file makes the gate ask, and the error is shown.</p>
+<p>Match narrowly. A rule for a whole product, such as <code>mcp__plugin_gcloud_gcloud__*</code> with <code>allow</code>, also skips the prompt for every gcloud change and delete.</p>
+<h2 id="the-token-directory">The token directory</h2>
+<p>The default is <code>~/.google-services-mcps</code>, in your home folder. It holds the OAuth client file, one token file per login group, the API key, the workspace-admin setup, <code>policy.json</code>, <code>audit.log</code> and, when a service account is set up, the record of its key path. Files are written with mode 0600 where the platform supports it; on Windows the folder's access list is limited to your user, SYSTEM and Administrators, and <code>doctor</code> checks it.</p>
+<p><code>npx google-services-mcps protect</code> can move the saved secrets into the operating system's store: DPAPI on Windows, with Keychain and libsecret implemented but not run in this release. <code>protect --off</code> moves them back to plain files. Secret values are passed to the store on standard input, never in a command line.</p>
+<h2 id="the-audit-log">The audit log</h2>
+<p>Each gated action writes one JSON line to <code>audit.log</code> in the token directory. The line holds the time, tool, method, decision and outcome, and a 16-character hash of the arguments. The arguments themselves are never written. Reads are not logged. The log is plain text and is not tamper-evident.</p>
+<p>The <a href="/architecture/">architecture page</a> shows where these settings sit in the request path. The <a href="/troubleshooting/">troubleshooting page</a> covers the messages a refused call prints.</p>
+  </div>
+</div>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <nav aria-label="Footer">
+      <ul>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/license/">License</a></li>
+        <li><a href="/products/">Products</a></li>
+        <li><a href="https://github.com/FiredMosquito831/google-services-mcps">Repository</a></li>
+        <li><a href="https://github.com/FiredMosquito831/google-services-mcps/issues">Issues</a></li>
+      </ul>
+    </nav>
+    <p>google-services-mcps is an independent project. It is not affiliated with, endorsed by, or sponsored by Google LLC. Google and the Google product names are trademarks of Google LLC.</p>
+    <p>Licensed under the Apache License, Version 2.0 (Apache-2.0). Based on google-services-mcps by FiredMosquito831 (https://github.com/FiredMosquito831/google-services-mcps, profile https://github.com/FiredMosquito831).</p>
+    <p>This site is generated from the repository by <code>scripts/build_site.py</code>. Version 2.17.0.</p>
+  </div>
+</footer>
+<script src="/assets/site.js" defer></script>
+</body>
+</html>

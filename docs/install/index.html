@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Install | google-services-mcps</title>
+<meta name="description" content="Every way to install the Google services MCP servers: npx, a global npm install, a one-line installer, or a clone. Flags, scopes and what an install writes.">
+<link rel="canonical" href="https://googleservices.danubelabs.net/install/">
+<meta name="theme-color" content="#0B1020" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F8FAFC" media="(prefers-color-scheme: light)">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="google-services-mcps">
+<meta property="og:title" content="Install | google-services-mcps">
+<meta property="og:description" content="Every way to install the Google services MCP servers: npx, a global npm install, a one-line installer, or a clone. Flags, scopes and what an install writes.">
+<meta property="og:url" content="https://googleservices.danubelabs.net/install/">
+<meta property="og:image" content="https://googleservices.danubelabs.net/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="google-services-mcps: 23 Google products as MCP servers, one plugin each">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Install | google-services-mcps">
+<meta name="twitter:description" content="Every way to install the Google services MCP servers: npx, a global npm install, a one-line installer, or a clone. Flags, scopes and what an install writes.">
+<meta name="twitter:image" content="https://googleservices.danubelabs.net/og.png">
+<meta name="twitter:image:alt" content="google-services-mcps: 23 Google products as MCP servers, one plugin each">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Install | google-services-mcps",
+  "url": "https://googleservices.danubelabs.net/install/",
+  "description": "Every way to install the Google services MCP servers: npx, a global npm install, a one-line installer, or a clone. Flags, scopes and what an install writes."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://googleservices.danubelabs.net/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Install",
+      "item": "https://googleservices.danubelabs.net/install/"
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/">
+      <svg class="brand-mark" viewBox="0 0 32 32" width="22" height="22" aria-hidden="true" focusable="false">
+        <rect width="32" height="32" rx="7" fill="var(--surface-2)"/>
+        <path d="M7 11h6M19 11h6M7 21h6M19 21h6" stroke="var(--accent)" stroke-width="2.4" stroke-linecap="round"/>
+        <circle cx="16" cy="11" r="3" fill="var(--warning)"/>
+        <circle cx="16" cy="21" r="3" fill="var(--accent)"/>
+      </svg>
+      <span>google-services-mcps</span>
+    </a>
+    <nav class="site-nav" aria-label="Main">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/install/" aria-current="page">Install</a></li>
+        <li><a href="/quick-start/">Quick start</a></li>
+        <li><a href="/products/">Products</a></li>
+        <li><a href="/architecture/">Architecture</a></li>
+        <li><a href="/configuration/">Configuration</a></li>
+        <li><a href="/faq/">FAQ</a></li>
+        <li><a href="/troubleshooting/">Troubleshooting</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <div class="wrap">
+    <ol>
+      <li><a href="/">Home</a></li>
+      <li><span aria-current="page">Install</span></li>
+    </ol>
+  </div>
+</nav>
+<main id="main">
+<div class="wrap">
+  <div class="page-head">
+    <p class="eyebrow">Install</p>
+    <h1>Install</h1>
+  </div>
+  <div class="prose">
+<p>Every route runs the same installer, <code>gsm</code>. Only the way you start it differs. The installer needs Node.js 20 or newer; the product's <code>engines</code> field requires <code>&gt;=20</code>. It needs no build and no <code>npm install</code>.</p>
+<h2 id="routes">Routes</h2>
+<div class="table-wrap"><table><caption>How to start the installer</caption><thead><tr><th scope="col">Route</th><th scope="col">Command</th><th scope="col">Needs</th></tr></thead><tbody><tr><td>npx (recommended)</td><td><code>npx google-services-mcps &lt;command&gt;</code></td><td>Node.js 20 or newer, npm</td></tr><tr><td>Global install</td><td><code>npm install -g google-services-mcps</code>, then <code>google-services-mcps &lt;command&gt;</code></td><td>Node.js 20 or newer, npm</td></tr><tr><td>One line, no npm</td><td>the line for your shell, below</td><td>Node.js 20 or newer</td></tr><tr><td>From a clone</td><td><code>node gsm.mjs &lt;command&gt;</code> in the repository folder</td><td>Node.js 20 or newer, git</td></tr></tbody></table></div>
+<p>The old package name <code>@firedmosquito831/google-services-mcps</code> is deprecated. It is the same installer; use <code>google-services-mcps</code>. A global install gives the commands <code>google-services-mcps</code> and <code>gsm</code>.</p>
+<h2 id="the-one-line-installers">The one-line installers</h2>
+<p>Each line downloads the repository into <code>google-services-mcps</code> in your home folder and runs <code>node gsm.mjs</code> there with your arguments. The download folder is replaced on each run, and logins are not affected.</p>
+<div class="codeblock"><p class="code-label">PowerShell</p><pre><code>&amp; ([scriptblock]::Create((irm "https://raw.githubusercontent.com/FiredMosquito831/google-services-mcps/main/scripts/install.ps1"))) install --agent claude --plugin gmail</code></pre></div>
+<div class="codeblock"><p class="code-label">Command Prompt</p><pre><code>curl -fsSL -o "%TEMP%\install-gsm.cmd" https://raw.githubusercontent.com/FiredMosquito831/google-services-mcps/main/scripts/install.cmd &amp;&amp; "%TEMP%\install-gsm.cmd" install --agent claude --plugin gmail</code></pre></div>
+<div class="codeblock"><p class="code-label">Linux, macOS and WSL</p><pre><code>curl -fsSL "https://raw.githubusercontent.com/FiredMosquito831/google-services-mcps/main/scripts/install.sh" | sh -s -- install --agent claude --plugin gmail</code></pre></div>
+<h2 id="flags-or-the-menu">Flags or the menu</h2>
+<p>With all the flags given, or with no terminal, nothing is asked: the command runs as written, and a missing flag is a usage error with the valid values. In a terminal, <code>npx google-services-mcps</code> with no arguments opens a guided menu. It covers installing, uninstalling, signing in to a Google group, signing out, the install list, the sign-in status, the products, the APIs and methods, the scopes, the checks and the version. Each answer shows the exact command it will run, and the install previews it with <code>--dry-run</code>.</p>
+<div class="table-wrap"><table><caption>Install options</caption><thead><tr><th scope="col">Option</th><th scope="col">What it does</th><th scope="col">Default</th></tr></thead><tbody><tr><td><code>--agent &lt;a&gt;</code></td><td><code>claude</code>, <code>codex</code>, <code>opencode</code>, <code>agy</code> (Antigravity) or <code>all</code></td><td>required</td></tr><tr><td><code>--plugin &lt;ids&gt;</code></td><td>one product (<code>gmail</code>), several (<code>gmail,gcalendar</code>), or <code>all</code>. Unknown ids are refused</td><td>required</td></tr><tr><td><code>--scope &lt;s&gt;</code></td><td><code>global</code>: your account, every project. <code>project</code>: the folder, shared when committed. <code>local</code>: the folder only. <code>folder</code> means <code>local</code></td><td><code>global</code></td></tr><tr><td><code>--path &lt;dir&gt;</code></td><td>the folder for <code>project</code> and <code>local</code>. It must exist</td><td>the current folder</td></tr><tr><td><code>--allow-writes</code></td><td>allows the write tools. Each change still asks unless confirmation is off</td><td>off</td></tr><tr><td><code>--confirmation &lt;mode&gt;</code></td><td><code>every-change</code>, <code>destructive-only</code> or <code>off</code></td><td><code>every-change</code></td></tr><tr><td><code>--toolset &lt;set&gt;</code></td><td><code>all</code>, <code>google</code> or <code>curated</code>: which tools each server lists. Written only when given</td><td><code>all</code></td></tr><tr><td><code>--install-missing</code></td><td>installs the requirements gsm can install, then checks again</td><td>off</td></tr><tr><td><code>--dry-run</code></td><td>prints every change and command, and writes nothing</td><td>off</td></tr><tr><td><code>--marketplace &lt;src&gt;</code></td><td>Claude Code only: <code>owner/repo</code>, a URL or a folder</td><td>the clone folder, else GitHub</td></tr><tr><td><code>--servers &lt;a,b&gt;</code></td><td>keeps only these servers of the products</td><td>all</td></tr><tr><td><code>--home &lt;dir&gt;</code></td><td>another home folder, for tests. Not for Claude Code</td><td>your home folder</td></tr></tbody></table></div>
+<h2 id="what-an-install-does">What an install does</h2>
+<ol><li><strong>Checks the requirements</strong> of the agents you chose: Claude Code (<code>claude</code>), Codex (<code>codex</code>), OpenCode (<code>opencode</code>), and git when the Claude Code marketplace comes from GitHub. A missing one stops the install before any file is written, and the message gives the command that installs it.</li><li><strong>Installs what is missing, if you ask</strong> (<code>--install-missing</code>). npm installs Claude Code, Codex and OpenCode. git is installed with winget on Windows and Homebrew on macOS; on Linux gsm shows the command instead, because git needs sudo.</li><li><strong>Claude Code:</strong> declares the <code>google-services-mcps</code> marketplace in the same scope as the plugin, then runs <code>claude plugin install &lt;product&gt;@google-services-mcps --scope &lt;scope&gt;</code>. Claude Code writes its own settings files.</li><li><strong>Codex, OpenCode and Antigravity:</strong> copies each product's server files to <code>~/.google-services-mcps/runtime/&lt;product&gt;/</code>, and writes one entry per server into the agent's config file.</li><li><strong>Records the install</strong> in <code>~/.google-services-mcps/runtime/installs.json</code>, so <code>list</code> and <code>uninstall</code> know what gsm did. Logins and tokens are never touched.</li></ol>
+<h2 id="scopes-by-agent">Scopes by agent</h2>
+<div class="table-wrap"><table><caption>Where each agent reads its configuration</caption><thead><tr><th scope="col">Agent</th><th scope="col"><code>global</code> (default)</th><th scope="col"><code>project</code></th><th scope="col"><code>local</code></th></tr></thead><tbody><tr><td>Claude Code</td><td><code>~/.claude/settings.json</code>, all your projects</td><td><code>.claude/settings.json</code> in the folder</td><td><code>.claude/settings.local.json</code> in the folder</td></tr><tr><td>Codex</td><td><code>~/.codex/config.toml</code></td><td><code>.codex/config.toml</code> in the folder, read only for trusted projects</td><td>the same file as <code>project</code></td></tr><tr><td>OpenCode</td><td><code>~/.config/opencode/opencode.json</code></td><td><code>opencode.json</code> in the folder</td><td>the same file as <code>project</code></td></tr><tr><td>Antigravity</td><td><code>~/.gemini/config/mcp_config.json</code></td><td>not supported (exit code 2)</td><td>not supported (exit code 2)</td></tr></tbody></table></div>
+<p>For Claude Code, the marketplace is declared in the same scope as the plugin. A <code>project</code> install writes both <code>extraKnownMarketplaces</code> and <code>enabledPlugins</code> into the folder's <code>.claude/settings.json</code>, so a teammate who clones the project gets both. An install from a clone records the clone folder, which is a local path, so do not commit that file.</p>
+<h2 id="plugin-options">Plugin options</h2>
+<p>Every Claude Code plugin has four options. <code>--allow-writes</code> and <code>--confirmation</code> set the first two at install time. The plugins need Claude Code 2.1.271 or later, because their options offer fixed choices.</p>
+<div class="table-wrap"><table><caption>The four plugin options</caption><thead><tr><th scope="col">Option</th><th scope="col">What it does</th><th scope="col">Default</th></tr></thead><tbody><tr><td><code>allow_writes</code></td><td>lists the tools that create, change, delete or send. Off, only reads are listed</td><td>off</td></tr><tr><td><code>confirmation</code></td><td><code>every-change</code>, <code>destructive-only</code> or <code>off</code></td><td><code>every-change</code></td></tr><tr><td><code>toolset</code></td><td><code>all</code>, <code>google</code> or <code>curated</code>: which tools the server lists. It applies when the server starts again</td><td><code>all</code></td></tr><tr><td><code>token_dir</code></td><td>the folder for tokens and the OAuth client. Empty means <code>~/.google-services-mcps</code></td><td>empty</td></tr></tbody></table></div>
+<p><code>gadmin</code> adds <code>admin_subject</code> and <code>service_account_key_file</code>. <code>gads</code> adds <code>ads_developer_token</code> and <code>ads_login_customer_id</code>. Show the options with <code>claude plugin configure gmail@google-services-mcps</code>; change them by piping JSON to the same command with <code>--values-stdin</code>, or with <code>/plugin configure</code> in Claude Code.</p>
+<h2 id="update">Update</h2>
+<p>Claude Code does not update plugins from this marketplace on its own. After a new release, refresh the marketplace and update each plugin you use:</p>
+<div class="codeblock"><p class="code-label">Update the plugins</p><pre><code>claude plugin marketplace update google-services-mcps
+claude plugin update gmail@google-services-mcps</code></pre></div>
+<p>Run the second line once per plugin. The new version loads in the next session, or after <code>/reload-plugins</code>. For Codex, OpenCode and Antigravity, run the install again so the runtime copy is refreshed.</p>
+<h2 id="check-and-remove">Check and remove</h2>
+<p><code>claude plugin list</code> shows each plugin with its scope and status. <code>npx google-services-mcps list</code> shows every install gsm made. <code>npx google-services-mcps doctor --plugin gmail</code> checks the plugin folder and the credentials, and exits 1 when a check fails.</p>
+<p>To remove one install, run <code>uninstall</code> with the same <code>--agent</code>, <code>--plugin</code>, <code>--scope</code> and <code>--path</code>. To remove every install gsm recorded, preview and then remove:</p>
+<div class="codeblock"><p class="code-label">Remove every install</p><pre><code>npx google-services-mcps uninstall --all --dry-run
+npx google-services-mcps uninstall --all --yes</code></pre></div>
+<p>Uninstall removes only gsm's own entries and leaves a backup of each changed config file. It never deletes the token directory. To remove logins, use <code>logout</code> for each group, then delete <code>~/.google-services-mcps</code> by hand.</p>
+  </div>
+</div>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <nav aria-label="Footer">
+      <ul>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/license/">License</a></li>
+        <li><a href="/products/">Products</a></li>
+        <li><a href="https://github.com/FiredMosquito831/google-services-mcps">Repository</a></li>
+        <li><a href="https://github.com/FiredMosquito831/google-services-mcps/issues">Issues</a></li>
+      </ul>
+    </nav>
+    <p>google-services-mcps is an independent project. It is not affiliated with, endorsed by, or sponsored by Google LLC. Google and the Google product names are trademarks of Google LLC.</p>
+    <p>Licensed under the Apache License, Version 2.0 (Apache-2.0). Based on google-services-mcps by FiredMosquito831 (https://github.com/FiredMosquito831/google-services-mcps, profile https://github.com/FiredMosquito831).</p>
+    <p>This site is generated from the repository by <code>scripts/build_site.py</code>. Version 2.17.0.</p>
+  </div>
+</footer>
+<script src="/assets/site.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contacts and Profile | google-services-mcps</title>
+<meta name="description" content="Google Contacts and People, personal health metrics, Data Portability, and the OAuth2 userinfo gcontacts: 75 tools, workspace-user login.">
+<link rel="canonical" href="https://googleservices.danubelabs.net/products/gcontacts/">
+<meta name="theme-color" content="#0B1020" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F8FAFC" media="(prefers-color-scheme: light)">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="google-services-mcps">
+<meta property="og:title" content="Contacts and Profile | google-services-mcps">
+<meta property="og:description" content="Google Contacts and People, personal health metrics, Data Portability, and the OAuth2 userinfo gcontacts: 75 tools, workspace-user login.">
+<meta property="og:url" content="https://googleservices.danubelabs.net/products/gcontacts/">
+<meta property="og:image" content="https://googleservices.danubelabs.net/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="google-services-mcps: 23 Google products as MCP servers, one plugin each">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Contacts and Profile | google-services-mcps">
+<meta name="twitter:description" content="Google Contacts and People, personal health metrics, Data Portability, and the OAuth2 userinfo gcontacts: 75 tools, workspace-user login.">
+<meta name="twitter:image" content="https://googleservices.danubelabs.net/og.png">
+<meta name="twitter:image:alt" content="google-services-mcps: 23 Google products as MCP servers, one plugin each">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Contacts and Profile | google-services-mcps",
+  "url": "https://googleservices.danubelabs.net/products/gcontacts/",
+  "description": "Google Contacts and People, personal health metrics, Data Portability, and the OAuth2 userinfo gcontacts: 75 tools, workspace-user login."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://googleservices.danubelabs.net/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Products",
+      "item": "https://googleservices.danubelabs.net/products/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Contacts and Profile",
+      "item": "https://googleservices.danubelabs.net/products/gcontacts/"
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/">
+      <svg class="brand-mark" viewBox="0 0 32 32" width="22" height="22" aria-hidden="true" focusable="false">
+        <rect width="32" height="32" rx="7" fill="var(--surface-2)"/>
+        <path d="M7 11h6M19 11h6M7 21h6M19 21h6" stroke="var(--accent)" stroke-width="2.4" stroke-linecap="round"/>
+        <circle cx="16" cy="11" r="3" fill="var(--warning)"/>
+        <circle cx="16" cy="21" r="3" fill="var(--accent)"/>
+      </svg>
+      <span>google-services-mcps</span>
+    </a>
+    <nav class="site-nav" aria-label="Main">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/install/">Install</a></li>
+        <li><a href="/quick-start/">Quick start</a></li>
+        <li><a href="/products/" aria-current="page">Products</a></li>
+        <li><a href="/architecture/">Architecture</a></li>
+        <li><a href="/configuration/">Configuration</a></li>
+        <li><a href="/faq/">FAQ</a></li>
+        <li><a href="/troubleshooting/">Troubleshooting</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <div class="wrap">
+    <ol>
+      <li><a href="/">Home</a></li>
+      <li><a href="/products/">Products</a></li>
+      <li><span aria-current="page">Contacts and Profile</span></li>
+    </ol>
+  </div>
+</nav>
+<main id="main">
+<div class="wrap">
+  <div class="page-head">
+    <p class="eyebrow">Product</p>
+    <h1>Contacts and Profile</h1>
+  </div>
+  <div class="prose">
+<p>Google Contacts and People, personal health metrics, Data Portability, and the OAuth2 userinfo endpoints.</p>
+<h2 id="install">Install</h2>
+<p><code>gcontacts</code> is one plugin in the <code>google-services-mcps</code> marketplace, and it runs one MCP server with the same name. Install it for Claude Code with the command below. For Codex, OpenCode or Antigravity, change <code>--agent</code>; the product id stays the same.</p>
+<div class="codeblock"><p class="code-label">Install for Claude Code</p><pre><code>npx google-services-mcps install --agent claude --plugin gcontacts</code></pre></div>
+<h2 id="what-it-manages">What it manages</h2>
+<p>The server carries 4 generated API bindings and 2 gateway APIs. Gateway APIs are reached through <code>api_search</code>, <code>api_describe</code> and <code>api_call</code>, which every product with gateway APIs lists.</p>
+<div class="table-wrap"><table><caption>Generated API bindings</caption><thead><tr><th scope="col">API</th><th scope="col">Version</th></tr></thead><tbody><tr><td>dataportability</td><td>v1</td></tr><tr><td>health</td><td>v4</td></tr><tr><td>oauth2</td><td>v2</td></tr><tr><td>people</td><td>v1</td></tr></tbody></table></div>
+<div class="table-wrap"><table><caption>Gateway APIs</caption><thead><tr><th scope="col">API</th><th scope="col">Version</th></tr></thead><tbody><tr><td>dataportability</td><td>v1beta</td></tr><tr><td>health</td><td>v4beta</td></tr></tbody></table></div>
+<h2 id="tools">Tools</h2>
+<p>The plugin's server registers <strong>75 tools</strong>: 41 reads, 23 writes, 10 destructive actions and 1 dynamic tools. A read never asks. A write is listed only when <strong>Allow write tools</strong> is on, and asks before it runs. A destructive action asks twice. A dynamic tool decides per call.</p>
+<p>Every tool name starts with <code>mcp__plugin_gcontacts_gcontacts__</code>, so a call traces back to this product. The table lists the tools this server registers, with the safety class from the plugin's tool map.</p>
+<div class="table-wrap"><table><caption>Registered tools</caption><thead><tr><th scope="col">Tool</th><th scope="col">Class</th><th scope="col">What it does</th></tr></thead><tbody><tr><td>account_remove</td><td>write</td><td>Remove a signed-in account</td></tr><tr><td>account_set_default</td><td>write</td><td>Set the default account</td></tr><tr><td>accounts_list</td><td>read</td><td>Signed-in accounts</td></tr><tr><td>api_call</td><td>dynamic</td><td>Call an API method</td></tr><tr><td>api_describe</td><td>read</td><td>Describe an API method</td></tr><tr><td>api_methods</td><td>read</td><td>gcontacts: API methods</td></tr><tr><td>api_search</td><td>read</td><td>Search API methods</td></tr><tr><td>auth_login</td><td>write</td><td>Sign in to Google</td></tr><tr><td>auth_setup_client</td><td>write</td><td>Save the Google OAuth client</td></tr><tr><td>auth_status</td><td>read</td><td>Sign-in status</td></tr><tr><td>contacts_delete</td><td>destructive</td><td>Delete a contact</td></tr><tr><td>contacts_list</td><td>read</td><td>List your contacts</td></tr><tr><td>contacts_search</td><td>read</td><td>Search your contacts</td></tr><tr><td>contacts_search_directory</td><td>read</td><td>Search the Workspace directory</td></tr><tr><td>data_archive_jobs_archive_state</td><td>read</td><td>dataportability.archiveJobs.getPortabilityArchiveState</td></tr><tr><td>dataportab_access_type_check</td><td>read</td><td>dataportability.accessType.check</td></tr><tr><td>dataportab_archive_initiate</td><td>write</td><td>dataportability.portabilityArchive.initiate</td></tr><tr><td>dataportab_archive_jobs_cancel</td><td>destructive</td><td>dataportability.archiveJobs.cancel</td></tr><tr><td>dataportab_archive_jobs_retry</td><td>write</td><td>dataportability.archiveJobs.retry</td></tr><tr><td>dataportab_authorization_reset</td><td>destructive</td><td>dataportability.authorization.reset</td></tr><tr><td>heal_points_export_exercise_tcx</td><td>read</td><td>health.users.dataTypes.dataPoints.exportExerciseTcx</td></tr><tr><td>health</td><td>read</td><td>Server health</td></tr><tr><td>health_data_types_points_create</td><td>write</td><td>health.users.dataTypes.dataPoints.create</td></tr><tr><td>health_data_types_points_get</td><td>read</td><td>health.users.dataTypes.dataPoints.get</td></tr><tr><td>health_data_types_points_list</td><td>read</td><td>health.users.dataTypes.dataPoints.list</td></tr><tr><td>health_data_types_points_patch</td><td>write</td><td>health.users.dataTypes.dataPoints.patch</td></tr><tr><td>health_paired_devices_list</td><td>read</td><td>health.users.pairedDevices.list</td></tr><tr><td>health_points_batch_delete</td><td>destructive</td><td>health.users.dataTypes.dataPoints.batchDelete</td></tr><tr><td>health_points_daily_roll_up</td><td>read</td><td>health.users.dataTypes.dataPoints.dailyRollUp</td></tr><tr><td>health_points_reconcile</td><td>read</td><td>health.users.dataTypes.dataPoints.reconcile</td></tr><tr><td>health_points_roll_up</td><td>read</td><td>health.users.dataTypes.dataPoints.rollUp</td></tr><tr><td>health_shl_m_get_shl_manifest</td><td>read</td><td>health.shl.m.getShlManifest</td></tr><tr><td>health_shl_r_get</td><td>read</td><td>health.shl.r.get</td></tr><tr><td>health_subscribers_create</td><td>write</td><td>health.projects.subscribers.create</td></tr><tr><td>health_subscribers_delete</td><td>destructive</td><td>health.projects.subscribers.delete</td></tr><tr><td>health_subscribers_list</td><td>read</td><td>health.projects.subscribers.list</td></tr><tr><td>health_subscribers_patch</td><td>write</td><td>health.projects.subscribers.patch</td></tr><tr><td>health_subscribers_subs_create</td><td>write</td><td>health.projects.subscribers.subscriptions.create</td></tr><tr><td>health_subscribers_subs_delete</td><td>destructive</td><td>health.projects.subscribers.subscriptions.delete</td></tr><tr><td>health_subscribers_subs_list</td><td>read</td><td>health.projects.subscribers.subscriptions.list</td></tr><tr><td>health_subscribers_subs_patch</td><td>write</td><td>health.projects.subscribers.subscriptions.patch</td></tr><tr><td>health_users_get_identity</td><td>read</td><td>health.users.getIdentity</td></tr><tr><td>health_users_get_irn_profile</td><td>read</td><td>health.users.getIrnProfile</td></tr><tr><td>health_users_get_profile</td><td>read</td><td>health.users.getProfile</td></tr><tr><td>health_users_get_settings</td><td>read</td><td>health.users.getSettings</td></tr><tr><td>health_users_paired_devices_get</td><td>read</td><td>health.users.pairedDevices.get</td></tr><tr><td>health_users_update_profile</td><td>write</td><td>health.users.updateProfile</td></tr><tr><td>health_users_update_settings</td><td>write</td><td>health.users.updateSettings</td></tr><tr><td>oauth2_userinfo_get</td><td>read</td><td>oauth2.userinfo.get</td></tr><tr><td>oauth2_userinfo_v2_me_get</td><td>read</td><td>oauth2.userinfo.v2.me.get</td></tr><tr><td>people_batch_create_contacts</td><td>write</td><td>people.people.batchCreateContacts</td></tr><tr><td>people_batch_delete_contacts</td><td>destructive</td><td>people.people.batchDeleteContacts</td></tr><tr><td>people_batch_update_contacts</td><td>write</td><td>people.people.batchUpdateContacts</td></tr><tr><td>people_contact_groups_batch_get</td><td>read</td><td>people.contactGroups.batchGet</td></tr><tr><td>people_contact_groups_create</td><td>write</td><td>people.contactGroups.create</td></tr><tr><td>people_contact_groups_delete</td><td>destructive</td><td>people.contactGroups.delete</td></tr><tr><td>people_contact_groups_get</td><td>read</td><td>people.contactGroups.get</td></tr><tr><td>people_contact_groups_list</td><td>read</td><td>people.contactGroups.list</td></tr><tr><td>people_contact_groups_update</td><td>write</td><td>people.contactGroups.update</td></tr><tr><td>people_contacts_contacts_group</td><td>write</td><td>people.otherContacts.copyOtherContactToMyContactsGroup</td></tr><tr><td>people_delete_contact_photo</td><td>destructive</td><td>people.people.deleteContactPhoto</td></tr><tr><td>people_groups_members_modify</td><td>write</td><td>people.contactGroups.members.modify</td></tr><tr><td>people_list_directory_people</td><td>read</td><td>people.people.listDirectoryPeople</td></tr><tr><td>people_other_contacts_list</td><td>read</td><td>people.otherContacts.list</td></tr><tr><td>people_other_contacts_search</td><td>read</td><td>people.otherContacts.search</td></tr><tr><td>people_people_connections_list</td><td>read</td><td>people.people.connections.list</td></tr><tr><td>people_people_create_contact</td><td>write</td><td>people.people.createContact</td></tr><tr><td>people_people_delete_contact</td><td>destructive</td><td>people.people.deleteContact</td></tr><tr><td>people_people_get</td><td>read</td><td>people.people.get</td></tr><tr><td>people_people_get_batch_get</td><td>read</td><td>people.people.getBatchGet</td></tr><tr><td>people_people_search_contacts</td><td>read</td><td>people.people.searchContacts</td></tr><tr><td>people_people_update_contact</td><td>write</td><td>people.people.updateContact</td></tr><tr><td>people_search_directory_people</td><td>read</td><td>people.people.searchDirectoryPeople</td></tr><tr><td>people_update_contact_photo</td><td>write</td><td>people.people.updateContactPhoto</td></tr><tr><td>profile_me</td><td>read</td><td>Your Google profile</td></tr></tbody></table></div>
+<p>The plugin option <code>toolset</code> can list fewer tools. <code>google</code> lists 3 tools that do the same jobs as Google's official MCP server for this product; <code>curated</code> lists the hand-written and gateway tools; <code>all</code> is the default.</p>
+<h2 id="sign-in">Sign-in</h2>
+<p><code>gcontacts</code> belongs to the <code>workspace-user</code> login group. Log in once for the group: create a Desktop OAuth client in a Google Cloud project, save its file with <code>npx google-services-mcps setup-client</code>, then run <code>npx google-services-mcps login workspace-user</code>. Products in this group share the one login.</p>
+<p>The plugin's scope file lists <strong>107 OAuth scopes</strong> for 1 APIs. A login asks only for the scopes of its profile: <code>readonly</code> (the default), <code>readwrite</code>, <code>full</code>, or an exact list.</p>
+<div class="table-wrap"><table><caption>OAuth scopes in the plugin's scope file</caption><thead><tr><th scope="col">API</th><th scope="col">Scope</th></tr></thead><tbody><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/cloud-platform</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/contacts</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/contacts.other.readonly</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/contacts.readonly</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.alerts.subscriptions</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.chrome.autofill</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.chrome.bookmarks</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.chrome.dictionary</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.chrome.extensions</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.chrome.history</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.chrome.reading_list</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.chrome.settings</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.discover.follows</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.discover.likes</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.discover.not_interested</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.maps.aliased_places</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.maps.commute_routes</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.maps.commute_settings</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.maps.ev_profile</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.maps.factual_contributions</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.maps.offering_contributions</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.maps.photos_videos</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.maps.questions_answers</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.maps.reviews</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.maps.starred_places</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.maps.vehicle_profile</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.myactivity.maps</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.myactivity.myadcenter</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.myactivity.play</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.myactivity.search</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.myactivity.shopping</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.myactivity.youtube</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.mymaps.maps</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.nest.camera_event</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.nest.camera_feature</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.nest.camera_video</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.nest.store</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.nest.user</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.order_reserve.purchases_reservations</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.pixel.device_data</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.play.devices</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.play.grouping</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.play.installs</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.play.library</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.play.playpoints</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.play.promotions</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.play.purchases</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.play.redemptions</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.play.subscriptions</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.play.usersettings</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.saved.collections</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.search_ugc.comments</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.search_ugc.media.reviews_and_stars</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.search_ugc.media.streaming_video_providers</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.search_ugc.media.thumbs</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.search_ugc.media.watched</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.searchnotifications.settings</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.searchnotifications.subscriptions</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.shopping.addresses</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.shopping.reviews</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.streetview.imagery</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.youtube.channel</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.youtube.clips</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.youtube.comments</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.youtube.conversations</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.youtube.live_chat</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.youtube.music</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.youtube.playable</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.youtube.posts</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.youtube.private_playlists</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.youtube.private_videos</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.youtube.public_playlists</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.youtube.public_videos</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.youtube.shopping</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.youtube.subscriptions</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.youtube.unlisted_playlists</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/dataportability.youtube.unlisted_videos</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/directory.readonly</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/googlehealth.activity_and_fitness.readonly</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/googlehealth.activity_and_fitness.writeonly</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/googlehealth.ecg.readonly</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.readonly</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.writeonly</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/googlehealth.irn.readonly</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/googlehealth.location.readonly</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/googlehealth.logged_symptoms.readonly</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/googlehealth.logged_symptoms.writeonly</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/googlehealth.mindfulness.readonly</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/googlehealth.mindfulness.writeonly</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/googlehealth.nutrition.writeonly</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/googlehealth.profile.readonly</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/googlehealth.profile.writeonly</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/googlehealth.reproductive_health.readonly</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/googlehealth.reproductive_health.writeonly</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/googlehealth.settings.readonly</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/googlehealth.settings.writeonly</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/googlehealth.sleep.readonly</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/googlehealth.sleep.writeonly</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/user.addresses.read</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/user.birthday.read</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/user.emails.read</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/user.gender.read</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/user.organization.read</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/user.phonenumbers.read</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/userinfo.email</td></tr><tr><td>gcontacts</td><td>https://www.googleapis.com/auth/userinfo.profile</td></tr><tr><td>gcontacts</td><td>openid</td></tr></tbody></table></div>
+<h2 id="plugin-details">Plugin details</h2>
+<dl class="keyvals"><dt>Plugin</dt><dd>gcontacts</dd><dt>MCP server</dt><dd>gcontacts</dd><dt>Display name</dt><dd>Contacts and Profile</dd><dt>Version</dt><dd>2.17.0</dd><dt>Marketplace</dt><dd>google-services-mcps</dd><dt>Login group</dt><dd>workspace-user</dd><dt>Marketplace category</dt><dd>productivity</dd><dt>Plugin options</dt><dd>allow_writes, confirmation, token_dir, toolset</dd><dt>Server kind</dt><dd>curated+discovery</dd></dl>
+<h2 id="related">Related</h2>
+<ul><li><a href="/products/">All products</a></li><li><a href="/install/">Install</a></li><li><a href="/configuration/">Configuration</a></li><li><a href="/architecture/">How the pieces connect</a></li><li><a href="/troubleshooting/">Troubleshooting</a></li></ul>
+  </div>
+</div>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <nav aria-label="Footer">
+      <ul>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/license/">License</a></li>
+        <li><a href="/products/">Products</a></li>
+        <li><a href="https://github.com/FiredMosquito831/google-services-mcps">Repository</a></li>
+        <li><a href="https://github.com/FiredMosquito831/google-services-mcps/issues">Issues</a></li>
+      </ul>
+    </nav>
+    <p>google-services-mcps is an independent project. It is not affiliated with, endorsed by, or sponsored by Google LLC. Google and the Google product names are trademarks of Google LLC.</p>
+    <p>Licensed under the Apache License, Version 2.0 (Apache-2.0). Based on google-services-mcps by FiredMosquito831 (https://github.com/FiredMosquito831/google-services-mcps, profile https://github.com/FiredMosquito831).</p>
+    <p>This site is generated from the repository by <code>scripts/build_site.py</code>. Version 2.17.0.</p>
+  </div>
+</footer>
+<script src="/assets/site.js" defer></script>
+</body>
+</html>

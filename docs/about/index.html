@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>About | google-services-mcps</title>
+<meta name="description" content="Who builds google-services-mcps, what state the project is in, how it is built from Google's Discovery documents, and what it is not.">
+<link rel="canonical" href="https://googleservices.danubelabs.net/about/">
+<meta name="theme-color" content="#0B1020" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F8FAFC" media="(prefers-color-scheme: light)">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="google-services-mcps">
+<meta property="og:title" content="About | google-services-mcps">
+<meta property="og:description" content="Who builds google-services-mcps, what state the project is in, how it is built from Google's Discovery documents, and what it is not.">
+<meta property="og:url" content="https://googleservices.danubelabs.net/about/">
+<meta property="og:image" content="https://googleservices.danubelabs.net/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="google-services-mcps: 23 Google products as MCP servers, one plugin each">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="About | google-services-mcps">
+<meta name="twitter:description" content="Who builds google-services-mcps, what state the project is in, how it is built from Google's Discovery documents, and what it is not.">
+<meta name="twitter:image" content="https://googleservices.danubelabs.net/og.png">
+<meta name="twitter:image:alt" content="google-services-mcps: 23 Google products as MCP servers, one plugin each">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "About | google-services-mcps",
+  "url": "https://googleservices.danubelabs.net/about/",
+  "description": "Who builds google-services-mcps, what state the project is in, how it is built from Google's Discovery documents, and what it is not."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://googleservices.danubelabs.net/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "About",
+      "item": "https://googleservices.danubelabs.net/about/"
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/">
+      <svg class="brand-mark" viewBox="0 0 32 32" width="22" height="22" aria-hidden="true" focusable="false">
+        <rect width="32" height="32" rx="7" fill="var(--surface-2)"/>
+        <path d="M7 11h6M19 11h6M7 21h6M19 21h6" stroke="var(--accent)" stroke-width="2.4" stroke-linecap="round"/>
+        <circle cx="16" cy="11" r="3" fill="var(--warning)"/>
+        <circle cx="16" cy="21" r="3" fill="var(--accent)"/>
+      </svg>
+      <span>google-services-mcps</span>
+    </a>
+    <nav class="site-nav" aria-label="Main">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/install/">Install</a></li>
+        <li><a href="/quick-start/">Quick start</a></li>
+        <li><a href="/products/">Products</a></li>
+        <li><a href="/architecture/">Architecture</a></li>
+        <li><a href="/configuration/">Configuration</a></li>
+        <li><a href="/faq/">FAQ</a></li>
+        <li><a href="/troubleshooting/">Troubleshooting</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <div class="wrap">
+    <ol>
+      <li><a href="/">Home</a></li>
+      <li><span aria-current="page">About</span></li>
+    </ol>
+  </div>
+</nav>
+<main id="main">
+<div class="wrap">
+  <div class="page-head">
+    <p class="eyebrow">About</p>
+    <h1>About this project</h1>
+  </div>
+  <div class="prose">
+<p><strong>google-services-mcps</strong> is an independent project by <a href="https://github.com/FiredMosquito831">FiredMosquito831</a>. It packages Google's APIs as Model Context Protocol servers, one plugin per product, so an AI agent can work with Google data under controls you set.</p>
+<h2 id="status">Status</h2>
+<p>Version 2.17.0, in beta. The code is built and tested offline: the unit and build tests pass, a smoke test starts all 23 servers over stdio, and Claude plugin validation passes for the marketplace and the Gmail plugin. Three products have run against live Google accounts: <code>gcloud</code>, <code>gsc</code> and <code>gmail</code>. Nothing else has, and no mail has been sent. The <a href="/">home page</a> and the <a href="/faq/">FAQ</a> say the same thing in their own words.</p>
+<h2 id="how-it-is-built">How it is built</h2>
+<p>The suite is built from Google's published Discovery documents and the Model Context Protocol specification. A product map in <code>config/products.json</code> is the source of truth: each product has a login group, a server name, a curated module or none, a list of generated APIs and a list of gateway APIs. The build turns that map and the Discovery snapshots into the plugin folders under <code>plugins/</code>, one per product.</p>
+<p>The project studied community MCP projects for design ideas only, including googleapis/gcloud-mcp, taylorwilsdon/google_workspace_mcp and mikusnuz/gsc-mcp, and others. It copied no code from them.</p>
+<h2 id="what-it-is-not">What it is not</h2>
+<ul><li>It is not an official Google product. It is not affiliated with, endorsed by or sponsored by Google LLC.</li><li>It is not a hosted service. The servers run on your machine, as you, and call Google directly.</li><li>It is not a way around Google's rules. Quotas, billing, approval rules and restricted-scope verification apply to every call.</li><li>It is not finished. The approval hook and the approval form have not been exercised in a live Claude Code session, and most products have not run against a real account.</li></ul>
+<h2 id="this-site">This site</h2>
+<p>The site is generated from the repository by <code>scripts/build_site.py</code>, which reads the plugin manifests and writes the pages, the sitemap and the assets. The product reference on this site is computed at build time: the product count, the tool counts and the scope counts come from the plugin folders, not from a typed list. The site loads no external fonts, scripts, analytics or embeds.</p>
+<h2 id="licence-and-contact">Licence and contact</h2>
+<p>The project is licensed under the Apache License, Version 2.0. The <a href="/license/">license page</a> has the notice and what the licence requires. Bug reports and questions go to the repository's <a href="https://github.com/FiredMosquito831/google-services-mcps/issues">issue tracker</a>; remove tokens, client secrets, API keys and account data before you post.</p>
+  </div>
+</div>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <nav aria-label="Footer">
+      <ul>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/license/">License</a></li>
+        <li><a href="/products/">Products</a></li>
+        <li><a href="https://github.com/FiredMosquito831/google-services-mcps">Repository</a></li>
+        <li><a href="https://github.com/FiredMosquito831/google-services-mcps/issues">Issues</a></li>
+      </ul>
+    </nav>
+    <p>google-services-mcps is an independent project. It is not affiliated with, endorsed by, or sponsored by Google LLC. Google and the Google product names are trademarks of Google LLC.</p>
+    <p>Licensed under the Apache License, Version 2.0 (Apache-2.0). Based on google-services-mcps by FiredMosquito831 (https://github.com/FiredMosquito831/google-services-mcps, profile https://github.com/FiredMosquito831).</p>
+    <p>This site is generated from the repository by <code>scripts/build_site.py</code>. Version 2.17.0.</p>
+  </div>
+</footer>
+<script src="/assets/site.js" defer></script>
+</body>
+</html>

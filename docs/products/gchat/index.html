@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Google Chat | google-services-mcps</title>
+<meta name="description" content="Google Chat spaces, messages and members, plus Workspace Events subscriptions. The gchat plugin registers 78 tools in the workspace-user login group.">
+<link rel="canonical" href="https://googleservices.danubelabs.net/products/gchat/">
+<meta name="theme-color" content="#0B1020" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F8FAFC" media="(prefers-color-scheme: light)">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="google-services-mcps">
+<meta property="og:title" content="Google Chat | google-services-mcps">
+<meta property="og:description" content="Google Chat spaces, messages and members, plus Workspace Events subscriptions. The gchat plugin registers 78 tools in the workspace-user login group.">
+<meta property="og:url" content="https://googleservices.danubelabs.net/products/gchat/">
+<meta property="og:image" content="https://googleservices.danubelabs.net/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="google-services-mcps: 23 Google products as MCP servers, one plugin each">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Google Chat | google-services-mcps">
+<meta name="twitter:description" content="Google Chat spaces, messages and members, plus Workspace Events subscriptions. The gchat plugin registers 78 tools in the workspace-user login group.">
+<meta name="twitter:image" content="https://googleservices.danubelabs.net/og.png">
+<meta name="twitter:image:alt" content="google-services-mcps: 23 Google products as MCP servers, one plugin each">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Google Chat | google-services-mcps",
+  "url": "https://googleservices.danubelabs.net/products/gchat/",
+  "description": "Google Chat spaces, messages and members, plus Workspace Events subscriptions. The gchat plugin registers 78 tools in the workspace-user login group."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://googleservices.danubelabs.net/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Products",
+      "item": "https://googleservices.danubelabs.net/products/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Google Chat",
+      "item": "https://googleservices.danubelabs.net/products/gchat/"
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/">
+      <svg class="brand-mark" viewBox="0 0 32 32" width="22" height="22" aria-hidden="true" focusable="false">
+        <rect width="32" height="32" rx="7" fill="var(--surface-2)"/>
+        <path d="M7 11h6M19 11h6M7 21h6M19 21h6" stroke="var(--accent)" stroke-width="2.4" stroke-linecap="round"/>
+        <circle cx="16" cy="11" r="3" fill="var(--warning)"/>
+        <circle cx="16" cy="21" r="3" fill="var(--accent)"/>
+      </svg>
+      <span>google-services-mcps</span>
+    </a>
+    <nav class="site-nav" aria-label="Main">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/install/">Install</a></li>
+        <li><a href="/quick-start/">Quick start</a></li>
+        <li><a href="/products/" aria-current="page">Products</a></li>
+        <li><a href="/architecture/">Architecture</a></li>
+        <li><a href="/configuration/">Configuration</a></li>
+        <li><a href="/faq/">FAQ</a></li>
+        <li><a href="/troubleshooting/">Troubleshooting</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <div class="wrap">
+    <ol>
+      <li><a href="/">Home</a></li>
+      <li><a href="/products/">Products</a></li>
+      <li><span aria-current="page">Google Chat</span></li>
+    </ol>
+  </div>
+</nav>
+<main id="main">
+<div class="wrap">
+  <div class="page-head">
+    <p class="eyebrow">Product</p>
+    <h1>Google Chat</h1>
+  </div>
+  <div class="prose">
+<p>Google Chat spaces, messages and members, plus Workspace Events subscriptions.</p>
+<h2 id="install">Install</h2>
+<p><code>gchat</code> is one plugin in the <code>google-services-mcps</code> marketplace, and it runs one MCP server with the same name. Install it for Claude Code with the command below. For Codex, OpenCode or Antigravity, change <code>--agent</code>; the product id stays the same.</p>
+<div class="codeblock"><p class="code-label">Install for Claude Code</p><pre><code>npx google-services-mcps install --agent claude --plugin gchat</code></pre></div>
+<h2 id="what-it-manages">What it manages</h2>
+<p>The server carries 2 generated API bindings and 0 gateway APIs. Gateway APIs are reached through <code>api_search</code>, <code>api_describe</code> and <code>api_call</code>, which every product with gateway APIs lists.</p>
+<div class="table-wrap"><table><caption>Generated API bindings</caption><thead><tr><th scope="col">API</th><th scope="col">Version</th></tr></thead><tbody><tr><td>chat</td><td>v1</td></tr><tr><td>workspaceevents</td><td>v1</td></tr></tbody></table></div>
+<h2 id="tools">Tools</h2>
+<p>The plugin's server registers <strong>78 tools</strong>: 36 reads, 32 writes, 10 destructive actions and 0 dynamic tools. A read never asks. A write is listed only when <strong>Allow write tools</strong> is on, and asks before it runs. A destructive action asks twice. A dynamic tool decides per call.</p>
+<p>Every tool name starts with <code>mcp__plugin_gchat_gchat__</code>, so a call traces back to this product. The table lists the tools this server registers, with the safety class from the plugin's tool map.</p>
+<div class="table-wrap"><table><caption>Registered tools</caption><thead><tr><th scope="col">Tool</th><th scope="col">Class</th><th scope="col">What it does</th></tr></thead><tbody><tr><td>account_remove</td><td>write</td><td>Remove a signed-in account</td></tr><tr><td>account_set_default</td><td>write</td><td>Set the default account</td></tr><tr><td>accounts_list</td><td>read</td><td>Signed-in accounts</td></tr><tr><td>api_methods</td><td>read</td><td>gchat: API methods</td></tr><tr><td>auth_login</td><td>write</td><td>Sign in to Google</td></tr><tr><td>auth_setup_client</td><td>write</td><td>Save the Google OAuth client</td></tr><tr><td>auth_status</td><td>read</td><td>Sign-in status</td></tr><tr><td>chat_custom_emojis_create</td><td>write</td><td>chat.customEmojis.create</td></tr><tr><td>chat_custom_emojis_delete</td><td>destructive</td><td>chat.customEmojis.delete</td></tr><tr><td>chat_custom_emojis_get</td><td>read</td><td>chat.customEmojis.get</td></tr><tr><td>chat_custom_emojis_list</td><td>read</td><td>chat.customEmojis.list</td></tr><tr><td>chat_get_notification_settings</td><td>read</td><td>Get Chat notification settings</td></tr><tr><td>chat_list_members</td><td>read</td><td>List Chat members</td></tr><tr><td>chat_list_messages</td><td>read</td><td>List Chat messages</td></tr><tr><td>chat_mark_as_do_not_disturb</td><td>write</td><td>chat.users.availability.markAsDoNotDisturb</td></tr><tr><td>chat_mark_read</td><td>write</td><td>Mark Chat conversations read</td></tr><tr><td>chat_mark_unread</td><td>write</td><td>Mark a Chat conversation unread</td></tr><tr><td>chat_media_download</td><td>read</td><td>chat.media.download</td></tr><tr><td>chat_search_conversations</td><td>read</td><td>Find Chat conversations</td></tr><tr><td>chat_search_messages</td><td>read</td><td>Search Chat messages</td></tr><tr><td>chat_send_message</td><td>destructive</td><td>Send a Chat message</td></tr><tr><td>chat_spaces_complete_import</td><td>write</td><td>chat.spaces.completeImport</td></tr><tr><td>chat_spaces_create</td><td>write</td><td>chat.spaces.create</td></tr><tr><td>chat_spaces_delete</td><td>destructive</td><td>chat.spaces.delete</td></tr><tr><td>chat_spaces_find_direct_message</td><td>read</td><td>chat.spaces.findDirectMessage</td></tr><tr><td>chat_spaces_find_group_chats</td><td>read</td><td>chat.spaces.findGroupChats</td></tr><tr><td>chat_spaces_get</td><td>read</td><td>chat.spaces.get</td></tr><tr><td>chat_spaces_list</td><td>read</td><td>chat.spaces.list</td></tr><tr><td>chat_spaces_members_create</td><td>write</td><td>chat.spaces.members.create</td></tr><tr><td>chat_spaces_members_delete</td><td>destructive</td><td>chat.spaces.members.delete</td></tr><tr><td>chat_spaces_members_get</td><td>read</td><td>chat.spaces.members.get</td></tr><tr><td>chat_spaces_members_list</td><td>read</td><td>chat.spaces.members.list</td></tr><tr><td>chat_spaces_members_patch</td><td>write</td><td>chat.spaces.members.patch</td></tr><tr><td>chat_spaces_message_pins_create</td><td>write</td><td>chat.spaces.messagePins.create</td></tr><tr><td>chat_spaces_message_pins_delete</td><td>destructive</td><td>chat.spaces.messagePins.delete</td></tr><tr><td>chat_spaces_message_pins_list</td><td>read</td><td>chat.spaces.messagePins.list</td></tr><tr><td>chat_spaces_messages_attachments_get</td><td>read</td><td>chat.spaces.messages.attachments.get</td></tr><tr><td>chat_spaces_messages_create</td><td>destructive</td><td>chat.spaces.messages.create</td></tr><tr><td>chat_spaces_messages_delete</td><td>destructive</td><td>chat.spaces.messages.delete</td></tr><tr><td>chat_spaces_messages_get</td><td>read</td><td>chat.spaces.messages.get</td></tr><tr><td>chat_spaces_messages_list</td><td>read</td><td>chat.spaces.messages.list</td></tr><tr><td>chat_spaces_messages_patch</td><td>write</td><td>chat.spaces.messages.patch</td></tr><tr><td>chat_spaces_messages_reactions_create</td><td>write</td><td>chat.spaces.messages.reactions.create</td></tr><tr><td>chat_spaces_messages_reactions_delete</td><td>destructive</td><td>chat.spaces.messages.reactions.delete</td></tr><tr><td>chat_spaces_messages_reactions_list</td><td>read</td><td>chat.spaces.messages.reactions.list</td></tr><tr><td>chat_spaces_messages_replace_cards</td><td>write</td><td>chat.spaces.messages.replaceCards</td></tr><tr><td>chat_spaces_messages_search</td><td>read</td><td>chat.spaces.messages.search</td></tr><tr><td>chat_spaces_messages_update</td><td>write</td><td>chat.spaces.messages.update</td></tr><tr><td>chat_spaces_patch</td><td>write</td><td>chat.spaces.patch</td></tr><tr><td>chat_spaces_search</td><td>read</td><td>chat.spaces.search</td></tr><tr><td>chat_spaces_setup</td><td>write</td><td>chat.spaces.setup</td></tr><tr><td>chat_spaces_space_events_get</td><td>read</td><td>chat.spaces.spaceEvents.get</td></tr><tr><td>chat_spaces_space_events_list</td><td>read</td><td>chat.spaces.spaceEvents.list</td></tr><tr><td>chat_spaces_space_notif_setting_get</td><td>read</td><td>chat.users.spaces.spaceNotificationSetting.get</td></tr><tr><td>chat_spaces_space_notif_setting_patch</td><td>write</td><td>chat.users.spaces.spaceNotificationSetting.patch</td></tr><tr><td>chat_spaces_update_space_read_state</td><td>write</td><td>chat.users.spaces.updateSpaceReadState</td></tr><tr><td>chat_threads_get_thread_read_state</td><td>read</td><td>chat.users.spaces.threads.getThreadReadState</td></tr><tr><td>chat_update_notification_settings</td><td>write</td><td>Change Chat notification settings</td></tr><tr><td>chat_users_availability_get</td><td>read</td><td>chat.users.availability.get</td></tr><tr><td>chat_users_availability_mark_as_active</td><td>write</td><td>chat.users.availability.markAsActive</td></tr><tr><td>chat_users_availability_mark_as_away</td><td>write</td><td>chat.users.availability.markAsAway</td></tr><tr><td>chat_users_availability_patch</td><td>write</td><td>chat.users.availability.patch</td></tr><tr><td>chat_users_sections_create</td><td>write</td><td>chat.users.sections.create</td></tr><tr><td>chat_users_sections_delete</td><td>destructive</td><td>chat.users.sections.delete</td></tr><tr><td>chat_users_sections_items_list</td><td>read</td><td>chat.users.sections.items.list</td></tr><tr><td>chat_users_sections_items_move</td><td>write</td><td>chat.users.sections.items.move</td></tr><tr><td>chat_users_sections_list</td><td>read</td><td>chat.users.sections.list</td></tr><tr><td>chat_users_sections_patch</td><td>write</td><td>chat.users.sections.patch</td></tr><tr><td>chat_users_sections_position</td><td>write</td><td>chat.users.sections.position</td></tr><tr><td>chat_users_spaces_get_space_read_state</td><td>read</td><td>chat.users.spaces.getSpaceReadState</td></tr><tr><td>health</td><td>read</td><td>Server health</td></tr><tr><td>workspacee_operations_get</td><td>read</td><td>workspaceevents.operations.get</td></tr><tr><td>workspacee_subscriptions_create</td><td>write</td><td>workspaceevents.subscriptions.create</td></tr><tr><td>workspacee_subscriptions_delete</td><td>destructive</td><td>workspaceevents.subscriptions.delete</td></tr><tr><td>workspacee_subscriptions_get</td><td>read</td><td>workspaceevents.subscriptions.get</td></tr><tr><td>workspacee_subscriptions_list</td><td>read</td><td>workspaceevents.subscriptions.list</td></tr><tr><td>workspacee_subscriptions_patch</td><td>write</td><td>workspaceevents.subscriptions.patch</td></tr><tr><td>workspacee_subscriptions_reactivate</td><td>write</td><td>workspaceevents.subscriptions.reactivate</td></tr></tbody></table></div>
+<p>The plugin option <code>toolset</code> can list fewer tools. <code>google</code> lists 9 tools that do the same jobs as Google's official MCP server for this product; <code>curated</code> lists the hand-written and gateway tools; <code>all</code> is the default.</p>
+<h2 id="sign-in">Sign-in</h2>
+<p><code>gchat</code> belongs to the <code>workspace-user</code> login group. Log in once for the group: create a Desktop OAuth client in a Google Cloud project, save its file with <code>npx google-services-mcps setup-client</code>, then run <code>npx google-services-mcps login workspace-user</code>. Products in this group share the one login.</p>
+<p>The plugin's scope file lists <strong>49 OAuth scopes</strong> for 1 APIs. A login asks only for the scopes of its profile: <code>readonly</code> (the default), <code>readwrite</code>, <code>full</code>, or an exact list.</p>
+<div class="table-wrap"><table><caption>OAuth scopes in the plugin's scope file</caption><thead><tr><th scope="col">API</th><th scope="col">Scope</th></tr></thead><tbody><tr><td>gchat</td><td>https://www.googleapis.com/auth/chat.admin.delete</td></tr><tr><td>gchat</td><td>https://www.googleapis.com/auth/chat.admin.memberships</td></tr><tr><td>gchat</td><td>https://www.googleapis.com/auth/chat.admin.memberships.readonly</td></tr><tr><td>gchat</td><td>https://www.googleapis.com/auth/chat.admin.spaces</td></tr><tr><td>gchat</td><td>https://www.googleapis.com/auth/chat.admin.spaces.readonly</td></tr><tr><td>gchat</td><td>https://www.googleapis.com/auth/chat.app.all.memberships.readonly</td></tr><tr><td>gchat</td><td>https://www.googleapis.com/auth/chat.app.all.messages.readonly</td></tr><tr><td>gchat</td><td>https://www.googleapis.com/auth/chat.app.all.spaces.readonly</td></tr><tr><td>gchat</td><td>https://www.googleapis.com/auth/chat.app.all.users.readstate.readonly</td></tr><tr><td>gchat</td><td>https://www.googleapis.com/auth/chat.app.delete</td></tr><tr><td>gchat</td><td>https://www.googleapis.com/auth/chat.app.memberships</td></tr><tr><td>gchat</td><td>https://www.googleapis.com/auth/chat.app.memberships.readonly</td></tr><tr><td>gchat</td><td>https://www.googleapis.com/auth/chat.app.messages.readonly</td></tr><tr><td>gchat</td><td>https://www.googleapis.com/auth/chat.app.spaces</td></tr><tr><td>gchat</td><td>https://www.googleapis.com/auth/chat.app.spaces.create</td></tr><tr><td>gchat</td><td>https://www.googleapis.com/auth/chat.app.spaces.readonly</td></tr><tr><td>gchat</td><td>https://www.googleapis.com/auth/chat.bot</td></tr><tr><td>gchat</td><td>https://www.googleapis.com/auth/chat.customemojis</td></tr><tr><td>gchat</td><td>https://www.googleapis.com/auth/chat.customemojis.readonly</td></tr><tr><td>gchat</td><td>https://www.googleapis.com/auth/chat.delete</td></tr><tr><td>gchat</td><td>https://www.googleapis.com/auth/chat.import</td></tr><tr><td>gchat</td><td>https://www.googleapis.com/auth/chat.memberships</td></tr><tr><td>gchat</td><td>https://www.googleapis.com/auth/chat.memberships.app</td></tr><tr><td>gchat</td><td>https://www.googleapis.com/auth/chat.memberships.readonly</td></tr><tr><td>gchat</td><td>https://www.googleapis.com/auth/chat.messages</td></tr><tr><td>gchat</td><td>https://www.googleapis.com/auth/chat.messages.create</td></tr><tr><td>gchat</td><td>https://www.googleapis.com/auth/chat.messages.reactions</td></tr><tr><td>gchat</td><td>https://www.googleapis.com/auth/chat.messages.reactions.create</td></tr><tr><td>gchat</td><td>https://www.googleapis.com/auth/chat.messages.reactions.readonly</td></tr><tr><td>gchat</td><td>https://www.googleapis.com/auth/chat.messages.readonly</td></tr><tr><td>gchat</td><td>https://www.googleapis.com/auth/chat.spaces</td></tr><tr><td>gchat</td><td>https://www.googleapis.com/auth/chat.spaces.create</td></tr><tr><td>gchat</td><td>https://www.googleapis.com/auth/chat.spaces.pins</td></tr><tr><td>gchat</td><td>https://www.googleapis.com/auth/chat.spaces.pins.readonly</td></tr><tr><td>gchat</td><td>https://www.googleapis.com/auth/chat.spaces.readonly</td></tr><tr><td>gchat</td><td>https://www.googleapis.com/auth/chat.users.availability</td></tr><tr><td>gchat</td><td>https://www.googleapis.com/auth/chat.users.availability.readonly</td></tr><tr><td>gchat</td><td>https://www.googleapis.com/auth/chat.users.readstate</td></tr><tr><td>gchat</td><td>https://www.googleapis.com/auth/chat.users.readstate.readonly</td></tr><tr><td>gchat</td><td>https://www.googleapis.com/auth/chat.users.sections</td></tr><tr><td>gchat</td><td>https://www.googleapis.com/auth/chat.users.sections.readonly</td></tr><tr><td>gchat</td><td>https://www.googleapis.com/auth/chat.users.spacesettings</td></tr><tr><td>gchat</td><td>https://www.googleapis.com/auth/drive</td></tr><tr><td>gchat</td><td>https://www.googleapis.com/auth/drive.file</td></tr><tr><td>gchat</td><td>https://www.googleapis.com/auth/drive.metadata</td></tr><tr><td>gchat</td><td>https://www.googleapis.com/auth/drive.metadata.readonly</td></tr><tr><td>gchat</td><td>https://www.googleapis.com/auth/drive.readonly</td></tr><tr><td>gchat</td><td>https://www.googleapis.com/auth/meetings.space.created</td></tr><tr><td>gchat</td><td>https://www.googleapis.com/auth/meetings.space.readonly</td></tr></tbody></table></div>
+<h2 id="plugin-details">Plugin details</h2>
+<dl class="keyvals"><dt>Plugin</dt><dd>gchat</dd><dt>MCP server</dt><dd>gchat</dd><dt>Display name</dt><dd>Google Chat</dd><dt>Version</dt><dd>2.17.0</dd><dt>Marketplace</dt><dd>google-services-mcps</dd><dt>Login group</dt><dd>workspace-user</dd><dt>Marketplace category</dt><dd>productivity</dd><dt>Plugin options</dt><dd>allow_writes, confirmation, token_dir, toolset</dd><dt>Server kind</dt><dd>curated+discovery</dd></dl>
+<h2 id="related">Related</h2>
+<ul><li><a href="/products/">All products</a></li><li><a href="/install/">Install</a></li><li><a href="/configuration/">Configuration</a></li><li><a href="/architecture/">How the pieces connect</a></li><li><a href="/troubleshooting/">Troubleshooting</a></li></ul>
+  </div>
+</div>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <nav aria-label="Footer">
+      <ul>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/license/">License</a></li>
+        <li><a href="/products/">Products</a></li>
+        <li><a href="https://github.com/FiredMosquito831/google-services-mcps">Repository</a></li>
+        <li><a href="https://github.com/FiredMosquito831/google-services-mcps/issues">Issues</a></li>
+      </ul>
+    </nav>
+    <p>google-services-mcps is an independent project. It is not affiliated with, endorsed by, or sponsored by Google LLC. Google and the Google product names are trademarks of Google LLC.</p>
+    <p>Licensed under the Apache License, Version 2.0 (Apache-2.0). Based on google-services-mcps by FiredMosquito831 (https://github.com/FiredMosquito831/google-services-mcps, profile https://github.com/FiredMosquito831).</p>
+    <p>This site is generated from the repository by <code>scripts/build_site.py</code>. Version 2.17.0.</p>
+  </div>
+</footer>
+<script src="/assets/site.js" defer></script>
+</body>
+</html>

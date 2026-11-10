@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Architecture | google-services-mcps</title>
+<meta name="description" content="How the marketplace, the plugins, the MCP servers, the consent hook and the token directory connect, with the install flow and the auth model in three diagrams.">
+<link rel="canonical" href="https://googleservices.danubelabs.net/architecture/">
+<meta name="theme-color" content="#0B1020" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F8FAFC" media="(prefers-color-scheme: light)">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="google-services-mcps">
+<meta property="og:title" content="Architecture | google-services-mcps">
+<meta property="og:description" content="How the marketplace, the plugins, the MCP servers, the consent hook and the token directory connect, with the install flow and the auth model in three diagrams.">
+<meta property="og:url" content="https://googleservices.danubelabs.net/architecture/">
+<meta property="og:image" content="https://googleservices.danubelabs.net/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="google-services-mcps: 23 Google products as MCP servers, one plugin each">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Architecture | google-services-mcps">
+<meta name="twitter:description" content="How the marketplace, the plugins, the MCP servers, the consent hook and the token directory connect, with the install flow and the auth model in three diagrams.">
+<meta name="twitter:image" content="https://googleservices.danubelabs.net/og.png">
+<meta name="twitter:image:alt" content="google-services-mcps: 23 Google products as MCP servers, one plugin each">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Architecture | google-services-mcps",
+  "url": "https://googleservices.danubelabs.net/architecture/",
+  "description": "How the marketplace, the plugins, the MCP servers, the consent hook and the token directory connect, with the install flow and the auth model in three diagrams."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://googleservices.danubelabs.net/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Architecture",
+      "item": "https://googleservices.danubelabs.net/architecture/"
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/">
+      <svg class="brand-mark" viewBox="0 0 32 32" width="22" height="22" aria-hidden="true" focusable="false">
+        <rect width="32" height="32" rx="7" fill="var(--surface-2)"/>
+        <path d="M7 11h6M19 11h6M7 21h6M19 21h6" stroke="var(--accent)" stroke-width="2.4" stroke-linecap="round"/>
+        <circle cx="16" cy="11" r="3" fill="var(--warning)"/>
+        <circle cx="16" cy="21" r="3" fill="var(--accent)"/>
+      </svg>
+      <span>google-services-mcps</span>
+    </a>
+    <nav class="site-nav" aria-label="Main">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/install/">Install</a></li>
+        <li><a href="/quick-start/">Quick start</a></li>
+        <li><a href="/products/">Products</a></li>
+        <li><a href="/architecture/" aria-current="page">Architecture</a></li>
+        <li><a href="/configuration/">Configuration</a></li>
+        <li><a href="/faq/">FAQ</a></li>
+        <li><a href="/troubleshooting/">Troubleshooting</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <div class="wrap">
+    <ol>
+      <li><a href="/">Home</a></li>
+      <li><span aria-current="page">Architecture</span></li>
+    </ol>
+  </div>
+</nav>
+<main id="main">
+<div class="wrap">
+  <div class="page-head">
+    <p class="eyebrow">Architecture</p>
+    <h1>How the pieces connect</h1>
+  </div>
+  <div class="prose">
+<p>The suite has three layers, and the generated plugin folders are the join point. The marketplace lists the plugins; a plugin holds one MCP server, a consent hook, a tool map and a skill; the server calls Google with the credentials in the token directory.</p>
+<h2 id="the-three-layers">The three layers</h2>
+<div class="table-wrap"><table><caption>The layers of the suite</caption><thead><tr><th scope="col">Layer</th><th scope="col">What it is</th><th scope="col">Example</th></tr></thead><tbody><tr><td>Marketplace</td><td>The <code>google-services-mcps</code> catalogue in <code>.claude-plugin/marketplace.json</code>. It lists the 23 plugins.</td><td><code>claude plugin marketplace add</code></td></tr><tr><td>Plugin</td><td>One Google product, packaged for Claude Code. It holds the MCP server, a consent hook, a tool map and a skill.</td><td><code>gmail@google-services-mcps</code></td></tr><tr><td>MCP server</td><td>A local Node.js process. The agent starts it over stdio. It exposes the product's tools and calls Google's APIs.</td><td><code>servers/gmail.mjs</code></td></tr></tbody></table></div>
+<p>The same servers run in Claude Code, Codex, OpenCode and Antigravity. Claude Code installs whole plugins from the marketplace. The installer writes the other three agents' config files and copies each product's server files to <code>~/.google-services-mcps/runtime/&lt;product&gt;/</code>. The hook exists only in Claude Code.</p>
+<figure class="diagram"><div class="diagram-frame"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 520" role="img" aria-labelledby="ph-title ph-desc" font-family="ui-monospace, SFMono-Regular, Consolas, monospace">
+  <title id="ph-title">The plugin-to-harness map</title>
+  <desc id="ph-desc">Twenty-three product plugin folders, grouped by login group, each starting one MCP server. Claude Code starts the server through the plugin and its PreToolUse hook; Codex, OpenCode and Antigravity start the same server from a runtime copy with no hook.</desc>
+
+  <!-- Column labels -->
+  <text x="16" y="26" fill="var(--text-muted)" font-size="12" letter-spacing="1.2">PRODUCT PLUGINS (23)</text>
+  <text x="360" y="26" fill="var(--text-muted)" font-size="12" letter-spacing="1.2">MCP SERVER</text>
+  <text x="640" y="26" fill="var(--text-muted)" font-size="12" letter-spacing="1.2">HARNESS</text>
+
+  <!-- Group cloud -->
+  <g>
+    <rect x="16" y="44" width="300" height="52" rx="8" fill="var(--surface)" stroke="var(--border)"/>
+    <circle cx="34" cy="70" r="5" fill="var(--accent)"/>
+    <text x="48" y="66" fill="var(--text)" font-size="13" font-weight="700">cloud</text>
+    <text x="48" y="84" fill="var(--text-muted)" font-size="11">gcloud · gai</text>
+  </g>
+  <!-- Group searchconsole -->
+  <g>
+    <rect x="16" y="104" width="300" height="52" rx="8" fill="var(--surface)" stroke="var(--border)"/>
+    <circle cx="34" cy="130" r="5" fill="var(--accent)"/>
+    <text x="48" y="126" fill="var(--text)" font-size="13" font-weight="700">searchconsole</text>
+    <text x="48" y="144" fill="var(--text-muted)" font-size="11">gsc</text>
+  </g>
+  <!-- Group workspace-user -->
+  <g>
+    <rect x="16" y="164" width="300" height="70" rx="8" fill="var(--surface)" stroke="var(--border)"/>
+    <circle cx="34" cy="190" r="5" fill="var(--accent)"/>
+    <text x="48" y="186" fill="var(--text)" font-size="13" font-weight="700">workspace-user</text>
+    <text x="48" y="204" fill="var(--text-muted)" font-size="11">gdrive · gmail · gcalendar · gchat · gmeet</text>
+    <text x="48" y="220" fill="var(--text-muted)" font-size="11">gcontacts · gtasks · gclassroom · gapps</text>
+  </g>
+  <!-- Group workspace-admin -->
+  <g>
+    <rect x="16" y="242" width="300" height="52" rx="8" fill="var(--surface)" stroke="var(--border)"/>
+    <circle cx="34" cy="268" r="5" fill="var(--warning)"/>
+    <text x="48" y="264" fill="var(--text)" font-size="13" font-weight="700">workspace-admin</text>
+    <text x="48" y="282" fill="var(--text-muted)" font-size="11">gadmin</text>
+  </g>
+  <!-- Group business -->
+  <g>
+    <rect x="16" y="302" width="300" height="70" rx="8" fill="var(--surface)" stroke="var(--border)"/>
+    <circle cx="34" cy="328" r="5" fill="var(--accent)"/>
+    <text x="48" y="324" fill="var(--text)" font-size="13" font-weight="700">business</text>
+    <text x="48" y="342" fill="var(--text-muted)" font-size="11">ganalytics · gtm · gyoutube · gbusiness</text>
+    <text x="48" y="358" fill="var(--text-muted)" font-size="11">gads</text>
+  </g>
+  <!-- Group developer + service-account + apikey -->
+  <g>
+    <rect x="16" y="380" width="300" height="52" rx="8" fill="var(--surface)" stroke="var(--border)"/>
+    <circle cx="34" cy="406" r="5" fill="var(--accent)"/>
+    <text x="48" y="402" fill="var(--text)" font-size="13" font-weight="700">developer</text>
+    <text x="48" y="420" fill="var(--text-muted)" font-size="11">gfirebase</text>
+  </g>
+  <g>
+    <rect x="16" y="440" width="146" height="52" rx="8" fill="var(--surface)" stroke="var(--border)"/>
+    <circle cx="34" cy="466" r="5" fill="var(--success)"/>
+    <text x="48" y="462" fill="var(--text)" font-size="12" font-weight="700">service-account</text>
+    <text x="48" y="480" fill="var(--text-muted)" font-size="11">gplay · gmerchant</text>
+  </g>
+  <g>
+    <rect x="170" y="440" width="146" height="52" rx="8" fill="var(--surface)" stroke="var(--border)"/>
+    <circle cx="188" cy="466" r="5" fill="var(--success)"/>
+    <text x="202" y="462" fill="var(--text)" font-size="12" font-weight="700">apikey</text>
+    <text x="202" y="480" fill="var(--text-muted)" font-size="11">gsearch · gmaps</text>
+  </g>
+
+  <!-- Arrows to server column -->
+  <g stroke="var(--border)" stroke-width="1.5" fill="none">
+    <path d="M316 70 H344"/>
+    <path d="M316 130 H344"/>
+    <path d="M316 199 H344"/>
+    <path d="M316 268 H344"/>
+    <path d="M316 337 H344"/>
+    <path d="M316 406 H344"/>
+    <path d="M316 466 H344"/>
+  </g>
+
+  <!-- Server column -->
+  <g>
+    <rect x="344" y="44" width="240" height="448" rx="10" fill="var(--surface-2)" stroke="var(--accent)"/>
+    <text x="464" y="80" fill="var(--text)" font-size="14" font-weight="700" text-anchor="middle">one server per product</text>
+    <text x="464" y="102" fill="var(--text-muted)" font-size="11" text-anchor="middle">servers/&lt;id&gt;.mjs</text>
+    <text x="464" y="124" fill="var(--text-muted)" font-size="11" text-anchor="middle">stdio, local Node.js process</text>
+    <line x1="368" y1="144" x2="560" y2="144" stroke="var(--border)"/>
+    <text x="464" y="172" fill="var(--text)" font-size="12" text-anchor="middle">tool-map.json</text>
+    <text x="464" y="192" fill="var(--text-muted)" font-size="11" text-anchor="middle">every tool, its class, its scopes</text>
+    <text x="464" y="222" fill="var(--text)" font-size="12" text-anchor="middle">scopes.json</text>
+    <text x="464" y="242" fill="var(--text-muted)" font-size="11" text-anchor="middle">the OAuth scopes of each API</text>
+    <text x="464" y="272" fill="var(--text)" font-size="12" text-anchor="middle">servers.json</text>
+    <text x="464" y="292" fill="var(--text-muted)" font-size="11" text-anchor="middle">APIs, gateway APIs, login group</text>
+    <line x1="368" y1="312" x2="560" y2="312" stroke="var(--border)"/>
+    <text x="464" y="340" fill="var(--text)" font-size="12" text-anchor="middle">token directory</text>
+    <text x="464" y="360" fill="var(--text-muted)" font-size="11" text-anchor="middle">~/.google-services-mcps</text>
+    <text x="464" y="390" fill="var(--text)" font-size="12" text-anchor="middle">Google APIs</text>
+    <text x="464" y="410" fill="var(--text-muted)" font-size="11" text-anchor="middle">HTTPS, with your credentials</text>
+    <text x="464" y="452" fill="var(--text-muted)" font-size="11" text-anchor="middle">no server of the suite's own</text>
+    <text x="464" y="470" fill="var(--text-muted)" font-size="11" text-anchor="middle">no telemetry path</text>
+  </g>
+
+  <!-- Arrows to harness column -->
+  <g stroke="var(--border)" stroke-width="1.5" fill="none">
+    <path d="M584 130 H612"/>
+    <path d="M584 250 H612"/>
+    <path d="M584 370 H612"/>
+  </g>
+
+  <!-- Harness column -->
+  <g>
+    <rect x="612" y="44" width="332" height="112" rx="10" fill="var(--surface)" stroke="var(--accent)" stroke-width="2"/>
+    <text x="632" y="72" fill="var(--text)" font-size="14" font-weight="700">Claude Code</text>
+    <text x="632" y="94" fill="var(--text-muted)" font-size="11">marketplace → plugin → server</text>
+    <text x="632" y="114" fill="var(--text-muted)" font-size="11">PreToolUse hook asks before a change</text>
+    <text x="632" y="134" fill="var(--text-muted)" font-size="11">destructive actions ask twice</text>
+  </g>
+  <g>
+    <rect x="612" y="170" width="332" height="72" rx="10" fill="var(--surface)" stroke="var(--border)"/>
+    <text x="632" y="198" fill="var(--text)" font-size="14" font-weight="700">Codex</text>
+    <text x="632" y="220" fill="var(--text-muted)" font-size="11">config.toml → runtime copy</text>
+    <text x="632" y="236" fill="var(--text-muted)" font-size="11">no hook; changes need MCP elicitation</text>
+  </g>
+  <g>
+    <rect x="612" y="256" width="332" height="72" rx="10" fill="var(--surface)" stroke="var(--border)"/>
+    <text x="632" y="284" fill="var(--text)" font-size="14" font-weight="700">OpenCode</text>
+    <text x="632" y="306" fill="var(--text-muted)" font-size="11">opencode.json → runtime copy</text>
+    <text x="632" y="322" fill="var(--text-muted)" font-size="11">no hook; changes need MCP elicitation</text>
+  </g>
+  <g>
+    <rect x="612" y="342" width="332" height="72" rx="10" fill="var(--surface)" stroke="var(--border)"/>
+    <text x="632" y="370" fill="var(--text)" font-size="14" font-weight="700">Antigravity</text>
+    <text x="632" y="392" fill="var(--text-muted)" font-size="11">mcp_config.json → runtime copy</text>
+    <text x="632" y="408" fill="var(--text-muted)" font-size="11">global scope only; no hook</text>
+  </g>
+
+  <!-- Legend -->
+  <g transform="translate(612, 432)">
+    <text x="0" y="12" fill="var(--text-muted)" font-size="11" letter-spacing="1">LEGEND</text>
+    <circle cx="6" cy="32" r="5" fill="var(--accent)"/>
+    <text x="20" y="36" fill="var(--text-muted)" font-size="11">OAuth user login</text>
+    <circle cx="6" cy="52" r="5" fill="var(--warning)"/>
+    <text x="20" y="56" fill="var(--text-muted)" font-size="11">service account, domain-wide</text>
+    <circle cx="6" cy="72" r="5" fill="var(--success)"/>
+    <text x="20" y="76" fill="var(--text-muted)" font-size="11">service account key or API key</text>
+  </g>
+</svg>
+</div><figcaption>The 23 product folders, one MCP server each, and the four harnesses. Claude Code adds the consent hook; the other three have none.</figcaption></figure>
+<h2 id="the-install-flow">The install flow</h2>
+<p>Every route runs the same installer. It checks the requirements of the agents you chose before it writes anything, then installs the plugin or writes the agent's config, then records the install. Logins and tokens are never touched.</p>
+<figure class="diagram"><div class="diagram-frame"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 460" role="img" aria-labelledby="if-title if-desc" font-family="ui-monospace, SFMono-Regular, Consolas, monospace">
+  <title id="if-title">The install flow</title>
+  <desc id="if-desc">The npx command runs the gsm installer, which checks the agent requirements before writing anything. Claude Code installs the marketplace and the plugin; Codex, OpenCode and Antigravity get a runtime copy and a config entry. The installer records the install and never touches the token directory.</desc>
+
+  <text x="16" y="26" fill="var(--text-muted)" font-size="12" letter-spacing="1.2">INSTALL FLOW</text>
+
+  <!-- Step 1 -->
+  <g>
+    <rect x="16" y="44" width="200" height="64" rx="10" fill="var(--surface)" stroke="var(--accent)" stroke-width="2"/>
+    <text x="34" y="70" fill="var(--text)" font-size="13" font-weight="700">1. command</text>
+    <text x="34" y="90" fill="var(--text-muted)" font-size="11">npx google-services-mcps</text>
+    <text x="34" y="104" fill="var(--text-muted)" font-size="11">install --agent … --plugin …</text>
+  </g>
+  <path d="M216 76 H252" stroke="var(--border)" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+  <!-- Step 2 -->
+  <g>
+    <rect x="252" y="44" width="200" height="64" rx="10" fill="var(--surface)" stroke="var(--border)"/>
+    <text x="270" y="70" fill="var(--text)" font-size="13" font-weight="700">2. requirements</text>
+    <text x="270" y="90" fill="var(--text-muted)" font-size="11">claude / codex / opencode</text>
+    <text x="270" y="104" fill="var(--text-muted)" font-size="11">git, when the marketplace is remote</text>
+  </g>
+  <path d="M452 76 H488" stroke="var(--border)" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+  <!-- Step 3 -->
+  <g>
+    <rect x="488" y="44" width="200" height="64" rx="10" fill="var(--surface)" stroke="var(--border)"/>
+    <text x="506" y="70" fill="var(--text)" font-size="13" font-weight="700">3. install</text>
+    <text x="506" y="90" fill="var(--text-muted)" font-size="11">plugin, or agent config</text>
+    <text x="506" y="104" fill="var(--text-muted)" font-size="11">and a runtime copy</text>
+  </g>
+  <path d="M688 76 H724" stroke="var(--border)" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+  <!-- Step 4 -->
+  <g>
+    <rect x="724" y="44" width="220" height="64" rx="10" fill="var(--surface)" stroke="var(--success)" stroke-width="2"/>
+    <text x="742" y="70" fill="var(--text)" font-size="13" font-weight="700">4. install record</text>
+    <text x="742" y="90" fill="var(--text-muted)" font-size="11">runtime/installs.json</text>
+    <text x="742" y="104" fill="var(--text-muted)" font-size="11">read by list and uninstall</text>
+  </g>
+
+  <!-- Branch: Claude Code -->
+  <g>
+    <rect x="16" y="150" width="440" height="130" rx="10" fill="var(--surface-2)" stroke="var(--accent)"/>
+    <text x="34" y="178" fill="var(--text)" font-size="14" font-weight="700">Claude Code</text>
+    <text x="34" y="202" fill="var(--text-muted)" font-size="11">claude plugin marketplace add google-services-mcps</text>
+    <text x="34" y="222" fill="var(--text-muted)" font-size="11">claude plugin install &lt;id&gt;@google-services-mcps --scope …</text>
+    <line x1="34" y1="238" x2="438" y2="238" stroke="var(--border)"/>
+    <text x="34" y="258" fill="var(--text-muted)" font-size="11">writes: Claude Code's own settings files</text>
+    <text x="34" y="272" fill="var(--text-muted)" font-size="11">the plugin is read from the marketplace</text>
+  </g>
+  <!-- Branch: other agents -->
+  <g>
+    <rect x="488" y="150" width="456" height="130" rx="10" fill="var(--surface-2)" stroke="var(--border)"/>
+    <text x="506" y="178" fill="var(--text)" font-size="14" font-weight="700">Codex, OpenCode, Antigravity</text>
+    <text x="506" y="202" fill="var(--text-muted)" font-size="11">copy plugins/&lt;id&gt; → ~/.google-services-mcps/runtime/&lt;id&gt;/</text>
+    <text x="506" y="222" fill="var(--text-muted)" font-size="11">write one entry into the agent's config file</text>
+    <line x1="506" y1="238" x2="926" y2="238" stroke="var(--border)"/>
+    <text x="506" y="258" fill="var(--text-muted)" font-size="11">config.toml · opencode.json · mcp_config.json</text>
+    <text x="506" y="272" fill="var(--text-muted)" font-size="11">a backup of each changed file is kept</text>
+  </g>
+
+  <!-- Arrows down -->
+  <path d="M236 108 V150" stroke="var(--border)" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+  <path d="M588 108 V150" stroke="var(--border)" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+  <!-- Token directory note -->
+  <g>
+    <rect x="16" y="316" width="928" height="56" rx="10" fill="var(--surface)" stroke="var(--border)" stroke-dasharray="6 4"/>
+    <text x="34" y="340" fill="var(--text)" font-size="13" font-weight="700">Never touched by install or uninstall</text>
+    <text x="34" y="360" fill="var(--text-muted)" font-size="11">the token directory (~/.google-services-mcps): OAuth client, login tokens, API key, policy.json, audit.log. Log in separately, once per group.</text>
+  </g>
+
+  <!-- Sign-in step -->
+  <g>
+    <rect x="16" y="392" width="928" height="52" rx="10" fill="var(--surface)" stroke="var(--warning)"/>
+    <text x="34" y="414" fill="var(--text)" font-size="13" font-weight="700">Sign in, once per login group</text>
+    <text x="34" y="432" fill="var(--text-muted)" font-size="11">setup-client, then login &lt;group&gt; · setup-admin · setup-service-account · setup-apikey</text>
+  </g>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="var(--border)"/>
+    </marker>
+  </defs>
+</svg>
+</div><figcaption>From the npx command to the agent configuration: the requirements check, the two install paths, and the install record.</figcaption></figure>
+<h2 id="the-auth-model">The auth model</h2>
+<p>There are three kinds of credential, and a product belongs to one login group that decides which kind it uses. A Desktop OAuth client gives a user token per group; a service account key covers Google Play and Merchant Center; an API key covers the public search and maps APIs. Tokens, the client file and the API key stay in the token directory; the suite has no server of its own and no telemetry path.</p>
+<figure class="diagram"><div class="diagram-frame"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 470" role="img" aria-labelledby="am-title am-desc" font-family="ui-monospace, SFMono-Regular, Consolas, monospace">
+  <title id="am-title">The auth model</title>
+  <desc id="am-desc">Three credential kinds — a Desktop OAuth client per login group, a service account key, and an API key — feed the token directory. The MCP server reads the tokens and calls Google over HTTPS. Every change passes the gate: token scopes, tool registration, the approval hook, the confirmation setting, the policy file and the audit log.</desc>
+
+  <text x="16" y="26" fill="var(--text-muted)" font-size="12" letter-spacing="1.2">AUTH MODEL</text>
+
+  <!-- Credential kinds -->
+  <g>
+    <rect x="16" y="44" width="250" height="96" rx="10" fill="var(--surface)" stroke="var(--accent)"/>
+    <text x="34" y="70" fill="var(--text)" font-size="13" font-weight="700">Desktop OAuth client</text>
+    <text x="34" y="92" fill="var(--text-muted)" font-size="11">one per Google Cloud project</text>
+    <text x="34" y="110" fill="var(--text-muted)" font-size="11">one login per group: cloud,</text>
+    <text x="34" y="126" fill="var(--text-muted)" font-size="11">searchconsole, workspace-user, business, developer</text>
+  </g>
+  <g>
+    <rect x="16" y="156" width="250" height="82" rx="10" fill="var(--surface)" stroke="var(--warning)"/>
+    <text x="34" y="182" fill="var(--text)" font-size="13" font-weight="700">Service account key</text>
+    <text x="34" y="204" fill="var(--text-muted)" font-size="11">domain-wide delegation: workspace-admin</text>
+    <text x="34" y="222" fill="var(--text-muted)" font-size="11">a key file: service-account (gplay, gmerchant)</text>
+  </g>
+  <g>
+    <rect x="16" y="254" width="250" height="66" rx="10" fill="var(--surface)" stroke="var(--success)"/>
+    <text x="34" y="280" fill="var(--text)" font-size="13" font-weight="700">API key</text>
+    <text x="34" y="302" fill="var(--text-muted)" font-size="11">apikey group: gsearch, gmaps</text>
+  </g>
+
+  <!-- Arrows to token dir -->
+  <g stroke="var(--border)" stroke-width="1.5" fill="none">
+    <path d="M266 92 H310"/>
+    <path d="M266 197 H310"/>
+    <path d="M266 287 H310"/>
+  </g>
+
+  <!-- Token directory -->
+  <g>
+    <rect x="310" y="44" width="250" height="276" rx="10" fill="var(--surface-2)" stroke="var(--accent)"/>
+    <text x="435" y="72" fill="var(--text)" font-size="14" font-weight="700" text-anchor="middle">token directory</text>
+    <text x="435" y="94" fill="var(--text-muted)" font-size="11" text-anchor="middle">~/.google-services-mcps</text>
+    <line x1="330" y1="110" x2="540" y2="110" stroke="var(--border)"/>
+    <text x="330" y="134" fill="var(--text-muted)" font-size="11">client_secret.json</text>
+    <text x="330" y="156" fill="var(--text-muted)" font-size="11">&lt;group&gt;.token.json</text>
+    <text x="330" y="178" fill="var(--text-muted)" font-size="11">apikey.json</text>
+    <text x="330" y="200" fill="var(--text-muted)" font-size="11">workspace-admin.scopes.json</text>
+    <text x="330" y="222" fill="var(--text-muted)" font-size="11">service-account.json</text>
+    <text x="330" y="244" fill="var(--text-muted)" font-size="11">policy.json</text>
+    <text x="330" y="266" fill="var(--text-muted)" font-size="11">audit.log</text>
+    <text x="330" y="294" fill="var(--text-muted)" font-size="11">mode 0600 where supported;</text>
+    <text x="330" y="310" fill="var(--text-muted)" font-size="11">on Windows, a limited access list</text>
+  </g>
+
+  <!-- Arrow to server -->
+  <path d="M560 182 H604" stroke="var(--border)" stroke-width="1.5" fill="none" marker-end="url(#am-arrow)"/>
+
+  <!-- Server -->
+  <g>
+    <rect x="604" y="44" width="180" height="276" rx="10" fill="var(--surface)" stroke="var(--border)"/>
+    <text x="694" y="72" fill="var(--text)" font-size="14" font-weight="700" text-anchor="middle">MCP server</text>
+    <text x="694" y="94" fill="var(--text-muted)" font-size="11" text-anchor="middle">local Node.js process</text>
+    <line x1="624" y1="110" x2="764" y2="110" stroke="var(--border)"/>
+    <text x="624" y="134" fill="var(--text-muted)" font-size="11">reads the token for</text>
+    <text x="624" y="150" fill="var(--text-muted)" font-size="11">its group</text>
+    <text x="624" y="176" fill="var(--text-muted)" font-size="11">registers only the tools</text>
+    <text x="624" y="192" fill="var(--text-muted)" font-size="11">the token covers</text>
+    <text x="624" y="218" fill="var(--text-muted)" font-size="11">calls Google over HTTPS</text>
+    <text x="624" y="244" fill="var(--text-muted)" font-size="11">retries 429, 503 and</text>
+    <text x="624" y="260" fill="var(--text-muted)" font-size="11">read 403s, 3 attempts</text>
+    <text x="624" y="292" fill="var(--text-muted)" font-size="11">redacts credential fields</text>
+    <text x="624" y="308" fill="var(--text-muted)" font-size="11">in read results</text>
+  </g>
+
+  <!-- Arrow to Google -->
+  <path d="M784 182 H828" stroke="var(--border)" stroke-width="1.5" fill="none" marker-end="url(#am-arrow)"/>
+
+  <!-- Google -->
+  <g>
+    <rect x="828" y="44" width="116" height="276" rx="10" fill="var(--surface)" stroke="var(--border)"/>
+    <text x="886" y="72" fill="var(--text)" font-size="13" font-weight="700" text-anchor="middle">Google</text>
+    <line x1="844" y1="88" x2="928" y2="88" stroke="var(--border)"/>
+    <text x="844" y="112" fill="var(--text-muted)" font-size="11">APIs</text>
+    <text x="844" y="134" fill="var(--text-muted)" font-size="11">OAuth</text>
+    <text x="844" y="156" fill="var(--text-muted)" font-size="11">tokeninfo</text>
+    <text x="844" y="186" fill="var(--text-muted)" font-size="11">scope checks</text>
+    <text x="844" y="208" fill="var(--text-muted)" font-size="11">quotas</text>
+    <text x="844" y="230" fill="var(--text-muted)" font-size="11">billing</text>
+    <text x="844" y="252" fill="var(--text-muted)" font-size="11">approval rules</text>
+  </g>
+
+  <!-- Gate strip -->
+  <g>
+    <rect x="16" y="348" width="928" height="106" rx="10" fill="var(--surface-2)" stroke="var(--warning)" stroke-width="2"/>
+    <text x="34" y="374" fill="var(--text)" font-size="13" font-weight="700">The gate: every change, in order</text>
+    <g font-size="11" fill="var(--text-muted)">
+      <text x="34" y="400">1. token scopes — Google rejects a call outside them</text>
+      <text x="34" y="420">2. tool registration — write and destructive tools are hidden while Allow write tools is off</text>
+      <text x="34" y="440">3. approval — the PreToolUse hook asks and never allows; a destructive call also shows an exact form</text>
+      <text x="502" y="400">4. confirmation — every-change, destructive-only or off</text>
+      <text x="502" y="420">5. policy.json — deny wins, then ask, then allow</text>
+      <text x="502" y="440">6. audit.log — one line, a hash of the arguments, never the values</text>
+    </g>
+  </g>
+
+  <defs>
+    <marker id="am-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="var(--border)"/>
+    </marker>
+  </defs>
+</svg>
+</div><figcaption>Three credential kinds feed the token directory, the server reads them, and the gate decides every change before it reaches Google.</figcaption></figure>
+<h2 id="the-consent-path">The consent path</h2>
+<p>A tool call passes through the layers in order. The token scopes decide what Google will accept. The server lists a write or destructive tool only when <strong>Allow write tools</strong> is on. In Claude Code, the <code>PreToolUse</code> hook asks before a change and never allows a call, so your own permission rules still apply. A destructive action also shows an <strong>Approve this action?</strong> form with the exact action. The confirmation setting and the policy file decide whether a prompt is needed, and each gated action writes one line to <code>audit.log</code>.</p>
+<ol><li><strong>Token scopes.</strong> A login asks only for the scopes of its profile. Google rejects any call outside them, whatever the plugin shows.</li><li><strong>Tool registration.</strong> Write and destructive tools are hidden while <strong>Allow write tools</strong> is off.</li><li><strong>Approval gate.</strong> The hook returns <code>ask</code> or <code>deny</code>, never <code>allow</code>. A destructive call also shows the exact action in a form.</li><li><strong>Confirmation and policy.</strong> <code>confirmation</code> sets when to ask; <code>policy.json</code> holds <code>allow</code>, <code>ask</code> and <code>deny</code> rules, and a deny always wins.</li><li><strong>Audit log.</strong> One JSON line per gated action, with a hash of the arguments, never the values.</li></ol>
+<h2 id="the-plugin-folder">The plugin folder</h2>
+<p>Every plugin folder has the same shape. The files are generated by the build, and the plugin's manifest points at the parts.</p>
+<div class="table-wrap"><table><caption>What a plugin folder holds</caption><thead><tr><th scope="col">Path</th><th scope="col">What it is</th></tr></thead><tbody><tr><td><code>.claude-plugin/plugin.json</code></td><td>the plugin manifest: name, display name, version, description, options</td></tr><tr><td><code>.mcp.json</code></td><td>how the agent starts the server, and which plugin options become environment variables</td></tr><tr><td><code>servers/&lt;id&gt;.mjs</code></td><td>the MCP server, bundled so it needs no <code>node_modules</code></td></tr><tr><td><code>hooks/hooks.json</code></td><td>the <code>PreToolUse</code> matcher for this plugin's tools</td></tr><tr><td><code>bin/gsm-hook.mjs</code></td><td>the hook: it reads the tool map and the policy, and asks or denies</td></tr><tr><td><code>tool-map.json</code></td><td>every tool name, its safety class and its scopes</td></tr><tr><td><code>method-kinds.json</code></td><td>the safety class of the product's API methods</td></tr><tr><td><code>servers.json</code></td><td>the server, its APIs, its gateway APIs and its login group</td></tr><tr><td><code>scopes.json</code></td><td>the OAuth scopes of each API</td></tr><tr><td><code>skills/&lt;id&gt;/SKILL.md</code></td><td>the skill: when to use the product and the common tasks</td></tr></tbody></table></div>
+<h2 id="where-the-data-goes">Where the data goes</h2>
+<p>The servers call only Google's API and OAuth endpoints, and the code has no separate telemetry path. Tokens stay in the token directory on your machine. Anything a tool returns, such as mail text, becomes part of the agent's conversation, so it goes to that agent's model provider as usual.</p>
+<p>The <a href="/configuration/">configuration page</a> lists the settings and the environment variable names. The <a href="/troubleshooting/">troubleshooting page</a> covers the messages the suite prints when a layer refuses a call.</p>
+  </div>
+</div>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <nav aria-label="Footer">
+      <ul>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/license/">License</a></li>
+        <li><a href="/products/">Products</a></li>
+        <li><a href="https://github.com/FiredMosquito831/google-services-mcps">Repository</a></li>
+        <li><a href="https://github.com/FiredMosquito831/google-services-mcps/issues">Issues</a></li>
+      </ul>
+    </nav>
+    <p>google-services-mcps is an independent project. It is not affiliated with, endorsed by, or sponsored by Google LLC. Google and the Google product names are trademarks of Google LLC.</p>
+    <p>Licensed under the Apache License, Version 2.0 (Apache-2.0). Based on google-services-mcps by FiredMosquito831 (https://github.com/FiredMosquito831/google-services-mcps, profile https://github.com/FiredMosquito831).</p>
+    <p>This site is generated from the repository by <code>scripts/build_site.py</code>. Version 2.17.0.</p>
+  </div>
+</footer>
+<script src="/assets/site.js" defer></script>
+</body>
+</html>

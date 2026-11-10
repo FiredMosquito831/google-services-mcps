@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Troubleshooting | google-services-mcps</title>
+<meta name="description" content="The messages the suite prints and what to do next: missing tools, login errors, refused scopes, throttling, install problems and approval prompts.">
+<link rel="canonical" href="https://googleservices.danubelabs.net/troubleshooting/">
+<meta name="theme-color" content="#0B1020" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F8FAFC" media="(prefers-color-scheme: light)">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="google-services-mcps">
+<meta property="og:title" content="Troubleshooting | google-services-mcps">
+<meta property="og:description" content="The messages the suite prints and what to do next: missing tools, login errors, refused scopes, throttling, install problems and approval prompts.">
+<meta property="og:url" content="https://googleservices.danubelabs.net/troubleshooting/">
+<meta property="og:image" content="https://googleservices.danubelabs.net/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="google-services-mcps: 23 Google products as MCP servers, one plugin each">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Troubleshooting | google-services-mcps">
+<meta name="twitter:description" content="The messages the suite prints and what to do next: missing tools, login errors, refused scopes, throttling, install problems and approval prompts.">
+<meta name="twitter:image" content="https://googleservices.danubelabs.net/og.png">
+<meta name="twitter:image:alt" content="google-services-mcps: 23 Google products as MCP servers, one plugin each">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Troubleshooting | google-services-mcps",
+  "url": "https://googleservices.danubelabs.net/troubleshooting/",
+  "description": "The messages the suite prints and what to do next: missing tools, login errors, refused scopes, throttling, install problems and approval prompts."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://googleservices.danubelabs.net/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Troubleshooting",
+      "item": "https://googleservices.danubelabs.net/troubleshooting/"
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/">
+      <svg class="brand-mark" viewBox="0 0 32 32" width="22" height="22" aria-hidden="true" focusable="false">
+        <rect width="32" height="32" rx="7" fill="var(--surface-2)"/>
+        <path d="M7 11h6M19 11h6M7 21h6M19 21h6" stroke="var(--accent)" stroke-width="2.4" stroke-linecap="round"/>
+        <circle cx="16" cy="11" r="3" fill="var(--warning)"/>
+        <circle cx="16" cy="21" r="3" fill="var(--accent)"/>
+      </svg>
+      <span>google-services-mcps</span>
+    </a>
+    <nav class="site-nav" aria-label="Main">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/install/">Install</a></li>
+        <li><a href="/quick-start/">Quick start</a></li>
+        <li><a href="/products/">Products</a></li>
+        <li><a href="/architecture/">Architecture</a></li>
+        <li><a href="/configuration/">Configuration</a></li>
+        <li><a href="/faq/">FAQ</a></li>
+        <li><a href="/troubleshooting/" aria-current="page">Troubleshooting</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <div class="wrap">
+    <ol>
+      <li><a href="/">Home</a></li>
+      <li><span aria-current="page">Troubleshooting</span></li>
+    </ol>
+  </div>
+</nav>
+<main id="main">
+<div class="wrap">
+  <div class="page-head">
+    <p class="eyebrow">Troubleshooting</p>
+    <h1>Troubleshooting</h1>
+  </div>
+  <div class="prose">
+<p>Start with the two checks that answer most questions. <code>npx google-services-mcps doctor --plugin &lt;id&gt;</code> checks the plugin folder, the hook, the tool names and the credentials, and exits 1 when a check fails. <code>npx google-services-mcps status</code> shows the logins, the API key and the setup of each group.</p>
+<h2 id="the-plugin-is-installed-but-its-tools-do-not-appear">The plugin is installed but its tools do not appear</h2>
+<ol><li>Run <code>claude plugin list</code>. If the status is <code>disabled</code>, enable it: <code>claude plugin enable gmail@google-services-mcps --scope user</code>.</li><li>Run <code>claude plugin validate</code> on the plugin folder.</li><li>Run <code>/mcp</code> in Claude Code. If the server shows as failed, read the message there.</li><li>Run <code>npx google-services-mcps doctor --plugin gmail</code> and fix each <code>FAIL</code> line.</li></ol>
+<h2 id="the-server-shows-no-tools">The server shows no tools</h2>
+<ul><li>The server is switched off for this session. Turn it on in <code>/mcp</code>.</li><li>The plugin is disabled. See the check above.</li><li>The login uses the <code>readonly</code> profile, so only read tools with read-only scopes are listed. This is expected. Log in with <code>--profile readwrite</code> if you need changes.</li><li>The group is not logged in. Every tool is listed, but each call fails with <code>Not logged in for "&lt;group&gt;".</code> Set up the client and log in.</li></ul>
+<h2 id="common-messages">Common messages</h2>
+<div class="table-wrap"><table><caption>The message, what it means, and what to do</caption><thead><tr><th scope="col">Message</th><th scope="col">Meaning</th><th scope="col">What to do</th></tr></thead><tbody><tr><td><code>Writes are turned off for this server (GSM_ALLOW_WRITES is not "true"), so &lt;tool&gt; was not run.</code></td><td><strong>Allow write tools</strong> is off.</td><td>Turn it on in the plugin options and restart the server.</td></tr><tr><td><code>Denied by policy rule "&lt;match&gt;". Nothing was changed.</code></td><td>A deny rule matched.</td><td>Change or remove the rule in <code>policy.json</code>, if you meant to allow the call.</td></tr><tr><td><code>Invalid policy file &lt;path&gt;: ...</code></td><td><code>policy.json</code> is not valid.</td><td>Fix the JSON or the field named in the error. Changes now ask.</td></tr><tr><td><code>You declined this action. Nothing was changed.</code></td><td>You declined the second approval.</td><td>Nothing to fix. Run the action again if you want it.</td></tr><tr><td><code>This client cannot ask for confirmation, so the action was not run.</code></td><td>The client has no approval step.</td><td>Use Claude Code for changes. Turning confirmation off to get past this is not recommended.</td></tr><tr><td><code>Not logged in for "&lt;group&gt;".</code></td><td>No token for the group.</td><td>Set up the client, then log in for the group.</td></tr><tr><td><code>The token lacks a scope for this tool.</code></td><td>The token does not have the scope for this tool.</td><td>Log in again with <code>--profile readwrite</code>, then restart the server.</td></tr><tr><td><code>HTTP 429</code> or <code>HTTP 503</code></td><td>Google is throttling the call; the suite retried it and it still failed.</td><td>Wait, then try again. Check the quota in the Cloud console.</td></tr><tr><td>A <code>truncated</code> object with <code>shown</code>, <code>omitted</code> and <code>how_to_continue</code></td><td>The result was longer than the result limit (25,000 characters by default).</td><td>Follow <code>how_to_continue</code>: page on, use a smaller page size, or add a filter.</td></tr><tr><td><code>"&lt;name&gt;" is not a query parameter of this method.</code></td><td><code>api_call</code> was given a query name the method does not declare.</td><td>Use one of the allowed names from <code>api_describe</code>.</td></tr><tr><td><code>Unknown tool, asking to be safe.</code></td><td>The tool is not in this plugin's tool map.</td><td>Reinstall or update the plugin, then run <code>doctor</code>.</td></tr><tr><td><code>Could not check this action, so asking to be safe.</code></td><td>The hook could not read its tool map or policy.</td><td>Read the error after the message and fix the file it names.</td></tr></tbody></table></div>
+<h2 id="install-and-login-problems">Install and login problems</h2>
+<ul><li><strong>Marketplace not found.</strong> Run the install again, which adds the marketplace, or add it by hand with <code>claude plugin marketplace add</code>.</li><li><strong><code>setup-client</code> says the file already exists.</strong> Use <code>--force</code>. The old client file is backed up first.</li><li><strong>The browser does not open for <code>login</code>.</strong> Run the same login with <code>--no-browser</code>; it prints the URL. Open it on the same machine, because the redirect goes to <code>127.0.0.1</code>.</li><li><strong><code>agy config folder not found</code>.</strong> Run Antigravity once so that it creates its config folder, then run the install again.</li><li><strong><code>--path must be an existing directory</code>.</strong> Create the folder, or fix the path.</li><li><strong>OpenCode says the file is not strict JSON.</strong> Remove the comments or trailing commas from <code>opencode.json</code>, or add the entry by hand. gsm does not change the file.</li><li><strong>Codex ignores a project config.</strong> Codex reads a project <code>.codex/config.toml</code> only in trusted projects. Trust the folder in Codex.</li><li><strong><code>--home does not apply to claude</code>.</strong> Remove <code>--home</code> when you use <code>--agent claude</code>.</li></ul>
+<h2 id="a-login-works-but-the-tools-still-fail">A login works but the tools still fail</h2>
+<p>After a sign-in in the chat, the server uses the new login at once. After a login in a terminal, call <code>auth_status</code>: it reads the tokens again and loads the tools the new scopes allow. Tools whose scopes the new login lacks stay listed until the server restarts, so restart it in <code>/mcp</code> or restart Claude Code.</p>
+<p>If Google refuses the login with a reauthentication request, a Workspace admin setting called Google Cloud session control has ended the session. Its default is 16 hours. Call <code>auth_login</code> to sign in again; to make it last longer, an admin changes the session length or exempts the app.</p>
+<h2 id="rate-limits">Rate limits</h2>
+<p>The suite retries throttled requests on its own, up to three attempts in all. The waits start at 0.5 seconds and double, with jitter; a <code>Retry-After</code> header is used instead, up to 60 seconds. After the last attempt the error text is returned. A quota that is used up resets on Google's schedule. Do not run a loop that retries on its own.</p>
+<p>The <a href="/faq/">FAQ</a> answers the broader questions. The <a href="/configuration/">configuration page</a> lists the settings that decide when a prompt appears.</p>
+  </div>
+</div>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <nav aria-label="Footer">
+      <ul>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/license/">License</a></li>
+        <li><a href="/products/">Products</a></li>
+        <li><a href="https://github.com/FiredMosquito831/google-services-mcps">Repository</a></li>
+        <li><a href="https://github.com/FiredMosquito831/google-services-mcps/issues">Issues</a></li>
+      </ul>
+    </nav>
+    <p>google-services-mcps is an independent project. It is not affiliated with, endorsed by, or sponsored by Google LLC. Google and the Google product names are trademarks of Google LLC.</p>
+    <p>Licensed under the Apache License, Version 2.0 (Apache-2.0). Based on google-services-mcps by FiredMosquito831 (https://github.com/FiredMosquito831/google-services-mcps, profile https://github.com/FiredMosquito831).</p>
+    <p>This site is generated from the repository by <code>scripts/build_site.py</code>. Version 2.17.0.</p>
+  </div>
+</footer>
+<script src="/assets/site.js" defer></script>
+</body>
+</html>

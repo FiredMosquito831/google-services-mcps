@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://googleservices.danubelabs.net/sitemap.xml

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" role="img" aria-labelledby="favicon-title">
+  <title id="favicon-title">google-services-mcps</title>
+  <rect width="32" height="32" rx="7" fill="#0B1020"/>
+  <path d="M7 11h6M19 11h6M7 21h6M19 21h6" stroke="#7AA2FF" stroke-width="2.4" stroke-linecap="round"/>
+  <circle cx="16" cy="11" r="3" fill="#FBBF24"/>
+  <circle cx="16" cy="21" r="3" fill="#7AA2FF"/>
+</svg>
