@@ -224,6 +224,12 @@ const generationConfig = z
   .optional()
   .describe('A Vertex GenerationConfig as JSON, such as {"temperature": 0.2, "maxOutputTokens": 1024, "responseMimeType": "application/json"}.');
 const tools = z.array(z.record(z.string(), z.unknown())).optional().describe('Vertex Tool objects as JSON (function declarations, Google Search grounding and the others).');
+const instances = z
+  .array(z.unknown())
+  .optional()
+  .describe(
+    'Vertex prediction-schema instances as JSON values, such as [{"prompt": "Count me"}]. May be supplied on its own when neither prompt nor contents is given, or together with prompt or contents; every supplied form is forwarded to the REST body.',
+  );
 
 const imageIndex = z
   .number()
@@ -247,6 +253,10 @@ const generateShape = {
   system_instruction: systemInstruction,
   generation_config: generationConfig,
   safety_settings: z.array(z.record(z.string(), z.unknown())).optional().describe('Vertex SafetySetting objects as JSON, such as [{"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_ONLY_HIGH"}].'),
+  model_armor_config: z
+    .record(z.string(), z.unknown())
+    .optional()
+    .describe('A Vertex ModelArmorConfig as JSON, such as {"promptTemplateName": "projects/p/locations/l/templates/t"}. Optional; promptTemplateName and responseTemplateName are template resource names. If supplied, safety_settings must not be supplied.'),
   tools,
   tool_config: z.record(z.string(), z.unknown()).optional().describe('A Vertex ToolConfig as JSON, such as {"functionCallingConfig": {"mode": "ANY"}}.'),
   cached_content: z.string().optional().describe('A cached content resource name, projects/<p>/locations/<r>/cachedContents/<id>, to use as context.'),
@@ -262,6 +272,7 @@ const countShape = {
   model,
   prompt,
   contents,
+  instances,
   system_instruction: systemInstruction,
   generation_config: generationConfig,
   tools,
@@ -288,6 +299,8 @@ const embedShape = {
   title: z.string().optional().describe('The title of the text, for RETRIEVAL_DOCUMENT (text models only).'),
   output_dimensionality: z.number().int().min(1).optional().describe('Fewer dimensions: the vector is cut to this length.'),
   auto_truncate: z.boolean().optional().describe('false: fail on text longer than the model takes, instead of cutting it. Google cuts it by default.'),
+  document_ocr: z.boolean().optional().describe('Optional. Whether to enable OCR for document content.'),
+  audio_track_extraction: z.boolean().optional().describe('Optional. Whether to extract audio from video content.'),
   offset: z
     .number()
     .int()
@@ -317,6 +330,7 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
           ...systemOf(input.system_instruction),
           ...(input.generation_config ? { generationConfig: input.generation_config } : {}),
           ...(input.safety_settings ? { safetySettings: input.safety_settings } : {}),
+          ...(input.model_armor_config ? { modelArmorConfig: input.model_armor_config } : {}),
           ...(input.tools ? { tools: input.tools } : {}),
           ...(input.tool_config ? { toolConfig: input.tool_config } : {}),
           ...(input.cached_content ? { cachedContent: input.cached_content } : {}),
@@ -330,15 +344,18 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       name: 'vertex_count_tokens',
       title: 'Count the tokens of a Vertex AI prompt',
       description:
-        "Count the tokens (and billable characters) a prompt would use with a Vertex AI model, before sending it (matches count_tokens in Google's Agent Platform MCP server). A read.",
+        "Count the tokens (and billable characters) a prompt would use with a Vertex AI model, before sending it (matches count_tokens in Google's Agent Platform MCP server). Accepts an optional model-specific `instances` array, on its own when `prompt`/`contents` are absent or alongside either of them; all supplied forms are forwarded. A read.",
       kind: 'read',
       scopes: COUNT_SCOPES,
       inputSchema: countShape,
       async handler(args) {
         const input = z.object(countShape).parse(args);
         const target = modelTarget(input.project_id, input.region ?? '', input.model);
+        // Without instances, no input form was supplied: keep the prompt/contents error before any request.
+        if (input.prompt === undefined && input.contents === undefined && input.instances === undefined) throw new Error('Give exactly one of prompt and contents.');
         const body = {
-          contents: contentsOf(input),
+          ...(input.prompt !== undefined || input.contents !== undefined ? { contents: contentsOf(input) } : {}),
+          ...(input.instances !== undefined ? { instances: input.instances } : {}),
           ...systemOf(input.system_instruction),
           ...(input.generation_config ? { generationConfig: input.generation_config } : {}),
           ...(input.tools ? { tools: input.tools } : {}),
@@ -372,6 +389,8 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
           ...(input.title ? { title: input.title } : {}),
           ...(input.output_dimensionality !== undefined ? { outputDimensionality: input.output_dimensionality } : {}),
           ...(input.auto_truncate !== undefined ? { autoTruncate: input.auto_truncate } : {}),
+          ...(input.document_ocr !== undefined ? { documentOcr: input.document_ocr } : {}),
+          ...(input.audio_track_extraction !== undefined ? { audioTrackExtraction: input.audio_track_extraction } : {}),
         };
         const body = {
           content: input.text !== undefined ? { parts: [{ text: input.text }] } : input.content,

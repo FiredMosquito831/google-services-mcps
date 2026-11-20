@@ -52,6 +52,10 @@ test('three tools, all reads; scopes as Discovery lists them; each names the Goo
     ],
   );
   assert.deepEqual(tools.get('vertex_generate_content').scopes, [G('aiplatform'), G('cloud-platform'), G('cloud-platform.read-only')]);
+  const armor = tools.get('vertex_generate_content').inputSchema.model_armor_config;
+  assert.ok(armor, 'vertex_generate_content exposes model_armor_config');
+  assert.equal(armor.safeParse(undefined).success, true, 'model_armor_config is optional');
+  assert.deepEqual(armor.safeParse({ promptTemplateName: 'projects/p/locations/l/templates/t' }).data, { promptTemplateName: 'projects/p/locations/l/templates/t' });
   assert.deepEqual(tools.get('vertex_embed_content').scopes, [G('aiplatform'), G('cloud-platform'), G('cloud-platform.read-only')]);
   assert.deepEqual(tools.get('vertex_count_tokens').scopes, [G('cloud-platform')]);
   const official = { vertex_generate_content: 'generate_content', vertex_count_tokens: 'count_tokens', vertex_embed_content: 'embed_content' };
@@ -139,6 +143,33 @@ test('vertex_generate_content: a prompt is one user turn; the options keep the A
   assert.deepEqual(await run('vertex_generate_content', { project_id: 'my-project-123', region: 'asia-northeast1', model: 'endpoints/42', contents: [{ role: 'user', parts: [{ text: 'Hi' }] }], raw: true }), whole);
   assert.equal(calls[0].url, 'https://asia-northeast1-aiplatform.googleapis.com/v1/projects/my-project-123/locations/asia-northeast1/endpoints/42:generateContent');
   assert.deepEqual(calls[0].body, { contents: [{ role: 'user', parts: [{ text: 'Hi' }] }] });
+});
+
+test('vertex_generate_content: model_armor_config reaches the REST body as an opaque object, and raw still shapes only the response', async () => {
+  const modelArmorConfig = {
+    promptTemplateName: 'projects/my-project-123/locations/global/templates/prompt-t',
+    responseTemplateName: 'projects/my-project-123/locations/global/templates/response-t',
+  };
+  const contents = [{ role: 'user', parts: [{ text: 'Screen this' }] }];
+  const whole = { candidates: [{ content: { parts: [{ text: 'ok' }] }, finishReason: 'STOP' }] };
+  reset(() => whole);
+  const rawOut = await run('vertex_generate_content', { project_id: 'my-project-123', model: 'gemini-2.5-flash', contents, model_armor_config: modelArmorConfig, raw: true });
+  assert.deepEqual(rawOut, whole);
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0].method, 'POST');
+  assert.equal(calls[0].url, `https://aiplatform.googleapis.com/v1/${MODEL}:generateContent`);
+  assert.deepEqual(calls[0].body, { contents, modelArmorConfig });
+  assert.equal(Object.hasOwn(calls[0].body, 'safetySettings'), false);
+
+  reset(() => ({ candidates: [{ content: { parts: [{ text: 'ok' }] }, finishReason: 'STOP' }] }));
+  const out = await run('vertex_generate_content', { project_id: 'my-project-123', model: 'gemini-2.5-flash', contents, model_armor_config: modelArmorConfig });
+  assert.deepEqual(out, { text: 'ok', finish_reason: 'STOP' });
+  assert.deepEqual(calls[0].body, { contents, modelArmorConfig });
+
+  const safetySettings = [{ category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_ONLY_HIGH' }];
+  reset(() => ({ candidates: [{ content: { parts: [{ text: 'ok' }] }, finishReason: 'STOP' }] }));
+  await run('vertex_generate_content', { project_id: 'my-project-123', model: 'gemini-2.5-flash', contents, model_armor_config: modelArmorConfig, safety_settings: safetySettings });
+  assert.deepEqual(calls[0].body, { contents, safetySettings, modelArmorConfig });
 });
 
 test('vertex_generate_content: an image comes back as part of its bytes, never dropped; files and other parts are named', async () => {
@@ -231,13 +262,25 @@ test('the cloud readiness group lists the APIs gai calls directly', async () => 
   }
 });
 
-test('vertex_generate_content and vertex_count_tokens: exactly one of prompt and contents, checked before any request', async () => {
+test('vertex_generate_content: exactly one of prompt and contents, checked before any request', async () => {
   reset();
-  for (const name of ['vertex_generate_content', 'vertex_count_tokens']) {
+  for (const name of ['vertex_generate_content']) {
     await assert.rejects(run(name, { project_id: 'my-project-123', model: 'gemini-2.5-flash' }), /exactly one of prompt and contents/, name);
     await assert.rejects(run(name, { project_id: 'my-project-123', model: 'gemini-2.5-flash', prompt: 'a', contents: [{ parts: [{ text: 'b' }] }] }), /exactly one of prompt and contents/, name);
     await assert.rejects(run(name, { project_id: 'my-project-123', region: 'nowhere', model: 'gemini-2.5-flash', prompt: 'a' }), /is not a Google Cloud region/, name);
   }
+  assert.equal(calls.length, 0);
+});
+
+test('vertex_count_tokens: exactly one of prompt and contents, checked before any request when instances is absent', async () => {
+  reset();
+  await assert.rejects(run('vertex_count_tokens', { project_id: 'my-project-123', model: 'gemini-2.5-flash' }), /exactly one of prompt and contents/);
+  await assert.rejects(run('vertex_count_tokens', { project_id: 'my-project-123', model: 'gemini-2.5-flash', prompt: 'a', contents: [{ parts: [{ text: 'b' }] }] }), /exactly one of prompt and contents/);
+  await assert.rejects(run('vertex_count_tokens', { project_id: 'my-project-123', region: 'nowhere', model: 'gemini-2.5-flash', prompt: 'a' }), /is not a Google Cloud region/);
+  await assert.rejects(
+    run('vertex_count_tokens', { project_id: 'my-project-123', model: 'gemini-2.5-flash', prompt: 'a', contents: [{ parts: [{ text: 'b' }] }], instances: [{ prompt: 'x' }] }),
+    /exactly one of prompt and contents/,
+  );
   assert.equal(calls.length, 0);
 });
 
@@ -247,6 +290,30 @@ test('vertex_count_tokens: countTokens with the same contents; total tokens and 
   assert.equal(calls[0].url, 'https://us-central1-aiplatform.googleapis.com/v1/projects/my-project-123/locations/us-central1/publishers/google/models/gemini-2.5-pro:countTokens');
   assert.deepEqual(calls[0].body, { contents: [{ role: 'user', parts: [{ text: 'Count me' }] }], systemInstruction: { parts: [{ text: 'S' }] } });
   assert.deepEqual(out, { total_tokens: 7, total_billable_characters: 21, prompt_tokens_details: [{ modality: 'TEXT', tokenCount: 7 }] });
+});
+
+test('vertex_count_tokens: instances alone, or alongside prompt/contents, is forwarded without replacing either form', async () => {
+  reset(() => ({ totalTokens: 7, totalBillableCharacters: 21, promptTokensDetails: [{ modality: 'TEXT', tokenCount: 7 }] }));
+  const instances = [{ prompt: 'Count me' }];
+  const out = await run('vertex_count_tokens', { project_id: 'my-project-123', region: 'us-central1', model: 'gemini-2.5-pro', instances });
+  assert.equal(calls[0].url, 'https://us-central1-aiplatform.googleapis.com/v1/projects/my-project-123/locations/us-central1/publishers/google/models/gemini-2.5-pro:countTokens');
+  assert.deepEqual(calls[0].body, { instances: [{ prompt: 'Count me' }] });
+  assert.equal(Object.hasOwn(calls[0].body, 'contents'), false);
+  assert.deepEqual(out, { total_tokens: 7, total_billable_characters: 21, prompt_tokens_details: [{ modality: 'TEXT', tokenCount: 7 }] });
+
+  await run('vertex_count_tokens', { project_id: 'my-project-123', model: 'gemini-2.5-pro', prompt: 'Count me', instances });
+  assert.deepEqual(calls[1].body, { contents: [{ role: 'user', parts: [{ text: 'Count me' }] }], instances });
+  const contents = [{ role: 'user', parts: [{ text: 'Count me' }] }];
+  await run('vertex_count_tokens', { project_id: 'my-project-123', model: 'gemini-2.5-pro', contents, instances });
+  assert.deepEqual(calls[2].body, { contents, instances });
+});
+
+test('vertex_count_tokens: an empty instances array and arbitrary JSON members are forwarded as given', async () => {
+  reset();
+  await run('vertex_count_tokens', { project_id: 'my-project-123', model: 'gemini-2.5-pro', instances: [] });
+  assert.deepEqual(calls[0].body, { instances: [] });
+  await run('vertex_count_tokens', { project_id: 'my-project-123', model: 'gemini-2.5-pro', instances: [1, 'x', [2]] });
+  assert.deepEqual(calls[1].body, { instances: [1, 'x', [2]] });
 });
 
 test('vertex_embed_content: the text as content, the options in embedContentConfig (not the deprecated top-level fields)', async () => {
@@ -262,6 +329,27 @@ test('vertex_embed_content: the text as content, the options in embedContentConf
   await assert.rejects(run('vertex_embed_content', { project_id: 'my-project-123', model: 'gemini-embedding-001' }), /exactly one of text and content/);
   await assert.rejects(run('vertex_embed_content', { project_id: 'my-project-123', model: 'endpoints/1', text: 'x' }), /not an endpoint/);
   assert.equal(calls.length, 0);
+});
+
+test('vertex_embed_content: document_ocr and audio_track_extraction reach embedContentConfig, including explicit false', async () => {
+  reset(() => ({ embedding: { values: [0.4, 0.5] } }));
+  const content = { parts: [{ fileData: { mimeType: 'video/mp4', fileUri: 'gs://bucket/clip.mp4' } }] };
+  await run('vertex_embed_content', { project_id: 'my-project-123', model: 'publishers/google/models/multimodalembedding', content, document_ocr: false, audio_track_extraction: true });
+  assert.equal(calls[0].url, 'https://aiplatform.googleapis.com/v1/projects/my-project-123/locations/global/publishers/google/models/multimodalembedding:embedContent');
+  assert.deepEqual(calls[0].body, { content, embedContentConfig: { documentOcr: false, audioTrackExtraction: true } });
+
+  reset(() => ({ embedding: { values: [0.7] } }));
+  await run('vertex_embed_content', { project_id: 'my-project-123', model: 'publishers/google/models/multimodalembedding', content, document_ocr: true, audio_track_extraction: true });
+  assert.deepEqual(calls[0].body, { content, embedContentConfig: { documentOcr: true, audioTrackExtraction: true } });
+  await assert.rejects(run('vertex_embed_content', { project_id: 'my-project-123', model: 'gemini-embedding-001', text: 'x', document_ocr: 'yes' }), /document_ocr/);
+});
+
+test('CR05: Discovery fixture declares modelArmorConfig, instances, documentOcr and audioTrackExtraction on the REST request schemas', () => {
+  const doc = JSON.parse(readFileSync(join(REPO, 'tests', 'fixtures', 'discovery', 'aiplatform.v1.json'), 'utf8'));
+  assert.ok(doc.schemas.GoogleCloudAiplatformV1GenerateContentRequest?.properties?.modelArmorConfig);
+  assert.ok(doc.schemas.GoogleCloudAiplatformV1CountTokensRequest?.properties?.instances);
+  assert.ok(doc.schemas.GoogleCloudAiplatformV1EmbedContentRequestEmbedContentConfig?.properties?.documentOcr);
+  assert.ok(doc.schemas.GoogleCloudAiplatformV1EmbedContentRequestEmbedContentConfig?.properties?.audioTrackExtraction);
 });
 
 test("the gai google list: Google's three Agent Search tools and the three Vertex basics; the other 53 are named as out of scope", () => {

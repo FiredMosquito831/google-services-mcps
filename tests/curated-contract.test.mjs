@@ -1183,14 +1183,39 @@ const CASES = {
       args: { project_id: 'my-project-123', region: 'us-central1', model: 'endpoints/1234567890', contents: [{ role: 'user', parts: [{ text: 'Hi' }] }], cached_content: 'projects/my-project-123/locations/us-central1/cachedContents/c1' },
       expect: ['aiplatform.projects.locations.endpoints.generateContent'],
     },
+    {
+      args: {
+        project_id: 'my-project-123',
+        model: 'gemini-2.5-flash',
+        prompt: 'Screen this',
+        model_armor_config: {
+          promptTemplateName: 'projects/my-project-123/locations/global/templates/prompt-t',
+          responseTemplateName: 'projects/my-project-123/locations/global/templates/response-t',
+        },
+      },
+      expect: ['aiplatform.projects.locations.publishers.models.generateContent'],
+    },
   ],
   vertex_count_tokens: [
     { args: { project_id: 'my-project-123', region: 'europe-west4', model: 'publishers/google/models/gemini-2.5-pro', prompt: 'Hello', system_instruction: 'Be brief.', generation_config: { temperature: 0 } }, expect: ['aiplatform.projects.locations.publishers.models.countTokens'] },
     { args: { project_id: 'my-project-123', model: 'endpoints/1234567890', contents: [{ role: 'user', parts: [{ text: 'Hi' }] }] }, expect: ['aiplatform.projects.locations.endpoints.countTokens'] },
+    { args: { project_id: 'my-project-123', region: 'us-central1', model: 'publishers/google/models/gemini-2.5-pro', prompt: 'Hello', instances: [{ prompt: 'Hello' }] }, expect: ['aiplatform.projects.locations.publishers.models.countTokens'] },
+    { args: { project_id: 'my-project-123', model: 'endpoints/1234567890', instances: [{ prompt: 'Hi' }] }, expect: ['aiplatform.projects.locations.endpoints.countTokens'] },
   ],
   vertex_embed_content: [
     {
       args: { project_id: 'my-project-123', region: 'us-central1', model: 'gemini-embedding-001', text: 'A sentence.', task_type: 'RETRIEVAL_DOCUMENT', title: 'Doc', output_dimensionality: 256, auto_truncate: false },
+      expect: ['aiplatform.projects.locations.publishers.models.embedContent'],
+    },
+    {
+      args: {
+        project_id: 'my-project-123',
+        region: 'us-central1',
+        model: 'publishers/google/models/multimodalembedding',
+        content: { parts: [{ fileData: { mimeType: 'video/mp4', fileUri: 'gs://bucket/clip.mp4' } }] },
+        document_ocr: false,
+        audio_track_extraction: true,
+      },
       expect: ['aiplatform.projects.locations.publishers.models.embedContent'],
     },
   ],
