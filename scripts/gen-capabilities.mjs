@@ -236,8 +236,11 @@ for (const p of perProduct) {
     lines.push('| Tool | Safety | Method or purpose | Scopes |');
     lines.push('|---|---|---|---|');
     for (const r of set) {
-      const scopes = (r.scopes ?? []).slice(0, 2).map((s) => s.replace('https://www.googleapis.com/auth/', '')).join(', ');
-      lines.push(`| \`${r.short}\` | ${r.kind} | ${r.methodId ?? r.title ?? ''} | ${scopes || '(none)'} |`);
+      const allScopes = r.scopes ?? [];
+      const scopes = allScopes.slice(0, 2).map((s) => s.replace('https://www.googleapis.com/auth/', '')).join(', ');
+      const hidden = allScopes.length - 2;
+      const scopeCell = (scopes || '(none)') + (hidden > 0 ? `, +${hidden} more` : '');
+      lines.push(`| \`${r.short}\` | ${r.kind} | ${r.methodId ?? r.title ?? ''} | ${scopeCell} |`);
     }
     lines.push('');
   }

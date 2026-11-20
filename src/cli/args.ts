@@ -43,6 +43,7 @@ export type Command =
   | 'apis'
   | 'methods'
   | 'doctor'
+  | 'audit'
   | 'health'
   | 'version'
   | 'help';
@@ -60,6 +61,7 @@ const COMMANDS: Record<Exclude<Command, 'help'>, Record<string, OptionType>> = {
     confirmation: 'string',
     toolset: 'string',
     marketplace: 'string',
+    'token-dir': 'string',
     'dry-run': 'boolean',
     home: 'string',
   },
@@ -76,8 +78,19 @@ const COMMANDS: Record<Exclude<Command, 'help'>, Record<string, OptionType>> = {
     'keep-data': 'boolean',
   },
   list: { json: 'boolean', home: 'string' },
-  login: { servers: 'string', 'client-secret': 'string', profile: 'string', scopes: 'string', 'no-browser': 'boolean', replace: 'boolean', account: 'string', with: 'string', toolset: 'string' },
-  'setup-client': { force: 'boolean' },
+  login: {
+    servers: 'string',
+    'client-secret': 'string',
+    profile: 'string',
+    scopes: 'string',
+    'no-browser': 'boolean',
+    replace: 'boolean',
+    rollback: 'boolean',
+    account: 'string',
+    with: 'string',
+    toolset: 'string',
+  },
+  'setup-client': { force: 'boolean', rollback: 'boolean' },
   'setup-apikey': { force: 'boolean' },
   status: { check: 'boolean' },
   logout: { 'local-only': 'boolean', account: 'string', 'revoke-all': 'boolean' },
@@ -90,6 +103,15 @@ const COMMANDS: Record<Exclude<Command, 'help'>, Record<string, OptionType>> = {
   apis: { search: 'string', limit: 'string', json: 'boolean' },
   methods: { search: 'string', limit: 'string', json: 'boolean' },
   doctor: { plugin: 'string', 'token-dir': 'string' },
+  audit: {
+    'token-dir': 'string',
+    tool: 'string',
+    outcome: 'string',
+    risk: 'string',
+    since: 'string',
+    until: 'string',
+    limit: 'string',
+  },
   health: { check: 'boolean', plugin: 'string', json: 'boolean' },
   version: {},
 };
@@ -141,13 +163,15 @@ export interface InstallRequestArgs {
   toolset?: Toolset;
   /** --marketplace, install with claude only: owner/repo, a URL or a path. */
   marketplace?: string;
+  /** Absolute --token-dir, install only for codex, opencode and agy. */
+  tokenDir?: string;
   dryRun: boolean;
   home?: string;
   keepData: boolean;
 }
 
 /** The usage lines of install and uninstall. A missing required flag prints them, with the valid values. */
-export const INSTALL_USAGE = 'usage: node gsm.mjs install --agent <claude|codex|opencode|agy|all> --plugin <id,...|all> [--scope global|project|local] [--path <dir>] [--dry-run]';
+export const INSTALL_USAGE = 'usage: node gsm.mjs install --agent <claude|codex|opencode|agy|all> --plugin <id,...|all> [--scope global|project|local] [--path <dir>] [--token-dir <dir>] [--dry-run]';
 export const UNINSTALL_USAGE =
   'usage: node gsm.mjs uninstall --agent <claude|codex|opencode|agy|all> --plugin <id,...|all> [--scope global|project|local] [--path <dir>] [--dry-run]\n' +
   '       node gsm.mjs uninstall --all [--dry-run] [--yes]';
@@ -240,6 +264,20 @@ export function parseInstallArgs(
     marketplace = values.marketplace.trim();
   }
 
+  let tokenDir: string | undefined;
+  if (values['token-dir'] !== undefined) {
+    if (command !== 'install') throw new UsageError('--token-dir applies only to install');
+    if (typeof values['token-dir'] !== 'string' || values['token-dir'].trim() === '') {
+      throw new UsageError('--token-dir needs a value');
+    }
+    if (agent === 'all' || agent === 'claude') {
+      throw new UsageError(
+        '--token-dir applies only to codex, opencode and agy; use one of those agents or leave it unset (Claude uses the token_dir plugin option)',
+      );
+    }
+    tokenDir = resolvePath(values['token-dir'].trim());
+  }
+
   return {
     agent,
     plugin,
@@ -252,6 +290,7 @@ export function parseInstallArgs(
     // Only a given flag adds the key, so the parsed request is the same as before when it is absent.
     ...(command === 'install' && values.toolset !== undefined ? { toolset: parseToolset(values.toolset) } : {}),
     marketplace,
+    ...(tokenDir !== undefined ? { tokenDir } : {}),
     dryRun: values['dry-run'] === true,
     home,
     keepData: command === 'uninstall' && values['keep-data'] === true,

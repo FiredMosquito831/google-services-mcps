@@ -24,7 +24,7 @@ const AGENT_TEXT: Record<AgentId, string> = {
   opencode:
     'OpenCode: gsm adds its keys under "mcp" in ~/.config/opencode/opencode.json (or opencode.json in the folder). Restart OpenCode afterwards.',
   agy:
-    'Antigravity (agy): gsm adds its keys under "mcpServers" in ~/.gemini/config/mcp_config.json. Global only. Antigravity must have been started once, so that its config folder exists.',
+    'Antigravity (agy): gsm adds its keys under "mcpServers" in ~/.gemini/config/mcp_config.json. Upstream documents <workspace>/.agents/mcp_config.json, but no scope flag was found in agy and workspace CLI loading is unverified (negative scratch probe on agy 1.5.12), so gsm requires --scope global. Antigravity must have been started once, so that its config folder exists.',
 };
 
 const SCOPE_TEXT: Record<Scope, string> = {

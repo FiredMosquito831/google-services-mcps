@@ -83,17 +83,17 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `blogger_posts_update` | write | blogger.posts.update | blogger |
 | `blogger_users_get` | read | blogger.users.get | blogger, blogger.readonly |
 | `youtube_abuse_reports_insert` | write | youtube.abuseReports.insert | youtube, youtube.force-ssl |
-| `youtube_activities_list` | read | youtube.activities.list | youtube, youtube.force-ssl |
+| `youtube_activities_list` | read | youtube.activities.list | youtube, youtube.force-ssl, +1 more |
 | `youtube_broadcasts_transition` | destructive | youtube.liveBroadcasts.transition | youtube, youtube.force-ssl |
 | `youtube_captions_delete` | destructive | youtube.captions.delete | youtube.force-ssl, youtubepartner |
 | `youtube_captions_download` | read | youtube.captions.download | youtube.force-ssl, youtubepartner |
 | `youtube_captions_list` | read | youtube.captions.list | youtube.force-ssl, youtubepartner |
-| `youtube_channel_sections_delete` | destructive | youtube.channelSections.delete | youtube, youtube.force-ssl |
-| `youtube_channel_sections_insert` | write | youtube.channelSections.insert | youtube, youtube.force-ssl |
-| `youtube_channel_sections_list` | read | youtube.channelSections.list | youtube, youtube.force-ssl |
-| `youtube_channel_sections_update` | write | youtube.channelSections.update | youtube, youtube.force-ssl |
-| `youtube_channels_list` | read | youtube.channels.list | youtube, youtube.force-ssl |
-| `youtube_channels_update` | write | youtube.channels.update | youtube, youtube.force-ssl |
+| `youtube_channel_sections_delete` | destructive | youtube.channelSections.delete | youtube, youtube.force-ssl, +1 more |
+| `youtube_channel_sections_insert` | write | youtube.channelSections.insert | youtube, youtube.force-ssl, +1 more |
+| `youtube_channel_sections_list` | read | youtube.channelSections.list | youtube, youtube.force-ssl, +2 more |
+| `youtube_channel_sections_update` | write | youtube.channelSections.update | youtube, youtube.force-ssl, +1 more |
+| `youtube_channels_list` | read | youtube.channels.list | youtube, youtube.force-ssl, +3 more |
+| `youtube_channels_update` | write | youtube.channels.update | youtube, youtube.force-ssl, +1 more |
 | `youtube_comment_threads_insert` | write | youtube.commentThreads.insert | youtube.force-ssl |
 | `youtube_comment_threads_list` | read | youtube.commentThreads.list | youtube.force-ssl |
 | `youtube_comments_delete` | destructive | youtube.comments.delete | youtube.force-ssl |
@@ -101,62 +101,62 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `youtube_comments_list` | read | youtube.comments.list | youtube.force-ssl |
 | `youtube_comments_mark_as_spam` | write | youtube.comments.markAsSpam | youtube.force-ssl |
 | `youtube_comments_update` | write | youtube.comments.update | youtube.force-ssl |
-| `youtube_i18n_languages_list` | read | youtube.i18nLanguages.list | youtube, youtube.force-ssl |
-| `youtube_i18n_regions_list` | read | youtube.i18nRegions.list | youtube, youtube.force-ssl |
-| `youtube_insert_cuepoint` | write | youtube.liveBroadcasts.insertCuepoint | youtube, youtube.force-ssl |
+| `youtube_i18n_languages_list` | read | youtube.i18nLanguages.list | youtube, youtube.force-ssl, +2 more |
+| `youtube_i18n_regions_list` | read | youtube.i18nRegions.list | youtube, youtube.force-ssl, +2 more |
+| `youtube_insert_cuepoint` | write | youtube.liveBroadcasts.insertCuepoint | youtube, youtube.force-ssl, +1 more |
 | `youtube_live_broadcasts_bind` | write | youtube.liveBroadcasts.bind | youtube, youtube.force-ssl |
 | `youtube_live_broadcasts_delete` | destructive | youtube.liveBroadcasts.delete | youtube, youtube.force-ssl |
 | `youtube_live_broadcasts_insert` | write | youtube.liveBroadcasts.insert | youtube, youtube.force-ssl |
-| `youtube_live_broadcasts_list` | read | youtube.liveBroadcasts.list | youtube, youtube.force-ssl |
+| `youtube_live_broadcasts_list` | read | youtube.liveBroadcasts.list | youtube, youtube.force-ssl, +1 more |
 | `youtube_live_broadcasts_update` | write | youtube.liveBroadcasts.update | youtube, youtube.force-ssl |
 | `youtube_live_chat_bans_delete` | destructive | youtube.liveChatBans.delete | youtube, youtube.force-ssl |
 | `youtube_live_chat_bans_insert` | write | youtube.liveChatBans.insert | youtube, youtube.force-ssl |
 | `youtube_live_chat_messages_delete` | destructive | youtube.liveChatMessages.delete | youtube, youtube.force-ssl |
 | `youtube_live_chat_messages_insert` | write | youtube.liveChatMessages.insert | youtube, youtube.force-ssl |
-| `youtube_live_chat_messages_list` | read | youtube.liveChatMessages.list | youtube, youtube.force-ssl |
-| `youtube_live_chat_messages_stream` | read | youtube.youtube.v3.liveChat.messages.stream | youtube, youtube.force-ssl |
-| `youtube_live_chat_moderators_list` | read | youtube.liveChatModerators.list | youtube, youtube.force-ssl |
+| `youtube_live_chat_messages_list` | read | youtube.liveChatMessages.list | youtube, youtube.force-ssl, +1 more |
+| `youtube_live_chat_messages_stream` | read | youtube.youtube.v3.liveChat.messages.stream | youtube, youtube.force-ssl, +1 more |
+| `youtube_live_chat_moderators_list` | read | youtube.liveChatModerators.list | youtube, youtube.force-ssl, +1 more |
 | `youtube_live_streams_delete` | destructive | youtube.liveStreams.delete | youtube, youtube.force-ssl |
 | `youtube_live_streams_insert` | write | youtube.liveStreams.insert | youtube, youtube.force-ssl |
-| `youtube_live_streams_list` | read | youtube.liveStreams.list | youtube, youtube.force-ssl |
+| `youtube_live_streams_list` | read | youtube.liveStreams.list | youtube, youtube.force-ssl, +1 more |
 | `youtube_live_streams_update` | write | youtube.liveStreams.update | youtube, youtube.force-ssl |
 | `youtube_members_list` | read | youtube.members.list | youtube.channel-memberships.creator |
 | `youtube_memberships_levels_list` | read | youtube.membershipsLevels.list | youtube.channel-memberships.creator |
 | `youtube_messages_transition` | write | youtube.liveChatMessages.transition | youtube, youtube.force-ssl |
 | `youtube_moderators_delete` | destructive | youtube.liveChatModerators.delete | youtube, youtube.force-ssl |
 | `youtube_moderators_insert` | write | youtube.liveChatModerators.insert | youtube, youtube.force-ssl |
-| `youtube_playlist_images_delete` | destructive | youtube.playlistImages.delete | youtube, youtube.force-ssl |
-| `youtube_playlist_images_list` | read | youtube.playlistImages.list | youtube, youtube.force-ssl |
-| `youtube_playlist_items_delete` | destructive | youtube.playlistItems.delete | youtube, youtube.force-ssl |
-| `youtube_playlist_items_insert` | write | youtube.playlistItems.insert | youtube, youtube.force-ssl |
-| `youtube_playlist_items_list` | read | youtube.playlistItems.list | youtube, youtube.force-ssl |
-| `youtube_playlist_items_update` | write | youtube.playlistItems.update | youtube, youtube.force-ssl |
-| `youtube_playlists_delete` | destructive | youtube.playlists.delete | youtube, youtube.force-ssl |
-| `youtube_playlists_insert` | write | youtube.playlists.insert | youtube, youtube.force-ssl |
-| `youtube_playlists_list` | read | youtube.playlists.list | youtube, youtube.force-ssl |
-| `youtube_playlists_update` | write | youtube.playlists.update | youtube, youtube.force-ssl |
-| `youtube_reasons_list` | read | youtube.videoAbuseReportReasons.list | youtube, youtube.force-ssl |
-| `youtube_search_list` | read | youtube.search.list | youtube, youtube.force-ssl |
+| `youtube_playlist_images_delete` | destructive | youtube.playlistImages.delete | youtube, youtube.force-ssl, +1 more |
+| `youtube_playlist_images_list` | read | youtube.playlistImages.list | youtube, youtube.force-ssl, +2 more |
+| `youtube_playlist_items_delete` | destructive | youtube.playlistItems.delete | youtube, youtube.force-ssl, +1 more |
+| `youtube_playlist_items_insert` | write | youtube.playlistItems.insert | youtube, youtube.force-ssl, +1 more |
+| `youtube_playlist_items_list` | read | youtube.playlistItems.list | youtube, youtube.force-ssl, +2 more |
+| `youtube_playlist_items_update` | write | youtube.playlistItems.update | youtube, youtube.force-ssl, +1 more |
+| `youtube_playlists_delete` | destructive | youtube.playlists.delete | youtube, youtube.force-ssl, +1 more |
+| `youtube_playlists_insert` | write | youtube.playlists.insert | youtube, youtube.force-ssl, +1 more |
+| `youtube_playlists_list` | read | youtube.playlists.list | youtube, youtube.force-ssl, +2 more |
+| `youtube_playlists_update` | write | youtube.playlists.update | youtube, youtube.force-ssl, +1 more |
+| `youtube_reasons_list` | read | youtube.videoAbuseReportReasons.list | youtube, youtube.force-ssl, +1 more |
+| `youtube_search_list` | read | youtube.search.list | youtube, youtube.force-ssl, +2 more |
 | `youtube_set_moderation_status` | write | youtube.comments.setModerationStatus | youtube.force-ssl |
-| `youtube_subscriptions_delete` | destructive | youtube.subscriptions.delete | youtube, youtube.force-ssl |
-| `youtube_subscriptions_insert` | write | youtube.subscriptions.insert | youtube, youtube.force-ssl |
-| `youtube_subscriptions_list` | read | youtube.subscriptions.list | youtube, youtube.force-ssl |
-| `youtube_super_chat_events_list` | read | youtube.superChatEvents.list | youtube, youtube.force-ssl |
+| `youtube_subscriptions_delete` | destructive | youtube.subscriptions.delete | youtube, youtube.force-ssl, +1 more |
+| `youtube_subscriptions_insert` | write | youtube.subscriptions.insert | youtube, youtube.force-ssl, +1 more |
+| `youtube_subscriptions_list` | read | youtube.subscriptions.list | youtube, youtube.force-ssl, +2 more |
+| `youtube_super_chat_events_list` | read | youtube.superChatEvents.list | youtube, youtube.force-ssl, +1 more |
 | `youtube_tests_insert` | write | youtube.tests.insert | youtube.readonly |
 | `youtube_third_party_links_delete` | destructive | youtube.thirdPartyLinks.delete | (none) |
 | `youtube_third_party_links_insert` | write | youtube.thirdPartyLinks.insert | (none) |
 | `youtube_third_party_links_list` | read | youtube.thirdPartyLinks.list | (none) |
 | `youtube_third_party_links_update` | write | youtube.thirdPartyLinks.update | (none) |
-| `youtube_video_categories_list` | read | youtube.videoCategories.list | youtube, youtube.force-ssl |
-| `youtube_video_trainability_get` | read | youtube.videoTrainability.get | youtube, youtube.force-ssl |
-| `youtube_videos_batch_get_stats` | read | youtube.videos.batchGetStats | youtube, youtube.force-ssl |
-| `youtube_videos_delete` | destructive | youtube.videos.delete | youtube, youtube.force-ssl |
-| `youtube_videos_get_rating` | read | youtube.videos.getRating | youtube, youtube.force-ssl |
-| `youtube_videos_list` | read | youtube.videos.list | youtube, youtube.force-ssl |
-| `youtube_videos_rate` | write | youtube.videos.rate | youtube, youtube.force-ssl |
-| `youtube_videos_report_abuse` | write | youtube.videos.reportAbuse | youtube, youtube.force-ssl |
-| `youtube_videos_update` | destructive | youtube.videos.update | youtube, youtube.force-ssl |
-| `youtube_watermarks_unset` | write | youtube.watermarks.unset | youtube, youtube.force-ssl |
+| `youtube_video_categories_list` | read | youtube.videoCategories.list | youtube, youtube.force-ssl, +2 more |
+| `youtube_video_trainability_get` | read | youtube.videoTrainability.get | youtube, youtube.force-ssl, +2 more |
+| `youtube_videos_batch_get_stats` | read | youtube.videos.batchGetStats | youtube, youtube.force-ssl, +2 more |
+| `youtube_videos_delete` | destructive | youtube.videos.delete | youtube, youtube.force-ssl, +1 more |
+| `youtube_videos_get_rating` | read | youtube.videos.getRating | youtube, youtube.force-ssl, +2 more |
+| `youtube_videos_list` | read | youtube.videos.list | youtube, youtube.force-ssl, +2 more |
+| `youtube_videos_rate` | write | youtube.videos.rate | youtube, youtube.force-ssl, +1 more |
+| `youtube_videos_report_abuse` | write | youtube.videos.reportAbuse | youtube, youtube.force-ssl, +1 more |
+| `youtube_videos_update` | destructive | youtube.videos.update | youtube, youtube.force-ssl, +1 more |
+| `youtube_watermarks_unset` | write | youtube.watermarks.unset | youtube, youtube.force-ssl, +1 more |
 | `youtuberep_jobs_create` | write | youtubereporting.jobs.create | yt-analytics-monetary.readonly, yt-analytics.readonly |
 | `youtuberep_jobs_delete` | destructive | youtubereporting.jobs.delete | yt-analytics-monetary.readonly, yt-analytics.readonly |
 | `youtuberep_jobs_get` | read | youtubereporting.jobs.get | yt-analytics-monetary.readonly, yt-analytics.readonly |
@@ -165,14 +165,14 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `youtuberep_jobs_reports_list` | read | youtubereporting.jobs.reports.list | yt-analytics-monetary.readonly, yt-analytics.readonly |
 | `youtuberep_media_download` | read | youtubereporting.media.download | yt-analytics-monetary.readonly, yt-analytics.readonly |
 | `youtuberep_report_types_list` | read | youtubereporting.reportTypes.list | yt-analytics-monetary.readonly, yt-analytics.readonly |
-| `ytanalyt_group_items_delete` | destructive | youtubeAnalytics.groupItems.delete | youtube, youtube.readonly |
-| `ytanalyt_group_items_insert` | write | youtubeAnalytics.groupItems.insert | youtube, youtube.readonly |
-| `ytanalyt_group_items_list` | read | youtubeAnalytics.groupItems.list | youtube, youtube.readonly |
-| `ytanalyt_groups_delete` | destructive | youtubeAnalytics.groups.delete | youtube, youtube.readonly |
-| `ytanalyt_groups_insert` | write | youtubeAnalytics.groups.insert | youtube, youtube.readonly |
-| `ytanalyt_groups_list` | read | youtubeAnalytics.groups.list | youtube, youtube.readonly |
-| `ytanalyt_groups_update` | write | youtubeAnalytics.groups.update | youtube, youtube.readonly |
-| `ytanalyt_reports_query` | read | youtubeAnalytics.reports.query | youtube, youtube.readonly |
+| `ytanalyt_group_items_delete` | destructive | youtubeAnalytics.groupItems.delete | youtube, youtube.readonly, +3 more |
+| `ytanalyt_group_items_insert` | write | youtubeAnalytics.groupItems.insert | youtube, youtube.readonly, +3 more |
+| `ytanalyt_group_items_list` | read | youtubeAnalytics.groupItems.list | youtube, youtube.readonly, +3 more |
+| `ytanalyt_groups_delete` | destructive | youtubeAnalytics.groups.delete | youtube, youtube.readonly, +3 more |
+| `ytanalyt_groups_insert` | write | youtubeAnalytics.groups.insert | youtube, youtube.readonly, +3 more |
+| `ytanalyt_groups_list` | read | youtubeAnalytics.groups.list | youtube, youtube.readonly, +3 more |
+| `ytanalyt_groups_update` | write | youtubeAnalytics.groups.update | youtube, youtube.readonly, +3 more |
+| `ytanalyt_reports_query` | read | youtubeAnalytics.reports.query | youtube, youtube.readonly, +3 more |
 
 ## Listing tool (1)
 

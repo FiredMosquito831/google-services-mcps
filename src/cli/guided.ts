@@ -65,7 +65,7 @@ const AGENT_CHOICES: Choice<string>[] = [
   { value: 'claude', label: 'Claude Code', hint: 'through the claude command' },
   { value: 'codex', label: 'Codex', hint: '~/.codex/config.toml' },
   { value: 'opencode', label: 'OpenCode', hint: 'opencode.json' },
-  { value: 'agy', label: 'Antigravity (agy)', hint: 'global only' },
+  { value: 'agy', label: 'Antigravity (agy)', hint: 'gsm global scope only' },
   { value: 'all', label: 'All four agents', hint: 'each one that is set up on this machine' },
 ];
 
@@ -239,11 +239,11 @@ export async function guidedInstall(env: GuidedEnv, prefill: InstallPrefill = {}
   }
   sayAll(env, describeAgent(agent as AgentId | 'all'), '  ');
 
-  // agy has only a global config, so its scope is fixed.
+  // gsm has not verified or implemented Antigravity workspace installs, so its scope is fixed.
   let scope = prefill.scope;
   if (agent === 'agy') {
     scope = 'global';
-    prompt.say('  Antigravity has only a global install, so the scope is global.');
+    prompt.say('  gsm has not verified or implemented Antigravity workspace installs, so gsm requires --scope global.');
   } else if (scope === undefined) {
     scope = await prompt.choose('Where should it be installed?', SCOPE_CHOICES, 'global');
   }

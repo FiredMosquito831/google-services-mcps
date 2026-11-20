@@ -284,15 +284,15 @@ Reads, writes, the gateway's `api_call`, the Google Ads mutate tools and the run
 
 - **Untrusted content.** Mail, documents and files can contain instructions aimed at the agent. The approval text shows the real action, so read it before you approve.
 
-- **Audit log.** It is plain text in the token directory. It is not tamper-evident. A declined prompt in Claude Code writes no line, because the call never reaches the server.
+- **Audit log.** It is plain text in the token directory. It is not tamper-evident. Gated Google-data tools and runtime setup/account writes record hashed entries here (`node gsm.mjs audit`). A declined prompt in Claude Code writes no line, because the call never reaches the server.
 
-- **Other clients.** A client with neither hooks nor elicitation cannot run modifying or destructive tools. That is the intended fail-closed behaviour. Codex, OpenCode and Antigravity have no hook in this suite. Their approval behaviour is **UNVERIFIED** in a live session.
+- **Other clients.** A client with neither hooks nor elicitation cannot run Google-data modifying or destructive tools (that is the intended fail-closed behaviour). Runtime sign-in and account tools (`auth_setup_client`, `auth_login`, `auth_setup_admin`, `auth_setup_service_account`, `account_set_default`, `account_remove`) stay callable so headless setups work; they still respect `policy.json` deny rules, prompt via elicitation when the client supports it, and write audit records. Codex, OpenCode and Antigravity have no hook in this suite.
 
-- **Install flag for Claude Code.** `npx google-services-mcps install --agent claude --allow-writes` does not set the plugin's write option, although its summary line says `writes: enabled`. Set **Allow write tools** in the plugin options instead.
+- **Install flag for Claude Code.** `npx google-services-mcps install --agent claude --allow-writes` passes `allow_writes=true` as a plugin option, and Claude Code keeps plugin options in its own config. Use `--agent <codex|opencode|agy> --token-dir <dir>` for the config-file adapters (`--agent claude` uses the `token_dir` plugin option instead).
 
 - **One login per group.** A login merges with the scopes the same account already holds for its group, so a login from one product's folder keeps the scopes of the other products. Name the account with `--account <email>` (in the chat: `auth_login` with `account`): only that account's stored scopes are merged, and only the ones a server of the group uses, so a scope from another group (a Cloud scope in a Gmail token, say) is not requested again. Without `--account`, nothing is merged, and a login that would take scopes away from an account already signed in saves nothing and says how to retry. The login does not ask Google for the scopes granted earlier (no `include_granted_scopes`). Use `--replace` to drop the stored scopes and keep only what this login requests. A merge can leave write scopes from an earlier readwrite login in place: when you want a readonly token again, log in with `--replace`. See [INSTALL.md](INSTALL.md#two-command-lines).
 
-- **Install paths.** Codex, OpenCode and Antigravity point to the server files inside the checkout. Moving the checkout breaks them until you install again.
+- **Install paths.** Codex, OpenCode and Antigravity configs point to the runtime copies under `<home>/.google-services-mcps/runtime/<product>/`, so installs stay intact even if the checkout moves.
 
 ## Reporting
 

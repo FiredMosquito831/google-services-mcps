@@ -145,8 +145,20 @@ export function saveAccount(group: string, email: string, tokens: Credentials & 
   const existing = record.accounts[email];
   const previous = Object.keys(record.accounts);
   const file = existing?.file ?? `${group}.${slugOf(email)}.token.json`;
+  const target = join(cfg.tokenDir, file);
+  const backupTarget = join(cfg.tokenDir, file.replace(/\.json$/, '.bak.json'));
   ensureTokenDir(cfg.tokenDir);
-  writeSecretText(cfg, join(cfg.tokenDir, file), JSON.stringify(tokens, null, 2) + '\n');
+  const oldText = existing ? readSecretText(cfg, target) : undefined;
+  if (oldText !== undefined) writeSecretText(cfg, backupTarget, oldText);
+  const payload = JSON.stringify(tokens, null, 2) + '\n';
+  try {
+    writeSecretText(cfg, target, payload);
+    const readBack = readSecretText(cfg, target);
+    if (readBack === undefined || JSON.parse(readBack) == null) throw new Error('token verification readback failed');
+  } catch (err) {
+    if (oldText !== undefined) writeSecretText(cfg, target, oldText);
+    throw err;
+  }
   record.accounts[email] = {
     file,
     scopes: (tokens.scope ?? '').split(' ').filter(Boolean),
@@ -159,7 +171,32 @@ export function saveAccount(group: string, email: string, tokens: Credentials & 
   }
   registry.groups[group] = record;
   writeRegistry(cfg, registry);
-  return join(cfg.tokenDir, file);
+  return target;
+}
+
+/** Restores the rolling token backup (`<file>.bak.json`) of an account when present. Returns the restored path. */
+export function restoreAccountBackup(group: string, email: string, cfg: RuntimeConfig): string {
+  const registry = readRegistry(cfg);
+  const record = recordOf(registry, group, cfg);
+  const entry = record.accounts[email];
+  if (!entry) throw new Error(`no signed-in account "${email}" for ${group}`);
+  const target = join(cfg.tokenDir, entry.file);
+  const backupTarget = join(cfg.tokenDir, entry.file.replace(/\.json$/, '.bak.json'));
+  const backupText = readSecretText(cfg, backupTarget);
+  if (backupText === undefined) throw new Error(`no backup token found for ${group} (${email})`);
+  let parsed: Credentials;
+  try {
+    parsed = JSON.parse(backupText) as Credentials;
+  } catch {
+    throw new Error(`backup token for ${group} (${email}) is not valid JSON`);
+  }
+  const currentText = readSecretText(cfg, target);
+  writeSecretText(cfg, target, backupText);
+  if (currentText !== undefined) writeSecretText(cfg, backupTarget, currentText);
+  entry.scopes = (parsed.scope ?? '').split(' ').filter(Boolean);
+  registry.groups[group] = record;
+  writeRegistry(cfg, registry);
+  return target;
 }
 
 /** Makes one signed-in account the default of its group. Throws when the account is not signed in. */

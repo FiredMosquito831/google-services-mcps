@@ -84,6 +84,7 @@ Commands:
   apis          List the APIs of a product (generated and gateway), or of the whole catalog, with method counts
   methods       List the methods of one catalog API: id, HTTP verb, path and kind (read, write or destructive)
   doctor        Check the plugin folders, hooks, tool names, token directory and credentials: PASS or FAIL per check
+  audit         Print hashed approval and runtime-write records from <tokenDir>/audit.log as JSONL
   health        One row per server: login, account, tool count (--check asks Google about each login)
   version       Show the suite version and the Node version
   --help        Show this help
@@ -91,14 +92,14 @@ Commands:
 Usage:
   npx google-services-mcps install   --agent <claude|codex|opencode|agy|all> --plugin <id[,id...]|all> [--scope global|project|local]
                          [--path <dir>] [--allow-writes] [--confirmation <every-change|destructive-only|off>]
-                         [--toolset <all|google|curated>] [--dry-run]
+                         [--toolset <all|google|curated>] [--token-dir <dir>] [--dry-run]
   npx google-services-mcps uninstall --agent <claude|codex|opencode|agy|all> --plugin <id[,id...]|all> [--scope global|project|local]
                          [--path <dir>] [--dry-run]
   npx google-services-mcps uninstall --all [--dry-run] [--yes]
   npx google-services-mcps list [--json] [--home <dir>]
-  npx google-services-mcps login <group> [--profile readonly|readwrite|full] [--scopes <url,url>] [--servers <a,b>] [--client-secret <file>] [--no-browser] [--replace] [--account <email>] [--with <part,...>] [--toolset all|google|curated]
+  npx google-services-mcps login <group> [--profile readonly|readwrite|full] [--scopes <url,url>] [--servers <a,b>] [--client-secret <file>] [--no-browser] [--replace] [--rollback] [--account <email>] [--with <part,...>] [--toolset all|google|curated]
   npx google-services-mcps scopes <group> [--profile readonly|readwrite|full] [--servers <a,b>] [--with <part,...>] [--toolset all|google|curated] [--json]
-  npx google-services-mcps setup-client <path-to-client_secret.json> [--force]
+  npx google-services-mcps setup-client <path-to-client_secret.json> [--force] | setup-client --rollback
   npx google-services-mcps setup-apikey [--force]
   npx google-services-mcps setup-admin --subject <admin email> --key-file <service account JSON> [--profile readonly|readwrite|full] [--servers <a,b>] [--replace] [--toolset all|google|curated]
   npx google-services-mcps setup-service-account --key-file <service account JSON>   (gplay and gmerchant; --remove forgets the setup)
@@ -108,11 +109,12 @@ Usage:
   npx google-services-mcps apis [<product>] [--search <text>] [--json] [--limit <n>]
   npx google-services-mcps methods <api> [<version>] [--search <text>] [--json] [--limit <n>]
   npx google-services-mcps doctor [--plugin <id>] [--token-dir <dir>]
+  npx google-services-mcps audit [--token-dir <dir>] [--tool <name>] [--outcome <value>] [--risk <value>] [--since <iso>] [--until <iso>] [--limit <n>]
   npx google-services-mcps version
   npx google-services-mcps --help
 
 Install and uninstall:
-  --agent       claude (the claude CLI), codex (config.toml), opencode (opencode.json), agy (global only), or all.
+  --agent       claude (the claude CLI), codex (config.toml), opencode (opencode.json), agy (gsm global scope only), or all.
   --scope       global (default): your user-wide config. project: the folder of --path, or the current folder.
                 local: only that folder, not shared. "folder" is accepted as an alias of local.
                 Codex and OpenCode have no separate local file, so project and local write the same file.
@@ -129,6 +131,8 @@ Install and uninstall:
   --toolset     all, google or curated: which tools each server lists. Only when given: GSM_TOOLSET for codex, opencode
                 and agy, and the plugin option toolset (--config toolset=<value>) for claude. Without it the servers list
                 every tool. agy: the install warns when a product can list more than 100 tools (a reported agy limit).
+  --token-dir   install only (codex, opencode, agy): write GSM_TOKEN_DIR for those servers. Claude uses the token_dir
+                plugin option instead (--agent claude and --agent all reject --token-dir).
   --marketplace claude only: owner/repo, a URL or a path. Default: this checkout, else FiredMosquito831/google-services-mcps.
   --all         uninstall only: removes every install in the list. It prints the list, then asks; --yes skips the question.
   --keep-data   uninstall with claude: keeps the plugin data directory.
@@ -161,9 +165,11 @@ API key:  setup-apikey reads GSM_API_KEY_INPUT or stdin. The key is never a comm
 Backups:  an existing config file is copied to <file>.gsm-backup-<YYYYMMDD-HHMMSS> before it changes.
 Doctor:   --plugin checks one product. Without it, every product of this checkout (or this plugin folder) is checked.
           --token-dir checks another token directory. Exit 1 when any check FAILs. It creates nothing and prints no secret.
+Audit:    Prints lines from <tokenDir>/audit.log as JSONL on stdout (7 allowlisted hash-only fields).
+          --tool, --outcome and --risk match exact values; --since and --until are inclusive ISO bounds; --limit caps output.
 ```
 
-Commands in the help text: node, node, node, node, install, uninstall, list, login, scopes, setup-client, setup-apikey, setup-admin, setup-service-account, protect, status, logout, accounts, products, apis, methods, doctor, health, version, node, node, node, node, node, node, node, node, node, node, node, node, node, node, node, node, node, node
+Commands in the help text: node, node, node, node, install, uninstall, list, login, scopes, setup-client, setup-apikey, setup-admin, setup-service-account, protect, status, logout, accounts, products, apis, methods, doctor, audit, health, version, node, node, node, node, node, node, node, node, node, node, node, node, node, node, node, node, node, node, node
 
 ## Catalog entries not assigned to a product
 

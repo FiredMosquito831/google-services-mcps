@@ -41,28 +41,28 @@ The tools that match Google's official MCP server for this product (https://deve
 | `contacts_search` | read | Search your contacts | contacts, contacts.readonly |
 | `contacts_search_directory` | read | Search the Workspace directory | directory.readonly |
 | `health` | read | Server health | (none) |
-| `profile_me` | read | Your Google profile | openid, userinfo.email |
+| `profile_me` | read | Your Google profile | openid, userinfo.email, +1 more |
 
 ## Per-method tools (59)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
-| `data_archive_jobs_archive_state` | read | dataportability.archiveJobs.getPortabilityArchiveState | dataportability.alerts.subscriptions, dataportability.chrome.autofill |
-| `dataportab_access_type_check` | read | dataportability.accessType.check | dataportability.alerts.subscriptions, dataportability.chrome.autofill |
-| `dataportab_archive_initiate` | write | dataportability.portabilityArchive.initiate | dataportability.alerts.subscriptions, dataportability.chrome.autofill |
-| `dataportab_archive_jobs_cancel` | destructive | dataportability.archiveJobs.cancel | dataportability.alerts.subscriptions, dataportability.chrome.autofill |
-| `dataportab_archive_jobs_retry` | write | dataportability.archiveJobs.retry | dataportability.alerts.subscriptions, dataportability.chrome.autofill |
-| `dataportab_authorization_reset` | destructive | dataportability.authorization.reset | dataportability.alerts.subscriptions, dataportability.chrome.autofill |
+| `data_archive_jobs_archive_state` | read | dataportability.archiveJobs.getPortabilityArchiveState | dataportability.alerts.subscriptions, dataportability.chrome.autofill, +71 more |
+| `dataportab_access_type_check` | read | dataportability.accessType.check | dataportability.alerts.subscriptions, dataportability.chrome.autofill, +71 more |
+| `dataportab_archive_initiate` | write | dataportability.portabilityArchive.initiate | dataportability.alerts.subscriptions, dataportability.chrome.autofill, +71 more |
+| `dataportab_archive_jobs_cancel` | destructive | dataportability.archiveJobs.cancel | dataportability.alerts.subscriptions, dataportability.chrome.autofill, +71 more |
+| `dataportab_archive_jobs_retry` | write | dataportability.archiveJobs.retry | dataportability.alerts.subscriptions, dataportability.chrome.autofill, +71 more |
+| `dataportab_authorization_reset` | destructive | dataportability.authorization.reset | dataportability.alerts.subscriptions, dataportability.chrome.autofill, +71 more |
 | `heal_points_export_exercise_tcx` | read | health.users.dataTypes.dataPoints.exportExerciseTcx | googlehealth.activity_and_fitness.readonly, googlehealth.location.readonly |
-| `health_data_types_points_create` | write | health.users.dataTypes.dataPoints.create | googlehealth.activity_and_fitness.writeonly, googlehealth.health_metrics_and_measurements.writeonly |
-| `health_data_types_points_get` | read | health.users.dataTypes.dataPoints.get | googlehealth.activity_and_fitness.readonly, googlehealth.activity_and_fitness.writeonly |
-| `health_data_types_points_list` | read | health.users.dataTypes.dataPoints.list | googlehealth.activity_and_fitness.readonly, googlehealth.activity_and_fitness.writeonly |
-| `health_data_types_points_patch` | write | health.users.dataTypes.dataPoints.patch | googlehealth.activity_and_fitness.writeonly, googlehealth.health_metrics_and_measurements.writeonly |
+| `health_data_types_points_create` | write | health.users.dataTypes.dataPoints.create | googlehealth.activity_and_fitness.writeonly, googlehealth.health_metrics_and_measurements.writeonly, +5 more |
+| `health_data_types_points_get` | read | health.users.dataTypes.dataPoints.get | googlehealth.activity_and_fitness.readonly, googlehealth.activity_and_fitness.writeonly, +14 more |
+| `health_data_types_points_list` | read | health.users.dataTypes.dataPoints.list | googlehealth.activity_and_fitness.readonly, googlehealth.activity_and_fitness.writeonly, +14 more |
+| `health_data_types_points_patch` | write | health.users.dataTypes.dataPoints.patch | googlehealth.activity_and_fitness.writeonly, googlehealth.health_metrics_and_measurements.writeonly, +5 more |
 | `health_paired_devices_list` | read | health.users.pairedDevices.list | googlehealth.settings.readonly |
-| `health_points_batch_delete` | destructive | health.users.dataTypes.dataPoints.batchDelete | googlehealth.activity_and_fitness.writeonly, googlehealth.health_metrics_and_measurements.writeonly |
-| `health_points_daily_roll_up` | read | health.users.dataTypes.dataPoints.dailyRollUp | googlehealth.activity_and_fitness.readonly, googlehealth.activity_and_fitness.writeonly |
-| `health_points_reconcile` | read | health.users.dataTypes.dataPoints.reconcile | googlehealth.activity_and_fitness.readonly, googlehealth.activity_and_fitness.writeonly |
-| `health_points_roll_up` | read | health.users.dataTypes.dataPoints.rollUp | googlehealth.activity_and_fitness.readonly, googlehealth.activity_and_fitness.writeonly |
+| `health_points_batch_delete` | destructive | health.users.dataTypes.dataPoints.batchDelete | googlehealth.activity_and_fitness.writeonly, googlehealth.health_metrics_and_measurements.writeonly, +5 more |
+| `health_points_daily_roll_up` | read | health.users.dataTypes.dataPoints.dailyRollUp | googlehealth.activity_and_fitness.readonly, googlehealth.activity_and_fitness.writeonly, +14 more |
+| `health_points_reconcile` | read | health.users.dataTypes.dataPoints.reconcile | googlehealth.activity_and_fitness.readonly, googlehealth.activity_and_fitness.writeonly, +14 more |
+| `health_points_roll_up` | read | health.users.dataTypes.dataPoints.rollUp | googlehealth.activity_and_fitness.readonly, googlehealth.activity_and_fitness.writeonly, +14 more |
 | `health_shl_m_get_shl_manifest` | read | health.shl.m.getShlManifest | (none) |
 | `health_shl_r_get` | read | health.shl.r.get | (none) |
 | `health_subscribers_create` | write | health.projects.subscribers.create | cloud-platform |
@@ -73,15 +73,15 @@ The tools that match Google's official MCP server for this product (https://deve
 | `health_subscribers_subs_delete` | destructive | health.projects.subscribers.subscriptions.delete | cloud-platform |
 | `health_subscribers_subs_list` | read | health.projects.subscribers.subscriptions.list | cloud-platform |
 | `health_subscribers_subs_patch` | write | health.projects.subscribers.subscriptions.patch | cloud-platform |
-| `health_users_get_identity` | read | health.users.getIdentity | googlehealth.activity_and_fitness.readonly, googlehealth.ecg.readonly |
+| `health_users_get_identity` | read | health.users.getIdentity | googlehealth.activity_and_fitness.readonly, googlehealth.ecg.readonly, +8 more |
 | `health_users_get_irn_profile` | read | health.users.getIrnProfile | googlehealth.irn.readonly |
 | `health_users_get_profile` | read | health.users.getProfile | googlehealth.profile.readonly |
 | `health_users_get_settings` | read | health.users.getSettings | googlehealth.settings.readonly |
 | `health_users_paired_devices_get` | read | health.users.pairedDevices.get | googlehealth.settings.readonly |
 | `health_users_update_profile` | write | health.users.updateProfile | googlehealth.profile.writeonly |
 | `health_users_update_settings` | write | health.users.updateSettings | googlehealth.settings.writeonly |
-| `oauth2_userinfo_get` | read | oauth2.userinfo.get | openid, userinfo.email |
-| `oauth2_userinfo_v2_me_get` | read | oauth2.userinfo.v2.me.get | openid, userinfo.email |
+| `oauth2_userinfo_get` | read | oauth2.userinfo.get | openid, userinfo.email, +1 more |
+| `oauth2_userinfo_v2_me_get` | read | oauth2.userinfo.v2.me.get | openid, userinfo.email, +1 more |
 | `people_batch_create_contacts` | write | people.people.batchCreateContacts | contacts |
 | `people_batch_delete_contacts` | destructive | people.people.batchDeleteContacts | contacts |
 | `people_batch_update_contacts` | write | people.people.batchUpdateContacts | contacts |
@@ -100,8 +100,8 @@ The tools that match Google's official MCP server for this product (https://deve
 | `people_people_connections_list` | read | people.people.connections.list | contacts, contacts.readonly |
 | `people_people_create_contact` | write | people.people.createContact | contacts |
 | `people_people_delete_contact` | destructive | people.people.deleteContact | contacts |
-| `people_people_get` | read | people.people.get | contacts, contacts.other.readonly |
-| `people_people_get_batch_get` | read | people.people.getBatchGet | contacts, contacts.other.readonly |
+| `people_people_get` | read | people.people.get | contacts, contacts.other.readonly, +10 more |
+| `people_people_get_batch_get` | read | people.people.getBatchGet | contacts, contacts.other.readonly, +10 more |
 | `people_people_search_contacts` | read | people.people.searchContacts | contacts, contacts.readonly |
 | `people_people_update_contact` | write | people.people.updateContact | contacts |
 | `people_search_directory_people` | read | people.people.searchDirectoryPeople | directory.readonly |

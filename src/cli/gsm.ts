@@ -28,11 +28,14 @@ import {
   apiKeyState,
   runAccounts,
   runLogout,
+  runRollbackAccount,
+  runRollbackClient,
   runSetDefaultAccount,
   runSetupClient,
   runStatus,
   runStatusCheck,
 } from './credentials.js';
+import { auditTokenDir, parseAuditFilters, runAuditExport } from './audit.js';
 import { guidedInstall, guidedSignIn, guidedUninstall, runMenu, type GuidedEnv, type InstallPrefill } from './guided.js';
 import { checkRequirements } from './requirements.js';
 import { createPrompter, type Prompter } from './prompt.js';
@@ -84,6 +87,7 @@ Commands:
   apis          List the APIs of a product (generated and gateway), or of the whole catalog, with method counts
   methods       List the methods of one catalog API: id, HTTP verb, path and kind (read, write or destructive)
   doctor        Check the plugin folders, hooks, tool names, token directory and credentials: PASS or FAIL per check
+  audit         Print hashed approval and runtime-write records from <tokenDir>/audit.log as JSONL
   health        One row per server: login, account, tool count (--check asks Google about each login)
   version       Show the suite version and the Node version
   --help        Show this help
@@ -91,14 +95,14 @@ Commands:
 Usage:
   node gsm.mjs install   --agent <claude|codex|opencode|agy|all> --plugin <id[,id...]|all> [--scope global|project|local]
                          [--path <dir>] [--allow-writes] [--confirmation <every-change|destructive-only|off>]
-                         [--toolset <all|google|curated>] [--dry-run]
+                         [--toolset <all|google|curated>] [--token-dir <dir>] [--dry-run]
   node gsm.mjs uninstall --agent <claude|codex|opencode|agy|all> --plugin <id[,id...]|all> [--scope global|project|local]
                          [--path <dir>] [--dry-run]
   node gsm.mjs uninstall --all [--dry-run] [--yes]
   node gsm.mjs list [--json] [--home <dir>]
-  node gsm.mjs login <group> [--profile readonly|readwrite|full] [--scopes <url,url>] [--servers <a,b>] [--client-secret <file>] [--no-browser] [--replace] [--account <email>] [--with <part,...>] [--toolset all|google|curated]
+  node gsm.mjs login <group> [--profile readonly|readwrite|full] [--scopes <url,url>] [--servers <a,b>] [--client-secret <file>] [--no-browser] [--replace] [--rollback] [--account <email>] [--with <part,...>] [--toolset all|google|curated]
   node gsm.mjs scopes <group> [--profile readonly|readwrite|full] [--servers <a,b>] [--with <part,...>] [--toolset all|google|curated] [--json]
-  node gsm.mjs setup-client <path-to-client_secret.json> [--force]
+  node gsm.mjs setup-client <path-to-client_secret.json> [--force] | setup-client --rollback
   node gsm.mjs setup-apikey [--force]
   node gsm.mjs setup-admin --subject <admin email> --key-file <service account JSON> [--profile readonly|readwrite|full] [--servers <a,b>] [--replace] [--toolset all|google|curated]
   node gsm.mjs setup-service-account --key-file <service account JSON>   (gplay and gmerchant; --remove forgets the setup)
@@ -108,11 +112,12 @@ Usage:
   node gsm.mjs apis [<product>] [--search <text>] [--json] [--limit <n>]
   node gsm.mjs methods <api> [<version>] [--search <text>] [--json] [--limit <n>]
   node gsm.mjs doctor [--plugin <id>] [--token-dir <dir>]
+  node gsm.mjs audit [--token-dir <dir>] [--tool <name>] [--outcome <value>] [--risk <value>] [--since <iso>] [--until <iso>] [--limit <n>]
   node gsm.mjs version
   node gsm.mjs --help
 
 Install and uninstall:
-  --agent       claude (the claude CLI), codex (config.toml), opencode (opencode.json), agy (global only), or all.
+  --agent       claude (the claude CLI), codex (config.toml), opencode (opencode.json), agy (gsm global scope only), or all.
   --scope       global (default): your user-wide config. project: the folder of --path, or the current folder.
                 local: only that folder, not shared. "folder" is accepted as an alias of local.
                 Codex and OpenCode have no separate local file, so project and local write the same file.
@@ -129,6 +134,8 @@ Install and uninstall:
   --toolset     all, google or curated: which tools each server lists. Only when given: GSM_TOOLSET for codex, opencode
                 and agy, and the plugin option toolset (--config toolset=<value>) for claude. Without it the servers list
                 every tool. agy: the install warns when a product can list more than 100 tools (a reported agy limit).
+  --token-dir   install only (codex, opencode, agy): write GSM_TOKEN_DIR for those servers. Claude uses the token_dir
+                plugin option instead (--agent claude and --agent all reject --token-dir).
   --marketplace claude only: owner/repo, a URL or a path. Default: this checkout, else FiredMosquito831/google-services-mcps.
   --all         uninstall only: removes every install in the list. It prints the list, then asks; --yes skips the question.
   --keep-data   uninstall with claude: keeps the plugin data directory.
@@ -161,6 +168,8 @@ API key:  setup-apikey reads GSM_API_KEY_INPUT or stdin. The key is never a comm
 Backups:  an existing config file is copied to <file>.gsm-backup-<YYYYMMDD-HHMMSS> before it changes.
 Doctor:   --plugin checks one product. Without it, every product of this checkout (or this plugin folder) is checked.
           --token-dir checks another token directory. Exit 1 when any check FAILs. It creates nothing and prints no secret.
+Audit:    Prints lines from <tokenDir>/audit.log as JSONL on stdout (7 allowlisted hash-only fields).
+          --tool, --outcome and --risk match exact values; --since and --until are inclusive ISO bounds; --limit caps output.
 `;
 
 const resolvePath = (p: string): string => resolve(process.cwd(), p);
@@ -328,14 +337,17 @@ async function dispatch(argv: readonly string[]): Promise<number> {
     case 'login': {
       // In a terminal, `login` with no group starts the guided sign-in (group, client file, profile, API key, admin).
       if (parsed.positionals.length === 0 && isInteractive()) return withPrompter((prompt) => guidedSignIn(guidedEnvFor(prompt, moduleUrl)));
-      const group = parseGroup(parsed.positionals, 'usage: node gsm.mjs login <group> [--profile readonly|readwrite|full] [--scopes <urls>] [--servers a,b] [--client-secret <file>] [--no-browser] [--replace] [--account <email>] [--with <part,...>] [--toolset all|google|curated]');
+      const group = parseGroup(parsed.positionals, 'usage: node gsm.mjs login <group> [--profile readonly|readwrite|full] [--scopes <urls>] [--servers a,b] [--client-secret <file>] [--no-browser] [--replace] [--rollback] [--account <email>] [--with <part,...>] [--toolset all|google|curated]');
+      const account = parseLoginAccount(parsed.values.account);
+      if (parsed.values.rollback === true) {
+        return runRollbackAccount(group, account, out);
+      }
       const choice = parseLoginScopes(parsed.values);
       const toolset = parseToolset(parsed.values.toolset);
       const servers = parseServers(parsed.values);
       const clientSecretFile = typeof parsed.values['client-secret'] === 'string' ? parsed.values['client-secret'] : undefined;
       const noBrowser = parsed.values['no-browser'] === true;
       const replace = parsed.values.replace === true;
-      const account = parseLoginAccount(parsed.values.account);
       const withParts = parseWith(parsed.values.with);
       return runLogin(
         {
@@ -407,7 +419,11 @@ async function dispatch(argv: readonly string[]): Promise<number> {
     }
 
     case 'setup-client': {
-      if (parsed.positionals.length !== 1) throw new UsageError('usage: node gsm.mjs setup-client <path-to-client_secret.json> [--force]');
+      if (parsed.values.rollback === true) {
+        noPositionals(parsed.positionals, 'usage: node gsm.mjs setup-client --rollback');
+        return runRollbackClient(out);
+      }
+      if (parsed.positionals.length !== 1) throw new UsageError('usage: node gsm.mjs setup-client <path-to-client_secret.json> [--force] | setup-client --rollback');
       return runSetupClient(parsed.positionals[0] ?? '', parsed.values.force === true, out);
     }
 
@@ -484,6 +500,11 @@ async function dispatch(argv: readonly string[]): Promise<number> {
         },
         out,
       );
+    }
+
+    case 'audit': {
+      noPositionals(parsed.positionals, 'usage: node gsm.mjs audit [--token-dir <dir>] [--tool <name>] [--outcome <value>] [--risk <value>] [--since <iso>] [--until <iso>] [--limit <n>]');
+      return runAuditExport(auditTokenDir(parsed.values['token-dir']), parseAuditFilters(parsed.values));
     }
 
     case 'health': {

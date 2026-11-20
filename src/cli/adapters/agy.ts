@@ -5,7 +5,8 @@
  * <your user folder>\AppData\Local\agy\bin\agy.exe):
  *  - `agy --help` lists the subcommand `mcp` (add, remove, list, enable, disable).
  *    `agy mcp add --help` documents no config path and no project or scope option.
- *    No project-level MCP config is documented, so project and folder scope are refused.
+ *    Upstream docs mention `<workspace>/.agents/mcp_config.json`, but `agy` 1.5.12 has
+ *    no CLI scope flag and scratch workspace probing was negative, so gsm requires `--scope global`.
  *  - The brief's path <home>/.gemini/antigravity-cli/mcp_config.json does NOT exist
  *    (that folder exists, but has no mcp_config.json). The file agy actually reads is
  *    <home>/.gemini/config/mcp_config.json: `agy mcp list` shows the "ase-moodle"
@@ -59,7 +60,7 @@ export async function install(ctx: AdapterContext): Promise<AdapterResult> {
   }
   const file = agyConfigPath(ctx.home);
   const set = new Map<string, unknown>();
-  const env = serverEnvironment(ctx.allowWrites, ctx.confirmation, ctx.toolset);
+  const env = serverEnvironment(ctx.allowWrites, ctx.confirmation, ctx.toolset, ctx.tokenDir);
   for (const server of ctx.servers) {
     set.set(`${SERVER_PREFIX}${server.name}`, agyEntry(ctx.serverFile(server), env));
   }
@@ -69,6 +70,8 @@ export async function install(ctx: AdapterContext): Promise<AdapterResult> {
   if (ctx.allowWrites) notes.push('GSM_ALLOW_WRITES=true is set: write tools are enabled for these servers.');
   if (ctx.confirmation !== undefined) notes.push(`GSM_CONFIRMATION=${ctx.confirmation} is set for these servers.`);
   if (ctx.toolset !== undefined) notes.push(`GSM_TOOLSET=${ctx.toolset} is set for these servers.`);
+  if (ctx.tokenDir !== undefined) notes.push(`GSM_TOKEN_DIR=${ctx.tokenDir} is set for these servers.`);
+  notes.push("gsm sign-in/account tools are not server-gated in this client; verify your client's approval behavior before allowing them.");
   return {
     agent: 'agy',
     action: 'install',

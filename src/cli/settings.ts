@@ -19,12 +19,14 @@ export const CONFIRMATION_DEFAULT: ConfirmationMode = 'every-change';
 export type EnvPairs = Array<[string, string]>;
 
 /** The env entries for one server. Nothing is written for a flag that was not given. */
-export function serverEnvironment(allowWrites: boolean, confirmation: ConfirmationMode | undefined, toolset?: Toolset): EnvPairs {
+export function serverEnvironment(allowWrites: boolean, confirmation: ConfirmationMode | undefined, toolset?: Toolset, tokenDir?: string): EnvPairs {
   const pairs: EnvPairs = [];
   if (allowWrites) pairs.push(['GSM_ALLOW_WRITES', 'true']);
   if (confirmation !== undefined) pairs.push(['GSM_CONFIRMATION', confirmation]);
   // --toolset, only when given: without it the key is not written and the server default (all) applies.
   if (toolset !== undefined) pairs.push(['GSM_TOOLSET', toolset]);
+  // --token-dir, only when given on non-Claude installs: appended last so existing configs without it keep identical order.
+  if (tokenDir !== undefined) pairs.push(['GSM_TOKEN_DIR', tokenDir]);
   return pairs;
 }
 

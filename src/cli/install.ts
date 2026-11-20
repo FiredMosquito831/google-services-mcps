@@ -341,6 +341,7 @@ export async function runInstall(run: InstallRun, env: InstallEnv): Promise<numb
       allowWrites: run.allowWrites,
       confirmation: run.confirmation,
       ...(run.toolset !== undefined ? { toolset: run.toolset } : {}),
+      ...(run.tokenDir !== undefined ? { tokenDir: run.tokenDir } : {}),
       keepData: run.keepData,
       run: env.run,
       platform: env.platform,

@@ -1,5 +1,5 @@
-import { randomBytes } from 'node:crypto';
-import { existsSync, readdirSync, readFileSync, renameSync, rmSync, writeFileSync, chmodSync } from 'node:fs';
+import { createHash, randomBytes } from 'node:crypto';
+import { closeSync, existsSync, openSync, readdirSync, readFileSync, renameSync, rmSync, statSync, writeFileSync, chmodSync } from 'node:fs';
 import { basename, dirname, join } from 'node:path';
 import { ensureTokenDir } from './acl.js';
 import type { RuntimeConfig } from './config.js';
@@ -139,27 +139,97 @@ export function secretFileExists(cfg: Pick<RuntimeConfig, 'tokenDir'>, file: str
   return readSecretText(cfg, file, env) !== undefined;
 }
 
+const LOCK_SLEEP = new Int32Array(new SharedArrayBuffer(4));
+const LOCK_WAIT_MS = 5000;
+const LOCK_STALE_MS = 15000;
+
+/** Cross-process advisory file lock keyed by secret path inside `cfg.tokenDir`. */
+export function withSecretLock<T>(cfg: Pick<RuntimeConfig, 'tokenDir'>, file: string, fn: () => T): T {
+  ensureTokenDir(cfg.tokenDir);
+  const digest = createHash('sha256').update(file).digest('hex').slice(0, 12);
+  const lockFile = join(cfg.tokenDir, `.lock-${digest}`);
+  const deadline = Date.now() + LOCK_WAIT_MS;
+  let fd: number | undefined;
+  for (;;) {
+    try {
+      fd = openSync(lockFile, 'wx', 0o600);
+      writeFileSync(fd, `${process.pid}\n`);
+      closeSync(fd);
+      fd = undefined;
+      break;
+    } catch (err) {
+      if ((err as NodeJS.ErrnoException).code !== 'EEXIST') throw err;
+      try {
+        if (Date.now() - statSync(lockFile).mtimeMs > LOCK_STALE_MS) {
+          rmSync(lockFile, { force: true });
+          continue;
+        }
+      } catch {
+        continue;
+      }
+      if (Date.now() >= deadline) throw new Error(`timed out waiting for credential lock: ${basename(file)}`);
+      Atomics.wait(LOCK_SLEEP, 0, 0, 5);
+    }
+  }
+  try {
+    return fn();
+  } finally {
+    if (fd !== undefined) {
+      try { closeSync(fd); } catch { /* ignore */ }
+    }
+    rmSync(lockFile, { force: true });
+  }
+}
+
+function readLiveSecretText(cfg: Pick<RuntimeConfig, 'tokenDir'>, file: string, env: NodeJS.ProcessEnv = process.env): string | undefined {
+  const backend = storeFor(cfg.tokenDir, env);
+  if (backend !== 'file') {
+    const found = getSecretSync(backend, cfg.tokenDir, secretNameOf(file));
+    if (found !== undefined) return found;
+  }
+  return existsSync(file) ? readFileSync(file, 'utf8') : undefined;
+}
+
+export interface WriteSecretOptions {
+  /** Guard evaluated inside the secret lock against live uncached text; returning false aborts without writing. */
+  ifMatch?: (current: string | undefined) => boolean;
+}
+
 /**
  * Writes a secret file with mode 0600. With an OS backend the text goes to the store, the name is recorded in the manifest,
- * and any plain copy of the file is removed.
+ * and any plain copy of the file is removed. Returns false only when `options.ifMatch` declines the write.
  */
-export function writeSecretText(cfg: Pick<RuntimeConfig, 'tokenDir'>, file: string, text: string, env: NodeJS.ProcessEnv = process.env): void {
-  const backend = storeFor(cfg.tokenDir, env);
-  if (backend === 'file') {
-    ensureTokenDir(dirname(file));
-    writeFileAtomic(file, text);
-    try {
-      chmodSync(file, 0o600);
-    } catch {
-      // Windows ignores POSIX modes; the folder's access list is the protection there.
+export function writeSecretText(
+  cfg: Pick<RuntimeConfig, 'tokenDir'>,
+  file: string,
+  text: string,
+  env: NodeJS.ProcessEnv = process.env,
+  options?: WriteSecretOptions,
+): boolean {
+  const commit = (): boolean => {
+    if (options?.ifMatch) {
+      const current = readLiveSecretText(cfg, file, env);
+      if (!options.ifMatch(current)) return false;
     }
-    return;
-  }
-  const name = secretNameOf(file);
-  putSecretSync(backend, cfg.tokenDir, name, text);
-  addName(cfg.tokenDir, name);
-  cache.set(cacheKey(cfg.tokenDir, name), text);
-  if (existsSync(file)) rmSync(file);
+    const backend = storeFor(cfg.tokenDir, env);
+    if (backend === 'file') {
+      ensureTokenDir(dirname(file));
+      writeFileAtomic(file, text);
+      try {
+        chmodSync(file, 0o600);
+      } catch {
+        // Windows ignores POSIX modes; the folder's access list is the protection there.
+      }
+      return true;
+    }
+    const name = secretNameOf(file);
+    putSecretSync(backend, cfg.tokenDir, name, text);
+    addName(cfg.tokenDir, name);
+    cache.set(cacheKey(cfg.tokenDir, name), text);
+    if (existsSync(file)) rmSync(file);
+    return true;
+  };
+  return options?.ifMatch ? withSecretLock(cfg, file, commit) : commit();
 }
 
 /** Removes a secret file from the store and from the folder. Returns false when neither had it. */
@@ -189,7 +259,7 @@ export function removeSecretFile(cfg: Pick<RuntimeConfig, 'tokenDir'>, file: str
 export function secretFilesIn(tokenDir: string): string[] {
   if (!existsSync(tokenDir)) return [];
   return readdirSync(tokenDir)
-    .filter((name) => name.endsWith('.token.json') || /^(client_secret|apikey|ads)(\.bak-[\w.-]+)?\.json$/.test(name))
+    .filter((name) => /\.token(\.bak(-[\w.-]+)?)?\.json$/.test(name) || /^(client_secret|apikey|ads)(\.bak-[\w.-]+)?\.json$/.test(name))
     .sort()
     .map((name) => join(tokenDir, name));
 }

@@ -43,7 +43,7 @@ export async function install(ctx: AdapterContext): Promise<AdapterResult> {
   const file = opencodeConfigPath(ctx);
   const set = new Map<string, unknown>();
   for (const server of ctx.servers) {
-    const env = serverEnvironment(ctx.allowWrites, ctx.confirmation, ctx.toolset);
+    const env = serverEnvironment(ctx.allowWrites, ctx.confirmation, ctx.toolset, ctx.tokenDir);
     set.set(`${SERVER_PREFIX}${server.name}`, opencodeEntry(ctx.serverFile(server), env));
   }
   const change = planJsonMap({
@@ -60,6 +60,8 @@ export async function install(ctx: AdapterContext): Promise<AdapterResult> {
   if (ctx.allowWrites) notes.push('GSM_ALLOW_WRITES=true is set: write tools are enabled for these servers.');
   if (ctx.confirmation !== undefined) notes.push(`GSM_CONFIRMATION=${ctx.confirmation} is set for these servers.`);
   if (ctx.toolset !== undefined) notes.push(`GSM_TOOLSET=${ctx.toolset} is set for these servers.`);
+  if (ctx.tokenDir !== undefined) notes.push(`GSM_TOKEN_DIR=${ctx.tokenDir} is set for these servers.`);
+  notes.push("gsm sign-in/account tools are not server-gated in this client; verify your client's approval behavior before allowing them.");
   return {
     agent: 'opencode',
     action: 'install',

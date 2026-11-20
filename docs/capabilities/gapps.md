@@ -66,7 +66,7 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `appsscript_projects_versions_create` | write | script.projects.versions.create | script.projects |
 | `appsscript_projects_versions_get` | read | script.projects.versions.get | script.projects, script.projects.readonly |
 | `appsscript_projects_versions_list` | read | script.projects.versions.list | script.projects, script.projects.readonly |
-| `appsscript_scripts_run` | destructive | script.scripts.run | https://mail.google.com/, https://www.google.com/calendar/feeds |
+| `appsscript_scripts_run` | destructive | script.scripts.run | https://mail.google.com/, https://www.google.com/calendar/feeds, +10 more |
 
 ## Listing tool (1)
 

@@ -41,291 +41,291 @@ The tools that match Google's official MCP server for this product (https://docs
 | `auth_status` | read | Sign-in status | (none) |
 | `health` | read | Server health | (none) |
 | `vertex_count_tokens` | read | Count the tokens of a Vertex AI prompt | cloud-platform |
-| `vertex_embed_content` | read | Embed text with a Vertex AI model | aiplatform, cloud-platform |
-| `vertex_generate_content` | read | Generate content with a Vertex AI model | aiplatform, cloud-platform |
+| `vertex_embed_content` | read | Embed text with a Vertex AI model | aiplatform, cloud-platform, +1 more |
+| `vertex_generate_content` | read | Generate content with a Vertex AI model | aiplatform, cloud-platform, +1 more |
 
 ## Per-method tools (350)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
-| `dis_agents_a2a_tasks_push_notif_configs_get` | read | discoveryengine.projects.locations.collections.engines.assistants.agents.a2a.v1.tasks.pushNotificationConfigs.get | cloud-platform, discoveryengine.readwrite |
-| `dis_engine_fetch_domain_verification_status` | read | discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.fetchDomainVerificationStatus | cloud-platform, discoveryengine.readwrite |
-| `dis_engines_assistants_agents_a2a_tasks_get` | read | discoveryengine.projects.locations.collections.engines.assistants.agents.a2a.v1.tasks.get | cloud-platform, discoveryengine.readwrite |
-| `dis_stores_completion_config_complete_query` | write | discoveryengine.projects.locations.collections.dataStores.completionConfig.completeQuery | cloud-platform, cloud_search.query |
-| `dis_stores_engine_batch_verify_target_sites` | write | discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.batchVerifyTargetSites | cloud-platform, discoveryengine.readwrite |
-| `disc_colls_stores_engine_sites_batch_create` | write | discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.targetSites.batchCreate | cloud-platform, discoveryengine.readwrite |
-| `disc_colls_stores_serving_configs_recommend` | write | discoveryengine.projects.locations.collections.dataStores.servingConfigs.recommend | cloud-platform, discoveryengine.readwrite |
-| `disc_engines_assistants_agents_a2a_get_card` | read | discoveryengine.projects.locations.collections.engines.assistants.agents.a2a.v1.getCard | cloud-platform, discoveryengine.readwrite |
-| `disco_assistants_agents_a2a_tasks_subscribe` | read | discoveryengine.projects.locations.collections.engines.assistants.agents.a2a.v1.tasks.subscribe | cloud-platform, discoveryengine.readwrite |
-| `disco_collections_data_stores_search_engine` | read | discoveryengine.projects.locations.collections.dataStores.getSiteSearchEngine | cloud-platform, discoveryengine.readwrite |
-| `disco_colls_data_stores_engine_site_search` | write | discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.enableAdvancedSiteSearch | cloud-platform, discoveryengine.readwrite |
-| `disco_engines_serving_configs_stream_answer` | write | discoveryengine.projects.locations.collections.engines.servingConfigs.streamAnswer | cloud-platform, discoveryengine.readwrite |
-| `discov_a2a_tasks_push_notif_configs_create` | write | discoveryengine.projects.locations.collections.engines.assistants.agents.a2a.v1.tasks.pushNotificationConfigs.create | cloud-platform, discoveryengine.readwrite |
-| `discov_a2a_tasks_push_notif_configs_delete` | destructive | discoveryengine.projects.locations.collections.engines.assistants.agents.a2a.v1.tasks.pushNotificationConfigs.delete | cloud-platform, discoveryengine.readwrite |
-| `discov_assistants_agents_a2a_message_stream` | write | discoveryengine.projects.locations.collections.engines.assistants.agents.a2a.v1.message.stream | cloud-platform, discoveryengine.readwrite |
-| `discov_colls_data_stores_engine_site_search` | write | discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.disableAdvancedSiteSearch | cloud-platform, discoveryengine.readwrite |
-| `discov_colls_stores_conversations_converse` | write | discoveryengine.projects.locations.collections.dataStores.conversations.converse | cloud-platform, discoveryengine.readwrite |
-| `discov_colls_stores_engine_sitemaps_create` | write | discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.sitemaps.create | cloud-platform, discoveryengine.readwrite |
-| `discov_colls_stores_engine_sitemaps_delete` | destructive | discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.sitemaps.delete | cloud-platform, discoveryengine.readwrite |
-| `discov_colls_stores_serving_configs_answer` | read | discoveryengine.projects.locations.collections.dataStores.servingConfigs.answer | cloud-platform, discoveryengine.readwrite |
-| `discov_colls_stores_serving_configs_create` | write | discoveryengine.projects.locations.collections.dataStores.servingConfigs.create | cloud-platform, discoveryengine.readwrite |
-| `discov_colls_stores_serving_configs_delete` | destructive | discoveryengine.projects.locations.collections.dataStores.servingConfigs.delete | cloud-platform, discoveryengine.readwrite |
-| `discov_colls_stores_serving_configs_search` | read | discoveryengine.projects.locations.collections.dataStores.servingConfigs.search | cloud-platform, discoveryengine.assist.readwrite |
-| `discov_engine_disable_advanced_site_search` | write | discoveryengine.projects.locations.dataStores.siteSearchEngine.disableAdvancedSiteSearch | cloud-platform, discoveryengine.readwrite |
-| `discov_engines_serving_configs_search_lite` | read | discoveryengine.projects.locations.collections.engines.servingConfigs.searchLite | cloud-platform, discoveryengine.assist.readwrite |
-| `discov_stores_branches_batch_get_docs_meta` | read | discoveryengine.projects.locations.collections.dataStores.branches.batchGetDocumentsMetadata | cloud-platform, discoveryengine.readwrite |
-| `discov_stores_serving_configs_stream_answer` | write | discoveryengine.projects.locations.collections.dataStores.servingConfigs.streamAnswer | cloud-platform, discoveryengine.readwrite |
-| `discov_suggestion_deny_list_entries_import` | write | discoveryengine.projects.locations.dataStores.suggestionDenyListEntries.import | cloud-platform, discoveryengine.assist.readwrite |
-| `discover_assistants_agents_a2a_message_send` | destructive | discoveryengine.projects.locations.collections.engines.assistants.agents.a2a.v1.message.send | cloud-platform, discoveryengine.readwrite |
-| `discover_assistants_agents_a2a_tasks_cancel` | destructive | discoveryengine.projects.locations.collections.engines.assistants.agents.a2a.v1.tasks.cancel | cloud-platform, discoveryengine.readwrite |
-| `discover_engine_enable_advanced_site_search` | write | discoveryengine.projects.locations.dataStores.siteSearchEngine.enableAdvancedSiteSearch | cloud-platform, discoveryengine.readwrite |
-| `discover_stores_serving_configs_search_lite` | read | discoveryengine.projects.locations.collections.dataStores.servingConfigs.searchLite | cloud-platform, discoveryengine.assist.readwrite |
-| `discover_suggestion_deny_list_entries_purge` | destructive | discoveryengine.projects.locations.dataStores.suggestionDenyListEntries.purge | cloud-platform, discoveryengine.assist.readwrite |
-| `discovery_a2a_tasks_push_notif_configs_list` | read | discoveryengine.projects.locations.collections.engines.assistants.agents.a2a.v1.tasks.pushNotificationConfigs.list | cloud-platform, discoveryengine.readwrite |
-| `discovery_collections_engines_controls_list` | read | discoveryengine.projects.locations.collections.engines.controls.list | cloud-platform, discoveryengine.readwrite |
-| `discovery_collections_engines_sessions_list` | read | discoveryengine.projects.locations.collections.engines.sessions.list | cloud-platform, discoveryengine.assist.readwrite |
-| `discovery_collections_update_data_connector` | write | discoveryengine.projects.locations.collections.updateDataConnector | cloud-platform, discoveryengine.assist.readwrite |
-| `discovery_colls_data_stores_controls_create` | write | discoveryengine.projects.locations.collections.dataStores.controls.create | cloud-platform, discoveryengine.readwrite |
-| `discovery_colls_data_stores_controls_delete` | destructive | discoveryengine.projects.locations.collections.dataStores.controls.delete | cloud-platform, discoveryengine.readwrite |
-| `discovery_colls_data_stores_engine_ops_list` | read | discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.operations.list | cloud-platform, discoveryengine.readwrite |
-| `discovery_colls_data_stores_models_ops_list` | read | discoveryengine.projects.locations.collections.dataStores.models.operations.list | cloud-platform, discoveryengine.readwrite |
-| `discovery_colls_data_stores_schemas_ops_get` | read | discoveryengine.projects.locations.collections.dataStores.schemas.operations.get | cloud-platform, discoveryengine.readwrite |
-| `discovery_colls_data_stores_sessions_create` | write | discoveryengine.projects.locations.collections.dataStores.sessions.create | cloud-platform, discoveryengine.assist.readwrite |
-| `discovery_colls_data_stores_sessions_delete` | destructive | discoveryengine.projects.locations.collections.dataStores.sessions.delete | cloud-platform, discoveryengine.assist.readwrite |
-| `discovery_colls_engines_conversations_patch` | write | discoveryengine.projects.locations.collections.engines.conversations.patch | cloud-platform, discoveryengine.readwrite |
-| `discovery_colls_engines_serving_configs_get` | read | discoveryengine.projects.locations.collections.engines.servingConfigs.get | cloud-platform, discoveryengine.readwrite |
-| `discovery_colls_stores_branches_docs_create` | write | discoveryengine.projects.locations.collections.dataStores.branches.documents.create | cloud-platform, discoveryengine.readwrite |
-| `discovery_colls_stores_branches_docs_delete` | destructive | discoveryengine.projects.locations.collections.dataStores.branches.documents.delete | cloud-platform, discoveryengine.readwrite |
-| `discovery_colls_stores_branches_docs_import` | write | discoveryengine.projects.locations.collections.dataStores.branches.documents.import | cloud-platform, discoveryengine.readwrite |
-| `discovery_colls_stores_conversations_create` | write | discoveryengine.projects.locations.collections.dataStores.conversations.create | cloud-platform, discoveryengine.readwrite |
-| `discovery_colls_stores_conversations_delete` | destructive | discoveryengine.projects.locations.collections.dataStores.conversations.delete | cloud-platform, discoveryengine.readwrite |
-| `discovery_colls_stores_engine_sites_ops_get` | read | discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.targetSites.operations.get | cloud-platform, discoveryengine.readwrite |
-| `discovery_colls_stores_serving_configs_list` | read | discoveryengine.projects.locations.collections.dataStores.servingConfigs.list | cloud-platform, discoveryengine.readwrite |
-| `discovery_colls_stores_sessions_answers_get` | read | discoveryengine.projects.locations.collections.dataStores.sessions.answers.get | cloud-platform, discoveryengine.readwrite |
-| `discovery_colls_stores_widget_configs_patch` | write | discoveryengine.projects.locations.collections.dataStores.widgetConfigs.patch | cloud-platform, discoveryengine.assist.readwrite |
-| `discovery_data_stores_engine_sitemaps_fetch` | read | discoveryengine.projects.locations.dataStores.siteSearchEngine.sitemaps.fetch | cloud-platform, discoveryengine.readwrite |
-| `discovery_data_stores_models_operations_get` | read | discoveryengine.projects.locations.dataStores.models.operations.get | cloud-platform, discoveryengine.readwrite |
-| `discovery_data_stores_serving_configs_patch` | write | discoveryengine.projects.locations.dataStores.servingConfigs.patch | cloud-platform, discoveryengine.readwrite |
-| `discovery_engines_assistants_agents_ops_get` | read | discoveryengine.projects.locations.collections.engines.assistants.agents.operations.get | cloud-platform, discoveryengine.readwrite |
-| `discovery_engines_serving_configs_recommend` | write | discoveryengine.projects.locations.collections.engines.servingConfigs.recommend | cloud-platform, discoveryengine.readwrite |
-| `discovery_projects_locations_get_acl_config` | read | discoveryengine.projects.locations.getAclConfig | cloud-platform, discoveryengine.readwrite |
-| `discovery_projects_locations_operations_get` | read | discoveryengine.projects.locations.operations.get | cloud-platform, discoveryengine.readwrite |
-| `discovery_stores_batch_update_user_licenses` | write | discoveryengine.projects.locations.userStores.batchUpdateUserLicenses | cloud-platform, discoveryengine.readwrite |
-| `discoverye_branches_batch_get_docs_meta` | read | discoveryengine.projects.locations.dataStores.branches.batchGetDocumentsMetadata | cloud-platform, discoveryengine.readwrite |
-| `discoverye_cmek_configs_delete` | destructive | discoveryengine.projects.locations.cmekConfigs.delete | cloud-platform, discoveryengine.readwrite |
-| `discoverye_cmek_configs_get` | read | discoveryengine.projects.locations.cmekConfigs.get | cloud-platform, discoveryengine.readwrite |
-| `discoverye_cmek_configs_list` | read | discoveryengine.projects.locations.cmekConfigs.list | cloud-platform, discoveryengine.readwrite |
-| `discoverye_cmek_configs_patch` | write | discoveryengine.projects.locations.cmekConfigs.patch | cloud-platform, discoveryengine.readwrite |
-| `discoverye_col_dat_sto_sug_den_lis_ent_impo` | write | discoveryengine.projects.locations.collections.dataStores.suggestionDenyListEntries.import | cloud-platform, discoveryengine.assist.readwrite |
-| `discoverye_col_dat_sto_sug_den_lis_ent_purg` | destructive | discoveryengine.projects.locations.collections.dataStores.suggestionDenyListEntries.purge | cloud-platform, discoveryengine.assist.readwrite |
-| `discoverye_collections_data_connector_mcp` | destructive | discoveryengine.projects.locations.collections.dataConnector.mcp | cloud-platform, discoveryengine.readwrite |
-| `discoverye_collections_data_stores_create` | write | discoveryengine.projects.locations.collections.dataStores.create | cloud-platform, discoveryengine.readwrite |
-| `discoverye_collections_data_stores_delete` | destructive | discoveryengine.projects.locations.collections.dataStores.delete | cloud-platform, discoveryengine.readwrite |
-| `discoverye_collections_data_stores_get` | read | discoveryengine.projects.locations.collections.dataStores.get | cloud-platform, discoveryengine.readwrite |
-| `discoverye_collections_data_stores_list` | read | discoveryengine.projects.locations.collections.dataStores.list | cloud-platform, discoveryengine.readwrite |
-| `discoverye_collections_data_stores_patch` | write | discoveryengine.projects.locations.collections.dataStores.patch | cloud-platform, discoveryengine.readwrite |
-| `discoverye_collections_delete` | destructive | discoveryengine.projects.locations.collections.delete | cloud-platform, discoveryengine.readwrite |
-| `discoverye_collections_engines_controls_get` | read | discoveryengine.projects.locations.collections.engines.controls.get | cloud-platform, discoveryengine.readwrite |
-| `discoverye_collections_engines_create` | write | discoveryengine.projects.locations.collections.engines.create | cloud-platform, discoveryengine.readwrite |
-| `discoverye_collections_engines_delete` | destructive | discoveryengine.projects.locations.collections.engines.delete | cloud-platform, discoveryengine.readwrite |
-| `discoverye_collections_engines_get` | read | discoveryengine.projects.locations.collections.engines.get | cloud-platform, discoveryengine.readwrite |
-| `discoverye_collections_engines_list` | read | discoveryengine.projects.locations.collections.engines.list | cloud-platform, discoveryengine.readwrite |
-| `discoverye_collections_engines_patch` | write | discoveryengine.projects.locations.collections.engines.patch | cloud-platform, discoveryengine.readwrite |
-| `discoverye_collections_engines_sessions_get` | read | discoveryengine.projects.locations.collections.engines.sessions.get | cloud-platform, discoveryengine.assist.readwrite |
-| `discoverye_collections_get_data_connector` | read | discoveryengine.projects.locations.collections.getDataConnector | cloud-platform, discoveryengine.assist.readwrite |
-| `discoverye_collections_get_iam_policy` | read | discoveryengine.projects.locations.collections.getIamPolicy | cloud-platform, discoveryengine.readwrite |
-| `discoverye_collections_operations_get` | read | discoveryengine.projects.locations.collections.operations.get | cloud-platform, discoveryengine.readwrite |
-| `discoverye_collections_operations_list` | read | discoveryengine.projects.locations.collections.operations.list | cloud-platform, discoveryengine.readwrite |
-| `discoverye_collections_set_iam_policy` | destructive | discoveryengine.projects.locations.collections.setIamPolicy | cloud-platform, discoveryengine.readwrite |
-| `discoverye_colls_data_connector_ops_get` | read | discoveryengine.projects.locations.collections.dataConnector.operations.get | cloud-platform, discoveryengine.readwrite |
-| `discoverye_colls_data_connector_ops_list` | read | discoveryengine.projects.locations.collections.dataConnector.operations.list | cloud-platform, discoveryengine.readwrite |
-| `discoverye_colls_data_stores_complete_query` | read | discoveryengine.projects.locations.collections.dataStores.completeQuery | cloud-platform, discoveryengine.assist.readwrite |
-| `discoverye_colls_data_stores_controls_get` | read | discoveryengine.projects.locations.collections.dataStores.controls.get | cloud-platform, discoveryengine.readwrite |
-| `discoverye_colls_data_stores_controls_list` | read | discoveryengine.projects.locations.collections.dataStores.controls.list | cloud-platform, discoveryengine.readwrite |
-| `discoverye_colls_data_stores_controls_patch` | write | discoveryengine.projects.locations.collections.dataStores.controls.patch | cloud-platform, discoveryengine.readwrite |
-| `discoverye_colls_data_stores_engine_ops_get` | read | discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.operations.get | cloud-platform, discoveryengine.readwrite |
-| `discoverye_colls_data_stores_get_iam_policy` | read | discoveryengine.projects.locations.collections.dataStores.getIamPolicy | cloud-platform, discoveryengine.readwrite |
-| `discoverye_colls_data_stores_models_list` | read | discoveryengine.projects.locations.collections.dataStores.customModels.list | cloud-platform, discoveryengine.readwrite |
-| `discoverye_colls_data_stores_models_ops_get` | read | discoveryengine.projects.locations.collections.dataStores.models.operations.get | cloud-platform, discoveryengine.readwrite |
-| `discoverye_colls_data_stores_ops_get` | read | discoveryengine.projects.locations.collections.dataStores.operations.get | cloud-platform, discoveryengine.readwrite |
-| `discoverye_colls_data_stores_ops_list` | read | discoveryengine.projects.locations.collections.dataStores.operations.list | cloud-platform, discoveryengine.readwrite |
-| `discoverye_colls_data_stores_schemas_create` | write | discoveryengine.projects.locations.collections.dataStores.schemas.create | cloud-platform, discoveryengine.readwrite |
-| `discoverye_colls_data_stores_schemas_delete` | destructive | discoveryengine.projects.locations.collections.dataStores.schemas.delete | cloud-platform, discoveryengine.readwrite |
-| `discoverye_colls_data_stores_schemas_get` | read | discoveryengine.projects.locations.collections.dataStores.schemas.get | cloud-platform, discoveryengine.readwrite |
-| `discoverye_colls_data_stores_schemas_list` | read | discoveryengine.projects.locations.collections.dataStores.schemas.list | cloud-platform, discoveryengine.readwrite |
-| `discoverye_colls_data_stores_schemas_patch` | write | discoveryengine.projects.locations.collections.dataStores.schemas.patch | cloud-platform, discoveryengine.readwrite |
-| `discoverye_colls_data_stores_sessions_get` | read | discoveryengine.projects.locations.collections.dataStores.sessions.get | cloud-platform, discoveryengine.assist.readwrite |
-| `discoverye_colls_data_stores_sessions_list` | read | discoveryengine.projects.locations.collections.dataStores.sessions.list | cloud-platform, discoveryengine.assist.readwrite |
-| `discoverye_colls_data_stores_sessions_patch` | write | discoveryengine.projects.locations.collections.dataStores.sessions.patch | cloud-platform, discoveryengine.assist.readwrite |
-| `discoverye_colls_data_stores_set_iam_policy` | destructive | discoveryengine.projects.locations.collections.dataStores.setIamPolicy | cloud-platform, discoveryengine.readwrite |
-| `discoverye_colls_engines_assistants_create` | write | discoveryengine.projects.locations.collections.engines.assistants.create | cloud-platform, discoveryengine.assist.readwrite |
-| `discoverye_colls_engines_assistants_delete` | destructive | discoveryengine.projects.locations.collections.engines.assistants.delete | cloud-platform, discoveryengine.assist.readwrite |
-| `discoverye_colls_engines_assistants_get` | read | discoveryengine.projects.locations.collections.engines.assistants.get | cloud-platform, discoveryengine.assist.readwrite |
-| `discoverye_colls_engines_assistants_list` | read | discoveryengine.projects.locations.collections.engines.assistants.list | cloud-platform, discoveryengine.assist.readwrite |
-| `discoverye_colls_engines_assistants_patch` | write | discoveryengine.projects.locations.collections.engines.assistants.patch | cloud-platform, discoveryengine.assist.readwrite |
-| `discoverye_colls_engines_controls_create` | write | discoveryengine.projects.locations.collections.engines.controls.create | cloud-platform, discoveryengine.readwrite |
-| `discoverye_colls_engines_controls_delete` | destructive | discoveryengine.projects.locations.collections.engines.controls.delete | cloud-platform, discoveryengine.readwrite |
-| `discoverye_colls_engines_controls_patch` | write | discoveryengine.projects.locations.collections.engines.controls.patch | cloud-platform, discoveryengine.readwrite |
-| `discoverye_colls_engines_conversations_get` | read | discoveryengine.projects.locations.collections.engines.conversations.get | cloud-platform, discoveryengine.readwrite |
-| `discoverye_colls_engines_conversations_list` | read | discoveryengine.projects.locations.collections.engines.conversations.list | cloud-platform, discoveryengine.readwrite |
-| `discoverye_colls_engines_get_iam_policy` | read | discoveryengine.projects.locations.collections.engines.getIamPolicy | cloud-platform, discoveryengine.readwrite |
-| `discoverye_colls_engines_ops_cancel` | destructive | discoveryengine.projects.locations.collections.engines.operations.cancel | cloud-platform, discoveryengine.readwrite |
-| `discoverye_colls_engines_ops_get` | read | discoveryengine.projects.locations.collections.engines.operations.get | cloud-platform, discoveryengine.readwrite |
-| `discoverye_colls_engines_ops_list` | read | discoveryengine.projects.locations.collections.engines.operations.list | cloud-platform, discoveryengine.readwrite |
-| `discoverye_colls_engines_sessions_create` | write | discoveryengine.projects.locations.collections.engines.sessions.create | cloud-platform, discoveryengine.assist.readwrite |
-| `discoverye_colls_engines_sessions_delete` | destructive | discoveryengine.projects.locations.collections.engines.sessions.delete | cloud-platform, discoveryengine.assist.readwrite |
-| `discoverye_colls_engines_sessions_patch` | write | discoveryengine.projects.locations.collections.engines.sessions.patch | cloud-platform, discoveryengine.assist.readwrite |
-| `discoverye_colls_engines_set_iam_policy` | destructive | discoveryengine.projects.locations.collections.engines.setIamPolicy | cloud-platform, discoveryengine.readwrite |
-| `discoverye_colls_engines_widget_configs_get` | read | discoveryengine.projects.locations.collections.engines.widgetConfigs.get | cloud-platform, discoveryengine.assist.readwrite |
-| `discoverye_colls_stores_branches_docs_get` | read | discoveryengine.projects.locations.collections.dataStores.branches.documents.get | cloud-platform, discoveryengine.readwrite |
-| `discoverye_colls_stores_branches_docs_list` | read | discoveryengine.projects.locations.collections.dataStores.branches.documents.list | cloud-platform, discoveryengine.readwrite |
-| `discoverye_colls_stores_branches_docs_patch` | write | discoveryengine.projects.locations.collections.dataStores.branches.documents.patch | cloud-platform, discoveryengine.readwrite |
-| `discoverye_colls_stores_branches_docs_purge` | destructive | discoveryengine.projects.locations.collections.dataStores.branches.documents.purge | cloud-platform, discoveryengine.readwrite |
-| `discoverye_colls_stores_branches_ops_cancel` | destructive | discoveryengine.projects.locations.collections.dataStores.branches.operations.cancel | cloud-platform, discoveryengine.readwrite |
-| `discoverye_colls_stores_branches_ops_get` | read | discoveryengine.projects.locations.collections.dataStores.branches.operations.get | cloud-platform, discoveryengine.readwrite |
-| `discoverye_colls_stores_branches_ops_list` | read | discoveryengine.projects.locations.collections.dataStores.branches.operations.list | cloud-platform, discoveryengine.readwrite |
-| `discoverye_colls_stores_conversations_get` | read | discoveryengine.projects.locations.collections.dataStores.conversations.get | cloud-platform, discoveryengine.readwrite |
-| `discoverye_colls_stores_conversations_list` | read | discoveryengine.projects.locations.collections.dataStores.conversations.list | cloud-platform, discoveryengine.readwrite |
-| `discoverye_colls_stores_conversations_patch` | write | discoveryengine.projects.locations.collections.dataStores.conversations.patch | cloud-platform, discoveryengine.readwrite |
-| `discoverye_colls_stores_engine_recrawl_uris` | write | discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.recrawlUris | cloud-platform, discoveryengine.readwrite |
-| `discoverye_colls_stores_engine_sites_create` | write | discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.targetSites.create | cloud-platform, discoveryengine.readwrite |
-| `discoverye_colls_stores_engine_sites_delete` | destructive | discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.targetSites.delete | cloud-platform, discoveryengine.readwrite |
-| `discoverye_colls_stores_engine_sites_get` | read | discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.targetSites.get | cloud-platform, discoveryengine.readwrite |
-| `discoverye_colls_stores_engine_sites_list` | read | discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.targetSites.list | cloud-platform, discoveryengine.readwrite |
-| `discoverye_colls_stores_engine_sites_patch` | write | discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.targetSites.patch | cloud-platform, discoveryengine.readwrite |
-| `discoverye_colls_stores_schemas_ops_list` | read | discoveryengine.projects.locations.collections.dataStores.schemas.operations.list | cloud-platform, discoveryengine.readwrite |
-| `discoverye_colls_stores_serving_configs_get` | read | discoveryengine.projects.locations.collections.dataStores.servingConfigs.get | cloud-platform, discoveryengine.readwrite |
-| `discoverye_colls_stores_suggestions_import` | write | discoveryengine.projects.locations.collections.dataStores.completionSuggestions.import | cloud-platform, discoveryengine.assist.readwrite |
-| `discoverye_colls_stores_suggestions_purge` | destructive | discoveryengine.projects.locations.collections.dataStores.completionSuggestions.purge | cloud-platform, discoveryengine.assist.readwrite |
-| `discoverye_colls_stores_train_custom_model` | write | discoveryengine.projects.locations.collections.dataStores.trainCustomModel | cloud-platform, discoveryengine.readwrite |
-| `discoverye_colls_stores_user_events_collect` | write | discoveryengine.projects.locations.collections.dataStores.userEvents.collect | cloud-platform, discoveryengine.assist.readwrite |
-| `discoverye_colls_stores_user_events_import` | write | discoveryengine.projects.locations.collections.dataStores.userEvents.import | cloud-platform, discoveryengine.assist.readwrite |
-| `discoverye_colls_stores_user_events_purge` | destructive | discoveryengine.projects.locations.collections.dataStores.userEvents.purge | cloud-platform, discoveryengine.assist.readwrite |
-| `discoverye_colls_stores_user_events_write` | write | discoveryengine.projects.locations.collections.dataStores.userEvents.write | cloud-platform, discoveryengine.assist.readwrite |
-| `discoverye_colls_stores_widget_configs_get` | read | discoveryengine.projects.locations.collections.dataStores.widgetConfigs.get | cloud-platform, discoveryengine.assist.readwrite |
-| `discoverye_completion_config_complete_query` | write | discoveryengine.projects.locations.dataStores.completionConfig.completeQuery | cloud-platform, cloud_search.query |
-| `discoverye_data_stores_branches_docs_create` | write | discoveryengine.projects.locations.dataStores.branches.documents.create | cloud-platform, discoveryengine.readwrite |
-| `discoverye_data_stores_branches_docs_delete` | destructive | discoveryengine.projects.locations.dataStores.branches.documents.delete | cloud-platform, discoveryengine.readwrite |
-| `discoverye_data_stores_branches_docs_get` | read | discoveryengine.projects.locations.dataStores.branches.documents.get | cloud-platform, discoveryengine.readwrite |
-| `discoverye_data_stores_branches_docs_import` | write | discoveryengine.projects.locations.dataStores.branches.documents.import | cloud-platform, discoveryengine.readwrite |
-| `discoverye_data_stores_branches_docs_list` | read | discoveryengine.projects.locations.dataStores.branches.documents.list | cloud-platform, discoveryengine.readwrite |
-| `discoverye_data_stores_branches_docs_patch` | write | discoveryengine.projects.locations.dataStores.branches.documents.patch | cloud-platform, discoveryengine.readwrite |
-| `discoverye_data_stores_branches_docs_purge` | destructive | discoveryengine.projects.locations.dataStores.branches.documents.purge | cloud-platform, discoveryengine.readwrite |
-| `discoverye_data_stores_branches_ops_cancel` | destructive | discoveryengine.projects.locations.dataStores.branches.operations.cancel | cloud-platform, discoveryengine.readwrite |
-| `discoverye_data_stores_branches_ops_get` | read | discoveryengine.projects.locations.dataStores.branches.operations.get | cloud-platform, discoveryengine.readwrite |
-| `discoverye_data_stores_branches_ops_list` | read | discoveryengine.projects.locations.dataStores.branches.operations.list | cloud-platform, discoveryengine.readwrite |
-| `discoverye_data_stores_complete_query` | read | discoveryengine.projects.locations.dataStores.completeQuery | cloud-platform, discoveryengine.assist.readwrite |
-| `discoverye_data_stores_controls_create` | write | discoveryengine.projects.locations.dataStores.controls.create | cloud-platform, discoveryengine.readwrite |
-| `discoverye_data_stores_controls_delete` | destructive | discoveryengine.projects.locations.dataStores.controls.delete | cloud-platform, discoveryengine.readwrite |
-| `discoverye_data_stores_controls_get` | read | discoveryengine.projects.locations.dataStores.controls.get | cloud-platform, discoveryengine.readwrite |
-| `discoverye_data_stores_controls_list` | read | discoveryengine.projects.locations.dataStores.controls.list | cloud-platform, discoveryengine.readwrite |
-| `discoverye_data_stores_controls_patch` | write | discoveryengine.projects.locations.dataStores.controls.patch | cloud-platform, discoveryengine.readwrite |
-| `discoverye_data_stores_conversations_create` | write | discoveryengine.projects.locations.dataStores.conversations.create | cloud-platform, discoveryengine.readwrite |
-| `discoverye_data_stores_conversations_delete` | destructive | discoveryengine.projects.locations.dataStores.conversations.delete | cloud-platform, discoveryengine.readwrite |
-| `discoverye_data_stores_conversations_get` | read | discoveryengine.projects.locations.dataStores.conversations.get | cloud-platform, discoveryengine.readwrite |
-| `discoverye_data_stores_conversations_list` | read | discoveryengine.projects.locations.dataStores.conversations.list | cloud-platform, discoveryengine.readwrite |
-| `discoverye_data_stores_conversations_patch` | write | discoveryengine.projects.locations.dataStores.conversations.patch | cloud-platform, discoveryengine.readwrite |
-| `discoverye_data_stores_create` | write | discoveryengine.projects.locations.dataStores.create | cloud-platform, discoveryengine.readwrite |
-| `discoverye_data_stores_delete` | destructive | discoveryengine.projects.locations.dataStores.delete | cloud-platform, discoveryengine.readwrite |
-| `discoverye_data_stores_engine_recrawl_uris` | write | discoveryengine.projects.locations.dataStores.siteSearchEngine.recrawlUris | cloud-platform, discoveryengine.readwrite |
-| `discoverye_data_stores_engine_sites_create` | write | discoveryengine.projects.locations.dataStores.siteSearchEngine.targetSites.create | cloud-platform, discoveryengine.readwrite |
-| `discoverye_data_stores_engine_sites_delete` | destructive | discoveryengine.projects.locations.dataStores.siteSearchEngine.targetSites.delete | cloud-platform, discoveryengine.readwrite |
-| `discoverye_data_stores_engine_sites_get` | read | discoveryengine.projects.locations.dataStores.siteSearchEngine.targetSites.get | cloud-platform, discoveryengine.readwrite |
-| `discoverye_data_stores_engine_sites_list` | read | discoveryengine.projects.locations.dataStores.siteSearchEngine.targetSites.list | cloud-platform, discoveryengine.readwrite |
-| `discoverye_data_stores_engine_sites_patch` | write | discoveryengine.projects.locations.dataStores.siteSearchEngine.targetSites.patch | cloud-platform, discoveryengine.readwrite |
-| `discoverye_data_stores_get` | read | discoveryengine.projects.locations.dataStores.get | cloud-platform, discoveryengine.readwrite |
-| `discoverye_data_stores_get_iam_policy` | read | discoveryengine.projects.locations.dataStores.getIamPolicy | cloud-platform, discoveryengine.readwrite |
-| `discoverye_data_stores_list` | read | discoveryengine.projects.locations.dataStores.list | cloud-platform, discoveryengine.readwrite |
-| `discoverye_data_stores_models_ops_list` | read | discoveryengine.projects.locations.dataStores.models.operations.list | cloud-platform, discoveryengine.readwrite |
-| `discoverye_data_stores_operations_get` | read | discoveryengine.projects.locations.dataStores.operations.get | cloud-platform, discoveryengine.readwrite |
-| `discoverye_data_stores_operations_list` | read | discoveryengine.projects.locations.dataStores.operations.list | cloud-platform, discoveryengine.readwrite |
-| `discoverye_data_stores_patch` | write | discoveryengine.projects.locations.dataStores.patch | cloud-platform, discoveryengine.readwrite |
-| `discoverye_data_stores_schemas_create` | write | discoveryengine.projects.locations.dataStores.schemas.create | cloud-platform, discoveryengine.readwrite |
-| `discoverye_data_stores_schemas_delete` | destructive | discoveryengine.projects.locations.dataStores.schemas.delete | cloud-platform, discoveryengine.readwrite |
-| `discoverye_data_stores_schemas_get` | read | discoveryengine.projects.locations.dataStores.schemas.get | cloud-platform, discoveryengine.readwrite |
-| `discoverye_data_stores_schemas_list` | read | discoveryengine.projects.locations.dataStores.schemas.list | cloud-platform, discoveryengine.readwrite |
-| `discoverye_data_stores_schemas_patch` | write | discoveryengine.projects.locations.dataStores.schemas.patch | cloud-platform, discoveryengine.readwrite |
-| `discoverye_data_stores_serving_configs_get` | read | discoveryengine.projects.locations.dataStores.servingConfigs.get | cloud-platform, discoveryengine.readwrite |
-| `discoverye_data_stores_serving_configs_list` | read | discoveryengine.projects.locations.dataStores.servingConfigs.list | cloud-platform, discoveryengine.readwrite |
-| `discoverye_data_stores_sessions_answers_get` | read | discoveryengine.projects.locations.dataStores.sessions.answers.get | cloud-platform, discoveryengine.readwrite |
-| `discoverye_data_stores_sessions_create` | write | discoveryengine.projects.locations.dataStores.sessions.create | cloud-platform, discoveryengine.assist.readwrite |
-| `discoverye_data_stores_sessions_delete` | destructive | discoveryengine.projects.locations.dataStores.sessions.delete | cloud-platform, discoveryengine.assist.readwrite |
-| `discoverye_data_stores_sessions_get` | read | discoveryengine.projects.locations.dataStores.sessions.get | cloud-platform, discoveryengine.assist.readwrite |
-| `discoverye_data_stores_sessions_list` | read | discoveryengine.projects.locations.dataStores.sessions.list | cloud-platform, discoveryengine.assist.readwrite |
-| `discoverye_data_stores_sessions_patch` | write | discoveryengine.projects.locations.dataStores.sessions.patch | cloud-platform, discoveryengine.assist.readwrite |
-| `discoverye_data_stores_set_iam_policy` | destructive | discoveryengine.projects.locations.dataStores.setIamPolicy | cloud-platform, discoveryengine.readwrite |
-| `discoverye_data_stores_suggestions_import` | write | discoveryengine.projects.locations.dataStores.completionSuggestions.import | cloud-platform, discoveryengine.assist.readwrite |
-| `discoverye_data_stores_suggestions_purge` | destructive | discoveryengine.projects.locations.dataStores.completionSuggestions.purge | cloud-platform, discoveryengine.assist.readwrite |
-| `discoverye_data_stores_user_events_collect` | write | discoveryengine.projects.locations.dataStores.userEvents.collect | cloud-platform, discoveryengine.assist.readwrite |
-| `discoverye_data_stores_user_events_import` | write | discoveryengine.projects.locations.dataStores.userEvents.import | cloud-platform, discoveryengine.assist.readwrite |
-| `discoverye_data_stores_user_events_purge` | destructive | discoveryengine.projects.locations.dataStores.userEvents.purge | cloud-platform, discoveryengine.assist.readwrite |
-| `discoverye_data_stores_user_events_write` | write | discoveryengine.projects.locations.dataStores.userEvents.write | cloud-platform, discoveryengine.assist.readwrite |
-| `discoverye_data_stores_widget_configs_get` | read | discoveryengine.projects.locations.dataStores.widgetConfigs.get | cloud-platform, discoveryengine.assist.readwrite |
-| `discoverye_data_stores_widget_configs_patch` | write | discoveryengine.projects.locations.dataStores.widgetConfigs.patch | cloud-platform, discoveryengine.assist.readwrite |
-| `discoverye_distribute_license_config` | write | discoveryengine.billingAccounts.billingAccountLicenseConfigs.distributeLicenseConfig | cloud-platform, discoveryengine.readwrite |
-| `discoverye_engines_assistants_stream_assist` | write | discoveryengine.projects.locations.collections.engines.assistants.streamAssist | cloud-platform, discoveryengine.assist.readwrite |
-| `discoverye_engines_conversations_converse` | write | discoveryengine.projects.locations.collections.engines.conversations.converse | cloud-platform, discoveryengine.readwrite |
-| `discoverye_engines_conversations_create` | write | discoveryengine.projects.locations.collections.engines.conversations.create | cloud-platform, discoveryengine.readwrite |
-| `discoverye_engines_conversations_delete` | destructive | discoveryengine.projects.locations.collections.engines.conversations.delete | cloud-platform, discoveryengine.readwrite |
-| `discoverye_engines_serving_configs_answer` | read | discoveryengine.projects.locations.collections.engines.servingConfigs.answer | cloud-platform, discoveryengine.readwrite |
-| `discoverye_engines_serving_configs_create` | write | discoveryengine.projects.locations.collections.engines.servingConfigs.create | cloud-platform, discoveryengine.readwrite |
-| `discoverye_engines_serving_configs_delete` | destructive | discoveryengine.projects.locations.collections.engines.servingConfigs.delete | cloud-platform, discoveryengine.readwrite |
-| `discoverye_engines_serving_configs_list` | read | discoveryengine.projects.locations.collections.engines.servingConfigs.list | cloud-platform, discoveryengine.readwrite |
-| `discoverye_engines_serving_configs_patch` | write | discoveryengine.projects.locations.collections.engines.servingConfigs.patch | cloud-platform, discoveryengine.readwrite |
-| `discoverye_engines_serving_configs_search` | read | discoveryengine.projects.locations.collections.engines.servingConfigs.search | cloud-platform, discoveryengine.assist.readwrite |
-| `discoverye_engines_sessions_answers_get` | read | discoveryengine.projects.locations.collections.engines.sessions.answers.get | cloud-platform, discoveryengine.readwrite |
-| `discoverye_engines_widget_configs_patch` | write | discoveryengine.projects.locations.collections.engines.widgetConfigs.patch | cloud-platform, discoveryengine.assist.readwrite |
-| `discoverye_get_cmek_config` | read | discoveryengine.projects.locations.getCmekConfig | cloud-platform, discoveryengine.readwrite |
-| `discoverye_grounding_configs_check` | read | discoveryengine.projects.locations.groundingConfigs.check | cloud-platform, discoveryengine.readwrite |
-| `discoverye_identity_mapping_stores_create` | write | discoveryengine.projects.locations.identityMappingStores.create | cloud-platform, discoveryengine.readwrite |
-| `discoverye_identity_mapping_stores_delete` | destructive | discoveryengine.projects.locations.identityMappingStores.delete | cloud-platform, discoveryengine.readwrite |
-| `discoverye_identity_mapping_stores_get` | read | discoveryengine.projects.locations.identityMappingStores.get | cloud-platform, discoveryengine.readwrite |
-| `discoverye_identity_mapping_stores_list` | read | discoveryengine.projects.locations.identityMappingStores.list | cloud-platform, discoveryengine.readwrite |
-| `discoverye_identity_mapping_stores_ops_get` | read | discoveryengine.projects.locations.identityMappingStores.operations.get | cloud-platform, discoveryengine.readwrite |
-| `discoverye_identity_mapping_stores_ops_list` | read | discoveryengine.projects.locations.identityMappingStores.operations.list | cloud-platform, discoveryengine.readwrite |
-| `discoverye_license_configs_create` | write | discoveryengine.projects.locations.licenseConfigs.create | cloud-platform, discoveryengine.readwrite |
-| `discoverye_license_configs_get` | read | discoveryengine.projects.locations.licenseConfigs.get | cloud-platform, discoveryengine.readwrite |
-| `discoverye_license_configs_list` | read | discoveryengine.projects.locations.licenseConfigs.list | cloud-platform, discoveryengine.readwrite |
-| `discoverye_license_configs_patch` | write | discoveryengine.projects.locations.licenseConfigs.patch | cloud-platform, discoveryengine.readwrite |
-| `discoverye_operations_list` | read | discoveryengine.projects.locations.operations.list | cloud-platform, discoveryengine.readwrite |
-| `discoverye_podcasts_operations_get` | read | discoveryengine.projects.locations.podcasts.operations.get | cloud-platform, discoveryengine.readwrite |
-| `discoverye_pro_loc_col_eng_com_con_com_quer` | write | discoveryengine.projects.locations.collections.engines.completionConfig.completeQuery | cloud-platform, cloud_search.query |
-| `discoverye_projects_locations_provision` | write | discoveryengine.projects.locations.provision | cloud-platform, discoveryengine.readwrite |
-| `discoverye_projects_operations_cancel` | destructive | discoveryengine.projects.operations.cancel | cloud-platform, discoveryengine.readwrite |
-| `discoverye_projects_operations_get` | read | discoveryengine.projects.operations.get | cloud-platform, discoveryengine.readwrite |
-| `discoverye_projects_operations_list` | read | discoveryengine.projects.operations.list | cloud-platform, discoveryengine.readwrite |
-| `discoverye_projects_provision` | write | discoveryengine.projects.provision | cloud-platform, discoveryengine.readwrite |
-| `discoverye_ranking_configs_rank` | write | discoveryengine.projects.locations.rankingConfigs.rank | cloud-platform, discoveryengine.readwrite |
-| `discoverye_retract_license_config` | write | discoveryengine.billingAccounts.billingAccountLicenseConfigs.retractLicenseConfig | cloud-platform, discoveryengine.readwrite |
-| `discoverye_serving_configs_search_lite` | read | discoveryengine.projects.locations.dataStores.servingConfigs.searchLite | cloud-platform, discoveryengine.assist.readwrite |
-| `discoverye_serving_configs_stream_answer` | write | discoveryengine.projects.locations.dataStores.servingConfigs.streamAnswer | cloud-platform, discoveryengine.readwrite |
-| `discoverye_set_up_data_connector` | write | discoveryengine.projects.locations.setUpDataConnector | cloud-platform, discoveryengine.assist.readwrite |
-| `discoverye_set_up_data_connector_v2` | write | discoveryengine.projects.locations.setUpDataConnectorV2 | cloud-platform, discoveryengine.assist.readwrite |
-| `discoverye_stores_conversations_converse` | write | discoveryengine.projects.locations.dataStores.conversations.converse | cloud-platform, discoveryengine.readwrite |
-| `discoverye_stores_engine_sitemaps_create` | write | discoveryengine.projects.locations.dataStores.siteSearchEngine.sitemaps.create | cloud-platform, discoveryengine.readwrite |
-| `discoverye_stores_engine_sitemaps_delete` | destructive | discoveryengine.projects.locations.dataStores.siteSearchEngine.sitemaps.delete | cloud-platform, discoveryengine.readwrite |
-| `discoverye_stores_engine_sitemaps_fetch` | read | discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.sitemaps.fetch | cloud-platform, discoveryengine.readwrite |
-| `discoverye_stores_engine_sites_batch_create` | write | discoveryengine.projects.locations.dataStores.siteSearchEngine.targetSites.batchCreate | cloud-platform, discoveryengine.readwrite |
-| `discoverye_stores_engine_sites_ops_list` | read | discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.targetSites.operations.list | cloud-platform, discoveryengine.readwrite |
-| `discoverye_stores_get_site_search_engine` | read | discoveryengine.projects.locations.dataStores.getSiteSearchEngine | cloud-platform, discoveryengine.readwrite |
-| `discoverye_stores_import_identity_mappings` | write | discoveryengine.projects.locations.identityMappingStores.importIdentityMappings | cloud-platform, discoveryengine.readwrite |
-| `discoverye_stores_list_identity_mappings` | read | discoveryengine.projects.locations.identityMappingStores.listIdentityMappings | cloud-platform, discoveryengine.readwrite |
-| `discoverye_stores_purge_identity_mappings` | write | discoveryengine.projects.locations.identityMappingStores.purgeIdentityMappings | cloud-platform, discoveryengine.readwrite |
-| `discoverye_stores_serving_configs_answer` | read | discoveryengine.projects.locations.dataStores.servingConfigs.answer | cloud-platform, discoveryengine.readwrite |
-| `discoverye_stores_serving_configs_create` | write | discoveryengine.projects.locations.dataStores.servingConfigs.create | cloud-platform, discoveryengine.readwrite |
-| `discoverye_stores_serving_configs_delete` | destructive | discoveryengine.projects.locations.dataStores.servingConfigs.delete | cloud-platform, discoveryengine.readwrite |
-| `discoverye_stores_serving_configs_patch` | write | discoveryengine.projects.locations.collections.dataStores.servingConfigs.patch | cloud-platform, discoveryengine.readwrite |
-| `discoverye_stores_serving_configs_recommend` | write | discoveryengine.projects.locations.dataStores.servingConfigs.recommend | cloud-platform, discoveryengine.readwrite |
-| `discoverye_stores_serving_configs_search` | read | discoveryengine.projects.locations.dataStores.servingConfigs.search | cloud-platform, discoveryengine.assist.readwrite |
-| `discoverye_update_acl_config` | write | discoveryengine.projects.locations.updateAclConfig | cloud-platform, discoveryengine.readwrite |
-| `discoverye_update_cmek_config` | write | discoveryengine.projects.locations.updateCmekConfig | cloud-platform, discoveryengine.readwrite |
-| `discoverye_user_events_collect` | write | discoveryengine.projects.locations.userEvents.collect | cloud-platform, discoveryengine.assist.readwrite |
-| `discoverye_user_events_import` | write | discoveryengine.projects.locations.userEvents.import | cloud-platform, discoveryengine.assist.readwrite |
-| `discoverye_user_events_write` | write | discoveryengine.projects.locations.userEvents.write | cloud-platform, discoveryengine.assist.readwrite |
-| `discoverye_user_stores_get` | read | discoveryengine.projects.locations.userStores.get | cloud-platform, discoveryengine.readwrite |
-| `discoverye_user_stores_patch` | write | discoveryengine.projects.locations.userStores.patch | cloud-platform, discoveryengine.readwrite |
-| `discoverye_user_stores_stats_list` | read | discoveryengine.projects.locations.userStores.licenseConfigsUsageStats.list | cloud-platform, discoveryengine.readwrite |
-| `discoverye_user_stores_user_licenses_list` | read | discoveryengine.projects.locations.userStores.userLicenses.list | cloud-platform, discoveryengine.readwrite |
+| `dis_agents_a2a_tasks_push_notif_configs_get` | read | discoveryengine.projects.locations.collections.engines.assistants.agents.a2a.v1.tasks.pushNotificationConfigs.get | cloud-platform, discoveryengine.readwrite, +1 more |
+| `dis_engine_fetch_domain_verification_status` | read | discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.fetchDomainVerificationStatus | cloud-platform, discoveryengine.readwrite, +1 more |
+| `dis_engines_assistants_agents_a2a_tasks_get` | read | discoveryengine.projects.locations.collections.engines.assistants.agents.a2a.v1.tasks.get | cloud-platform, discoveryengine.readwrite, +1 more |
+| `dis_stores_completion_config_complete_query` | write | discoveryengine.projects.locations.collections.dataStores.completionConfig.completeQuery | cloud-platform, cloud_search.query, +3 more |
+| `dis_stores_engine_batch_verify_target_sites` | write | discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.batchVerifyTargetSites | cloud-platform, discoveryengine.readwrite, +1 more |
+| `disc_colls_stores_engine_sites_batch_create` | write | discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.targetSites.batchCreate | cloud-platform, discoveryengine.readwrite, +1 more |
+| `disc_colls_stores_serving_configs_recommend` | write | discoveryengine.projects.locations.collections.dataStores.servingConfigs.recommend | cloud-platform, discoveryengine.readwrite, +1 more |
+| `disc_engines_assistants_agents_a2a_get_card` | read | discoveryengine.projects.locations.collections.engines.assistants.agents.a2a.v1.getCard | cloud-platform, discoveryengine.readwrite, +1 more |
+| `disco_assistants_agents_a2a_tasks_subscribe` | read | discoveryengine.projects.locations.collections.engines.assistants.agents.a2a.v1.tasks.subscribe | cloud-platform, discoveryengine.readwrite, +1 more |
+| `disco_collections_data_stores_search_engine` | read | discoveryengine.projects.locations.collections.dataStores.getSiteSearchEngine | cloud-platform, discoveryengine.readwrite, +1 more |
+| `disco_colls_data_stores_engine_site_search` | write | discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.enableAdvancedSiteSearch | cloud-platform, discoveryengine.readwrite, +1 more |
+| `disco_engines_serving_configs_stream_answer` | write | discoveryengine.projects.locations.collections.engines.servingConfigs.streamAnswer | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discov_a2a_tasks_push_notif_configs_create` | write | discoveryengine.projects.locations.collections.engines.assistants.agents.a2a.v1.tasks.pushNotificationConfigs.create | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discov_a2a_tasks_push_notif_configs_delete` | destructive | discoveryengine.projects.locations.collections.engines.assistants.agents.a2a.v1.tasks.pushNotificationConfigs.delete | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discov_assistants_agents_a2a_message_stream` | write | discoveryengine.projects.locations.collections.engines.assistants.agents.a2a.v1.message.stream | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discov_colls_data_stores_engine_site_search` | write | discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.disableAdvancedSiteSearch | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discov_colls_stores_conversations_converse` | write | discoveryengine.projects.locations.collections.dataStores.conversations.converse | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discov_colls_stores_engine_sitemaps_create` | write | discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.sitemaps.create | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discov_colls_stores_engine_sitemaps_delete` | destructive | discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.sitemaps.delete | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discov_colls_stores_serving_configs_answer` | read | discoveryengine.projects.locations.collections.dataStores.servingConfigs.answer | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discov_colls_stores_serving_configs_create` | write | discoveryengine.projects.locations.collections.dataStores.servingConfigs.create | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discov_colls_stores_serving_configs_delete` | destructive | discoveryengine.projects.locations.collections.dataStores.servingConfigs.delete | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discov_colls_stores_serving_configs_search` | read | discoveryengine.projects.locations.collections.dataStores.servingConfigs.search | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discov_engine_disable_advanced_site_search` | write | discoveryengine.projects.locations.dataStores.siteSearchEngine.disableAdvancedSiteSearch | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discov_engines_serving_configs_search_lite` | read | discoveryengine.projects.locations.collections.engines.servingConfigs.searchLite | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discov_stores_branches_batch_get_docs_meta` | read | discoveryengine.projects.locations.collections.dataStores.branches.batchGetDocumentsMetadata | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discov_stores_serving_configs_stream_answer` | write | discoveryengine.projects.locations.collections.dataStores.servingConfigs.streamAnswer | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discov_suggestion_deny_list_entries_import` | write | discoveryengine.projects.locations.dataStores.suggestionDenyListEntries.import | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discover_assistants_agents_a2a_message_send` | destructive | discoveryengine.projects.locations.collections.engines.assistants.agents.a2a.v1.message.send | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discover_assistants_agents_a2a_tasks_cancel` | destructive | discoveryengine.projects.locations.collections.engines.assistants.agents.a2a.v1.tasks.cancel | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discover_engine_enable_advanced_site_search` | write | discoveryengine.projects.locations.dataStores.siteSearchEngine.enableAdvancedSiteSearch | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discover_stores_serving_configs_search_lite` | read | discoveryengine.projects.locations.collections.dataStores.servingConfigs.searchLite | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discover_suggestion_deny_list_entries_purge` | destructive | discoveryengine.projects.locations.dataStores.suggestionDenyListEntries.purge | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discovery_a2a_tasks_push_notif_configs_list` | read | discoveryengine.projects.locations.collections.engines.assistants.agents.a2a.v1.tasks.pushNotificationConfigs.list | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discovery_collections_engines_controls_list` | read | discoveryengine.projects.locations.collections.engines.controls.list | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discovery_collections_engines_sessions_list` | read | discoveryengine.projects.locations.collections.engines.sessions.list | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discovery_collections_update_data_connector` | write | discoveryengine.projects.locations.collections.updateDataConnector | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discovery_colls_data_stores_controls_create` | write | discoveryengine.projects.locations.collections.dataStores.controls.create | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discovery_colls_data_stores_controls_delete` | destructive | discoveryengine.projects.locations.collections.dataStores.controls.delete | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discovery_colls_data_stores_engine_ops_list` | read | discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.operations.list | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discovery_colls_data_stores_models_ops_list` | read | discoveryengine.projects.locations.collections.dataStores.models.operations.list | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discovery_colls_data_stores_schemas_ops_get` | read | discoveryengine.projects.locations.collections.dataStores.schemas.operations.get | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discovery_colls_data_stores_sessions_create` | write | discoveryengine.projects.locations.collections.dataStores.sessions.create | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discovery_colls_data_stores_sessions_delete` | destructive | discoveryengine.projects.locations.collections.dataStores.sessions.delete | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discovery_colls_engines_conversations_patch` | write | discoveryengine.projects.locations.collections.engines.conversations.patch | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discovery_colls_engines_serving_configs_get` | read | discoveryengine.projects.locations.collections.engines.servingConfigs.get | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discovery_colls_stores_branches_docs_create` | write | discoveryengine.projects.locations.collections.dataStores.branches.documents.create | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discovery_colls_stores_branches_docs_delete` | destructive | discoveryengine.projects.locations.collections.dataStores.branches.documents.delete | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discovery_colls_stores_branches_docs_import` | write | discoveryengine.projects.locations.collections.dataStores.branches.documents.import | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discovery_colls_stores_conversations_create` | write | discoveryengine.projects.locations.collections.dataStores.conversations.create | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discovery_colls_stores_conversations_delete` | destructive | discoveryengine.projects.locations.collections.dataStores.conversations.delete | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discovery_colls_stores_engine_sites_ops_get` | read | discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.targetSites.operations.get | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discovery_colls_stores_serving_configs_list` | read | discoveryengine.projects.locations.collections.dataStores.servingConfigs.list | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discovery_colls_stores_sessions_answers_get` | read | discoveryengine.projects.locations.collections.dataStores.sessions.answers.get | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discovery_colls_stores_widget_configs_patch` | write | discoveryengine.projects.locations.collections.dataStores.widgetConfigs.patch | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discovery_data_stores_engine_sitemaps_fetch` | read | discoveryengine.projects.locations.dataStores.siteSearchEngine.sitemaps.fetch | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discovery_data_stores_models_operations_get` | read | discoveryengine.projects.locations.dataStores.models.operations.get | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discovery_data_stores_serving_configs_patch` | write | discoveryengine.projects.locations.dataStores.servingConfigs.patch | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discovery_engines_assistants_agents_ops_get` | read | discoveryengine.projects.locations.collections.engines.assistants.agents.operations.get | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discovery_engines_serving_configs_recommend` | write | discoveryengine.projects.locations.collections.engines.servingConfigs.recommend | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discovery_projects_locations_get_acl_config` | read | discoveryengine.projects.locations.getAclConfig | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discovery_projects_locations_operations_get` | read | discoveryengine.projects.locations.operations.get | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discovery_stores_batch_update_user_licenses` | write | discoveryengine.projects.locations.userStores.batchUpdateUserLicenses | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_branches_batch_get_docs_meta` | read | discoveryengine.projects.locations.dataStores.branches.batchGetDocumentsMetadata | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_cmek_configs_delete` | destructive | discoveryengine.projects.locations.cmekConfigs.delete | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_cmek_configs_get` | read | discoveryengine.projects.locations.cmekConfigs.get | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_cmek_configs_list` | read | discoveryengine.projects.locations.cmekConfigs.list | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_cmek_configs_patch` | write | discoveryengine.projects.locations.cmekConfigs.patch | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_col_dat_sto_sug_den_lis_ent_impo` | write | discoveryengine.projects.locations.collections.dataStores.suggestionDenyListEntries.import | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discoverye_col_dat_sto_sug_den_lis_ent_purg` | destructive | discoveryengine.projects.locations.collections.dataStores.suggestionDenyListEntries.purge | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discoverye_collections_data_connector_mcp` | destructive | discoveryengine.projects.locations.collections.dataConnector.mcp | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_collections_data_stores_create` | write | discoveryengine.projects.locations.collections.dataStores.create | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_collections_data_stores_delete` | destructive | discoveryengine.projects.locations.collections.dataStores.delete | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_collections_data_stores_get` | read | discoveryengine.projects.locations.collections.dataStores.get | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_collections_data_stores_list` | read | discoveryengine.projects.locations.collections.dataStores.list | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_collections_data_stores_patch` | write | discoveryengine.projects.locations.collections.dataStores.patch | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_collections_delete` | destructive | discoveryengine.projects.locations.collections.delete | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_collections_engines_controls_get` | read | discoveryengine.projects.locations.collections.engines.controls.get | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_collections_engines_create` | write | discoveryengine.projects.locations.collections.engines.create | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_collections_engines_delete` | destructive | discoveryengine.projects.locations.collections.engines.delete | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_collections_engines_get` | read | discoveryengine.projects.locations.collections.engines.get | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_collections_engines_list` | read | discoveryengine.projects.locations.collections.engines.list | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_collections_engines_patch` | write | discoveryengine.projects.locations.collections.engines.patch | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_collections_engines_sessions_get` | read | discoveryengine.projects.locations.collections.engines.sessions.get | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discoverye_collections_get_data_connector` | read | discoveryengine.projects.locations.collections.getDataConnector | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discoverye_collections_get_iam_policy` | read | discoveryengine.projects.locations.collections.getIamPolicy | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_collections_operations_get` | read | discoveryengine.projects.locations.collections.operations.get | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_collections_operations_list` | read | discoveryengine.projects.locations.collections.operations.list | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_collections_set_iam_policy` | destructive | discoveryengine.projects.locations.collections.setIamPolicy | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_colls_data_connector_ops_get` | read | discoveryengine.projects.locations.collections.dataConnector.operations.get | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_colls_data_connector_ops_list` | read | discoveryengine.projects.locations.collections.dataConnector.operations.list | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_colls_data_stores_complete_query` | read | discoveryengine.projects.locations.collections.dataStores.completeQuery | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discoverye_colls_data_stores_controls_get` | read | discoveryengine.projects.locations.collections.dataStores.controls.get | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_colls_data_stores_controls_list` | read | discoveryengine.projects.locations.collections.dataStores.controls.list | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_colls_data_stores_controls_patch` | write | discoveryengine.projects.locations.collections.dataStores.controls.patch | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_colls_data_stores_engine_ops_get` | read | discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.operations.get | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_colls_data_stores_get_iam_policy` | read | discoveryengine.projects.locations.collections.dataStores.getIamPolicy | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_colls_data_stores_models_list` | read | discoveryengine.projects.locations.collections.dataStores.customModels.list | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_colls_data_stores_models_ops_get` | read | discoveryengine.projects.locations.collections.dataStores.models.operations.get | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_colls_data_stores_ops_get` | read | discoveryengine.projects.locations.collections.dataStores.operations.get | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_colls_data_stores_ops_list` | read | discoveryengine.projects.locations.collections.dataStores.operations.list | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_colls_data_stores_schemas_create` | write | discoveryengine.projects.locations.collections.dataStores.schemas.create | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_colls_data_stores_schemas_delete` | destructive | discoveryengine.projects.locations.collections.dataStores.schemas.delete | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_colls_data_stores_schemas_get` | read | discoveryengine.projects.locations.collections.dataStores.schemas.get | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_colls_data_stores_schemas_list` | read | discoveryengine.projects.locations.collections.dataStores.schemas.list | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_colls_data_stores_schemas_patch` | write | discoveryengine.projects.locations.collections.dataStores.schemas.patch | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_colls_data_stores_sessions_get` | read | discoveryengine.projects.locations.collections.dataStores.sessions.get | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discoverye_colls_data_stores_sessions_list` | read | discoveryengine.projects.locations.collections.dataStores.sessions.list | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discoverye_colls_data_stores_sessions_patch` | write | discoveryengine.projects.locations.collections.dataStores.sessions.patch | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discoverye_colls_data_stores_set_iam_policy` | destructive | discoveryengine.projects.locations.collections.dataStores.setIamPolicy | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_colls_engines_assistants_create` | write | discoveryengine.projects.locations.collections.engines.assistants.create | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discoverye_colls_engines_assistants_delete` | destructive | discoveryengine.projects.locations.collections.engines.assistants.delete | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discoverye_colls_engines_assistants_get` | read | discoveryengine.projects.locations.collections.engines.assistants.get | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discoverye_colls_engines_assistants_list` | read | discoveryengine.projects.locations.collections.engines.assistants.list | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discoverye_colls_engines_assistants_patch` | write | discoveryengine.projects.locations.collections.engines.assistants.patch | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discoverye_colls_engines_controls_create` | write | discoveryengine.projects.locations.collections.engines.controls.create | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_colls_engines_controls_delete` | destructive | discoveryengine.projects.locations.collections.engines.controls.delete | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_colls_engines_controls_patch` | write | discoveryengine.projects.locations.collections.engines.controls.patch | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_colls_engines_conversations_get` | read | discoveryengine.projects.locations.collections.engines.conversations.get | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_colls_engines_conversations_list` | read | discoveryengine.projects.locations.collections.engines.conversations.list | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_colls_engines_get_iam_policy` | read | discoveryengine.projects.locations.collections.engines.getIamPolicy | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_colls_engines_ops_cancel` | destructive | discoveryengine.projects.locations.collections.engines.operations.cancel | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_colls_engines_ops_get` | read | discoveryengine.projects.locations.collections.engines.operations.get | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_colls_engines_ops_list` | read | discoveryengine.projects.locations.collections.engines.operations.list | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_colls_engines_sessions_create` | write | discoveryengine.projects.locations.collections.engines.sessions.create | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discoverye_colls_engines_sessions_delete` | destructive | discoveryengine.projects.locations.collections.engines.sessions.delete | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discoverye_colls_engines_sessions_patch` | write | discoveryengine.projects.locations.collections.engines.sessions.patch | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discoverye_colls_engines_set_iam_policy` | destructive | discoveryengine.projects.locations.collections.engines.setIamPolicy | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_colls_engines_widget_configs_get` | read | discoveryengine.projects.locations.collections.engines.widgetConfigs.get | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discoverye_colls_stores_branches_docs_get` | read | discoveryengine.projects.locations.collections.dataStores.branches.documents.get | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_colls_stores_branches_docs_list` | read | discoveryengine.projects.locations.collections.dataStores.branches.documents.list | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_colls_stores_branches_docs_patch` | write | discoveryengine.projects.locations.collections.dataStores.branches.documents.patch | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_colls_stores_branches_docs_purge` | destructive | discoveryengine.projects.locations.collections.dataStores.branches.documents.purge | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_colls_stores_branches_ops_cancel` | destructive | discoveryengine.projects.locations.collections.dataStores.branches.operations.cancel | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_colls_stores_branches_ops_get` | read | discoveryengine.projects.locations.collections.dataStores.branches.operations.get | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_colls_stores_branches_ops_list` | read | discoveryengine.projects.locations.collections.dataStores.branches.operations.list | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_colls_stores_conversations_get` | read | discoveryengine.projects.locations.collections.dataStores.conversations.get | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_colls_stores_conversations_list` | read | discoveryengine.projects.locations.collections.dataStores.conversations.list | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_colls_stores_conversations_patch` | write | discoveryengine.projects.locations.collections.dataStores.conversations.patch | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_colls_stores_engine_recrawl_uris` | write | discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.recrawlUris | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_colls_stores_engine_sites_create` | write | discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.targetSites.create | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_colls_stores_engine_sites_delete` | destructive | discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.targetSites.delete | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_colls_stores_engine_sites_get` | read | discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.targetSites.get | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_colls_stores_engine_sites_list` | read | discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.targetSites.list | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_colls_stores_engine_sites_patch` | write | discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.targetSites.patch | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_colls_stores_schemas_ops_list` | read | discoveryengine.projects.locations.collections.dataStores.schemas.operations.list | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_colls_stores_serving_configs_get` | read | discoveryengine.projects.locations.collections.dataStores.servingConfigs.get | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_colls_stores_suggestions_import` | write | discoveryengine.projects.locations.collections.dataStores.completionSuggestions.import | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discoverye_colls_stores_suggestions_purge` | destructive | discoveryengine.projects.locations.collections.dataStores.completionSuggestions.purge | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discoverye_colls_stores_train_custom_model` | write | discoveryengine.projects.locations.collections.dataStores.trainCustomModel | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_colls_stores_user_events_collect` | write | discoveryengine.projects.locations.collections.dataStores.userEvents.collect | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discoverye_colls_stores_user_events_import` | write | discoveryengine.projects.locations.collections.dataStores.userEvents.import | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discoverye_colls_stores_user_events_purge` | destructive | discoveryengine.projects.locations.collections.dataStores.userEvents.purge | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discoverye_colls_stores_user_events_write` | write | discoveryengine.projects.locations.collections.dataStores.userEvents.write | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discoverye_colls_stores_widget_configs_get` | read | discoveryengine.projects.locations.collections.dataStores.widgetConfigs.get | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discoverye_completion_config_complete_query` | write | discoveryengine.projects.locations.dataStores.completionConfig.completeQuery | cloud-platform, cloud_search.query, +3 more |
+| `discoverye_data_stores_branches_docs_create` | write | discoveryengine.projects.locations.dataStores.branches.documents.create | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_data_stores_branches_docs_delete` | destructive | discoveryengine.projects.locations.dataStores.branches.documents.delete | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_data_stores_branches_docs_get` | read | discoveryengine.projects.locations.dataStores.branches.documents.get | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_data_stores_branches_docs_import` | write | discoveryengine.projects.locations.dataStores.branches.documents.import | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_data_stores_branches_docs_list` | read | discoveryengine.projects.locations.dataStores.branches.documents.list | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_data_stores_branches_docs_patch` | write | discoveryengine.projects.locations.dataStores.branches.documents.patch | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_data_stores_branches_docs_purge` | destructive | discoveryengine.projects.locations.dataStores.branches.documents.purge | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_data_stores_branches_ops_cancel` | destructive | discoveryengine.projects.locations.dataStores.branches.operations.cancel | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_data_stores_branches_ops_get` | read | discoveryengine.projects.locations.dataStores.branches.operations.get | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_data_stores_branches_ops_list` | read | discoveryengine.projects.locations.dataStores.branches.operations.list | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_data_stores_complete_query` | read | discoveryengine.projects.locations.dataStores.completeQuery | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discoverye_data_stores_controls_create` | write | discoveryengine.projects.locations.dataStores.controls.create | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_data_stores_controls_delete` | destructive | discoveryengine.projects.locations.dataStores.controls.delete | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_data_stores_controls_get` | read | discoveryengine.projects.locations.dataStores.controls.get | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_data_stores_controls_list` | read | discoveryengine.projects.locations.dataStores.controls.list | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_data_stores_controls_patch` | write | discoveryengine.projects.locations.dataStores.controls.patch | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_data_stores_conversations_create` | write | discoveryengine.projects.locations.dataStores.conversations.create | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_data_stores_conversations_delete` | destructive | discoveryengine.projects.locations.dataStores.conversations.delete | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_data_stores_conversations_get` | read | discoveryengine.projects.locations.dataStores.conversations.get | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_data_stores_conversations_list` | read | discoveryengine.projects.locations.dataStores.conversations.list | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_data_stores_conversations_patch` | write | discoveryengine.projects.locations.dataStores.conversations.patch | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_data_stores_create` | write | discoveryengine.projects.locations.dataStores.create | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_data_stores_delete` | destructive | discoveryengine.projects.locations.dataStores.delete | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_data_stores_engine_recrawl_uris` | write | discoveryengine.projects.locations.dataStores.siteSearchEngine.recrawlUris | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_data_stores_engine_sites_create` | write | discoveryengine.projects.locations.dataStores.siteSearchEngine.targetSites.create | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_data_stores_engine_sites_delete` | destructive | discoveryengine.projects.locations.dataStores.siteSearchEngine.targetSites.delete | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_data_stores_engine_sites_get` | read | discoveryengine.projects.locations.dataStores.siteSearchEngine.targetSites.get | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_data_stores_engine_sites_list` | read | discoveryengine.projects.locations.dataStores.siteSearchEngine.targetSites.list | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_data_stores_engine_sites_patch` | write | discoveryengine.projects.locations.dataStores.siteSearchEngine.targetSites.patch | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_data_stores_get` | read | discoveryengine.projects.locations.dataStores.get | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_data_stores_get_iam_policy` | read | discoveryengine.projects.locations.dataStores.getIamPolicy | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_data_stores_list` | read | discoveryengine.projects.locations.dataStores.list | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_data_stores_models_ops_list` | read | discoveryengine.projects.locations.dataStores.models.operations.list | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_data_stores_operations_get` | read | discoveryengine.projects.locations.dataStores.operations.get | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_data_stores_operations_list` | read | discoveryengine.projects.locations.dataStores.operations.list | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_data_stores_patch` | write | discoveryengine.projects.locations.dataStores.patch | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_data_stores_schemas_create` | write | discoveryengine.projects.locations.dataStores.schemas.create | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_data_stores_schemas_delete` | destructive | discoveryengine.projects.locations.dataStores.schemas.delete | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_data_stores_schemas_get` | read | discoveryengine.projects.locations.dataStores.schemas.get | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_data_stores_schemas_list` | read | discoveryengine.projects.locations.dataStores.schemas.list | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_data_stores_schemas_patch` | write | discoveryengine.projects.locations.dataStores.schemas.patch | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_data_stores_serving_configs_get` | read | discoveryengine.projects.locations.dataStores.servingConfigs.get | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_data_stores_serving_configs_list` | read | discoveryengine.projects.locations.dataStores.servingConfigs.list | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_data_stores_sessions_answers_get` | read | discoveryengine.projects.locations.dataStores.sessions.answers.get | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_data_stores_sessions_create` | write | discoveryengine.projects.locations.dataStores.sessions.create | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discoverye_data_stores_sessions_delete` | destructive | discoveryengine.projects.locations.dataStores.sessions.delete | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discoverye_data_stores_sessions_get` | read | discoveryengine.projects.locations.dataStores.sessions.get | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discoverye_data_stores_sessions_list` | read | discoveryengine.projects.locations.dataStores.sessions.list | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discoverye_data_stores_sessions_patch` | write | discoveryengine.projects.locations.dataStores.sessions.patch | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discoverye_data_stores_set_iam_policy` | destructive | discoveryengine.projects.locations.dataStores.setIamPolicy | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_data_stores_suggestions_import` | write | discoveryengine.projects.locations.dataStores.completionSuggestions.import | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discoverye_data_stores_suggestions_purge` | destructive | discoveryengine.projects.locations.dataStores.completionSuggestions.purge | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discoverye_data_stores_user_events_collect` | write | discoveryengine.projects.locations.dataStores.userEvents.collect | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discoverye_data_stores_user_events_import` | write | discoveryengine.projects.locations.dataStores.userEvents.import | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discoverye_data_stores_user_events_purge` | destructive | discoveryengine.projects.locations.dataStores.userEvents.purge | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discoverye_data_stores_user_events_write` | write | discoveryengine.projects.locations.dataStores.userEvents.write | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discoverye_data_stores_widget_configs_get` | read | discoveryengine.projects.locations.dataStores.widgetConfigs.get | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discoverye_data_stores_widget_configs_patch` | write | discoveryengine.projects.locations.dataStores.widgetConfigs.patch | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discoverye_distribute_license_config` | write | discoveryengine.billingAccounts.billingAccountLicenseConfigs.distributeLicenseConfig | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_engines_assistants_stream_assist` | write | discoveryengine.projects.locations.collections.engines.assistants.streamAssist | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discoverye_engines_conversations_converse` | write | discoveryengine.projects.locations.collections.engines.conversations.converse | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_engines_conversations_create` | write | discoveryengine.projects.locations.collections.engines.conversations.create | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_engines_conversations_delete` | destructive | discoveryengine.projects.locations.collections.engines.conversations.delete | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_engines_serving_configs_answer` | read | discoveryengine.projects.locations.collections.engines.servingConfigs.answer | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_engines_serving_configs_create` | write | discoveryengine.projects.locations.collections.engines.servingConfigs.create | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_engines_serving_configs_delete` | destructive | discoveryengine.projects.locations.collections.engines.servingConfigs.delete | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_engines_serving_configs_list` | read | discoveryengine.projects.locations.collections.engines.servingConfigs.list | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_engines_serving_configs_patch` | write | discoveryengine.projects.locations.collections.engines.servingConfigs.patch | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_engines_serving_configs_search` | read | discoveryengine.projects.locations.collections.engines.servingConfigs.search | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discoverye_engines_sessions_answers_get` | read | discoveryengine.projects.locations.collections.engines.sessions.answers.get | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_engines_widget_configs_patch` | write | discoveryengine.projects.locations.collections.engines.widgetConfigs.patch | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discoverye_get_cmek_config` | read | discoveryengine.projects.locations.getCmekConfig | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_grounding_configs_check` | read | discoveryengine.projects.locations.groundingConfigs.check | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_identity_mapping_stores_create` | write | discoveryengine.projects.locations.identityMappingStores.create | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_identity_mapping_stores_delete` | destructive | discoveryengine.projects.locations.identityMappingStores.delete | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_identity_mapping_stores_get` | read | discoveryengine.projects.locations.identityMappingStores.get | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_identity_mapping_stores_list` | read | discoveryengine.projects.locations.identityMappingStores.list | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_identity_mapping_stores_ops_get` | read | discoveryengine.projects.locations.identityMappingStores.operations.get | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_identity_mapping_stores_ops_list` | read | discoveryengine.projects.locations.identityMappingStores.operations.list | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_license_configs_create` | write | discoveryengine.projects.locations.licenseConfigs.create | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_license_configs_get` | read | discoveryengine.projects.locations.licenseConfigs.get | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_license_configs_list` | read | discoveryengine.projects.locations.licenseConfigs.list | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_license_configs_patch` | write | discoveryengine.projects.locations.licenseConfigs.patch | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_operations_list` | read | discoveryengine.projects.locations.operations.list | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_podcasts_operations_get` | read | discoveryengine.projects.locations.podcasts.operations.get | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_pro_loc_col_eng_com_con_com_quer` | write | discoveryengine.projects.locations.collections.engines.completionConfig.completeQuery | cloud-platform, cloud_search.query, +3 more |
+| `discoverye_projects_locations_provision` | write | discoveryengine.projects.locations.provision | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_projects_operations_cancel` | destructive | discoveryengine.projects.operations.cancel | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_projects_operations_get` | read | discoveryengine.projects.operations.get | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_projects_operations_list` | read | discoveryengine.projects.operations.list | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_projects_provision` | write | discoveryengine.projects.provision | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_ranking_configs_rank` | write | discoveryengine.projects.locations.rankingConfigs.rank | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_retract_license_config` | write | discoveryengine.billingAccounts.billingAccountLicenseConfigs.retractLicenseConfig | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_serving_configs_search_lite` | read | discoveryengine.projects.locations.dataStores.servingConfigs.searchLite | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discoverye_serving_configs_stream_answer` | write | discoveryengine.projects.locations.dataStores.servingConfigs.streamAnswer | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_set_up_data_connector` | write | discoveryengine.projects.locations.setUpDataConnector | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discoverye_set_up_data_connector_v2` | write | discoveryengine.projects.locations.setUpDataConnectorV2 | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discoverye_stores_conversations_converse` | write | discoveryengine.projects.locations.dataStores.conversations.converse | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_stores_engine_sitemaps_create` | write | discoveryengine.projects.locations.dataStores.siteSearchEngine.sitemaps.create | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_stores_engine_sitemaps_delete` | destructive | discoveryengine.projects.locations.dataStores.siteSearchEngine.sitemaps.delete | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_stores_engine_sitemaps_fetch` | read | discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.sitemaps.fetch | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_stores_engine_sites_batch_create` | write | discoveryengine.projects.locations.dataStores.siteSearchEngine.targetSites.batchCreate | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_stores_engine_sites_ops_list` | read | discoveryengine.projects.locations.collections.dataStores.siteSearchEngine.targetSites.operations.list | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_stores_get_site_search_engine` | read | discoveryengine.projects.locations.dataStores.getSiteSearchEngine | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_stores_import_identity_mappings` | write | discoveryengine.projects.locations.identityMappingStores.importIdentityMappings | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_stores_list_identity_mappings` | read | discoveryengine.projects.locations.identityMappingStores.listIdentityMappings | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_stores_purge_identity_mappings` | write | discoveryengine.projects.locations.identityMappingStores.purgeIdentityMappings | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_stores_serving_configs_answer` | read | discoveryengine.projects.locations.dataStores.servingConfigs.answer | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_stores_serving_configs_create` | write | discoveryengine.projects.locations.dataStores.servingConfigs.create | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_stores_serving_configs_delete` | destructive | discoveryengine.projects.locations.dataStores.servingConfigs.delete | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_stores_serving_configs_patch` | write | discoveryengine.projects.locations.collections.dataStores.servingConfigs.patch | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_stores_serving_configs_recommend` | write | discoveryengine.projects.locations.dataStores.servingConfigs.recommend | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_stores_serving_configs_search` | read | discoveryengine.projects.locations.dataStores.servingConfigs.search | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discoverye_update_acl_config` | write | discoveryengine.projects.locations.updateAclConfig | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_update_cmek_config` | write | discoveryengine.projects.locations.updateCmekConfig | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_user_events_collect` | write | discoveryengine.projects.locations.userEvents.collect | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discoverye_user_events_import` | write | discoveryengine.projects.locations.userEvents.import | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discoverye_user_events_write` | write | discoveryengine.projects.locations.userEvents.write | cloud-platform, discoveryengine.assist.readwrite, +2 more |
+| `discoverye_user_stores_get` | read | discoveryengine.projects.locations.userStores.get | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_user_stores_patch` | write | discoveryengine.projects.locations.userStores.patch | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_user_stores_stats_list` | read | discoveryengine.projects.locations.userStores.licenseConfigsUsageStats.list | cloud-platform, discoveryengine.readwrite, +1 more |
+| `discoverye_user_stores_user_licenses_list` | read | discoveryengine.projects.locations.userStores.userLicenses.list | cloud-platform, discoveryengine.readwrite, +1 more |
 | `language_documents_analyze_entities` | read | language.documents.analyzeEntities | cloud-language, cloud-platform |
 | `language_documents_analyze_sentiment` | read | language.documents.analyzeSentiment | cloud-language, cloud-platform |
 | `language_documents_annotate_text` | read | language.documents.annotateText | cloud-language, cloud-platform |

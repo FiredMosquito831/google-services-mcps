@@ -48,7 +48,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `chat_mark_read` | write | Mark Chat conversations read | chat.users.readstate |
 | `chat_mark_unread` | write | Mark a Chat conversation unread | chat.users.readstate |
 | `chat_search_conversations` | read | Find Chat conversations | chat.spaces, chat.spaces.readonly |
-| `chat_search_messages` | read | Search Chat messages | chat.messages, chat.messages.readonly |
+| `chat_search_messages` | read | Search Chat messages | chat.messages, chat.messages.readonly, +1 more |
 | `chat_send_message` | destructive | Send a Chat message | chat.messages, chat.messages.create |
 | `chat_update_notification_settings` | write | Change Chat notification settings | chat.users.spacesettings |
 | `health` | read | Server health | (none) |
@@ -62,39 +62,39 @@ The tools that match Google's official MCP server for this product (https://deve
 | `chat_custom_emojis_get` | read | chat.customEmojis.get | chat.customemojis, chat.customemojis.readonly |
 | `chat_custom_emojis_list` | read | chat.customEmojis.list | chat.customemojis, chat.customemojis.readonly |
 | `chat_mark_as_do_not_disturb` | write | chat.users.availability.markAsDoNotDisturb | chat.users.availability |
-| `chat_media_download` | read | chat.media.download | chat.bot, chat.messages |
+| `chat_media_download` | read | chat.media.download | chat.bot, chat.messages, +1 more |
 | `chat_spaces_complete_import` | write | chat.spaces.completeImport | chat.import |
-| `chat_spaces_create` | write | chat.spaces.create | chat.app.spaces, chat.app.spaces.create |
-| `chat_spaces_delete` | destructive | chat.spaces.delete | chat.admin.delete, chat.app.delete |
-| `chat_spaces_find_direct_message` | read | chat.spaces.findDirectMessage | chat.bot, chat.spaces |
+| `chat_spaces_create` | write | chat.spaces.create | chat.app.spaces, chat.app.spaces.create, +3 more |
+| `chat_spaces_delete` | destructive | chat.spaces.delete | chat.admin.delete, chat.app.delete, +2 more |
+| `chat_spaces_find_direct_message` | read | chat.spaces.findDirectMessage | chat.bot, chat.spaces, +1 more |
 | `chat_spaces_find_group_chats` | read | chat.spaces.findGroupChats | chat.memberships, chat.memberships.readonly |
-| `chat_spaces_get` | read | chat.spaces.get | chat.admin.spaces, chat.admin.spaces.readonly |
-| `chat_spaces_list` | read | chat.spaces.list | chat.bot, chat.spaces |
-| `chat_spaces_members_create` | write | chat.spaces.members.create | chat.admin.memberships, chat.app.memberships |
-| `chat_spaces_members_delete` | destructive | chat.spaces.members.delete | chat.admin.memberships, chat.app.memberships |
-| `chat_spaces_members_get` | read | chat.spaces.members.get | chat.admin.memberships, chat.admin.memberships.readonly |
-| `chat_spaces_members_list` | read | chat.spaces.members.list | chat.admin.memberships, chat.admin.memberships.readonly |
-| `chat_spaces_members_patch` | write | chat.spaces.members.patch | chat.admin.memberships, chat.app.memberships |
+| `chat_spaces_get` | read | chat.spaces.get | chat.admin.spaces, chat.admin.spaces.readonly, +4 more |
+| `chat_spaces_list` | read | chat.spaces.list | chat.bot, chat.spaces, +1 more |
+| `chat_spaces_members_create` | write | chat.spaces.members.create | chat.admin.memberships, chat.app.memberships, +3 more |
+| `chat_spaces_members_delete` | destructive | chat.spaces.members.delete | chat.admin.memberships, chat.app.memberships, +3 more |
+| `chat_spaces_members_get` | read | chat.spaces.members.get | chat.admin.memberships, chat.admin.memberships.readonly, +4 more |
+| `chat_spaces_members_list` | read | chat.spaces.members.list | chat.admin.memberships, chat.admin.memberships.readonly, +5 more |
+| `chat_spaces_members_patch` | write | chat.spaces.members.patch | chat.admin.memberships, chat.app.memberships, +2 more |
 | `chat_spaces_message_pins_create` | write | chat.spaces.messagePins.create | chat.spaces, chat.spaces.pins |
 | `chat_spaces_message_pins_delete` | destructive | chat.spaces.messagePins.delete | chat.spaces, chat.spaces.pins |
-| `chat_spaces_message_pins_list` | read | chat.spaces.messagePins.list | chat.spaces, chat.spaces.pins |
+| `chat_spaces_message_pins_list` | read | chat.spaces.messagePins.list | chat.spaces, chat.spaces.pins, +2 more |
 | `chat_spaces_messages_attachments_get` | read | chat.spaces.messages.attachments.get | chat.bot |
-| `chat_spaces_messages_create` | destructive | chat.spaces.messages.create | chat.bot, chat.import |
-| `chat_spaces_messages_delete` | destructive | chat.spaces.messages.delete | chat.bot, chat.import |
-| `chat_spaces_messages_get` | read | chat.spaces.messages.get | chat.app.messages.readonly, chat.bot |
-| `chat_spaces_messages_list` | read | chat.spaces.messages.list | chat.app.messages.readonly, chat.import |
-| `chat_spaces_messages_patch` | write | chat.spaces.messages.patch | chat.bot, chat.import |
-| `chat_spaces_messages_reactions_create` | write | chat.spaces.messages.reactions.create | chat.bot, chat.import |
-| `chat_spaces_messages_reactions_delete` | destructive | chat.spaces.messages.reactions.delete | chat.bot, chat.import |
-| `chat_spaces_messages_reactions_list` | read | chat.spaces.messages.reactions.list | chat.messages, chat.messages.reactions |
+| `chat_spaces_messages_create` | destructive | chat.spaces.messages.create | chat.bot, chat.import, +2 more |
+| `chat_spaces_messages_delete` | destructive | chat.spaces.messages.delete | chat.bot, chat.import, +1 more |
+| `chat_spaces_messages_get` | read | chat.spaces.messages.get | chat.app.messages.readonly, chat.bot, +2 more |
+| `chat_spaces_messages_list` | read | chat.spaces.messages.list | chat.app.messages.readonly, chat.import, +2 more |
+| `chat_spaces_messages_patch` | write | chat.spaces.messages.patch | chat.bot, chat.import, +1 more |
+| `chat_spaces_messages_reactions_create` | write | chat.spaces.messages.reactions.create | chat.bot, chat.import, +3 more |
+| `chat_spaces_messages_reactions_delete` | destructive | chat.spaces.messages.reactions.delete | chat.bot, chat.import, +2 more |
+| `chat_spaces_messages_reactions_list` | read | chat.spaces.messages.reactions.list | chat.messages, chat.messages.reactions, +2 more |
 | `chat_spaces_messages_replace_cards` | write | chat.spaces.messages.replaceCards | chat.bot |
 | `chat_spaces_messages_search` | read | chat.spaces.messages.search | chat.messages, chat.messages.readonly |
-| `chat_spaces_messages_update` | write | chat.spaces.messages.update | chat.bot, chat.import |
-| `chat_spaces_patch` | write | chat.spaces.patch | chat.admin.spaces, chat.app.spaces |
-| `chat_spaces_search` | read | chat.spaces.search | chat.admin.spaces, chat.admin.spaces.readonly |
+| `chat_spaces_messages_update` | write | chat.spaces.messages.update | chat.bot, chat.import, +1 more |
+| `chat_spaces_patch` | write | chat.spaces.patch | chat.admin.spaces, chat.app.spaces, +2 more |
+| `chat_spaces_search` | read | chat.spaces.search | chat.admin.spaces, chat.admin.spaces.readonly, +2 more |
 | `chat_spaces_setup` | write | chat.spaces.setup | chat.spaces, chat.spaces.create |
-| `chat_spaces_space_events_get` | read | chat.spaces.spaceEvents.get | chat.app.all.memberships.readonly, chat.app.all.messages.readonly |
-| `chat_spaces_space_events_list` | read | chat.spaces.spaceEvents.list | chat.app.all.memberships.readonly, chat.app.all.messages.readonly |
+| `chat_spaces_space_events_get` | read | chat.spaces.spaceEvents.get | chat.app.all.memberships.readonly, chat.app.all.messages.readonly, +14 more |
+| `chat_spaces_space_events_list` | read | chat.spaces.spaceEvents.list | chat.app.all.memberships.readonly, chat.app.all.messages.readonly, +14 more |
 | `chat_spaces_space_notif_setting_get` | read | chat.users.spaces.spaceNotificationSetting.get | chat.users.spacesettings |
 | `chat_spaces_space_notif_setting_patch` | write | chat.users.spaces.spaceNotificationSetting.patch | chat.users.spacesettings |
 | `chat_spaces_update_space_read_state` | write | chat.users.spaces.updateSpaceReadState | chat.users.readstate |
@@ -111,13 +111,13 @@ The tools that match Google's official MCP server for this product (https://deve
 | `chat_users_sections_patch` | write | chat.users.sections.patch | chat.users.sections |
 | `chat_users_sections_position` | write | chat.users.sections.position | chat.users.sections |
 | `chat_users_spaces_get_space_read_state` | read | chat.users.spaces.getSpaceReadState | chat.users.readstate, chat.users.readstate.readonly |
-| `workspacee_operations_get` | read | workspaceevents.operations.get | chat.bot, chat.memberships |
-| `workspacee_subscriptions_create` | write | workspaceevents.subscriptions.create | chat.app.all.memberships.readonly, chat.app.all.messages.readonly |
-| `workspacee_subscriptions_delete` | destructive | workspaceevents.subscriptions.delete | chat.bot, chat.memberships |
-| `workspacee_subscriptions_get` | read | workspaceevents.subscriptions.get | chat.bot, chat.memberships |
-| `workspacee_subscriptions_list` | read | workspaceevents.subscriptions.list | chat.bot, chat.memberships |
-| `workspacee_subscriptions_patch` | write | workspaceevents.subscriptions.patch | chat.app.all.memberships.readonly, chat.app.all.messages.readonly |
-| `workspacee_subscriptions_reactivate` | write | workspaceevents.subscriptions.reactivate | chat.app.all.memberships.readonly, chat.app.all.messages.readonly |
+| `workspacee_operations_get` | read | workspaceevents.operations.get | chat.bot, chat.memberships, +18 more |
+| `workspacee_subscriptions_create` | write | workspaceevents.subscriptions.create | chat.app.all.memberships.readonly, chat.app.all.messages.readonly, +26 more |
+| `workspacee_subscriptions_delete` | destructive | workspaceevents.subscriptions.delete | chat.bot, chat.memberships, +18 more |
+| `workspacee_subscriptions_get` | read | workspaceevents.subscriptions.get | chat.bot, chat.memberships, +18 more |
+| `workspacee_subscriptions_list` | read | workspaceevents.subscriptions.list | chat.bot, chat.memberships, +18 more |
+| `workspacee_subscriptions_patch` | write | workspaceevents.subscriptions.patch | chat.app.all.memberships.readonly, chat.app.all.messages.readonly, +26 more |
+| `workspacee_subscriptions_reactivate` | write | workspaceevents.subscriptions.reactivate | chat.app.all.memberships.readonly, chat.app.all.messages.readonly, +26 more |
 
 ## Listing tool (1)
 

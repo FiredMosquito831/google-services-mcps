@@ -247,7 +247,17 @@ export async function runLogin(req: LoginRequest, loadRegistryFn: () => Registry
   }
 
   // Each account keeps its own token file. A sign-in with an account that is already signed in replaces its token.
-  const saved = saveAccount(group, existing?.email ?? email, account ? { ...tokens, account } : tokens, cfg);
+  const now = Date.now();
+  const rawExpiresIn = (tokens as { refresh_token_expires_in?: unknown }).refresh_token_expires_in;
+  const enrichedTokens = {
+    ...tokens,
+    ...(account ? { account } : {}),
+    login_at: now,
+    ...(typeof rawExpiresIn === 'number' && Number.isFinite(rawExpiresIn)
+      ? { refresh_token_expires_at: now + Math.round(rawExpiresIn * 1000) }
+      : {}),
+  };
+  const saved = saveAccount(group, existing?.email ?? email, enrichedTokens, cfg);
   out.log(`Saved token: ${saved} (mode 0600)`);
   out.log(account ? `Account: ${account}` : 'Account: not recorded (Google did not name the account)');
   out.log(`Signed-in accounts for ${group}: ${accountNames(group, cfg)}`);

@@ -74,15 +74,15 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `tagmgr_accounts_containers_snippet` | read | tagmanager.accounts.containers.snippet | tagmanager.edit.containers, tagmanager.readonly |
 | `tagmgr_accounts_containers_update` | write | tagmanager.accounts.containers.update | tagmanager.edit.containers |
 | `tagmgr_accounts_containers_versions_delete` | destructive | tagmanager.accounts.containers.versions.delete | tagmanager.edit.containerversions |
-| `tagmgr_accounts_containers_versions_get` | read | tagmanager.accounts.containers.versions.get | tagmanager.edit.containers, tagmanager.edit.containerversions |
+| `tagmgr_accounts_containers_versions_get` | read | tagmanager.accounts.containers.versions.get | tagmanager.edit.containers, tagmanager.edit.containerversions, +1 more |
 | `tagmgr_accounts_containers_versions_live` | read | tagmanager.accounts.containers.versions.live | tagmanager.edit.containers, tagmanager.readonly |
 | `tagmgr_accounts_containers_versions_publish` | destructive | tagmanager.accounts.containers.versions.publish | tagmanager.publish |
 | `tagmgr_accounts_containers_versions_update` | write | tagmanager.accounts.containers.versions.update | tagmanager.edit.containerversions |
 | `tagmgr_accounts_containers_workspaces_get` | read | tagmanager.accounts.containers.workspaces.get | tagmanager.edit.containers, tagmanager.readonly |
 | `tagmgr_accounts_containers_workspaces_list` | read | tagmanager.accounts.containers.workspaces.list | tagmanager.edit.containers, tagmanager.readonly |
 | `tagmgr_accounts_containers_workspaces_sync` | write | tagmanager.accounts.containers.workspaces.sync | tagmanager.edit.containers |
-| `tagmgr_accounts_get` | read | tagmanager.accounts.get | tagmanager.edit.containers, tagmanager.manage.accounts |
-| `tagmgr_accounts_list` | read | tagmanager.accounts.list | tagmanager.edit.containers, tagmanager.manage.accounts |
+| `tagmgr_accounts_get` | read | tagmanager.accounts.get | tagmanager.edit.containers, tagmanager.manage.accounts, +1 more |
+| `tagmgr_accounts_list` | read | tagmanager.accounts.list | tagmanager.edit.containers, tagmanager.manage.accounts, +1 more |
 | `tagmgr_accounts_update` | write | tagmanager.accounts.update | tagmanager.manage.accounts |
 | `tagmgr_accounts_user_permissions_create` | destructive | tagmanager.accounts.user_permissions.create | tagmanager.manage.users |
 | `tagmgr_accounts_user_permissions_delete` | destructive | tagmanager.accounts.user_permissions.delete | tagmanager.manage.users |
@@ -97,7 +97,7 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `tagmgr_accts_ctrs_envs_reauthorize` | write | tagmanager.accounts.containers.environments.reauthorize | tagmanager.publish |
 | `tagmgr_accts_ctrs_envs_update` | write | tagmanager.accounts.containers.environments.update | tagmanager.edit.containers |
 | `tagmgr_accts_ctrs_ver_headers_latest` | read | tagmanager.accounts.containers.version_headers.latest | tagmanager.edit.containers, tagmanager.readonly |
-| `tagmgr_accts_ctrs_ver_headers_list` | read | tagmanager.accounts.containers.version_headers.list | tagmanager.edit.containers, tagmanager.edit.containerversions |
+| `tagmgr_accts_ctrs_ver_headers_list` | read | tagmanager.accounts.containers.version_headers.list | tagmanager.edit.containers, tagmanager.edit.containerversions, +1 more |
 | `tagmgr_accts_ctrs_vers_set_latest` | write | tagmanager.accounts.containers.versions.set_latest | tagmanager.edit.containers |
 | `tagmgr_accts_ctrs_vers_undelete` | write | tagmanager.accounts.containers.versions.undelete | tagmanager.edit.containerversions |
 | `tagmgr_accts_ctrs_ws_bulk_update` | write | tagmanager.accounts.containers.workspaces.bulk_update | tagmanager.edit.containers |

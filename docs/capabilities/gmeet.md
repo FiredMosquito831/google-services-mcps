@@ -68,7 +68,7 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `meet_records_transcripts_list` | read | meet.conferenceRecords.transcripts.list | meetings.space.created, meetings.space.readonly |
 | `meet_spaces_create` | write | meet.spaces.create | meetings.space.created |
 | `meet_spaces_end_active_conference` | destructive | meet.spaces.endActiveConference | meetings.space.created |
-| `meet_spaces_get` | read | meet.spaces.get | meetings.space.created, meetings.space.readonly |
+| `meet_spaces_get` | read | meet.spaces.get | meetings.space.created, meetings.space.readonly, +1 more |
 | `meet_spaces_members_batch_update` | write | meet.spaces.members.batchUpdate | meetings.space.created |
 | `meet_spaces_members_create` | write | meet.spaces.members.create | meetings.space.created |
 | `meet_spaces_members_delete` | destructive | meet.spaces.members.delete | meetings.space.created |

@@ -135,6 +135,8 @@ interface PlanInput {
   confirmation?: ConfirmationMode;
   /** --toolset, only when given (GSM_TOOLSET). */
   toolset?: Toolset;
+  /** --token-dir, only when given (GSM_TOKEN_DIR). */
+  tokenDir?: string;
 }
 
 /** Pure planning step: computes the new file text without touching the disk. */
@@ -195,7 +197,11 @@ export function planCodex(input: PlanInput): FileChange {
   const updated: string[] = [];
   for (const server of input.servers) {
     const key = `${SERVER_PREFIX}${server.name}`;
-    const next = renderEntry(key, input.serverFile(server), serverEnvironment(input.allowWrites, input.confirmation, input.toolset));
+    const next = renderEntry(
+      key,
+      input.serverFile(server),
+      serverEnvironment(input.allowWrites, input.confirmation, input.toolset, input.tokenDir),
+    );
     const prev = tables.get(key);
     if (prev === undefined) added.push(key);
     else if (prev.join('\n') !== next.join('\n')) updated.push(key);
@@ -227,6 +233,7 @@ async function apply(ctx: AdapterContext, action: 'install' | 'uninstall'): Prom
     allowWrites: ctx.allowWrites,
     confirmation: ctx.confirmation,
     ...(ctx.toolset !== undefined ? { toolset: ctx.toolset } : {}),
+    ...(ctx.tokenDir !== undefined ? { tokenDir: ctx.tokenDir } : {}),
   });
   const changed = change.before !== change.after;
   const backups = ctx.dryRun ? [] : commitChanges([change]);
@@ -242,6 +249,8 @@ async function apply(ctx: AdapterContext, action: 'install' | 'uninstall'): Prom
     if (ctx.allowWrites) notes.push('GSM_ALLOW_WRITES=true is set: write tools are enabled for these servers.');
     if (ctx.confirmation !== undefined) notes.push(`GSM_CONFIRMATION=${ctx.confirmation} is set for these servers.`);
     if (ctx.toolset !== undefined) notes.push(`GSM_TOOLSET=${ctx.toolset} is set for these servers.`);
+    if (ctx.tokenDir !== undefined) notes.push(`GSM_TOKEN_DIR=${ctx.tokenDir} is set for these servers.`);
+    notes.push("gsm sign-in/account tools are not server-gated in this client; verify your client's approval behavior before allowing them.");
   } else if (!changed) {
     notes.push('no gsm entries found in this scope; nothing to remove');
   }

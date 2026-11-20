@@ -82,6 +82,8 @@ export interface AdapterContext {
   confirmation?: ConfirmationMode;
   /** --toolset, when given on install. Undefined means nothing is written, so the server default (all) applies. */
   toolset?: Toolset;
+  /** --token-dir, when given on install for codex, opencode or agy. */
+  tokenDir?: string;
   /** Servers to write (used by the config-file adapters). */
   servers: readonly ServerRef[];
   /** Absolute path of the bundled .mjs file for a server. */

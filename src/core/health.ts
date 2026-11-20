@@ -1,4 +1,4 @@
-import { loadUserTokens, loginSourceOf, readAdminScopeFile, readServiceAccountFile, type AuthKind } from './auth.js';
+import { loadUserTokens, loginSourceOf, readAdminScopeFile, readServiceAccountFile, refreshExpiryInfo, type AuthKind, type StoredCredentials } from './auth.js';
 import { readAdcState } from './adc.js';
 import type { RuntimeConfig } from './config.js';
 import { secretFileExists } from './secret-files.js';
@@ -21,6 +21,9 @@ export interface LoginHealth {
   detail: string;
   /** The tool that moves a server that is not signed in forward. Undefined when signed in. */
   next?: string;
+  /** Stored refresh-token expiry (when Google issued one, e.g. Testing apps). */
+  refreshTokenExpiresAt?: string;
+  refreshWarning?: string;
 }
 
 export interface LiveHealth {
@@ -46,17 +49,30 @@ function nextSignIn(cfg: RuntimeConfig): string {
 }
 
 /** The account recorded in a group's token file at login. */
-export function storedAccount(group: AuthKind, cfg: RuntimeConfig): string | undefined {
+export function storedAccount(group: AuthKind, cfg: RuntimeConfig, account?: string): string | undefined {
   try {
-    const tokens = loadUserTokens(group, cfg) as { account?: unknown } | null;
+    const tokens = loadUserTokens(group, cfg, account) as { account?: unknown } | null;
     return typeof tokens?.account === 'string' ? tokens.account : undefined;
   } catch {
     return undefined;
   }
 }
 
-/** The offline login state of a group. Never calls Google. */
-export function loginHealth(group: string, cfg: RuntimeConfig): LoginHealth {
+function refreshFields(group: AuthKind, cfg: RuntimeConfig, account?: string): { refreshTokenExpiresAt?: string; refreshWarning?: string } {
+  try {
+    const tokens = loadUserTokens(group, cfg, account) as StoredCredentials | null;
+    const { refreshTokenExpiresAt, refreshWarning } = refreshExpiryInfo(tokens);
+    return {
+      ...(refreshTokenExpiresAt ? { refreshTokenExpiresAt } : {}),
+      ...(refreshWarning ? { refreshWarning } : {}),
+    };
+  } catch {
+    return {};
+  }
+}
+
+/** The offline login state of a group (or named account of that group). Never calls Google. */
+export function loginHealth(group: string, cfg: RuntimeConfig, account?: string): LoginHealth {
   if (group === 'apikey') {
     const set = Boolean(cfg.apiKey);
     return {
@@ -90,23 +106,21 @@ export function loginHealth(group: string, cfg: RuntimeConfig): LoginHealth {
         : `not set up: run ${invocation()} setup-service-account --key-file <file>`,
     };
   }
-  if (group === 'cloud') {
-    const source = loginSourceOf('cloud', cfg);
-    return {
-      kind: 'oauth-or-adc',
-      loggedIn: source !== undefined,
-      account: source === 'oauth' ? storedAccount('cloud', cfg) : undefined,
-      next: source ? undefined : nextSignIn(cfg),
-      detail: sourceDetail(source, cfg, `no login: run ${invocation()} login cloud, or sign in with ADC (auth_login, method "adc")`),
-    };
-  }
-  const source = loginSourceOf(group as AuthKind, cfg);
+  const source = loginSourceOf(group as AuthKind, cfg, account);
+  const missing =
+    account !== undefined
+      ? `account "${account}" is not signed in for ${group}: run ${invocation()} login ${group} --account ${account}`
+      : group === 'cloud'
+        ? `no login: run ${invocation()} login cloud, or sign in with ADC (auth_login, method "adc")`
+        : `not logged in: run ${invocation()} login ${group}`;
+  const kind: LoginKind = group === 'cloud' ? 'oauth-or-adc' : 'oauth';
   return {
-    kind: 'oauth',
+    kind,
     loggedIn: source !== undefined,
-    account: source === 'oauth' ? storedAccount(group as AuthKind, cfg) : undefined,
+    account: source === 'oauth' ? (storedAccount(group as AuthKind, cfg, account) ?? account) : undefined,
     next: source ? undefined : nextSignIn(cfg),
-    detail: sourceDetail(source, cfg, `not logged in: run ${invocation()} login ${group}`),
+    detail: sourceDetail(source, cfg, missing),
+    ...(source === 'oauth' ? refreshFields(group as AuthKind, cfg, account) : {}),
   };
 }
 
@@ -126,12 +140,13 @@ function sourceDetail(source: 'oauth' | 'adc' | 'service-account' | undefined, c
   return `signed in with Application Default Credentials.${quotaNote}`;
 }
 
-/** Asks Google about a group's login. Makes network calls, so it runs only when asked. */
-export async function liveHealth(group: string, cfg: RuntimeConfig, deps: GrantDeps = {}): Promise<LiveHealth> {
+/** Asks Google about a group's login (or a named account). Makes network calls, so it runs only when asked. */
+export async function liveHealth(group: string, cfg: RuntimeConfig, deps: GrantDeps = {}, account?: string): Promise<LiveHealth> {
   if (group === 'apikey' || group === 'workspace-admin') {
     return { state: 'not-applicable', detail: 'nothing to ask Google about for this group', missingScopes: [] };
   }
-  const check = group === 'service-account' ? await checkServiceAccountGrant(cfg, deps) : await checkGrant(group as AuthKind, cfg, deps);
+  const check =
+    group === 'service-account' ? await checkServiceAccountGrant(cfg, deps) : await checkGrant(group as AuthKind, cfg, deps, account);
   return {
     state: check.state,
     detail: check.detail,
@@ -149,6 +164,8 @@ export interface ServerHealthInput {
   version: string;
   group: string | undefined;
   cfg: RuntimeConfig;
+  /** Optional named account for OAuth groups (`health` account selector). */
+  account?: string;
   /** Tools registered right now. */
   registered: number;
   /** Tools defined but not registered: they need a login, a scope, or GSM_ALLOW_WRITES. */
@@ -164,7 +181,7 @@ export interface ServerHealthInput {
 
 /** The report of one server. The JSON it returns is what the health tool and `gsm health --json` show. */
 export async function serverHealth(input: ServerHealthInput): Promise<Record<string, unknown>> {
-  const login = input.group ? loginHealth(input.group, input.cfg) : null;
+  const login = input.group ? loginHealth(input.group, input.cfg, input.account) : null;
   const report: Record<string, unknown> = {
     server: input.server,
     version: input.version,
@@ -174,7 +191,7 @@ export async function serverHealth(input: ServerHealthInput): Promise<Record<str
     login,
   };
   if (input.live && input.group) {
-    report.live = await liveHealth(input.group, input.cfg);
+    report.live = await liveHealth(input.group, input.cfg, {}, input.account);
   } else {
     report.live = 'not checked (ask with live: true)';
   }

@@ -91,6 +91,7 @@ Options:
 | `--allow-writes` | install | For `codex`, `opencode` and `agy`: sets `GSM_ALLOW_WRITES=true`. For `claude`: passed to the plugin as the option `allow_writes=true` (`claude plugin install --config`). |
 | `--confirmation` | install | `every-change` (the default), `destructive-only` or `off`. For `codex`, `opencode` and `agy`: sets `GSM_CONFIRMATION`. For `claude`: passed to the plugin as the option `confirmation` (`--config`). |
 | `--toolset` | install | `all`, `google` or `curated`: which tools each server lists. Only when given: for `codex`, `opencode` and `agy` it sets `GSM_TOOLSET`; for `claude` it is passed to the plugin as the option `toolset` (`--config toolset=<value>`; checked, and Claude Code refuses another value). Without it nothing is written and the servers list every tool. For `agy`, the install warns when a product can list more than 100 tools: Antigravity is reported to refuse such a server (not verified). |
+| `--token-dir` | install | Absolute token folder (`GSM_TOKEN_DIR`) for `codex`, `opencode` and `agy`. Claude Code keeps its `token_dir` plugin option (`--agent claude` and `--agent all` reject `--token-dir`). |
 | `--install-missing` | install | Installs the requirements gsm can install (npm for Claude Code, Codex and OpenCode; winget or brew for git), then checks again. Without it, a missing requirement stops the install. |
 | `--marketplace` | install (claude) | Where Claude Code gets the marketplace: `owner/repo`, a URL, or a path. The default is the repository folder when it is a git clone. Otherwise (npm package, zip download) it is `FiredMosquito831/google-services-mcps` on GitHub. |
 | `--servers` | install | Keeps only these servers of the chosen products (`a,b`). For `claude`, which installs whole plugins, gsm installs the plugins that contain them. |
@@ -331,7 +332,7 @@ Notes for each agent:
 
 - **Codex.** All gsm entries live in one managed block, between `# >>> google-services-mcps (managed by gsm) >>>` and `# <<< google-services-mcps (managed by gsm) <<<`. Text outside the block is not touched. Codex reads a project `.codex/config.toml` only in trusted projects. Trust the folder in Codex, or its servers stay off. **Checked** (the installer prints this note).
 - **OpenCode.** Each entry is under `mcp` with the key `gsm-<name>`. The file must be plain JSON. A file with comments or trailing commas is refused and not changed. **Checked.**
-- **Antigravity (`agy`).** The folder `~/.gemini/config` must already exist. Without it the install stops with `agy config folder not found ... Run agy once so it creates its folder, then retry.` **Checked.** Run `agy` once to create it. **UNVERIFIED:** how `agy` creates the folder, because `agy` was not run. Then check with `agy mcp list` (**UNVERIFIED:** not run here).
+- **Antigravity (`agy`).** Upstream docs mention `<workspace>/.agents/mcp_config.json`, but `agy` 1.5.12 exposes no CLI scope flag and scratch workspace probing was negative, so `gsm` requires `--scope global`. The folder `~/.gemini/config` must already exist. Without it the install stops with `agy config folder not found ... Run agy once so it creates its folder, then retry.` **Checked.** Run `agy` once to create it. **UNVERIFIED:** how `agy` creates the folder, because `agy` was not run. Then check with `agy mcp list` (**UNVERIFIED:** not run here).
 - **Project and local files hold absolute paths.** The entries point at server files on your machine. Do not commit a project or local config file for a team. **Checked** (the paths appear in the file).
 
 ### Uninstall
@@ -359,6 +360,7 @@ npx google-services-mcps uninstall --agent codex --plugin gmail --scope global
 | `--allow-writes` | Set `GSM_ALLOW_WRITES=true` for Codex, OpenCode and Antigravity. **Not applied to Claude Code**, which uses the plugin option. **Checked.** |
 | `--confirmation every-change\|destructive-only\|off` | Set `GSM_CONFIRMATION` for Codex, OpenCode and Antigravity. **Not applied to Claude Code.** **Checked.** |
 | `--toolset all\|google\|curated` | Set `GSM_TOOLSET` for Codex, OpenCode and Antigravity, and the plugin option `toolset` for Claude Code. Only when given. **Checked** (config files in a temp home; `claude plugin install --config toolset=google` with a temp `CLAUDE_CONFIG_DIR`). |
+| `--token-dir <dir>` | Set `GSM_TOKEN_DIR` for Codex, OpenCode and Antigravity (`install` only). Refused for `claude` (which uses the `token_dir` plugin option) and `all`. **Checked.** |
 | `--marketplace <path or owner/repo>` | Claude Code only. Default: this checkout, else `FiredMosquito831/google-services-mcps`. **Checked** (the default was printed from a temporary folder). |
 | `--dry-run` | Print every planned change and command. Write nothing. |
 | `--home <dir>` | Use another home folder, for Codex, OpenCode and Antigravity. **Does not apply to Claude Code**: `--home` with `--agent claude` stops with an error. **Checked.** |

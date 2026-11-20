@@ -55,18 +55,18 @@ The tools that match Google's official MCP server for this product (https://deve
 | `drive_create_file` | write | Create or upload Drive file | drive, drive.file |
 | `drive_create_folder` | write | Create Drive folder | drive, drive.file |
 | `drive_create_text_file` | write | Create Drive text file | drive, drive.file |
-| `drive_download` | read | Download Drive file | drive, drive.file |
-| `drive_get_file` | read | Get Drive file | drive, drive.metadata |
-| `drive_list_recent` | read | List recent Drive files | drive, drive.metadata |
+| `drive_download` | read | Download Drive file | drive, drive.file, +1 more |
+| `drive_get_file` | read | Get Drive file | drive, drive.metadata, +2 more |
+| `drive_list_recent` | read | List recent Drive files | drive, drive.metadata, +2 more |
 | `drive_read_text` | read | Read Drive file as text | drive, drive.readonly |
-| `drive_search` | read | Search Drive | drive, drive.metadata |
-| `drive_trash_file` | destructive | Trash Drive file | drive, drive.file |
-| `drive_untrash_file` | write | Restore Drive file from trash | drive, drive.file |
+| `drive_search` | read | Search Drive | drive, drive.metadata, +2 more |
+| `drive_trash_file` | destructive | Trash Drive file | drive, drive.file, +1 more |
+| `drive_untrash_file` | write | Restore Drive file from trash | drive, drive.file, +1 more |
 | `drive_update_file` | write | Update Drive file metadata | drive, drive.file |
 | `health` | read | Server health | (none) |
-| `sheets_get_values` | read | Read spreadsheet values | drive, drive.file |
-| `sheets_insert_rows` | write | Insert spreadsheet rows or columns | drive, drive.file |
-| `sheets_write_values` | write | Write spreadsheet values | drive, drive.file |
+| `sheets_get_values` | read | Read spreadsheet values | drive, drive.file, +3 more |
+| `sheets_insert_rows` | write | Insert spreadsheet rows or columns | drive, drive.file, +1 more |
+| `sheets_write_values` | write | Write spreadsheet values | drive, drive.file, +1 more |
 
 ## Per-method tools (175)
 
@@ -123,32 +123,32 @@ The tools that match Google's official MCP server for this product (https://deve
 | `books_volumes_recommended_list` | read | books.volumes.recommended.list | books |
 | `books_volumes_recommended_rate` | write | books.volumes.recommended.rate | books |
 | `books_volumes_useruploaded_list` | read | books.volumes.useruploaded.list | books |
-| `docs_documents_batch_update` | destructive | docs.documents.batchUpdate | documents, drive |
-| `docs_documents_create` | write | docs.documents.create | documents, drive |
-| `docs_documents_get` | read | docs.documents.get | documents, documents.readonly |
+| `docs_documents_batch_update` | destructive | docs.documents.batchUpdate | documents, drive, +1 more |
+| `docs_documents_create` | write | docs.documents.create | documents, drive, +1 more |
+| `docs_documents_get` | read | docs.documents.get | documents, documents.readonly, +3 more |
 | `dri_update_label_enabled_app_settings` | write | drivelabels.labels.updateLabelEnabledAppSettings | (none) |
-| `drive_about_get` | read | drive.about.get | drive, drive.appdata |
-| `drive_accessproposals_get` | read | drive.accessproposals.get | drive, drive.file |
-| `drive_accessproposals_list` | read | drive.accessproposals.list | drive, drive.file |
+| `drive_about_get` | read | drive.about.get | drive, drive.appdata, +5 more |
+| `drive_accessproposals_get` | read | drive.accessproposals.get | drive, drive.file, +3 more |
+| `drive_accessproposals_list` | read | drive.accessproposals.list | drive, drive.file, +3 more |
 | `drive_accessproposals_resolve` | write | drive.accessproposals.resolve | drive, drive.file |
-| `drive_approvals_approve` | write | drive.approvals.approve | drive, drive.file |
-| `drive_approvals_cancel` | destructive | drive.approvals.cancel | drive, drive.file |
-| `drive_approvals_comment` | write | drive.approvals.comment | drive, drive.file |
-| `drive_approvals_decline` | write | drive.approvals.decline | drive, drive.file |
-| `drive_approvals_get` | read | drive.approvals.get | drive, drive.appdata |
-| `drive_approvals_list` | read | drive.approvals.list | drive, drive.appdata |
-| `drive_approvals_reassign` | write | drive.approvals.reassign | drive, drive.file |
-| `drive_approvals_start` | write | drive.approvals.start | drive, drive.file |
-| `drive_apps_get` | read | drive.apps.get | drive, drive.appdata |
+| `drive_approvals_approve` | write | drive.approvals.approve | drive, drive.file, +1 more |
+| `drive_approvals_cancel` | destructive | drive.approvals.cancel | drive, drive.file, +1 more |
+| `drive_approvals_comment` | write | drive.approvals.comment | drive, drive.file, +1 more |
+| `drive_approvals_decline` | write | drive.approvals.decline | drive, drive.file, +1 more |
+| `drive_approvals_get` | read | drive.approvals.get | drive, drive.appdata, +4 more |
+| `drive_approvals_list` | read | drive.approvals.list | drive, drive.appdata, +4 more |
+| `drive_approvals_reassign` | write | drive.approvals.reassign | drive, drive.file, +1 more |
+| `drive_approvals_start` | write | drive.approvals.start | drive, drive.file, +1 more |
+| `drive_apps_get` | read | drive.apps.get | drive, drive.appdata, +5 more |
 | `drive_apps_list` | read | drive.apps.list | drive.apps.readonly |
-| `drive_changes_get_start_page_token` | read | drive.changes.getStartPageToken | drive, drive.appdata |
-| `drive_changes_list` | read | drive.changes.list | drive, drive.appdata |
-| `drive_changes_watch` | write | drive.changes.watch | drive, drive.appdata |
-| `drive_channels_stop` | destructive | drive.channels.stop | drive, drive.appdata |
+| `drive_changes_get_start_page_token` | read | drive.changes.getStartPageToken | drive, drive.appdata, +6 more |
+| `drive_changes_list` | read | drive.changes.list | drive, drive.appdata, +6 more |
+| `drive_changes_watch` | write | drive.changes.watch | drive, drive.appdata, +6 more |
+| `drive_channels_stop` | destructive | drive.channels.stop | drive, drive.appdata, +6 more |
 | `drive_comments_create` | write | drive.comments.create | drive, drive.file |
 | `drive_comments_delete` | destructive | drive.comments.delete | drive, drive.file |
-| `drive_comments_get` | read | drive.comments.get | drive, drive.file |
-| `drive_comments_list` | read | drive.comments.list | drive, drive.file |
+| `drive_comments_get` | read | drive.comments.get | drive, drive.file, +2 more |
+| `drive_comments_list` | read | drive.comments.list | drive, drive.file, +2 more |
 | `drive_comments_update` | write | drive.comments.update | drive, drive.file |
 | `drive_drives_create` | write | drive.drives.create | drive |
 | `drive_drives_delete` | destructive | drive.drives.delete | drive |
@@ -157,96 +157,96 @@ The tools that match Google's official MCP server for this product (https://deve
 | `drive_drives_list` | read | drive.drives.list | drive, drive.readonly |
 | `drive_drives_unhide` | write | drive.drives.unhide | drive |
 | `drive_drives_update` | write | drive.drives.update | drive |
-| `drive_files_copy` | write | drive.files.copy | drive, drive.appdata |
-| `drive_files_delete` | destructive | drive.files.delete | drive, drive.appdata |
-| `drive_files_download` | read | drive.files.download | drive, drive.file |
+| `drive_files_copy` | write | drive.files.copy | drive, drive.appdata, +2 more |
+| `drive_files_delete` | destructive | drive.files.delete | drive, drive.appdata, +1 more |
+| `drive_files_download` | read | drive.files.download | drive, drive.file, +1 more |
 | `drive_files_empty_trash` | destructive | drive.files.emptyTrash | drive |
-| `drive_files_export` | read | drive.files.export | drive, drive.file |
+| `drive_files_export` | read | drive.files.export | drive, drive.file, +2 more |
 | `drive_files_generate_cse_token` | write | drive.files.generateCseToken | drive |
-| `drive_files_generate_ids` | read | drive.files.generateIds | drive, drive.appdata |
-| `drive_files_get` | read | drive.files.get | drive, drive.appdata |
-| `drive_files_list` | read | drive.files.list | drive, drive.appdata |
-| `drive_files_list_labels` | read | drive.files.listLabels | drive, drive.file |
-| `drive_files_modify_labels` | write | drive.files.modifyLabels | drive, drive.file |
-| `drive_files_watch` | write | drive.files.watch | drive, drive.appdata |
-| `drive_operations_get` | read | drive.operations.get | drive, drive.file |
+| `drive_files_generate_ids` | read | drive.files.generateIds | drive, drive.appdata, +1 more |
+| `drive_files_get` | read | drive.files.get | drive, drive.appdata, +6 more |
+| `drive_files_list` | read | drive.files.list | drive, drive.appdata, +6 more |
+| `drive_files_list_labels` | read | drive.files.listLabels | drive, drive.file, +4 more |
+| `drive_files_modify_labels` | write | drive.files.modifyLabels | drive, drive.file, +1 more |
+| `drive_files_watch` | write | drive.files.watch | drive, drive.appdata, +6 more |
+| `drive_operations_get` | read | drive.operations.get | drive, drive.file, +2 more |
 | `drive_permissions_create` | destructive | drive.permissions.create | drive, drive.file |
 | `drive_permissions_delete` | destructive | drive.permissions.delete | drive, drive.file |
-| `drive_permissions_get` | read | drive.permissions.get | drive, drive.file |
-| `drive_permissions_list` | read | drive.permissions.list | drive, drive.file |
+| `drive_permissions_get` | read | drive.permissions.get | drive, drive.file, +5 more |
+| `drive_permissions_list` | read | drive.permissions.list | drive, drive.file, +5 more |
 | `drive_permissions_update` | destructive | drive.permissions.update | drive, drive.file |
 | `drive_replies_create` | write | drive.replies.create | drive, drive.file |
 | `drive_replies_delete` | destructive | drive.replies.delete | drive, drive.file |
-| `drive_replies_get` | read | drive.replies.get | drive, drive.file |
-| `drive_replies_list` | read | drive.replies.list | drive, drive.file |
+| `drive_replies_get` | read | drive.replies.get | drive, drive.file, +2 more |
+| `drive_replies_list` | read | drive.replies.list | drive, drive.file, +2 more |
 | `drive_replies_update` | write | drive.replies.update | drive, drive.file |
-| `drive_revisions_delete` | destructive | drive.revisions.delete | drive, drive.appdata |
-| `drive_revisions_get` | read | drive.revisions.get | drive, drive.appdata |
-| `drive_revisions_list` | read | drive.revisions.list | drive, drive.appdata |
-| `drive_revisions_update` | write | drive.revisions.update | drive, drive.appdata |
+| `drive_revisions_delete` | destructive | drive.revisions.delete | drive, drive.appdata, +1 more |
+| `drive_revisions_get` | read | drive.revisions.get | drive, drive.appdata, +6 more |
+| `drive_revisions_list` | read | drive.revisions.list | drive, drive.appdata, +6 more |
+| `drive_revisions_update` | write | drive.revisions.update | drive, drive.appdata, +1 more |
 | `drive_teamdrives_create` | write | drive.teamdrives.create | drive |
 | `drive_teamdrives_delete` | destructive | drive.teamdrives.delete | drive |
 | `drive_teamdrives_get` | read | drive.teamdrives.get | drive, drive.readonly |
 | `drive_teamdrives_list` | read | drive.teamdrives.list | drive, drive.readonly |
 | `drive_teamdrives_update` | write | drive.teamdrives.update | drive |
 | `driveactiv_activity_query` | read | driveactivity.activity.query | drive.activity, drive.activity.readonly |
-| `drivelabe_labels_revisions_locks_list` | read | drivelabels.labels.revisions.locks.list | drive.admin.labels, drive.admin.labels.readonly |
+| `drivelabe_labels_revisions_locks_list` | read | drivelabels.labels.revisions.locks.list | drive.admin.labels, drive.admin.labels.readonly, +2 more |
 | `drivelabel_labels_create` | write | drivelabels.labels.create | drive.admin.labels, drive.labels |
 | `drivelabel_labels_delete` | destructive | drivelabels.labels.delete | drive.admin.labels, drive.labels |
 | `drivelabel_labels_delta` | write | drivelabels.labels.delta | drive.admin.labels, drive.labels |
 | `drivelabel_labels_disable` | destructive | drivelabels.labels.disable | drive.admin.labels, drive.labels |
 | `drivelabel_labels_enable` | write | drivelabels.labels.enable | drive.admin.labels, drive.labels |
-| `drivelabel_labels_get` | read | drivelabels.labels.get | drive.admin.labels, drive.admin.labels.readonly |
-| `drivelabel_labels_list` | read | drivelabels.labels.list | drive.admin.labels, drive.admin.labels.readonly |
-| `drivelabel_labels_locks_list` | read | drivelabels.labels.locks.list | drive.admin.labels, drive.admin.labels.readonly |
+| `drivelabel_labels_get` | read | drivelabels.labels.get | drive.admin.labels, drive.admin.labels.readonly, +2 more |
+| `drivelabel_labels_list` | read | drivelabels.labels.list | drive.admin.labels, drive.admin.labels.readonly, +2 more |
+| `drivelabel_labels_locks_list` | read | drivelabels.labels.locks.list | drive.admin.labels, drive.admin.labels.readonly, +2 more |
 | `drivelabel_labels_permissions_create` | write | drivelabels.labels.permissions.create | drive.admin.labels, drive.labels |
 | `drivelabel_labels_permissions_delete` | destructive | drivelabels.labels.permissions.delete | drive.admin.labels, drive.labels |
-| `drivelabel_labels_permissions_list` | read | drivelabels.labels.permissions.list | drive.admin.labels, drive.admin.labels.readonly |
+| `drivelabel_labels_permissions_list` | read | drivelabels.labels.permissions.list | drive.admin.labels, drive.admin.labels.readonly, +2 more |
 | `drivelabel_labels_perms_batch_delete` | destructive | drivelabels.labels.permissions.batchDelete | drive.admin.labels, drive.labels |
 | `drivelabel_labels_perms_batch_update` | write | drivelabels.labels.permissions.batchUpdate | drive.admin.labels, drive.labels |
 | `drivelabel_labels_publish` | write | drivelabels.labels.publish | drive.admin.labels, drive.labels |
 | `drivelabel_labels_revs_perms_create` | write | drivelabels.labels.revisions.permissions.create | drive.admin.labels, drive.labels |
 | `drivelabel_labels_revs_perms_delete` | destructive | drivelabels.labels.revisions.permissions.delete | drive.admin.labels, drive.labels |
-| `drivelabel_labels_revs_perms_list` | read | drivelabels.labels.revisions.permissions.list | drive.admin.labels, drive.admin.labels.readonly |
+| `drivelabel_labels_revs_perms_list` | read | drivelabels.labels.revisions.permissions.list | drive.admin.labels, drive.admin.labels.readonly, +2 more |
 | `drivelabel_labels_revs_update_perms` | write | drivelabels.labels.revisions.updatePermissions | drive.admin.labels, drive.labels |
 | `drivelabel_labels_update_permissions` | write | drivelabels.labels.updatePermissions | drive.admin.labels, drive.labels |
-| `drivelabel_limits_get_label` | read | drivelabels.limits.getLabel | drive.admin.labels, drive.admin.labels.readonly |
+| `drivelabel_limits_get_label` | read | drivelabels.limits.getLabel | drive.admin.labels, drive.admin.labels.readonly, +2 more |
 | `drivelabel_revs_perms_batch_delete` | destructive | drivelabels.labels.revisions.permissions.batchDelete | drive.admin.labels, drive.labels |
 | `drivelabel_revs_perms_batch_update` | write | drivelabels.labels.revisions.permissions.batchUpdate | drive.admin.labels, drive.labels |
 | `drivelabel_update_label_copy_mode` | write | drivelabels.labels.updateLabelCopyMode | drive.admin.labels, drive.labels |
-| `drivelabel_users_get_capabilities` | read | drivelabels.users.getCapabilities | drive.admin.labels, drive.admin.labels.readonly |
-| `forms_forms_batch_update` | write | forms.forms.batchUpdate | drive, drive.file |
-| `forms_forms_create` | write | forms.forms.create | drive, drive.file |
-| `forms_forms_get` | read | forms.forms.get | drive, drive.file |
-| `forms_forms_responses_get` | read | forms.forms.responses.get | drive, drive.file |
-| `forms_forms_responses_list` | read | forms.forms.responses.list | drive, drive.file |
-| `forms_forms_set_publish_settings` | write | forms.forms.setPublishSettings | drive, drive.file |
-| `forms_forms_watches_create` | write | forms.forms.watches.create | drive, drive.file |
-| `forms_forms_watches_delete` | destructive | forms.forms.watches.delete | drive, drive.file |
-| `forms_forms_watches_list` | read | forms.forms.watches.list | drive, drive.file |
-| `forms_forms_watches_renew` | write | forms.forms.watches.renew | drive, drive.file |
-| `she_values_batch_clear_by_data_filter` | destructive | sheets.spreadsheets.values.batchClearByDataFilter | drive, drive.file |
-| `sheet_values_batch_get_by_data_filter` | read | sheets.spreadsheets.values.batchGetByDataFilter | drive, drive.file |
-| `sheets_batch_update_by_data_filter` | write | sheets.spreadsheets.values.batchUpdateByDataFilter | drive, drive.file |
-| `sheets_get_by_data_filter` | read | sheets.spreadsheets.getByDataFilter | drive, drive.file |
-| `sheets_spreadsheets_batch_update` | destructive | sheets.spreadsheets.batchUpdate | drive, drive.file |
-| `sheets_spreadsheets_create` | write | sheets.spreadsheets.create | drive, drive.file |
-| `sheets_spreadsheets_get` | read | sheets.spreadsheets.get | drive, drive.file |
-| `sheets_spreadsheets_meta_get` | read | sheets.spreadsheets.developerMetadata.get | drive, drive.file |
-| `sheets_spreadsheets_meta_search` | read | sheets.spreadsheets.developerMetadata.search | drive, drive.file |
-| `sheets_spreadsheets_sheets_copy_to` | write | sheets.spreadsheets.sheets.copyTo | drive, drive.file |
-| `sheets_spreadsheets_values_append` | write | sheets.spreadsheets.values.append | drive, drive.file |
-| `sheets_spreadsheets_values_batch_get` | read | sheets.spreadsheets.values.batchGet | drive, drive.file |
-| `sheets_spreadsheets_values_clear` | destructive | sheets.spreadsheets.values.clear | drive, drive.file |
-| `sheets_spreadsheets_values_get` | read | sheets.spreadsheets.values.get | drive, drive.file |
-| `sheets_spreadsheets_values_update` | write | sheets.spreadsheets.values.update | drive, drive.file |
-| `sheets_values_batch_clear` | destructive | sheets.spreadsheets.values.batchClear | drive, drive.file |
-| `sheets_values_batch_update` | write | sheets.spreadsheets.values.batchUpdate | drive, drive.file |
-| `slides_pages_get_thumbnail` | read | slides.presentations.pages.getThumbnail | drive, drive.file |
-| `slides_presentations_batch_update` | destructive | slides.presentations.batchUpdate | drive, drive.file |
-| `slides_presentations_create` | write | slides.presentations.create | drive, drive.file |
-| `slides_presentations_get` | read | slides.presentations.get | drive, drive.file |
-| `slides_presentations_pages_get` | read | slides.presentations.pages.get | drive, drive.file |
+| `drivelabel_users_get_capabilities` | read | drivelabels.users.getCapabilities | drive.admin.labels, drive.admin.labels.readonly, +2 more |
+| `forms_forms_batch_update` | write | forms.forms.batchUpdate | drive, drive.file, +1 more |
+| `forms_forms_create` | write | forms.forms.create | drive, drive.file, +1 more |
+| `forms_forms_get` | read | forms.forms.get | drive, drive.file, +3 more |
+| `forms_forms_responses_get` | read | forms.forms.responses.get | drive, drive.file, +1 more |
+| `forms_forms_responses_list` | read | forms.forms.responses.list | drive, drive.file, +1 more |
+| `forms_forms_set_publish_settings` | write | forms.forms.setPublishSettings | drive, drive.file, +1 more |
+| `forms_forms_watches_create` | write | forms.forms.watches.create | drive, drive.file, +4 more |
+| `forms_forms_watches_delete` | destructive | forms.forms.watches.delete | drive, drive.file, +4 more |
+| `forms_forms_watches_list` | read | forms.forms.watches.list | drive, drive.file, +4 more |
+| `forms_forms_watches_renew` | write | forms.forms.watches.renew | drive, drive.file, +4 more |
+| `she_values_batch_clear_by_data_filter` | destructive | sheets.spreadsheets.values.batchClearByDataFilter | drive, drive.file, +1 more |
+| `sheet_values_batch_get_by_data_filter` | read | sheets.spreadsheets.values.batchGetByDataFilter | drive, drive.file, +1 more |
+| `sheets_batch_update_by_data_filter` | write | sheets.spreadsheets.values.batchUpdateByDataFilter | drive, drive.file, +1 more |
+| `sheets_get_by_data_filter` | read | sheets.spreadsheets.getByDataFilter | drive, drive.file, +1 more |
+| `sheets_spreadsheets_batch_update` | destructive | sheets.spreadsheets.batchUpdate | drive, drive.file, +1 more |
+| `sheets_spreadsheets_create` | write | sheets.spreadsheets.create | drive, drive.file, +1 more |
+| `sheets_spreadsheets_get` | read | sheets.spreadsheets.get | drive, drive.file, +3 more |
+| `sheets_spreadsheets_meta_get` | read | sheets.spreadsheets.developerMetadata.get | drive, drive.file, +1 more |
+| `sheets_spreadsheets_meta_search` | read | sheets.spreadsheets.developerMetadata.search | drive, drive.file, +1 more |
+| `sheets_spreadsheets_sheets_copy_to` | write | sheets.spreadsheets.sheets.copyTo | drive, drive.file, +1 more |
+| `sheets_spreadsheets_values_append` | write | sheets.spreadsheets.values.append | drive, drive.file, +1 more |
+| `sheets_spreadsheets_values_batch_get` | read | sheets.spreadsheets.values.batchGet | drive, drive.file, +3 more |
+| `sheets_spreadsheets_values_clear` | destructive | sheets.spreadsheets.values.clear | drive, drive.file, +1 more |
+| `sheets_spreadsheets_values_get` | read | sheets.spreadsheets.values.get | drive, drive.file, +3 more |
+| `sheets_spreadsheets_values_update` | write | sheets.spreadsheets.values.update | drive, drive.file, +1 more |
+| `sheets_values_batch_clear` | destructive | sheets.spreadsheets.values.batchClear | drive, drive.file, +1 more |
+| `sheets_values_batch_update` | write | sheets.spreadsheets.values.batchUpdate | drive, drive.file, +1 more |
+| `slides_pages_get_thumbnail` | read | slides.presentations.pages.getThumbnail | drive, drive.file, +3 more |
+| `slides_presentations_batch_update` | destructive | slides.presentations.batchUpdate | drive, drive.file, +4 more |
+| `slides_presentations_create` | write | slides.presentations.create | drive, drive.file, +1 more |
+| `slides_presentations_get` | read | slides.presentations.get | drive, drive.file, +3 more |
+| `slides_presentations_pages_get` | read | slides.presentations.pages.get | drive, drive.file, +3 more |
 
 ## Gateway tools (3)
 

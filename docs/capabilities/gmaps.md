@@ -46,11 +46,11 @@ The tools that match Google's official MCP server for this product (https://deve
 | `airquality_history_lookup` | read | airquality.history.lookup | cloud-platform |
 | `airquality_tiles_lookup_heatmap_tile` | read | airquality.mapTypes.heatmapTiles.lookupHeatmapTile | cloud-platform |
 | `areainsigh_v1_compute_insights` | read | areainsights.computeInsights | cloud-platform |
-| `places_places_autocomplete` | read | places.places.autocomplete | cloud-platform, maps-platform.places |
-| `places_places_get` | read | places.places.get | cloud-platform, maps-platform.places |
-| `places_places_photos_get_media` | read | places.places.photos.getMedia | cloud-platform, maps-platform.places |
-| `places_places_search_nearby` | read | places.places.searchNearby | cloud-platform, maps-platform.places |
-| `places_places_search_text` | read | places.places.searchText | cloud-platform, maps-platform.places |
+| `places_places_autocomplete` | read | places.places.autocomplete | cloud-platform, maps-platform.places, +1 more |
+| `places_places_get` | read | places.places.get | cloud-platform, maps-platform.places, +1 more |
+| `places_places_photos_get_media` | read | places.places.photos.getMedia | cloud-platform, maps-platform.places, +1 more |
+| `places_places_search_nearby` | read | places.places.searchNearby | cloud-platform, maps-platform.places, +1 more |
+| `places_places_search_text` | read | places.places.searchText | cloud-platform, maps-platform.places, +1 more |
 | `pollen_forecast_lookup` | read | pollen.forecast.lookup | cloud-platform |
 | `pollen_tiles_lookup_heatmap_tile` | read | pollen.mapTypes.heatmapTiles.lookupHeatmapTile | cloud-platform |
 | `solar_building_insights_find_closest` | read | solar.buildingInsights.findClosest | cloud-platform |

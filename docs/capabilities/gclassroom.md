@@ -58,14 +58,14 @@ The tools that match Google's official MCP server for this product (https://deve
 | `classroom_create_topic` | write | Create a Classroom topic | classroom.topics |
 | `classroom_get_announcements` | read | Get Classroom announcements | classroom.announcements, classroom.announcements.readonly |
 | `classroom_get_course` | read | Get a Classroom course | classroom.courses, classroom.courses.readonly |
-| `classroom_get_coursework` | read | Get Classroom coursework | classroom.coursework.me, classroom.coursework.me.readonly |
+| `classroom_get_coursework` | read | Get Classroom coursework | classroom.coursework.me, classroom.coursework.me.readonly, +2 more |
 | `classroom_get_guardians` | read | Get Classroom guardians | classroom.guardianlinks.students, classroom.guardianlinks.students.readonly |
-| `classroom_get_roster` | read | Get a Classroom roster | classroom.rosters, classroom.rosters.readonly |
-| `classroom_get_rubric` | read | Get a Classroom rubric | classroom.coursework.me, classroom.coursework.me.readonly |
+| `classroom_get_roster` | read | Get a Classroom roster | classroom.rosters, classroom.rosters.readonly, +2 more |
+| `classroom_get_rubric` | read | Get a Classroom rubric | classroom.coursework.me, classroom.coursework.me.readonly, +2 more |
 | `classroom_list_announcements` | read | List Classroom announcements | classroom.announcements, classroom.announcements.readonly |
 | `classroom_list_courses` | read | List Classroom courses | classroom.courses, classroom.courses.readonly |
-| `classroom_list_coursework` | read | List Classroom coursework | classroom.coursework.me, classroom.coursework.me.readonly |
-| `classroom_list_submissions` | read | List Classroom submissions | classroom.coursework.me, classroom.coursework.me.readonly |
+| `classroom_list_coursework` | read | List Classroom coursework | classroom.coursework.me, classroom.coursework.me.readonly, +2 more |
+| `classroom_list_submissions` | read | List Classroom submissions | classroom.coursework.me, classroom.coursework.me.readonly, +4 more |
 | `classroom_list_topics` | read | List Classroom topics | classroom.topics, classroom.topics.readonly |
 | `classroom_update_coursework` | write | Update Classroom coursework | classroom.coursework.students |
 | `health` | read | Server health | (none) |
@@ -98,8 +98,8 @@ The tools that match Google's official MCP server for this product (https://deve
 | `classr_work_attachments_list` | read | classroom.courses.courseWork.addOnAttachments.list | classroom.addons.student, classroom.addons.teacher |
 | `classr_work_attachments_patch` | write | classroom.courses.courseWork.addOnAttachments.patch | classroom.addons.teacher |
 | `classr_work_modify_assignees` | write | classroom.courses.courseWork.modifyAssignees | classroom.coursework.students |
-| `classr_work_submissions_get` | read | classroom.courses.courseWork.studentSubmissions.get | classroom.coursework.me, classroom.coursework.me.readonly |
-| `classr_work_submissions_list` | read | classroom.courses.courseWork.studentSubmissions.list | classroom.coursework.me, classroom.coursework.me.readonly |
+| `classr_work_submissions_get` | read | classroom.courses.courseWork.studentSubmissions.get | classroom.coursework.me, classroom.coursework.me.readonly, +4 more |
+| `classr_work_submissions_list` | read | classroom.courses.courseWork.studentSubmissions.list | classroom.coursework.me, classroom.coursework.me.readonly, +4 more |
 | `classr_work_submissions_patch` | write | classroom.courses.courseWork.studentSubmissions.patch | classroom.coursework.me, classroom.coursework.students |
 | `classroom_aliases_create` | write | classroom.courses.aliases.create | classroom.courses |
 | `classroom_aliases_delete` | destructive | classroom.courses.aliases.delete | classroom.courses |
@@ -113,7 +113,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `classroom_attachments_list` | read | classroom.courses.announcements.addOnAttachments.list | classroom.addons.student, classroom.addons.teacher |
 | `classroom_attachments_patch` | write | classroom.courses.announcements.addOnAttachments.patch | classroom.addons.teacher |
 | `classroom_cou_upd_gra_per_set` | write | classroom.courses.updateGradingPeriodSettings | classroom.courses |
-| `classroom_cou_wor_att_sub_get` | read | classroom.courses.courseWork.addOnAttachments.studentSubmissions.get | classroom.addons.student, classroom.addons.teacher |
+| `classroom_cou_wor_att_sub_get` | read | classroom.courses.courseWork.addOnAttachments.studentSubmissions.get | classroom.addons.student, classroom.addons.teacher, +6 more |
 | `classroom_cou_wor_att_sub_pat` | write | classroom.courses.courseWork.addOnAttachments.studentSubmissions.patch | classroom.addons.teacher |
 | `classroom_cour_mate_atta_crea` | write | classroom.courses.courseWorkMaterials.addOnAttachments.create | classroom.addons.teacher |
 | `classroom_cour_mate_atta_dele` | destructive | classroom.courses.courseWorkMaterials.addOnAttachments.delete | classroom.addons.teacher |
@@ -130,8 +130,8 @@ The tools that match Google's official MCP server for this product (https://deve
 | `classroom_courses_update` | write | classroom.courses.update | classroom.courses |
 | `classroom_courses_work_create` | write | classroom.courses.courseWork.create | classroom.coursework.students |
 | `classroom_courses_work_delete` | destructive | classroom.courses.courseWork.delete | classroom.coursework.students |
-| `classroom_courses_work_get` | read | classroom.courses.courseWork.get | classroom.coursework.me, classroom.coursework.me.readonly |
-| `classroom_courses_work_list` | read | classroom.courses.courseWork.list | classroom.coursework.me, classroom.coursework.me.readonly |
+| `classroom_courses_work_get` | read | classroom.courses.courseWork.get | classroom.coursework.me, classroom.coursework.me.readonly, +2 more |
+| `classroom_courses_work_list` | read | classroom.courses.courseWork.list | classroom.coursework.me, classroom.coursework.me.readonly, +2 more |
 | `classroom_courses_work_patch` | write | classroom.courses.courseWork.patch | classroom.coursework.students |
 | `classroom_create` | write | classroom.registrations.create | classroom.push-notifications |
 | `classroom_delete` | destructive | classroom.registrations.delete | classroom.push-notifications |
@@ -141,8 +141,8 @@ The tools that match Google's official MCP server for this product (https://deve
 | `classroom_groups_members_list` | read | classroom.courses.studentGroups.studentGroupMembers.list | classroom.rosters, classroom.rosters.readonly |
 | `classroom_groups_patch` | write | classroom.courses.studentGroups.patch | classroom.rosters |
 | `classroom_guardians_delete` | destructive | classroom.userProfiles.guardians.delete | classroom.guardianlinks.students |
-| `classroom_guardians_get` | read | classroom.userProfiles.guardians.get | classroom.guardianlinks.me.readonly, classroom.guardianlinks.students |
-| `classroom_guardians_list` | read | classroom.userProfiles.guardians.list | classroom.guardianlinks.me.readonly, classroom.guardianlinks.students |
+| `classroom_guardians_get` | read | classroom.userProfiles.guardians.get | classroom.guardianlinks.me.readonly, classroom.guardianlinks.students, +1 more |
+| `classroom_guardians_list` | read | classroom.userProfiles.guardians.list | classroom.guardianlinks.me.readonly, classroom.guardianlinks.students, +1 more |
 | `classroom_invitations_accept` | write | classroom.invitations.accept | classroom.rosters |
 | `classroom_invitations_create` | destructive | classroom.invitations.create | classroom.rosters |
 | `classroom_invitations_delete` | destructive | classroom.invitations.delete | classroom.rosters |
@@ -157,26 +157,26 @@ The tools that match Google's official MCP server for this product (https://deve
 | `classroom_materials_patch` | write | classroom.courses.courseWorkMaterials.patch | classroom.courseworkmaterials |
 | `classroom_modify_assignees` | write | classroom.courses.announcements.modifyAssignees | classroom.announcements |
 | `classroom_modify_attachments` | write | classroom.courses.courseWork.studentSubmissions.modifyAttachments | classroom.coursework.me, classroom.coursework.students |
-| `classroom_students_create` | write | classroom.courses.students.create | classroom.profile.emails, classroom.profile.photos |
+| `classroom_students_create` | write | classroom.courses.students.create | classroom.profile.emails, classroom.profile.photos, +1 more |
 | `classroom_students_delete` | destructive | classroom.courses.students.delete | classroom.rosters |
-| `classroom_students_get` | read | classroom.courses.students.get | classroom.profile.emails, classroom.profile.photos |
-| `classroom_students_list` | read | classroom.courses.students.list | classroom.profile.emails, classroom.profile.photos |
-| `classroom_submissions_get` | read | classroom.courses.posts.addOnAttachments.studentSubmissions.get | classroom.addons.student, classroom.addons.teacher |
-| `classroom_submissions_list` | read | classroom.courses.courseWork.addOnAttachments.studentSubmissions.list | classroom.addons.student, classroom.addons.teacher |
+| `classroom_students_get` | read | classroom.courses.students.get | classroom.profile.emails, classroom.profile.photos, +2 more |
+| `classroom_students_list` | read | classroom.courses.students.list | classroom.profile.emails, classroom.profile.photos, +2 more |
+| `classroom_submissions_get` | read | classroom.courses.posts.addOnAttachments.studentSubmissions.get | classroom.addons.student, classroom.addons.teacher, +6 more |
+| `classroom_submissions_list` | read | classroom.courses.courseWork.addOnAttachments.studentSubmissions.list | classroom.addons.student, classroom.addons.teacher, +6 more |
 | `classroom_submissions_patch` | write | classroom.courses.posts.addOnAttachments.studentSubmissions.patch | classroom.addons.teacher |
-| `classroom_teachers_create` | write | classroom.courses.teachers.create | classroom.profile.emails, classroom.profile.photos |
+| `classroom_teachers_create` | write | classroom.courses.teachers.create | classroom.profile.emails, classroom.profile.photos, +1 more |
 | `classroom_teachers_delete` | destructive | classroom.courses.teachers.delete | classroom.rosters |
-| `classroom_teachers_get` | read | classroom.courses.teachers.get | classroom.profile.emails, classroom.profile.photos |
-| `classroom_teachers_list` | read | classroom.courses.teachers.list | classroom.profile.emails, classroom.profile.photos |
+| `classroom_teachers_get` | read | classroom.courses.teachers.get | classroom.profile.emails, classroom.profile.photos, +2 more |
+| `classroom_teachers_list` | read | classroom.courses.teachers.list | classroom.profile.emails, classroom.profile.photos, +2 more |
 | `classroom_topics_create` | write | classroom.courses.topics.create | classroom.topics |
 | `classroom_topics_delete` | destructive | classroom.courses.topics.delete | classroom.topics |
 | `classroom_topics_patch` | write | classroom.courses.topics.patch | classroom.topics |
 | `classroom_use_pro_gua_inv_cre` | destructive | classroom.userProfiles.guardianInvitations.create | classroom.guardianlinks.students |
-| `classroom_user_profiles_get` | read | classroom.userProfiles.get | classroom.profile.emails, classroom.profile.photos |
+| `classroom_user_profiles_get` | read | classroom.userProfiles.get | classroom.profile.emails, classroom.profile.photos, +2 more |
 | `classroom_work_rubrics_create` | write | classroom.courses.courseWork.rubrics.create | classroom.coursework.students |
 | `classroom_work_rubrics_delete` | destructive | classroom.courses.courseWork.rubrics.delete | classroom.coursework.students |
-| `classroom_work_rubrics_get` | read | classroom.courses.courseWork.rubrics.get | classroom.coursework.me, classroom.coursework.me.readonly |
-| `classroom_work_rubrics_list` | read | classroom.courses.courseWork.rubrics.list | classroom.coursework.me, classroom.coursework.me.readonly |
+| `classroom_work_rubrics_get` | read | classroom.courses.courseWork.rubrics.get | classroom.coursework.me, classroom.coursework.me.readonly, +2 more |
+| `classroom_work_rubrics_list` | read | classroom.courses.courseWork.rubrics.list | classroom.coursework.me, classroom.coursework.me.readonly, +2 more |
 | `classroom_work_rubrics_patch` | write | classroom.courses.courseWork.rubrics.patch | classroom.coursework.students |
 | `classroom_work_update_rubric` | write | classroom.courses.courseWork.updateRubric | classroom.coursework.students |
 

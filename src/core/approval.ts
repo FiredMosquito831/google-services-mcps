@@ -211,3 +211,76 @@ export function createGate(opts: GateOptions): GateFn {
     throw new DeniedError('You declined this action. Nothing was changed.');
   };
 }
+
+export type RuntimeGateFn = (input: { tool: string; kind: 'write' | 'destructive'; args: unknown }) => Promise<void>;
+
+/**
+ * Runtime setup/account guard (`auth_setup_client`, `auth_login`, `account_set_default`, `account_remove`, etc.):
+ * works even when `GSM_ALLOW_WRITES` is false (so readonly sign-in stays usable), respects explicit `policy.json` deny
+ * rules, elicits confirmation when a client without hooks advertises elicitation, and records a hashed-args audit line.
+ */
+export function createRuntimeGate(opts: GateOptions): RuntimeGateFn {
+  const { server, cfg } = opts;
+  const readPolicy = policyReader(cfg.tokenDir);
+
+  return async (input) => {
+    const risk = riskFromKind(input.kind);
+    const audit = (decision: string, outcome: Outcome): void =>
+      writeAudit(cfg.tokenDir, { tool: input.tool, risk, decision, outcome, args: input.args });
+
+    const loaded = readPolicy();
+    if (loaded.policy) {
+      const verdict = decide({
+        toolName: input.tool,
+        risk,
+        policy: loaded.policy,
+        confirmationEnvOverride: cfg.confirmationFromEnv ? cfg.confirmation : undefined,
+      });
+      if (verdict.decision === 'deny') {
+        audit('deny', 'denied');
+        throw new DeniedError(`${verdict.reason} Nothing was changed.`);
+      }
+      if (verdict.decision === 'allow') {
+        audit('allow', 'allowed');
+        return;
+      }
+    }
+
+    if (risk === 'modify' && cfg.hookActive) {
+      audit('ask', 'hook');
+      return;
+    }
+
+    if (!server.server.getClientCapabilities()?.elicitation) {
+      if (loaded.error) {
+        audit('deny', 'denied');
+        throw new DeniedError(`The policy file could not be read (${loaded.error}). Nothing was changed.`);
+      }
+      audit('runtime', 'allowed');
+      return;
+    }
+
+    let answer;
+    try {
+      answer = await server.server.elicitInput({
+        message: describeAction({
+          toolName: input.tool,
+          risk,
+          args: input.args,
+          reason: loaded.error ? `Policy file could not be read (${loaded.error}).` : undefined,
+        }),
+        requestedSchema: APPROVAL_FORM,
+      });
+    } catch (err) {
+      audit('runtime', 'unavailable');
+      throw new ApprovalUnavailableError(messageOf(err));
+    }
+
+    if (answer.action === 'accept' && answer.content?.approve === true) {
+      audit('ask', 'approved');
+      return;
+    }
+    audit('ask', 'declined');
+    throw new DeniedError('You declined this action. Nothing was changed.');
+  };
+}

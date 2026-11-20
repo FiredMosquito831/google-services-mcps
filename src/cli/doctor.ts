@@ -163,24 +163,46 @@ function checkToolNames(tally: Tally, id: string, toolMap: unknown): void {
     : `${id}: ${bad.length} tool name(s) lack the prefix ${prefix} or are longer than ${MAX_TOOL_NAME_LENGTH} characters, for example ${bad.slice(0, 3).join(', ')}`);
 }
 
+/** The literal prefix Claude Code puts before the plugin and server names (as in src/hook/pretooluse.ts). */
+const PLUGIN_TOOL_PREFIX = 'mcp__plugin_';
+
+/** Derives the full server prefix from the first tool-map entry, matching hook behavior. */
+function toolMapPrefix(toolMap: unknown): string | null {
+  const first = Array.isArray(toolMap) && isObject(toolMap[0]) ? toolMap[0].name : undefined;
+  if (typeof first !== 'string' || !first.startsWith(PLUGIN_TOOL_PREFIX)) return null;
+  const cut = first.indexOf('__', PLUGIN_TOOL_PREFIX.length);
+  return cut > PLUGIN_TOOL_PREFIX.length ? first.slice(0, cut + 2) : null;
+}
+
 /**
- * The plugin's tool-aliases.json (2.0.0, optional): every old tool name must point at a tool the plugin has, and every
- * key and value must carry the plugin prefix and fit Claude Code's limit. A folder without the file has no aliases,
- * which is what a plugin built before 2.0.0 has.
+ * The plugin's tool-aliases.json (2.0.0, optional): every old tool name must point at a tool the plugin has. Alias
+ * names are the server's short tool names, compared with the short suffix of each full tool-map name and checked
+ * against Claude Code's 64-character limit with the full prefix restored. A folder without the file has no aliases.
  */
 function checkToolAliases(tally: Tally, id: string, aliases: unknown, toolMap: unknown): void {
   if (!isObject(aliases) || !isObject(aliases.aliases)) {
     tally.check(false, `${id}: tool-aliases.json holds no "aliases" object`);
     return;
   }
-  const prefix = `mcp__plugin_${id}_`;
+  const fullPrefix = toolMapPrefix(toolMap);
+  if (fullPrefix === null) {
+    tally.check(false, `${id}: cannot derive full tool prefix from the first tool-map entry; alias names cannot be validated`);
+    return;
+  }
   const known = new Set(
-    Array.isArray(toolMap) ? toolMap.map((e) => (isObject(e) && typeof e.name === 'string' ? e.name : '')) : [],
+    Array.isArray(toolMap)
+      ? toolMap
+          .map((e) => (isObject(e) && typeof e.name === 'string' && e.name.startsWith(fullPrefix) ? e.name.slice(fullPrefix.length) : ''))
+          .filter((name) => name.length > 0)
+      : [],
   );
+  const shortName = (name: unknown): name is string =>
+    typeof name === 'string' &&
+    /^[a-z0-9_]+$/.test(name) &&
+    !name.startsWith('mcp__') &&
+    fullPrefix.length + name.length <= MAX_TOOL_NAME_LENGTH;
   const entries = Object.entries(aliases.aliases);
-  const bad = entries.filter(([from, to]) =>
-    typeof to !== 'string' || !to.startsWith(prefix) || to.length > MAX_TOOL_NAME_LENGTH || !known.has(to) ||
-    !from.startsWith(prefix) || from.length > MAX_TOOL_NAME_LENGTH || known.has(from));
+  const bad = entries.filter(([from, to]) => !shortName(from) || !shortName(to) || known.has(from) || !known.has(to));
   tally.check(bad.length === 0, bad.length === 0
     ? `${id}: tool-aliases.json has ${entries.length} old tool name(s), each pointing at a tool of this plugin`
     : `${id}: ${bad.length} of ${entries.length} old tool name(s) in tool-aliases.json are wrong, for example ${bad.slice(0, 3).map(([f, t]) => `${f} -> ${String(t)}`).join(', ')}`);

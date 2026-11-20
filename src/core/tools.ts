@@ -7,6 +7,7 @@ import {
   AccountChoiceError,
   AuthRequiredError,
   GrantExpiredError,
+  LOGIN_LIFETIME_NOTE,
   UnknownAccountError,
   forgetAdcClients,
   forgetServiceAccountClients,
@@ -15,12 +16,13 @@ import {
   isLoggedIn,
   loginSourceOf,
   removeUserTokens,
+  tokenStatus,
   type AuthKind,
 } from './auth.js';
 import { accountEmailOf, accountNames, listAccounts, otherGroupsWithAccount, setDefaultAccount } from './accounts.js';
 import { withAccount } from './account-context.js';
 import { revokeGrant, withIdentityScope } from './grant-check.js';
-import { createGate, type GateFn } from './approval.js';
+import { createGate, createRuntimeGate, type GateFn } from './approval.js';
 import { setToolAliasLookup } from './policy.js';
 import { aliasTransport } from './alias-transport.js';
 import { toolAliasesFrom, type ToolAliases } from './tool-aliases.js';
@@ -494,6 +496,7 @@ export async function runServer(opts: {
     list.filter((tool) => isGranted(tool, grant) && (tool.kind === 'read' || tool.kind === 'dynamic' || cfg.allowWrites));
 
   const gate: GateFn = createGate({ server, cfg });
+  const runtimeGate = createRuntimeGate({ server, cfg });
   const ctx: ToolContext = {
     gate,
     get grantedScopes() {
@@ -645,6 +648,11 @@ export async function runServer(opts: {
         annotations: runtimeHints('auth_setup_client'),
       },
       async (rawArgs: Record<string, unknown>): Promise<CallToolResult> => {
+        try {
+          await runtimeGate({ tool: 'auth_setup_client', kind: 'write', args: { force: rawArgs.force === true } });
+        } catch (err) {
+          return { isError: true, content: [{ type: 'text', text: describeError(err, group) }] };
+        }
         const args = ['setup-client', String(rawArgs.path)];
         if (rawArgs.force === true) args.push('--force');
         const res = await runGsmCommand(cliFile, args);
@@ -704,6 +712,11 @@ export async function runServer(opts: {
         }
         const profile: SignInProfile = rawArgs.profile === 'readwrite' || rawArgs.profile === 'full' ? rawArgs.profile : 'readonly';
         const include = Array.isArray(rawArgs.with) ? rawArgs.with.filter((p): p is string => typeof p === 'string' && optionalParts.includes(p)) : [];
+        try {
+          await runtimeGate({ tool: 'auth_login', kind: 'write', args: { method, profile, with: include } });
+        } catch (err) {
+          return { isError: true, content: [{ type: 'text', text: describeError(err, group) }] };
+        }
         return text(await signIn.start(profile, method, account, include));
       },
     );
@@ -727,7 +740,12 @@ export async function runServer(opts: {
         const state = signedIn
           ? `Signed in for "${group}"${via}. ${loaded} tool(s) loaded now, ${registered.size} registered in total.`
           : `Not signed in for "${group}". ${registered.size} tool(s) registered in total.`;
-        return text(`${state} Accounts: ${accountNames(group as string, cfg)}. ${signIn.describe()}${toolsetNote}`);
+        let lifetime = '';
+        if (source === 'oauth') {
+          const st = tokenStatus(group as AuthKind, cfg);
+          lifetime = st.refreshWarning ? ` Warning: ${st.refreshWarning}` : ` ${LOGIN_LIFETIME_NOTE}`;
+        }
+        return text(`${state} Accounts: ${accountNames(group as string, cfg)}. ${signIn.describe()}${toolsetNote}${lifetime}`);
       },
     );
   }
@@ -747,6 +765,11 @@ export async function runServer(opts: {
         annotations: runtimeHints('auth_setup_service_account'),
       },
       async (rawArgs: Record<string, unknown>): Promise<CallToolResult> => {
+        try {
+          await runtimeGate({ tool: 'auth_setup_service_account', kind: 'write', args: { remove: rawArgs.remove === true } });
+        } catch (err) {
+          return { isError: true, content: [{ type: 'text', text: describeError(err, group) }] };
+        }
         if (rawArgs.remove === true) {
           const res = await runGsmCommand(cliFile, ['setup-service-account', '--remove']);
           forgetServiceAccountClients();
@@ -820,6 +843,11 @@ export async function runServer(opts: {
       },
       async (rawArgs: Record<string, unknown>): Promise<CallToolResult> => {
         try {
+          await runtimeGate({ tool: 'account_set_default', kind: 'write', args: { email: String(rawArgs.email) } });
+        } catch (err) {
+          return { isError: true, content: [{ type: 'text', text: describeError(err, group) }] };
+        }
+        try {
           setDefaultAccount(group as string, String(rawArgs.email), cfg);
           return text(`The default account for ${group} is now ${String(rawArgs.email)}.`);
         } catch (err) {
@@ -838,6 +866,11 @@ export async function runServer(opts: {
       },
       async (rawArgs: Record<string, unknown>): Promise<CallToolResult> => {
         const email = String(rawArgs.email);
+        try {
+          await runtimeGate({ tool: 'account_remove', kind: 'destructive', args: { email } });
+        } catch (err) {
+          return { isError: true, content: [{ type: 'text', text: describeError(err, group) }] };
+        }
         // A revoke at Google would also end this account's sign-in for the other groups, so it runs only when no other
         // group has the account (accounts.json and file names only; no token is read for this).
         const shared = otherGroupsWithAccount(email, group as string, cfg);
@@ -879,21 +912,32 @@ export async function runServer(opts: {
   }
 
   // Every server has a health tool. It is read-only and needs no login. It asks Google only when live is true.
+  const healthHasAccounts = group !== undefined && ACCOUNT_GROUPS.has(group);
   server.registerTool(
     'health',
     {
       title: 'Server health',
       description:
         'Reports this server: its version, its login state and the account it belongs to (as recorded at login), how many tools are registered, and whether writes are allowed. With live: true it also asks Google whether the login still works. It changes nothing.',
-      inputSchema: { live: z.boolean().optional().describe('Ask Google whether the login still works. A network call. Default false.') },
+      inputSchema: {
+        live: z.boolean().optional().describe('Ask Google whether the login still works. A network call. Default false.'),
+        ...(healthHasAccounts
+          ? { account: z.string().optional().describe('Signed-in account email to check (default: the group default account).') }
+          : {}),
+      },
       annotations: runtimeHints('health'),
     },
     async (rawArgs: Record<string, unknown>): Promise<CallToolResult> => {
+      const account =
+        healthHasAccounts && typeof rawArgs.account === 'string' && rawArgs.account.trim() !== ''
+          ? rawArgs.account.trim().toLowerCase()
+          : undefined;
       const report = await serverHealth({
         server: opts.name,
         version: opts.version,
         group,
         cfg,
+        ...(account !== undefined ? { account } : {}),
         registered: registered.size,
         hidden: defined.length - registered.size,
         writesAllowed: cfg.allowWrites,

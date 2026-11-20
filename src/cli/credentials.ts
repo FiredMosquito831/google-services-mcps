@@ -1,4 +1,4 @@
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { ensureTokenDir } from '../core/acl.js';
 import {
@@ -8,14 +8,17 @@ import {
   listAccounts,
   otherGroupsWithAccount,
   removeAccount,
+  restoreAccountBackup,
   setDefaultAccount,
 } from '../core/accounts.js';
 import {
   ADMIN_SCOPES,
   adminScopeFileFor,
   adcSourceFor,
+  LOGIN_LIFETIME_NOTE,
   readAdminScopeFile,
   readServiceAccountFile,
+  refreshExpiryInfo,
   serviceAccountFileFor,
   serviceAccountScopesFor,
   serviceAccountServers,
@@ -26,7 +29,7 @@ import { checkGrant, checkKeyRestrictions, checkServiceAccountServers, revokeGra
 import { loadConfig, type RuntimeConfig } from '../core/config.js';
 import { ALL_GROUPS, OAUTH_GROUPS, type CliGroup } from './args.js';
 import { backupFile } from './fsutil.js';
-import { readSecretText, secretFileExists, secretNameOf, storeFor, writeSecretText } from '../core/secret-files.js';
+import { readSecretText, secretFileExists, secretNameOf, storeFor, storedSecretNames, writeSecretText } from '../core/secret-files.js';
 import { postureLine } from './posture.js';
 import type { Output } from './report.js';
 import { UsageError } from './types.js';
@@ -75,6 +78,8 @@ export interface StoredToken {
   expiry_date?: number;
   refresh_token?: string;
   access_token?: string;
+  login_at?: number;
+  refresh_token_expires_at?: number;
 }
 
 /**
@@ -196,6 +201,15 @@ export function runStatus(out: Output, env: NodeJS.ProcessEnv = process.env): nu
       out.log(`    token file: ${file}`);
       out.log(`    expires: ${formatExpiry(token.expiry_date)}`);
       out.log(`    refresh token: ${token.refresh_token ? 'yes' : 'no'}`);
+      if (token.refresh_token) {
+        const refresh = refreshExpiryInfo(token);
+        if (refresh.refreshTokenExpiresAt) {
+          out.log(`    refresh token expires: ${refresh.refreshTokenExpiresAt}`);
+          if (refresh.refreshWarning) out.log(`    WARNING: ${refresh.refreshWarning}`);
+        } else {
+          out.log(`    login lifetime: ${LOGIN_LIFETIME_NOTE}`);
+        }
+      }
       out.log(`    scopes (${scopes.length}):`);
       for (const scope of scopes) out.log(`      ${scope}`);
       out.log(`    ${postureLine(scopes, env)}`);
@@ -414,9 +428,70 @@ export function runSetupClient(sourceArg: string, force: boolean, out: Output): 
   ensureTokenDir(cfg.tokenDir);
   const backup = exists ? backupCurrentClient(cfg, dest) : undefined;
   writeSecretText(cfg, dest, text);
+  const readBack = readSecretText(cfg, dest);
+  if (readBack !== text) {
+    if (backup && storeFor(cfg.tokenDir) === 'file' && existsSync(backup)) {
+      writeSecretText(cfg, dest, readFileSync(backup, 'utf8'));
+    }
+    throw new Error(`could not verify saved OAuth client at ${dest}`);
+  }
   const where = storeFor(cfg.tokenDir) === 'file' ? dest : `the ${storeFor(cfg.tokenDir)} store`;
   out.log(`OAuth client saved: ${where} (mode 0600 for files). The client secret was not printed.`);
   if (backup) out.log(`backup: ${backup}`);
   out.log(`Next: node gsm.mjs login ${OAUTH_GROUPS.join(' | ')}`);
+  return 0;
+}
+
+/**
+ * Restores the most recent client_secret.bak-* backup saved before a previous setup-client --force replacement.
+ * Works with both plain files and an OS secret store without printing secret values.
+ */
+export function runRollbackClient(out: Output, env: NodeJS.ProcessEnv = process.env): number {
+  const cfg = loadConfig(env);
+  const backend = storeFor(cfg.tokenDir, env);
+  const candidates: string[] = [];
+  if (existsSync(cfg.tokenDir)) {
+    for (const name of readdirSync(cfg.tokenDir)) {
+      if (/^client_secret\.(json\.gsm-backup-[\w.-]+|bak-[\w.-]+\.json)$/.test(name)) candidates.push(join(cfg.tokenDir, name));
+    }
+  }
+  if (backend !== 'file') {
+    for (const name of storedSecretNames(cfg.tokenDir)) {
+      if (/^client_secret\.bak-[\w.-]+$/.test(name)) candidates.push(join(cfg.tokenDir, `${name}.json`));
+    }
+  }
+  const unique = [...new Set(candidates)].sort().reverse();
+  if (unique.length === 0) {
+    throw new UsageError(`no OAuth client backup found in ${cfg.tokenDir}`);
+  }
+  const latest = unique[0]!;
+  const backupText = readSecretText(cfg, latest, env);
+  if (backupText === undefined) throw new UsageError(`backup could not be read: ${latest}`);
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(backupText);
+  } catch {
+    throw new Error(`backup is not valid JSON: ${latest}`);
+  }
+  const block =
+    typeof parsed === 'object' && parsed !== null ? (parsed as { installed?: { client_id?: unknown; client_secret?: unknown } }).installed : undefined;
+  if (!block || typeof block.client_id !== 'string' || typeof block.client_secret !== 'string') {
+    throw new Error(`backup is not a Desktop OAuth client: ${latest}`);
+  }
+  const dest = cfg.clientSecretFile;
+  const previous = secretFileExists(cfg, dest, env) ? backupCurrentClient(cfg, dest) : undefined;
+  writeSecretText(cfg, dest, backupText, env);
+  out.log(`OAuth client restored from ${latest} (the client secret was not printed).`);
+  if (previous) out.log(`previous client backed up as: ${previous}`);
+  return 0;
+}
+
+/** Restores the rolling token backup saved before a previous re-login or --replace for an account. */
+export function runRollbackAccount(group: CliGroup, account: string | undefined, out: Output, env: NodeJS.ProcessEnv = process.env): number {
+  const cfg = loadConfig(env);
+  const email = account ?? defaultAccount(group, cfg);
+  if (email === undefined) throw new UsageError(`${group}: no signed-in account found to roll back`);
+  const restored = restoreAccountBackup(group, email, cfg);
+  out.log(`${group} ${email}: restored previous token (${restored}; token values are not printed).`);
   return 0;
 }

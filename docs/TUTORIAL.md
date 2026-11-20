@@ -98,6 +98,7 @@ Run `npx google-services-mcps` with no arguments in a terminal (or `npx google-s
 | `--allow-writes` | Codex, OpenCode and Antigravity: turns on write tools (`GSM_ALLOW_WRITES=true`). For Claude Code this flag is not applied. Use the plugin option instead (section 6.1). |
 | `--confirmation <every-change\|destructive-only\|off>` | Codex, OpenCode and Antigravity: sets `GSM_CONFIRMATION`. For Claude Code this flag is not applied. Use the plugin option instead. |
 | `--toolset <all\|google\|curated>` | Which tools each server lists. Codex, OpenCode and Antigravity: sets `GSM_TOOLSET`. Claude Code: sets the plugin option `toolset`. Only when given; without it every tool is listed. For Antigravity the install warns when a product can list more than 100 tools (a reported Antigravity limit, not verified). |
+| `--token-dir <dir>` | Token directory (`GSM_TOKEN_DIR`) for Codex, OpenCode and Antigravity (`install` only; Claude Code uses the `token_dir` plugin option). |
 | `--servers <a,b>` | Keeps only these servers from the chosen products. Each product has one server with the same name. |
 
 **Always run `--dry-run` first.** It shows what would change. Example output, trimmed, for Codex (checked):
@@ -305,7 +306,7 @@ Do not commit a project or local `opencode.json` for a team. It contains absolut
 
 ### 6.4 Antigravity (agy)
 
-Antigravity supports **global scope only**.
+`gsm` supports **global scope only** for Antigravity (`agy` 1.5.12 has no CLI scope flag and scratch workspace probing of `<workspace>/.agents/mcp_config.json` was negative).
 
 ```
 npx google-services-mcps install --agent agy --plugin gmail
@@ -746,6 +747,7 @@ Run `npx google-services-mcps --help` for the full text. Each flag in each comma
 | `--allow-writes` | off | Codex, OpenCode and Antigravity only. Sets `GSM_ALLOW_WRITES=true`. Not applied to Claude Code. |
 | `--confirmation every-change\|destructive-only\|off` | `every-change` | Codex, OpenCode and Antigravity only. Sets `GSM_CONFIRMATION`. Not applied to Claude Code. |
 | `--toolset all\|google\|curated` | `all` | Sets `GSM_TOOLSET` for Codex, OpenCode and Antigravity, and the plugin option `toolset` for Claude Code. Written only when given. |
+| `--token-dir <dir>` | none | `install` only: sets `GSM_TOKEN_DIR` for Codex, OpenCode and Antigravity (Claude Code uses the `token_dir` plugin option; refused with `--agent claude` or `--agent all`). |
 | `--marketplace <path or owner/repo>` | this checkout | Claude Code only. |
 | `--dry-run` | off | Prints the plan and writes nothing. |
 | `--home <dir>` | your user folder | Another home folder. Not for `claude`. |

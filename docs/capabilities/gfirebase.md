@@ -72,7 +72,7 @@ The tools that match Google's official MCP server for this product (https://gith
 | `auth_login` | write | Sign in to Google | (none) |
 | `auth_setup_client` | write | Save the Google OAuth client | (none) |
 | `auth_status` | read | Sign-in status | (none) |
-| `firebase_get_sdk_config` | read | Get a Firebase app's SDK configuration | cloud-platform, cloud-platform.read-only |
+| `firebase_get_sdk_config` | read | Get a Firebase app's SDK configuration | cloud-platform, cloud-platform.read-only, +2 more |
 | `firestore_get_document` | read | Get a Firestore document | cloud-platform, datastore |
 | `firestore_list_documents` | read | List Firestore documents | cloud-platform, datastore |
 | `firestore_query_collection` | read | Query a Firestore collection | cloud-platform, datastore |
@@ -125,7 +125,7 @@ The tools that match Google's official MCP server for this product (https://gith
 | `fireba_app_attest_config_patch` | write | firebaseappcheck.projects.apps.appAttestConfig.patch | cloud-platform, firebase |
 | `fireba_apps_attest_attestation` | write | firebaseappcheck.projects.apps.exchangeAppAttestAttestation | cloud-platform, firebase |
 | `fireba_apps_integrity_challenge` | write | firebaseappcheck.projects.apps.generatePlayIntegrityChallenge | cloud-platform, firebase |
-| `fireba_available_projects_list` | read | firebase.availableProjects.list | cloud-platform, cloud-platform.read-only |
+| `fireba_available_projects_list` | read | firebase.availableProjects.list | cloud-platform, cloud-platform.read-only, +2 more |
 | `fireba_clients_attest_assertion` | write | firebaseappcheck.oauthClients.exchangeAppAttestAssertion | cloud-platform, firebase |
 | `fireba_clients_attest_challenge` | write | firebaseappcheck.oauthClients.generateAppAttestChallenge | cloud-platform, firebase |
 | `fireba_connectors_execute_query` | write | firebasedataconnect.projects.locations.services.connectors.executeQuery | cloud-platform |
@@ -135,37 +135,37 @@ The tools that match Google's official MCP server for this product (https://gith
 | `fireba_releases_reports_delete` | destructive | firebaseappdistribution.projects.apps.releases.feedbackReports.delete | cloud-platform |
 | `firebase_add_google_analytics` | write | firebase.projects.addGoogleAnalytics | cloud-platform, firebase |
 | `firebase_android_apps_create` | write | firebase.projects.androidApps.create | cloud-platform, firebase |
-| `firebase_android_apps_get` | read | firebase.projects.androidApps.get | cloud-platform, cloud-platform.read-only |
-| `firebase_android_apps_list` | read | firebase.projects.androidApps.list | cloud-platform, cloud-platform.read-only |
+| `firebase_android_apps_get` | read | firebase.projects.androidApps.get | cloud-platform, cloud-platform.read-only, +2 more |
+| `firebase_android_apps_list` | read | firebase.projects.androidApps.list | cloud-platform, cloud-platform.read-only, +2 more |
 | `firebase_android_apps_patch` | write | firebase.projects.androidApps.patch | cloud-platform, firebase |
 | `firebase_android_apps_remove` | destructive | firebase.projects.androidApps.remove | cloud-platform, firebase |
-| `firebase_android_apps_sha_list` | read | firebase.projects.androidApps.sha.list | cloud-platform, cloud-platform.read-only |
+| `firebase_android_apps_sha_list` | read | firebase.projects.androidApps.sha.list | cloud-platform, cloud-platform.read-only, +2 more |
 | `firebase_android_apps_undelete` | write | firebase.projects.androidApps.undelete | cloud-platform, firebase |
-| `firebase_apps_get_config` | read | firebase.projects.androidApps.getConfig | cloud-platform, cloud-platform.read-only |
+| `firebase_apps_get_config` | read | firebase.projects.androidApps.getConfig | cloud-platform, cloud-platform.read-only, +2 more |
 | `firebase_apps_sha_create` | write | firebase.projects.androidApps.sha.create | cloud-platform, firebase |
 | `firebase_apps_sha_delete` | destructive | firebase.projects.androidApps.sha.delete | cloud-platform, firebase |
-| `firebase_get_admin_sdk_config` | read | firebase.projects.getAdminSdkConfig | cloud-platform, cloud-platform.read-only |
-| `firebase_get_analytics_details` | read | firebase.projects.getAnalyticsDetails | cloud-platform, cloud-platform.read-only |
+| `firebase_get_admin_sdk_config` | read | firebase.projects.getAdminSdkConfig | cloud-platform, cloud-platform.read-only, +2 more |
+| `firebase_get_analytics_details` | read | firebase.projects.getAnalyticsDetails | cloud-platform, cloud-platform.read-only, +2 more |
 | `firebase_ios_apps_create` | write | firebase.projects.iosApps.create | cloud-platform, firebase |
-| `firebase_ios_apps_get_config` | read | firebase.projects.iosApps.getConfig | cloud-platform, cloud-platform.read-only |
+| `firebase_ios_apps_get_config` | read | firebase.projects.iosApps.getConfig | cloud-platform, cloud-platform.read-only, +2 more |
 | `firebase_ios_apps_patch` | write | firebase.projects.iosApps.patch | cloud-platform, firebase |
 | `firebase_ios_apps_remove` | destructive | firebase.projects.iosApps.remove | cloud-platform, firebase |
 | `firebase_ios_apps_undelete` | write | firebase.projects.iosApps.undelete | cloud-platform, firebase |
 | `firebase_location_finalize` | write | firebase.projects.defaultLocation.finalize | cloud-platform, firebase |
-| `firebase_locations_list` | read | firebase.projects.availableLocations.list | cloud-platform, cloud-platform.read-only |
-| `firebase_operations_get` | read | firebase.operations.get | cloud-platform, cloud-platform.read-only |
+| `firebase_locations_list` | read | firebase.projects.availableLocations.list | cloud-platform, cloud-platform.read-only, +2 more |
+| `firebase_operations_get` | read | firebase.operations.get | cloud-platform, cloud-platform.read-only, +2 more |
 | `firebase_projects_add_firebase` | write | firebase.projects.addFirebase | cloud-platform, firebase |
-| `firebase_projects_get` | read | firebase.projects.get | cloud-platform, cloud-platform.read-only |
-| `firebase_projects_ios_apps_get` | read | firebase.projects.iosApps.get | cloud-platform, cloud-platform.read-only |
-| `firebase_projects_ios_apps_list` | read | firebase.projects.iosApps.list | cloud-platform, cloud-platform.read-only |
-| `firebase_projects_list` | read | firebase.projects.list | cloud-platform, cloud-platform.read-only |
+| `firebase_projects_get` | read | firebase.projects.get | cloud-platform, cloud-platform.read-only, +2 more |
+| `firebase_projects_ios_apps_get` | read | firebase.projects.iosApps.get | cloud-platform, cloud-platform.read-only, +2 more |
+| `firebase_projects_ios_apps_list` | read | firebase.projects.iosApps.list | cloud-platform, cloud-platform.read-only, +2 more |
+| `firebase_projects_list` | read | firebase.projects.list | cloud-platform, cloud-platform.read-only, +2 more |
 | `firebase_projects_patch` | write | firebase.projects.patch | cloud-platform, firebase |
-| `firebase_projects_search_apps` | read | firebase.projects.searchApps | cloud-platform, cloud-platform.read-only |
-| `firebase_projects_web_apps_get` | read | firebase.projects.webApps.get | cloud-platform, cloud-platform.read-only |
-| `firebase_projects_web_apps_list` | read | firebase.projects.webApps.list | cloud-platform, cloud-platform.read-only |
+| `firebase_projects_search_apps` | read | firebase.projects.searchApps | cloud-platform, cloud-platform.read-only, +2 more |
+| `firebase_projects_web_apps_get` | read | firebase.projects.webApps.get | cloud-platform, cloud-platform.read-only, +2 more |
+| `firebase_projects_web_apps_list` | read | firebase.projects.webApps.list | cloud-platform, cloud-platform.read-only, +2 more |
 | `firebase_remove_analytics` | write | firebase.projects.removeAnalytics | cloud-platform, firebase |
 | `firebase_web_apps_create` | write | firebase.projects.webApps.create | cloud-platform, firebase |
-| `firebase_web_apps_get_config` | read | firebase.projects.webApps.getConfig | cloud-platform, cloud-platform.read-only |
+| `firebase_web_apps_get_config` | read | firebase.projects.webApps.getConfig | cloud-platform, cloud-platform.read-only, +2 more |
 | `firebase_web_apps_patch` | write | firebase.projects.webApps.patch | cloud-platform, firebase |
 | `firebase_web_apps_remove` | destructive | firebase.projects.webApps.remove | cloud-platform, firebase |
 | `firebase_web_apps_undelete` | write | firebase.projects.webApps.undelete | cloud-platform, firebase |
@@ -276,8 +276,8 @@ The tools that match Google's official MCP server for this product (https://gith
 | `firebaseda_instances_create` | write | firebasedatabase.projects.locations.instances.create | cloud-platform, firebase |
 | `firebaseda_instances_delete` | destructive | firebasedatabase.projects.locations.instances.delete | cloud-platform, firebase |
 | `firebaseda_instances_disable` | destructive | firebasedatabase.projects.locations.instances.disable | cloud-platform, firebase |
-| `firebaseda_instances_get` | read | firebasedatabase.projects.locations.instances.get | cloud-platform, cloud-platform.read-only |
-| `firebaseda_instances_list` | read | firebasedatabase.projects.locations.instances.list | cloud-platform, cloud-platform.read-only |
+| `firebaseda_instances_get` | read | firebasedatabase.projects.locations.instances.get | cloud-platform, cloud-platform.read-only, +2 more |
+| `firebaseda_instances_list` | read | firebasedatabase.projects.locations.instances.list | cloud-platform, cloud-platform.read-only, +2 more |
 | `firebaseda_instances_reenable` | write | firebasedatabase.projects.locations.instances.reenable | cloud-platform, firebase |
 | `firebaseda_instances_undelete` | write | firebasedatabase.projects.locations.instances.undelete | cloud-platform, firebase |
 | `firebaseda_introspect_graphql` | write | firebasedataconnect.projects.locations.services.introspectGraphql | cloud-platform |
@@ -304,17 +304,17 @@ The tools that match Google's official MCP server for this product (https://gith
 | `firebaseml_operations_cancel` | destructive | firebaseml.operations.cancel | cloud-platform |
 | `firebaseml_operations_delete` | destructive | firebaseml.operations.delete | cloud-platform |
 | `firebaseml_operations_list` | read | firebaseml.operations.list | cloud-platform |
-| `firebaser_projects_releases_get` | read | firebaserules.projects.releases.get | cloud-platform, firebase |
-| `firebaser_projects_rulesets_get` | read | firebaserules.projects.rulesets.get | cloud-platform, firebase |
-| `firebaseru_get_executable` | read | firebaserules.projects.releases.getExecutable | cloud-platform, firebase |
-| `firebaseru_projects_test` | read | firebaserules.projects.test | cloud-platform, firebase |
+| `firebaser_projects_releases_get` | read | firebaserules.projects.releases.get | cloud-platform, firebase, +1 more |
+| `firebaser_projects_rulesets_get` | read | firebaserules.projects.rulesets.get | cloud-platform, firebase, +1 more |
+| `firebaseru_get_executable` | read | firebaserules.projects.releases.getExecutable | cloud-platform, firebase, +1 more |
+| `firebaseru_projects_test` | read | firebaserules.projects.test | cloud-platform, firebase, +1 more |
 | `firebaseru_releases_create` | write | firebaserules.projects.releases.create | cloud-platform, firebase |
 | `firebaseru_releases_delete` | destructive | firebaserules.projects.releases.delete | cloud-platform, firebase |
-| `firebaseru_releases_list` | read | firebaserules.projects.releases.list | cloud-platform, firebase |
+| `firebaseru_releases_list` | read | firebaserules.projects.releases.list | cloud-platform, firebase, +1 more |
 | `firebaseru_releases_patch` | write | firebaserules.projects.releases.patch | cloud-platform, firebase |
 | `firebaseru_rulesets_create` | write | firebaserules.projects.rulesets.create | cloud-platform, firebase |
 | `firebaseru_rulesets_delete` | destructive | firebaserules.projects.rulesets.delete | cloud-platform, firebase |
-| `firebaseru_rulesets_list` | read | firebaserules.projects.rulesets.list | cloud-platform, firebase |
+| `firebaseru_rulesets_list` | read | firebaserules.projects.rulesets.list | cloud-platform, firebase, +1 more |
 | `firebases_default_bucket_create` | write | firebasestorage.projects.defaultBucket.create | cloud-platform, firebase |
 | `firebases_delete_default_bucket` | destructive | firebasestorage.projects.deleteDefaultBucket | cloud-platform, firebase |
 | `firebases_projects_buckets_list` | read | firebasestorage.projects.buckets.list | cloud-platform, firebase |

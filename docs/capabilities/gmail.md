@@ -46,19 +46,19 @@ The tools that match Google's official MCP server for this product (https://deve
 | `auth_login` | write | Sign in to Google | (none) |
 | `auth_setup_client` | write | Save the Google OAuth client | (none) |
 | `auth_status` | read | Sign-in status | (none) |
-| `gmail_create_draft` | write | Create Gmail draft | https://mail.google.com/, gmail.compose |
-| `gmail_create_label` | write | Create Gmail label | https://mail.google.com/, gmail.labels |
-| `gmail_get_attachment` | read | Get Gmail attachment | https://mail.google.com/, gmail.modify |
-| `gmail_get_message` | read | Get Gmail message | https://mail.google.com/, gmail.metadata |
-| `gmail_get_thread` | read | Get Gmail thread | https://mail.google.com/, gmail.modify |
+| `gmail_create_draft` | write | Create Gmail draft | https://mail.google.com/, gmail.compose, +1 more |
+| `gmail_create_label` | write | Create Gmail label | https://mail.google.com/, gmail.labels, +1 more |
+| `gmail_get_attachment` | read | Get Gmail attachment | https://mail.google.com/, gmail.modify, +1 more |
+| `gmail_get_message` | read | Get Gmail message | https://mail.google.com/, gmail.metadata, +2 more |
+| `gmail_get_thread` | read | Get Gmail thread | https://mail.google.com/, gmail.modify, +1 more |
 | `gmail_label` | write | Add Gmail labels | https://mail.google.com/, gmail.modify |
-| `gmail_list_drafts` | read | List Gmail drafts | https://mail.google.com/, gmail.compose |
-| `gmail_list_labels` | read | List Gmail labels | https://mail.google.com/, gmail.labels |
+| `gmail_list_drafts` | read | List Gmail drafts | https://mail.google.com/, gmail.compose, +2 more |
+| `gmail_list_labels` | read | List Gmail labels | https://mail.google.com/, gmail.labels, +3 more |
 | `gmail_reply` | destructive | Reply to a Gmail message | https://mail.google.com/, gmail.modify |
-| `gmail_search` | read | Search Gmail | https://mail.google.com/, gmail.metadata |
-| `gmail_search_threads` | read | Search Gmail threads | https://mail.google.com/, gmail.metadata |
-| `gmail_send` | destructive | Send Gmail message | https://mail.google.com/, gmail.compose |
-| `gmail_send_draft` | destructive | Send Gmail draft | https://mail.google.com/, gmail.compose |
+| `gmail_search` | read | Search Gmail | https://mail.google.com/, gmail.metadata, +2 more |
+| `gmail_search_threads` | read | Search Gmail threads | https://mail.google.com/, gmail.metadata, +2 more |
+| `gmail_send` | destructive | Send Gmail message | https://mail.google.com/, gmail.compose, +1 more |
+| `gmail_send_draft` | destructive | Send Gmail draft | https://mail.google.com/, gmail.compose, +1 more |
 | `gmail_trash` | destructive | Move to Gmail Trash | https://mail.google.com/, gmail.modify |
 | `gmail_unlabel` | write | Remove Gmail labels | https://mail.google.com/, gmail.modify |
 | `gmail_untrash` | write | Restore from Gmail Trash | https://mail.google.com/, gmail.modify |
@@ -73,59 +73,59 @@ The tools that match Google's official MCP server for this product (https://deve
 | `gmail_send_as_smime_info_set_default` | write | gmail.users.settings.sendAs.smimeInfo.setDefault | gmail.settings.basic, gmail.settings.sharing |
 | `gmail_settings_addresses_create` | destructive | gmail.users.settings.forwardingAddresses.create | gmail.settings.sharing |
 | `gmail_settings_addresses_delete` | destructive | gmail.users.settings.forwardingAddresses.delete | gmail.settings.sharing |
-| `gmail_settings_addresses_list` | read | gmail.users.settings.forwardingAddresses.list | https://mail.google.com/, gmail.modify |
+| `gmail_settings_addresses_list` | read | gmail.users.settings.forwardingAddresses.list | https://mail.google.com/, gmail.modify, +2 more |
 | `gmail_settings_cse_identities_create` | write | gmail.users.settings.cse.identities.create | gmail.settings.basic, gmail.settings.sharing |
 | `gmail_settings_cse_identities_delete` | destructive | gmail.users.settings.cse.identities.delete | gmail.settings.basic, gmail.settings.sharing |
-| `gmail_settings_cse_identities_list` | read | gmail.users.settings.cse.identities.list | https://mail.google.com/, gmail.modify |
+| `gmail_settings_cse_identities_list` | read | gmail.users.settings.cse.identities.list | https://mail.google.com/, gmail.modify, +3 more |
 | `gmail_settings_cse_identities_patch` | write | gmail.users.settings.cse.identities.patch | gmail.settings.basic, gmail.settings.sharing |
 | `gmail_settings_cse_keypairs_create` | write | gmail.users.settings.cse.keypairs.create | gmail.settings.basic, gmail.settings.sharing |
 | `gmail_settings_cse_keypairs_disable` | destructive | gmail.users.settings.cse.keypairs.disable | gmail.settings.basic, gmail.settings.sharing |
 | `gmail_settings_cse_keypairs_enable` | write | gmail.users.settings.cse.keypairs.enable | gmail.settings.basic, gmail.settings.sharing |
 | `gmail_settings_cse_keypairs_obliterate` | destructive | gmail.users.settings.cse.keypairs.obliterate | gmail.settings.basic, gmail.settings.sharing |
-| `gmail_settings_forwarding_addresses_get` | read | gmail.users.settings.forwardingAddresses.get | https://mail.google.com/, gmail.modify |
-| `gmail_settings_get_auto_forwarding` | read | gmail.users.settings.getAutoForwarding | https://mail.google.com/, gmail.modify |
-| `gmail_settings_send_as_smime_info_get` | read | gmail.users.settings.sendAs.smimeInfo.get | https://mail.google.com/, gmail.modify |
-| `gmail_settings_send_as_smime_info_list` | read | gmail.users.settings.sendAs.smimeInfo.list | https://mail.google.com/, gmail.modify |
+| `gmail_settings_forwarding_addresses_get` | read | gmail.users.settings.forwardingAddresses.get | https://mail.google.com/, gmail.modify, +2 more |
+| `gmail_settings_get_auto_forwarding` | read | gmail.users.settings.getAutoForwarding | https://mail.google.com/, gmail.modify, +2 more |
+| `gmail_settings_send_as_smime_info_get` | read | gmail.users.settings.sendAs.smimeInfo.get | https://mail.google.com/, gmail.modify, +3 more |
+| `gmail_settings_send_as_smime_info_list` | read | gmail.users.settings.sendAs.smimeInfo.list | https://mail.google.com/, gmail.modify, +3 more |
 | `gmail_settings_update_auto_forwarding` | destructive | gmail.users.settings.updateAutoForwarding | gmail.settings.sharing |
-| `gmail_users_drafts_delete` | destructive | gmail.users.drafts.delete | https://mail.google.com/, gmail.addons.current.action.compose |
-| `gmail_users_drafts_get` | read | gmail.users.drafts.get | https://mail.google.com/, gmail.compose |
-| `gmail_users_drafts_list` | read | gmail.users.drafts.list | https://mail.google.com/, gmail.compose |
-| `gmail_users_get_profile` | read | gmail.users.getProfile | https://mail.google.com/, gmail.compose |
-| `gmail_users_history_list` | read | gmail.users.history.list | https://mail.google.com/, gmail.metadata |
-| `gmail_users_labels_create` | write | gmail.users.labels.create | https://mail.google.com/, gmail.labels |
-| `gmail_users_labels_delete` | destructive | gmail.users.labels.delete | https://mail.google.com/, gmail.labels |
-| `gmail_users_labels_get` | read | gmail.users.labels.get | https://mail.google.com/, gmail.labels |
-| `gmail_users_labels_list` | read | gmail.users.labels.list | https://mail.google.com/, gmail.labels |
-| `gmail_users_labels_patch` | write | gmail.users.labels.patch | https://mail.google.com/, gmail.labels |
-| `gmail_users_labels_update` | write | gmail.users.labels.update | https://mail.google.com/, gmail.labels |
-| `gmail_users_messages_attachments_get` | read | gmail.users.messages.attachments.get | https://mail.google.com/, gmail.addons.current.message.action |
+| `gmail_users_drafts_delete` | destructive | gmail.users.drafts.delete | https://mail.google.com/, gmail.addons.current.action.compose, +2 more |
+| `gmail_users_drafts_get` | read | gmail.users.drafts.get | https://mail.google.com/, gmail.compose, +2 more |
+| `gmail_users_drafts_list` | read | gmail.users.drafts.list | https://mail.google.com/, gmail.compose, +2 more |
+| `gmail_users_get_profile` | read | gmail.users.getProfile | https://mail.google.com/, gmail.compose, +3 more |
+| `gmail_users_history_list` | read | gmail.users.history.list | https://mail.google.com/, gmail.metadata, +2 more |
+| `gmail_users_labels_create` | write | gmail.users.labels.create | https://mail.google.com/, gmail.labels, +1 more |
+| `gmail_users_labels_delete` | destructive | gmail.users.labels.delete | https://mail.google.com/, gmail.labels, +1 more |
+| `gmail_users_labels_get` | read | gmail.users.labels.get | https://mail.google.com/, gmail.labels, +3 more |
+| `gmail_users_labels_list` | read | gmail.users.labels.list | https://mail.google.com/, gmail.labels, +3 more |
+| `gmail_users_labels_patch` | write | gmail.users.labels.patch | https://mail.google.com/, gmail.labels, +1 more |
+| `gmail_users_labels_update` | write | gmail.users.labels.update | https://mail.google.com/, gmail.labels, +1 more |
+| `gmail_users_messages_attachments_get` | read | gmail.users.messages.attachments.get | https://mail.google.com/, gmail.addons.current.message.action, +3 more |
 | `gmail_users_messages_batch_delete` | destructive | gmail.users.messages.batchDelete | https://mail.google.com/ |
 | `gmail_users_messages_batch_modify` | write | gmail.users.messages.batchModify | https://mail.google.com/, gmail.modify |
 | `gmail_users_messages_delete` | destructive | gmail.users.messages.delete | https://mail.google.com/ |
-| `gmail_users_messages_get` | read | gmail.users.messages.get | https://mail.google.com/, gmail.addons.current.message.action |
-| `gmail_users_messages_list` | read | gmail.users.messages.list | https://mail.google.com/, gmail.metadata |
+| `gmail_users_messages_get` | read | gmail.users.messages.get | https://mail.google.com/, gmail.addons.current.message.action, +5 more |
+| `gmail_users_messages_list` | read | gmail.users.messages.list | https://mail.google.com/, gmail.metadata, +2 more |
 | `gmail_users_messages_modify` | write | gmail.users.messages.modify | https://mail.google.com/, gmail.modify |
 | `gmail_users_messages_trash` | destructive | gmail.users.messages.trash | https://mail.google.com/, gmail.modify |
 | `gmail_users_messages_untrash` | write | gmail.users.messages.untrash | https://mail.google.com/, gmail.modify |
-| `gmail_users_settings_cse_identities_get` | read | gmail.users.settings.cse.identities.get | https://mail.google.com/, gmail.modify |
-| `gmail_users_settings_cse_keypairs_get` | read | gmail.users.settings.cse.keypairs.get | https://mail.google.com/, gmail.modify |
-| `gmail_users_settings_cse_keypairs_list` | read | gmail.users.settings.cse.keypairs.list | https://mail.google.com/, gmail.modify |
+| `gmail_users_settings_cse_identities_get` | read | gmail.users.settings.cse.identities.get | https://mail.google.com/, gmail.modify, +3 more |
+| `gmail_users_settings_cse_keypairs_get` | read | gmail.users.settings.cse.keypairs.get | https://mail.google.com/, gmail.modify, +3 more |
+| `gmail_users_settings_cse_keypairs_list` | read | gmail.users.settings.cse.keypairs.list | https://mail.google.com/, gmail.modify, +3 more |
 | `gmail_users_settings_delegates_create` | destructive | gmail.users.settings.delegates.create | gmail.settings.sharing |
 | `gmail_users_settings_delegates_delete` | destructive | gmail.users.settings.delegates.delete | gmail.settings.sharing |
-| `gmail_users_settings_delegates_get` | read | gmail.users.settings.delegates.get | https://mail.google.com/, gmail.modify |
-| `gmail_users_settings_delegates_list` | read | gmail.users.settings.delegates.list | https://mail.google.com/, gmail.modify |
+| `gmail_users_settings_delegates_get` | read | gmail.users.settings.delegates.get | https://mail.google.com/, gmail.modify, +2 more |
+| `gmail_users_settings_delegates_list` | read | gmail.users.settings.delegates.list | https://mail.google.com/, gmail.modify, +2 more |
 | `gmail_users_settings_filters_create` | write | gmail.users.settings.filters.create | gmail.settings.basic |
 | `gmail_users_settings_filters_delete` | destructive | gmail.users.settings.filters.delete | gmail.settings.basic |
-| `gmail_users_settings_filters_get` | read | gmail.users.settings.filters.get | https://mail.google.com/, gmail.modify |
-| `gmail_users_settings_filters_list` | read | gmail.users.settings.filters.list | https://mail.google.com/, gmail.modify |
-| `gmail_users_settings_get_imap` | read | gmail.users.settings.getImap | https://mail.google.com/, gmail.modify |
-| `gmail_users_settings_get_language` | read | gmail.users.settings.getLanguage | https://mail.google.com/, gmail.modify |
-| `gmail_users_settings_get_pop` | read | gmail.users.settings.getPop | https://mail.google.com/, gmail.modify |
-| `gmail_users_settings_get_vacation` | read | gmail.users.settings.getVacation | https://mail.google.com/, gmail.modify |
+| `gmail_users_settings_filters_get` | read | gmail.users.settings.filters.get | https://mail.google.com/, gmail.modify, +2 more |
+| `gmail_users_settings_filters_list` | read | gmail.users.settings.filters.list | https://mail.google.com/, gmail.modify, +2 more |
+| `gmail_users_settings_get_imap` | read | gmail.users.settings.getImap | https://mail.google.com/, gmail.modify, +2 more |
+| `gmail_users_settings_get_language` | read | gmail.users.settings.getLanguage | https://mail.google.com/, gmail.modify, +2 more |
+| `gmail_users_settings_get_pop` | read | gmail.users.settings.getPop | https://mail.google.com/, gmail.modify, +2 more |
+| `gmail_users_settings_get_vacation` | read | gmail.users.settings.getVacation | https://mail.google.com/, gmail.modify, +2 more |
 | `gmail_users_settings_send_as_create` | write | gmail.users.settings.sendAs.create | gmail.settings.sharing |
 | `gmail_users_settings_send_as_delete` | destructive | gmail.users.settings.sendAs.delete | gmail.settings.sharing |
-| `gmail_users_settings_send_as_get` | read | gmail.users.settings.sendAs.get | https://mail.google.com/, gmail.modify |
-| `gmail_users_settings_send_as_list` | read | gmail.users.settings.sendAs.list | https://mail.google.com/, gmail.modify |
+| `gmail_users_settings_send_as_get` | read | gmail.users.settings.sendAs.get | https://mail.google.com/, gmail.modify, +2 more |
+| `gmail_users_settings_send_as_list` | read | gmail.users.settings.sendAs.list | https://mail.google.com/, gmail.modify, +2 more |
 | `gmail_users_settings_send_as_patch` | write | gmail.users.settings.sendAs.patch | gmail.settings.basic, gmail.settings.sharing |
 | `gmail_users_settings_send_as_update` | write | gmail.users.settings.sendAs.update | gmail.settings.basic, gmail.settings.sharing |
 | `gmail_users_settings_send_as_verify` | write | gmail.users.settings.sendAs.verify | gmail.settings.sharing |
@@ -133,14 +133,14 @@ The tools that match Google's official MCP server for this product (https://deve
 | `gmail_users_settings_update_language` | write | gmail.users.settings.updateLanguage | gmail.settings.basic |
 | `gmail_users_settings_update_pop` | write | gmail.users.settings.updatePop | gmail.settings.basic |
 | `gmail_users_settings_update_vacation` | write | gmail.users.settings.updateVacation | gmail.settings.basic |
-| `gmail_users_stop` | destructive | gmail.users.stop | https://mail.google.com/, gmail.metadata |
+| `gmail_users_stop` | destructive | gmail.users.stop | https://mail.google.com/, gmail.metadata, +2 more |
 | `gmail_users_threads_delete` | destructive | gmail.users.threads.delete | https://mail.google.com/ |
-| `gmail_users_threads_get` | read | gmail.users.threads.get | https://mail.google.com/, gmail.addons.current.message.action |
-| `gmail_users_threads_list` | read | gmail.users.threads.list | https://mail.google.com/, gmail.metadata |
+| `gmail_users_threads_get` | read | gmail.users.threads.get | https://mail.google.com/, gmail.addons.current.message.action, +5 more |
+| `gmail_users_threads_list` | read | gmail.users.threads.list | https://mail.google.com/, gmail.metadata, +2 more |
 | `gmail_users_threads_modify` | write | gmail.users.threads.modify | https://mail.google.com/, gmail.modify |
 | `gmail_users_threads_trash` | destructive | gmail.users.threads.trash | https://mail.google.com/, gmail.modify |
 | `gmail_users_threads_untrash` | write | gmail.users.threads.untrash | https://mail.google.com/, gmail.modify |
-| `gmail_users_watch` | write | gmail.users.watch | https://mail.google.com/, gmail.metadata |
+| `gmail_users_watch` | write | gmail.users.watch | https://mail.google.com/, gmail.metadata, +2 more |
 | `gmailpost_domains_get_compliance_status` | read | gmailpostmastertools.domains.getComplianceStatus | postmaster, postmaster.traffic.readonly |
 | `gmailpostm_domain_stats_batch_query` | read | gmailpostmastertools.domainStats.batchQuery | postmaster, postmaster.traffic.readonly |
 | `gmailpostm_domains_create` | write | gmailpostmastertools.domains.create | postmaster, postmaster.domain |

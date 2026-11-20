@@ -454,19 +454,107 @@ export async function getAuthClient(kind: AuthKind, cfg: RuntimeConfig): Promise
   const client = new OAuth2Client(clientId, clientSecret);
   client.setCredentials(stored);
   const entry: { client: OAuth2Client | JWT; fingerprint: string } = { client, fingerprint };
-  // Persist refreshed access tokens so a restart does not force a new login. The write goes to the store in use. It is
-  // skipped when the file is gone (the account was signed out: it is not created again) or holds another refresh token
-  // (a newer sign-in replaced it: its token is not overwritten with this older client's answer).
+  // Persist refreshed access tokens so a restart does not force a new login. The write goes to the store in use under a
+  // cross-process lock + CAS guard (`ifMatch`) so a concurrent refresh can never overwrite a newer rotated refresh token.
   client.on('tokens', (fresh) => {
     if (!secretFileExists(cfg, path)) return;
     const current = readTokenFile(cfg, path);
-    if (refreshFingerprint(current) !== entry.fingerprint) return;
-    writeSecretText(cfg, path, JSON.stringify({ ...current, ...fresh }, null, 2));
-    entry.fingerprint = refreshFingerprint({ ...current, ...fresh });
+    if (refreshFingerprint(current) !== entry.fingerprint) {
+      entry.fingerprint = refreshFingerprint(current);
+      client.setCredentials(current);
+      return;
+    }
+    const merged = mergeRefreshedTokens(current, fresh);
+    let adopted: StoredCredentials | undefined;
+    const wrote = writeSecretText(
+      cfg,
+      path,
+      JSON.stringify(merged, null, 2),
+      process.env,
+      {
+        ifMatch: (latestText) => {
+          if (latestText === undefined) return false;
+          let latest: StoredCredentials;
+          try {
+            latest = JSON.parse(latestText) as StoredCredentials;
+          } catch {
+            return false;
+          }
+          if (refreshFingerprint(latest) !== entry.fingerprint) {
+            adopted = latest;
+            return false;
+          }
+          return true;
+        },
+      },
+    );
+    if (wrote) {
+      entry.fingerprint = refreshFingerprint(merged);
+      return;
+    }
+    if (adopted) {
+      entry.fingerprint = refreshFingerprint(adopted);
+      client.setCredentials(adopted);
+    }
   });
   entry.client = withRetry(client, kind);
   userClients.set(path, entry);
   return entry.client;
+}
+
+export interface StoredCredentials extends Credentials {
+  account?: string;
+  login_at?: number;
+  refresh_token_expires_in?: number;
+  refresh_token_expires_at?: number;
+}
+
+export const LOGIN_LIFETIME_NOTE =
+  'Google does not always publish how long a refresh token remains valid offline (OAuth apps in Testing expire after 7 days; unused tokens can expire after 6 months). Use live health checks (`health` with live: true or `status --check`) or re-authenticate if a refresh fails.';
+
+const REFRESH_WARN_WINDOW_SEC = 48 * 3600;
+
+/** Merges a google-auth-library token refresh payload onto the stored token record, computing/preserving refresh expiry. */
+export function mergeRefreshedTokens(current: StoredCredentials, fresh: Credentials, now: number = Date.now()): StoredCredentials {
+  const freshExt = fresh as StoredCredentials;
+  const next: StoredCredentials = { ...current, ...fresh };
+  if (typeof freshExt.refresh_token_expires_in === 'number' && Number.isFinite(freshExt.refresh_token_expires_in)) {
+    next.refresh_token_expires_at = now + Math.round(freshExt.refresh_token_expires_in * 1000);
+  } else if (fresh.refresh_token && fresh.refresh_token !== current.refresh_token) {
+    // A new rotated refresh token without an explicit lifetime clears any stale earlier deadline.
+    delete next.refresh_token_expires_at;
+  } else if (current.refresh_token_expires_at !== undefined) {
+    next.refresh_token_expires_at = current.refresh_token_expires_at;
+  }
+  if (current.login_at !== undefined && next.login_at === undefined) next.login_at = current.login_at;
+  return next;
+}
+
+/** Computes offline refresh-token expiry fields when stored on the token record. */
+export function refreshExpiryInfo(
+  tokens: StoredCredentials | null | undefined,
+  now: number = Date.now(),
+): { refreshTokenExpiresAt?: string; refreshTokenExpiresInSeconds?: number; refreshWarning?: string } {
+  const exp = tokens?.refresh_token_expires_at;
+  if (typeof exp !== 'number' || !Number.isFinite(exp)) return {};
+  const iso = new Date(exp).toISOString();
+  const remainingSec = Math.round((exp - now) / 1000);
+  if (remainingSec <= 0) {
+    return {
+      refreshTokenExpiresAt: iso,
+      refreshTokenExpiresInSeconds: 0,
+      refreshWarning: `Refresh token expired at ${iso}; sign in again.`,
+    };
+  }
+  if (remainingSec <= REFRESH_WARN_WINDOW_SEC) {
+    const hours = Math.max(1, Math.round(remainingSec / 3600));
+    return {
+      refreshTokenExpiresAt: iso,
+      refreshTokenExpiresInSeconds: remainingSec,
+      refreshWarning: `Refresh token expires in ~${hours}h (${iso}); sign in again soon.`,
+    };
+  }
+  return { refreshTokenExpiresAt: iso, refreshTokenExpiresInSeconds: remainingSec };
 }
 
 /** A SHA-256 of a token file's refresh token, to notice a new sign-in. Empty when there is none. Never shown. */
@@ -579,9 +667,12 @@ export interface TokenStatus {
   tokenFile: string;
   scopes?: string[];
   expiresAt?: string;
+  refreshTokenExpiresAt?: string;
+  refreshTokenExpiresInSeconds?: number;
+  refreshWarning?: string;
 }
 
-export function tokenStatus(kind: AuthKind, cfg: RuntimeConfig): TokenStatus {
+export function tokenStatus(kind: AuthKind, cfg: RuntimeConfig, account?: string): TokenStatus {
   if (kind === 'service-account') {
     const source = serviceAccountSource(cfg);
     return {
@@ -601,19 +692,21 @@ export function tokenStatus(kind: AuthKind, cfg: RuntimeConfig): TokenStatus {
       scopes: stored?.scopes ?? ADMIN_SCOPES,
     };
   }
-  const tokens = loadUserTokens(kind, cfg);
-  const source = loginSourceOf(kind, cfg);
+  const tokens = loadUserTokens(kind, cfg, account) as StoredCredentials | null;
+  const source = loginSourceOf(kind, cfg, account);
   if (!tokens && source === 'adc') {
     const adc = adcSourceFor(kind, cfg);
     return { kind, loggedIn: true, source, tokenFile: '', scopes: adc?.scopes };
   }
+  const refreshInfo = refreshExpiryInfo(tokens);
   return {
     kind,
     loggedIn: Boolean(tokens),
     source,
-    tokenFile: tokenFileOf(kind, cfg) ?? '',
+    tokenFile: tokenFileOf(kind, cfg, account) ?? '',
     scopes: tokens?.scope?.split(' '),
     expiresAt: tokens?.expiry_date ? new Date(tokens.expiry_date).toISOString() : undefined,
+    ...refreshInfo,
   };
 }
 
