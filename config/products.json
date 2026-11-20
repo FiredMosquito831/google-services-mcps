@@ -4343,23 +4343,49 @@
       "methodNotes": {
         "streetviewpublish": {
           "source": "https://developers.google.com/streetview/publish/first-app (\"After you have your API key and access token\"; the samples send both ?key=YOUR_API_KEY and authorization: Bearer YOUR_ACCESS_TOKEN). Every method of the API lists the OAuth scope https://www.googleapis.com/auth/streetviewpublish in Discovery.",
-          "reason": "gsearch and gmaps are the apikey group: gmaps holds an API key and has no Google sign-in, so no OAuth token is ever sent. Every Street View Publish tool is expected to be refused until the product gains an OAuth sign-in, which is a separate decision (adversarial review of gmaps, F2).",
+          "reason": "gmaps keeps its API key, and the approved Street View Publish credential route adds a user OAuth bearer token to these methods only, after sign-in with the streetviewpublish scope. Before sign-in the 14 tools are hidden. gsearch and every non-Street View gmaps method stay key-only (OD13a).",
           "methods": {
-            "streetviewpublish.photo.create": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call.",
-            "streetviewpublish.photo.delete": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call.",
-            "streetviewpublish.photo.get": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call.",
-            "streetviewpublish.photo.startUpload": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call.",
-            "streetviewpublish.photo.update": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call.",
-            "streetviewpublish.photoSequence.create": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call.",
-            "streetviewpublish.photoSequence.delete": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call.",
-            "streetviewpublish.photoSequence.get": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call.",
-            "streetviewpublish.photoSequence.startUpload": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call.",
-            "streetviewpublish.photoSequences.list": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call.",
-            "streetviewpublish.photos.batchDelete": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call.",
-            "streetviewpublish.photos.batchGet": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call.",
-            "streetviewpublish.photos.batchUpdate": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call.",
-            "streetviewpublish.photos.list": "Street View Publish needs an OAuth 2.0 access token as well as the API key; this product holds only a key and has no Google sign-in, so expect Google to refuse this call."
+            "streetviewpublish.photo.create": "Street View Publish needs both this product's API key and a Google OAuth 2.0 access token with the streetviewpublish scope. Call auth_login for the Street View credential route first; until the scope is granted this tool is hidden. photo.startUpload only opens an upload session; uploading bytes is not implemented.",
+            "streetviewpublish.photo.delete": "Street View Publish needs both this product's API key and a Google OAuth 2.0 access token with the streetviewpublish scope. Call auth_login for the Street View credential route first; until the scope is granted this tool is hidden. photo.startUpload only opens an upload session; uploading bytes is not implemented.",
+            "streetviewpublish.photo.get": "Street View Publish needs both this product's API key and a Google OAuth 2.0 access token with the streetviewpublish scope. Call auth_login for the Street View credential route first; until the scope is granted this tool is hidden. photo.startUpload only opens an upload session; uploading bytes is not implemented.",
+            "streetviewpublish.photo.startUpload": "Street View Publish needs both this product's API key and a Google OAuth 2.0 access token with the streetviewpublish scope. Call auth_login for the Street View credential route first; until the scope is granted this tool is hidden. photo.startUpload only opens an upload session; uploading bytes is not implemented.",
+            "streetviewpublish.photo.update": "Street View Publish needs both this product's API key and a Google OAuth 2.0 access token with the streetviewpublish scope. Call auth_login for the Street View credential route first; until the scope is granted this tool is hidden. photo.startUpload only opens an upload session; uploading bytes is not implemented.",
+            "streetviewpublish.photoSequence.create": "Street View Publish needs both this product's API key and a Google OAuth 2.0 access token with the streetviewpublish scope. Call auth_login for the Street View credential route first; until the scope is granted this tool is hidden. photo.startUpload only opens an upload session; uploading bytes is not implemented.",
+            "streetviewpublish.photoSequence.delete": "Street View Publish needs both this product's API key and a Google OAuth 2.0 access token with the streetviewpublish scope. Call auth_login for the Street View credential route first; until the scope is granted this tool is hidden. photo.startUpload only opens an upload session; uploading bytes is not implemented.",
+            "streetviewpublish.photoSequence.get": "Street View Publish needs both this product's API key and a Google OAuth 2.0 access token with the streetviewpublish scope. Call auth_login for the Street View credential route first; until the scope is granted this tool is hidden. photo.startUpload only opens an upload session; uploading bytes is not implemented.",
+            "streetviewpublish.photoSequence.startUpload": "Street View Publish needs both this product's API key and a Google OAuth 2.0 access token with the streetviewpublish scope. Call auth_login for the Street View credential route first; until the scope is granted this tool is hidden. photo.startUpload only opens an upload session; uploading bytes is not implemented.",
+            "streetviewpublish.photoSequences.list": "Street View Publish needs both this product's API key and a Google OAuth 2.0 access token with the streetviewpublish scope. Call auth_login for the Street View credential route first; until the scope is granted this tool is hidden. photo.startUpload only opens an upload session; uploading bytes is not implemented.",
+            "streetviewpublish.photos.batchDelete": "Street View Publish needs both this product's API key and a Google OAuth 2.0 access token with the streetviewpublish scope. Call auth_login for the Street View credential route first; until the scope is granted this tool is hidden. photo.startUpload only opens an upload session; uploading bytes is not implemented.",
+            "streetviewpublish.photos.batchGet": "Street View Publish needs both this product's API key and a Google OAuth 2.0 access token with the streetviewpublish scope. Call auth_login for the Street View credential route first; until the scope is granted this tool is hidden. photo.startUpload only opens an upload session; uploading bytes is not implemented.",
+            "streetviewpublish.photos.batchUpdate": "Street View Publish needs both this product's API key and a Google OAuth 2.0 access token with the streetviewpublish scope. Call auth_login for the Street View credential route first; until the scope is granted this tool is hidden. photo.startUpload only opens an upload session; uploading bytes is not implemented.",
+            "streetviewpublish.photos.list": "Street View Publish needs both this product's API key and a Google OAuth 2.0 access token with the streetviewpublish scope. Call auth_login for the Street View credential route first; until the scope is granted this tool is hidden. photo.startUpload only opens an upload session; uploading bytes is not implemented."
           }
+        }
+      },
+      "credentialOverrides": {
+        "streetviewpublish": {
+          "api": "streetviewpublish",
+          "version": "v1",
+          "route": "streetview-key-plus-bearer",
+          "scope": "https://www.googleapis.com/auth/streetviewpublish",
+          "host": "streetviewpublish.googleapis.com",
+          "userAuthKind": "workspace-user",
+          "methods": [
+            "streetviewpublish.photo.create",
+            "streetviewpublish.photo.delete",
+            "streetviewpublish.photo.get",
+            "streetviewpublish.photo.startUpload",
+            "streetviewpublish.photo.update",
+            "streetviewpublish.photoSequence.create",
+            "streetviewpublish.photoSequence.delete",
+            "streetviewpublish.photoSequence.get",
+            "streetviewpublish.photoSequence.startUpload",
+            "streetviewpublish.photoSequences.list",
+            "streetviewpublish.photos.batchDelete",
+            "streetviewpublish.photos.batchGet",
+            "streetviewpublish.photos.batchUpdate",
+            "streetviewpublish.photos.list"
+          ]
         }
       },
       "fieldMaskDefaults": {

@@ -141,6 +141,38 @@
     "title": "Look up the weather"
   },
   {
+    "name": "mcp__plugin_gmaps_gmaps__maps_weather_alerts",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "title": "Look up public weather alerts"
+  },
+  {
+    "name": "mcp__plugin_gmaps_gmaps__maps_weather_history",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "title": "Look up hourly weather history"
+  },
+  {
+    "name": "mcp__plugin_gmaps_gmaps__maps_weather_minutes",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "title": "Look up minute-level precipitation nowcast"
+  },
+  {
+    "name": "mcp__plugin_gmaps_gmaps__maps_weather_tile",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "title": "Fetch a weather map tile"
+  },
+  {
     "name": "mcp__plugin_gmaps_gmaps__places_places_autocomplete",
     "kind": "read",
     "scopes": [

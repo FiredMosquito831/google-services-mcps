@@ -33,6 +33,7 @@ import { renamesForServer } from './discovery/tool-names.js';
 import { toolMapFromDefs } from './dump.js';
 import { serverHealth } from './health.js';
 import { createSignIn, runGsmCommand, type SignInMethod, type SignInProfile } from './inchat-login.js';
+import { streetViewOverride } from './credential-route.js';
 import { findGcloud } from './adc.js';
 import { apiOfMethod, notCoveredBy, notCoveredLine, policyFields, resolveScopes, serverPreferFields, type Requirement } from './scopes.js';
 import { fileURLToPath } from 'node:url';
@@ -471,6 +472,19 @@ export async function runServer(opts: {
 
   // The grant is read at registration, and again on each access to ctx, so a new login is seen without a restart.
   const group = groupOf(opts.name);
+  const credentialOverride = (() => {
+    try {
+      return streetViewOverride(serverByName(loadRegistry(), opts.name).credentialOverrides);
+    } catch {
+      return undefined;
+    }
+  })();
+  const routeUser = credentialOverride?.userAuthKind as AuthKind | undefined;
+  const routeGrant = (): string[] | null => {
+    if (!credentialOverride || routeUser === undefined) return null;
+    const scopes = grantedScopes(routeUser, cfg);
+    return scopes?.includes(credentialOverride.scope) ? [credentialOverride.scope] : [];
+  };
 
   // The product's scope rules (config/products.json scopePolicy), when it has them. Undefined for most servers.
   const policy = scopePolicyOf(opts.name);
@@ -510,6 +524,7 @@ export async function runServer(opts: {
     writesAllowed: cfg.allowWrites,
     toolNames: defined.map((tool) => tool.name),
     cli: invocation(),
+    credentialRoute: credentialOverride !== undefined,
     // The same rule as the login's "Not covered" line: a readonly sign-in that covers none of the toolset's tools.
     readonlyCoversNothing: signsInWithOAuth && adcNotesFor('readonly', []).length > 0,
   });
@@ -526,7 +541,11 @@ export async function runServer(opts: {
 
   // Only tools the stored grant can run are registered. Writes and destructive tools need GSM_ALLOW_WRITES.
   const registerable = (grant: string[] | null, list: ToolDef[]): ToolDef[] =>
-    list.filter((tool) => isGranted(tool, grant) && (tool.kind === 'read' || tool.kind === 'dynamic' || cfg.allowWrites));
+    list.filter((tool) => {
+      const streetView = credentialOverride?.methods.includes(tool.methodId ?? '') ?? false;
+      const allowed = streetView && credentialOverride ? isGranted(tool, routeGrant()) : isGranted(tool, grant);
+      return allowed && (tool.kind === 'read' || tool.kind === 'dynamic' || cfg.allowWrites);
+    });
 
   const gate: GateFn = createGate({ server, cfg });
   const runtimeGate = createRuntimeGate({ server, cfg });
@@ -640,12 +659,21 @@ export async function runServer(opts: {
 
   // Sign-in from the chat, for the groups that use a Google login. The client file, the sign-in and the admin setup run
   // as gsm commands of this plugin, so they do the same work as the terminal commands (see inchat-login.ts).
-  const canSignIn = group !== undefined && ACCOUNT_GROUPS.has(group);
+  const canSignIn = (group !== undefined && ACCOUNT_GROUPS.has(group)) || credentialOverride !== undefined;
+  const signInGroup = routeUser ?? (group as string);
   const cliFile = fileURLToPath(new URL('../bin/gsm.mjs', import.meta.url));
   const text = (value: string): CallToolResult => ({ content: [{ type: 'text', text: value }] });
 
   // The two ways to sign in, with their costs. auth_login shows them first, so the person chooses before anything starts.
   const signInChoice = (): string => {
+    if (credentialOverride) {
+      return [
+        `Street View Publish needs both this product's API key and a Google OAuth access token with ${credentialOverride.scope}.`,
+        `Call auth_login with profile "readwrite" or "full" and method "oauth" to sign in with the existing user OAuth profile.`,
+        'The readonly profile does not cover this scope. ADC is not part of this route; the token must come from the user OAuth sign-in.',
+        `The 14 Street View tools load only after that scope is granted. Writes and deletes still need writes allowed and the approval gate.`,
+      ].join('\n');
+    }
     const signedIn = accountNames(group as string, cfg);
     const source = loginSourceOf(group as AuthKind, cfg);
     const lines = [
@@ -671,17 +699,18 @@ export async function runServer(opts: {
   const signIn = canSignIn
     ? createSignIn({
         cliFile,
-        group: group as string,
+        group: signInGroup,
         server: opts.name,
         cfg,
         adcScopes: adcScopesFor,
         adcNotes: adcNotesFor,
+        ...(credentialOverride ? { oauthScopes: [credentialOverride.scope] } : {}),
         onSignedIn: () => {
           // The sign-in ran in another process. Forget the clients built from the old tokens, and what was read from the
           // OS store, so the next call uses the new login without a restart.
           forgetAdcClients();
           forgetUserClients();
-          register(registerable(currentGrant(), defined));
+          register(registerable(credentialOverride ? routeGrant()! : currentGrant(), defined));
         },
       })
     : undefined;
@@ -757,12 +786,24 @@ export async function runServer(opts: {
       async (rawArgs: Record<string, unknown>): Promise<CallToolResult> => {
         if (rawArgs.method !== 'oauth' && rawArgs.method !== 'adc') return text(signInChoice());
         const method: SignInMethod = rawArgs.method;
+        if (credentialOverride && method !== 'oauth') {
+          return text('The Street View credential route signs in with the user OAuth profile only; call auth_login again with method "oauth".');
+        }
         let account: string | undefined;
         if (typeof rawArgs.account === 'string' && rawArgs.account.trim() !== '') {
           account = accountEmailOf(rawArgs.account);
           if (account === undefined) return text('account must be the email address of a Google account, for example name@example.com.');
         }
         const profile: SignInProfile = rawArgs.profile === 'readwrite' || rawArgs.profile === 'full' ? rawArgs.profile : 'readonly';
+        if (credentialOverride) {
+          const requirements: Requirement[] = built
+            .filter((tool) => credentialOverride.methods.includes(tool.methodId ?? ''))
+            .map((tool) => ({ tool: tool.name, kind: tool.kind, scopes: [...(tool.scopes ?? [])] }));
+          const resolved = resolveScopes(requirements, profile, []).scopes;
+          if (!resolved.includes(credentialOverride.scope)) {
+            return text(`Profile "${profile}" does not cover ${credentialOverride.scope}. Call auth_login again with profile "readwrite" or "full".`);
+          }
+        }
         const include = Array.isArray(rawArgs.with) ? rawArgs.with.filter((p): p is string => typeof p === 'string' && optionalParts.includes(p)) : [];
         try {
           await runtimeGate({ tool: 'auth_login', kind: 'write', args: { method, profile, with: include } });
@@ -784,9 +825,14 @@ export async function runServer(opts: {
         // A sign-in made in a terminal is seen here too: the tokens are read again, not taken from this process's memory.
         forgetUserClients();
         const before = registered.size;
-        const signedIn = isLoggedIn(group as AuthKind, cfg);
-        if (signedIn) register(registerable(currentGrant(), defined));
+        const signedIn = credentialOverride ? routeGrant()?.length === 1 : isLoggedIn(group as AuthKind, cfg);
+        if (signedIn) register(registerable(credentialOverride ? routeGrant()! : currentGrant(), defined));
         const loaded = registered.size - before;
+        if (credentialOverride) {
+          return text(
+            `Street View credential route: ${signedIn ? `signed in with ${credentialOverride.scope}` : `not signed in; call auth_login with profile "readwrite" or "full"`}. ${loaded} tool(s) loaded now, ${registered.size} registered in total. Accounts: ${accountNames(signInGroup, cfg)}. ${signIn.describe()}${toolsetNote}`,
+          );
+        }
         const source = loginSourceOf(group as AuthKind, cfg);
         const via = source === 'adc' ? ' with Application Default Credentials' : source === 'oauth' ? ' with an OAuth account' : '';
         const state = signedIn
@@ -859,7 +905,7 @@ export async function runServer(opts: {
     );
   }
 
-  if (signIn) {
+  if (signIn && credentialOverride === undefined) {
     // Accounts: the signed-in accounts of this server's group, and which one is the default.
     server.registerTool(
       'accounts_list',

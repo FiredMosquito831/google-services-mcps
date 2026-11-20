@@ -67,6 +67,12 @@ export interface SignInOptions {
    * in core/scopes.ts). The OAuth sign-in prints its own, which are passed on from the login's output. Absent: none.
    */
   adcNotes?: (profile: SignInProfile, include: readonly string[]) => string[];
+  /**
+   * Exact scopes of a narrow credential route (OD13a). When present, the OAuth sign-in asks for these with --scopes
+   * instead of resolving a profile from this server's tools or narrowing to --servers. ADC is not used for that route.
+   * Absent for every existing OAuth product, so their sign-in argv is unchanged.
+   */
+  oauthScopes?: readonly string[];
   /** Called when the sign-in has saved a token, so the server can load its tools. */
   onSignedIn: () => void;
 }
@@ -181,7 +187,11 @@ export function createSignIn(opts: SignInOptions): SignIn {
     });
 
   const startOAuth = (profile: SignInProfile, account?: string, include: readonly string[] = []): Promise<string> => {
-    const args = [opts.cliFile, 'login', opts.group, '--profile', profile, '--servers', opts.server];
+    // The narrow credential route asks for its exact approved scope. Every other sign-in keeps the old argv.
+    const args =
+      opts.oauthScopes !== undefined
+        ? [opts.cliFile, 'login', opts.group, '--scopes', [...opts.oauthScopes].join(',')]
+        : [opts.cliFile, 'login', opts.group, '--profile', profile, '--servers', opts.server];
     // One argument, so the email can never be read as another option.
     if (account) args.push(`--account=${account}`);
     // The optional parts to add (--with). Absent when none are named, so the argv is the same as before.

@@ -32,6 +32,8 @@ export interface InstructionsInput {
   toolNames: readonly string[];
   /** The command that runs this plugin's CLI (invocation()), for the one step that has no chat tool: storing an API key. */
   cli: string;
+  /** True for the product that declares the Street View credential route. */
+  credentialRoute?: boolean;
   /**
    * True when a readonly sign-in covers none of the toolset's tools that need a Google scope (notCoveredBy in scopes.ts,
    * as the login's "Not covered" line works it out): Google Ads and Business Profile have no read-only scope.
@@ -55,7 +57,7 @@ function writesLine(writesAllowed: boolean): string {
 }
 
 /** How this server signs in, in the chat first. */
-function signInLines(group: AuthGroup | undefined, cli: string, readonlyCoversNothing: boolean): string[] {
+function signInLines(group: AuthGroup | undefined, cli: string, readonlyCoversNothing: boolean, credentialRoute = false): string[] {
   if (group !== undefined && OAUTH_SIGN_IN.has(group)) {
     const profile = readonlyCoversNothing
       ? 'profile readwrite (readonly covers none of these tools; write tools stay hidden while writes are off)'
@@ -84,6 +86,11 @@ function signInLines(group: AuthGroup | undefined, cli: string, readonlyCoversNo
     return [
       'This server uses an API key stored on this machine. If health reports no key, or a call is refused for the key, the person stores it in a terminal (it is never pasted into the chat):',
       `${cli} setup-apikey`,
+      ...(credentialRoute
+        ? [
+            'Street View Publish is the exception: its 14 signed-in tools also need the streetviewpublish OAuth scope. They stay hidden until auth_login (profile readwrite or full) grants it; the key is still sent with every one of those calls.',
+          ]
+        : []),
     ];
   }
   return ['If a tool you expect is missing, call health.'];
@@ -103,7 +110,7 @@ export function serverInstructions(input: InstructionsInput): string {
   const lines = [
     toolsetLine(input.toolset),
     writesLine(input.writesAllowed),
-    ...signInLines(input.group, input.cli, input.readonlyCoversNothing === true),
+    ...signInLines(input.group, input.cli, input.readonlyCoversNothing === true, input.credentialRoute === true),
   ];
   if (input.toolNames.includes('api_call')) {
     lines.push('Methods without their own tool: api_search finds one, api_describe shows its parameters, api_call runs it.');

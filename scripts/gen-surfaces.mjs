@@ -48,7 +48,7 @@ function toolCount(id) {
   const server = p.server?.name ?? id;
   const keyScopes = p.group === 'service-account' ? SERVICE_ACCOUNT_SCOPES_BY_SERVER[server] ?? [] : undefined;
   const prefix = `mcp__plugin_${id}_${server}__`;
-  return JSON.parse(readFileSync(file, 'utf8')).filter((t) => registersEntry(t.name.startsWith(prefix) ? t.name.slice(prefix.length) : t.name, t.scopes, p.group, keyScopes)).length;
+  return JSON.parse(readFileSync(file, 'utf8')).filter((t) => registersEntry(t.name.startsWith(prefix) ? t.name.slice(prefix.length) : t.name, t.scopes, p.group, keyScopes, Boolean(p.credentialOverrides))).length;
 }
 
 const apiTitle = new Map(catalog.apis.map((a) => [`${a.name}/${a.version}`, a]));
@@ -66,7 +66,7 @@ for (const [id, p] of Object.entries(products.products)) {
     id,
     title: p.title,
     group: login.group,
-    setup: login.setup,
+    setup: p.credentialOverrides ? 'API key, then `setup-apikey`; Street View also needs `auth_login` (readwrite/full)' : login.setup,
     tools: built ?? p.generatedToolCount,
     generatedApis: generated.length,
     gatewayApis: gateway.length,

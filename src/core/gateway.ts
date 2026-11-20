@@ -41,7 +41,8 @@ import { fileURLToPath } from 'node:url';
 import { z } from 'zod';
 import type { RuntimeConfig } from './config.js';
 import { invocation } from './invocation.js';
-import type { AuthGroup } from './registry.js';
+import { loadRegistry, serverByName, type AuthGroup } from './registry.js';
+import { overrideForMethod, STREETVIEW_ROUTE } from './credential-route.js';
 import { classifyMethod } from './discovery/methods.js';
 import { buildUrl, loadToolKinds, rootForPath, sendAuthorized, type RegionalEndpoint } from './discovery/tools.js';
 import type { GateFn } from './approval.js';
@@ -747,6 +748,20 @@ interface WireRequest {
   data?: unknown;
   headers?: Record<string, string>;
   read?: 'bytes' | 'media';
+  authMethodId?: string;
+  credentialRoute?: string;
+}
+
+/** The identity and route of an approved Street View method, for the one sendAuthorized path the gateway uses. */
+function credentialFields(product: string, cfg: RuntimeConfig, entry: IndexEntry, api: string, version: string, group: string) {
+  if (group !== API_KEY_GROUP) return {};
+  try {
+    const server = serverByName(loadRegistry(), cfg.server ?? product);
+    if (!overrideForMethod(server.credentialOverrides, entry.id, api, version)) return {};
+    return { authMethodId: entry.id, credentialRoute: STREETVIEW_ROUTE };
+  } catch {
+    return {};
+  }
 }
 
 /**
@@ -789,6 +804,7 @@ async function runCall(core: Core, args: CallArgs, ctx: ToolContext | undefined)
 
   // Read-only: fetches the Discovery document (cached) to learn which parameters the method declares.
   const { doc, raw } = await rawMethodFor(entry, input.cfg);
+  const credentials = credentialFields(input.product, input.cfg, entry, doc.name ?? entry.api.name, doc.version ?? entry.api.version, input.group);
   if (hasBody && !refOf(raw.request)) throw new Error(`${entry.id} takes no request body.`);
 
   const declaredPath = new Set(paramsOf(raw.parameters).filter((p) => p.location === 'path').map((p) => p.name));
@@ -831,7 +847,7 @@ async function runCall(core: Core, args: CallArgs, ctx: ToolContext | undefined)
   try {
     res = requestOverride
       ? await requestOverride({ url, method: method.httpMethod, params, data, ...extra })
-      : await sendRequest(input.cfg, input.group, { url, method: method.httpMethod, params, data, ...extra });
+      : await sendRequest(input.cfg, input.group, { url, method: method.httpMethod, params, data, ...extra, ...credentials });
   } catch (err) {
     throw new Error(httpError(err, input.group, isApiKey ? input.cfg.apiKey : undefined));
   }

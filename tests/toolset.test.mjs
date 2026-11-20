@@ -1005,10 +1005,12 @@ test('runServer: google on gmaps (API key) lists its 4 tools and health, with th
   const env = (extra = {}) => childEnv(dir, tokenDir, { GSM_API_KEY: 'fake-key-for-tools-list', ...extra });
   const unset = await withClient(entry, env(), listTools);
   const google = await withClient(entry, env({ GSM_TOOLSET: 'google' }), async (c) => ({ tools: await listTools(c), health: await health(c) }));
-  assert.deepEqual(google.tools.map((t) => t.name), [...MAPS_GOOGLE, 'health'].sort());
+  const MAPS_RUNTIME = ['auth_login', 'auth_setup_client', 'auth_status', 'health'];
+  assert.deepEqual(google.tools.map((t) => t.name), [...MAPS_GOOGLE, ...MAPS_RUNTIME].sort());
   for (const t of google.tools) assert.deepEqual(t, unset.find((u) => u.name === t.name), t.name);
   for (const name of MAPS_GOOGLE) assert.equal(google.tools.find((t) => t.name === name).annotations.readOnlyHint, true, name);
-  assert.deepEqual(google.health.toolset, { requested: 'google', effective: 'google', outsideToolset: unset.length - google.tools.length });
+  const hidden = readJson('config', 'products.json').products.gmaps.credentialOverrides.streetviewpublish.methods.length;
+  assert.deepEqual(google.health.toolset, { requested: 'google', effective: 'google', outsideToolset: unset.length + hidden - google.tools.length });
   assert.equal(JSON.stringify(google.health).includes('fake-key-for-tools-list'), false, 'health never shows the key');
 });
 

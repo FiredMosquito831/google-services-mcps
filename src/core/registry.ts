@@ -92,6 +92,11 @@ export interface ServerSpec {
    */
   methodNotes?: Record<string, MethodNotes>;
   /**
+   * Per API of the product, a narrow request-level credential rule (config/products.json credentialOverrides).
+   * Only exact declared methods, group and URL host may add a user OAuth bearer token to the existing API key.
+   */
+  credentialOverrides?: Record<string, CredentialOverride>;
+  /**
    * Per generated API of the product, write methods whose call meets the destructive rule for some request bodies only
    * (config/products.json destructiveWhen; Gmail's modify methods when they add TRASH or SPAM). Such a call is gated as
    * destructive, as a curated tool's destructiveWhen is (callKind in tools.ts): it asks even under destructive-only. The
@@ -152,6 +157,17 @@ export interface MethodNotes {
   methods: Record<string, string>;
   source?: string;
   reason?: string;
+}
+
+/** One API's entry of ServerSpec.credentialOverrides: the approved method ids and the credential rule for them. */
+export interface CredentialOverride {
+  api: string;
+  version: string;
+  route: string;
+  scope: string;
+  host: string;
+  userAuthKind: string;
+  methods: string[];
 }
 
 /**

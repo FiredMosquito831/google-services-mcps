@@ -127,16 +127,30 @@ export async function runLogin(req: LoginRequest, loadRegistryFn: () => Registry
   };
   const { clientId, clientSecret } = readClientSecret(secretCfg);
 
-  // --servers narrows the group; every name must belong to it (checked with the same message as before).
-  const servers = selectGroupServers(registry, group, req.servers && req.servers.length > 0 ? req.servers : undefined);
-  const include = checkOptionalParts(registry, servers, req.with);
+  // --servers narrows the group; every name must belong to it. A standalone credential-route plugin (such as gmaps's
+  // Street View Publish route) has no servers of its userAuthKind in its own plugin registry: allow explicit --scopes
+  // or readwrite/full for the declared override without failing selectGroupServers.
+  const routeOverrides = registry.servers.flatMap((s) =>
+    Object.values(s.credentialOverrides ?? {}).filter((o) => o.userAuthKind === group),
+  );
+  const overrideScopes = [...new Set(routeOverrides.map((o) => o.scope).filter(Boolean))];
+  const noGroupServers =
+    (!req.servers || req.servers.length === 0) &&
+    overrideScopes.length > 0 &&
+    registry.servers.every((s) => s.group !== group);
+  const servers = noGroupServers
+    ? []
+    : selectGroupServers(registry, group, req.servers && req.servers.length > 0 ? req.servers : undefined);
+  const include = noGroupServers ? [] : checkOptionalParts(registry, servers, req.with);
   // The toolset: --toolset, else GSM_TOOLSET (the server's setting, passed to a sign-in from the chat), else all.
   const toolset = req.toolset ?? cfg.toolset;
-  const requirements = await requirementsForSpecs(
-    servers.map((name) => serverByName(registry, name)),
-    cfg,
-    { warn: (line) => out.warn(line), ...(toolset !== 'all' ? { toolset } : {}) },
-  );
+  const requirements = noGroupServers
+    ? []
+    : await requirementsForSpecs(
+        servers.map((name) => serverByName(registry, name)),
+        cfg,
+        { warn: (line) => out.warn(line), ...(toolset !== 'all' ? { toolset } : {}) },
+      );
   if (toolset !== 'all' && req.profile !== 'custom') {
     out.log(`Toolset ${toolset}: only the tools of this toolset count toward the scopes (${TOOLSET_TEXT[toolset]}).`);
   }
@@ -145,6 +159,14 @@ export async function runLogin(req: LoginRequest, loadRegistryFn: () => Registry
   if (req.profile === 'custom') {
     requested = [...new Set(req.customScopes ?? [])].sort();
     out.log(`Requesting the ${requested.length} scope(s) given with --scopes. Nothing else is requested by this login.`);
+  } else if (noGroupServers) {
+    if (req.profile === 'readonly') {
+      throw new UsageError(
+        `No ${group} servers are in this plugin; the declared credential route requires --profile readwrite or --profile full (or --scopes ${overrideScopes.join(',')}).`,
+      );
+    }
+    requested = [...overrideScopes].sort();
+    out.log(`Profile ${req.profile}: ${PROFILE_TEXT[req.profile]}.`);
   } else {
     requested = resolveScopes(requirements, req.profile, include).scopes;
     out.log(`Profile ${req.profile}: ${PROFILE_TEXT[req.profile]}.`);

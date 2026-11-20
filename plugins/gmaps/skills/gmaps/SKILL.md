@@ -14,6 +14,8 @@ No sign-in: this server uses an API key stored on this machine. A key is never p
 
 `node "${CLAUDE_PLUGIN_ROOT}/bin/gsm.mjs" setup-apikey` (it reads the key from stdin, or from the GSM_API_KEY_INPUT variable).
 
+Street View Publish is the exception: its 14 tools stay hidden until `auth_login` with profile `readwrite` or `full` grants the streetviewpublish scope to the existing user OAuth profile. Each of those calls then sends both the API key and that user bearer token; every other call stays key-only.
+
 ## Common tasks
 
 ### 1. Places
@@ -42,7 +44,7 @@ Reads never ask for approval. Tools that change or delete data are listed only w
 
 ## Tools
 
-The `gmaps` MCP server lists up to 39 tools with the `all` toolset: 29 read, 7 write, 3 destructive, counting its 1 runtime tools (`health` and the sign-in tools). Write and destructive tools are listed only when writes are allowed, and a tool loads only when the sign-in holds one of its scopes. The `google` toolset lists 4 of them plus the runtime tools.
+The `gmaps` MCP server lists up to 46 tools with the `all` toolset: 34 read, 9 write, 3 destructive, counting its 4 runtime tools (`health` and the sign-in tools). Write and destructive tools are listed only when writes are allowed, and a tool loads only when the sign-in holds one of its scopes. The `google` toolset lists 4 of them plus the runtime tools.
 
 ## APIs
 

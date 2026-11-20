@@ -111,15 +111,22 @@ test('gtasks (2.7.0): the update and patch tools say what `completed` and `due` 
   assert.deepEqual(readJson('plugins', 'gtasks', 'servers.json').servers[0].methodNotes, notes);
 });
 
-test('gmaps (2.12.1): every Street View Publish tool says it needs OAuth, and no other gmaps tool carries a note', async () => {
-  const notes = readJson('config', 'products.json').products.gmaps.methodNotes;
+test('gmaps (OD13a): all 14 Street View tools describe the key + bearer route; no other tool carries the note', async () => {
+  const product = readJson('config', 'products.json').products.gmaps;
+  const notes = product.methodNotes;
+  const override = product.credentialOverrides.streetviewpublish;
   assert.deepEqual(Object.keys(notes), ['streetviewpublish']);
-  // All 14 methods of the API carry the note: the product has an API key only, and Google wants a token too.
+  assert.equal(override.route, 'streetview-key-plus-bearer');
+  assert.equal(override.scope, 'https://www.googleapis.com/auth/streetviewpublish');
+  assert.equal(override.host, 'streetviewpublish.googleapis.com');
+  // The declared method list is the single source for the notes and the runtime credential discriminator.
   const methods = notes.streetviewpublish.methods;
+  assert.deepEqual(Object.keys(methods).sort(), [...override.methods].sort());
   assert.equal(Object.keys(methods).length, 14);
   for (const [id, note] of Object.entries(methods)) {
+    assert.match(note, /API key/, id);
     assert.match(note, /OAuth 2\.0 access token/, id);
-    assert.match(note, /only a key and has no Google sign-in/, id);
+    assert.match(note, /auth_login/, id);
   }
   const tools = await discoveryToolsFor('gmaps', cfg);
   for (const [id, note] of Object.entries(methods)) {
@@ -128,9 +135,12 @@ test('gmaps (2.12.1): every Street View Publish tool says it needs OAuth, and no
     assert.ok(tool.description.includes(note), `${id}: the note is in the tool description`);
     assert.ok(tool.description.length <= 2048, `${id}: ${tool.description.length} characters`);
   }
-  for (const tool of tools.filter((t) => !(t.methodId in methods))) assert.doesNotMatch(tool.description, /has no Google sign-in/, `${tool.methodId} carries no note`);
-  // The plugin's servers.json, which the bundled server reads, carries exactly the same note.
-  assert.deepEqual(readJson('plugins', 'gmaps', 'servers.json').servers[0].methodNotes, notes);
+  for (const tool of tools.filter((t) => !(t.methodId in methods))) assert.doesNotMatch(tool.description, /auth_login/, `${tool.methodId} carries no Street View note`);
+  // The plugin's servers.json, which the bundled server reads, carries exactly the same note and the same override.
+  const server = readJson('plugins', 'gmaps', 'servers.json').servers[0];
+  assert.deepEqual(server.methodNotes, notes);
+  assert.deepEqual(server.credentialOverrides, product.credentialOverrides);
+  assert.equal(readJson('plugins', 'gsearch', 'servers.json').servers[0].credentialOverrides, undefined);
 });
 
 test('gen-servers: methodNotes name methods of a generated API snapshot, with a source, a reason and a non-empty note', () => {

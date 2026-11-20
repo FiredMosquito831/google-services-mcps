@@ -37,6 +37,12 @@ export interface ApiKeyRequestOptions {
    * photo behind a redirect) a MediaBody instead of the bytes read as text.
    */
   read?: 'bytes' | 'media';
+  /**
+   * The bearer access token of the narrow Street View credential route. Absent on every key-only request: then the
+   * request, its errors and its answer are built exactly as before. The token is set after the caller's headers and
+   * redacted from everything this module returns or throws.
+   */
+  bearerToken?: string;
 }
 
 export interface ApiKeyResponse {
@@ -44,13 +50,17 @@ export interface ApiKeyResponse {
   data: unknown;
 }
 
-/** Replaces every occurrence of the key in a string, and in every string of a value (keys included). */
-function redactKeyIn(value: unknown, key: string): unknown {
-  if (typeof value === 'string') return value.split(key).join('[redacted]');
-  if (Array.isArray(value)) return value.map((item) => redactKeyIn(item, key));
+/** Replaces every occurrence of the key and, on the dual-credential route, the bearer token in a string or a value. */
+function redactKeyIn(value: unknown, key: string, bearer?: string): unknown {
+  const clean = (text: string): string => {
+    const withoutKey = text.split(key).join('[redacted]');
+    return bearer ? withoutKey.split(bearer).join('[redacted]') : withoutKey;
+  };
+  if (typeof value === 'string') return clean(value);
+  if (Array.isArray(value)) return value.map((item) => redactKeyIn(item, key, bearer));
   if (value && typeof value === 'object') {
     return Object.fromEntries(
-      Object.entries(value).map(([name, item]): [string, unknown] => [redactKeyIn(name, key) as string, redactKeyIn(item, key)]),
+      Object.entries(value).map(([name, item]): [string, unknown] => [clean(name), redactKeyIn(item, key, bearer)]),
     );
   }
   return value;
@@ -109,6 +119,11 @@ export class ApiKeyClient {
       for (const name of Object.keys(headers)) if (name.toLowerCase() === 'x-goog-api-key') delete headers[name];
       headers['X-Goog-Api-Key'] = key;
     }
+    // Only the narrow route reaches here with a token. It is set after the caller's headers so none can replace it.
+    if (options.bearerToken) {
+      for (const name of Object.keys(headers)) if (name.toLowerCase() === 'authorization') delete headers[name];
+      headers['Authorization'] = `Bearer ${options.bearerToken}`;
+    }
 
     const url = withQuery(options.url, options.params, options.keyInHeader ? undefined : key);
     const controller = new AbortController();
@@ -127,7 +142,7 @@ export class ApiKeyClient {
         : err instanceof Error
           ? err.message
           : String(err);
-      throw new Error(String(redactKeyIn(`The request ${method} ${options.url} failed: ${why}.`, key)));
+      throw new Error(String(redactKeyIn(`The request ${method} ${options.url} failed: ${why}.`, key, options.bearerToken)));
     } finally {
       clearTimeout(timer);
     }
@@ -150,9 +165,9 @@ export class ApiKeyClient {
 
     if (!res.ok) {
       // The status and the redacted body ride on the error, so requestWithRetry (core/http.ts) can read the status.
-      const failure = new Error(String(redactKeyIn(failureText(res.status, data, text), key)));
-      throw Object.assign(failure, { response: { status: res.status, data: redactKeyIn(data, key) } });
+      const failure = new Error(String(redactKeyIn(failureText(res.status, data, text), key, options.bearerToken)));
+      throw Object.assign(failure, { response: { status: res.status, data: redactKeyIn(data, key, options.bearerToken) } });
     }
-    return { status: res.status, data: redactKeyIn(data, key) };
+    return { status: res.status, data: redactKeyIn(data, key, options.bearerToken) };
   }
 }

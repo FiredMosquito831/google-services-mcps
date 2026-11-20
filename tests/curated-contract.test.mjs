@@ -1208,6 +1208,18 @@ const CASES = {
     { args: { latitude: 48.85, longitude: 2.35, forecast: 'hourly', hours: 12, page_size: 6, page_token: 'p1' }, expect: ['weather.forecast.hours.lookup'] },
     { args: { latitude: 48.85, longitude: 2.35, forecast: 'daily', days: 3, page_size: 3 }, expect: ['weather.forecast.days.lookup'] },
   ],
+  maps_weather_history: [
+    { args: { latitude: 48.85, longitude: 2.35, hours: 12, units_system: 'METRIC', language_code: 'en', page_size: 10, page_token: 'p1' }, expect: ['weather.history.hours.lookup'] },
+  ],
+  maps_weather_alerts: [
+    { args: { latitude: 48.85, longitude: 2.35, language_code: 'en', page_size: 5, page_token: 'p1' }, expect: ['weather.publicAlerts.lookup'] },
+  ],
+  maps_weather_minutes: [
+    { args: { latitude: 48.85, longitude: 2.35, units_system: 'METRIC', page_size: 20, page_token: 'p1' }, expect: ['weather.forecast.minutes.lookup'] },
+  ],
+  maps_weather_tile: [
+    { args: { map_type: 'PRECIPITATION', zoom: 5, x: 16, y: 11 }, expect: ['weather.mapTypes.mapTiles.lookupMapTile'] },
+  ],
 
   // gsearch (2.13.0), with the API key
   psi_run: [
@@ -1281,7 +1293,7 @@ test('every curated tool has a contract row, a skip reason or a known defect, an
   const listed = new Set([...Object.keys(CASES), ...Object.keys(SKIPPED), ...Object.keys(KNOWN_DEFECTS)]);
   assert.deepEqual([...tools.keys()].filter((name) => !listed.has(name)), [], 'curated tools without a row');
   assert.deepEqual([...listed].filter((name) => !tools.has(name)), [], 'rows for tools that do not exist');
-  assert.equal(tools.size, 165, 'the curated tool count; update the table when it changes');
+  assert.equal(tools.size, 169, 'the curated tool count; update the table when it changes');
 });
 
 for (const [name, cases] of Object.entries(CASES)) {

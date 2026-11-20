@@ -26,7 +26,8 @@ function registered(id) {
   const keyScopes = p.group === 'service-account' ? SERVICE_ACCOUNT_SCOPES_BY_SERVER[p.server.name] : undefined;
   const map = readJson('plugins', id, 'tool-map.json');
   const short = (t) => t.name.slice(t.name.indexOf('__', 'mcp__plugin_'.length) + 2);
-  return { map, own: map.filter((t) => registersEntry(short(t), t.scopes, p.group, keyScopes)), short };
+  const credentialRoute = Boolean(p.credentialOverrides);
+  return { map, own: map.filter((t) => registersEntry(short(t), t.scopes, p.group, keyScopes, credentialRoute)), short };
 }
 
 test('registersEntry: a group registers its own runtime tools only, and a service account key only the tools its scopes cover', () => {
@@ -34,6 +35,12 @@ test('registersEntry: a group registers its own runtime tools only, and a servic
   assert.equal(registersEntry('auth_setup_admin', [], 'workspace-user'), false);
   assert.equal(registersEntry('auth_setup_admin', [], 'workspace-admin'), true);
   assert.equal(registersEntry('auth_login', [], 'apikey'), false);
+  // OD13a: only the product with the declared credential route signs in; plain apikey groups stay health-only.
+  assert.equal(registersEntry('auth_login', [], 'apikey', undefined, true), true);
+  assert.equal(registersEntry('auth_setup_client', [], 'apikey', undefined, true), true);
+  assert.equal(registersEntry('auth_status', [], 'apikey', undefined, true), true);
+  assert.equal(registersEntry('accounts_list', [], 'apikey', undefined, true), false);
+  assert.deepEqual(runtimeToolsFor('apikey', true), ['auth_login', 'auth_setup_client', 'auth_status', 'health']);
   assert.equal(registersEntry('health', [], 'apikey'), true);
   assert.equal(registersEntry('gmail_search', ['https://x/gmail.readonly'], 'workspace-user'), true);
   const key = ['https://www.googleapis.com/auth/content'];
@@ -99,7 +106,8 @@ test('a capability page lists no runtime tool its server never registers, and na
     const tables = start >= 0 ? page.slice(0, start) + (end >= 0 ? page.slice(end) : '') : page;
     assert.ok(tables.includes('| Tool | Safety |'), `${id}: the tool tables are checked`);
     for (const name of RUNTIME_TOOL_NAMES) {
-      if (!runtimeToolsFor(group).includes(name)) assert.ok(!tables.includes(`| \`${name}\` |`), `${id} lists ${name}`);
+      const own = runtimeToolsFor(group, Boolean(products[id].credentialOverrides));
+      if (!own.includes(name)) assert.ok(!tables.includes(`| \`${name}\` |`), `${id} lists ${name}`);
     }
     const { map, own, short } = registered(id);
     const left = map.filter((t) => !own.includes(t)).map(short);

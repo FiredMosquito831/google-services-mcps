@@ -48,6 +48,11 @@ export async function groupScopeUniverse(
   const set = new Set<string>(IDENTITY_SCOPES);
   for (const scope of reg.groupScopes?.[group] ?? []) set.add(scope);
   for (const r of known) for (const scope of r.scopes) set.add(scope);
+  for (const server of reg.servers) {
+    for (const override of Object.values(server.credentialOverrides ?? {})) {
+      if (override.userAuthKind === group && override.scope) set.add(override.scope);
+    }
+  }
   const others = reg.servers.filter((s) => s.group === group && !knownServers.includes(s.name));
   if (others.length > 0) {
     // The notes about a missing catalog were printed for the login's own servers already.

@@ -297,6 +297,7 @@
       "https://www.googleapis.com/auth/script.projects.readonly",
       "https://www.googleapis.com/auth/spreadsheets",
       "https://www.googleapis.com/auth/spreadsheets.readonly",
+      "https://www.googleapis.com/auth/streetviewpublish",
       "https://www.googleapis.com/auth/tasks",
       "https://www.googleapis.com/auth/tasks.readonly",
       "https://www.googleapis.com/auth/user.addresses.read",

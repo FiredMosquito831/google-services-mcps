@@ -89,6 +89,7 @@ export function registryFromProducts(raw: unknown, dataRoot: string): Registry {
       ...(isPlainObject(value.targetQueryDefaults) ? { targetQueryDefaults: value.targetQueryDefaults as Record<string, TargetQueryDefaults> } : {}),
       // The product's notes for some methods' tools (checked by scripts/gen-servers.mjs).
       ...(isPlainObject(value.methodNotes) ? { methodNotes: value.methodNotes as Record<string, MethodNotes> } : {}),
+      ...(isPlainObject(value.credentialOverrides) ? { credentialOverrides: value.credentialOverrides as Record<string, import('../core/registry.js').CredentialOverride> } : {}),
       // The product's write methods that are destructive for some request bodies (checked by scripts/gen-servers.mjs).
       ...(isPlainObject(value.destructiveWhen) ? { destructiveWhen: value.destructiveWhen as Record<string, DestructiveWhen> } : {}),
       // The product's listed toolsets, as tool names (scripts/gen-servers.mjs writes the same into config/servers.json).
@@ -181,6 +182,7 @@ const BUILD_FIELDS = [
   'pageSizeDefaults',
   'targetQueryDefaults',
   'methodNotes',
+  'credentialOverrides',
   'destructiveWhen',
   'toolsets',
   'toolsetScopes',

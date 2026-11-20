@@ -196,6 +196,99 @@
        ]
       }
      }
+    },
+    "minutes": {
+     "methods": {
+      "lookup": {
+       "id": "weather.forecast.minutes.lookup",
+       "path": "v1/forecast/minutes:lookup",
+       "flatPath": "v1/forecast/minutes:lookup",
+       "httpMethod": "GET",
+       "description": "Returns minute-level precipitation nowcast events for up to 6 hours ahead.",
+       "parameters": [
+        { "name": "location.latitude", "location": "query", "type": "number", "format": "double" },
+        { "name": "location.longitude", "location": "query", "type": "number", "format": "double" },
+        { "name": "unitsSystem", "location": "query", "type": "string", "enum": ["UNITS_SYSTEM_UNSPECIFIED", "IMPERIAL", "METRIC"] },
+        { "name": "pageSize", "location": "query", "type": "integer", "format": "int32" },
+        { "name": "pageToken", "location": "query", "type": "string" }
+       ],
+       "parameterOrder": [],
+       "response": "LookupForecastMinutesResponse",
+       "scopes": ["https://www.googleapis.com/auth/cloud-platform"]
+      }
+     }
+    }
+   }
+  },
+  "history": {
+   "resources": {
+    "hours": {
+     "methods": {
+      "lookup": {
+       "id": "weather.history.hours.lookup",
+       "path": "v1/history/hours:lookup",
+       "flatPath": "v1/history/hours:lookup",
+       "httpMethod": "GET",
+       "description": "Returns up to 24 hours of historical hourly weather observations at a given location.",
+       "parameters": [
+        { "name": "location.latitude", "location": "query", "type": "number", "format": "double" },
+        { "name": "location.longitude", "location": "query", "type": "number", "format": "double" },
+        { "name": "hours", "location": "query", "type": "integer", "format": "int32" },
+        { "name": "unitsSystem", "location": "query", "type": "string", "enum": ["UNITS_SYSTEM_UNSPECIFIED", "IMPERIAL", "METRIC"] },
+        { "name": "languageCode", "location": "query", "type": "string" },
+        { "name": "pageSize", "location": "query", "type": "integer", "format": "int32" },
+        { "name": "pageToken", "location": "query", "type": "string" }
+       ],
+       "parameterOrder": [],
+       "response": "LookupHistoryHoursResponse",
+       "scopes": ["https://www.googleapis.com/auth/cloud-platform"]
+      }
+     }
+    }
+   }
+  },
+  "publicAlerts": {
+   "methods": {
+    "lookup": {
+     "id": "weather.publicAlerts.lookup",
+     "path": "v1/publicAlerts:lookup",
+     "flatPath": "v1/publicAlerts:lookup",
+     "httpMethod": "GET",
+     "description": "Returns active severe weather public alerts at a given location.",
+     "parameters": [
+      { "name": "location.latitude", "location": "query", "type": "number", "format": "double" },
+      { "name": "location.longitude", "location": "query", "type": "number", "format": "double" },
+      { "name": "languageCode", "location": "query", "type": "string" },
+      { "name": "pageSize", "location": "query", "type": "integer", "format": "int32" },
+      { "name": "pageToken", "location": "query", "type": "string" }
+     ],
+     "parameterOrder": [],
+     "response": "LookupPublicAlertsResponse",
+     "scopes": ["https://www.googleapis.com/auth/cloud-platform"]
+    }
+   }
+  },
+  "mapTypes": {
+   "resources": {
+    "mapTiles": {
+     "methods": {
+      "lookupMapTile": {
+       "id": "weather.mapTypes.mapTiles.lookupMapTile",
+       "path": "v1/mapTypes/{mapType}/mapTiles/{zoom}/{x}/{y}",
+       "flatPath": "v1/mapTypes/{mapType}/mapTiles/{zoom}/{x}/{y}",
+       "httpMethod": "GET",
+       "description": "Returns a weather map overlay raster tile.",
+       "parameters": [
+        { "name": "mapType", "location": "path", "type": "string", "required": true },
+        { "name": "zoom", "location": "path", "type": "integer", "format": "int32", "required": true },
+        { "name": "x", "location": "path", "type": "integer", "format": "int32", "required": true },
+        { "name": "y", "location": "path", "type": "integer", "format": "int32", "required": true }
+       ],
+       "parameterOrder": ["mapType", "zoom", "x", "y"],
+       "response": "HttpBody",
+       "scopes": ["https://www.googleapis.com/auth/cloud-platform"]
+      }
+     }
     }
    }
   }

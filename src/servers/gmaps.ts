@@ -22,6 +22,7 @@ import type { RuntimeConfig } from '../core/config.js';
 import { googleScopes } from '../core/auth.js';
 import { ApiKeyClient } from '../core/discovery/apikey-client.js';
 import { requestWithRetry } from '../core/http.js';
+import { MediaBody, mediaPart } from '../core/media.js';
 import { defineTool, type ToolDef } from '../core/tools.js';
 
 const ROUTES = 'https://routes.googleapis.com/directions/v2:computeRoutes';
@@ -140,9 +141,45 @@ export function weatherRequest(input: z.infer<z.ZodObject<typeof weatherShape>>)
   return { url: `${WEATHER}/${path}`, params };
 }
 
+const MAP_TILE_SEGMENT = /^[A-Za-z0-9_-]+$/;
+
+const historyWeatherShape = {
+  latitude: z.number().min(-90).max(90).describe("Latitude in degrees. places_places_search_text finds a place's location."),
+  longitude: z.number().min(-180).max(180).describe('Longitude in degrees.'),
+  hours: z.number().int().min(1).max(24).optional().describe('Past hours to return, 1 to 24 (default 24).'),
+  page_size: z.number().int().min(1).max(24).optional().describe('Hours per page, 1 to 24 (default 24).'),
+  page_token: z.string().optional().describe('next_page_token from the previous call, with the same other arguments.'),
+  units_system: z.enum(['METRIC', 'IMPERIAL']).optional().describe('METRIC (default) or IMPERIAL.'),
+  language_code: z.string().optional().describe('BCP-47 language code, such as en or fr. Default en.'),
+};
+
+const alertsWeatherShape = {
+  latitude: z.number().min(-90).max(90).describe("Latitude in degrees. places_places_search_text finds a place's location."),
+  longitude: z.number().min(-180).max(180).describe('Longitude in degrees.'),
+  page_size: z.number().int().min(1).max(100).optional().describe('Alerts per page.'),
+  page_token: z.string().optional().describe('next_page_token from the previous call.'),
+  language_code: z.string().optional().describe('BCP-47 language code, such as en or fr. Default en.'),
+};
+
+const minutesWeatherShape = {
+  latitude: z.number().min(-90).max(90).describe("Latitude in degrees. places_places_search_text finds a place's location."),
+  longitude: z.number().min(-180).max(180).describe('Longitude in degrees.'),
+  page_size: z.number().int().min(1).max(100).optional().describe('Minutes-level nowcast records per page.'),
+  page_token: z.string().optional().describe('next_page_token from the previous call.'),
+  units_system: z.enum(['METRIC', 'IMPERIAL']).optional().describe('METRIC (default) or IMPERIAL.'),
+};
+
+const weatherTileShape = {
+  map_type: z.string().trim().min(1).describe('Weather map layer type, such as PRECIPITATION or TEMPERATURE.'),
+  zoom: z.number().int().min(0).max(22).describe('Map zoom level.'),
+  x: z.number().int().min(0).describe('Tile X coordinate.'),
+  y: z.number().int().min(0).describe('Tile Y coordinate.'),
+  offset: z.number().int().min(0).optional().describe('Read a large tile image in base64 parts starting at this byte offset.'),
+};
+
 export function buildTools(cfg: RuntimeConfig): ToolDef[] {
   /** Sends one request with the key in the X-Goog-Api-Key header, through the retry rules of core/http.ts. */
-  const send = (req: { url: string; method: 'GET' | 'POST'; params?: Record<string, unknown>; data?: unknown; headers?: Record<string, string> }) =>
+  const send = (req: { url: string; method: 'GET' | 'POST'; params?: Record<string, unknown>; data?: unknown; headers?: Record<string, string>; read?: 'bytes' | 'media' }) =>
     requestWithRetry(() => new ApiKeyClient(cfg).request({ ...req, keyInHeader: true }), { idempotent: true });
 
   return [
@@ -188,6 +225,92 @@ export function buildTools(cfg: RuntimeConfig): ToolDef[] {
         const input = z.object(weatherShape).parse(args);
         const req = weatherRequest(input);
         const res = await send({ url: req.url, method: 'GET', params: req.params });
+        return res.data;
+      },
+    }),
+    defineTool({
+      name: 'maps_weather_history',
+      title: 'Look up hourly weather history',
+      description:
+        'Past hourly weather observations (up to 24 hours) for a latitude and longitude via Weather API history/hours:lookup, with the API key. A read.',
+      kind: 'read',
+      scopes: WEATHER_SCOPES,
+      inputSchema: historyWeatherShape,
+      async handler(args) {
+        const input = z.object(historyWeatherShape).parse(args);
+        const params: Record<string, unknown> = {
+          'location.latitude': input.latitude,
+          'location.longitude': input.longitude,
+          ...(input.hours !== undefined ? { hours: input.hours } : {}),
+          ...(input.page_size !== undefined ? { pageSize: input.page_size } : {}),
+          ...(input.page_token ? { pageToken: input.page_token } : {}),
+          ...(input.units_system ? { unitsSystem: input.units_system } : {}),
+          ...(input.language_code ? { languageCode: input.language_code } : {}),
+        };
+        const res = await send({ url: `${WEATHER}/history/hours:lookup`, method: 'GET', params });
+        return res.data;
+      },
+    }),
+    defineTool({
+      name: 'maps_weather_alerts',
+      title: 'Look up public weather alerts',
+      description:
+        'Active severe weather and public alerts intersecting a latitude and longitude via Weather API publicAlerts:lookup, with the API key. A read.',
+      kind: 'read',
+      scopes: WEATHER_SCOPES,
+      inputSchema: alertsWeatherShape,
+      async handler(args) {
+        const input = z.object(alertsWeatherShape).parse(args);
+        const params: Record<string, unknown> = {
+          'location.latitude': input.latitude,
+          'location.longitude': input.longitude,
+          ...(input.page_size !== undefined ? { pageSize: input.page_size } : {}),
+          ...(input.page_token ? { pageToken: input.page_token } : {}),
+          ...(input.language_code ? { languageCode: input.language_code } : {}),
+        };
+        const res = await send({ url: `${WEATHER}/publicAlerts:lookup`, method: 'GET', params });
+        return res.data;
+      },
+    }),
+    defineTool({
+      name: 'maps_weather_minutes',
+      title: 'Look up minute-level precipitation nowcast',
+      description:
+        'Minute-level precipitation nowcast events (up to 6 hours ahead) for a latitude and longitude via Weather API forecast/minutes:lookup, with the API key. A read.',
+      kind: 'read',
+      scopes: WEATHER_SCOPES,
+      inputSchema: minutesWeatherShape,
+      async handler(args) {
+        const input = z.object(minutesWeatherShape).parse(args);
+        const params: Record<string, unknown> = {
+          'location.latitude': input.latitude,
+          'location.longitude': input.longitude,
+          ...(input.page_size !== undefined ? { pageSize: input.page_size } : {}),
+          ...(input.page_token ? { pageToken: input.page_token } : {}),
+          ...(input.units_system ? { unitsSystem: input.units_system } : {}),
+        };
+        const res = await send({ url: `${WEATHER}/forecast/minutes:lookup`, method: 'GET', params });
+        return res.data;
+      },
+    }),
+    defineTool({
+      name: 'maps_weather_tile',
+      title: 'Fetch a weather map tile',
+      description:
+        'Fetch one raster weather map overlay tile (PNG/image returned as bounded base64 parts) for map_type, zoom, x, y via Weather API lookupMapTile, with the API key. A read.',
+      kind: 'read',
+      scopes: WEATHER_SCOPES,
+      inputSchema: weatherTileShape,
+      async handler(args) {
+        const input = z.object(weatherTileShape).parse(args);
+        if (!MAP_TILE_SEGMENT.test(input.map_type)) {
+          throw new Error('map_type must contain only letters, digits, underscores or hyphens.');
+        }
+        const url = `${WEATHER}/mapTypes/${encodeURIComponent(input.map_type)}/mapTiles/${input.zoom}/${input.x}/${input.y}`;
+        const res = await send({ url, method: 'GET', read: 'media' });
+        if (res.data instanceof MediaBody) {
+          return mediaPart(res.data, { offset: input.offset ?? 0, maxResultChars: cfg.maxResultChars, canContinue: true });
+        }
         return res.data;
       },
     }),

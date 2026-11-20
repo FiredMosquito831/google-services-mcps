@@ -134,7 +134,7 @@ const products = ids.map((id) => {
     const keyScopes = entry.group === 'service-account' ? SERVICE_ACCOUNT_SCOPES_BY_SERVER[server] ?? [] : undefined;
     const prefix = `mcp__plugin_${id}_${server}__`;
     const toolMap = readJson(toolMapPath).filter((t) =>
-      registersEntry(typeof t.name === 'string' && t.name.startsWith(prefix) ? t.name.slice(prefix.length) : t.name, t.scopes, entry.group, keyScopes),
+      registersEntry(typeof t.name === 'string' && t.name.startsWith(prefix) ? t.name.slice(prefix.length) : t.name, t.scopes, entry.group, keyScopes, Boolean(entry.credentialOverrides)),
     );
     tools = toolMap.length;
     for (const tool of toolMap) {

@@ -111,7 +111,7 @@ for (const [id, p] of Object.entries(products.products)) {
   // Only the tools the server registers are listed and counted. The map also holds, for the hook, the runtime tools of
   // the other sign-in kinds, and for a service-account product the tools its key's fixed scopes never cover.
   const keyScopes = p.group === 'service-account' ? SERVICE_ACCOUNT_SCOPES_BY_SERVER[serverName] ?? [] : undefined;
-  const registers = (name, scopes) => registersEntry(name, scopes, p.group, keyScopes);
+  const registers = (name, scopes) => registersEntry(name, scopes, p.group, keyScopes, Boolean(p.credentialOverrides));
   const tools = mapped.filter((t) => registers(t.short, t.scopes));
   const notRegistered = mapped.filter((t) => !registers(t.short, t.scopes));
   const rows = tools.map((t) => ({ ...t, group: classify(t, t.short) }));
@@ -121,6 +121,7 @@ for (const [id, p] of Object.entries(products.products)) {
     title: p.title,
     description: p.description,
     group: p.group,
+    credentialRoute: Boolean(p.credentialOverrides),
     server: serverName,
     curatedModule: p.server?.curated ?? null,
     rows,
@@ -142,7 +143,7 @@ for (const [id, p] of Object.entries(products.products)) {
     toolsets: Object.fromEntries(
       ['all', 'google', 'curated'].map((t) => [t, existsSync(mapFile) ? toolsetCount(mapFile, id, serverName, t, toolsetLists(p), { registers }) : undefined]),
     ),
-    runtime: runtimeToolsFor(p.group),
+    runtime: runtimeToolsFor(p.group, Boolean(p.credentialOverrides)),
     notRegistered: notRegistered.map((t) => ({ short: t.short, why: RUNTIME_TOOL_NAMES.includes(t.short) ? 'runtime' : 'key', scopes: t.scopes ?? [] })),
     google: p.toolsets?.google,
   });
@@ -179,7 +180,7 @@ for (const p of perProduct) {
   lines.push('');
   lines.push(p.description);
   lines.push('');
-  lines.push(`- Plugin: \`${p.id}\`, MCP server: \`${p.server}\`, login: ${LOGIN[p.group] ?? p.group}`);
+  lines.push(`- Plugin: \`${p.id}\`, MCP server: \`${p.server}\`, login: ${p.credentialRoute ? 'API key, then `setup-apikey`; Street View also needs `auth_login` (readwrite/full)' : LOGIN[p.group] ?? p.group}`);
   lines.push(`- Install: \`claude plugin install ${p.id}@${marketplace.name}\``);
   lines.push(
     `- Tools: ${p.counts.total} total. Curated ${p.counts.curated}, per-method ${p.counts.generated}, gateway ${p.counts.gateway}. Read ${p.counts.read}, write ${p.counts.write}, destructive ${p.counts.destructive}, dynamic ${p.counts.dynamic}.`,
@@ -280,7 +281,7 @@ for (const p of perProduct) {
   const c = p.counts;
   const ts = p.toolsets;
   out.push(
-    `| \`${p.id}\` | ${p.title}: ${p.description} | \`${p.server}\` | ${LOGIN[p.group] ?? p.group} | ${c.total} (${c.read} / ${c.write} / ${c.destructive} / ${c.dynamic}) | ${p.generatedApis.length} / ${p.gatewayApis.length} | ${toolsetCell(ts.all, 'all')} / ${toolsetCell(ts.google, 'google')} / ${toolsetCell(ts.curated, 'curated')} | [${p.id}](capabilities/${p.id}.md) |`,
+    `| \`${p.id}\` | ${p.title}: ${p.description} | \`${p.server}\` | ${p.credentialRoute ? 'API key + Street View sign-in (`auth_login`)' : LOGIN[p.group] ?? p.group} | ${c.total} (${c.read} / ${c.write} / ${c.destructive} / ${c.dynamic}) | ${p.generatedApis.length} / ${p.gatewayApis.length} | ${toolsetCell(ts.all, 'all')} / ${toolsetCell(ts.google, 'google')} / ${toolsetCell(ts.curated, 'curated')} | [${p.id}](capabilities/${p.id}.md) |`,
   );
 }
 out.push('');

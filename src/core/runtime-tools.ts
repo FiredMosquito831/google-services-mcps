@@ -31,17 +31,28 @@ const ACCOUNT_SIGN_IN_GROUPS: ReadonlySet<string> = new Set(['workspace-user', '
  * Every other entry can register: when the sign-in covers it and, for a change, when writes are allowed. The skills and
  * the generated docs count tools with this rule (scripts/bundle.mjs, scripts/gen-*.mjs).
  */
-export function registersEntry(name: string, scopes: readonly string[] | undefined, group: string | undefined, keyScopes?: readonly string[]): boolean {
-  if (RUNTIME_TOOL_NAMES.includes(name)) return runtimeToolsFor(group).includes(name);
+export function registersEntry(
+  name: string,
+  scopes: readonly string[] | undefined,
+  group: string | undefined,
+  keyScopes?: readonly string[],
+  credentialRoute = false,
+): boolean {
+  if (RUNTIME_TOOL_NAMES.includes(name)) return runtimeToolsFor(group, credentialRoute).includes(name);
   if (keyScopes === undefined || scopes === undefined || scopes.length === 0) return true;
   return scopes.some((scope) => keyScopes.includes(scope));
 }
 
-/** The runtime tools a server of this sign-in group registers, sorted. */
-export function runtimeToolsFor(group: string | undefined): string[] {
+/**
+ * The runtime tools a server of this sign-in group registers, sorted. A product with the approved Street View
+ * credential route registers the three sign-in tools that route needs, without changing any other group's list.
+ */
+export function runtimeToolsFor(group: string | undefined, credentialRoute = false): string[] {
   const names = ['health'];
   if (group !== undefined && ACCOUNT_SIGN_IN_GROUPS.has(group)) {
     names.push('auth_setup_client', 'auth_login', 'auth_status', 'accounts_list', 'account_set_default', 'account_remove');
+  } else if (credentialRoute) {
+    names.push('auth_setup_client', 'auth_login', 'auth_status');
   }
   if (group === 'service-account') names.push('auth_setup_service_account', 'auth_status');
   if (group === 'workspace-admin') names.push('auth_setup_admin');

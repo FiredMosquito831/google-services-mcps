@@ -84,7 +84,7 @@ test('every skill: frontmatter within the cap, use cases first, sign-in in the c
     const chatTool = { apikey: 'health', 'service-account': 'auth_setup_service_account', 'workspace-admin': 'auth_setup_admin' }[group] ?? 'auth_login';
     assert.ok(signIn.indexOf(chatTool) >= 0 && (group === 'apikey' || signIn.indexOf(chatTool) < terminal), `${id}: ${chatTool} comes before the terminal command`);
     for (const runtime of RUNTIME_TOOL_NAMES) {
-      if (skill.includes(`\`${runtime}\``)) assert.ok(runtimeToolsFor(group).includes(runtime), `${id} names ${runtime}, which it does not register`);
+      if (skill.includes(`\`${runtime}\``)) assert.ok(runtimeToolsFor(group, Boolean(products[id].credentialOverrides)).includes(runtime), `${id} names ${runtime}, which it does not register`);
     }
   }
 });
@@ -136,22 +136,35 @@ async function listedNames(plugin) {
 test('every bundled server registers exactly runtimeToolsFor(its group), and lists the number of tools its skill states', { timeout: 600_000 }, async () => {
   for (const id of plugins) {
     const names = await listedNames(id);
-    assert.deepEqual(names.filter((n) => RUNTIME_TOOL_NAMES.includes(n)).sort(), runtimeToolsFor(products[id].group), `${id} runtime tools`);
+    const product = products[id];
+    assert.deepEqual(names.filter((n) => RUNTIME_TOOL_NAMES.includes(n)).sort(), runtimeToolsFor(product.group, Boolean(product.credentialOverrides)), `${id} runtime tools`);
     const skill = readFileSync(join(ROOT, 'plugins', id, 'skills', id, 'SKILL.md'), 'utf8');
-    assert.match(skill, new RegExp(`lists up to ${names.length} tools with the \`all\` toolset`), `${id}: ${names.length} tools listed`);
+    // The Street View route hides its 14 tools before sign-in; the skill counts the maximum after sign-in.
+    const hidden = product.credentialOverrides?.streetviewpublish?.methods.length ?? 0;
+    assert.match(skill, new RegExp(`lists up to ${names.length + hidden} tools with the \`all\` toolset`), `${id}: ${names.length + hidden} tools listed`);
   }
 });
 
-test('the skill counts the tools the server registers: the tool map without the runtime tools of other sign-in kinds, and without what a service account key never covers', () => {
+test('the skill counts the tools the server registers: the tool map without the runtime tools of other sign-in kinds, and without what a service account key never covers', async () => {
   for (const id of plugins) {
     const skill = readFileSync(join(ROOT, 'plugins', id, 'skills', id, 'SKILL.md'), 'utf8');
     const map = readJson('plugins', id, 'tool-map.json');
     const group = products[id].group;
-    const runtime = runtimeToolsFor(group);
+    const runtime = runtimeToolsFor(group, Boolean(products[id].credentialOverrides));
     const keyScopes = group === 'service-account' ? SERVICE_ACCOUNT_SCOPES_BY_SERVER[id] : undefined;
     const reachable = (t) => keyScopes === undefined || (t.scopes ?? []).length === 0 || t.scopes.some((s) => keyScopes.includes(s));
     const count = map.filter((t) => !RUNTIME_TOOL_NAMES.includes(t.name.slice(t.name.indexOf('__', 12) + 2)) && reachable(t)).length + runtime.length;
     assert.match(skill, new RegExp(`lists up to ${count} tools with the \`all\` toolset`), id);
     assert.ok(count < map.length, `${id}: fewer than the ${map.length} entries of the tool map`);
+    if (products[id].credentialOverrides) {
+      // OD13a: before sign-in the 14 Street View methods are deliberately absent from tools/list. The skill still
+      // counts the maximum registerable surface, so the hidden methods are the only difference.
+      const override = products[id].credentialOverrides.streetviewpublish;
+      const hidden = map.filter((t) => override.methods.includes(t.methodId ?? '')).map((t) => t.name);
+      assert.equal(hidden.length, 14);
+      const live = await listedNames(id);
+      for (const name of hidden) assert.ok(!live.includes(name), `${name} is hidden before sign-in`);
+      assert.equal(live.length + hidden.length, count, 'the signed-out list plus the hidden tools is the skill count');
+    }
   }
 });

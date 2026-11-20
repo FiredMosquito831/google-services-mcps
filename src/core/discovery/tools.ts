@@ -15,6 +15,7 @@ import type { JWT, OAuth2Client } from 'google-auth-library';
 import { z, type ZodRawShape } from 'zod';
 import { verboseOn, type RuntimeConfig } from '../config.js';
 import { getAuthClient, type AuthKind } from '../auth.js';
+import { dualCredentialAllowed, methodInOverride, overrideForMethod, STREETVIEW_ROUTE } from '../credential-route.js';
 import { isIdempotentMethod, requestWithRetry } from '../http.js';
 import type { ToolContext, ToolDef, ToolKind } from '../tools.js';
 import {
@@ -22,6 +23,7 @@ import {
   serverByName,
   type ApiRef,
   type AuthGroup,
+  type CredentialOverride,
   type DestructiveBodyRule,
   type PageSizeDefault,
   type ServerSpec,
@@ -235,6 +237,8 @@ export interface DiscoverySource {
    * config/products.json). A method that lists scopes keeps its own. Absent: a method without scopes declares none.
    */
   scopesWhenNone?: readonly string[];
+  /** Narrow credential rule of this API when declared on the product (ServerSpec.credentialOverrides). */
+  credentialOverride?: CredentialOverride;
   /**
    * Method id to the `fields` value its tool sends when a call gives none: the methods Google documents as returning no
    * default fields (ServerSpec.fieldsDefaults, declared in config/products.json). Absent: no default.
@@ -291,7 +295,7 @@ interface MethodDefaults {
   pageSize?: PageSizeDefault;
 }
 
-type DefaultsSource = Pick<DiscoverySource, 'fieldsDefaults' | 'fieldMasks' | 'pageSizes' | 'targetQueryDefaults'>;
+type DefaultsSource = Pick<DiscoverySource, 'fieldsDefaults' | 'fieldMasks' | 'pageSizes' | 'targetQueryDefaults' | 'credentialOverride'>;
 
 function defaultsOf(src: DefaultsSource, id: string): MethodDefaults {
   return {
@@ -433,6 +437,34 @@ export interface AuthorizedRequest {
    * Absent: as before (the API key client always reads bytes, and returns a MediaBody only for content that is not text).
    */
   read?: 'bytes' | 'media';
+  /** Discovery method id supplied by the caller; never sent to Google itself. */
+  authMethodId?: string;
+  /** Narrow credential route claimed by the caller. */
+  credentialRoute?: string;
+}
+
+/** Test seam for dual-credential route; never set in production. */
+let bearerOverride: string | undefined;
+export function setBearerForTests(token: string | undefined): void {
+  bearerOverride = token;
+}
+
+function credentialOverridesOf(cfg: RuntimeConfig): Record<string, CredentialOverride> | undefined {
+  if (cfg.server === undefined) return undefined;
+  try {
+    return serverByName(loadRegistry(), cfg.server).credentialOverrides;
+  } catch {
+    return undefined;
+  }
+}
+
+async function bearerFor(override: CredentialOverride, cfg: RuntimeConfig): Promise<string> {
+  if (bearerOverride !== undefined) return bearerOverride;
+  const client = await getAuthClient(override.userAuthKind as AuthKind, cfg);
+  const result = await client.getAccessToken();
+  const token = typeof result === 'string' ? result : result.token;
+  if (!token) throw new Error('Street View Publish needs an OAuth sign-in with the streetviewpublish scope before this call.');
+  return token;
 }
 
 /** A response header from either shape the HTTP layer returns (a Headers object, or a plain object). */
@@ -460,13 +492,25 @@ export async function sendAuthorized(
   cfg: RuntimeConfig,
   req: AuthorizedRequest,
 ): Promise<{ status: number; data: unknown }> {
+  const overrides = req.authMethodId === undefined && req.credentialRoute === undefined ? undefined : credentialOverridesOf(cfg);
+  const claimedApproved = req.authMethodId !== undefined && overrideForMethod(overrides, req.authMethodId) !== undefined;
+  const dual =
+    req.credentialRoute !== undefined || claimedApproved
+      ? dualCredentialAllowed(overrides, group, req.url, req.credentialRoute, req.authMethodId)
+      : false;
+  if ((req.credentialRoute !== undefined || claimedApproved) && !dual) {
+    throw new Error('Street View credential route refused: the method identity, group or host is not the approved one.');
+  }
   const ads = isGoogleAdsUrl(req.url) ? adsHeaders(cfg) : undefined;
   // The request's own headers (a field mask), then the Google Ads headers, which no request header replaces.
   const headers = { ...(req.headers ?? {}), ...(ads ?? {}) };
   const client = await authFor(group, cfg);
   // An OAuth or ADC client retries inside its own request method (core/auth.ts), so every request sent through it is covered.
   if (client instanceof ApiKeyClient) {
-    return requestWithRetry(() => client.request(req), { idempotent: isIdempotentMethod(req.method) });
+    if (!dual) return requestWithRetry(() => client.request(req), { idempotent: isIdempotentMethod(req.method) });
+    const override = overrideForMethod(overrides, req.authMethodId)!;
+    const bearerToken = await bearerFor(override, cfg);
+    return requestWithRetry(() => client.request({ ...req, headers, bearerToken }), { idempotent: isIdempotentMethod(req.method) });
   }
   const hasParams = req.params !== undefined && Object.keys(req.params).length > 0;
   try {
@@ -692,7 +736,13 @@ function buildMethodTool(
       const a = args as Record<string, unknown>;
       const offset = takesOffset && typeof a[OFFSET_ARG] === 'number' ? (a[OFFSET_ARG] as number) : 0;
       const asMedia = media === 'download' && a[ALT_ARG] === 'media';
-      const sent: AuthorizedRequest = asMedia ? { ...req, headers: { ...(req.headers ?? {}), Range: rangeHeader(offset, cfg.maxResultChars) }, read: 'media' } : media ? { ...req, read: 'bytes' } : req;
+      const identity = src.credentialOverride ? { authMethodId: m.fullId } : {};
+      const route = methodInOverride(src.credentialOverride, m.fullId, doc.name, doc.version) ? { credentialRoute: STREETVIEW_ROUTE } : {};
+      const sent: AuthorizedRequest = asMedia
+        ? { ...req, ...identity, ...route, headers: { ...(req.headers ?? {}), Range: rangeHeader(offset, cfg.maxResultChars) }, read: 'media' }
+        : media
+          ? { ...req, ...identity, ...route, read: 'bytes' }
+          : { ...req, ...identity, ...route };
       const res = await sendAuthorized(group, cfg, sent);
       // A file is returned as one part that fits the result limit, never as text.
       if (res.data instanceof MediaBody) return mediaPart(res.data, { offset, maxResultChars: cfg.maxResultChars, canContinue: takesOffset });
@@ -732,7 +782,9 @@ function buildMethodTool(
       ...endpointsOf(doc),
     };
     tool.describeTarget = async (args) => {
-      const res = await sendAuthorized(group, cfg, buildRequest(targetPlan, args as Record<string, unknown>));
+      const identity = src.credentialOverride ? { authMethodId: target.fullId } : {};
+      const route = methodInOverride(src.credentialOverride, target.fullId, doc.name, doc.version) ? { credentialRoute: STREETVIEW_ROUTE } : {};
+      const res = await sendAuthorized(group, cfg, { ...buildRequest(targetPlan, args as Record<string, unknown>), ...identity, ...route });
       return targetFieldsOf(redactCredentials(res.data, { api: doc.name, schema: target.responseRef, schemas: doc.schemas }));
     };
   }
@@ -931,6 +983,7 @@ export async function discoveryToolsFor(
       doc: JSON.parse(readFileSync(file, 'utf8')) as DiscoveryDoc,
       include: a.include,
       ...(server.scopeOverrides?.[a.api] ? { scopesWhenNone: server.scopeOverrides[a.api] } : {}),
+      ...(server.credentialOverrides?.[a.api] ? { credentialOverride: server.credentialOverrides[a.api] } : {}),
       ...requestDefaultsFor(server, a.api),
       ...(server.methodNotes?.[a.api] ? { methodNotes: server.methodNotes[a.api]!.methods } : {}),
       ...(server.destructiveWhen?.[a.api] ? { destructiveWhen: server.destructiveWhen[a.api]!.methods } : {}),

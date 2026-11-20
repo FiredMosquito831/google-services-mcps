@@ -50,7 +50,7 @@ function toolCount(id) {
     const server = p.server?.name ?? id;
     const keyScopes = p.group === 'service-account' ? SERVICE_ACCOUNT_SCOPES_BY_SERVER[server] ?? [] : undefined;
     const prefix = `mcp__plugin_${id}_${server}__`;
-    const count = map.filter((t) => registersEntry(t.name.startsWith(prefix) ? t.name.slice(prefix.length) : t.name, t.scopes, p.group, keyScopes)).length;
+    const count = map.filter((t) => registersEntry(t.name.startsWith(prefix) ? t.name.slice(prefix.length) : t.name, t.scopes, p.group, keyScopes, Boolean(p.credentialOverrides))).length;
     return { count, source: 'tool-map' };
   }
   return { count: products[id].generatedToolCount, source: 'config' };

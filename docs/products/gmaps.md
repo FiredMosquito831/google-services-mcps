@@ -2,7 +2,7 @@
 
 Install with the simplest command: `npx google-services-mcps install --agent claude --plugin <id>` (see docs/TUTORIAL.md).
 
-Maps Platform and location APIs: Places (New), Address Validation, Air Quality, Pollen, Solar, Street View Publish, Places Aggregate and Travel Impact Model, and the Routes and Weather APIs through two hand-written tools. It looks up places and addresses, computes routes, reads the weather and environmental and solar data for a location. Street View Publish's 14 methods are listed but cannot work here: Google requires an OAuth 2.0 access token as well as the API key, and this product has only a key (see "Street View Publish" below). It has no gateway.
+Maps Platform and location APIs: Places (New), Address Validation, Air Quality, Pollen, Solar, Street View Publish, Places Aggregate and Travel Impact Model, and the Routes and Weather APIs through two hand-written tools. It looks up places and addresses, computes routes, reads the weather and environmental and solar data for a location. Street View Publish's 14 methods send both the product's API key and a user OAuth bearer token after sign-in (see "Street View Publish" below). They stay hidden until that sign-in grants the scope. It has no gateway.
 
 ## When to install it
 
@@ -20,19 +20,19 @@ node <plugin>/bin/gsm.mjs setup-apikey
 node <plugin>/bin/gsm.mjs status
 ```
 
-`<plugin>` is the plugin folder (in this repo, `plugins/gmaps`). gmaps is in the API key group: it uses the same key as gsearch (`apikey.json` in the token folder), and there is no login step.
+`<plugin>` is the plugin folder (in this repo, `plugins/gmaps`). gmaps is in the API key group: it uses the same key as gsearch (`apikey.json` in the token folder), with no login step for key-only tools. Street View Publish is the one exception: in the chat, call `auth_login` with profile `readwrite` or `full` to add the Street View scope to the existing user OAuth profile; that route adds no new token file.
 
 1. In a Google Cloud project, enable billing and the Maps APIs you use: Places API (New), Routes API, Weather API, Address Validation, Air Quality, Pollen, Solar and Street View Publish.
 2. Create an API key and restrict it to those APIs.
 3. Run `setup-apikey`. Paste the key when asked, or pipe it in. The key is never printed and never passed on the command line.
 
-There is no scopes profile, because a key is not an OAuth token. Street View's writes need the plugin option `allow_writes`; place autocomplete does not (it is a read).
+Key-only tools have no scopes profile, because a key is not an OAuth token. The Street View route derives its one scope from the 14 methods' own kinds through the normal `readonly`/`readwrite`/`full` resolver; the Street View scope is not view-only, so `readonly` does not cover it. Street View's writes still need the plugin option `allow_writes`; place autocomplete does not (it is a read).
 
 ## What it can do
 
 | Area | Tools | Safety | What it does |
 |---|---|---|---|
-| Routes and weather (hand-written) | `maps_compute_routes`, `maps_lookup_weather` | read | A route's distance and duration (with stops, alternatives and the polyline on request); the current weather or an hourly or daily forecast |
+| Routes and weather (hand-written) | `maps_compute_routes`, `maps_lookup_weather`, `maps_weather_history`, `maps_weather_alerts`, `maps_weather_minutes`, `maps_weather_tile` | read | Route distance and duration (stops, alternatives, polyline); current weather, hourly/daily/minute forecasts, 24h hourly history, public alerts, and raster weather map tiles |
 | Places (5 methods) | get, photos get, search nearby, search text, autocomplete | read | Find places, read their details and photos, and suggest places as the user types |
 | Address Validation (2) | validate address | read | Check an address |
 | | provide validation feedback | write | Send feedback on an address result |
@@ -40,13 +40,13 @@ There is no scopes profile, because a key is not an OAuth token. Street View's w
 | Solar (3) | building insights, data layers, GeoTIFF | read | Solar potential for a building |
 | Places Aggregate (1) | compute insights | read | Compute area insights (a read since 1.26.3) |
 | Travel Impact Model (4) | flight emissions calculations | read | Compute flight emissions (reads since 1.26.3) |
-| Street View Publish (14) | photo and sequence create, update, upload start, get, list | read, write | Street-level imagery. These tools cannot work here: see the note below |
-| | photo and sequence delete, batch delete | destructive | Delete Street View photos. Cannot work here either |
+| Street View Publish (14) | photo and sequence create, update, upload start, get, list | read, write | Street-level imagery; visible after the Street View sign-in, and key + bearer on each call |
+| | photo and sequence delete, batch delete | destructive | Delete Street View photos after sign-in; they still ask twice |
 | Gateway | none | | No gateway tools. All methods are per-method tools. |
 
 The full list is in `docs/capabilities/gmaps.md`.
 
-The two hand-written tools match tools of Google's Maps Grounding Lite MCP server (https://developers.google.com/maps/ai/maps-experience-agent-tools/reference/mcp/compute_routes and `.../lookup_weather`). The Routes and Weather APIs are not in Google's Discovery directory, so these call them directly with the API key, which goes in the `X-Goog-Api-Key` header and never in a URL; every answer and error has the key removed. `maps_compute_routes` always sends the response field mask Google requires: a short summary by default (duration, duration without traffic, distance, description, warnings, labels and the same per leg), the polyline with `include_polyline`, or the fields you name with `field_mask` (no wildcard). With the plugin option `toolset: google`, the server lists these two, `places_places_search_text` (Google's `search_places`) and `places_places_get` (place details), with `health`. Google publishes `resolve_names` and `resolve_maps_urls` as a REST surface (POST `https://mapstools.googleapis.com/v1:resolveNames`), whose Discovery document is not public (it answered 403 on 2026-11-01) and whose only documented authorization is the OAuth scope `maps-platform.mapstools`; gmaps has an API key and no Google sign-in, so they have no tool here.
+The two hand-written tools match tools of Google's Maps Grounding Lite MCP server (https://developers.google.com/maps/ai/maps-experience-agent-tools/reference/mcp/compute_routes and `.../lookup_weather`). The Routes and Weather APIs are not in Google's Discovery directory, so these call them directly with the API key, which goes in the `X-Goog-Api-Key` header and never in a URL; every answer and error has the key removed. `maps_compute_routes` always sends the response field mask Google requires: a short summary by default (duration, duration without traffic, distance, description, warnings, labels and the same per leg), the polyline with `include_polyline`, or the fields you name with `field_mask` (no wildcard). With the plugin option `toolset: google`, the server lists these two, `places_places_search_text` (Google's `search_places`) and `places_places_get` (place details), with `health`. Google publishes `resolve_names` and `resolve_maps_urls` as a REST surface (POST `https://mapstools.googleapis.com/v1:resolveNames`), whose Discovery document is not public (it answered 403 on 2026-11-01) and whose only documented authorization is the OAuth scope `maps-platform.mapstools`; gmaps has an API key and no Google sign-in that covers `maps-platform.mapstools`, so they have no tool here.
 
 ## Example requests
 
@@ -61,13 +61,13 @@ The two hand-written tools match tools of Google's Maps Grounding Lite MCP serve
 ## Safety
 
 - Autocomplete (since 1.24.2) and the emissions and insight calculations (since 1.26.3) are reads: they only compute, so Claude runs them without asking. They still use your key's quota.
-- Street View deletes are destructive. They ask twice, though Google is expected to refuse them here (see "Street View Publish").
+- Street View deletes are destructive. They ask twice; after sign-in the key and bearer token are added only to these 14 methods, and no model-controlled `confirm` argument exists.
 - Field masks decide which billing SKU a request uses. Ask only for the fields you need. Since 1.30.0, `places_places_search_text`, `places_places_search_nearby` and `places_places_get` send the field mask Google requires (before, they sent none, and Google's documentation says such a call fails; not checked live): by default the id, display name, address, location, types and Maps link (Essentials and Pro fields, plus `nextPageToken` for text search), or the fields you name in `field_mask`. Rating, phone, opening hours and website are Enterprise fields; ask for them by name.
 - The `confirmation` option defaults to `every-change`. Change it with `printf '%s' '{"confirmation":"destructive-only"}' | claude plugin configure gmaps@google-services-mcps --values-stdin` (JSON on stdin), or `/plugin configure gmaps@google-services-mcps` in Claude Code.
 
 ## Street View Publish
 
-Google's Street View Publish API needs an API key **and** an OAuth 2.0 access token: the quickstart says "After you have your API key and access token", and its samples send both `?key=YOUR_API_KEY` and `authorization: Bearer YOUR_ACCESS_TOKEN` (https://developers.google.com/streetview/publish/first-app). gmaps is in the API key group and has no Google sign-in, so it sends no token, and all 14 Street View Publish tools are expected to be refused. Every one of their descriptions says so. The same goes for uploading imagery: `photo.startUpload` only returns an upload session, and the upload itself is a media upload, which this suite's per-method tools and gateway both leave out. Making Street View work needs an OAuth sign-in for this product, which is a separate decision.
+Google's Street View Publish API needs an API key **and** an OAuth 2.0 access token: the quickstart says "After you have your API key and access token", and its samples send both `?key=YOUR_API_KEY` and `authorization: Bearer YOUR_ACCESS_TOKEN` (https://developers.google.com/streetview/publish/first-app). gmaps stays in the API key group, and the approved credential route adds a bearer token from the existing user OAuth profile only to the 14 approved `streetviewpublish.v1` methods, only when the method identity, group and exact host `streetviewpublish.googleapis.com` all match; otherwise the call is refused before anything is sent. Before sign-in the 14 tools are hidden. `photo.startUpload` still only returns an upload session: uploading the image bytes is a media upload that this suite does not implement, so this is an auth-only fix. The owner must enable and approve `https://www.googleapis.com/auth/streetviewpublish` on the OAuth consent screen and publish the app. Live acceptance of the dual credentials remains UNVERIFIED; no live Google call was made.
 
 ## Costs and limits
 
@@ -75,6 +75,6 @@ Each SKU has free calls each month: 10,000 for Essentials, 5,000 for Pro and 1,0
 
 ## Caveats
 
-- Street View Publish quota numbers and error codes are UNVERIFIED. The tools are not expected to work at all without an OAuth token (see "Street View Publish").
+- Street View Publish quota numbers, error codes and live acceptance of key + bearer are UNVERIFIED. The tools are hidden without the OAuth scope (see "Street View Publish").
 - Later price tiers are UNVERIFIED for most SKUs.
 - Places Autocomplete session usage is listed as unlimited with no price shown. Confirm it on the SKU page before you rely on it.

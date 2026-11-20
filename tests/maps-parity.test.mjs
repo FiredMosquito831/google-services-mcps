@@ -45,15 +45,27 @@ const noKeyIn = (call) => {
   assert.equal(call.headers['X-Goog-Api-Key'], KEY, 'the key is in the X-Goog-Api-Key header');
 };
 
-test('two tools, both reads; each names the Google tool it matches', () => {
-  assert.deepEqual([...tools.values()].map((t) => [t.name, t.kind]), [['maps_compute_routes', 'read'], ['maps_lookup_weather', 'read']]);
+test('six curated reads; routes and weather match Google MCP tools, extra Weather endpoints cover history, alerts, minutes and map tiles', () => {
+  assert.deepEqual(
+    [...tools.values()].map((t) => [t.name, t.kind]),
+    [
+      ['maps_compute_routes', 'read'],
+      ['maps_lookup_weather', 'read'],
+      ['maps_weather_history', 'read'],
+      ['maps_weather_alerts', 'read'],
+      ['maps_weather_minutes', 'read'],
+      ['maps_weather_tile', 'read'],
+    ],
+  );
   const official = { maps_compute_routes: 'compute_routes', maps_lookup_weather: 'lookup_weather' };
   for (const [name, google] of Object.entries(official)) {
     const t = tools.get(name);
     assert.ok(t.description.includes(`matches ${google} in Google's Maps Grounding Lite MCP server`), name);
-    assert.equal(t.inputSchema.confirm, undefined, `${name}: no model-controlled confirm`);
-    assert.ok(name.length <= 49 - 'gmaps'.length * 2, `${name} fits the name budget`);
-    assert.deepEqual(t.scopes, ['https://www.googleapis.com/auth/cloud-platform'], name);
+  }
+  for (const t of tools.values()) {
+    assert.equal(t.inputSchema.confirm, undefined, `${t.name}: no model-controlled confirm`);
+    assert.ok(t.name.length <= 49 - 'gmaps'.length * 2, `${t.name} fits the name budget`);
+    assert.deepEqual(t.scopes, ['https://www.googleapis.com/auth/cloud-platform'], t.name);
   }
 });
 
@@ -183,4 +195,36 @@ test("the gmaps google list: Google's search_places, compute_routes and lookup_w
   assert.match(google.notes.places_places_get, /maps-platform\.mapstools/);
   const map = JSON.parse(readFileSync(join(REPO, 'plugins', 'gmaps', 'tool-map.json'), 'utf8'));
   for (const name of google.tools) assert.equal(map.find((t) => t.name === `mcp__plugin_gmaps_gmaps__${name}`)?.kind, 'read', name);
+});
+
+test('OD13c: Weather history, alerts, minute nowcast and mapTiles use header key and bounded output', async () => {
+  reset(() => ({ status: 200, body: { historyHours: [] } }));
+  await run('maps_weather_history', { latitude: 35.68, longitude: 139.69, hours: 12, units_system: 'METRIC', page_size: 12 });
+  assert.equal(calls[0].path, 'https://weather.googleapis.com/v1/history/hours:lookup');
+  assert.equal(calls[0].query.hours, '12');
+  noKeyIn(calls[0]);
+
+  reset(() => ({ status: 200, body: { weatherAlerts: [] } }));
+  await run('maps_weather_alerts', { latitude: 35.68, longitude: 139.69, language_code: 'en' });
+  assert.equal(calls[0].path, 'https://weather.googleapis.com/v1/publicAlerts:lookup');
+  noKeyIn(calls[0]);
+
+  reset(() => ({ status: 200, body: { minuteForecasts: [] } }));
+  await run('maps_weather_minutes', { latitude: 35.68, longitude: 139.69, units_system: 'IMPERIAL' });
+  assert.equal(calls[0].path, 'https://weather.googleapis.com/v1/forecast/minutes:lookup');
+  noKeyIn(calls[0]);
+
+  const tilePng = Buffer.from([137, 80, 78, 71, 13, 10, 26, 10, 0, 0, 0, 1]);
+  setFetchForTests(async (input, init = {}) => {
+    const url = new URL(String(input));
+    calls.push({ method: init.method, url: String(input), path: `${url.origin}${url.pathname}`, query: Object.fromEntries(url.searchParams), headers: { ...init.headers } });
+    return new Response(tilePng, { status: 200, headers: { 'content-type': 'image/png' } });
+  });
+  calls = [];
+  const tile = await run('maps_weather_tile', { map_type: 'PRECIPITATION', zoom: 4, x: 8, y: 5 });
+  assert.equal(calls[0].path, 'https://weather.googleapis.com/v1/mapTypes/PRECIPITATION/mapTiles/4/8/5');
+  noKeyIn(calls[0]);
+  assert.equal(tile.mime_type, 'image/png');
+  assert.equal(tile.data_base64, tilePng.toString('base64'));
+  await assert.rejects(run('maps_weather_tile', { map_type: '../bad', zoom: 1, x: 0, y: 0 }), /map_type must contain/);
 });

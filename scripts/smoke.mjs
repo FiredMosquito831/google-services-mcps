@@ -177,10 +177,13 @@ for (const plugin of plugins) {
       for (const n of names) {
         if (SIGN_IN_TOOLS.has(n) && !toolMap.some((t) => t.name === prefix + n)) fail(`${server}: ${n} is not in tool-map.json, so the hook would ask for every call`);
       }
+      // OD13a: the product's declared credential route hides its methods until sign-in, in both write modes.
+      const hidden = hiddenRouteNames(plugin, toolMap, prefix);
+      if (names.some((n) => hidden.includes(n))) fail(`${server}: a Street View tool is listed before sign-in`);
       const expectedOff = toolMap
         .filter((t) => READ_KINDS.has(t.kind))
         .map((t) => t.name.slice(prefix.length))
-        .filter((n) => !SIGN_IN_TOOLS.has(n))
+        .filter((n) => !SIGN_IN_TOOLS.has(n) && !hidden.includes(n))
         .sort();
       const listedOff = names.filter((n) => !SIGN_IN_TOOLS.has(n)).sort();
       // The tools a server lists with writes off must be read entries of its tool map.
@@ -215,6 +218,12 @@ function toolKindOf(toolMap, prefix, shortName) {
   return toolMap.find((t) => t.name === prefix + shortName)?.kind;
 }
 
+/** Tool-map names of the declared credential route, hidden until the approved sign-in grants its scope. */
+function hiddenRouteNames(plugin, toolMap, prefix) {
+  const methods = products[plugin]?.credentialOverrides?.streetviewpublish?.methods ?? [];
+  return toolMap.filter((t) => methods.includes(t.methodId ?? '')).map((t) => t.name.slice(prefix.length));
+}
+
 // Writes on: the names stay within the limit, and every tool-map entry is registered.
 for (const plugin of plugins) {
   const pluginDir = join(pluginsDir, plugin);
@@ -230,9 +239,12 @@ for (const plugin of plugins) {
       if (longestFull > TOOL_NAME_MAX) fail(`${server} (writes on): full tool name is ${longestFull} characters (limit ${TOOL_NAME_MAX})`);
       if (new Set(names).size !== names.length) fail(`${server} (writes on): duplicate tool names`);
       if (!tools.some((t) => t.annotations?.readOnlyHint !== true)) fail(`${server} (writes on): no write tools registered`);
-      const expected = (toolMaps.get(plugin) ?? [])
+      const map = toolMaps.get(plugin) ?? [];
+      const hidden = hiddenRouteNames(plugin, map, prefix);
+      if (names.some((n) => hidden.includes(n))) fail(`${server} (writes on): a Street View tool is listed before sign-in`);
+      const expected = map
         .map((t) => t.name.slice(prefix.length))
-        .filter((n) => !SIGN_IN_TOOLS.has(n))
+        .filter((n) => !SIGN_IN_TOOLS.has(n) && !hidden.includes(n))
         .sort();
       const registered = names.filter((n) => !SIGN_IN_TOOLS.has(n));
       const unexpected = registered.filter((n) => !expected.includes(n));

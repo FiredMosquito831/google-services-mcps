@@ -454,6 +454,33 @@ function methodNotesOf(value, id, apiMethods) {
   return value;
 }
 
+/**
+ * A product's "credentialOverrides" (ServerSpec.credentialOverrides in src/core/registry.ts): a narrow, data-declared
+ * request-level credential rule. Only the approved streetviewpublish v1 route is known.
+ */
+function credentialOverridesOf(value, id, apiMethods) {
+  if (value === undefined) return undefined;
+  const where = `product ${id} credentialOverrides`;
+  if (typeof value !== 'object' || value === null || Array.isArray(value) || Object.keys(value).length === 0) fail(`${where} must be a non-empty object`);
+  const users = ['cloud', 'workspace-user', 'searchconsole', 'business', 'developer'];
+  for (const [api, entry] of Object.entries(value)) {
+    if (!apiMethods.has(api)) fail(`${where}: "${api}" is not a generated API of the product`);
+    if (entry.route !== 'streetview-key-plus-bearer') fail(`${where}["${api}"].route must be streetview-key-plus-bearer`);
+    if (entry.api !== api || entry.version !== 'v1') fail(`${where}["${api}"] must declare api "${api}" version "v1"`);
+    if (entry.scope !== 'https://www.googleapis.com/auth/streetviewpublish') fail(`${where}["${api}"].scope must be the Street View Publish scope`);
+    if (entry.host !== 'streetviewpublish.googleapis.com') fail(`${where}["${api}"].host must be streetviewpublish.googleapis.com`);
+    if (!users.includes(entry.userAuthKind)) fail(`${where}["${api}"].userAuthKind must be an existing OAuth user group`);
+    if (!Array.isArray(entry.methods) || entry.methods.length === 0) fail(`${where}["${api}"].methods must be a non-empty list`);
+    const seen = new Set();
+    for (const method of entry.methods) {
+      checkMethodOf(where, api, method, apiMethods);
+      if (seen.has(method)) fail(`${where}["${api}"].methods lists ${method} twice`);
+      seen.add(method);
+    }
+  }
+  return value;
+}
+
 /** The schemas of each API's snapshot (every version merged), for checks that look into a method's request. */
 function snapshotSchemasOf(apis) {
   const out = new Map();
@@ -576,6 +603,8 @@ function main() {
     // Only a product with method notes gets the key, so the entries of the others stay as they were.
     const methodNotes = methodNotesOf(p.methodNotes, id, apiMethods);
     if (methodNotes) server.methodNotes = methodNotes;
+    const credentialOverrides = credentialOverridesOf(p.credentialOverrides, id, apiMethods);
+    if (credentialOverrides) server.credentialOverrides = credentialOverrides;
     // Only a product with body rules for destructive calls gets the key, so the entries of the others stay as they were.
     const destructiveWhen = destructiveWhenOf(p.destructiveWhen, id, apiMethods, snapshotSchemasOf(apis));
     if (destructiveWhen) server.destructiveWhen = destructiveWhen;
