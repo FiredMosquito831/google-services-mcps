@@ -1153,9 +1153,11 @@ test('runServer: google on gsearch (API key) and gadmin lists the list and the r
   const aentry = curatedEntry(adir, 'gadmin', 'workspace-admin');
   const atokens = join(adir, 'tokens');
   mkdirSync(atokens, { recursive: true });
-  // What setup-admin stores, with every scope the plugin's tools list (fake values; the key file is never read here).
+  // What setup-admin stores, with every scope the plugin's tools list (fake values; the key file is never read here, only its existence checked).
   const adminScopes = [...new Set(readJson('plugins', 'gadmin', 'tool-map.json').flatMap((t) => t.scopes ?? []))].sort();
-  writeFileSync(join(atokens, 'workspace-admin.scopes.json'), JSON.stringify({ subject: 'admin@example.com', scopes: adminScopes, profile: 'custom', keyFile: join(adir, 'no-key.json') }));
+  const akey = join(adir, 'admin-key.json');
+  writeFileSync(akey, JSON.stringify({ type: 'service_account', client_email: 'sa@test-project.iam.gserviceaccount.com' }));
+  writeFileSync(join(atokens, 'workspace-admin.scopes.json'), JSON.stringify({ subject: 'admin@example.com', scopes: adminScopes, profile: 'custom', keyFile: akey }));
   const aall = await withClient(aentry, childEnv(adir, atokens), listTools);
   const agoogle = await withClient(aentry, childEnv(adir, atokens, { GSM_TOOLSET: 'google' }), async (c) => ({ tools: await listTools(c), health: await health(c) }));
   const listed = agoogle.tools.map((t) => t.name).filter((n) => ADMIN_GOOGLE.includes(n)).sort();

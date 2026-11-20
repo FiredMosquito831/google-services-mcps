@@ -26,6 +26,12 @@ type Member = admin_directory_v1.Schema$Member;
 const CUSTOMER = 'my_customer';
 
 let cachedDir: Dir | undefined;
+
+/** Forget the curated Directory client after an in-chat setup, so the next call reads the new subject, key and scopes. */
+export function forgetAdminDirectoryClient(): void {
+  cachedDir = undefined;
+}
+
 async function directory(cfg: RuntimeConfig): Promise<Dir> {
   if (!cachedDir) {
     const auth: OAuth2Client | JWT = await getAuthClient('workspace-admin', cfg);

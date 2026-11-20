@@ -64,9 +64,29 @@ test('README, SURFACES, CAPABILITIES and each capability page give every product
     assert.match(capabilities, new RegExp(`\\| \`${id}\` \\| .*? \\| ${count} \\(${kinds.read} / ${kinds.write} / ${kinds.destructive} / ${kinds.dynamic}\\) \\|`), `${id} CAPABILITIES`);
     const page = read('docs', 'capabilities', `${id}.md`);
     assert.match(page, new RegExp(`- Tools: ${count} total\\.`), `${id} capability page`);
+    if (id === 'gadmin') {
+      const ppage = read('docs', 'products', 'gadmin.md');
+      assert.match(ppage, new RegExp(`lists up to ${count} tools with the \`all\` toolset`), `${id} product page`);
+      assert.doesNotMatch(ppage, /It has 366 tools\./, `${id} product page`);
+    }
   }
   assert.match(readme, new RegExp(`\\*\\*Totals:\\*\\* ${ids.length} products, ${total} tools,`));
   assert.match(capabilities, new RegExp(`; ${total} tools built;`));
+});
+
+test('gadmin hand-written product page states the registered maximum', () => {
+  const maximum = registered('gadmin').own.length;
+  const page = read('docs', 'products', 'gadmin.md');
+
+  assert.equal(maximum, 368, 'gadmin registered maximum');
+  assert.match(page, new RegExp(`up to ${maximum} tools with the \`all\` toolset`), 'docs/products/gadmin.md total');
+  assert.match(page, /366 defined tools/, 'defined-tool explanation');
+  assert.match(page, /`health`/, 'health runtime tool named');
+  assert.match(page, /`auth_setup_admin`/, 'admin-setup runtime tool named');
+  assert.match(page, /tools\/list/, 'tools/list explanation');
+  assert.doesNotMatch(page, /It has 366 tools\./, 'old incorrect total is gone');
+  assert.match(page, /describes what is available after a full DWD setup/, 'count is the post-setup maximum');
+  assert.match(page, /before that, `tools\/list` offers only `health` and `auth_setup_admin`/, 'pre-setup surface is documented');
 });
 
 test('a capability page lists no runtime tool its server never registers, and names the map entries it leaves out', () => {

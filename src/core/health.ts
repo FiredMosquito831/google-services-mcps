@@ -1,8 +1,9 @@
+import { existsSync } from 'node:fs';
 import { loadUserTokens, loginSourceOf, readAdminScopeFile, readServiceAccountFile, refreshExpiryInfo, type AuthKind, type StoredCredentials } from './auth.js';
 import { readAdcState } from './adc.js';
 import type { RuntimeConfig } from './config.js';
 import { secretFileExists } from './secret-files.js';
-import { checkGrant, checkServiceAccountGrant, type GrantDeps, type GrantState } from './grant-check.js';
+import { checkAdminDwdGrant, checkGrant, checkServiceAccountGrant, type GrantDeps, type GrantState } from './grant-check.js';
 import { invocation } from './invocation.js';
 
 /**
@@ -84,13 +85,21 @@ export function loginHealth(group: string, cfg: RuntimeConfig, account?: string)
     };
   }
   if (group === 'workspace-admin') {
+    // Stored setup wins field by field, matching getAuthClient; key contents are never read and no network call is made.
     const stored = readAdminScopeFile(cfg);
-    const configured = Boolean((stored?.keyFile ?? cfg.serviceAccountKeyFile) && (stored?.subject ?? cfg.adminSubject));
+    const keyFile = stored?.keyFile ?? cfg.serviceAccountKeyFile;
+    const subject = stored?.subject ?? cfg.adminSubject;
+    const configured = typeof keyFile === 'string' && keyFile.trim() !== '' && typeof subject === 'string' && subject.trim() !== '';
+    const keyExists = configured && typeof keyFile === 'string' && existsSync(keyFile);
     return {
       kind: 'service-account',
-      loggedIn: configured,
-      detail: configured ? 'service account set up' : `not set up: run ${invocation()} setup-admin`,
-      next: configured ? undefined : 'auth_setup_admin',
+      loggedIn: keyExists,
+      detail: keyExists
+        ? 'service account set up'
+        : configured
+          ? `key file missing at ${keyFile}`
+          : `not set up: run ${invocation()} setup-admin`,
+      next: keyExists ? undefined : 'auth_setup_admin',
     };
   }
   if (group === 'service-account') {
@@ -142,11 +151,15 @@ function sourceDetail(source: 'oauth' | 'adc' | 'service-account' | undefined, c
 
 /** Asks Google about a group's login (or a named account). Makes network calls, so it runs only when asked. */
 export async function liveHealth(group: string, cfg: RuntimeConfig, deps: GrantDeps = {}, account?: string): Promise<LiveHealth> {
-  if (group === 'apikey' || group === 'workspace-admin') {
+  if (group === 'apikey') {
     return { state: 'not-applicable', detail: 'nothing to ask Google about for this group', missingScopes: [] };
   }
   const check =
-    group === 'service-account' ? await checkServiceAccountGrant(cfg, deps) : await checkGrant(group as AuthKind, cfg, deps, account);
+    group === 'workspace-admin'
+      ? await checkAdminDwdGrant(cfg, deps)
+      : group === 'service-account'
+        ? await checkServiceAccountGrant(cfg, deps)
+        : await checkGrant(group as AuthKind, cfg, deps, account);
   return {
     state: check.state,
     detail: check.detail,

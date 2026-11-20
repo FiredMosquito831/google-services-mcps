@@ -474,7 +474,9 @@ npx google-services-mcps login developer --profile readonly --servers gfirebase
 npx google-services-mcps setup-admin --subject admin@example.com --key-file "C:\Users\you\Downloads\service-account.json" --profile readonly --servers gadmin
 ```
 
-Checked with a test service account file. The command checks that the file has a `client_email`, saves the setup in the token directory, and prints the scopes to authorize for the service account's client ID under **Google Admin console > Security > API controls > Domain-wide delegation**. It does not call Google. The key file is referenced where it is, and it is not copied. Use `--replace` to drop the stored scopes, as for `login`.
+Checked with a test service account file. The command checks that the file has a `client_email`, saves the setup in the token directory, and prints the scopes to authorize for the service account's client ID under **Google Admin console > Security > API controls > Domain-wide delegation**. It does not call Google. The key file is referenced where it is, and is not copied. Use `--replace` to drop the stored scopes, as for `login`. Run `gsm status --check` (or call `health` with `live: true`) to verify live DWD token minting with Google.
+
+Google says the scopes authorized in the Admin console should be the same set configured on the Cloud project's OAuth consent screen (Google Cloud console > APIs & Services > OAuth consent screen > Scopes). It also says DWD changes can take up to 24 hours but typically happen more quickly, so wait and retry a newly authorized scope before creating another key. When rotating from a broader stored scope set, `--replace` keeps only the scopes printed by the command; without it the stored scopes are merged.
 
 ### 8.8 apikey: gsearch, gmaps
 

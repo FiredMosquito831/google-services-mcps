@@ -10,15 +10,18 @@ import {
   LOGIN_LIFETIME_NOTE,
   UnknownAccountError,
   forgetAdcClients,
+  forgetAdminClients,
   forgetServiceAccountClients,
   forgetUserClients,
   grantedScopes,
   isLoggedIn,
   loginSourceOf,
+  readAdminScopeFile,
   removeUserTokens,
   tokenStatus,
   type AuthKind,
 } from './auth.js';
+import { existsSync } from 'node:fs';
 import { accountEmailOf, accountNames, listAccounts, otherGroupsWithAccount, setDefaultAccount } from './accounts.js';
 import { withAccount } from './account-context.js';
 import { revokeGrant, withIdentityScope } from './grant-check.js';
@@ -35,11 +38,41 @@ import { apiOfMethod, notCoveredBy, notCoveredLine, policyFields, resolveScopes,
 import { fileURLToPath } from 'node:url';
 import { loadRegistry, serverByName, type AuthGroup, type ScopePolicy } from './registry.js';
 import { invocation, invocationFor, setInvocation } from './invocation.js';
-import { selectToolset, type ServerToolsets, type ToolOrigin, type ToolsetSelection } from './toolset.js';
+import { selectToolset, type ServerToolsets, type ToolOrigin, type Toolset, type ToolsetSelection } from './toolset.js';
 import { settleWithin, TARGET_PREVIEW_KEY, TARGET_READ_TIMEOUT_MS } from './target-preview.js';
 import { pageSizeArgOf, shapeResult, type ShapeOptions } from './result-shape.js';
 import { serverInstructions } from './instructions.js';
 import { decide, loadPolicyFile, riskFromKind, type Policy } from './policy.js';
+
+/**
+ * Exact argv `auth_setup_admin` passes to the plugin CLI. Pure: absent or unknown profile keeps the readonly default.
+ */
+export function setupAdminArgs(rawArgs: Record<string, unknown>, serverName: string, toolset: Toolset): string[] {
+  const profile = rawArgs.profile === 'readwrite' || rawArgs.profile === 'full' ? rawArgs.profile : 'readonly';
+  const args = ['setup-admin', '--subject', String(rawArgs.subject), '--key-file', String(rawArgs.key_file), '--profile', profile, '--servers', serverName];
+  if (rawArgs.replace === true) args.push('--replace');
+  if (toolset !== 'all') args.push(`--toolset=${toolset}`);
+  return args;
+}
+
+/**
+ * Offline admin readiness mirroring getAuthClient: stored setup wins field by field (no fallback from stored key path
+ * to env key path); a setup whose key file is gone is not ready. Key contents are never read.
+ */
+export function adminReady(cfg: RuntimeConfig): boolean {
+  const stored = readAdminScopeFile(cfg);
+  const keyFile = stored?.keyFile ?? cfg.serviceAccountKeyFile;
+  const subject = stored?.subject ?? cfg.adminSubject;
+  return (
+    typeof keyFile === 'string' &&
+    keyFile.trim() !== '' &&
+    typeof subject === 'string' &&
+    subject.trim() !== '' &&
+    existsSync(keyFile)
+  );
+}
+
+const ADMIN_SETUP_TOOLS: ReadonlySet<string> = new Set(['health', 'auth_setup_admin']);
 
 /**
  * read        : safe, always registered and never gated.
@@ -540,6 +573,24 @@ export async function runServer(opts: {
           ...(requiresUserInteraction(tool, policyNow, cfg) ? { _meta: { [REQUIRES_USER_INTERACTION]: true } } : {}),
         },
         async (rawArgs: Record<string, unknown>): Promise<CallToolResult> => {
+          // A narrower in-chat admin setup leaves older tools registered, and a key deleted after startup leaves every
+          // admin tool stale. Refuse them before prepare/describeTarget can read Google, and before the gate asks.
+          if (group === 'workspace-admin' && !ADMIN_SETUP_TOOLS.has(tool.name)) {
+            const ready = adminReady(cfg);
+            if (!ready || !isGranted(tool, currentGrant())) {
+              return {
+                isError: true,
+                content: [
+                  {
+                    type: 'text',
+                    text: ready
+                      ? 'This tool is not covered by the current admin setup. Rerun auth_setup_admin (or run gsm setup-admin in a terminal and restart this server) before calling it.'
+                      : 'Admin setup missing or key file not found; run auth_setup_admin (or run gsm setup-admin in a terminal and restart this server) before calling it.',
+                  },
+                ],
+              };
+            }
+          }
           try {
             const prepare = tool.prepare;
             if (prepare && (tool.kind === 'write' || tool.kind === 'destructive')) {
@@ -584,7 +635,8 @@ export async function runServer(opts: {
       );
     }
   };
-  register(registerable(granted, defined));
+  // The admin group exposes data tools only with a real, key-file-backed setup (health and auth_setup_admin always register).
+  if (group !== 'workspace-admin' || adminReady(cfg)) register(registerable(granted, defined));
 
   // Sign-in from the chat, for the groups that use a Google login. The client file, the sign-in and the admin setup run
   // as gsm commands of this plugin, so they do the same work as the terminal commands (see inchat-login.ts).
@@ -745,7 +797,7 @@ export async function runServer(opts: {
           const st = tokenStatus(group as AuthKind, cfg);
           lifetime = st.refreshWarning ? ` Warning: ${st.refreshWarning}` : ` ${LOGIN_LIFETIME_NOTE}`;
         }
-        return text(`${state} Accounts: ${accountNames(group as string, cfg)}. ${signIn.describe()}${toolsetNote}${lifetime}`);
+        return text(`${state}${lifetime} Accounts: ${accountNames(group as string, cfg)}. ${signIn.describe()}${toolsetNote}`);
       },
     );
   }
@@ -892,21 +944,37 @@ export async function runServer(opts: {
       {
         title: 'Set up the workspace admin account',
         description:
-          'Sets up domain-wide delegation for the admin tools: the super admin email to act as, and the full path of the service account key file. The key file stays where it is; only its path is saved.',
+          'Sets up domain-wide delegation for the admin tools: the super admin email to act as, the full path of the service account key file, and an optional profile (readonly default, readwrite, or full). The key file stays where it is; only its path is saved. A broader profile needs the listed scopes authorized for the service account client ID in Google Admin console > Security > API controls > Domain-wide delegation. Write tools also need GSM_ALLOW_WRITES=true. Newly covered tools load in this session for clients that refresh their tool list; tools left over from an older setup stay listed until restart but are refused when called. Restart the gadmin server if your client does not refresh.',
         inputSchema: {
           subject: z.string().describe('The super admin email to act as.'),
           key_file: z.string().describe('Full path of the service account key JSON file.'),
+          profile: z
+            .enum(['readonly', 'readwrite', 'full'])
+            .optional()
+            .describe('readonly (the default) or, on explicit owner choice, readwrite/full. Wider profiles need DWD reauthorization of the service account client ID.'),
           replace: z.boolean().optional().describe('Keep only the scopes this setup asks for, instead of merging with the stored ones.'),
         },
         annotations: runtimeHints('auth_setup_admin'),
       },
       async (rawArgs: Record<string, unknown>): Promise<CallToolResult> => {
-        const args = ['setup-admin', '--subject', String(rawArgs.subject), '--key-file', String(rawArgs.key_file), '--profile', 'readonly', '--servers', opts.name];
-        if (rawArgs.replace === true) args.push('--replace');
-        // The server's toolset, as for auth_login. Absent for all, so the argv is the same as before.
-        if (cfg.toolset !== 'all') args.push(`--toolset=${cfg.toolset}`);
+        try {
+          await runtimeGate({ tool: 'auth_setup_admin', kind: 'write', args: rawArgs });
+        } catch (err) {
+          return { isError: true, content: [{ type: 'text', text: describeError(err, group) }] };
+        }
+        const args = setupAdminArgs(rawArgs, opts.name, cfg.toolset);
         const res = await runGsmCommand(cliFile, args);
-        return text(res.code === 0 ? res.output : `Could not set up the admin account: ${res.output}`);
+        if (res.code !== 0) return text(`Could not set up the admin account: ${res.output}`);
+        const { forgetAdminDirectoryClient } = await import('../servers/workspace-admin.js');
+        forgetAdminDirectoryClient();
+        forgetAdminClients();
+        const before = registered.size;
+        register(registerable(currentGrant(), defined));
+        const loaded = registered.size - before;
+        return text(
+          `${res.output}\n${loaded} tool(s) loaded now, ${registered.size} registered in total.\n` +
+            'Newly covered tools load in this chat session for clients that refresh their tool list. If your client still shows the old list, or a tool is refused as not covered by the current admin setup, restart this gadmin server.',
+        );
       },
     );
   }

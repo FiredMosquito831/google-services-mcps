@@ -17,6 +17,8 @@ const plugin = (id) => join(REPO, 'plugins', id, 'servers', `${id}.mjs`);
 async function withServer(serverFile, tokenDir, fn) {
   const env = { ...process.env, GSM_TOKEN_DIR: tokenDir, GSM_NO_BROWSER: '1' };
   delete env.GSM_API_KEY;
+  delete env.GSM_ADMIN_SUBJECT;
+  delete env.GSM_SERVICE_ACCOUNT_KEY_FILE;
   const child = spawn(process.execPath, [serverFile], { env, stdio: ['pipe', 'pipe', 'pipe'] });
   const waiting = new Map();
   const rl = createInterface({ input: child.stdout });
@@ -47,11 +49,12 @@ async function withServer(serverFile, tokenDir, fn) {
     const res = await request('tools/call', { name, arguments: args });
     return res.result.content[0].text;
   };
-  const names = async () => (await request('tools/list', {})).result.tools.map((tool) => tool.name);
+  const listed = async () => (await request('tools/list', {})).result.tools;
+  const names = async () => (await listed()).map((tool) => tool.name);
   try {
     await request('initialize', { protocolVersion: '2025-06-18', capabilities: {}, clientInfo: { name: 'test', version: '0' } });
     child.stdin.write(JSON.stringify({ jsonrpc: '2.0', method: 'notifications/initialized' }) + '\n');
-    return await fn({ request, call, names });
+    return await fn({ request, call, names, listed });
   } finally {
     // Closing stdin is what a client does at the end. The server then stops any sign-in still waiting.
     child.stdin.end();
@@ -71,8 +74,12 @@ test('a Google server offers the sign-in tools before any sign-in; a key server 
       const gcloud = await names();
       assert.ok(gcloud.includes('auth_login') && gcloud.includes('auth_setup_client'));
     });
-    await withServer(plugin('gadmin'), dir, async ({ names }) => {
-      assert.ok((await names()).includes('auth_setup_admin'));
+    await withServer(plugin('gadmin'), dir, async ({ names, listed }) => {
+      assert.deepEqual((await names()).sort(), ['auth_setup_admin', 'health']);
+      const setup = (await listed()).find((tool) => tool.name === 'auth_setup_admin');
+      const profile = setup.inputSchema.properties.profile;
+      assert.deepEqual(profile.enum, ['readonly', 'readwrite', 'full'], 'the three CLI profiles are exposed in chat');
+      assert.ok(!setup.inputSchema.required.includes('profile'), 'profile is optional, so existing calls stay valid');
     });
     await withServer(plugin('gsearch'), dir, async ({ names }) => {
       assert.ok(!(await names()).includes('auth_login'), 'an API key is never sent through the chat');

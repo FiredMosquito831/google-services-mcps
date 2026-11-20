@@ -77,7 +77,7 @@ function signInLines(group: AuthGroup | undefined, cli: string, readonlyCoversNo
   if (group === 'workspace-admin') {
     return [
       'If a tool you expect is missing, call health: the admin tools load once domain-wide delegation is set up and its scopes cover them.',
-      'Set up here, in the chat: ask for the admin email to act as and the full path of the service account key, then call auth_setup_admin.',
+      'Set up here, in the chat: ask for the admin email to act as and the full path of the service account key, then call auth_setup_admin. Chat setup accepts the same readonly (default), readwrite and full profile choice; a broader profile needs the DWD scopes reauthorized for the service account client ID and the gadmin server restarted.',
     ];
   }
   if (group === 'apikey') {

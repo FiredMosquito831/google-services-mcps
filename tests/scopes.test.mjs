@@ -15,7 +15,7 @@ const { resolveScopes, requirementsFor, isReadonlyScope, isViewOnlyScope, isFull
 
 /** Every tool key a HeldBack result names. */
 const heldKeys = (h) => new Set([...Object.values(h.optional), ...Object.values(h.needsProfile), h.noProfile].flatMap((l) => l.tools));
-const { isGranted, describeError, scopeHint } = await import(dist('core/tools.js'));
+const { isGranted, describeError, scopeHint, adminReady } = await import(dist('core/tools.js'));
 const { loadConfig } = await import(dist('core/config.js'));
 const { loadRegistry } = await import(dist('core/registry.js'));
 const { getAuthClient, grantedScopes, readAdminScopeFile, googleScopes, ADMIN_SCOPES } = await import(dist('core/auth.js'));
@@ -300,6 +300,24 @@ test('admin without setup falls back to ADMIN_SCOPES, both for gating and for th
     const cfg = loadConfig({ GSM_TOKEN_DIR: dir });
     assert.deepEqual(grantedScopes('workspace-admin', cfg), [...ADMIN_SCOPES]);
     assert.equal(readAdminScopeFile(cfg), null);
+  });
+});
+
+test('admin readiness needs an existing key and never falls back from a stored key path to the env key', async () => {
+  await withTokenDir(async (dir) => {
+    const envKey = fakeKeyFile();
+    const env = { GSM_TOKEN_DIR: dir, GSM_ADMIN_SUBJECT: 'env@example.com', GSM_SERVICE_ACCOUNT_KEY_FILE: envKey };
+    assert.equal(adminReady(loadConfig(env)), true, 'an env setup with an existing key is ready');
+
+    const storedKey = join(dir, 'stored-key.json');
+    writeFileSync(join(dir, 'workspace-admin.scopes.json'), JSON.stringify({ subject: 'stored@example.com', scopes: [], profile: 'readonly', keyFile: storedKey }));
+    assert.equal(adminReady(loadConfig(env)), false, 'the stored missing key wins over the existing env key');
+    assert.equal(isGranted({ scopes: undefined }, grantedScopes('workspace-admin', loadConfig(env))), true, 'grant alone cannot hide scope-less tools');
+
+    writeFileSync(storedKey, '{not read}');
+    assert.equal(adminReady(loadConfig(env)), true, 'contents are never read; existence is enough');
+    writeFileSync(join(dir, 'workspace-admin.scopes.json'), JSON.stringify({ subject: '', scopes: [], profile: 'readonly', keyFile: storedKey }));
+    assert.equal(adminReady(loadConfig(env)), false, 'a stored empty subject does not fall back to the env subject');
   });
 });
 

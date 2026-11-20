@@ -51,6 +51,8 @@ async function connect(pluginDir, serverName, env) {
       ...process.env,
       GSM_TOKEN_DIR: tokenDir,
       GSM_ALLOW_WRITES: 'false',
+      GSM_ADMIN_SUBJECT: '',
+      GSM_SERVICE_ACCOUNT_KEY_FILE: '',
       APPDATA: join(tokenDir, 'appdata'),
       GOOGLE_APPLICATION_CREDENTIALS: join(tokenDir, 'no-adc.json'),
       ...env,
@@ -267,13 +269,18 @@ for (const plugin of plugins) {
   }
 }
 
-// Admin server without service account config: must fail with a clear message.
+// Admin server without a key-file-backed setup: only setup and health tools register, and setup stays callable.
 {
   const client = await connect(join(pluginsDir, 'gadmin'), 'gadmin', {});
   try {
-    const res = await client.callTool({ name: 'admin_users_list', arguments: {} });
-    if (!res.isError || !/GSM_SERVICE_ACCOUNT_KEY_FILE|GSM_ADMIN_SUBJECT|Admin tools need/.test(textOf(res))) {
-      fail(`gadmin: missing admin config did not fail clearly: ${textOf(res).slice(0, 200)}`);
+    const { tools } = await client.listTools();
+    const names = tools.map((t) => t.name).sort();
+    if (JSON.stringify(names) !== JSON.stringify(['auth_setup_admin', 'health'])) {
+      fail(`gadmin: pre-setup tools/list was ${names.join(', ')}, expected auth_setup_admin and health only`);
+    }
+    const res = await client.callTool({ name: 'auth_setup_admin', arguments: {} });
+    if (!res.isError || !/subject|key_file/i.test(textOf(res))) {
+      fail(`gadmin: auth_setup_admin is not callable before setup: ${textOf(res).slice(0, 200)}`);
     }
   } finally {
     await client.close();

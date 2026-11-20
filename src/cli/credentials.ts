@@ -25,7 +25,7 @@ import {
   serviceAccountSource,
   type AuthKind,
 } from '../core/auth.js';
-import { checkGrant, checkKeyRestrictions, checkServiceAccountServers, revokeGrant, type GrantDeps, type GrantState } from '../core/grant-check.js';
+import { checkAdminDwdGrant, checkGrant, checkKeyRestrictions, checkServiceAccountServers, revokeGrant, type GrantDeps, type GrantState } from '../core/grant-check.js';
 import { loadConfig, type RuntimeConfig } from '../core/config.js';
 import { ALL_GROUPS, OAUTH_GROUPS, type CliGroup } from './args.js';
 import { backupFile } from './fsutil.js';
@@ -160,7 +160,11 @@ export function runStatus(out: Output, env: NodeJS.ProcessEnv = process.env): nu
       const stored = readAdminScopeFile(cfg);
       if (stored) {
         const keyFound = existsSync(stored.keyFile);
-        out.log(`${group}: set up with node gsm.mjs setup-admin (service account, domain-wide delegation)`);
+        out.log(
+          keyFound
+            ? `${group}: set up with node gsm.mjs setup-admin (service account, domain-wide delegation)`
+            : `${group}: setup record present (key file missing at ${stored.keyFile})`,
+        );
         out.log(`  setup file: ${adminScopeFileFor(cfg)}`);
         out.log(`  subject: ${stored.subject}`);
         out.log(`  key file: ${stored.keyFile}${keyFound ? '' : ' (NOT found)'}`);
@@ -283,6 +287,17 @@ export async function runStatusCheck(out: Output, env: NodeJS.ProcessEnv = proce
     }
   } else {
     out.log('service-account: not set up, nothing to check');
+  }
+
+  const storedAdmin = readAdminScopeFile(cfg);
+  const adminKey = storedAdmin?.keyFile ?? cfg.serviceAccountKeyFile;
+  const adminSubject = storedAdmin?.subject ?? cfg.adminSubject;
+  if (typeof adminKey === 'string' && adminKey.trim() !== '' && typeof adminSubject === 'string' && adminSubject.trim() !== '') {
+    const check = await checkAdminDwdGrant(cfg, deps);
+    if (check.state !== 'valid') problems += 1;
+    out.log(`workspace-admin: ${CHECK_LABEL[check.state]}. ${check.detail}`);
+  } else {
+    out.log('workspace-admin: not set up, nothing to check');
   }
 
   out.log(problems === 0 ? 'All stored logins and keys check out.' : `${problems} check(s) need attention. See the lines above.`);

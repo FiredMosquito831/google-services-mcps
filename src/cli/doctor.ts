@@ -13,7 +13,7 @@ import type { Registry } from '../core/registry.js';
 import { loadConfig } from '../core/config.js';
 import { optionValue } from '../core/plugin-option.js';
 import { aclExtras } from '../core/acl.js';
-import { adminScopeFileFor, serviceAccountSource } from '../core/auth.js';
+import { adminScopeFileFor, readAdminScopeFile, serviceAccountSource } from '../core/auth.js';
 import { getSecretSync } from '../core/secret-store.js';
 import { secretFileExists, storedSecretNames, storeFor } from '../core/secret-files.js';
 import { OAUTH_GROUPS } from './args.js';
@@ -369,11 +369,20 @@ export function runDoctor(req: DoctorRequest, out: Output): number {
   const adminIds = active.filter((id) => groupOf(id) === 'workspace-admin');
   if (adminIds.length > 0) {
     const file = adminScopeFileFor({ tokenDir });
-    const fromEnv = optionValue(req.env.GSM_ADMIN_SUBJECT) !== undefined && optionValue(req.env.GSM_SERVICE_ACCOUNT_KEY_FILE) !== undefined;
+    // --token-dir wins over GSM_TOKEN_DIR for this whole run: read the setup record from that same resolved directory.
+    const adminCfg = loadConfig({ ...req.env, GSM_TOKEN_DIR: tokenDir });
+    const envKeyFile = optionValue(req.env.GSM_SERVICE_ACCOUNT_KEY_FILE);
+    const fromEnv = optionValue(req.env.GSM_ADMIN_SUBJECT) !== undefined && envKeyFile !== undefined;
     const stored = existsSync(file);
     tally.check(stored || fromEnv, stored || fromEnv
       ? `workspace-admin is set up (needed by ${list(adminIds)}): ${stored ? file : 'GSM_ADMIN_SUBJECT and GSM_SERVICE_ACCOUNT_KEY_FILE are set'}`
       : `workspace-admin is not set up (needed by ${list(adminIds)}): no ${file}, and GSM_ADMIN_SUBJECT and GSM_SERVICE_ACCOUNT_KEY_FILE are not both set. Run: node gsm.mjs setup-admin --subject <email> --key-file <file>`);
+    // Stored path wins field by field as in getAuthClient: env key is never a fallback for a deleted stored key.
+    const record = stored ? readAdminScopeFile(adminCfg) : null;
+    const keyFile = record?.keyFile ?? (stored ? undefined : envKeyFile);
+    if ((stored || fromEnv) && keyFile !== undefined && !existsSync(keyFile)) {
+      out.log(`WARN workspace-admin key file missing at ${keyFile} (setup present; admin calls will fail until the key is restored). Run: node gsm.mjs setup-admin --subject <email> --key-file <file>`);
+    }
   }
 
   // gplay and gmerchant need a service account key: the one setup-service-account records, or GOOGLE_APPLICATION_CREDENTIALS.

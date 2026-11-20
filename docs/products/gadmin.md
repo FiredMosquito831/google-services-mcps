@@ -2,7 +2,7 @@
 
 Install with the simplest command: `npx google-services-mcps install --agent claude --plugin <id>` (see docs/TUTORIAL.md).
 
-Google Workspace administration for your domain: users, groups, org units, domains, Cloud Identity, Chrome management and policy, Groups Settings, licensing, reports, alerts, Vault, reseller, data transfer and Cloud Search admin. It acts as a super admin through a service account with domain-wide delegation. It has 366 tools.
+Google Workspace administration for your domain: users, groups, org units, domains, Cloud Identity, Chrome management and policy, Groups Settings, licensing, reports, alerts, Vault, reseller, data transfer and Cloud Search admin. It acts as a super admin through a service account with domain-wide delegation. It lists up to 368 tools with the `all` toolset. With the `all` toolset and writes enabled, the startup line and `health` report 366 defined tools; the other two are the runtime tools `health` and `auth_setup_admin`, which the server registers directly.
 
 ## When to install it
 
@@ -25,10 +25,14 @@ node <plugin>/bin/gsm.mjs status
 `<plugin>` is the plugin folder (in this repo, `plugins/gadmin`).
 
 1. In Google Cloud, create a service account and a JSON key. If your organization blocks key creation (the default for organizations created since May 2024), ask your administrator for an exception.
-2. In the Google Admin console, open Security, API controls, Domain-wide delegation. Add the service account's client ID with the scopes the profile lists. Run `node <plugin>/bin/gsm.mjs scopes workspace-admin` to print them.
-3. Run `setup-admin` with a super admin's email. The key file is not copied. The suite reads it from where you put it.
+2. In the Google Admin console, open Security, API controls, Domain-wide delegation. Add the service account's client ID with the scopes the profile lists, and make that list the same set configured on the Cloud project's OAuth consent screen (Google Cloud console > APIs & Services > OAuth consent screen > Scopes). Run `node <plugin>/bin/gsm.mjs scopes workspace-admin --profile <profile>` to print them. Google says DWD changes can take up to 24 hours but typically happen more quickly, so if a newly authorized scope does not work yet, wait and retry rather than repeatedly recreating the key.
+3. Run `setup-admin` with a super admin's email. The key file is not copied. The suite reads it from where you put it. Offline readiness checks are local: the referenced key must exist at that path, and no Google call is made unless you ask for `gsm status --check` or `health` with `live: true`. `readonly` is the default profile; `readwrite` and `full` can widen the delegated scope set and require reauthorizing the service account's client ID in the Admin console.
 
-Restart the MCP server (`/mcp`) after setup.
+When rotating away from a broader stored scope set, run `setup-admin --replace` so only the scopes printed above are kept; by default the stored scopes are merged with the requested ones. Run `node <plugin>/bin/gsm.mjs scopes workspace-admin --profile <profile>` first to confirm the intended list.
+
+The admin data tools are hidden until a setup names a super admin and an existing key file; before that, `tools/list` offers only `health` and `auth_setup_admin`. If the key file is later deleted, `health` reports the missing path and any admin data tool still listed by the client is refused on call until the server restarts.
+
+After an in-chat `auth_setup_admin` call, tools covered by the new setup load in the current session for clients that refresh their tool list; tools left over from the previous setup stay listed until restart and are refused when called. Restart the MCP server (`/mcp`) if your client does not refresh, or after a terminal `setup-admin` call. A profile other than `readonly` needs DWD reauthorization of the service account's client ID.
 
 ## What it can do
 
@@ -46,7 +50,7 @@ Restart the MCP server (`/mcp`) after setup.
 | Per-method (343) | | mixed | Directory (128 methods), Cloud Identity (70), Cloud Search (49), Vault (33), Reseller (17), Chrome Policy (14), Alert Center (11), Licensing (7), Reports (6), Data Transfer (5), Groups Settings (3) |
 | Gateway (4 APIs) | `api_search`, `api_describe`, `api_call` | read, read, dynamic | Chrome Management (70 methods), Cloud Identity v1beta1 (71), Groups Migration, Verified Access v1 |
 
-The full list is in `docs/capabilities/gadmin.md`.
+The full list is in `docs/capabilities/gadmin.md`. The 368 maximum counts 366 defined tools plus the 2 runtime tools `health` and `auth_setup_admin`, and describes what is available after a full DWD setup with writes enabled — not the pre-setup list (`health` and `auth_setup_admin`).
 
 Google has no official MCP server for Workspace administration (none was found on 2026-10-29), so with the plugin option `toolset: google` the server lists a small set chosen here: `admin_users_list`, `admin_user_get`, `admin_groups_list`, `admin_group_get` (2.4.0), `admin_group_members_list`, `admin_orgunits_list`, `admin_orgunit_get` (2.4.0), `admin_domains_list`, `admin_activities_list` (Reports API; since 1.30.1 it asks for 25 records a page when you give no `maxResults`, where Google's default is 1,000), `alerts_alerts_list` (Alert Center), and two writes, `admin_user_set_suspended` and `admin_group_member_add`. 12 tools, with `health` and the setup tools. No delete is in it. `setup-admin --toolset google` delegates only the scopes those tools need. For `readwrite` that is, since 1.25.0, `admin.directory.user`, `admin.directory.group.member`, `admin.directory.group.readonly`, `admin.directory.orgunit.readonly`, `admin.directory.domain.readonly`, `admin.reports.audit.readonly` and `apps.alerts` (before, the write scopes of groups, org units and domains). The two tools 2.4.0 adds need no new scope: their read-only directory scopes are already in it.
 

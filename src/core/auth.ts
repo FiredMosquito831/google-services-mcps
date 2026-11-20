@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { existsSync, readFileSync, rmSync, writeFileSync, chmodSync } from 'node:fs';
+import { existsSync, readFileSync, rmSync, statSync, writeFileSync, chmodSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { OAuth2Client, GoogleAuth, JWT, type Credentials } from 'google-auth-library';
 import { ensureTokenDir } from './acl.js';
@@ -423,13 +423,25 @@ export async function getAuthClient(kind: AuthKind, cfg: RuntimeConfig): Promise
       );
     }
     if (!existsSync(keyFile)) throw new Error(`Service account key file not found: ${keyFile}. Run gsm setup-admin again with the right --key-file.`);
-    return withRetry(
+    let keyStat;
+    try {
+      keyStat = statSync(keyFile);
+    } catch {
+      throw new Error(`Service account key file not found: ${keyFile}. Run gsm setup-admin again with the right --key-file.`);
+    }
+    const scopes = stored?.scopes ?? ADMIN_SCOPES;
+    const cacheKey = `${keyFile}\n${subject}\n${scopes.join(' ')}\n${keyStat.mtimeMs}\n${keyStat.size}`;
+    const cached = adminClients.get(cacheKey);
+    if (cached) return cached;
+    const client = withRetry(
       new JWT({
         keyFile,
-        scopes: stored?.scopes ?? ADMIN_SCOPES,
+        scopes,
         subject,
       }),
     );
+    adminClients.set(cacheKey, client);
+    return client;
   }
 
   if (kind === 'service-account') return serviceAccountClient(cfg);
@@ -574,6 +586,17 @@ export function forgetUserClients(): void {
   forgetCachedSecrets();
 }
 
+/**
+ * The admin clients, by stored setup (key file, subject, ordered scopes) and key-file stat metadata. One wrapped
+ * client per setup so sequential generated admin calls reuse the access token until google-auth-library refreshes it.
+ */
+const adminClients = new Map<string, JWT>();
+
+/** Forgets the admin clients so the next call reads the setup and key-file metadata again. */
+export function forgetAdminClients(): void {
+  adminClients.clear();
+}
+
 /** The service-account clients, by key file and scope set (one per server of the group that uses the key). */
 const serviceClients = new Map<string, JWT>();
 
@@ -667,6 +690,8 @@ export interface TokenStatus {
   tokenFile: string;
   scopes?: string[];
   expiresAt?: string;
+  /** Local path-only reason when the workspace-admin key is missing. Never prints key contents. */
+  detail?: string;
   refreshTokenExpiresAt?: string;
   refreshTokenExpiresInSeconds?: number;
   refreshWarning?: string;
@@ -685,11 +710,16 @@ export function tokenStatus(kind: AuthKind, cfg: RuntimeConfig, account?: string
   }
   if (kind === 'workspace-admin') {
     const stored = readAdminScopeFile(cfg);
+    const keyFile = stored?.keyFile ?? cfg.serviceAccountKeyFile;
+    const subject = stored?.subject ?? cfg.adminSubject;
+    const loggedIn = Boolean(keyFile && subject);
+    const detail = loggedIn && typeof keyFile === 'string' && !existsSync(keyFile) ? `key file missing at ${keyFile}` : undefined;
     return {
       kind,
-      loggedIn: Boolean((stored?.keyFile ?? cfg.serviceAccountKeyFile) && (stored?.subject ?? cfg.adminSubject)),
+      loggedIn,
       tokenFile: adminScopeFileFor(cfg),
       scopes: stored?.scopes ?? ADMIN_SCOPES,
+      ...(detail === undefined ? {} : { detail }),
     };
   }
   const tokens = loadUserTokens(kind, cfg, account) as StoredCredentials | null;

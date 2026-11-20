@@ -77,6 +77,9 @@ export async function runHealth(req: HealthRequest, out: Output): Promise<number
 
 function loginCell(row: HealthRow): string {
   if (row.login.kind === 'api-key') return row.login.loggedIn ? 'key set' : 'no key';
+  if (row.group === 'workspace-admin' && row.login.detail.startsWith('key file missing at ')) {
+    return `set up — ${row.login.detail}`;
+  }
   if (row.login.kind === 'service-account') return row.login.loggedIn ? 'set up' : 'not set up';
   return row.login.loggedIn ? 'logged in' : 'not logged in';
 }

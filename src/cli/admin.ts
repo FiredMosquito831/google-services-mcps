@@ -79,9 +79,19 @@ export async function runSetupAdmin(req: SetupAdminRequest, reg: Registry, out: 
   out.log(`Subject: ${req.subject}`);
   out.log(`Key file: ${keyFile} (referenced, not copied)`);
   out.log(`Profile ${req.profile}: ${PROFILE_TEXT[req.profile]}.`);
+  out.log(
+    'readonly is the default; readwrite and full ask for a wider DWD scope set. A changed profile requires reauthorizing the service account client ID in Google Admin console > Security > API controls > Domain-wide delegation.',
+  );
   out.log(`The server for ${servers.join(', ')} runs ${formatCoverage(coverageOf(requirements, merge.scopes))}.`);
   out.log('Authorize these scopes for the service account client ID under Google Admin console > Security > API controls > Domain-wide delegation:');
   for (const scope of merge.scopes) out.log(`  ${scope}`);
+  out.log(
+    "The scope list above should be the same set configured on the Cloud project's OAuth consent screen (Google Cloud console > APIs & Services > OAuth consent screen > Scopes); that is Google's wording, not a local check.",
+  );
+  out.log(
+    'Google says domain-wide delegation changes can take up to 24 hours but typically happen more quickly; if a newly authorized scope does not work yet, wait and retry before creating another key.',
+  );
+  out.log('When rotating away from a broader stored scope set, use --replace so only the scopes printed above are kept.');
   out.log('Restart the gadmin server so it reads the new setup. Write tools also need GSM_ALLOW_WRITES=true.');
   return 0;
 }

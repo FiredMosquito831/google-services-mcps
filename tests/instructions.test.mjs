@@ -87,6 +87,8 @@ test('each sign-in group gets its own setup tools; only the API key group gets a
   assert.ok(!sa.includes('auth_login') && !sa.includes('auth_setup_client'));
   const admin = of({ group: 'workspace-admin' });
   assert.match(admin, /auth_setup_admin/);
+  assert.match(admin, /Chat setup accepts the same readonly \(default\), readwrite and full profile choice/);
+  assert.match(admin, /DWD scopes reauthorized for the service account client ID and the gadmin server restarted/);
   assert.ok(!admin.includes('auth_login'));
   const key = of({ group: 'apikey' });
   assert.ok(key.includes('node "/plugins/demo/bin/gsm.mjs" setup-apikey'), key);

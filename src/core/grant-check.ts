@@ -4,11 +4,13 @@ import { GoogleAuth } from 'google-auth-library';
 import { existsSync } from 'node:fs';
 import { JWT } from 'google-auth-library';
 import {
+  ADMIN_SCOPES,
   adcSourceFor,
   grantRefusalOf,
   isInvalidGrant,
   refusalMessage,
   loadUserTokens,
+  readAdminScopeFile,
   readClientSecret,
   readServiceAccountFile,
   serviceAccountScopesFor,
@@ -77,10 +79,15 @@ export interface GrantDeps {
   makeAdcClient?: (scopes: string[]) => Promise<OAuthClientLike>;
   /** Builds the service-account client for a key file. The default is a JWT with the key. */
   makeServiceClient?: (keyFile: string, scopes: string[]) => Promise<OAuthClientLike>;
+  /** Builds the domain-wide delegation JWT client for workspace-admin. The default is a JWT impersonating subject. */
+  makeAdminClient?: (keyFile: string, scopes: string[], subject: string) => Promise<OAuthClientLike> | OAuthClientLike;
 }
 
 const defaultServiceClient = async (keyFile: string, scopes: string[]): Promise<OAuthClientLike> =>
   new JWT({ keyFile, scopes }) as unknown as OAuthClientLike;
+
+const defaultAdminClient = (keyFile: string, scopes: string[], subject: string): OAuthClientLike =>
+  new JWT({ keyFile, scopes, subject }) as unknown as OAuthClientLike;
 
 const defaultClient = (clientId: string, clientSecret: string): OAuthClientLike =>
   new OAuth2Client(clientId, clientSecret) as unknown as OAuthClientLike;
@@ -275,7 +282,60 @@ export async function checkServiceAccountServers(cfg: RuntimeConfig, deps: Grant
   return results;
 }
 
-/** The email scope. With it, Google's token info names the account the login belongs to. */
+/**
+ * Opt-in live domain-wide delegation check for workspace-admin: mints one JWT access token for the impersonated
+ * super-admin subject and configured scopes, reporting unauthorized_client/refusals clearly without leaking key data.
+ */
+export async function checkAdminDwdGrant(cfg: RuntimeConfig, deps: GrantDeps = {}): Promise<GrantCheck> {
+  const group = 'workspace-admin' as const;
+  const none = (state: GrantState, detail: string, account?: string): GrantCheck => ({
+    group,
+    state,
+    detail,
+    ...(account ? { account } : {}),
+    scopes: [],
+    missingScopes: [],
+  });
+  const stored = readAdminScopeFile(cfg);
+  const keyFile = stored?.keyFile ?? cfg.serviceAccountKeyFile;
+  const subject = stored?.subject ?? cfg.adminSubject;
+  const scopes = [...(stored?.scopes ?? ADMIN_SCOPES)];
+  if (typeof keyFile !== 'string' || keyFile.trim() === '' || typeof subject !== 'string' || subject.trim() === '') {
+    return none('not-logged-in', `not set up: run ${invocation()} setup-admin --subject <email> --key-file <file>`);
+  }
+  if (!existsSync(keyFile)) {
+    return none('not-logged-in', `key file missing at ${keyFile}. Run ${invocation()} setup-admin again with the right --key-file.`, subject);
+  }
+  let token: string | null | undefined;
+  try {
+    const client = await (deps.makeAdminClient ?? defaultAdminClient)(keyFile, scopes, subject);
+    token = (await client.getAccessToken()).token;
+  } catch (err) {
+    const text = redact(messageOf(err), [keyFile]);
+    if (isInvalidGrant(err) || /invalid_grant|unauthorized_client|invalid_client|\b401\b|\b403\b/.test(text)) {
+      return none(
+        'expired',
+        `Google refused DWD authorization (${text}). Check Domain-wide delegation and OAuth consent screen scopes (changes can take up to 24h), or re-run ${invocation()} setup-admin.`,
+        subject,
+      );
+    }
+    return none('unreachable', `could not check DWD token with Google: ${text}`, subject);
+  }
+  if (!token) {
+    return none('expired', `Google returned no access token for DWD setup (${subject}).`, subject);
+  }
+  return {
+    group,
+    state: 'valid',
+    detail: `domain-wide delegation verified for ${subject} (${scopes.length} scope(s))`,
+    scopes,
+    missingScopes: [],
+    account: subject,
+  };
+}
+
+/**
+ * The email scope. With it, Google's token info names the account the login belongs to. */
 export const IDENTITY_SCOPE = 'https://www.googleapis.com/auth/userinfo.email';
 
 /** The scopes with the identity scope added, once. Logins request it so `status` and `health` can name the account. */
