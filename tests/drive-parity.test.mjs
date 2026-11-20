@@ -80,11 +80,10 @@ test('kinds follow classifyMethod: list_recent, download and get_values read; cr
   assert.deepEqual(tools.get('sheets_write_values').scopes, [G('drive'), G('drive.file'), G('spreadsheets')]);
   assert.deepEqual(tools.get('sheets_get_values').scopes, [G('drive'), G('drive.file'), G('drive.readonly'), G('spreadsheets'), G('spreadsheets.readonly')]);
   assert.deepEqual(tools.get('drive_list_recent').scopes, tools.get('drive_search').scopes);
-  // 2.1.0: drive_trash_file and drive_untrash_file work their approval out in prepare (a preview alone is never shown);
-  // no other tool of this server has one.
+  // 2.1.0+: drive_trash_file, drive_untrash_file and drive_update_file work their approval out in prepare (a preview alone is never shown).
   assert.deepEqual(
     [...tools.values()].filter((t) => t.prepare).map((t) => t.name).sort(),
-    ['drive_trash_file', 'drive_untrash_file'],
+    ['drive_trash_file', 'drive_untrash_file', 'drive_update_file'],
   );
   for (const t of tools.values()) assert.equal(t.inputSchema.confirm, undefined, `${t.name}: no model-controlled confirm`);
 });
@@ -432,4 +431,68 @@ test('sheets_insert_rows: one insertDimension request; bad indexes are refused b
     await assert.rejects(run('sheets_insert_rows', args), message);
     assert.equal(calls.length, 0);
   }
+});
+
+test('GD3: drive_search sends corpora=allDrives, falls back to corpora=user on 400, and surfaces incompleteSearch', async () => {
+  reset(() => ({ files: [{ id: 'f1', name: 'Shared' }], incompleteSearch: true }));
+  const out = await run('drive_search', { q: "name contains 'Shared'" });
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0].query.corpora, 'allDrives');
+  assert.equal(calls[0].query.includeItemsFromAllDrives, 'true');
+  assert.equal(calls[0].query.supportsAllDrives, 'true');
+  assert.equal(out.incomplete_search, true);
+
+  let attempt = 0;
+  reset(() => {
+    attempt += 1;
+    if (attempt === 1) {
+      const err = new Error('Invalid corpora');
+      err.code = 400;
+      throw err;
+    }
+    return { files: [{ id: 'f2', name: 'MyFile' }] };
+  });
+  const fallback = await run('drive_search', { q: 'trashed = false' });
+  assert.deepEqual(calls.map((c) => c.query.corpora), ['allDrives', 'user']);
+  assert.equal(fallback.files[0].id, 'f2');
+});
+
+test('GD1: drive_read_text sheet mode checks scopes before calling Sheets and translates 403 cleanly', async () => {
+  reset();
+  const readText = tools.get('drive_read_text');
+  await assert.rejects(
+    readText.handler(
+      { file_id: 's1', sheet: 'Budget' },
+      { gate: async () => undefined, grantedScopes: ['https://www.googleapis.com/auth/drive.metadata.readonly'], hasScope: () => false },
+    ),
+    /needs a Drive or Sheets read scope/,
+  );
+  assert.equal(calls.length, 0);
+
+  reset((call) => {
+    if (call.url.includes('/drive/v3/files/s1')) return { id: 's1', name: 'Budget', mimeType: 'application/vnd.google-apps.spreadsheet' };
+    const err = new Error('Insufficient Permission');
+    err.code = 403;
+    throw err;
+  });
+  await assert.rejects(run('drive_read_text', { file_id: 's1', sheet: 'Budget' }), /Google Sheets refused reading sheet "Budget"/);
+});
+
+test('GD5: drive_download caches sequential exported chunks across offset calls within session', async () => {
+  const bytes = Buffer.alloc(1600, 65);
+  reset((call) => {
+    if (call.path.endsWith('/export')) return bytes;
+    return { id: 'g', name: 'LongDoc', mimeType: 'application/vnd.google-apps.document' };
+  });
+  const chunks = [];
+  let offset = 0;
+  for (;;) {
+    const res = await run('drive_download', { file_id: 'g', export_mime_type: 'application/pdf', offset }, small);
+    chunks.push(Buffer.from(res.data_base64, 'base64'));
+    if (res.next_offset === undefined) break;
+    offset = res.next_offset;
+  }
+  assert.equal(chunks.length, 3);
+  assert.equal(calls.filter((c) => c.path.endsWith('/export')).length, 1, 'sequential offsets reuse cached export without repeat export calls');
+  assert.equal(Buffer.concat(chunks).length, bytes.length);
 });

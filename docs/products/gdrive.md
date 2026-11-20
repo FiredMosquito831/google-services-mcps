@@ -77,7 +77,10 @@ Drive is included with Google Workspace. It allows 1,000,000 quota units per min
 
 ## Caveats
 
-- `drive_read_text` does not read text out of a PDF or an image: Drive has no public call for that, and this server has no PDF reader, so the call refuses and points to `drive_download` rather than return nonsense. A spreadsheet is read one sheet at a time (Drive's CSV export is one sheet deep): the answer names the sheet it read, lists the others, and `sheet` reads one by name.
+- `drive_read_text` does not read text out of a PDF or an image: Drive has no public call for that, and this server has no PDF reader, so the call refuses and points to `drive_download` rather than return nonsense (to OCR a file in Drive, upload or convert it to a Google Doc first). A spreadsheet is read one sheet at a time (Drive's CSV export is one sheet deep): the answer names the sheet it read, lists the others, and `sheet` reads one by name (requiring Drive or Sheets read scopes).
+- `drive_search` queries `corpora=allDrives` with `includeItemsFromAllDrives=true` and `supportsAllDrives=true` (falling back to `corpora=user` on HTTP 400) and surfaces `incomplete_search: true` if Drive stops early.
+- `drive_download` returns base64 content directly without writing to disk, and caches exported Google Docs/Sheets/Slides in memory across sequential `offset` parts within the session.
+- Generated parity notes: `drive_files_copy`, `drive_permissions_list`, `docs_documents_get`, `sheets_spreadsheets_get`, `slides_presentations_get` and `slides_presentations_pages_get` expose raw Google JSON shapes without the hosted `commentsIncluded` switch (`drive_read_text` with `include_comments` reads Drive file comment threads separately).
 - Drive Labels, Drive Activity and Books quotas are UNVERIFIED. The Drive Labels pages disagree.
 - The gateway reaches the Drive v2 API. Check each method with `api_describe` before a call.
 - Drive scope classification is UNVERIFIED. A public OAuth app may need Google's review for its scopes.

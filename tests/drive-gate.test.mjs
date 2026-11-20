@@ -34,7 +34,7 @@ function writeEntry(dir) {
       `  let upload = 0;`,
       `  if (opts.data && typeof opts.data.pipe === 'function') { for await (const c of opts.data) upload += Buffer.from(c).length; }`,
       `  appendFileSync(process.env.CALLS_FILE, JSON.stringify({ method, path: url.pathname, alt: url.searchParams.get('alt') ?? opts.params?.alt ?? null, upload }) + '\\n');`,
-      `  const data = (opts.params?.alt === 'media') ? Buffer.from('hello') : { id: 'f1', name: 'a.txt', mimeType: 'text/plain', size: '5' };`,
+      `  const data = (opts.params?.alt === 'media') ? Buffer.from('hello') : { id: 'f1', name: 'a.txt', mimeType: 'text/plain', size: '5', parents: ['folder-1'] };`,
       `  return { data, status: 200, headers: new Headers(), config: opts };`,
       `};`,
       `const { runServer } = await import(${JSON.stringify(dist('core/tools.js'))});`,
@@ -110,11 +110,18 @@ test('declined: drive_create_file, sheets_write_values and sheets_insert_rows se
     }
     assert.equal(asked.length, 5);
     assert.match(asked[0].message, /report\.txt/);
+    // The update's approval shows the file's current state and the requested change, not just raw ids.
+    assert.match(asked[3].message, /"name_before": "a\.txt"/);
+    assert.match(asked[3].message, /"name_after": "renamed\.txt"/);
     // The restore's approval shows the name read from the file, not the raw id.
     assert.match(asked[4].message, /"name": "a\.txt"/);
     const called = callsIn(s.callsFile);
     assert.deepEqual(called.filter((c) => c.method !== 'GET'), [], 'declined: no request that changes anything');
-    assert.deepEqual(called.map((c) => [c.method, c.path]), [['GET', '/drive/v3/files/f1']], 'the restore read the file to name it, and nothing else');
+    assert.deepEqual(
+      called.map((c) => [c.method, c.path]),
+      [['GET', '/drive/v3/files/f1'], ['GET', '/drive/v3/files/f1']],
+      'the update and restore each read the file, and nothing else',
+    );
 
     const read = await client.callTool({ name: 'drive_download', arguments: { file_id: 'f1' } });
     assert.notEqual(read.isError, true, read.content[0].text);

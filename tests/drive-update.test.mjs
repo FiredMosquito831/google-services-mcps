@@ -128,6 +128,94 @@ test('update_file refuses nothing-to-do and a move mixed with one-folder changes
   assert.equal(schema('drive_update_file').shape.mime_type, undefined);
 });
 
+// The approval preview is a display payload; the full parent ids outside it are the execution payload.
+const UPDATE_EFFECT =
+  'Changes only the listed metadata of this Drive file; no file content is touched. Long values are shortened for display; the full values are used for the change.';
+
+test('update_file prepare reads the current name and parents once and shows only the requested changes', async () => {
+  const tool = tools.get('drive_update_file');
+  reset(() => ({ id: 'f1', name: 'Report.pdf', mimeType: 'application/pdf', parents: ['old1', 'old2'] }));
+  const args = { file_id: 'f1', name: 'Renamed.pdf', description: 'new', starred: true, add_parent_id: 'p2', remove_parent_id: 'p1' };
+  const prepared = await tool.prepare(args, ctx);
+  assert.deepEqual(prepared.preview, {
+    file_id: 'f1',
+    name_before: 'Report.pdf',
+    mime_type: 'application/pdf',
+    parents_before: ['old1', 'old2'],
+    name_after: 'Renamed.pdf',
+    description_after: 'new',
+    starred_after: true,
+    add_parent: 'p2',
+    remove_parent: 'p1',
+    effect: UPDATE_EFFECT,
+  });
+  assert.deepEqual(prepared.parents, ['old1', 'old2'], 'the full ids are outside preview');
+  assert.deepEqual(calls.map((c) => [c.method, c.path]), [['GET', '/drive/v3/files/f1']]);
+  assert.equal(calls[0].query.fields, 'id,name,mimeType,parents');
+  assert.equal(calls[0].query.supportsAllDrives, 'true');
+});
+
+test('update_file reuses the prepared full parents on a move, so the handler sends no second GET', async () => {
+  const tool = tools.get('drive_update_file');
+  reset((call) => (call.method === 'GET' ? { id: 'f1', name: 'Report.pdf', mimeType: 'application/pdf', parents: ['old1', 'old2'] } : file({ parents: ['new1'] })));
+  const args = { file_id: 'f1', parent_id: 'new1' };
+  const prepared = await tool.prepare(args, ctx);
+  assert.deepEqual(prepared.parents, ['old1', 'old2']);
+  calls = [];
+  const out = await tool.handler(args, ctx, prepared);
+  assert.deepEqual(calls.map((c) => [c.method, c.path]), [['PATCH', '/drive/v3/files/f1']]);
+  assert.equal(calls[0].query.addParents, 'new1');
+  assert.equal(calls[0].query.removeParents, 'old1,old2');
+  assert.deepEqual(out.changed, ['parents']);
+});
+
+test('update_file prepare refuses invalid args with no request at all', async () => {
+  const tool = tools.get('drive_update_file');
+  for (const [args, message] of [
+    [{ file_id: 'f1' }, /Nothing to change/],
+    [{ file_id: 'f1', parent_id: 'p1', add_parent_id: 'p2' }, /parent_id moves the file on its own/],
+    [{ file_id: 'f1', parent_id: 'p1', remove_parent_id: 'p1' }, /parent_id moves the file on its own/],
+  ]) {
+    reset();
+    await assert.rejects(tool.prepare(args, ctx), message);
+    assert.equal(calls.length, 0, `${JSON.stringify(args)}: no request`);
+  }
+});
+
+test('update_file with prepared data renames and stars in one PATCH and keeps the changed list', async () => {
+  const tool = tools.get('drive_update_file');
+  reset((call) => (call.method === 'GET' ? { id: 'f1', name: 'Report', mimeType: 'text/plain', parents: ['p1'] } : file({ name: 'Renamed', starred: true })));
+  const args = { file_id: 'f1', name: 'Renamed', starred: true };
+  const prepared = await tool.prepare(args, ctx);
+  calls = [];
+  const out = await tool.handler(args, ctx, prepared);
+  assert.deepEqual(calls.map((c) => [c.method, c.path]), [['PATCH', '/drive/v3/files/f1']]);
+  assert.deepEqual(calls[0].body, { name: 'Renamed', starred: true });
+  assert.deepEqual(out.changed, ['name', 'starred']);
+});
+
+test('update_file truncates only the approval strings, never the ids it moves', async () => {
+  const tool = tools.get('drive_update_file');
+  const longName = 'N'.repeat(220);
+  const longDescription = 'D'.repeat(220);
+  const longDestination = `dest-${'x'.repeat(220)}`;
+  const longCurrent = `old-${'y'.repeat(220)}`;
+  reset((call) => (call.method === 'GET' ? { id: 'f1', name: 'Report', mimeType: 'text/plain', parents: [longCurrent] } : file({ parents: [longDestination] })));
+  const args = { file_id: 'f1', name: longName, description: longDescription, parent_id: longDestination };
+  const prepared = await tool.prepare(args, ctx);
+  for (const shown of [prepared.preview.name_after, prepared.preview.description_after, prepared.preview.move_to_parent, prepared.preview.parents_before[0]]) {
+    assert.equal(shown.length, 200, 'bounded preview string');
+    assert.ok(shown.endsWith('...'), 'the exact three-dot marker');
+  }
+  assert.equal(prepared.parents[0], longCurrent, 'the full id survives outside preview');
+  calls = [];
+  await tool.handler(args, ctx, prepared);
+  assert.deepEqual(calls.map((c) => [c.method, c.path]), [['PATCH', '/drive/v3/files/f1']]);
+  assert.equal(calls[0].query.addParents, longDestination, 'the full destination id is executed');
+  assert.equal(calls[0].query.removeParents, longCurrent, 'the full current id is removed, with no marker');
+  assert.ok(!calls[0].query.addParents.includes('...') && !calls[0].query.removeParents.includes('...'));
+});
+
 // ---------------------------------------------------------------------------
 // drive_untrash_file and the trash approval
 

@@ -506,6 +506,18 @@ test('the gdrive google list covers the 20 tools of Google\'s Drive, Docs, Sheet
   assert.equal(official.size, 20);
   assert.deepEqual(google.matches.sheets_write_values, ['update_values', 'update_formulas']);
   assert.match(google.notes.drive_read_text, /PDF and image text is not read/);
+  const expectedNotes = {
+    drive_permissions_list: "Generated drive.permissions.list: raw Drive PermissionList JSON (fields, nextPageToken), not Google's hosted permissions[] summary.",
+    drive_files_copy: "Generated drive.files.copy: raw Drive File shape with a nested body/requestBody (title, parents), not Google's flat title/parentId copy_file.",
+    docs_documents_get: "Generated Docs documents.get: full raw Document JSON with optional fields; no hosted commentsIncluded switch. drive_read_text(include_comments) reads file-level Drive comment threads into a separate comments array, not the hosted in-response comments.",
+    sheets_spreadsheets_get: "Generated Sheets spreadsheets.get: raw Spreadsheet JSON with optional fields; no hosted commentsIncluded switch. drive_read_text(include_comments) is a separate file-comment-threads route, not the same output.",
+    slides_presentations_get: "Generated Slides presentations.get: raw Presentation JSON with optional fields; no hosted commentsIncluded switch. drive_read_text(include_comments) is a separate file-comment-threads route, not the same output.",
+    slides_presentations_pages_get: "Generated Slides presentations.pages.get: raw Page JSON with optional fields; no hosted commentsIncluded switch. drive_read_text(include_comments) is a separate file-comment-threads route, not the same output.",
+  };
+  assert.deepEqual(Object.fromEntries(Object.keys(expectedNotes).map((tool) => [tool, google.notes[tool]])), expectedNotes);
+  for (const tool of ['docs_documents_get', 'sheets_spreadsheets_get', 'slides_presentations_get', 'slides_presentations_pages_get']) {
+    assert.match(google.notes[tool], /no hosted commentsIncluded switch/);
+  }
 });
 
 test("the gcloud google list covers the tools of Google's Cloud MCP servers for its APIs, without a shell command", () => {

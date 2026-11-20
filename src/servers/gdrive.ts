@@ -15,7 +15,7 @@ import type { JWT, OAuth2Client } from 'google-auth-library';
 import { z } from 'zod';
 import type { RuntimeConfig } from '../core/config.js';
 import { getAuthClient, googleScopes } from '../core/auth.js';
-import { defineTool, type ToolDef } from '../core/tools.js';
+import { defineTool, type PreparedAction, type ToolDef } from '../core/tools.js';
 import { base64Part, base64PartBytes, base64PartsNote, fitText } from '../core/result-shape.js';
 import { checkLocalFile, mimeTypeOf, protectedPaths } from './local-files.js';
 import { OFFICE_TYPES, officeText } from './office-text.js';
@@ -139,8 +139,27 @@ export const VALUE_INPUT = { data: 'RAW', formulas: 'USER_ENTERED' } as const;
 const cell = z.union([z.string(), z.number(), z.boolean(), z.null()]);
 const spreadsheetId = z.string().min(1).describe('The spreadsheet ID (the file ID in Drive, the long part of its URL).');
 
+/** Full parent ids live outside preview: approval shows bounded strings while move executes real ids. */
+type UpdatePrepared = PreparedAction & { parents: string[] };
+type UpdateArgs = { name?: string; description?: string; starred?: boolean; parent_id?: string; add_parent_id?: string; remove_parent_id?: string };
+const bound = (s: string) => (s.length > 200 ? `${s.slice(0, 197)}...` : s);
+
+/** Validation shared between prepare and handler so invalid calls never read Google. */
+function validateUpdateArgs({ name, description, starred, parent_id, add_parent_id, remove_parent_id }: UpdateArgs): void {
+  const given = [name, description, starred, parent_id, add_parent_id, remove_parent_id].filter((v) => v !== undefined).length;
+  if (given === 0) throw new Error('Nothing to change: give name, description, starred, parent_id, add_parent_id or remove_parent_id.');
+  if (parent_id !== undefined && (add_parent_id !== undefined || remove_parent_id !== undefined)) {
+    throw new Error('parent_id moves the file on its own. Give it without add_parent_id and remove_parent_id.');
+  }
+}
+
+const SHEETS_READ_SCOPES = googleScopes('drive', 'drive.readonly', 'spreadsheets', 'spreadsheets.readonly');
+const EXPORT_CACHE_TTL_MS = 60_000;
+const EXPORT_CACHE_MAX_BYTES = 20 * 1024 * 1024;
+
 export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
   const driveApi = async () => drive({ version: 'v3', auth: await authFor(cfg) });
+  const exportCache = new Map<string, { data: Buffer; expiresAt: number }>();
   const sheetsRequest = async <T>(opts: { url: string; method: 'GET' | 'PUT' | 'POST'; params?: Record<string, unknown>; data?: unknown }): Promise<T> => {
     const auth = (await authFor(cfg)) as OAuth2Client;
     return (await auth.request<T>(opts)).data;
@@ -212,15 +231,27 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       },
       async handler({ q, page_size, page_token }) {
         const api = await driveApi();
-        const res = await api.files.list({
+        const base = {
           q,
           pageSize: page_size ?? 20,
           pageToken: page_token,
-          fields: 'nextPageToken, files(id, name, mimeType, modifiedTime, owners(displayName, emailAddress), webViewLink)',
+          fields: 'nextPageToken, incompleteSearch, files(id, name, mimeType, modifiedTime, owners(displayName, emailAddress), webViewLink)',
           includeItemsFromAllDrives: true,
           supportsAllDrives: true,
-        });
-        return { files: (res.data.files ?? []).map(driveSummary), next_page_token: res.data.nextPageToken ?? undefined };
+        };
+        let res;
+        try {
+          res = await api.files.list({ ...base, corpora: 'allDrives' });
+        } catch (err) {
+          const status = (err as { code?: number; response?: { status?: number } })?.code ?? (err as { response?: { status?: number } })?.response?.status;
+          if (status !== 400) throw err;
+          res = await api.files.list({ ...base, corpora: 'user' });
+        }
+        return {
+          files: (res.data.files ?? []).map(driveSummary),
+          next_page_token: res.data.nextPageToken ?? undefined,
+          ...(res.data.incompleteSearch ? { incomplete_search: true } : {}),
+        };
       },
     }),
     defineTool({
@@ -305,7 +336,12 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
         sheet: z.string().optional().describe('A spreadsheet only: the name of the sheet to read (a tab of it), from "sheets". Without it the first sheet is read, as the CSV export does.'),
         include_comments: z.boolean().optional().describe('Also return the comment threads (author, text, quoted text, replies, resolved). Default false.'),
       },
-      async handler({ file_id, max_chars, offset, sheet, include_comments }) {
+      async handler({ file_id, max_chars, offset, sheet, include_comments }, ctx) {
+        if (sheet !== undefined && ctx.grantedScopes !== null && !ctx.hasScope(SHEETS_READ_SCOPES)) {
+          throw new Error(
+            'Reading a named spreadsheet tab needs a Drive or Sheets read scope (drive.readonly, drive, spreadsheets.readonly, or spreadsheets). Sign in again with workspace-user or pass a broader scope.',
+          );
+        }
         const api = await driveApi();
         const meta = await api.files.get({ fileId: file_id, fields: 'id, name, mimeType', supportsAllDrives: true });
         const mime = meta.data.mimeType ?? '';
@@ -335,11 +371,22 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
           if (tabs && !tabs.includes(sheet)) {
             throw new Error(`"${sheet}" is not a sheet of "${meta.data.name ?? file_id}". Its sheets: ${tabs.join(', ')}.`);
           }
-          const values = await sheetsRequest<{ values?: unknown[][] }>({
-            url: `${SHEETS}/${encodeURIComponent(file_id)}/values/${encodeURIComponent(sheet)}`,
-            method: 'GET',
-            params: { valueRenderOption: 'FORMATTED_VALUE' },
-          });
+          let values: { values?: unknown[][] };
+          try {
+            values = await sheetsRequest<{ values?: unknown[][] }>({
+              url: `${SHEETS}/${encodeURIComponent(file_id)}/values/${encodeURIComponent(sheet)}`,
+              method: 'GET',
+              params: { valueRenderOption: 'FORMATTED_VALUE' },
+            });
+          } catch (err) {
+            const status = (err as { code?: number; response?: { status?: number } })?.code ?? (err as { response?: { status?: number } })?.response?.status;
+            if (status === 403) {
+              throw new Error(
+                `Google Sheets refused reading sheet "${sheet}" (HTTP 403). Ensure your token includes spreadsheets.readonly (or drive.readonly/drive) for Sheets API access, or use sheets_get_values after re-authenticating.`,
+              );
+            }
+            throw err;
+          }
           raw = csvOf(values.values ?? []);
           source = `values of the sheet "${sheet}"`;
           if (tabs) tabPart = { sheet, sheets: tabs };
@@ -448,9 +495,28 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
           contentType = export_mime_type ?? EXPORT_DEFAULT[mime] ?? '';
           if (!contentType) throw new Error(`"${name}" is a ${mime} file, which has no default export. Give export_mime_type, for example application/pdf.`);
           if (!MIME_RE.test(contentType)) throw new Error(`export_mime_type "${contentType}" is not a valid content type.`);
-          // An export has no byte ranges: a part is cut from the whole export.
-          data = bytesOf((await api.files.export({ fileId: file_id, mimeType: contentType }, { responseType: 'arraybuffer' })).data);
-          if (offset !== undefined) return { id: meta.data.id, name, mime_type: contentType, ...base64Part(data, offset, part) };
+          // An export has no byte ranges: reuse an in-session buffered export across sequential offset > 0 pages.
+          const cacheKey = `${file_id}\0${contentType}`;
+          const now = Date.now();
+          const cached = offset !== undefined && offset > 0 ? exportCache.get(cacheKey) : undefined;
+          if (cached && cached.expiresAt > now) {
+            data = cached.data;
+          } else {
+            data = bytesOf((await api.files.export({ fileId: file_id, mimeType: contentType }, { responseType: 'arraybuffer' })).data);
+            if (offset !== undefined && offset + part < data.length && data.length <= EXPORT_CACHE_MAX_BYTES) {
+              if (exportCache.size >= 2) {
+                const oldest = exportCache.keys().next().value;
+                if (oldest !== undefined) exportCache.delete(oldest);
+              }
+              exportCache.set(cacheKey, { data, expiresAt: now + EXPORT_CACHE_TTL_MS });
+            } else {
+              exportCache.delete(cacheKey);
+            }
+          }
+          if (offset !== undefined) {
+            if (offset + part >= data.length) exportCache.delete(cacheKey);
+            return { id: meta.data.id, name, mime_type: contentType, ...base64Part(data, offset, part) };
+          }
         } else {
           contentType = mime || 'application/octet-stream';
           const reported = Number(meta.data.size ?? NaN);
@@ -661,19 +727,37 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
         add_parent_id: z.string().optional().describe('Add the file to this folder and keep the folders it is in now.'),
         remove_parent_id: z.string().optional().describe('Take the file out of this folder.'),
       },
-      async handler({ file_id, name, description, starred, parent_id, add_parent_id, remove_parent_id }) {
-        const given = [name, description, starred, parent_id, add_parent_id, remove_parent_id].filter((v) => v !== undefined).length;
-        if (given === 0) throw new Error('Nothing to change: give name, description, starred, parent_id, add_parent_id or remove_parent_id.');
-        if (parent_id !== undefined && (add_parent_id !== undefined || remove_parent_id !== undefined)) {
-          throw new Error('parent_id moves the file on its own. Give it without add_parent_id and remove_parent_id.');
-        }
+      async prepare({ file_id, name, description, starred, parent_id, add_parent_id, remove_parent_id }) {
+        validateUpdateArgs({ name, description, starred, parent_id, add_parent_id, remove_parent_id });
+        const api = await driveApi();
+        const res = await api.files.get({ fileId: file_id, fields: 'id,name,mimeType,parents', supportsAllDrives: true });
+        const preview = {
+          file_id: bound(file_id),
+          name_before: res.data.name == null ? null : bound(res.data.name),
+          mime_type: res.data.mimeType == null ? null : bound(res.data.mimeType),
+          parents_before: (res.data.parents ?? []).map(bound),
+          ...(name !== undefined ? { name_after: bound(name) } : {}),
+          ...(description !== undefined ? { description_after: bound(description) } : {}),
+          ...(starred !== undefined ? { starred_after: starred } : {}),
+          ...(parent_id !== undefined ? { move_to_parent: bound(parent_id) } : {}),
+          ...(add_parent_id !== undefined ? { add_parent: bound(add_parent_id) } : {}),
+          ...(remove_parent_id !== undefined ? { remove_parent: bound(remove_parent_id) } : {}),
+          effect: 'Changes only the listed metadata of this Drive file; no file content is touched. Long values are shortened for display; the full values are used for the change.',
+        };
+        const prepared: UpdatePrepared = { preview, parents: res.data.parents ?? [] };
+        return prepared;
+      },
+      async handler(args, ctx, prepared?) {
+        const { file_id, name, description, starred, parent_id, add_parent_id, remove_parent_id } = args;
+        validateUpdateArgs(args);
         const api = await driveApi();
         let addParents = add_parent_id;
         let removeParents = remove_parent_id;
         if (parent_id !== undefined) {
-          // A move: the file goes into the new folder and leaves the folders it is in now (the new one stays, if it is there already).
-          const current = await api.files.get({ fileId: file_id, fields: 'parents', supportsAllDrives: true });
-          const others = (current.data.parents ?? []).filter((p) => p !== parent_id);
+          // A move: reuse full ids approved during prepare, falling back to a fresh GET on direct handler calls.
+          const fullParents = Array.isArray((prepared as UpdatePrepared | undefined)?.parents) ? (prepared as UpdatePrepared).parents : undefined;
+          const current = fullParents ?? (await api.files.get({ fileId: file_id, fields: 'parents', supportsAllDrives: true })).data.parents ?? [];
+          const others = current.filter((p) => p !== parent_id);
           addParents = parent_id;
           removeParents = others.length > 0 ? others.join(',') : undefined;
         }

@@ -22,23 +22,23 @@ The tools that match Google's official MCP server for this product (https://deve
 
 | Tool | Google's tool | Note |
 |---|---|---|
-| `drive_search` | `search_files` | Takes Drive's own query syntax (q), not the dialect of Google's search_files (title, parentId, owner); the same searches can be written in either. |
+| `drive_search` | `search_files` | Takes Drive's own query syntax (q), not the dialect of Google's search_files (title, parentId, owner); the same searches can be written in either. Sends corpora=allDrives with 400 fallback to corpora=user. |
 | `drive_list_recent` | `list_recent_files` |  |
 | `drive_get_file` | `get_file_metadata` |  |
-| `drive_permissions_list` | `get_file_permissions` |  |
+| `drive_permissions_list` | `get_file_permissions` | Generated drive.permissions.list: raw Drive PermissionList JSON (fields, nextPageToken), not Google's hosted permissions[] summary. |
 | `drive_read_text` | `read_file_content` | PDF and image text is not read: Drive has no public text-extraction call. Office and OpenDocument text is taken from the downloaded file, since Drive exports only Google files. |
 | `drive_download` | `download_file_content` |  |
 | `drive_create_file` | `create_file` | Converts to a Google type only when google_type is given; Google's create_file converts by default. |
-| `drive_files_copy` | `copy_file` |  |
-| `docs_documents_get` | `read_doc` | Generated from Docs' documents.get: the full document JSON. Comments (Google's commentsIncluded) are in drive_read_text with include_comments. |
+| `drive_files_copy` | `copy_file` | Generated drive.files.copy: raw Drive File shape with a nested body/requestBody (title, parents), not Google's flat title/parentId copy_file. |
+| `docs_documents_get` | `read_doc` | Generated Docs documents.get: full raw Document JSON with optional fields; no hosted commentsIncluded switch. drive_read_text(include_comments) reads file-level Drive comment threads into a separate comments array, not the hosted in-response comments. |
 | `docs_documents_batch_update` | `update_doc` |  |
 | `sheets_get_values` | `get_values` |  |
-| `sheets_spreadsheets_get` | `get_spreadsheet` |  |
+| `sheets_spreadsheets_get` | `get_spreadsheet` | Generated Sheets spreadsheets.get: raw Spreadsheet JSON with optional fields; no hosted commentsIncluded switch. drive_read_text(include_comments) is a separate file-comment-threads route, not the same output. |
 | `sheets_spreadsheets_batch_update` | `update_spreadsheet` |  |
 | `sheets_write_values` | `update_values`, `update_formulas` | One tool for Google's update_values and update_formulas: value_input data (RAW) or formulas (USER_ENTERED), always given. |
 | `sheets_insert_rows` | `insert_dimension` |  |
-| `slides_presentations_get` | `read_presentation` |  |
-| `slides_presentations_pages_get` | `read_slide_page` |  |
+| `slides_presentations_get` | `read_presentation` | Generated Slides presentations.get: raw Presentation JSON with optional fields; no hosted commentsIncluded switch. drive_read_text(include_comments) is a separate file-comment-threads route, not the same output. |
+| `slides_presentations_pages_get` | `read_slide_page` | Generated Slides presentations.pages.get: raw Page JSON with optional fields; no hosted commentsIncluded switch. drive_read_text(include_comments) is a separate file-comment-threads route, not the same output. |
 | `slides_pages_get_thumbnail` | `read_slide_page_thumbnail` | The generated name is cut to fit the 64-character tool name budget. |
 | `slides_presentations_batch_update` | `update_presentation` |  |
 
@@ -126,7 +126,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `docs_documents_batch_update` | destructive | docs.documents.batchUpdate | documents, drive, +1 more |
 | `docs_documents_create` | write | docs.documents.create | documents, drive, +1 more |
 | `docs_documents_get` | read | docs.documents.get | documents, documents.readonly, +3 more |
-| `dri_update_label_enabled_app_settings` | write | drivelabels.labels.updateLabelEnabledAppSettings | (none) |
+| `dri_update_label_enabled_app_settings` | write | drivelabels.labels.updateLabelEnabledAppSettings | drive.labels, drive.admin.labels |
 | `drive_about_get` | read | drive.about.get | drive, drive.appdata, +5 more |
 | `drive_accessproposals_get` | read | drive.accessproposals.get | drive, drive.file, +3 more |
 | `drive_accessproposals_list` | read | drive.accessproposals.list | drive, drive.file, +3 more |

@@ -67,6 +67,12 @@
           ]
         }
       },
+      "scopeOverrides": {
+        "drivelabels": [
+          "https://www.googleapis.com/auth/drive.labels",
+          "https://www.googleapis.com/auth/drive.admin.labels"
+        ]
+      },
       "fieldsDefaults": {
         "drive": {
           "value": "*",
