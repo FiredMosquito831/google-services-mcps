@@ -54,7 +54,8 @@ test('the server map: gapps has the optional part mail (the full Gmail scope) an
 });
 
 test('readonly and readwrite resolve exactly as before; full no longer asks for https://mail.google.com/ unless mail is named', async () => {
-  for (const toolset of ['all', 'google', 'curated']) {
+  // curated holds only appsscript_get_content (no scripts.run), while all and google include scripts.run.
+  for (const toolset of ['all', 'google']) {
     const reqs = await reqsOf(toolset);
     for (const profile of ['readonly', 'readwrite']) {
       assert.deepEqual(resolveScopes(reqs, profile), resolveScopes(before(reqs), profile), `${toolset} ${profile}`);

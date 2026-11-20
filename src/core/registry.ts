@@ -103,6 +103,13 @@ export interface ServerSpec {
    * tool map keeps the method's own kind. Absent for a product that has none, so its tools are gated as before.
    */
   destructiveWhen?: Record<string, DestructiveWhen>;
+  /**
+   * Per generated API of the product, an approval-only read for a destructive method whose exact code version the
+   * approval must name (config/products.json runPreviews; Apps Script's scripts.run). The declaration supplies the
+   * preview-only argument name; the method's generated tool gets an optional argument and a read-only prepare. Absent
+   * for every other product, so their tools and approvals stay exactly as before.
+   */
+  runPreviews?: Record<string, RunPreviews>;
   label: string;
   /**
    * The plugin folder the server is built from (plugins/<id>), set only by the CLI of the repository layout (the
@@ -155,6 +162,25 @@ export interface TargetQueryDefaults {
 /** One API's entry of ServerSpec.methodNotes: the note per method id, with the evidence for people. */
 export interface MethodNotes {
   methods: Record<string, string>;
+  source?: string;
+  reason?: string;
+}
+
+/**
+ * An approval-only preview of the code version a destructive method will run. It adds one optional argument to the
+ * method's tool; that argument is consumed by prepare and is never one of the request plan's fields, so it cannot reach
+ * the URL, query, body or headers.
+ */
+export interface RunPreview {
+  /** The one approved strategy; each strategy has one small read helper. */
+  strategy: 'apps-script-deployment-and-content';
+  /** The preview-only argument: the script project's Drive ID for the Apps Script strategy. */
+  previewArg: string;
+}
+
+/** One API's entry of ServerSpec.runPreviews: the preview per method id, with the evidence for people. */
+export interface RunPreviews {
+  methods: Record<string, RunPreview>;
   source?: string;
   reason?: string;
 }

@@ -160,6 +160,8 @@ const DOCS = [
   'tagmanager.v2',
   // 2.13.0: the curated psi_run runs one PageSpeed Insights analysis here.
   'pagespeedonline.v5',
+  // Q038: the curated appsscript_get_content reads Apps Script files here.
+  'script.v1',
 ];
 
 /**
@@ -323,7 +325,7 @@ function problemsOf(call) {
 // ---------------------------------------------------------------------------
 // The servers and their tools.
 
-const SERVERS = ['gmail', 'gcalendar', 'gdrive', 'searchconsole', 'cloud', 'gads', 'workspace-admin', 'gchat', 'gcontacts', 'gclassroom', 'ganalytics', 'gfirebase', 'gai', 'gmaps', 'gplay', 'meet', 'gsearch', 'gtm', 'gbusiness'];
+const SERVERS = ['gmail', 'gcalendar', 'gdrive', 'searchconsole', 'cloud', 'gads', 'workspace-admin', 'gchat', 'gcontacts', 'gclassroom', 'gapps', 'ganalytics', 'gfirebase', 'gai', 'gmaps', 'gplay', 'meet', 'gsearch', 'gtm', 'gbusiness'];
 const tools = new Map();
 for (const mod of SERVERS) {
   const { buildTools } = await import(DIST(`servers/${mod}.js`));
@@ -1393,6 +1395,21 @@ const CASES = {
       assertQuery: (q) => assert.deepEqual(q, {}, 'the get tool sends only the name path parameter'),
     },
   ],
+
+  // Q038: curated gapps project content reader with file_name, include_source=false, and offset/max_chars paging.
+  appsscript_get_content: [
+    {
+      args: { script_id: 'script-123' },
+      expect: ['script.projects.getContent'],
+      respond: () => ({ scriptId: 'script-123', files: [{ name: 'Code', type: 'SERVER_JS', source: 'function hi() {}' }] }),
+    },
+    {
+      args: { script_id: 'script-123', version_number: 3, file_name: 'Code', offset: 0, max_chars: 10 },
+      expect: ['script.projects.getContent'],
+      sends: { versionNumber: '3' },
+      respond: () => ({ scriptId: 'script-123', files: [{ name: 'Code', type: 'SERVER_JS', source: 'function hi() {}' }] }),
+    },
+  ],
 };
 
 /** Tools that cannot run here, with the reason. Counted. */
@@ -1405,7 +1422,7 @@ test('every curated tool has a contract row, a skip reason or a known defect, an
   const listed = new Set([...Object.keys(CASES), ...Object.keys(SKIPPED), ...Object.keys(KNOWN_DEFECTS)]);
   assert.deepEqual([...tools.keys()].filter((name) => !listed.has(name)), [], 'curated tools without a row');
   assert.deepEqual([...listed].filter((name) => !tools.has(name)), [], 'rows for tools that do not exist');
-  assert.equal(tools.size, 181, 'the curated tool count; update the table when it changes');
+  assert.equal(tools.size, 182, 'the curated tool count; update the table when it changes');
 });
 
 for (const [name, cases] of Object.entries(CASES)) {

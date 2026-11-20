@@ -22,6 +22,13 @@ const readJson = (...parts) => JSON.parse(readFileSync(join(ROOT, ...parts), 'ut
 const { flattenMethods } = await import(dist('core/discovery/methods.js'));
 const { targetGetFor, targetFieldsOf, settleWithin, TARGET_FIELDS, TARGET_MAX_FIELDS, TARGET_VALUE_CHARS, TARGET_PREVIEW_KEY } = await import(dist('core/target-preview.js'));
 const { formMayShow } = await import(dist('core/tools.js'));
+const {
+  readScriptRunPreview,
+  RUN_PREVIEW_KEY,
+  RUN_PREVIEW_TIMEOUT_MS,
+  RUN_PREVIEW_VALUE_CHARS,
+  RUN_PREVIEW_NOT_READ,
+} = await import(dist('core/script-run-preview.js'));
 const { decide, describeAction } = await import(dist('core/policy.js'));
 const { CREDENTIAL_FIELDS } = await import(dist('core/credential-fields.js'));
 
@@ -458,5 +465,128 @@ test('generated People delete: the approval-only GET sends personFields and name
       ],
       'the same DELETE as before: no mask, no extra argument, no body',
     );
+  });
+});
+
+// ---------------------------------------------------------------------------
+// OD03: scripts.run's approval-only version preview.
+
+test('script-run preview: only documented read URLs, no deployment id in {scriptId}, no source, capped fields', async () => {
+  const urls = [];
+  const long = `2026-${'x'.repeat(300)}`;
+  const read = async (kind, url) => {
+    urls.push([kind, url]);
+    if (kind === 'deployment') return { updateTime: '2026-11-18T10:00:00Z', deploymentConfig: { versionNumber: 7 } };
+    if (kind === 'version') return { versionNumber: 7, createTime: '2026-11-17T09:00:00Z' };
+    return {
+      files: [
+        {
+          name: 'Code',
+          updateTime: long,
+          source: 'function runMe() { return "never shown"; }',
+          functionSet: { values: [{ name: 'other' }, { name: 'runMe' }] },
+        },
+      ],
+    };
+  };
+  const input = { deploymentId: 'DEP/1', previewProjectId: 'project id', functionName: 'runMe', devMode: false };
+  const fields = await readScriptRunPreview(input, read);
+  assert.deepEqual(urls, [
+    ['deployment', 'https://script.googleapis.com/v1/projects/project%20id/deployments/DEP%2F1'],
+    ['version', 'https://script.googleapis.com/v1/projects/project%20id/versions/7'],
+    ['content', 'https://script.googleapis.com/v1/projects/project%20id/content?versionNumber=7'],
+  ]);
+  assert.equal(fields['deployment version'], '7');
+  assert.equal(fields['version createTime'], '2026-11-17T09:00:00Z');
+  assert.equal(fields['deployment updateTime'], '2026-11-18T10:00:00Z', 'a different second time is shown');
+  assert.equal(fields['entry point'], 'runMe');
+  assert.equal(fields['entry point in code'], 'found');
+  assert.equal(fields['deployed file updateTime'], undefined, 'the deployed file time is not the devMode=false clock');
+  assert.equal(fields.warning, undefined);
+  assert.ok(Object.keys(fields).length <= 6);
+  assert.doesNotMatch(JSON.stringify(fields), /source|never shown/, 'no source excerpt and no other response text');
+
+  urls.length = 0;
+  const head = await readScriptRunPreview({ ...input, devMode: true }, read);
+  assert.deepEqual(urls, [
+    ['deployment', 'https://script.googleapis.com/v1/projects/project%20id/deployments/DEP%2F1'],
+    ['content', 'https://script.googleapis.com/v1/projects/project%20id/content'],
+  ], 'devMode=true reads HEAD with no versionNumber query and no versions.get');
+  assert.equal(head['HEAD file updateTime'], `${long.slice(0, RUN_PREVIEW_VALUE_CHARS - 3)}...`, 'the value is cut');
+  assert.equal(head['version createTime'], undefined);
+  assert.equal(head['deployed file updateTime'], undefined);
+
+  urls.length = 0;
+  const none = await readScriptRunPreview({ ...input, previewProjectId: '' }, read);
+  assert.deepEqual(urls, [], 'no project script id: no read at all');
+  assert.deepEqual(none, { warning: `${RUN_PREVIEW_NOT_READ}: no project script id supplied` });
+
+  urls.length = 0;
+  const failed = await readScriptRunPreview({ ...input, previewProjectId: 'P1' }, async () => { throw new Error('403'); });
+  assert.match(failed.warning, new RegExp(RUN_PREVIEW_NOT_READ));
+  assert.ok(Object.keys(failed).length <= 6);
+  assert.equal(RUN_PREVIEW_TIMEOUT_MS, 5000, 'one shared bounded deadline');
+});
+
+test('appsscript_scripts_run: the approval names the entry point and time; reads happen first, never on decline; no id means no read', async () => {
+  const responder = `(method, path) => {
+    if (method === 'GET' && path === '/v1/projects/P1/deployments/DEP1') return { updateTime: '2026-11-18T10:00:00Z', deploymentConfig: { versionNumber: 7 } };
+    if (method === 'GET' && path === '/v1/projects/P1/versions/7') return { createTime: '2026-11-17T09:00:00Z' };
+    if (method === 'GET' && path === '/v1/projects/P1/content') return { files: [{ name: 'Code', updateTime: '2026-11-19T12:00:00Z', functionSet: { values: [{ name: 'runMe' }] }, source: 'never shown' }] };
+    if (method === 'GET' && path === '/v1/projects/P1/deployments/MISSING') return { httpError: 404 };
+    if (method === 'POST') return { done: true };
+    return { httpError: 404 };
+  }`;
+  const run = (extra) => ({
+    scriptId: extra.deployment ?? 'DEP1',
+    body: { function: 'runMe', devMode: extra.devMode ?? false, parameters: ['Q3'] },
+    ...(extra.previewProjectId ? { previewProjectId: extra.previewProjectId } : {}),
+  });
+  const s = childServer('gapps', 'workspace-user', generatedLine('gapps'), responder);
+  await withClient(s, serverEnv(s), DECLINE, async (client, asked) => {
+    await client.callTool({ name: 'appsscript_scripts_run', arguments: run({}) });
+    assert.match(asked[0].message, /version not read: no project script id supplied/);
+    assert.match(asked[0].message, /"function": "runMe"/, 'the original function and parameters stay in the approval');
+    assert.match(asked[0].message, /"parameters": \[\s*"Q3"/);
+    assert.match(asked[0].message, /most recently saved version rather than the version deployed/);
+    assert.deepEqual(callsIn(s.callsFile), [], 'no id: no GET and no POST');
+
+    await client.callTool({ name: 'appsscript_scripts_run', arguments: run({ previewProjectId: 'P1' }) });
+    assert.match(asked[1].message, new RegExp(RUN_PREVIEW_KEY.replace(/[()]/g, '\\$&')));
+    assert.match(asked[1].message, /"deployment version": "7"/);
+    assert.match(asked[1].message, /"version createTime": "2026-11-17T09:00:00Z"/);
+    assert.match(asked[1].message, /"entry point": "runMe"/);
+    assert.doesNotMatch(asked[1].message, /never shown/, 'source never enters the approval');
+    assert.deepEqual(callsIn(s.callsFile).map((c) => [c.method, c.path, c.query.versionNumber]), [
+      ['GET', '/v1/projects/P1/deployments/DEP1', undefined],
+      ['GET', '/v1/projects/P1/versions/7', undefined],
+      ['GET', '/v1/projects/P1/content', '7'],
+    ], 'the exact documented GETs; the deployment id never fills {scriptId}');
+
+    const before = callsIn(s.callsFile).length;
+    await client.callTool({ name: 'appsscript_scripts_run', arguments: run({ devMode: true, previewProjectId: 'P1' }) });
+    assert.match(asked[2].message, /"HEAD file updateTime": "2026-11-19T12:00:00Z"/);
+    assert.deepEqual(callsIn(s.callsFile).slice(before).map((c) => [c.method, c.path, c.query.versionNumber]), [
+      ['GET', '/v1/projects/P1/deployments/DEP1', undefined],
+      ['GET', '/v1/projects/P1/content', undefined],
+    ], 'HEAD content has no versionNumber and no version read');
+
+    const beforeFailure = callsIn(s.callsFile).length;
+    await client.callTool({ name: 'appsscript_scripts_run', arguments: run({ deployment: 'MISSING', previewProjectId: 'P1' }) });
+    assert.match(asked[3].message, /version not read/);
+    assert.equal(asked.length, 4, 'a failed informational read still shows the gate');
+    assert.deepEqual(callsIn(s.callsFile).slice(beforeFailure).map((c) => c.method), ['GET'], 'no content read without a known deployed version; no POST after a declined approval');
+  });
+
+  const t = childServer('gapps', 'workspace-user', generatedLine('gapps'), responder);
+  await withClient(t, serverEnv(t), APPROVE, async (client, asked) => {
+    await client.callTool({ name: 'appsscript_scripts_run', arguments: run({ previewProjectId: 'P1' }) });
+    assert.equal(asked[0].callsBefore, 3, 'all reads came before the gate');
+    assert.deepEqual(callsIn(t.callsFile).map((c) => [c.method, c.path]), [
+      ['GET', '/v1/projects/P1/deployments/DEP1'],
+      ['GET', '/v1/projects/P1/versions/7'],
+      ['GET', '/v1/projects/P1/content'],
+      ['POST', '/v1/scripts/DEP1:run'],
+    ], 'the run request is unchanged and happens only after approval');
   });
 });

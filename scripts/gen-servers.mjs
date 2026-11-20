@@ -56,6 +56,7 @@ const CURATED_FILES = {
   search: 'src/servers/gsearch.ts',
   tagmanager: 'src/servers/gtm.ts',
   business: 'src/servers/gbusiness.ts',
+  gapps: 'src/servers/gapps.ts',
 };
 
 const ID_PATTERN = /^[a-z]+$/;
@@ -482,6 +483,39 @@ function credentialOverridesOf(value, id, apiMethods) {
   return value;
 }
 
+/** The approved approval-preview strategies. An unknown strategy is a product-data error, not a silent no-op. */
+const RUN_PREVIEW_STRATEGIES = new Set(['apps-script-deployment-and-content']);
+
+/**
+ * A product's "runPreviews" (ServerSpec.runPreviews in src/core/registry.ts), checked and copied as is: a bounded
+ * read-only approval preview for one destructive generated method. The preview-only argument must not be a Discovery
+ * parameter, a body field, a generated auxiliar argument or a reserved tool argument, so it cannot enter RequestPlan.
+ */
+function runPreviewsOf(value, id, apiMethods, apis) {
+  if (value === undefined) return undefined;
+  const where = `product ${id} runPreviews`;
+  checkPerApi(value, where, apiMethods);
+  const reserved = new Set(['confirm', 'account', 'fields', 'field_mask', 'alt', 'offset', 'body', 'requestBody']);
+  for (const [api, entry] of Object.entries(value)) {
+    const methods = entry.methods;
+    if (typeof methods !== 'object' || methods === null || Array.isArray(methods) || Object.keys(methods).length === 0) fail(`${where}["${api}"].methods must be a non-empty object`);
+    const version = apis.find((a) => a.api === api)?.version;
+    const doc = version ? readJson(join(ROOT, 'data', 'discovery', `${api}.${version}.json`)) : undefined;
+    for (const [method, rule] of Object.entries(methods)) {
+      const snapshot = checkMethodOf(`${where}["${api}"]`, api, method, apiMethods);
+      if (typeof rule !== 'object' || rule === null || Array.isArray(rule)) fail(`${where}["${api}"]["${method}"] must be an object`);
+      if (!RUN_PREVIEW_STRATEGIES.has(rule.strategy)) fail(`${where}["${api}"]["${method}"].strategy must be one of ${[...RUN_PREVIEW_STRATEGIES].join(', ')}`);
+      if (!isText(rule.previewArg) || !/^[a-z][a-zA-Z0-9]*$/.test(rule.previewArg)) fail(`${where}["${api}"]["${method}"].previewArg must be a lower-camel argument name`);
+      const taken = new Set([...reserved, ...(snapshot?.parameters ?? []).map((p) => p.name)]);
+      const bodySchema = snapshot?.request && doc?.schemas?.[snapshot.request];
+      for (const name of Object.keys(bodySchema?.properties ?? {})) taken.add(name);
+      if (taken.has(rule.previewArg)) fail(`${where}["${api}"]["${method}"].previewArg "${rule.previewArg}" collides with a request argument, so it could reach Google`);
+      if (Object.keys(rule).some((k) => k !== 'strategy' && k !== 'previewArg')) fail(`${where}["${api}"]["${method}"] has an unknown key`);
+    }
+  }
+  return value;
+}
+
 /** The schemas of each API's snapshot (every version merged), for checks that look into a method's request. */
 function snapshotSchemasOf(apis) {
   const out = new Map();
@@ -609,6 +643,9 @@ function main() {
     // Only a product with body rules for destructive calls gets the key, so the entries of the others stay as they were.
     const destructiveWhen = destructiveWhenOf(p.destructiveWhen, id, apiMethods, snapshotSchemasOf(apis));
     if (destructiveWhen) server.destructiveWhen = destructiveWhen;
+    // Only a product with a run preview gets the key, so every other product's generated entry stays byte-identical.
+    const runPreviews = runPreviewsOf(p.runPreviews, id, apiMethods, p.generated ?? []);
+    if (runPreviews) server.runPreviews = runPreviews;
     // Only a product that lists a toolset gets the key, so the entries of the others stay as they were.
     const toolsets = toolsetsOf(p.toolsets, id);
     if (toolsets) server.toolsets = toolsets;

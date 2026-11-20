@@ -2156,8 +2156,8 @@
       "name": "gapps",
       "plugin": "gapps",
       "group": "workspace-user",
-      "kind": "discovery",
-      "curated": null,
+      "kind": "curated+discovery",
+      "curated": "src/servers/gapps.ts",
       "apis": [
         {
           "api": "script",
@@ -2189,10 +2189,22 @@
           }
         }
       },
+      "runPreviews": {
+        "script": {
+          "source": "OD03 (apps-script-deployment-and-content preview); Google Apps Script REST API references for /v1/scripts/run, /v1/projects.deployments/get, /v1/projects.versions/get and /v1/projects/getContent",
+          "reason": "The approval for scripts.run shows the model's function and parameters but not which saved code will run; devMode can select the most recently saved version rather than the deployed one. A bounded, best-effort read-only preview tells the approver which entry point and last-modified time govern the run without changing the request or the destructive class.",
+          "methods": {
+            "script.scripts.run": {
+              "strategy": "apps-script-deployment-and-content",
+              "previewArg": "previewProjectId"
+            }
+          }
+        }
+      },
       "toolsets": {
         "google": [
           "appsscript_projects_get",
-          "appsscript_projects_get_content",
+          "appsscript_get_content",
           "appsscript_projects_update_content",
           "appsscript_projects_versions_create",
           "appsscript_projects_versions_list",

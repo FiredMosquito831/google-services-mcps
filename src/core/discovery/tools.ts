@@ -26,6 +26,7 @@ import {
   type CredentialOverride,
   type DestructiveBodyRule,
   type PageSizeDefault,
+  type RunPreview,
   type ServerSpec,
 } from '../registry.js';
 import {
@@ -50,7 +51,14 @@ import {
   resolveDynamicKind,
 } from '../dynamic.js';
 import { redactCredentials } from '../credential-fields.js';
-import { targetFieldsOf, targetGetFor } from '../target-preview.js';
+import { settleWithin, targetFieldsOf, targetGetFor } from '../target-preview.js';
+import {
+  DEV_MODE_MEANING,
+  RUN_PREVIEW_KEY,
+  RUN_PREVIEW_TIMEOUT_MS,
+  readScriptRunPreview,
+  type RunPreviewReader,
+} from '../script-run-preview.js';
 import { contentRange, fromBytes, MediaBody, mediaPart, rangeHeader } from '../media.js';
 import { base64PartBytes } from '../result-shape.js';
 
@@ -288,6 +296,11 @@ export interface DiscoverySource {
    * Absent: every call is gated by the method's kind, as before.
    */
   destructiveWhen?: Readonly<Record<string, DestructiveBodyRule>>;
+  /**
+   * Method id to its approval-only version preview (ServerSpec.runPreviews, declared in config/products.json). The
+   * method's tool gets one preview-only argument and a read-only prepare. Absent: no tool changes.
+   */
+  runPreviews?: Readonly<Record<string, RunPreview>>;
 }
 
 /**
@@ -660,6 +673,7 @@ function buildMethodTool(
   target?: MethodRecord,
   src: DefaultsSource = {},
   bodyRule?: DestructiveBodyRule,
+  runPreview?: RunPreview,
 ): ToolDef {
   const shape: ZodRawShape = {};
   const fields: RequestField[] = [];
@@ -716,6 +730,18 @@ function buildMethodTool(
   }
   const takesOffset = media !== undefined && free(OFFSET_ARG);
   if (takesOffset) shape[OFFSET_ARG] = z.number().int().min(0).optional().describe(offsetText(partBytes));
+
+  // The preview-only argument is a schema field, never a RequestPlan field. buildRequest iterates plan.fields, so it
+  // cannot appear in the URL, query, body or headers of the run request or its static summary (OD03).
+  if (runPreview && free(runPreview.previewArg)) {
+    shape[runPreview.previewArg] = z
+      .string()
+      .min(1)
+      .optional()
+      .describe(
+        `The script project's Drive ID, read only to show the code version and last-modified time in the approval. It is never sent with this call. Omit it and no preview read is made; the approval then says the version was not read.`,
+      );
+  }
 
   if (adsLogin) {
     // A future Discovery parameter must never be silently renamed or overwritten by the synthetic argument.
@@ -815,6 +841,43 @@ function buildMethodTool(
     tool.preview = (args) => {
       const req = buildRequest(plan, args as Record<string, unknown>);
       return { method: m.fullId, url: req.url, query: req.params, body: req.data ?? null, ...(req.headers ? { headers: req.headers } : {}) };
+    };
+  }
+  if (runPreview && m.kind === 'destructive') {
+    // One approved strategy, declared in the product map: a bounded read-only preview of the version this run will use.
+    // It uses the normal prepare hook, so it never replaces the gate, and it is never added to the request plan.
+    const previewArg = runPreview.previewArg;
+    const pathArg = m.parameters.find((p) => p.location === 'path')?.name;
+    tool.prepare = async (args) => {
+      const a = args as Record<string, unknown>;
+      const body = bodyArg === undefined ? undefined : a[bodyArg];
+      const bodyRecord = body !== null && typeof body === 'object' && !Array.isArray(body) ? (body as Record<string, unknown>) : undefined;
+      const reader: RunPreviewReader = async (kind, url) => {
+        const res = await sendAuthorized(group, cfg, { method: 'GET', url });
+        // A content response carries source: it passes the credential list (and never that source) before a field is picked.
+        return kind === 'content' ? redactCredentials(res.data, { api: doc.name, schema: 'Content', schemas: doc.schemas }) : res.data;
+      };
+      const fields =
+        (await settleWithin(
+          readScriptRunPreview(
+            {
+              deploymentId: pathArg === undefined ? '' : String(a[argFor(pathArg)] ?? ''),
+              previewProjectId: a[previewArg],
+              functionName: bodyRecord?.function,
+              devMode: bodyRecord?.devMode,
+              rootUrl: doc.rootUrl,
+            },
+            reader,
+          ),
+          RUN_PREVIEW_TIMEOUT_MS,
+        )) ?? { warning: 'version not read: the preview read took too long' };
+      // The gated args are this object, so keep the original function and parameters first; the added fields are bounded.
+      const preview: Record<string, unknown> = {};
+      if (pathArg !== undefined) preview[argFor(pathArg)] = a[argFor(pathArg)];
+      if (bodyArg !== undefined && body !== undefined) preview[bodyArg] = body;
+      preview['devMode meaning'] = DEV_MODE_MEANING;
+      preview[RUN_PREVIEW_KEY] = fields;
+      return { preview };
     };
   }
   if (target) {
@@ -950,7 +1013,21 @@ export function generateDiscoveryTools(
     const name = names[i]!;
     const m = entry.method;
     const note = methodNoteText(kinds.notes[m.apiName], entry.src.methodNotes?.[m.fullId]);
-    tools.push(buildMethodTool(m, name, entry.doc, group, cfg, note, entry.scopesWhenNone, entry.target, entry.src, entry.src.destructiveWhen?.[m.fullId]));
+    tools.push(
+      buildMethodTool(
+        m,
+        name,
+        entry.doc,
+        group,
+        cfg,
+        note,
+        entry.scopesWhenNone,
+        entry.target,
+        entry.src,
+        entry.src.destructiveWhen?.[m.fullId],
+        entry.src.runPreviews?.[m.fullId],
+      ),
+    );
     rows.push({
       method: m.fullId,
       tool: name,
@@ -1041,6 +1118,7 @@ export async function discoveryToolsFor(
       ...requestDefaultsFor(server, a.api),
       ...(server.methodNotes?.[a.api] ? { methodNotes: server.methodNotes[a.api]!.methods } : {}),
       ...(server.destructiveWhen?.[a.api] ? { destructiveWhen: server.destructiveWhen[a.api]!.methods } : {}),
+      ...(server.runPreviews?.[a.api] ? { runPreviews: server.runPreviews[a.api]!.methods } : {}),
     });
   }
   if (missing.length > 0) {

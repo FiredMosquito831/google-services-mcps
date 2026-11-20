@@ -758,3 +758,26 @@ test('Merchant reviews: the 8 review tools keep their names and send to reviews/
     assert.equal(index.find((e) => e.method.id === id && e.regex.test(call.url))?.key, 'merchantapi.reviews_v1alpha', `${id} matches the v1alpha document`);
   }
 });
+
+// ---------------------------------------------------------------------------
+// OD03: the preview-only argument is a schema field, never a request field.
+
+test('scripts.run: previewProjectId is optional on that one tool and is stripped from every part of the POST', async () => {
+  const run = await byMethod('gapps', 'script.scripts.run');
+  assert.ok(run.inputSchema.previewProjectId?.isOptional(), 'the preview-only argument is optional');
+  for (const tool of await toolsOf('gapps')) {
+    if (tool.methodId === 'script.scripts.run') continue;
+    assert.equal(tool.inputSchema.previewProjectId, undefined, `${tool.methodId} has no preview-only argument`);
+  }
+  respond = () => ({});
+  for (const devMode of [false, true]) {
+    const args = { scriptId: 'DEP1', body: { function: 'runMe', devMode, parameters: ['Q3'] } };
+    const plain = await requestsOf(run, args);
+    const withPreview = await requestsOf(run, { ...args, previewProjectId: 'PROJECT1' });
+    assert.deepEqual(withPreview, plain, `devMode=${devMode}: identical URL, query, body and headers`);
+    assert.equal(JSON.stringify(withPreview).includes('previewProjectId'), false, 'the argument appears nowhere in the request');
+    assert.deepEqual(contract(withPreview[0], 'script.scripts.run'), { id: 'script.scripts.run', problems: [] });
+    assert.equal(withPreview[0].body.function, 'runMe');
+    assert.equal(withPreview[0].url, 'https://script.googleapis.com/v1/scripts/DEP1:run');
+  }
+});

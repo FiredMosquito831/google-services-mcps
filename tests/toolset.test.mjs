@@ -131,7 +131,7 @@ const LEAN_GOOGLE = {
   ],
   gapps: [
     'appsscript_projects_get',
-    'appsscript_projects_get_content',
+    'appsscript_get_content',
     'appsscript_projects_update_content',
     'appsscript_projects_versions_create',
     // 2.5.0: the versions list and the redeploy (deployments.update keeps the id and the URL; create makes a new one).
@@ -1213,11 +1213,14 @@ test('runServer: google on gplay (service account key) lists its 16 tools and th
 });
 
 test('runServer: google on gtasks and gapps lists the lean list and the runtime tools, with the same schemas as all', async () => {
-  // gmeet left this loop in 2.6.0: it has hand-written tools now, so its entry builds them too (the next test).
-  const lean = Object.fromEntries(Object.entries(LEAN_GOOGLE).filter(([id]) => id !== 'gmeet'));
-  for (const [id, tools] of Object.entries(lean)) {
+  // gmeet left the pure-generated path in 2.6.0; gapps gained curated appsscript_get_content for Q038.
+  const entries = [
+    ['gtasks', LEAN_GOOGLE.gtasks, (dir) => generatedEntry(dir, 'gtasks')],
+    ['gapps', LEAN_GOOGLE.gapps, (dir) => curatedEntry(dir, 'gapps', 'gapps')],
+  ];
+  for (const [id, tools, makeEntry] of entries) {
     const dir = tempDir(`gsm-toolset-${id}-`);
-    const entry = generatedEntry(dir, id);
+    const entry = makeEntry(dir);
     const tokenDir = fakeLogin(dir, id, 'workspace-user');
     const unset = await withClient(entry, childEnv(dir, tokenDir), listTools);
     const google = await withClient(entry, childEnv(dir, tokenDir, { GSM_TOOLSET: 'google' }), async (c) => ({ tools: await listTools(c), health: await health(c) }));

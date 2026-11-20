@@ -23,7 +23,7 @@ Only if the chat tools fail, the same steps in a terminal: `node "${CLAUDE_PLUGI
 
 ### 1. Read the code
 
-1. `appsscript_projects_get_content` with scriptId (from the script editor's URL).
+1. `appsscript_get_content` with script_id (from the script editor's URL); use file_name, offset/max_chars or include_source=false for large projects.
 
 ### 2. Change and deploy
 
@@ -33,6 +33,7 @@ Only if the chat tools fail, the same steps in a terminal: `node "${CLAUDE_PLUGI
 ### 3. Run a function
 
 1. `appsscript_scripts_run` with the DEPLOYMENT id (not the script id) and a body naming function (and parameters). The script must be deployed as an API executable and share a standard Google Cloud project with this suite's OAuth client; the sign-in must hold every scope the script uses.
+2. For the approval preview, pass optional previewProjectId: the script project's Drive ID, read only and never sent with the run. It shows the entry point and last-modified time; without it the approval says version not read. devMode=true runs the most recently saved version rather than the version deployed for use with the Apps Script API (owner only).
 
 ### 4. Executions
 
@@ -52,7 +53,7 @@ Reads never ask for approval. Tools that change or delete data are listed only w
 
 ## Tools
 
-The `gapps` MCP server lists up to 26 tools with the `all` toolset: 15 read, 8 write, 3 destructive, counting its 7 runtime tools (`health` and the sign-in tools). Write and destructive tools are listed only when writes are allowed, and a tool loads only when the sign-in holds one of its scopes. The `google` toolset lists 10 of them plus the runtime tools.
+The `gapps` MCP server lists up to 27 tools with the `all` toolset: 16 read, 8 write, 3 destructive, counting its 7 runtime tools (`health` and the sign-in tools). Write and destructive tools are listed only when writes are allowed, and a tool loads only when the sign-in holds one of its scopes. The `google` toolset lists 10 of them plus the runtime tools.
 
 ## APIs
 

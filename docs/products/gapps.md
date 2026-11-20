@@ -2,7 +2,7 @@
 
 Install with the simplest command: `npx google-services-mcps install --agent claude --plugin <id>` (see docs/TUTORIAL.md).
 
-Apps Script projects: their files, versions, deployments and process history, plus running a script function. It also reads Google Workspace Marketplace license data. It has 19 tools and no gateway.
+Apps Script projects: their files, versions, deployments and process history, plus running a script function. It also reads Google Workspace Marketplace license data. It has 27 registered tools (1 curated `appsscript_get_content`, 18 per-method, 7 runtime and 1 `api_methods` listing) and no gateway.
 
 ## When to install it
 
@@ -24,9 +24,12 @@ node <plugin>/bin/gsm.mjs status
 
 1. In a Google Cloud project, enable the Apps Script API.
 2. Set up the OAuth consent screen. Use Internal for a Workspace domain. Create an OAuth client ID of type Desktop app and download the JSON file.
-3. Run `setup-client`, then `login workspace-user`. Restart the MCP server (`/mcp`) after login.
+3. In the Apps Script dashboard at https://script.google.com/home/usersettings, turn on Apps Script API access for the Google account you will use with gsm. This user-level grant is separate from enabling the API in Cloud and is required for calls that create or modify script projects and deployments. The same dashboard can revoke that access at any time.
+4. Run `setup-client`, then `login workspace-user`. Restart the MCP server (`/mcp`) after login.
 
 Start with `--profile readonly`. Writes need a `readwrite` login and the plugin option `allow_writes`.
+
+The dashboard grant in step 3 is required for creating or modifying script projects and deployments; running a function has the separate prerequisites listed below.
 
 Running a function needs more than a sign-in. Google's guide, "Execute functions with the Google Apps Script API" (https://developers.google.com/apps-script/api/how-tos/execute, read 2026-11-01), lists what `scripts.run` needs before a call works:
 
@@ -36,6 +39,8 @@ Running a function needs more than a sign-in. Google's guide, "Execute functions
 - a run may take six minutes, passes and returns basic types only, and the Apps Script API does not work with service accounts.
 
 Since 2.5.0 that text is in the `appsscript_scripts_run` tool itself (a method note), so the model sees it without this page.
+
+`appsscript_scripts_run` also accepts an optional, preview-only `previewProjectId`: the script project's Drive ID. It is read only before the approval and never sent with the run. When it is supplied, the approval shows the entry point and the last-modified time of the code that governs the run, read from Google with bounded, read-only GETs; when it is absent, no extra read is made and the approval says `version not read`. Google's `devMode=true` runs the most recently saved version rather than the version deployed for use with the Apps Script API (only when the sign-in owns the script); `devMode=false` runs the deployed version. The preview is best effort: a failed, slow or unscoped read shows a warning and the run still asks as before. The double ask, the request bytes and the twelve scopes of the run tool are unchanged; the preview reads may need `script.projects.readonly` or `script.deployments.readonly` on the login, and the `google` toolset already asks for both.
 
 ## What it can do
 
@@ -53,7 +58,9 @@ Since 2.5.0 that text is in the `appsscript_scripts_run` tool itself (a method n
 
 The full list is in `docs/capabilities/gapps.md`.
 
-Google has no official MCP server for Apps Script (none was found on 2026-10-29). With the plugin option `toolset: google`, the server lists a small set chosen here instead: `appsscript_projects_get`, `appsscript_projects_get_content`, `appsscript_projects_update_content`, `appsscript_projects_versions_create`, `appsscript_projects_versions_list` (2.5.0), `appsscript_projects_deployments_list`, `appsscript_projects_deployments_create`, `appsscript_projects_deployments_update` (2.5.0), `appsscript_processes_list` and `appsscript_scripts_run` (destructive: it asks twice) (10 tools), plus `health` and the sign-in tools. A `readonly` login with that toolset asks for `script.projects.readonly`, `script.deployments.readonly` and, since 1.32.1, `script.processes` (Google: "View Google Apps Script processes"), so recent runs load too; with the `all` toolset it also asks for `script.metrics` ("View Google Apps Script project's metrics"); a `readwrite` login for `script.projects`, `script.deployments`, `script.processes` and `userinfo.email`. The two tools 2.5.0 adds need no new scope: their scopes are already in the cover. A function run with `appsscript_scripts_run` needs the scopes the script itself uses; sign in with those as an explicit scope list.
+Google has no official MCP server for Apps Script (none was found on 2026-10-29). With the plugin option `toolset: google`, the server lists a small set chosen here instead: `appsscript_projects_get`, `appsscript_get_content` (curated reader with `file_name` filter, `include_source: false` index, and `offset`/`max_chars` paging), `appsscript_projects_update_content`, `appsscript_projects_versions_create`, `appsscript_projects_versions_list` (2.5.0), `appsscript_projects_deployments_list`, `appsscript_projects_deployments_create`, `appsscript_projects_deployments_update` (2.5.0), `appsscript_processes_list` and `appsscript_scripts_run` (destructive: it asks twice) (10 tools), plus `health` and the sign-in tools. A `readonly` login with that toolset asks for `script.projects.readonly`, `script.deployments.readonly` and, since 1.32.1, `script.processes` (Google: "View Google Apps Script processes"), so recent runs load too; with the `all` toolset it also asks for `script.metrics` ("View Google Apps Script project's metrics"); a `readwrite` login for `script.projects`, `script.deployments`, `script.processes` and `userinfo.email`. The two tools 2.5.0 adds need no new scope: their scopes are already in the cover. A function run with `appsscript_scripts_run` needs the scopes the script itself uses; sign in with those as an explicit scope list.
+
+**Large project reads (`appsscript_get_content`).** Google's REST `projects.getContent` has no server-side offset or file filter. The curated `appsscript_get_content` tool fetches the project content and lets you pass `include_source: false` to list all file names and sizes, `file_name` to read one file, and `offset` + `max_chars` (`next_offset` continues) so large projects never silently lose files before `appsscript_projects_update_content`. Check every file before calling `appsscript_projects_update_content`, which clears any omitted files (including the `appsscript` manifest).
 
 `appsscript_projects_deployments_create` makes a **new** deployment every time, with a new id and a new web-app URL. To ship a new version of an existing deployment, read the version number from `appsscript_projects_versions_list` and pass it to `appsscript_projects_deployments_update`: the deployment id and its URL stay the same. That flow is what the plugin's skill describes.
 

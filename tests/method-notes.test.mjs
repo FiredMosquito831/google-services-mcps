@@ -206,3 +206,60 @@ test('gmail (1.39.0): each generated tool a hand-written tool covers names it; e
   // Every gmail_* name a note mentions is a tool of the server.
   for (const note of Object.values(notes)) for (const name of note.match(/\bgmail_[a-z_]+/g) ?? []) assert.ok(curated.has(name), `${name} in "${note}"`);
 });
+
+test('gapps (OD03): the declared run preview is copied to the server map and gives only scripts.run a preview argument', async () => {
+  const declared = readJson('config', 'products.json').products.gapps.runPreviews;
+  assert.deepEqual(Object.keys(declared), ['script']);
+  assert.deepEqual(Object.keys(declared.script.methods), ['script.scripts.run']);
+  assert.equal(declared.script.methods['script.scripts.run'].previewArg, 'previewProjectId');
+  assert.match(declared.script.reason, /devMode/);
+  assert.deepEqual(readJson('plugins', 'gapps', 'servers.json').servers[0].runPreviews, declared);
+  const tools = await discoveryToolsFor('gapps', cfg);
+  const run = tools.find((t) => t.methodId === 'script.scripts.run');
+  assert.equal(typeof run.prepare, 'function', 'only the configured method gets a prepare');
+  assert.ok(run.inputSchema.previewProjectId?.isOptional());
+  for (const tool of tools.filter((t) => t.methodId !== 'script.scripts.run')) {
+    assert.equal(tool.prepare, undefined, `${tool.methodId} has no prepare`);
+    assert.equal(tool.inputSchema.previewProjectId, undefined, `${tool.methodId} has no preview argument`);
+  }
+});
+
+test('gen-servers: runPreviews validates the strategy and keeps the preview argument out of the request', () => {
+  const run = (runPreviews) => {
+    const root = mkdtempSync(join(tmpdir(), 'gsm-gen-runpreview-'));
+    temps.push(root);
+    mkdirSync(join(root, 'scripts'));
+    mkdirSync(join(root, 'config'));
+    mkdirSync(join(root, 'data', 'discovery'), { recursive: true });
+    cpSync(join(REPO, 'scripts', 'gen-servers.mjs'), join(root, 'scripts', 'gen-servers.mjs'));
+    cpSync(join(REPO, 'data', 'discovery', 'script.v1.json'), join(root, 'data', 'discovery', 'script.v1.json'));
+    const product = { title: 'X', description: 'X.', group: 'workspace-user', server: { name: 'gx', curated: null }, generated: [{ api: 'script', version: 'v1' }], runPreviews };
+    writeFileSync(join(root, 'config', 'products.json'), JSON.stringify({ products: { gx: product } }));
+    const res = spawnSync(process.execPath, [join(root, 'scripts', 'gen-servers.mjs')], { encoding: 'utf8' });
+    return { ...res, servers: res.status === 0 ? JSON.parse(readFileSync(join(root, 'config', 'servers.json'), 'utf8')).servers : undefined };
+  };
+  const entry = (over) => ({
+    script: {
+      source: 'https://developers.google.com/apps-script/api/reference/rest/v1/scripts/run',
+      reason: 'The approval must name the code version.',
+      methods: { 'script.scripts.run': { strategy: 'apps-script-deployment-and-content', previewArg: 'previewProjectId', ...over } },
+    },
+  });
+  const ok = run(entry());
+  assert.equal(ok.status, 0, ok.stderr);
+  assert.deepEqual(ok.servers[0].runPreviews, entry());
+  assert.equal('runPreviews' in run(undefined).servers[0], false, 'a product without a run preview gets no key');
+  for (const [value, message] of [
+    [entry({ strategy: 'guess-from-deployment-id' }), /strategy must be one of/],
+    [entry({ previewArg: 'scriptId' }), /collides with a request argument/],
+    [entry({ previewArg: 'function' }), /collides with a request argument/],
+    [entry({ previewArg: 'confirm' }), /collides with a request argument/],
+    [entry({ previewArg: 'body' }), /collides with a request argument/],
+    [{ script: { ...entry().script, methods: { 'script.nothing.run': entry().script.methods['script.scripts.run'] } } }, /is not a method of the script snapshot/],
+    [entry({ previewArg: '' }), /lower-camel argument name/],
+  ]) {
+    const res = run(value);
+    assert.notEqual(res.status, 0, JSON.stringify(value));
+    assert.match(res.stderr, message);
+  }
+});

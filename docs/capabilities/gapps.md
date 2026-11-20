@@ -4,11 +4,11 @@ Apps Script projects and execution, plus the Workspace Marketplace SDK.
 
 - Plugin: `gapps`, MCP server: `gapps`, login: Desktop OAuth client, then `login workspace-user`
 - Install: `claude plugin install gapps@google-services-mcps`
-- Tools: 26 total. Curated 7, per-method 18, gateway 0. Read 15, write 8, destructive 3, dynamic 0.
+- Tools: 27 total. Curated 8, per-method 18, gateway 0. Read 16, write 8, destructive 3, dynamic 0.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 26, google 17, curated 26 (all) tools, each counting the 7 runtime tools this server registers (`account_remove`, `account_set_default`, `accounts_list`, `auth_login`, `auth_setup_client`, `auth_status`, `health`). "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 27, google 17, curated 8 tools, each counting the 7 runtime tools this server registers (`account_remove`, `account_set_default`, `accounts_list`, `auth_login`, `auth_setup_client`, `auth_status`, `health`). "(all)" means the product has no such toolset yet, so it lists every tool.
 
 ## Not registered by this server (2)
 
@@ -23,7 +23,7 @@ Google has no official MCP server for this product. The google toolset is a lean
 | Tool | Google's tool | Note |
 |---|---|---|
 | `appsscript_projects_get` | (none) | A script project's title, parent file and times, by script id. |
-| `appsscript_projects_get_content` | (none) | The files of a script project: name, type and source. |
+| `appsscript_get_content` | (none) | Hand-written in place of raw appsscript_projects_get_content in the google list: supports file_name filter, include_source=false manifest index, and offset/max_chars paging so large projects are never silently cut without continuation. |
 | `appsscript_projects_update_content` | (none) | Replaces every file of a script project with the files given. Destructive since 1.26.3 (Google: it clears all the existing files), so it asks twice; send the files you keep too. |
 | `appsscript_projects_versions_create` | (none) | Saves the current code as a numbered version, for a deployment. A write, so it asks first. |
 | `appsscript_projects_versions_list` | (none) | The saved versions of a script project, newest first, with their numbers and times: which one a deployment points at. |
@@ -31,15 +31,16 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `appsscript_projects_deployments_create` | (none) | Deploys a version (as an API executable, web app or add-on, by its manifest). A write, so it asks first. It makes a NEW deployment each time, with a new id and a new web-app URL; to ship a new version of an existing one, use appsscript_projects_deployments_update. |
 | `appsscript_projects_deployments_update` | (none) | Points an existing deployment at another version, or changes its manifest fields; its id and web-app URL stay the same. A write, so it asks first. |
 | `appsscript_processes_list` | (none) | Your recent script runs: function, status, start time and duration. |
-| `appsscript_scripts_run` | (none) | Runs a function of a script deployed as an API executable; pass the deployment id, not the script id. Destructive, so it asks twice: the script can do anything its own scopes allow, and the sign-in needs the scopes the script uses (the login asks for one of them here, userinfo.email). The script and this OAuth client must share a standard Google Cloud project with the Apps Script API enabled. |
+| `appsscript_scripts_run` | (none) | Runs a function of a script deployed as an API executable; pass the deployment id, not the script id. Destructive, so it asks twice: the script can do anything its own scopes allow, and the sign-in needs the scopes the script uses (the login asks for one of them here, userinfo.email). The script and this OAuth client must share a standard Google Cloud project with the Apps Script API enabled. The optional previewProjectId is the script project's Drive ID, read only for the approval preview and never sent with the run; without it the approval says the version was not read. With it, the approval shows the entry point and last-modified time and explains that devMode=true runs the most recently saved version rather than the version deployed for use with the Apps Script API (owner only). |
 
-## Curated tools (7)
+## Curated tools (8)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
 | `account_remove` | write | Remove a signed-in account | (none) |
 | `account_set_default` | write | Set the default account | (none) |
 | `accounts_list` | read | Signed-in accounts | (none) |
+| `appsscript_get_content` | read | Get Apps Script project files | script.projects, script.projects.readonly |
 | `auth_login` | write | Sign in to Google | (none) |
 | `auth_setup_client` | write | Save the Google OAuth client | (none) |
 | `auth_status` | read | Sign-in status | (none) |
