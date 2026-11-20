@@ -149,6 +149,18 @@
     "title": "civicinfo.elections.voterInfoQuery"
   },
   {
+    "name": "mcp__plugin_gsearch_gsearch__crux_history",
+    "kind": "read",
+    "scopes": [],
+    "title": "Read a Chrome UX Report history timeseries"
+  },
+  {
+    "name": "mcp__plugin_gsearch_gsearch__crux_record",
+    "kind": "read",
+    "scopes": [],
+    "title": "Read a Chrome UX Report record"
+  },
+  {
     "name": "mcp__plugin_gsearch_gsearch__cse_cse_list",
     "kind": "read",
     "scopes": [],

@@ -24,7 +24,7 @@ No sign-in: this server uses an API key stored on this machine. A key is never p
 ### 2. Page speed and Core Web Vitals
 
 1. `psi_run` with url and strategy (mobile or desktop): the Lighthouse scores, the field data Google has from real visitors, the six lab metrics and the worst opportunities, in that order.
-2. `chromeuxre_records_query_record` with a body naming url or origin, for the raw CrUX field data.
+2. `crux_record` and `crux_history` with exactly one of url (a page) or origin (a site); both or neither are refused before a request. They shape the CrUX record or weekly timeseries: collection period(s), per-metric p75(s), fractions and up to 10 histogram bins (a display cap, not a Google limit), without inventing ratings. Use psi_run for PageSpeed scores.
 
 ### 3. Is a URL safe
 
@@ -49,7 +49,7 @@ Reads never ask for approval. Tools that change or delete data are listed only w
 
 ## Tools
 
-The `gsearch` MCP server lists up to 53 tools with the `all` toolset: 46 read, 3 write, 3 destructive and 1 dynamic (decided per call), counting its 1 runtime tools (`health` and the sign-in tools). Write and destructive tools are listed only when writes are allowed, and a tool loads only when the sign-in holds one of its scopes. The `google` toolset lists 8 of them plus the runtime tools. The gateway APIs below are reached through `api_search` (find a method), `api_describe` (its parameters) and `api_call` (run it).
+The `gsearch` MCP server lists up to 55 tools with the `all` toolset: 48 read, 3 write, 3 destructive and 1 dynamic (decided per call), counting its 1 runtime tools (`health` and the sign-in tools). Write and destructive tools are listed only when writes are allowed, and a tool loads only when the sign-in holds one of its scopes. The `google` toolset lists 8 of them plus the runtime tools. The gateway APIs below are reached through `api_search` (find a method), `api_describe` (its parameters) and `api_call` (run it).
 
 ## APIs
 

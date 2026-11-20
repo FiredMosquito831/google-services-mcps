@@ -3076,12 +3076,14 @@
           "androidmgmt_list_web_apps",
           "androidmgmt_get_web_app",
           "androidpub_reviews_list",
-          "androidpub_reviews_reply",
           "androidpub_tracks_releases_list",
-          "androidpub_edits_tracks_list",
           "androidpu_purchases_subscriptionsv2_get",
           "androidpub_monetization_subs_list",
-          "androidpub_orders_get"
+          "androidpub_orders_get",
+          "playdevelo_vitals_crashrate_query",
+          "playdevelo_vitals_anrrate_query",
+          "playdevelo_anomalies_list",
+          "playdevelo_vitals_errors_issues_search"
         ]
       },
       "label": "Google Play: Google Play developer publishing and reporting, Play Games Services, Android Enterprise and Management, Play Integrity and device APIs."

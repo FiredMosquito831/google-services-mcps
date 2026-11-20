@@ -4,11 +4,11 @@ Public search and web-quality APIs (Custom Search, PageSpeed, CrUX, Safe Browsin
 
 - Plugin: `gsearch`, MCP server: `gsearch`, login: API key, then `setup-apikey` (no login)
 - Install: `claude plugin install gsearch@google-services-mcps`
-- Tools: 53 total. Curated 2, per-method 47, gateway 3. Read 46, write 3, destructive 3, dynamic 1.
+- Tools: 55 total. Curated 4, per-method 47, gateway 3. Read 48, write 3, destructive 3, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 53, google 9, curated 5 tools, each counting the 1 runtime tools this server registers (`health`). "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 55, google 9, curated 7 tools, each counting the 1 runtime tools this server registers (`health`). "(all)" means the product has no such toolset yet, so it lists every tool.
 
 ## Not registered by this server (8)
 
@@ -31,10 +31,12 @@ The tools that match Google's official MCP server for this product (https://deve
 | `factcheckt_claims_search` | (none) | No official Google MCP server covers Fact Check Tools; kept to find published fact checks of a claim (Fact Check Tools API claims.search). |
 | `webrisk_uris_search` | (none) | No official Google MCP server covers Web Risk; kept to check a URL against Google's threat lists (Web Risk API uris.search). |
 
-## Curated tools (2)
+## Curated tools (4)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
+| `crux_history` | read | Read a Chrome UX Report history timeseries | (none) |
+| `crux_record` | read | Read a Chrome UX Report record | (none) |
 | `health` | read | Server health | (none) |
 | `psi_run` | read | Run PageSpeed Insights | openid |
 

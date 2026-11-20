@@ -31,13 +31,15 @@ There is no scopes profile, because a key is not an OAuth token. The write and d
 
 | Area | Tools | Safety | What it does |
 |---|---|---|---|
-| Hand-written | `psi_run` | read | One PageSpeed Insights analysis: the Lighthouse category scores first, then the field data Google has from real visitors, the six lab metrics and the worst opportunities; `include_raw` adds Google's whole report |
+| Hand-written | `psi_run`, `crux_record`, `crux_history` | read | `psi_run` runs one PageSpeed Insights analysis: the Lighthouse category scores first, then field data, lab metrics and opportunities (`include_raw` adds the full report). `crux_record` and `crux_history` read Chrome UX Report single-period or weekly timeseries records: collection period(s), per-metric p75(s), fractions and up to 10 histogram bins |
 | Per-method (47) | | mostly read | Safe Browsing and Web Risk lookups, PageSpeed Insights, Chrome UX Report, Fact Check Tools, Knowledge Graph, Civic Information, Digital Asset Links, Version History, Developer Knowledge |
 | Per-method writes | | write | Fact-check page create and update, Web Risk submissions. Digital Asset Links bulk check (since 1.26.3), Developer Knowledge answer query (since 1.24.2) and the Safe Browsing v4 finds in the gateway (since 1.26.3) are reads. |
 | Per-method deletes | | destructive | Fact-check page delete, Web Risk operation cancel and delete |
 | Gateway (all 15 APIs) | `api_search`, `api_describe`, `api_call` | read, read, dynamic | Every API this plugin generates, so the `curated` toolset reaches all of them |
 
 The full list is in `docs/capabilities/gsearch.md`.
+
+`crux_record` and `crux_history` need exactly one of `url` (a full page URL) or `origin` (a scheme and host). The published tool schema cannot express that one-of rule, so both tools refuse both or neither before sending a request. Their histogram bin cap is a display choice, not a Google limit, and CrUX returns no rating, so none is added.
 
 With the plugin option `toolset: google`, the server lists the three Developer Knowledge tools that match Google's Developer Knowledge MCP server (https://developerknowledge.googleapis.com/mcp: `search_documents`, `get_documents`, `answer_query`), and a small set chosen here for the APIs no official server covers: `psi_run` for PageSpeed Insights, the Chrome UX Report record query, Knowledge Graph search, Fact Check claims search and Web Risk URL search. 8 tools, with `health`. Every one of them is a read, so none asks: the answer tool is a POST that Google marks read-only, and the suite counts it as a read since 1.24.2.
 
@@ -47,6 +49,7 @@ Google has no MCP server for the other APIs of this plugin, and the gateway now 
 
 - "Is https://example-shop.test/login flagged for malware?" Claude runs the Safe Browsing URL search. No prompt.
 - "Give me the PageSpeed score for our homepage on mobile." Claude runs `psi_run` with `strategy: "mobile"`: the performance score, the Core Web Vitals of real visitors and the worst opportunities. No prompt. `include_raw` returns Google's whole Lighthouse report when the summary is not enough; it is large, and the runtime cuts it.
+- "What does CrUX record for this page, and how has LCP trended over the last 12 weeks?" Claude runs `crux_record` or `crux_history` with `url` (or `origin` for the site, never both): shaped p75/timeseries, fractions and up to 10 histogram bins without inventing ratings. No prompt. The raw `chromeuxre_records_query_record` and `chromeuxre_query_history_record` tools remain available in `all`.
 - "Find fact checks about this claim: the bridge closed in June." Claude runs the Fact Check claims search. No prompt.
 - "Search the Google developer docs for the Drive quota page." Claude runs a Developer Knowledge search. No prompt.
 

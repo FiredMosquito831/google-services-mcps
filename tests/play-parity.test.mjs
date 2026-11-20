@@ -243,24 +243,33 @@ test('a list answer puts the page token first, so a long page never loses it (th
   assert.equal(shaped.next_page_token, 'p2');
 });
 
-test("the gplay google list: Google's nine Android Management tools and a lean Play publishing set", () => {
+test("the gplay google list: Google's nine Android Management tools, five Play reads and four Reporting reads", () => {
   const google = JSON.parse(readFileSync(join(REPO, 'config', 'products.json'), 'utf8')).products.gplay.toolsets.google;
   for (const [name, official] of Object.entries(OFFICIAL)) assert.deepEqual(google.matches[name], [official], name);
   const publishing = google.tools.filter((t) => !t.startsWith('androidmgmt_'));
   assert.deepEqual(publishing, [
     'androidpub_reviews_list',
-    'androidpub_reviews_reply',
     'androidpub_tracks_releases_list',
-    'androidpub_edits_tracks_list',
     'androidpu_purchases_subscriptionsv2_get',
     'androidpub_monetization_subs_list',
     'androidpub_orders_get',
+    'playdevelo_vitals_crashrate_query',
+    'playdevelo_vitals_anrrate_query',
+    'playdevelo_anomalies_list',
+    'playdevelo_vitals_errors_issues_search',
   ]);
   for (const tool of publishing) {
     assert.deepEqual(google.matches[tool], [], tool);
     assert.ok(typeof google.notes[tool] === 'string' && google.notes[tool].length > 10, tool);
   }
+  for (const name of ['androidpub_reviews_reply', 'androidpub_edits_tracks_list']) {
+    assert.equal(google.tools.includes(name), false, `${name} is out of google.tools`);
+    assert.equal(Object.hasOwn(google.matches, name), false, `${name} is out of matches`);
+    assert.equal(Object.hasOwn(google.notes, name), false, `${name} is out of notes`);
+  }
   const map = JSON.parse(readFileSync(join(REPO, 'plugins', 'gplay', 'tool-map.json'), 'utf8'));
   const kind = (name) => map.find((t) => t.name === `mcp__plugin_gplay_gplay__${name}`)?.kind;
-  for (const name of google.tools) assert.equal(kind(name), name === 'androidpub_reviews_reply' ? 'write' : 'read', name);
+  for (const name of google.tools) assert.equal(kind(name), 'read', name);
+  assert.equal(kind('androidpub_reviews_reply'), 'write', 'the public reply stays gated under all');
+  assert.equal(kind('androidpub_edits_tracks_list'), 'read', 'the edit-tracks read stays under all');
 });

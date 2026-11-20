@@ -11,6 +11,9 @@
  * Auth: the API key of the apikey group (apikey.json or GSM_API_KEY), as the generated gsearch tools use it. The key
  * goes in the query, which is what this API documents, and ApiKeyClient (core/discovery/apikey-client.ts) removes it
  * from every error and answer.
+ *
+ * Curated CrUX reads (OD13d): `crux_record` (`records:queryRecord`) and `crux_history` (`records:queryHistoryRecord`)
+ * shape CrUX field records and timeseries cleanly without inventing rating labels not sent by CrUX.
  */
 import { z } from 'zod';
 import type { RuntimeConfig } from '../core/config.js';
@@ -140,6 +143,200 @@ export function opportunities(audits: Record<string, LighthouseAudit> | undefine
   return rows.slice(0, limit);
 }
 
+// ---------------------------------------------------------------------------
+// Chrome UX Report (CrUX): curated record and history reads over the Discovery POST endpoints.
+
+const CRUX_RECORD = 'https://chromeuxreport.googleapis.com/v1/records:queryRecord';
+const CRUX_HISTORY = 'https://chromeuxreport.googleapis.com/v1/records:queryHistoryRecord';
+
+export const CRUX_METRICS = [
+  'first_contentful_paint',
+  'first_input_delay',
+  'largest_contentful_paint',
+  'cumulative_layout_shift',
+  'experimental_time_to_first_byte',
+  'experimental_interaction_to_next_paint',
+] as const;
+
+export const CRUX_FORM_FACTORS = ['ALL_FORM_FACTORS', 'PHONE', 'DESKTOP', 'TABLET'] as const;
+
+/** A display cap on histogram bins, not a Google limit. */
+export const CRUX_HISTOGRAM_BINS = 10;
+
+interface CruxDate {
+  year?: number;
+  month?: number;
+  day?: number;
+}
+
+interface CruxKey {
+  url?: string;
+  origin?: string;
+  formFactor?: string;
+  effectiveConnectionType?: string;
+}
+
+export interface CruxRecordResponse {
+  record?: {
+    key?: CruxKey;
+    collectionPeriod?: { firstDate?: CruxDate; lastDate?: CruxDate };
+    metrics?: Record<
+      string,
+      {
+        percentiles?: { p75?: unknown };
+        fractions?: Record<string, number>;
+        histogram?: Array<{ start?: unknown; end?: unknown; density?: unknown }>;
+      }
+    >;
+  };
+  urlNormalizationDetails?: { normalizedUrl?: string; originalUrl?: string };
+}
+
+export interface CruxHistoryResponse {
+  record?: {
+    key?: CruxKey;
+    collectionPeriods?: Array<{ firstDate?: CruxDate; lastDate?: CruxDate }>;
+    metrics?: Record<
+      string,
+      {
+        percentilesTimeseries?: { p75s?: unknown[] };
+        fractionTimeseries?: Record<string, { fractions?: unknown[] }>;
+        histogramTimeseries?: Array<{ start?: unknown; end?: unknown; densities?: unknown[] }>;
+      }
+    >;
+  };
+  urlNormalizationDetails?: { normalizedUrl?: string; originalUrl?: string };
+}
+
+function cruxDate(date: CruxDate | undefined): string | null {
+  if (!date || !Number.isInteger(date.year) || !Number.isInteger(date.month) || !Number.isInteger(date.day)) return null;
+  return `${date.year}-${String(date.month).padStart(2, '0')}-${String(date.day).padStart(2, '0')}`;
+}
+
+function identifierOf(key: CruxKey | undefined) {
+  return {
+    url: key?.url ?? null,
+    origin: key?.origin ?? null,
+    form_factor: key?.formFactor ?? null,
+    effective_connection_type: key?.effectiveConnectionType ?? null,
+  };
+}
+
+export function cruxRequest(input: {
+  url?: string;
+  origin?: string;
+  metrics?: readonly (typeof CRUX_METRICS)[number][];
+  formFactor?: (typeof CRUX_FORM_FACTORS)[number];
+  collectionPeriodCount?: number;
+}, history = false) {
+  return {
+    url: history ? CRUX_HISTORY : CRUX_RECORD,
+    data: {
+      ...(input.url ? { url: input.url } : {}),
+      ...(input.origin ? { origin: input.origin } : {}),
+      ...(input.metrics?.length ? { metrics: [...input.metrics] } : {}),
+      ...(input.formFactor ? { formFactor: input.formFactor } : {}),
+      ...(history && input.collectionPeriodCount !== undefined ? { collectionPeriodCount: input.collectionPeriodCount } : {}),
+    },
+  };
+}
+
+export function shapeCruxRecord(data: CruxRecordResponse) {
+  const normalization = data.urlNormalizationDetails ? { url_normalization_details: data.urlNormalizationDetails } : {};
+  if (!data.record) {
+    return { found: false, note: 'No CrUX record was found for this identifier and dimensions.', ...normalization };
+  }
+  const metrics: Record<string, Record<string, unknown>> = {};
+  const notes: string[] = [];
+  for (const [name, metric] of Object.entries(data.record.metrics ?? {})) {
+    const bins = Array.isArray(metric.histogram) ? metric.histogram : [];
+    metrics[name] = {
+      p75: metric.percentiles?.p75 ?? null,
+      ...(metric.fractions && Object.keys(metric.fractions).length ? { fractions: metric.fractions } : {}),
+      ...(bins.length ? { histogram: bins.slice(0, CRUX_HISTOGRAM_BINS) } : {}),
+      ...(bins.length > CRUX_HISTOGRAM_BINS ? { histogram_shown: CRUX_HISTOGRAM_BINS, histogram_total: bins.length } : {}),
+    };
+    if (bins.length > CRUX_HISTOGRAM_BINS) {
+      notes.push(`The histogram for ${name} shows ${CRUX_HISTOGRAM_BINS} of ${bins.length} bins (a display cap, not a Google limit).`);
+    }
+  }
+  return {
+    found: true,
+    identifier: identifierOf(data.record.key),
+    collection_period: {
+      first_date: cruxDate(data.record.collectionPeriod?.firstDate),
+      last_date: cruxDate(data.record.collectionPeriod?.lastDate),
+    },
+    metrics,
+    ...normalization,
+    ...(notes.length ? { note: notes.join(' ') } : {}),
+  };
+}
+
+export function shapeCruxHistory(data: CruxHistoryResponse) {
+  const normalization = data.urlNormalizationDetails ? { url_normalization_details: data.urlNormalizationDetails } : {};
+  if (!data.record) {
+    return { found: false, note: 'No CrUX history record was found for this identifier and dimensions.', ...normalization };
+  }
+  const metrics: Record<string, Record<string, unknown>> = {};
+  const notes: string[] = [];
+  for (const [name, metric] of Object.entries(data.record.metrics ?? {})) {
+    const bins = Array.isArray(metric.histogramTimeseries) ? metric.histogramTimeseries : [];
+    metrics[name] = {
+      p75s: metric.percentilesTimeseries?.p75s ?? [],
+      ...(metric.fractionTimeseries && Object.keys(metric.fractionTimeseries).length ? { fraction_timeseries: metric.fractionTimeseries } : {}),
+      ...(bins.length ? { histogram_timeseries: bins.slice(0, CRUX_HISTOGRAM_BINS) } : {}),
+      ...(bins.length > CRUX_HISTOGRAM_BINS ? { histogram_shown: CRUX_HISTOGRAM_BINS, histogram_total: bins.length } : {}),
+    };
+    if (bins.length > CRUX_HISTOGRAM_BINS) {
+      notes.push(`The histogram timeseries for ${name} shows ${CRUX_HISTOGRAM_BINS} of ${bins.length} bins (a display cap, not a Google limit).`);
+    }
+  }
+  return {
+    found: true,
+    identifier: identifierOf(data.record.key),
+    collection_periods: (data.record.collectionPeriods ?? []).map((p) => ({
+      first_date: cruxDate(p.firstDate),
+      last_date: cruxDate(p.lastDate),
+    })),
+    metrics,
+    ...normalization,
+    ...(notes.length ? { note: notes.join(' ') } : {}),
+  };
+}
+
+const cruxBaseShape = {
+  url: z.string().trim().min(1).optional().describe('A full page URL, such as https://example.com/. Give this or origin, never both.'),
+  origin: z.string().trim().min(1).optional().describe('A site origin, such as https://example.com. Give this or url, never both.'),
+  metrics: z.array(z.enum(CRUX_METRICS)).optional().describe(`Only these CrUX metrics: ${CRUX_METRICS.join(', ')}. Google returns any metrics it has when none are named.`),
+  formFactor: z.enum(CRUX_FORM_FACTORS).optional().describe(`The device class: ${CRUX_FORM_FACTORS.join(', ')}. Google's default aggregates all form factors.`),
+};
+
+const cruxHistoryShape = {
+  ...cruxBaseShape,
+  collectionPeriodCount: z
+    .number()
+    .int()
+    .min(1)
+    .max(40)
+    .optional()
+    .describe('Number of collection periods to return (1-40; Google defaults to 25).'),
+};
+
+function withOneIdentifier<T extends z.ZodRawShape>(shape: T) {
+  return z.object(shape).superRefine((input, ctx) => {
+    const a = input as { url?: string; origin?: string };
+    if (a.url && a.origin) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Give exactly one of url or origin, not both.' });
+    } else if (!a.url && !a.origin) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Give exactly one of url or origin.' });
+    }
+  });
+}
+
+const cruxRecordInput = withOneIdentifier(cruxBaseShape);
+const cruxHistoryInput = withOneIdentifier(cruxHistoryShape);
+
 const psiShape = {
   url: z.string().trim().min(1).describe('The URL to analyse, including its scheme, such as https://example.com/.'),
   strategy: z.enum(['mobile', 'desktop']).optional().describe("mobile or desktop. Google's default is desktop. Mobile is the form Google's own tools report."),
@@ -208,6 +405,36 @@ export function buildTools(cfg: RuntimeConfig): ToolDef[] {
           ...(note.length ? { note: note.join(' ') } : {}),
           ...(input.include_raw ? { raw: data } : {}),
         };
+      },
+    }),
+    defineTool({
+      name: 'crux_record',
+      title: 'Read a Chrome UX Report record',
+      description:
+        'One Chrome UX Report (CrUX) record for a page URL or a site origin: the collection period and, per metric, the 75th percentile with the fractions and up to 10 histogram bins Google returned (a display cap, not a Google limit). Give exactly one of `url` (a full page URL) or `origin` (a scheme and host); both or neither are refused before any request is sent. The published tool schema cannot express that one-of rule, so the handler enforces it. No rating is invented: CrUX does not return a GOOD/NEEDS-IMPROVEMENT/POOR field. A curated read over the CrUX API v1 records:queryRecord POST; `psi_run` gives PageSpeed scores and a field-data summary. A read; no approval prompt.',
+      kind: 'read',
+      scopes: [],
+      inputSchema: cruxBaseShape,
+      async handler(args) {
+        const input = cruxRecordInput.parse(args);
+        const req = cruxRequest(input, false);
+        const res = await requestWithRetry(() => new ApiKeyClient(cfg).request({ url: req.url, method: 'POST', data: req.data }), { idempotent: true });
+        return shapeCruxRecord((res.data ?? {}) as CruxRecordResponse);
+      },
+    }),
+    defineTool({
+      name: 'crux_history',
+      title: 'Read a Chrome UX Report history timeseries',
+      description:
+        'Weekly Chrome UX Report (CrUX) timeseries history for a page URL or a site origin: collection periods (1-40, default 25) and per-metric p75s timeseries, fractions and bounded histogram bins. Give exactly one of `url` or `origin`; both or neither are refused before any request. No rating is invented. A curated read over the CrUX API v1 records:queryHistoryRecord POST. A read; no approval prompt.',
+      kind: 'read',
+      scopes: [],
+      inputSchema: cruxHistoryShape,
+      async handler(args) {
+        const input = cruxHistoryInput.parse(args);
+        const req = cruxRequest(input, true);
+        const res = await requestWithRetry(() => new ApiKeyClient(cfg).request({ url: req.url, method: 'POST', data: req.data }), { idempotent: true });
+        return shapeCruxHistory((res.data ?? {}) as CruxHistoryResponse);
       },
     }),
   ];

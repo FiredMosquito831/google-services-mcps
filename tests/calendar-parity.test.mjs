@@ -335,6 +335,23 @@ test('create: recurrence and reminders; a 1.7.0 call sends the same request as b
   assert.equal(calls.length, 0);
 });
 
+// NW04: protective send_updates=none default and explicit opt-in values
+test('send_updates: create, update, respond and delete default to none and forward explicit all/externalOnly', async () => {
+  const args = {
+    calendar_create_event: { summary: 'Review', start: '2026-11-02T10:00:00+01:00', end: '2026-11-02T11:00:00+01:00', attendees: ['a@example.com'] },
+    calendar_update_event: { event_id: 'ev-1', summary: 'New' },
+    calendar_respond: { event_id: 'ev-1', response: 'accepted' },
+    calendar_delete_event: { event_id: 'ev-1' },
+  };
+  for (const [name, base] of Object.entries(args)) {
+    for (const value of [undefined, 'all', 'externalOnly']) {
+      reset(() => EVENT);
+      await run(name, { ...base, ...(value === undefined ? {} : { send_updates: value }) });
+      assert.equal(calls.at(-1).query.sendUpdates, value ?? 'none', `${name} with ${value ?? 'no send_updates'}`);
+    }
+  }
+});
+
 // ---------------------------------------------------------------------------
 // calendar_list_events and calendar_get_event
 

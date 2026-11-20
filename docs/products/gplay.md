@@ -45,7 +45,7 @@ The key asks for the scopes of every API gplay carries (since 1.23.1; before, on
 
 The full list is in `docs/capabilities/gplay.md`.
 
-The nine hand-written tools match the tools of Google's Android Device Management MCP server (https://androidmanagement.googleapis.com/mcp). The Android Management API is a gateway API here (its per-method tools would take gplay past the 350 generated tools a server may have), so these call it directly with the service account key; the account must belong to the Google Cloud project that manages the enterprise. With the plugin option `toolset: google`, the server lists these nine and a small Play publishing set chosen here (Google has no official MCP server for Play publishing): reviews list and reply (the reply is public and asks first), a track's releases, an edit's tracks, a subscription purchase, the subscription products and an order. 16 tools, with `health` and the setup tools.
+The nine hand-written tools match the tools of Google's Android Device Management MCP server (https://androidmanagement.googleapis.com/mcp). The Android Management API is a gateway API here (its per-method tools would take gplay past the 350 generated tools a server may have), so these call it directly with the service account key; the account must belong to the Google Cloud project that manages the enterprise. With the plugin option `toolset: google`, the server lists these nine and nine reads chosen here: five Play publishing reads (Google has no official MCP server for Play publishing) — reviews list, a track's releases, a subscription purchase, the subscription products and an order — and four Play Developer Reporting reads — Vitals crash rate, Vitals ANR rate, anomalies and error issues. 18 configured tools, with `health` and the setup tools that brings the server to 21. The public reviews reply and the edit's tracks read are not in `google`; they remain available under the default `all` toolset behind the normal consent gate.
 
 **Uploading a build.** The per-method tools leave out every media-upload method (Play's `edits.bundles.upload` among them), so a new build could not be released at all. `androidpub_upload_bundle` does that one step: it takes a full path to an `.aab`, creates an edit (or uses `edit_id`), uploads the file, optionally writes the new version code onto a track as a release (`draft` by default, `inProgress` with `user_fraction` for a staged rollout), and commits the edit only when `commit` is true. Its approval names the file, its size and SHA-256, the track and the releases it holds, so a person can see what would be published; with `commit` it is a destructive call and asks twice. Without `commit` the edit stays open, and `androidpub_edits_commit` (or `androidpub_edits_delete`) finishes it.
 
@@ -55,11 +55,11 @@ The nine hand-written tools match the tools of Google's Android Device Managemen
 
 - "Which devices of enterprise LC0123abcd are not compliant?" Claude runs `androidmgmt_list_devices`. No prompt.
 
-- "Show the crash rate for my app this month." Claude runs a Reporting read. No prompt.
+- "Show the crash rate for my app this month." Claude runs `playdevelo_vitals_crashrate_query`, a Reporting read. No prompt.
 - "List my release tracks and the version on each." Claude runs the tracks list. No prompt.
 - "Commit my staged edit to the production track." Claude runs `androidpub_edits_commit`. It asks twice, and the change publishes.
 - "Put this build (C:\builds\app-release.aab) on the beta track as a draft." Claude runs `androidpub_upload_bundle` with `track: "beta"` and no `commit`: the bundle is uploaded and the release is staged, and nothing is published until the commit.
-- "Reply to Kim's one-star review." Claude runs the review reply tool. It asks first, and the reply is public.
+- "Reply to Kim's one-star review." Claude runs the review reply tool under the default `all` toolset (it is not in `google`). It asks first, and the reply is public.
 - "Revoke a device's access to the enterprise account." Claude runs the revoke tool. It asks twice.
 
 ## Safety

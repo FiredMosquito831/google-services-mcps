@@ -4025,12 +4025,14 @@
             "androidmgmt_list_web_apps",
             "androidmgmt_get_web_app",
             "androidpub_reviews_list",
-            "androidpub_reviews_reply",
             "androidpub_tracks_releases_list",
-            "androidpub_edits_tracks_list",
             "androidpu_purchases_subscriptionsv2_get",
             "androidpub_monetization_subs_list",
-            "androidpub_orders_get"
+            "androidpub_orders_get",
+            "playdevelo_vitals_crashrate_query",
+            "playdevelo_vitals_anrrate_query",
+            "playdevelo_anomalies_list",
+            "playdevelo_vitals_errors_issues_search"
           ],
           "matches": {
             "androidmgmt_list_enterprises": [
@@ -4061,22 +4063,26 @@
               "get_web_app"
             ],
             "androidpub_reviews_list": [],
-            "androidpub_reviews_reply": [],
             "androidpub_tracks_releases_list": [],
-            "androidpub_edits_tracks_list": [],
             "androidpu_purchases_subscriptionsv2_get": [],
             "androidpub_monetization_subs_list": [],
-            "androidpub_orders_get": []
+            "androidpub_orders_get": [],
+            "playdevelo_vitals_crashrate_query": [],
+            "playdevelo_vitals_anrrate_query": [],
+            "playdevelo_anomalies_list": [],
+            "playdevelo_vitals_errors_issues_search": []
           },
           "notes": {
             "androidmgmt_list_enterprises": "Android Management API, called directly (a gateway API here); the service-account key asks for its scope since 1.23.1. The service account must belong to the project that manages the enterprises.",
             "androidpub_reviews_list": "No official Google MCP server covers Play publishing; kept for the app's recent user reviews (Play Developer API reviews.list).",
-            "androidpub_reviews_reply": "Replies to a user review; the reply is public. A write: it asks first.",
             "androidpub_tracks_releases_list": "The releases of a track (production, beta, ...) without opening an edit (applications.tracks.releases.list).",
-            "androidpub_edits_tracks_list": "The tracks of an edit; it needs an edit id, which androidpub_edits_insert (a write) opens.",
             "androidpu_purchases_subscriptionsv2_get": "One subscription purchase by its token (purchases.subscriptionsv2.get).",
             "androidpub_monetization_subs_list": "The app's subscription products (monetization.subscriptions.list).",
-            "androidpub_orders_get": "One order by its id (orders.get)."
+            "androidpub_orders_get": "One order by its id (orders.get).",
+            "playdevelo_vitals_crashrate_query": "No official Google MCP server covers Play Developer Reporting (a review finding, not an exhaustive vendor proof); this read uses the existing playdeveloperreporting scope and returns the app's crash rate (vitals.crashrate.query).",
+            "playdevelo_vitals_anrrate_query": "No official Google MCP server covers Play Developer Reporting (a review finding, not an exhaustive vendor proof); this read uses the existing playdeveloperreporting scope and returns the app's ANR rate (vitals.anrrate.query).",
+            "playdevelo_anomalies_list": "No official Google MCP server covers Play Developer Reporting (a review finding, not an exhaustive vendor proof); this read uses the existing playdeveloperreporting scope and lists the app's anomalies (anomalies.list).",
+            "playdevelo_vitals_errors_issues_search": "No official Google MCP server covers Play Developer Reporting (a review finding, not an exhaustive vendor proof); this read uses the existing playdeveloperreporting scope and finds the app's error issues (vitals.errors.issues.search)."
           }
         }
       },

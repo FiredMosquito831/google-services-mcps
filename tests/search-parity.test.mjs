@@ -25,17 +25,21 @@ after(() => {
 const cfg = loadConfig({ GSM_TOKEN_DIR: tokenDir, GSM_API_KEY: KEY });
 const tools = new Map(search.buildTools(cfg).map((t) => [t.name, t]));
 const ctx = { gate: async () => undefined, grantedScopes: null, hasScope: () => true };
-const run = (args) => tools.get('psi_run').handler(args, ctx);
+const runTool = (name, args, toolCtx = ctx) => tools.get(name).handler(args, toolCtx);
+const run = (args) => runTool('psi_run', args);
 
 let calls = [];
+let fail = false;
 setFetchForTests(async (input, init = {}) => {
   const url = new URL(String(input));
-  calls.push({ method: init.method, path: `${url.origin}${url.pathname}`, query: url.searchParams, params: Object.fromEntries(url.searchParams) });
+  calls.push({ method: init.method, path: `${url.origin}${url.pathname}`, query: url.searchParams, params: Object.fromEntries(url.searchParams), body: typeof init.body === 'string' ? JSON.parse(init.body) : undefined });
+  if (fail) return new Response(JSON.stringify({ error: { message: `The key ${KEY} was rejected` } }), { status: 400, headers: { 'content-type': 'application/json' } });
   return new Response(JSON.stringify(respond()), { status: 200, headers: { 'content-type': 'application/json' } });
 });
 let respond = () => ({});
 const reset = (body) => {
   calls = [];
+  fail = false;
   respond = () => body;
 };
 
@@ -165,4 +169,100 @@ test('psi_run: the tool is a read with the method\'s scope, listed in all and in
   assert.equal(search.scorePercent(0.955), 96);
   assert.equal(search.scorePercent(null), null);
   assert.equal(search.scorePercent(undefined), null);
+});
+
+// OD13d: curated CrUX record and history reads. No live Google call: fetch is stubbed and the key is fake.
+
+const CRUX = {
+  record: {
+    key: { url: 'https://example.com/', formFactor: 'PHONE', effectiveConnectionType: '4G' },
+    collectionPeriod: { firstDate: { year: 2026, month: 10, day: 1 }, lastDate: { year: 2026, month: 10, day: 28 } },
+    metrics: {
+      largest_contentful_paint: {
+        percentiles: { p75: 1234 },
+        fractions: { fast: 0.7, average: 0.2, slow: 0.1 },
+        histogram: Array.from({ length: 12 }, (_, i) => ({ start: i * 100, end: (i + 1) * 100, density: 1 / 12 })),
+      },
+      cumulative_layout_shift: { percentiles: { p75: '0.05' }, histogram: [{ start: '0', end: '0.1', density: 0.9 }] },
+    },
+  },
+  urlNormalizationDetails: { originalUrl: 'http://example.com', normalizedUrl: 'https://example.com/' },
+};
+
+const CRUX_HISTORY_RESP = {
+  record: {
+    key: { origin: 'https://example.com', formFactor: 'DESKTOP' },
+    collectionPeriods: [
+      { firstDate: { year: 2026, month: 10, day: 1 }, lastDate: { year: 2026, month: 10, day: 28 } },
+      { firstDate: { year: 2026, month: 10, day: 8 }, lastDate: { year: 2026, month: 11, day: 4 } },
+    ],
+    metrics: {
+      largest_contentful_paint: {
+        percentilesTimeseries: { p75s: [1200, 1150] },
+        fractionTimeseries: { fast: { fractions: [0.7, 0.75] } },
+        histogramTimeseries: [{ start: 0, end: 2500, densities: [0.7, 0.75] }],
+      },
+    },
+  },
+};
+
+test('crux_record: POSTs to queryRecord, shapes bins without rating invention, and refuses both/neither/bad enums', async () => {
+  reset(CRUX);
+  await runTool('crux_record', { url: 'https://example.com/' });
+  assert.equal(calls[0].method, 'POST');
+  assert.equal(calls[0].path, 'https://chromeuxreport.googleapis.com/v1/records:queryRecord');
+  assert.deepEqual(calls[0].body, { url: 'https://example.com/' });
+  assert.equal(calls[0].params.key, KEY);
+
+  reset(CRUX);
+  const answer = await runTool('crux_record', { origin: 'https://example.com', metrics: ['largest_contentful_paint', 'experimental_interaction_to_next_paint'], formFactor: 'PHONE' });
+  assert.deepEqual(calls[0].body, {
+    origin: 'https://example.com',
+    metrics: ['largest_contentful_paint', 'experimental_interaction_to_next_paint'],
+    formFactor: 'PHONE',
+  });
+  assert.equal(answer.found, true);
+  assert.deepEqual(answer.identifier, { url: 'https://example.com/', origin: null, form_factor: 'PHONE', effective_connection_type: '4G' });
+  assert.deepEqual(answer.collection_period, { first_date: '2026-10-01', last_date: '2026-10-28' });
+  assert.equal(answer.metrics.largest_contentful_paint.histogram.length, 10);
+  assert.equal(answer.metrics.largest_contentful_paint.histogram_total, 12);
+  assert.match(answer.note, /shows 10 of 12 bins/);
+  assert.doesNotMatch(JSON.stringify(answer), /GOOD|NEEDS_IMPROVEMENT|POOR|AIzaFAKE/);
+
+  reset({});
+  const missing = await runTool('crux_record', { origin: 'https://example.com' });
+  assert.deepEqual(missing, { found: false, note: 'No CrUX record was found for this identifier and dimensions.' });
+
+  reset(CRUX);
+  await assert.rejects(() => runTool('crux_record', { url: 'https://example.com/', origin: 'https://example.com' }), /exactly one of url or origin, not both/);
+  await assert.rejects(() => runTool('crux_record', {}), /exactly one of url or origin/);
+  await assert.rejects(() => runTool('crux_record', { url: 'https://example.com/', metrics: ['speed_index'] }));
+  assert.equal(calls.length, 0);
+
+  fail = true;
+  await assert.rejects(() => runTool('crux_record', { url: 'https://example.com/' }), (err) => {
+    assert.match(err.message, /\[redacted\]/);
+    assert.doesNotMatch(err.message, /AIzaFAKE/);
+    return true;
+  });
+});
+
+test('crux_history: POSTs to queryHistoryRecord, shapes timeseries cleanly, and validates inputs before requesting', async () => {
+  reset(CRUX_HISTORY_RESP);
+  const out = await runTool('crux_history', { origin: 'https://example.com', formFactor: 'DESKTOP', collectionPeriodCount: 2 });
+  assert.equal(calls[0].method, 'POST');
+  assert.equal(calls[0].path, 'https://chromeuxreport.googleapis.com/v1/records:queryHistoryRecord');
+  assert.deepEqual(calls[0].body, { origin: 'https://example.com', formFactor: 'DESKTOP', collectionPeriodCount: 2 });
+  assert.equal(out.found, true);
+  assert.deepEqual(out.collection_periods, [
+    { first_date: '2026-10-01', last_date: '2026-10-28' },
+    { first_date: '2026-10-08', last_date: '2026-11-04' },
+  ]);
+  assert.deepEqual(out.metrics.largest_contentful_paint.p75s, [1200, 1150]);
+
+  reset({});
+  assert.equal((await runTool('crux_history', { url: 'https://example.com/' })).found, false);
+  reset({});
+  await assert.rejects(() => runTool('crux_history', { url: 'https://example.com/', collectionPeriodCount: 41 }));
+  assert.equal(calls.length, 0);
 });

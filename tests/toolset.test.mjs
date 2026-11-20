@@ -316,7 +316,7 @@ const ADMIN_GOOGLE = [
   'admin_user_set_suspended',
   'admin_group_member_add',
 ];
-/** The gplay list (1.24.0): Google's 9 Android Device Management MCP tools (curated) and a lean Play publishing set. */
+/** The gplay list (OD13j): Google's 9 Android Management MCP tools, five lean Play reads and four Developer Reporting reads. */
 const PLAY_GOOGLE = [
   'androidmgmt_list_enterprises',
   'androidmgmt_get_enterprise',
@@ -328,12 +328,14 @@ const PLAY_GOOGLE = [
   'androidmgmt_list_web_apps',
   'androidmgmt_get_web_app',
   'androidpub_reviews_list',
-  'androidpub_reviews_reply',
   'androidpub_tracks_releases_list',
-  'androidpub_edits_tracks_list',
   'androidpu_purchases_subscriptionsv2_get',
   'androidpub_monetization_subs_list',
   'androidpub_orders_get',
+  'playdevelo_vitals_crashrate_query',
+  'playdevelo_vitals_anrrate_query',
+  'playdevelo_anomalies_list',
+  'playdevelo_vitals_errors_issues_search',
 ];
 /** The tools runServer adds for a server of an OAuth group. No toolset removes them. */
 const RUNTIME_OAUTH = ['account_remove', 'account_set_default', 'accounts_list', 'auth_login', 'auth_setup_client', 'auth_status', 'health'];
@@ -1198,7 +1200,7 @@ test('runServer: google on gsearch (API key) and gadmin lists the list and the r
   assert.equal(agoogle.health.toolset.effective, 'google');
 });
 
-test('runServer: google on gplay (service account key) lists its 16 tools and the runtime tools, with the same schemas as all', async () => {
+test('runServer: google on gplay (service account key) lists its 18 configured tools and the runtime tools, with the same schemas as all', async () => {
   const dir = tempDir('gsm-toolset-gplay-');
   const entry = curatedEntry(dir, 'gplay', 'gplay');
   const { generateKeyPairSync } = await import('node:crypto');

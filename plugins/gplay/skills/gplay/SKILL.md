@@ -22,7 +22,7 @@ The service account must also be added in Play Console (Users and permissions) o
 
 ### 1. Reviews
 
-1. `androidpub_reviews_list` with packageName, then `androidpub_reviews_reply` (a change: it asks first).
+1. Under the default `all` toolset, `androidpub_reviews_list` with packageName, then `androidpub_reviews_reply` (a change: it asks first, and the reply is public). The reply is not in `google`.
 
 ### 2. Releases
 
@@ -50,7 +50,7 @@ Reads never ask for approval. Tools that change or delete data are listed only w
 
 ## Tools
 
-The `gplay` MCP server lists up to 366 tools with the `all` toolset: 170 read, 148 write, 47 destructive and 1 dynamic (decided per call), counting its 3 runtime tools (`health` and the sign-in tools). Write and destructive tools are listed only when writes are allowed, and a tool loads only when the sign-in holds one of its scopes. The `google` toolset lists 16 of them plus the runtime tools. The gateway APIs below are reached through `api_search` (find a method), `api_describe` (its parameters) and `api_call` (run it).
+The `gplay` MCP server lists up to 366 tools with the `all` toolset: 170 read, 148 write, 47 destructive and 1 dynamic (decided per call), counting its 3 runtime tools (`health` and the sign-in tools). Write and destructive tools are listed only when writes are allowed, and a tool loads only when the sign-in holds one of its scopes. The `google` toolset lists 18 of them plus the runtime tools. The gateway APIs below are reached through `api_search` (find a method), `api_describe` (its parameters) and `api_call` (run it).
 
 ## APIs
 

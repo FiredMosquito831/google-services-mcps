@@ -8,7 +8,7 @@ Google Play developer publishing and reporting, Play Games Services, Android Ent
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 366, google 19, curated 16 tools, each counting the 3 runtime tools this server registers (`auth_setup_service_account`, `auth_status`, `health`). "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 366, google 21, curated 16 tools, each counting the 3 runtime tools this server registers (`auth_setup_service_account`, `auth_status`, `health`). "(all)" means the product has no such toolset yet, so it lists every tool.
 
 ## Not registered by this server (6)
 
@@ -16,7 +16,7 @@ The tool map (`plugins/<id>/tool-map.json`) also lists these, so the consent hoo
 
 - Sign-in tools of other sign-in kinds: `account_remove`, `account_set_default`, `accounts_list`, `auth_login`, `auth_setup_admin`, `auth_setup_client`.
 
-## Toolset google (16)
+## Toolset google (18)
 
 The tools that match Google's official MCP server for this product (https://androidmanagement.googleapis.com/mcp).
 
@@ -32,12 +32,14 @@ The tools that match Google's official MCP server for this product (https://andr
 | `androidmgmt_list_web_apps` | `list_web_apps` |  |
 | `androidmgmt_get_web_app` | `get_web_app` |  |
 | `androidpub_reviews_list` | (none) | No official Google MCP server covers Play publishing; kept for the app's recent user reviews (Play Developer API reviews.list). |
-| `androidpub_reviews_reply` | (none) | Replies to a user review; the reply is public. A write: it asks first. |
 | `androidpub_tracks_releases_list` | (none) | The releases of a track (production, beta, ...) without opening an edit (applications.tracks.releases.list). |
-| `androidpub_edits_tracks_list` | (none) | The tracks of an edit; it needs an edit id, which androidpub_edits_insert (a write) opens. |
 | `androidpu_purchases_subscriptionsv2_get` | (none) | One subscription purchase by its token (purchases.subscriptionsv2.get). |
 | `androidpub_monetization_subs_list` | (none) | The app's subscription products (monetization.subscriptions.list). |
 | `androidpub_orders_get` | (none) | One order by its id (orders.get). |
+| `playdevelo_vitals_crashrate_query` | (none) | No official Google MCP server covers Play Developer Reporting (a review finding, not an exhaustive vendor proof); this read uses the existing playdeveloperreporting scope and returns the app's crash rate (vitals.crashrate.query). |
+| `playdevelo_vitals_anrrate_query` | (none) | No official Google MCP server covers Play Developer Reporting (a review finding, not an exhaustive vendor proof); this read uses the existing playdeveloperreporting scope and returns the app's ANR rate (vitals.anrrate.query). |
+| `playdevelo_anomalies_list` | (none) | No official Google MCP server covers Play Developer Reporting (a review finding, not an exhaustive vendor proof); this read uses the existing playdeveloperreporting scope and lists the app's anomalies (anomalies.list). |
+| `playdevelo_vitals_errors_issues_search` | (none) | No official Google MCP server covers Play Developer Reporting (a review finding, not an exhaustive vendor proof); this read uses the existing playdeveloperreporting scope and finds the app's error issues (vitals.errors.issues.search). |
 
 ## Curated tools (13)
 

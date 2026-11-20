@@ -161,6 +161,8 @@ const DOCS = [
   'tagmanager.v2',
   // 2.13.0: the curated psi_run runs one PageSpeed Insights analysis here.
   'pagespeedonline.v5',
+  // OD13d: curated CrUX reads run records:queryRecord and records:queryHistoryRecord here.
+  'chromeuxreport.v1',
   // Q038: the curated appsscript_get_content reads Apps Script files here.
   'script.v1',
 ];
@@ -1302,10 +1304,21 @@ const CASES = {
     { args: { map_type: 'PRECIPITATION', zoom: 5, x: 16, y: 11 }, expect: ['weather.mapTypes.mapTiles.lookupMapTile'] },
   ],
 
-  // gsearch (2.13.0), with the API key
+  // gsearch (2.13.0 / OD13d), with the API key
   psi_run: [
     { args: { url: 'https://example.com/' }, expect: ['pagespeedonline.pagespeedapi.runpagespeed'], sends: { url: 'https://example.com/', category: 'performance' } },
     { args: { url: 'https://example.com/', strategy: 'mobile', categories: ['performance', 'seo', 'accessibility', 'best-practices'], locale: 'fr', include_raw: true }, expect: ['pagespeedonline.pagespeedapi.runpagespeed'] },
+  ],
+  crux_record: [
+    { args: { url: 'https://example.com/' }, expect: ['chromeuxreport.records.queryRecord'], assertBody: (body) => assert.deepEqual(body, { url: 'https://example.com/' }) },
+    {
+      args: { origin: 'https://example.com', metrics: ['largest_contentful_paint', 'experimental_interaction_to_next_paint'], formFactor: 'PHONE' },
+      expect: ['chromeuxreport.records.queryRecord'],
+      assertBody: (body) => assert.deepEqual(body, { origin: 'https://example.com', metrics: ['largest_contentful_paint', 'experimental_interaction_to_next_paint'], formFactor: 'PHONE' }),
+    },
+  ],
+  crux_history: [
+    { args: { url: 'https://example.com/', collectionPeriodCount: 12 }, expect: ['chromeuxreport.records.queryHistoryRecord'], assertBody: (body) => assert.deepEqual(body, { url: 'https://example.com/', collectionPeriodCount: 12 }) },
   ],
 
   // gtm (2.14.0)
@@ -1429,7 +1442,7 @@ test('every curated tool has a contract row, a skip reason or a known defect, an
   const listed = new Set([...Object.keys(CASES), ...Object.keys(SKIPPED), ...Object.keys(KNOWN_DEFECTS)]);
   assert.deepEqual([...tools.keys()].filter((name) => !listed.has(name)), [], 'curated tools without a row');
   assert.deepEqual([...listed].filter((name) => !tools.has(name)), [], 'rows for tools that do not exist');
-  assert.equal(tools.size, 184, 'the curated tool count; update the table when it changes');
+  assert.equal(tools.size, 186, 'the curated tool count; update the table when it changes');
 });
 
 for (const [name, cases] of Object.entries(CASES)) {
@@ -1451,6 +1464,8 @@ for (const [name, cases] of Object.entries(CASES)) {
       assert.deepEqual(seen, c.expect, `${name}: the Discovery methods it calls`);
       // A row may pin query values Google's text spells out (sends): each is checked on the first request.
       for (const [key, value] of Object.entries(c.sends ?? {})) assert.equal(calls[0].query[key], value, `${name}: ${key}`);
+      c.assertQuery?.(calls[0].query);
+      c.assertBody?.(calls[0].body);
     }
   });
 }

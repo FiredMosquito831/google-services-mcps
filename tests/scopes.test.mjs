@@ -164,8 +164,9 @@ test('real servers: curated tools declare scopes, and write tools without Discov
     for (const tool of await buildServerTools({ ...spec, apis: undefined }, cfg)) curated.push(tool);
   }
   assert.ok(curated.length >= 50, `curated tools found: ${curated.length}`);
+  const unscopedCuratedReads = new Set(['crux_record', 'crux_history']);
   for (const tool of curated) {
-    assert.ok(tool.scopes && tool.scopes.length > 0, `${tool.name} declares scopes`);
+    assert.ok(tool.scopes && (tool.scopes.length > 0 || (tool.kind === 'read' && unscopedCuratedReads.has(tool.name))), `${tool.name} declares scopes`);
   }
 
   // Write and destructive tools with no scopes. Discovery lists no scopes for these methods, and they

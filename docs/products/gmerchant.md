@@ -48,7 +48,7 @@ gmerchant has no OAuth sign-in and no profile: the key asks for one fixed scope,
 
 The full list is in `docs/capabilities/gmerchant.md`.
 
-Google's Merchant API MCP server (alpha, https://developers.google.com/merchant/api/guides/agentic-tools/merchant-data-mcp) has 13 tools; each is a generated tool here already. With the plugin option `toolset: google`, the server lists those 13 (accounts, account issues, programs, automatic improvements, products list and get, aggregate product statuses, report search, data sources list, get, create and fetch, the latest file upload), plus `health` and the sign-in tools. The data source create asks first. Google says a data source fetch triggers processing, so since 1.24.2 it is a write here and asks first too.
+Google's Merchant API MCP server (alpha, https://developers.google.com/merchant/api/guides/agentic-tools/merchant-data-mcp) has 13 task-shaped tools; `gmerchant` covers those 13 with generated per-method tools in `toolset: google` (16 total including the 3 runtime setup/health tools `auth_setup_service_account`, `auth_status`, `health`). The 8 Manufacturer Center and CSS tools remain outside `google` by design (`gmerchant` is service-account-only, and `auth_setup_service_account` setup in chat is documented in `docs/SECURITY.md`). The data source create asks first. Google says a data source fetch triggers processing, so since 1.24.2 it is a write here and asks first too.
 
 ## Example requests
 

@@ -11,8 +11,9 @@ const dist = (p) => new URL(`../dist/${p}`, import.meta.url).href;
 // Every hand-written (curated) module. Each one exports buildTools and nothing that starts a server.
 const MODULES = ['cloud', 'gmail', 'gdrive', 'gcalendar', 'workspace-admin', 'searchconsole', 'gchat', 'gcontacts', 'gclassroom', 'gapps', 'ganalytics', 'gbusiness', 'gfirebase', 'gai', 'gmaps', 'gplay', 'meet', 'gsearch', 'gtm'];
 // The product modules that must hold only their own area's tools.
-const AREA_PREFIX = { gmail: ['gmail'], gdrive: ['drive', 'sheets'], gcalendar: ['calendar'], gchat: ['chat'], gcontacts: ['contacts', 'profile'], gclassroom: ['classroom'], gapps: ['appsscript'], ganalytics: ['ga'], gbusiness: ['mbreviews', 'mblocalposts'], gfirebase: ['firestore', 'remoteconfig', 'auth', 'firebase'], gai: ['vertex'], gmaps: ['maps'], gplay: ['androidmgmt', 'androidpub'], meet: ['meet'], gsearch: ['psi'], gtm: ['gtm'] };
-const EXPECTED_COUNT = { gmail: 16, gdrive: 14, gcalendar: 9, gchat: 9, gcontacts: 5, gclassroom: 16, gapps: 1, ganalytics: 8, gbusiness: 4, gfirebase: 6, gai: 3, gmaps: 6, gplay: 10, meet: 2, gsearch: 1, gtm: 1 };
+const AREA_PREFIX = { gmail: ['gmail'], gdrive: ['drive', 'sheets'], gcalendar: ['calendar'], gchat: ['chat'], gcontacts: ['contacts', 'profile'], gclassroom: ['classroom'], gapps: ['appsscript'], ganalytics: ['ga'], gbusiness: ['mbreviews', 'mblocalposts'], gfirebase: ['firestore', 'remoteconfig', 'auth', 'firebase'], gai: ['vertex'], gmaps: ['maps'], gplay: ['androidmgmt', 'androidpub'], meet: ['meet'], gsearch: ['psi', 'crux'], gtm: ['gtm'] };
+const EXPECTED_COUNT = { gmail: 16, gdrive: 14, gcalendar: 9, gchat: 9, gcontacts: 5, gclassroom: 16, gapps: 1, ganalytics: 8, gbusiness: 4, gfirebase: 6, gai: 3, gmaps: 6, gplay: 10, meet: 2, gsearch: 3, gtm: 1 };
+const UNSCOPED_READS = new Set(['crux_record', 'crux_history']);
 const KINDS = new Set(['read', 'write', 'destructive']);
 
 const dir = mkdtempSync(join(tmpdir(), 'gsm-curated-'));
@@ -48,7 +49,7 @@ for (const name of MODULES) {
       assert.ok(t.name.length <= 40, `${t.name} is at most 40 characters`);
       assert.ok(KINDS.has(t.kind), `${t.name} has a kind (${t.kind})`);
       assert.ok(t.title && t.description, `${t.name} has a title and description`);
-      assert.ok(Array.isArray(t.scopes) && t.scopes.length > 0, `${t.name} declares scopes`);
+      assert.ok(Array.isArray(t.scopes) && (t.scopes.length > 0 || (t.kind === 'read' && UNSCOPED_READS.has(t.name))), `${t.name} declares scopes`);
       // openid is the one bare scope name: OpenID Connect names it so, and Discovery lists it so (oauth2.userinfo.get).
       assert.ok(t.scopes.every((s) => typeof s === 'string' && (s.startsWith('https://') || s === 'openid')), `${t.name} scopes are full URLs`);
     }

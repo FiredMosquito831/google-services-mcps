@@ -82,5 +82,6 @@ Spark has no cost and needs no payment method. Blaze is usage-based, keeps the S
 
 - What happens on Spark when an allowance runs out is UNVERIFIED.
 - Crashlytics data retention and the App Distribution upload quota are UNVERIFIED.
+- `firebasehosting.v1` `operations.list`/`cancel`/`delete` declare no OAuth scope in Discovery and load without a login grant check; live Firebase scope acceptance for Hosting and Realtime Database CLI-only surfaces is UNVERIFIED.
 - Whether a topic send counts once or once per device against the FCM quota is UNVERIFIED.
 - Data Connect on Spark is a three-month trial. The instance is archived if the project does not upgrade.
