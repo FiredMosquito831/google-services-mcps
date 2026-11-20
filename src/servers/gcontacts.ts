@@ -4,8 +4,9 @@
  * read your own profile. The generated people_* tools need a readMask and the right sources from the caller; these set
  * sensible ones, send the warm-up request Google asks for before a contact search, and return short entries.
  * Since 2.8.0 two more do what the generated tools left raw: contacts_list pages through every contact, and
- * contacts_delete names the contact in its approval from a read of it (the generic target preview of a generated tool
- * finds nothing to show for a Person, which has no top-level title or name).
+ * contacts_delete names the contact in its approval from a read of it. Generated People writes now get a target preview
+ * too: an approval-only GET with personFields=names,emailAddresses lets it name one contact from names[0].displayName
+ * and emailAddresses[0].value; contacts_delete stays the richer curated path (more emails and phone numbers).
  *
  * All but contacts_delete are reads. Like Google's tools, the search descriptions tell the model to show the people
  * found and let the person confirm which one is meant before a result goes into another tool.

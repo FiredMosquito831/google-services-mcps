@@ -79,6 +79,12 @@ export interface ServerSpec {
    */
   pageSizeDefaults?: Record<string, PageSizeDefaults>;
   /**
+   * Per generated API of the product, query values sent only by the approval-only target GET of some methods
+   * (config/products.json targetQueryDefaults; People's personFields for people.people.get). Absent for every other
+   * product and every ordinary call, so their requests stay byte-identical.
+   */
+  targetQueryDefaults?: Record<string, TargetQueryDefaults>;
+  /**
    * Per generated API of the product, a note for some of its methods (config/products.json methodNotes; gsearch's Fact
    * Check pages and Web Risk submissions, which an API key cannot run). The note goes into that method's tool description
    * only, after the API's note from config/tool-kinds.json, which every tool of the API carries. Absent for a product that
@@ -130,6 +136,13 @@ export interface PageSizeDefault {
 /** One API's entry of ServerSpec.pageSizeDefaults. */
 export interface PageSizeDefaults {
   methods: Record<string, PageSizeDefault>;
+  source?: string;
+  reason?: string;
+}
+
+/** One API's entry of ServerSpec.targetQueryDefaults: the query values for each method's approval-only target GET. */
+export interface TargetQueryDefaults {
+  methods: Record<string, Record<string, string>>;
   source?: string;
   reason?: string;
 }

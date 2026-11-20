@@ -6,7 +6,7 @@
 import { test, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { generateKeyPairSync } from 'node:crypto';
-import { mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync, cpSync, mkdirSync } from 'node:fs';
+import { existsSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync, cpSync, mkdirSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
@@ -308,7 +308,7 @@ test('the data reaches every copy: config/servers.json, the plugin servers.json 
   const { registryFromProducts } = await import(DIST('cli/products.js'));
   const products = readJson('config', 'products.json').products;
   const converted = registryFromProducts(readJson('config', 'products.json'), REPO).servers;
-  const owners = { fieldsDefaults: ['gdrive'], fieldMaskDefaults: ['gmaps'], pageSizeDefaults: ['gadmin', 'gads', 'gcalendar', 'gcloud', 'gmerchant', 'gyoutube'] };
+  const owners = { fieldsDefaults: ['gdrive'], fieldMaskDefaults: ['gmaps'], pageSizeDefaults: ['gadmin', 'gads', 'gcalendar', 'gcloud', 'gmerchant', 'gyoutube'], targetQueryDefaults: ['gcontacts'] };
   for (const [key, ids] of Object.entries(owners)) {
     for (const id of ids) {
       assert.ok(products[id][key], `${id} declares ${key}`);
@@ -318,6 +318,67 @@ test('the data reaches every copy: config/servers.json, the plugin servers.json 
     }
     for (const [id, p] of Object.entries(products)) if (!ids.includes(id)) assert.equal(p[key], undefined, `${id} ${key}`);
   }
+});
+
+test('targetQueryDefaults: only the approval-only People GET sends the declared mask; ordinary calls and other target reads do not', async () => {
+  assert.deepEqual(readJson('config', 'products.json').products.gcontacts.targetQueryDefaults.people.methods['people.people.get'], { personFields: 'names,emailAddresses' });
+  for (const id of ['people.people.deleteContact', 'people.people.updateContact']) {
+    const tool = await byMethod('gcontacts', id);
+    assert.ok(tool?.describeTarget, `${id} has an approval-only read`);
+    calls = [];
+    respond = () => ({});
+    await tool.describeTarget({ resourceName: 'people/c123' });
+    assert.equal(calls.length, 1, `${id}: only the read`);
+    assert.equal(calls[0].method, 'GET');
+    assert.equal(calls[0].url, 'https://people.googleapis.com/v1/people/c123');
+    assert.deepEqual(calls[0].query, { personFields: 'names,emailAddresses' }, `${id}: the mask is target-only`);
+  }
+  const get = await byMethod('gcontacts', 'people.people.get');
+  const [plain] = await requestsOf(get, { resourceName: 'people/c123' });
+  assert.equal('personFields' in plain.query, false, 'an ordinary get sends no declared default');
+  const [given] = await requestsOf(get, { resourceName: 'people/c123', personFields: 'names' });
+  assert.equal(given.query.personFields, 'names', 'a supplied value still wins');
+  const drive = await byMethod('gdrive', 'drive.comments.update');
+  calls = [];
+  await drive.describeTarget({ fileId: 'f1', commentId: 'c1' });
+  assert.equal(calls[0].query.fields, '*', 'an unrelated target GET is unchanged');
+  assert.equal('personFields' in calls[0].query, false);
+  respond = () => ({});
+});
+
+test('targetQueryDefaults: gen-servers rejects an unknown API, method, source, reason, parameter or non-literal value', () => {
+  const root = mkdtempSync(join(tmpdir(), 'gsm-target-defaults-'));
+  temps.push(root);
+  for (const dir of ['scripts', 'config', 'data/discovery', 'src/servers']) mkdirSync(join(root, dir), { recursive: true });
+  writeFileSync(join(root, 'src', 'servers', 'gcontacts.ts'), '');
+  cpSync(join(REPO, 'scripts', 'gen-servers.mjs'), join(root, 'scripts', 'gen-servers.mjs'));
+  cpSync(join(REPO, 'data', 'discovery', 'people.v1.json'), join(root, 'data', 'discovery', 'people.v1.json'));
+  const gcontacts = readJson('config', 'products.json').products.gcontacts;
+  const good = gcontacts.targetQueryDefaults.people;
+  const reject = (label, mutation) => {
+    const payload = { targetQueryDefaults: { people: structuredClone(good) } };
+    mutation(payload);
+    rmSync(join(root, 'config', 'servers.json'), { force: true });
+    writeFileSync(join(root, 'config', 'products.json'), JSON.stringify({ products: { gcontacts: { ...gcontacts, ...payload } } }));
+    const run = spawnSync(process.execPath, [join(root, 'scripts', 'gen-servers.mjs')], { encoding: 'utf8' });
+    assert.notEqual(run.status, 0, `${label} was accepted`);
+    assert.match(run.stderr, /targetQueryDefaults/, `${label}: ${run.stderr}`);
+    assert.equal(existsSync(join(root, 'config', 'servers.json')), false, `${label}: no output was written`);
+  };
+  reject('empty object', (p) => { p.targetQueryDefaults.people.methods = {}; });
+  reject('unknown API', (p) => { p.targetQueryDefaults.bogus = p.targetQueryDefaults.people; delete p.targetQueryDefaults.people; });
+  reject('unknown method', (p) => { p.targetQueryDefaults.people.methods['people.people.notAMethod'] = p.targetQueryDefaults.people.methods['people.people.get']; delete p.targetQueryDefaults.people.methods['people.people.get']; });
+  reject('missing source', (p) => { delete p.targetQueryDefaults.people.source; });
+  reject('blank reason', (p) => { p.targetQueryDefaults.people.reason = '  '; });
+  reject('no parameter', (p) => { p.targetQueryDefaults.people.methods['people.people.get'] = {}; });
+  reject('unknown parameter', (p) => { p.targetQueryDefaults.people.methods['people.people.get'] = { bogus: 'x' }; });
+  reject('non-literal value', (p) => { p.targetQueryDefaults.people.methods['people.people.get'] = { personFields: '${mask}' }; });
+  reject('wildcard value', (p) => { p.targetQueryDefaults.people.methods['people.people.get'] = { personFields: '*' }; });
+  // The same generator accepts the real declaration.
+  writeFileSync(join(root, 'config', 'products.json'), JSON.stringify({ products: { gcontacts } }));
+  const run = spawnSync(process.execPath, [join(root, 'scripts', 'gen-servers.mjs')], { encoding: 'utf8' });
+  assert.equal(run.status, 0, run.stderr);
+  assert.deepEqual(JSON.parse(readFileSync(join(root, 'config', 'servers.json'), 'utf8')).servers[0].targetQueryDefaults.people, good);
 });
 
 // ---------------------------------------------------------------------------

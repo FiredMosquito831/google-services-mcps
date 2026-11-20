@@ -6,6 +6,7 @@ import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { z } from 'zod';
+import { normalizeObjectSchema, safeParseAsync } from '@modelcontextprotocol/sdk/server/zod-compat.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const dist = (p) => new URL(`../dist/${p}`, import.meta.url).href;
@@ -17,6 +18,46 @@ const { loadConfig } = await import(dist('core/config.js'));
 const { loadRegistry, scopesForGroup } = await import(dist('core/registry.js'));
 
 const testConfig = () => loadConfig({ GSM_TOKEN_DIR: mkdtempSync(join(tmpdir(), 'gsm-test-')) });
+
+/** Read-only markers directly on properties, on $ref targets, on nested objects and on array items. */
+const readOnlySchemas = {
+  RefFlagged: { id: 'RefFlagged', type: 'string', readOnly: true },
+  RefChain: { id: 'RefChain', $ref: 'RefFlagged' },
+  WritableRef: { id: 'WritableRef', type: 'string' },
+  CycleA: { id: 'CycleA', $ref: 'CycleB' },
+  CycleB: { id: 'CycleB', $ref: 'CycleA' },
+  Deep5: { id: 'Deep5', type: 'string', readOnly: true },
+  Deep4: { id: 'Deep4', $ref: 'Deep5' },
+  Deep3: { id: 'Deep3', $ref: 'Deep4' },
+  Deep2: { id: 'Deep2', $ref: 'Deep3' },
+  Deep1: { id: 'Deep1', $ref: 'Deep2' },
+  TaskMetadata: { id: 'TaskMetadata', type: 'object', properties: { etag: { type: 'string', readOnly: true }, label: { type: 'string' } } },
+  AllReadOnly: { id: 'AllReadOnly', type: 'object', properties: { a: { type: 'string', readOnly: true }, b: { type: 'integer', readOnly: true } } },
+  ConflictRequest: {
+    id: 'ConflictRequest', type: 'object', required: ['title', 'conflict'],
+    properties: { title: { type: 'string' }, conflict: { type: 'string', readOnly: true }, forced: { type: 'string', readOnly: true, required: true } },
+  },
+  LimitsRequest: {
+    id: 'LimitsRequest', type: 'object',
+    properties: { cycle: { $ref: 'CycleA' }, missing: { $ref: 'NoSuchSchema' }, deep: { $ref: 'Deep1' }, plain: { type: 'string' } },
+  },
+  Task: {
+    id: 'Task', type: 'object', required: ['title'],
+    properties: {
+      title: { type: 'string' },
+      notes: { type: 'string' },
+      position: { type: 'string', readOnly: true },
+      parent: { type: 'string', readOnly: true },
+      selfLink: { type: 'string', readOnly: true },
+      labelRef: { $ref: 'WritableRef' },
+      flaggedRef: { $ref: 'RefFlagged' },
+      chainedRef: { $ref: 'RefChain' },
+      metadata: { $ref: 'TaskMetadata' },
+      subtasks: { type: 'array', items: { type: 'object', properties: { title: { type: 'string' }, kind: { type: 'string', readOnly: true } } } },
+      forced: { type: 'string', readOnly: true },
+    },
+  },
+};
 
 // ---------------------------------------------------------------------------
 // Schema conversion
@@ -49,6 +90,38 @@ test('schema: $ref, enum and array convert to zod, with descriptions', () => {
   assert.equal(person.safeParse({ name: 'A', tags: 'x' }).success, false, 'array is enforced');
   assert.equal(person.safeParse({ name: 'A', age: 1.5 }).success, false, 'integer is enforced');
   assert.equal(person.shape.name.description, 'Full name');
+});
+
+test('schema: readOnly properties are excluded, including markers carried only by a $ref target', () => {
+  const task = schemaToZod({ $ref: 'Task' }, { schemas: readOnlySchemas });
+  assert.deepEqual(Object.keys(task.shape).sort(), ['labelRef', 'metadata', 'notes', 'subtasks', 'title']);
+  assert.deepEqual(
+    task.parse({
+      title: 'x', notes: 'n', labelRef: 'w', position: '3', parent: 'p', selfLink: 's',
+      flaggedRef: 'f', chainedRef: 'c', forced: 'f2',
+      metadata: { label: 'm', etag: 'e' }, subtasks: [{ title: 'sub', kind: 'k' }],
+    }),
+    { title: 'x', notes: 'n', labelRef: 'w', metadata: { label: 'm' }, subtasks: [{ title: 'sub' }] },
+  );
+  assert.equal(task.safeParse({ title: 'x' }).success, true);
+  assert.equal(task.safeParse({ notes: 'n' }).success, false, 'a required writable field is still required');
+
+  // An all-read-only object must stay an object: a z.record fallback would re-admit the stripped names.
+  const all = schemaToZod({ $ref: 'AllReadOnly' }, { schemas: readOnlySchemas });
+  assert.ok(all instanceof z.ZodObject, 'all-read-only object is not a free-form record');
+  assert.deepEqual(Object.keys(all.shape), []);
+  assert.deepEqual(all.parse({}), {});
+  assert.deepEqual(all.parse({ a: 'x' }), {}, 'the removed key is stripped, not accepted as a record value');
+
+  // A required read-only name never makes a remaining property required, by parent list or by prop.required.
+  const conflict = schemaToZod({ $ref: 'ConflictRequest' }, { schemas: readOnlySchemas });
+  assert.deepEqual(Object.keys(conflict.shape), ['title']);
+  assert.equal(conflict.safeParse({ title: 'x' }).success, true);
+  assert.equal(conflict.safeParse({}).success, false);
+
+  // Missing refs, cycles and markers past maxRefDepth are not read-only; the converter budget is unchanged.
+  const limits = schemaToZod({ $ref: 'LimitsRequest' }, { schemas: readOnlySchemas });
+  assert.deepEqual(Object.keys(limits.shape).sort(), ['cycle', 'deep', 'missing', 'plain']);
 });
 
 test('schema: recursive $ref terminates and accepts deep values past the limit', () => {
@@ -311,6 +384,104 @@ test('generate: a body field named body collides with a query parameter, so it b
   const create = tools.find((t) => t.title === 'demo.things.create');
   assert.ok(create.inputSchema.body, 'the query parameter keeps body');
   assert.ok(create.inputSchema.requestBody, 'the request body is requestBody');
+});
+
+/** Mirrors McpServer.validateToolInput: normalizeObjectSchema -> safeParseAsync, then the handler's parsed args only. */
+async function sdkParse(tool, args) {
+  const schema = normalizeObjectSchema(tool.inputSchema) ?? tool.inputSchema;
+  const result = await safeParseAsync(schema, args);
+  assert.equal(result.success, true, `SDK-style parse of ${tool.title}: ${JSON.stringify(result.error ?? null)}`);
+  return result.data;
+}
+
+const taskMethod = (path, httpMethod) => ({
+  path, httpMethod, request: 'Task',
+  parameters: [
+    { name: 'list', location: 'path', type: 'string', required: true },
+    { name: 'task', location: 'path', type: 'string', required: true },
+    { name: 'fields', location: 'query', type: 'string' },
+  ],
+});
+const taskDoc = () => ({
+  name: 'tasks', version: 'v1', rootUrl: 'https://tasks.googleapis.com/', servicePath: 'tasks/v1/', schemas: readOnlySchemas,
+  resources: {
+    tasks: {
+      methods: {
+        insert: { id: 'tasks.tasks.insert', ...taskMethod('lists/{list}/tasks', 'POST') },
+        patch: { id: 'tasks.tasks.patch', ...taskMethod('lists/{list}/tasks/{task}', 'PATCH') },
+        update: { id: 'tasks.tasks.update', ...taskMethod('lists/{list}/tasks/{task}', 'PUT') },
+        remove: { id: 'tasks.tasks.remove', ...taskMethod('lists/{list}/tasks/{task}', 'DELETE') },
+      },
+    },
+  },
+});
+const taskPlan = (fullId, httpMethod, path) => ({
+  fullId, httpMethod, rootUrl: 'https://tasks.googleapis.com/', servicePath: 'tasks/v1/', path,
+  fields: [
+    { arg: 'list', api: 'list', location: 'path' },
+    { arg: 'task', api: 'task', location: 'path' },
+    { arg: 'body', api: 'body', location: 'body' },
+    { arg: 'fields', api: 'fields', location: 'query' },
+    { arg: 'fieldMask', api: 'X-Goog-FieldMask', location: 'header' },
+  ],
+  queryDefaults: { alt: 'json' },
+  headerDefaults: { 'X-Goog-FieldMask': 'id,title' },
+});
+const requestBody = { title: 'x', notes: 'n', labelRef: 'w', metadata: { label: 'm' }, subtasks: [{ title: 'sub' }] };
+const requestArgs = { list: 'L1', task: 'T1', body: requestBody, fields: 'id,title' };
+// Literals captured before the schema.ts edit, with this same SDK-style parse path. They are not derived at test time.
+const requestGolden = {
+  insert: {
+    method: 'POST', url: 'https://tasks.googleapis.com/tasks/v1/lists/L1/tasks', query: 'fields=id%2Ctitle&alt=json',
+    headers: { 'X-Goog-FieldMask': 'id,title' },
+    bodyBytes: '{"title":"x","notes":"n","labelRef":"w","metadata":{"label":"m"},"subtasks":[{"title":"sub"}]}',
+  },
+  patch: {
+    method: 'PATCH', url: 'https://tasks.googleapis.com/tasks/v1/lists/L1/tasks/T1', query: 'fields=id%2Ctitle&alt=json',
+    headers: { 'X-Goog-FieldMask': 'id,title' },
+    bodyBytes: '{"title":"x","notes":"n","labelRef":"w","metadata":{"label":"m"},"subtasks":[{"title":"sub"}]}',
+  },
+  update: {
+    method: 'PUT', url: 'https://tasks.googleapis.com/tasks/v1/lists/L1/tasks/T1', query: 'fields=id%2Ctitle&alt=json',
+    headers: { 'X-Goog-FieldMask': 'id,title' },
+    bodyBytes: '{"title":"x","notes":"n","labelRef":"w","metadata":{"label":"m"},"subtasks":[{"title":"sub"}]}',
+  },
+  preview: { method: 'tasks.tasks.remove', url: 'https://tasks.googleapis.com/tasks/v1/lists/L1/tasks/T1', query: { fields: 'id' }, body: null },
+  // The pre-change body for a call that supplies a read-only key; this is the intended change, not the byte golden.
+  suppliedBodyBytesBefore: '{"title":"x","notes":"n","position":"3","labelRef":"w","metadata":{"label":"m"},"subtasks":[{"title":"sub"}]}',
+};
+
+test('generate: readOnly keys leave inputSchema and omission calls keep fixed byte-identical requests', async () => {
+  const { tools } = generateDiscoveryTools('gtasks', 'cloud', [{ apiName: 'tasks', apiVersion: 'v1', doc: taskDoc() }], { overrides: {}, notes: {} }, testConfig());
+  const cases = [
+    ['insert', 'tasks.tasks.insert', 'POST', 'lists/{list}/tasks'],
+    ['patch', 'tasks.tasks.patch', 'PATCH', 'lists/{list}/tasks/{task}'],
+    ['update', 'tasks.tasks.update', 'PUT', 'lists/{list}/tasks/{task}'],
+  ];
+  for (const [key, id, verb, path] of cases) {
+    const tool = tools.find((t) => t.title === id);
+    assert.ok(tool, id);
+    assert.deepEqual(Object.keys(tool.inputSchema.body.unwrap().shape).sort(), ['labelRef', 'metadata', 'notes', 'subtasks', 'title'], id);
+    const parsed = await sdkParse(tool, requestArgs);
+    const req = buildRequest(taskPlan(id, verb, path), parsed);
+    const golden = requestGolden[key];
+    assert.equal(req.method, golden.method, id);
+    assert.equal(req.url, golden.url, id);
+    assert.equal(serializeQuery(req.params), golden.query, id);
+    assert.deepEqual(req.headers, golden.headers, id);
+    assert.equal(JSON.stringify(req.data), golden.bodyBytes, id);
+  }
+
+  const insert = tools.find((t) => t.title === 'tasks.tasks.insert');
+  const supplied = await sdkParse(insert, { ...requestArgs, body: { ...requestBody, position: '3' } });
+  assert.equal(supplied.body.position, undefined, 'a supplied read-only key is stripped after the fix');
+  assert.match(requestGolden.suppliedBodyBytesBefore, /"position":"3"/, 'the fixed pre-change literal contained the key');
+  assert.doesNotMatch(JSON.stringify(supplied.body), /"position"/, 'the post-change body does not contain it');
+  assert.deepEqual(supplied.body, (await sdkParse(insert, requestArgs)).body, 'supplying a read-only key now yields the same body as omitting it');
+
+  const remove = tools.find((t) => t.title === 'tasks.tasks.remove');
+  const removeArgs = await sdkParse(remove, { list: 'L1', task: 'T1', fields: 'id' });
+  assert.deepEqual(await remove.preview(removeArgs), requestGolden.preview, 'destructive preview bytes are unchanged');
 });
 
 /** A one-API demo document with two methods: demo.things.list (GET) and demo.things.delete (DELETE). */

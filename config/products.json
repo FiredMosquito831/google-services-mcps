@@ -2460,6 +2460,17 @@
           ]
         }
       },
+      "targetQueryDefaults": {
+        "people": {
+          "methods": {
+            "people.people.get": {
+              "personFields": "names,emailAddresses"
+            }
+          },
+          "source": "https://developers.google.com/people/api/rest/v1/people/get (2026-11-19): \"personFields: Required. A field mask to restrict which fields on the person are returned.\" and \"The request returns a 400 error if 'personFields' is not specified.\"",
+          "reason": "Approval-only target GET for generated People writes: names one contact in the approval text from names[0].displayName and emailAddresses[0].value. Applies only to describeTarget; no handler, tool schema, scope or ordinary call changes."
+        }
+      },
       "toolsets": {
         "google": {
           "source": "https://developers.google.com/people/api/mcp/tools_list",

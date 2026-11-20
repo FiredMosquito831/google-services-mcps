@@ -138,6 +138,37 @@ test('targetFieldsOf: top-level strings of the listed fields only, at most four,
   assert.equal(TARGET_PREVIEW_KEY, 'target (read from Google now, not sent)');
 });
 
+test('targetFieldsOf: the two explicit People paths fill the name and email slots at index 0 only; top-level values win', () => {
+  const person = { resourceName: 'people/c123', names: [{ displayName: 'Ada Lovelace' }], emailAddresses: [{ value: 'ada@example.com' }] };
+  assert.deepEqual(targetFieldsOf(person), { displayName: 'Ada Lovelace', email: 'ada@example.com' });
+  assert.deepEqual(
+    targetFieldsOf({ ...person, displayName: 'Top name', primaryEmail: 'top@example.com', emailAddress: 'other@example.com' }),
+    { displayName: 'Top name', primaryEmail: 'top@example.com', emailAddress: 'other@example.com' },
+    'a top-level name and any top-level email suppress both nested values; no duplicate output',
+  );
+  assert.deepEqual(targetFieldsOf({ ...person, email: 'top@example.com' }), { displayName: 'Ada Lovelace', email: 'top@example.com' });
+  assert.deepEqual(targetFieldsOf({ ...person, displayName: '   ' }), { displayName: 'Ada Lovelace', email: 'ada@example.com' });
+  // Index 0 only: there is no search for a valid later element, no deep walk and no nested `value` key.
+  for (const names of [[], [{ displayName: '' }, { displayName: 'Later' }], [{ displayName: '   ' }, { displayName: 'Later' }], [{ displayName: 7 }, { displayName: 'Later' }], [{ givenName: 'Ada' }, { displayName: 'Later' }]]) {
+    assert.deepEqual(targetFieldsOf({ ...person, names }), { email: 'ada@example.com' }, `names: ${JSON.stringify(names)}`);
+  }
+  for (const emailAddresses of [[], [{ value: '' }, { value: 'later@example.com' }], [{ value: 7 }, { value: 'later@example.com' }], [{}, { value: 'later@example.com' }]]) {
+    assert.deepEqual(targetFieldsOf({ ...person, emailAddresses }), { displayName: 'Ada Lovelace' }, `emailAddresses: ${JSON.stringify(emailAddresses)}`);
+  }
+  assert.deepEqual(targetFieldsOf({ name: { displayName: 'Ada Lovelace' } }), undefined, 'an Admin User.name object is not walked');
+  const long = { names: [{ displayName: 'n'.repeat(500) }], emailAddresses: [{ value: 'e'.repeat(500) }] };
+  const cut = targetFieldsOf(long);
+  assert.deepEqual(Object.keys(cut), ['displayName', 'email']);
+  assert.equal(cut.displayName, `${'n'.repeat(TARGET_VALUE_CHARS)}...`);
+  assert.equal(cut.email, `${'e'.repeat(TARGET_VALUE_CHARS)}...`);
+  const capped = targetFieldsOf({ title: 't', summary: 's', subject: 'j', ...person });
+  assert.deepEqual(Object.keys(capped), ['title', 'displayName', 'summary', 'subject'], `at most ${TARGET_MAX_FIELDS}, in the listed order`);
+  assert.equal('value' in capped, false);
+  // The GET result is redacted before extraction (src/core/discovery/tools.ts); no credential field name was added.
+  assert.match(readFileSync(join(ROOT, 'src', 'core', 'discovery', 'tools.ts'), 'utf8'), /targetFieldsOf\(redactCredentials\(/);
+  for (const rule of CREDENTIAL_FIELDS) assert.equal(TARGET_FIELDS.includes(rule.field), false, `${rule.api} ${rule.schema}.${rule.field}`);
+});
+
 test('settleWithin gives up on a slow or failed read; formMayShow skips a read nobody would see', async () => {
   assert.equal(await settleWithin(new Promise((r) => setTimeout(() => r('late'), 200)), 20), undefined);
   assert.equal(await settleWithin(Promise.reject(new Error('404')), 1000), undefined);
@@ -392,5 +423,40 @@ test('generated tools: no target read when the form cannot be shown (a change wi
     assert.notEqual(res.isError, true, res.content[0].text);
     assert.equal(asked.length, 0, 'the hook asked about the change; the server does not');
     assert.deepEqual(callsIn(s.callsFile).map((c) => c.method), ['PATCH'], 'no read for a preview nobody sees');
+  });
+});
+
+test('generated People delete: the approval-only GET sends personFields and names one contact; the DELETE is unchanged', async () => {
+  const responder = `(method, path) => {
+    if (method === 'GET' && path === '/v1/people/c123') return { resourceName: 'people/c123', names: [{ displayName: 'Ada Lovelace' }], emailAddresses: [{ value: 'ada@example.com' }, { value: 'other@example.com' }] };
+    if (method === 'GET') return { httpError: 404 };
+    return {};
+  }`;
+  const del = { name: 'people_people_delete_contact', arguments: { resourceName: 'people/c123' } };
+  const s = childServer('gcontacts', 'workspace-user', generatedLine('gcontacts'), responder);
+  await withClient(s, serverEnv(s), DECLINE, async (client, asked) => {
+    const res = await client.callTool(del);
+    assert.equal(res.isError, true, 'declined');
+    assert.equal(asked.length, 1);
+    assert.ok(asked[0].message.includes(`"${TARGET_PREVIEW_KEY}": {\n    "displayName": "Ada Lovelace",\n    "email": "ada@example.com"\n  }`), asked[0].message);
+    assert.equal(asked[0].message.includes('other@example.com'), false, 'only the first email is shown');
+    const calls = callsIn(s.callsFile);
+    assert.deepEqual(calls.map((c) => [c.method, c.path]), [['GET', '/v1/people/c123']], 'the read only; no delete');
+    assert.deepEqual(calls[0].query, { personFields: 'names,emailAddresses' });
+  });
+
+  const t = childServer('gcontacts', 'workspace-user', generatedLine('gcontacts'), responder);
+  await withClient(t, serverEnv(t), APPROVE, async (client, asked) => {
+    const res = await client.callTool(del);
+    assert.notEqual(res.isError, true, res.content[0].text);
+    assert.equal(asked.length, 1, 'only one approval');
+    assert.deepEqual(
+      callsIn(t.callsFile).map((c) => [c.method, c.path, c.query, c.body]),
+      [
+        ['GET', '/v1/people/c123', { personFields: 'names,emailAddresses' }, undefined],
+        ['DELETE', '/v1/people/c123:deleteContact', {}, undefined],
+      ],
+      'the same DELETE as before: no mask, no extra argument, no body',
+    );
   });
 });

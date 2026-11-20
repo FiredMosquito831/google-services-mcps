@@ -20,6 +20,7 @@ import type {
   Registry,
   ScopePolicy,
   ServerSpec,
+  TargetQueryDefaults,
 } from '../core/registry.js';
 import type { InstallRoots } from './paths.js';
 import { LISTED_TOOLSETS, PREFER_PROFILES, type PreferredScopes, type ServerToolsets, type ServerToolsetScopes } from '../core/toolset.js';
@@ -84,6 +85,8 @@ export function registryFromProducts(raw: unknown, dataRoot: string): Registry {
       ...(isPlainObject(value.fieldsDefaults) ? { fieldsDefaults: value.fieldsDefaults as Record<string, FieldsDefaults> } : {}),
       ...(isPlainObject(value.fieldMaskDefaults) ? { fieldMaskDefaults: value.fieldMaskDefaults as Record<string, FieldMaskDefaults> } : {}),
       ...(isPlainObject(value.pageSizeDefaults) ? { pageSizeDefaults: value.pageSizeDefaults as Record<string, PageSizeDefaults> } : {}),
+      // The product's query values for approval-only target reads (checked by scripts/gen-servers.mjs).
+      ...(isPlainObject(value.targetQueryDefaults) ? { targetQueryDefaults: value.targetQueryDefaults as Record<string, TargetQueryDefaults> } : {}),
       // The product's notes for some methods' tools (checked by scripts/gen-servers.mjs).
       ...(isPlainObject(value.methodNotes) ? { methodNotes: value.methodNotes as Record<string, MethodNotes> } : {}),
       // The product's write methods that are destructive for some request bodies (checked by scripts/gen-servers.mjs).
@@ -176,6 +179,7 @@ const BUILD_FIELDS = [
   'fieldsDefaults',
   'fieldMaskDefaults',
   'pageSizeDefaults',
+  'targetQueryDefaults',
   'methodNotes',
   'destructiveWhen',
   'toolsets',

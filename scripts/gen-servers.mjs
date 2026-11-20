@@ -408,6 +408,33 @@ function pageSizeDefaultsOf(value, id, apiMethods) {
 }
 
 /**
+ * A product's "targetQueryDefaults" (ServerSpec.targetQueryDefaults in src/core/registry.ts), checked and copied as is:
+ * per generated API of the product, the literal query values only the approval-only target GET of a method sends
+ * ({ methods: { id: { parameter: value } }, source, reason }). Each parameter must be a query parameter of that method
+ * in its snapshot; no wildcards or dynamic input.
+ */
+function targetQueryDefaultsOf(value, id, apiMethods) {
+  if (value === undefined) return undefined;
+  const where = `product ${id} targetQueryDefaults`;
+  checkPerApi(value, where, apiMethods);
+  for (const [api, entry] of Object.entries(value)) {
+    const methods = entry.methods;
+    if (typeof methods !== 'object' || methods === null || Array.isArray(methods) || Object.keys(methods).length === 0) fail(`${where}["${api}"].methods must be a non-empty object`);
+    for (const [method, query] of Object.entries(methods)) {
+      const at = `${where}["${api}"]["${method}"]`;
+      const found = checkMethodOf(`${where}["${api}"]`, api, method, apiMethods);
+      if (typeof query !== 'object' || query === null || Array.isArray(query) || Object.keys(query).length === 0) fail(`${at} needs at least one query parameter`);
+      for (const [param, literal] of Object.entries(query)) {
+        if (!isText(param) || !isText(literal) || /\s|[*${}]/.test(literal)) fail(`${at}: "${param}" needs a literal value without spaces or dynamic input`);
+        const snapshotParam = found?.parameters?.find((p) => p.name === param);
+        if (found && (!snapshotParam || snapshotParam.location !== 'query')) fail(`${at}: "${param}" is not a query parameter of the method`);
+      }
+    }
+  }
+  return value;
+}
+
+/**
  * A product's "methodNotes" (ServerSpec.methodNotes in src/core/registry.ts), checked and copied as is: per generated API
  * of the product, a note for some of its methods, which only that method's tool description carries ({ methods: { id:
  * note }, source, reason }). A note for every tool of an API belongs in config/tool-kinds.json notes instead.
@@ -543,6 +570,9 @@ function main() {
     if (fieldMaskDefaults) server.fieldMaskDefaults = fieldMaskDefaults;
     const pageSizeDefaults = pageSizeDefaultsOf(p.pageSizeDefaults, id, apiMethods);
     if (pageSizeDefaults) server.pageSizeDefaults = pageSizeDefaults;
+    // Only a product with approval-only target reads gets the key, so every other server entry stays byte-identical.
+    const targetQueryDefaults = targetQueryDefaultsOf(p.targetQueryDefaults, id, apiMethods);
+    if (targetQueryDefaults) server.targetQueryDefaults = targetQueryDefaults;
     // Only a product with method notes gets the key, so the entries of the others stay as they were.
     const methodNotes = methodNotesOf(p.methodNotes, id, apiMethods);
     if (methodNotes) server.methodNotes = methodNotes;

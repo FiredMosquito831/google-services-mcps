@@ -251,6 +251,11 @@ export interface DiscoverySource {
    */
   pageSizes?: Readonly<Record<string, PageSizeDefault>>;
   /**
+   * Method id to query values sent only by that method's approval-only target GET (ServerSpec.targetQueryDefaults).
+   * Absent: the target GET sends only the path arguments and the ordinary defaults, as before.
+   */
+  targetQueryDefaults?: Readonly<Record<string, Readonly<Record<string, string>>>>;
+  /**
    * Method id to a note its tool's description carries, after the API's note (ServerSpec.methodNotes, declared in
    * config/products.json). Absent: the tool carries the API's note only, as before.
    */
@@ -286,7 +291,7 @@ interface MethodDefaults {
   pageSize?: PageSizeDefault;
 }
 
-type DefaultsSource = Pick<DiscoverySource, 'fieldsDefaults' | 'fieldMasks' | 'pageSizes'>;
+type DefaultsSource = Pick<DiscoverySource, 'fieldsDefaults' | 'fieldMasks' | 'pageSizes' | 'targetQueryDefaults'>;
 
 function defaultsOf(src: DefaultsSource, id: string): MethodDefaults {
   return {
@@ -294,6 +299,12 @@ function defaultsOf(src: DefaultsSource, id: string): MethodDefaults {
     ...(src.fieldMasks?.[id] !== undefined ? { fieldMask: src.fieldMasks[id] } : {}),
     ...(src.pageSizes?.[id] !== undefined ? { pageSize: src.pageSizes[id] } : {}),
   };
+}
+
+/** The declared query values for one method's approval-only target read; never used for an ordinary call. */
+function targetQueryDefaultsOf(src: DefaultsSource, id: string): Record<string, string> | undefined {
+  const query = src.targetQueryDefaults?.[id];
+  return query && Object.keys(query).length > 0 ? { ...query } : undefined;
 }
 
 /** The query and header defaults a method's request plan carries, or nothing when it has none. */
@@ -705,7 +716,10 @@ function buildMethodTool(
   if (target) {
     // The resource this write acts on, read for the approval only (target-preview.ts). The same path arguments, nothing
     // else; the result passes the credential list before a field is picked. The request the handler sends is not changed.
-    // A get that returns no default fields (Drive's comments and approvals) sends its default fields value.
+    // A get that returns no default fields (Drive's comments and approvals) sends its default fields value. A declared
+    // target-only query default (People's personFields) is added here alone, never to the tool's own call plan.
+    const targetDefaults = planDefaults(defaultsOf(src, target.fullId));
+    const targetQuery = targetQueryDefaultsOf(src, target.fullId);
     const targetPlan: RequestPlan = {
       fullId: target.fullId,
       httpMethod: 'GET',
@@ -713,7 +727,8 @@ function buildMethodTool(
       servicePath: doc.servicePath,
       path: target.path,
       fields: target.parameters.filter((p) => p.location === 'path').map((p) => ({ arg: argFor(p.name), api: p.name, location: 'path' as const })),
-      ...planDefaults(defaultsOf(src, target.fullId)),
+      ...targetDefaults,
+      ...(targetQuery ? { queryDefaults: { ...(targetDefaults.queryDefaults ?? {}), ...targetQuery } } : {}),
       ...endpointsOf(doc),
     };
     tool.describeTarget = async (args) => {
@@ -844,20 +859,22 @@ export function generateDiscoveryTools(
 }
 
 /**
- * The request defaults the product declares for one of its APIs (config/products.json fieldsDefaults and
- * fieldMaskDefaults), by method id. Nothing for an API without any.
+ * The request defaults the product declares for one of its APIs (config/products.json fieldsDefaults,
+ * fieldMaskDefaults, pageSizeDefaults and targetQueryDefaults), by method id. Nothing for an API without any.
  */
 export function requestDefaultsFor(
-  server: Pick<ServerSpec, 'fieldsDefaults' | 'fieldMaskDefaults' | 'pageSizeDefaults'>,
+  server: Pick<ServerSpec, 'fieldsDefaults' | 'fieldMaskDefaults' | 'pageSizeDefaults' | 'targetQueryDefaults'>,
   api: string,
 ): DefaultsSource {
   const fields = server.fieldsDefaults?.[api];
   const masks = server.fieldMaskDefaults?.[api]?.methods;
   const sizes = server.pageSizeDefaults?.[api]?.methods;
+  const target = server.targetQueryDefaults?.[api]?.methods;
   return {
     ...(fields ? { fieldsDefaults: Object.fromEntries(fields.methods.map((id) => [id, fields.value])) } : {}),
     ...(masks ? { fieldMasks: { ...masks } } : {}),
     ...(sizes ? { pageSizes: { ...sizes } } : {}),
+    ...(target ? { targetQueryDefaults: Object.fromEntries(Object.entries(target).map(([id, query]) => [id, { ...query }])) } : {}),
   };
 }
 

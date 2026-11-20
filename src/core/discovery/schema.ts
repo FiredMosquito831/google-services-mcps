@@ -19,6 +19,8 @@ export interface SchemaNode {
   additionalProperties?: SchemaNode | boolean;
   items?: SchemaNode;
   enum?: string[];
+  /** Discovery marks service-generated fields that a client must not set. */
+  readOnly?: boolean;
   /** Discovery puts required:true on parameters; JSON Schema uses a list on the parent object. */
   required?: boolean | string[];
   default?: unknown;
@@ -152,16 +154,39 @@ function enumOrString(values: string[]): z.ZodTypeAny {
   return z.enum(unique as [string, ...string[]]);
 }
 
+/**
+ * True when a property must not be an input, either directly or through a named $ref chain. The walk has its own
+ * seen-set and never touches the converter's node/stack budget, so filtering changes no non-read-only node's shape.
+ */
+function isReadOnlyProperty(prop: SchemaNode, ctx: SchemaContext): boolean {
+  if (prop.readOnly === true) return true;
+  let node = prop;
+  const seen = new Set<string>();
+  const maxDepth = ctx.maxRefDepth ?? MAX_REF_DEPTH;
+  for (let depth = 0; depth < maxDepth && node.$ref; depth++) {
+    const ref = node.$ref;
+    if (seen.has(ref)) return false;
+    seen.add(ref);
+    const target = ctx.schemas[ref];
+    if (!target) return false;
+    if (target.readOnly === true) return true;
+    node = target;
+  }
+  return false;
+}
+
 function objectOf(node: SchemaNode, ctx: SchemaContext, st: WalkState): z.ZodTypeAny {
   const props = node.properties ?? {};
   if (Object.keys(props).length > 0) {
     const requiredNames = new Set(Array.isArray(node.required) ? node.required : []);
     const shape: Record<string, z.ZodTypeAny> = {};
     for (const [key, prop] of Object.entries(props)) {
+      if (isReadOnlyProperty(prop, ctx)) continue;
       const child = walk(prop, ctx, st);
       const required = prop.required === true || requiredNames.has(key);
       shape[key] = required ? child : child.optional();
     }
+    // Keep an object even when every declared property was read-only: a z.record fallback would admit those keys again.
     return z.object(shape);
   }
 
