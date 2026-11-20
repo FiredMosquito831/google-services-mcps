@@ -70,12 +70,24 @@ test('six tools: five reads and one write; scopes as Discovery lists them; each 
       ['ga_get_metadata', 'read'],
       ['ga_annotations_list', 'read'],
       ['ga_annotation_create', 'write'],
+      ['ga_custom_dimension_create', 'write'],
+      ['ga_key_event_create', 'write'],
     ],
   );
   for (const name of ['ga_run_report', 'ga_run_realtime_report', 'ga_run_funnel_report', 'ga_get_metadata']) assert.deepEqual(tools.get(name).scopes, [G('analytics'), G('analytics.readonly')], name);
   assert.deepEqual(tools.get('ga_annotations_list').scopes, [G('analytics.edit'), G('analytics.readonly')]);
-  assert.deepEqual(tools.get('ga_annotation_create').scopes, [G('analytics.edit')]);
-  const official = { ga_run_report: 'run_report', ga_run_realtime_report: 'run_realtime_report', ga_run_funnel_report: 'run_funnel_report', ga_annotations_list: 'list_property_annotations', ga_annotation_create: 'create_property_annotation' };
+  for (const w of ['ga_annotation_create', 'ga_custom_dimension_create', 'ga_key_event_create']) {
+    assert.deepEqual(tools.get(w).scopes, [G('analytics.edit')], w);
+  }
+  const official = {
+    ga_run_report: 'run_report',
+    ga_run_realtime_report: 'run_realtime_report',
+    ga_run_funnel_report: 'run_funnel_report',
+    ga_annotations_list: 'list_property_annotations',
+    ga_annotation_create: 'create_property_annotation',
+    ga_custom_dimension_create: 'create_custom_dimension',
+    ga_key_event_create: 'create_key_event',
+  };
   for (const [name, google] of Object.entries(official)) {
     const t = tools.get(name);
     assert.ok(t.description.includes(`matches ${google} in Google's Google Analytics MCP server`), name);
@@ -305,7 +317,7 @@ test('ga_annotation_create: prepare builds the exact annotation and sends nothin
   assert.equal(calls.length, 1);
 });
 
-test("the ganalytics google list covers the 10 tools of Google's Google Analytics MCP server", () => {
+test("the ganalytics google list covers all 13 tools of Google's Google Analytics MCP server", () => {
   const google = JSON.parse(readFileSync(join(REPO, 'config', 'products.json'), 'utf8')).products.ganalytics.toolsets.google;
   const official = new Set(Object.values(google.matches).flat());
   for (const name of [
@@ -319,15 +331,51 @@ test("the ganalytics google list covers the 10 tools of Google's Google Analytic
     'run_funnel_report',
     'run_conversions_report',
     'create_property_annotation',
+    'list_key_events',
+    'create_custom_dimension',
+    'create_key_event',
   ]) {
     assert.ok(official.has(name), `no tool of ours matches ${name}`);
   }
-  assert.equal(official.size, 10);
+  assert.equal(official.size, 13);
   assert.deepEqual(google.matches.ga_run_report, ['run_report', 'run_conversions_report']);
   assert.equal(google.tools.includes('api_call'), false, 'no gateway method counts toward its scopes');
   const map = JSON.parse(readFileSync(join(REPO, 'plugins', 'ganalytics', 'tool-map.json'), 'utf8'));
   const kind = (name) => map.find((t) => t.name === `mcp__plugin_ganalytics_ganalytics__${name}`)?.kind;
-  for (const name of google.tools) assert.equal(kind(name), name === 'ga_annotation_create' ? 'write' : 'read', name);
+  const writes = new Set(['ga_annotation_create', 'ga_custom_dimension_create', 'ga_key_event_create']);
+  for (const name of google.tools) assert.equal(kind(name), writes.has(name) ? 'write' : 'read', name);
+});
+
+test('ga_custom_dimension_create and ga_key_event_create: prepare validates and builds v1beta requests without sending', async () => {
+  calls = [];
+  const dim = tools.get('ga_custom_dimension_create');
+  const prepDim = await dim.prepare({ property_id: '123', parameter_name: 'plan_tier', display_name: 'Plan Tier', scope: 'USER', disallow_ads_personalization: true }, ctx);
+  assert.equal(calls.length, 0, 'prepare sends nothing');
+  assert.deepEqual(prepDim.preview, {
+    property: 'properties/123',
+    custom_dimension: { parameterName: 'plan_tier', displayName: 'Plan Tier', scope: 'USER', disallowAdsPersonalization: true },
+  });
+  respond = (call) => ({ name: 'properties/123/customDimensions/45', ...call.body });
+  const dimOut = await dim.handler({ property_id: '123', parameter_name: 'plan_tier', display_name: 'Plan Tier', scope: 'USER', disallow_ads_personalization: true }, ctx, prepDim);
+  assert.equal(calls[0].method, 'POST');
+  assert.equal(calls[0].url, 'https://analyticsadmin.googleapis.com/v1beta/properties/123/customDimensions');
+  assert.deepEqual(dimOut.created.parameterName, 'plan_tier');
+  await assert.rejects(dim.prepare({ property_id: '123', parameter_name: 'x'.repeat(25), display_name: 'Too Long', scope: 'USER' }, ctx), /at most 24/);
+  await assert.rejects(dim.prepare({ property_id: '123', parameter_name: 'item_x', display_name: 'Bad NPA', scope: 'EVENT', disallow_ads_personalization: true }, ctx), /only supported when scope is USER/);
+
+  calls = [];
+  const ke = tools.get('ga_key_event_create');
+  const prepKe = await ke.prepare({ property_id: '123', event_name: 'sign_up', default_value: { numeric_value: 10, currency_code: 'USD' } }, ctx);
+  assert.equal(calls.length, 0, 'prepare sends nothing');
+  assert.deepEqual(prepKe.preview, {
+    property: 'properties/123',
+    key_event: { eventName: 'sign_up', countingMethod: 'ONCE_PER_EVENT', defaultValue: { numericValue: 10, currencyCode: 'USD' } },
+  });
+  respond = (call) => ({ name: 'properties/123/keyEvents/99', ...call.body });
+  const keOut = await ke.handler({ property_id: '123', event_name: 'sign_up', default_value: { numeric_value: 10, currency_code: 'USD' } }, ctx, prepKe);
+  assert.equal(calls[0].method, 'POST');
+  assert.equal(calls[0].url, 'https://analyticsadmin.googleapis.com/v1beta/properties/123/keyEvents');
+  assert.deepEqual(keOut.created.countingMethod, 'ONCE_PER_EVENT');
 });
 
 // ---- ga_get_metadata (2.17.0) ----

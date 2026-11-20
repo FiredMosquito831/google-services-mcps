@@ -44,7 +44,7 @@ Reads never ask for approval. Tools that change or delete data are listed only w
 
 ## Tools
 
-The `ganalytics` MCP server lists up to 83 tools with the `all` toolset: 44 read, 28 write, 10 destructive and 1 dynamic (decided per call), counting its 7 runtime tools (`health` and the sign-in tools). Write and destructive tools are listed only when writes are allowed, and a tool loads only when the sign-in holds one of its scopes. The `google` toolset lists 9 of them plus the runtime tools. The gateway APIs below are reached through `api_search` (find a method), `api_describe` (its parameters) and `api_call` (run it).
+The `ganalytics` MCP server lists up to 85 tools with the `all` toolset: 44 read, 30 write, 10 destructive and 1 dynamic (decided per call), counting its 7 runtime tools (`health` and the sign-in tools). Write and destructive tools are listed only when writes are allowed, and a tool loads only when the sign-in holds one of its scopes. The `google` toolset lists 12 of them plus the runtime tools. The gateway APIs below are reached through `api_search` (find a method), `api_describe` (its parameters) and `api_call` (run it).
 
 ## APIs
 

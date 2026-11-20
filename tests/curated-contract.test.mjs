@@ -152,6 +152,7 @@ const DOCS = [
   'classroom.v1',
   'meet.v2',
   'analyticsdata.v1beta',
+  'analyticsadmin.v1beta',
   // 2.11.0: the curated firebase_get_sdk_config reads an app's config (and the app list) here.
   'firebase.v1beta1',
   // 2.12.0: the curated androidpub_upload_bundle uploads an app bundle and writes a track here.
@@ -1140,6 +1141,12 @@ const CASES = {
     { args: { property_id: '123', title: 'Launch', start_date: '2026-10-01', description: 'New site', color: 'BLUE' }, expect: ['analyticsadmin.properties.reportingDataAnnotations.create'] },
     { args: { property_id: '123', title: 'Sale', start_date: '2026-10-05', end_date: '2026-10-09' }, expect: ['analyticsadmin.properties.reportingDataAnnotations.create'] },
   ],
+  ga_custom_dimension_create: [
+    { args: { property_id: '123', parameter_name: 'plan_tier', display_name: 'Plan Tier', scope: 'USER', description: 'Subscription tier', disallow_ads_personalization: true }, expect: ['analyticsadmin.properties.customDimensions.create'] },
+  ],
+  ga_key_event_create: [
+    { args: { property_id: '123', event_name: 'purchase', counting_method: 'ONCE_PER_SESSION', default_value: { numeric_value: 25, currency_code: 'USD' } }, expect: ['analyticsadmin.properties.keyEvents.create'] },
+  ],
 
   // gfirebase (1.20.0)
   firestore_get_document: [
@@ -1422,7 +1429,7 @@ test('every curated tool has a contract row, a skip reason or a known defect, an
   const listed = new Set([...Object.keys(CASES), ...Object.keys(SKIPPED), ...Object.keys(KNOWN_DEFECTS)]);
   assert.deepEqual([...tools.keys()].filter((name) => !listed.has(name)), [], 'curated tools without a row');
   assert.deepEqual([...listed].filter((name) => !tools.has(name)), [], 'rows for tools that do not exist');
-  assert.equal(tools.size, 182, 'the curated tool count; update the table when it changes');
+  assert.equal(tools.size, 184, 'the curated tool count; update the table when it changes');
 });
 
 for (const [name, cases] of Object.entries(CASES)) {

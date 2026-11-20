@@ -145,11 +145,12 @@ const LEAN_GOOGLE = {
 };
 /** The gads list (Q016): Google's official reads plus the curated SearchStream read; all four are reads. */
 const ADS_GOOGLE = ['ads_list_customers', 'ads_search', 'ads_resource_metadata', 'ads_search_stream'];
-/** The ganalytics list (1.17.0): Google's 10 Google Analytics MCP tools, through four generated and five curated tools. */
+/** The ganalytics list: Google's 13 Google Analytics MCP tools (Q027), through four generated and eight curated tools. */
 const ANALYTICS_GOOGLE = [
   'gaadmin_acct_summaries_list',
   'gaadmin_properties_get',
   'gaadmin_pro_goo_ads_link_list',
+  'gaadmin_props_key_events_list',
   // 2.17.0: the hand-written metadata tool takes the place of the generated gadata_props_get_meta.
   'ga_get_metadata',
   'ga_run_report',
@@ -157,6 +158,8 @@ const ANALYTICS_GOOGLE = [
   'ga_run_funnel_report',
   'ga_annotations_list',
   'ga_annotation_create',
+  'ga_custom_dimension_create',
+  'ga_key_event_create',
 ];
 /** The gmerchant list (1.18.0): Google's 13 Merchant API MCP tools, all generated tools already. */
 const MERCHANT_GOOGLE = [
@@ -970,7 +973,7 @@ test('runServer: google on gads lists its 4 reads and the runtime tools, with th
   assert.deepEqual(google.health.toolset, { requested: 'google', effective: 'google', outsideToolset: unset.length - google.tools.length });
 });
 
-test('runServer: google on ganalytics lists its 9 tools and the runtime tools, with the same schemas as all', async () => {
+test('runServer: google on ganalytics lists its 12 tools and the runtime tools, with the same schemas as all', async () => {
   const dir = tempDir('gsm-toolset-ganalytics-');
   const entry = curatedEntry(dir, 'ganalytics', 'ganalytics');
   const tokenDir = fakeLogin(dir, 'ganalytics', 'business');
@@ -978,7 +981,9 @@ test('runServer: google on ganalytics lists its 9 tools and the runtime tools, w
   const google = await withClient(entry, childEnv(dir, tokenDir, { GSM_TOOLSET: 'google' }), async (c) => ({ tools: await listTools(c), health: await health(c) }));
   assert.deepEqual(google.tools.map((t) => t.name), [...ANALYTICS_GOOGLE, ...RUNTIME_OAUTH].sort());
   for (const t of google.tools) assert.deepEqual(t, unset.find((u) => u.name === t.name), t.name);
-  assert.equal(google.tools.find((t) => t.name === 'ga_annotation_create').annotations.readOnlyHint, false);
+  for (const w of ['ga_annotation_create', 'ga_custom_dimension_create', 'ga_key_event_create']) {
+    assert.equal(google.tools.find((t) => t.name === w).annotations.readOnlyHint, false, w);
+  }
   assert.deepEqual(google.health.toolset, { requested: 'google', effective: 'google', outsideToolset: unset.length - google.tools.length });
 });
 

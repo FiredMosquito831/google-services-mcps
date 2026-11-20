@@ -32,6 +32,7 @@ import { makeCloudCall, type CloudCall } from './cloud-http.js';
 
 const DATA = 'https://analyticsdata.googleapis.com';
 const ADMIN_ALPHA = 'https://analyticsadmin.googleapis.com/v1alpha';
+const ADMIN_BETA = 'https://analyticsadmin.googleapis.com/v1beta';
 
 /** The scopes of the Data API report methods (Discovery: analytics, analytics.readonly). */
 const DATA_SCOPES = googleScopes('analytics', 'analytics.readonly');
@@ -364,6 +365,87 @@ export function annotationSummary(a: Annotation) {
   };
 }
 
+export const CUSTOM_DIMENSION_SCOPES = ['EVENT', 'USER', 'ITEM'] as const;
+export const KEY_EVENT_COUNTING_METHODS = ['ONCE_PER_EVENT', 'ONCE_PER_SESSION'] as const;
+
+const customDimensionCreateShape = {
+  property_id: propertyId,
+  parameter_name: z
+    .string()
+    .trim()
+    .regex(/^[a-zA-Z][a-zA-Z0-9_]*$/, 'parameter_name must start with a letter and contain only letters, digits, and underscores.')
+    .max(40)
+    .describe('Immutable event/user/item parameter name (alphanumeric + underscore, starting with a letter; max 24 chars for USER scope, 40 for EVENT/ITEM).'),
+  display_name: z.string().trim().min(1).max(82).describe('Display name shown in Google Analytics reports (max 82 chars).'),
+  scope: z.enum(CUSTOM_DIMENSION_SCOPES).describe('Scope of the custom dimension: EVENT, USER, or ITEM.'),
+  description: z.string().max(150).optional().describe('Optional description (max 150 chars).'),
+  disallow_ads_personalization: z
+    .boolean()
+    .optional()
+    .describe('Optional (USER scope only): exclude this dimension from ads personalization.'),
+};
+
+/** Validates and builds the request of ga_custom_dimension_create without sending anything. */
+export function customDimensionRequest(input: {
+  property_id: string | number;
+  parameter_name: string;
+  display_name: string;
+  scope: (typeof CUSTOM_DIMENSION_SCOPES)[number];
+  description?: string;
+  disallow_ads_personalization?: boolean;
+}) {
+  const parent = propertyName(input.property_id);
+  const param = input.parameter_name.trim();
+  if (input.scope === 'USER' && param.length > 24) {
+    throw new Error(`parameter_name "${param}" is ${param.length} characters; USER-scoped custom dimensions allow at most 24.`);
+  }
+  if (input.disallow_ads_personalization !== undefined && input.scope !== 'USER') {
+    throw new Error('disallow_ads_personalization is only supported when scope is USER.');
+  }
+  const custom_dimension = {
+    parameterName: param,
+    displayName: input.display_name.trim(),
+    scope: input.scope,
+    ...(input.description !== undefined ? { description: input.description } : {}),
+    ...(input.disallow_ads_personalization !== undefined ? { disallowAdsPersonalization: input.disallow_ads_personalization } : {}),
+  };
+  return { parent, custom_dimension };
+}
+
+const keyEventCreateShape = {
+  property_id: propertyId,
+  event_name: z.string().trim().min(1).describe("Event name to mark as a key event (such as 'purchase' or 'sign_up')."),
+  counting_method: z
+    .enum(KEY_EVENT_COUNTING_METHODS)
+    .optional()
+    .describe('How key events are counted: ONCE_PER_EVENT (default) or ONCE_PER_SESSION.'),
+  default_value: z
+    .object({
+      numeric_value: z.number().describe('Default numeric monetary value attributed to this key event.'),
+      currency_code: z.string().regex(/^[A-Z]{3}$/, 'Use a 3-letter ISO 4217 currency code such as USD or EUR.'),
+    })
+    .optional()
+    .describe('Optional default value and ISO 4217 currency when the event omits value/currency.'),
+};
+
+/** Validates and builds the request of ga_key_event_create without sending anything. */
+export function keyEventRequest(input: {
+  property_id: string | number;
+  event_name: string;
+  counting_method?: (typeof KEY_EVENT_COUNTING_METHODS)[number];
+  default_value?: { numeric_value: number; currency_code: string };
+}) {
+  const parent = propertyName(input.property_id);
+  const key_event = {
+    eventName: input.event_name.trim(),
+    countingMethod: input.counting_method ?? 'ONCE_PER_EVENT',
+    ...(input.default_value
+      ? { defaultValue: { numericValue: input.default_value.numeric_value, currencyCode: input.default_value.currency_code } }
+      : {}),
+  };
+  return { parent, key_event };
+}
+
 export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
   // The account is chosen per call (see account-context.ts), so the client is not cached here.
   const call: CloudCall = makeCloudCall(() => getAuthClient('business', cfg));
@@ -546,6 +628,60 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
         })();
         const res = await call<Annotation>({ url: `${ADMIN_ALPHA}/${req.property}/reportingDataAnnotations`, method: 'POST', body: req.annotation });
         return { created: annotationSummary(res.data) };
+      },
+    }),
+    defineTool({
+      name: 'ga_custom_dimension_create',
+      title: 'Create a GA4 custom dimension',
+      description:
+        "Create a custom dimension on a GA4 property (matches create_custom_dimension in Google's Google Analytics MCP server). It asks first; the approval shows the exact dimension payload. Needs the analytics.edit scope and Editor role on the property. Admin API v1beta.",
+      kind: 'write',
+      scopes: ANNOTATIONS_WRITE,
+      inputSchema: customDimensionCreateShape,
+      async prepare(args): Promise<PreparedAction> {
+        const req = customDimensionRequest(z.object(customDimensionCreateShape).parse(args));
+        return { preview: { property: req.parent, custom_dimension: req.custom_dimension } };
+      },
+      async handler(args, _ctx, prepared) {
+        const req = prepared
+          ? (prepared.preview as { property: string; custom_dimension: ReturnType<typeof customDimensionRequest>['custom_dimension'] })
+          : (() => {
+              const r = customDimensionRequest(z.object(customDimensionCreateShape).parse(args));
+              return { property: r.parent, custom_dimension: r.custom_dimension };
+            })();
+        const res = await call<Record<string, unknown>>({
+          url: `${ADMIN_BETA}/${req.property}/customDimensions`,
+          method: 'POST',
+          body: req.custom_dimension,
+        });
+        return { created: res.data };
+      },
+    }),
+    defineTool({
+      name: 'ga_key_event_create',
+      title: 'Create a GA4 key event',
+      description:
+        "Mark an event as a key event on a GA4 property (matches create_key_event in Google's Google Analytics MCP server). It asks first; the approval shows the exact key event payload. Needs the analytics.edit scope and Editor role on the property. Admin API v1beta.",
+      kind: 'write',
+      scopes: ANNOTATIONS_WRITE,
+      inputSchema: keyEventCreateShape,
+      async prepare(args): Promise<PreparedAction> {
+        const req = keyEventRequest(z.object(keyEventCreateShape).parse(args));
+        return { preview: { property: req.parent, key_event: req.key_event } };
+      },
+      async handler(args, _ctx, prepared) {
+        const req = prepared
+          ? (prepared.preview as { property: string; key_event: ReturnType<typeof keyEventRequest>['key_event'] })
+          : (() => {
+              const r = keyEventRequest(z.object(keyEventCreateShape).parse(args));
+              return { property: r.parent, key_event: r.key_event };
+            })();
+        const res = await call<Record<string, unknown>>({
+          url: `${ADMIN_BETA}/${req.property}/keyEvents`,
+          method: 'POST',
+          body: req.key_event,
+        });
+        return { created: res.data };
       },
     }),
   ];

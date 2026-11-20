@@ -2384,12 +2384,15 @@
           "gaadmin_acct_summaries_list",
           "gaadmin_properties_get",
           "gaadmin_pro_goo_ads_link_list",
+          "gaadmin_props_key_events_list",
           "ga_get_metadata",
           "ga_run_report",
           "ga_run_realtime_report",
           "ga_run_funnel_report",
           "ga_annotations_list",
-          "ga_annotation_create"
+          "ga_annotation_create",
+          "ga_custom_dimension_create",
+          "ga_key_event_create"
         ]
       },
       "label": "Google Analytics: Google Analytics admin and data APIs for GA4 properties, configuration and reports."

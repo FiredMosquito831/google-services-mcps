@@ -407,12 +407,12 @@ test('requirements: the gads google list (4 reads, no gateway) resolves to adwor
 test('requirements: the ganalytics google list resolves to analytics.readonly, and adds analytics.edit for readwrite, as Google asks', async () => {
   const { cfg } = tempTokens();
   const google = await requirementsFor(['ganalytics'], cfg, { ...quiet, toolset: 'google' });
-  assert.equal(google.length, 9);
+  assert.equal(google.length, 12);
   assert.equal(google.filter((r) => r.gateway).length, 0, 'no api_call in the list, so no gateway method counts');
   const readonly = resolveScopes(google, 'readonly');
   assert.deepEqual(readonly.scopes, [G('analytics.readonly')]);
-  // The one write: Google's server asks for analytics.edit only with --allow-write.
-  assert.deepEqual(readonly.uncovered, ['ganalytics/ga_annotation_create']);
+  // The three writes: analytics.edit is requested on readwrite only.
+  assert.deepEqual(readonly.uncovered, ['ganalytics/ga_annotation_create', 'ganalytics/ga_custom_dimension_create', 'ganalytics/ga_key_event_create']);
   assert.deepEqual(resolveScopes(google, 'readwrite').scopes, [G('analytics.edit'), G('analytics.readonly')]);
   // The all toolset counts the gateway (analyticsadmin v1alpha) and resolves as before 1.17.0.
   const all = await requirementsFor(['ganalytics'], cfg, quiet);
