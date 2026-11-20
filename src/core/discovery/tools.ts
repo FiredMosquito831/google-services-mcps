@@ -42,7 +42,13 @@ import { assignReadableToolNames, registerRenames, type ToolRename } from './too
 import { clipText, paramToZod, schemaToZod } from './schema.js';
 import { ApiKeyClient } from './apikey-client.js';
 import { adsHeaders, customerIdOf, isGoogleAdsUrl, LOGIN_CUSTOMER_ID_ARG, redactedError } from '../ads.js';
-import { BIGQUERY_JOBS_QUERY_METHOD, isDestructiveBigQuerySql, resolveDynamicKind } from '../dynamic.js';
+import {
+  BIGQUERY_JOBS_QUERY_METHOD,
+  isDestructiveBigQuerySql,
+  isDestructiveMeetSpacePatch,
+  MEET_SPACES_PATCH_METHOD,
+  resolveDynamicKind,
+} from '../dynamic.js';
 import { redactCredentials } from '../credential-fields.js';
 import { targetFieldsOf, targetGetFor } from '../target-preview.js';
 import { contentRange, fromBytes, MediaBody, mediaPart, rangeHeader } from '../media.js';
@@ -800,6 +806,10 @@ function buildMethodTool(
     // BigQuery jobs.query can run DROP/DELETE/TRUNCATE/DDL; escalate non-SELECT/DML/DDL statements at call time while keeping tool-map kind write.
     const arg = bodyArg;
     tool.destructiveWhen = (args) => isDestructiveBigQuerySql((args as Record<string, unknown>)[arg]);
+  } else if (m.fullId === MEET_SPACES_PATCH_METHOD && m.kind === 'write' && bodyArg !== undefined) {
+    // Meet spaces.patch with config.accessType === 'OPEN' removes join restrictions and escalates to destructive at call time.
+    const arg = bodyArg;
+    tool.destructiveWhen = (args) => isDestructiveMeetSpacePatch((args as Record<string, unknown>)[arg]);
   }
   if (m.kind === 'destructive') {
     tool.preview = (args) => {

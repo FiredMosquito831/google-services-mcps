@@ -76,6 +76,11 @@
   "gmail.users.settings.forwardingAddresses.create": "destructive",
   "classroom.userProfiles.guardianInvitations.create": "destructive",
   "classroom.invitations.create": "destructive",
+  "meet.spaces.members.create": "destructive",
+  "meet.spaces.members.patch": "destructive",
+  "meet.spaces.members.batchUpdate": "destructive",
+  "classroom.courses.students.create": "destructive",
+  "classroom.courses.teachers.create": "destructive",
 
   "drive.permissions.create": "destructive",
   "drive.permissions.insert": "destructive",

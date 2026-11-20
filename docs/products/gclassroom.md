@@ -44,7 +44,8 @@ Start with `--profile readonly`. Changes need a `readwrite` login and the plugin
 | Submissions | list and get | read | Check who turned in what |
 | | patch, return, reclaim, turn in, modify attachments | write | Grade, return or reclaim work, and turn in work for a student |
 | Students and teachers | list and get | read | Read the roster |
-| | create students, student groups and group members; create teachers | write | Add people to a course |
+| | create student groups and group members | write | Add a group to a course |
+| | create students, create teachers | destructive | Ask twice: directly adding a student or teacher grants course access |
 | | delete students, teachers, student groups | destructive | Remove people from a course |
 | Announcements, rubrics, groups | list, get, create, update | read, write | Read and post announcements, rubrics and student groups |
 | | delete | destructive | Delete announcements, rubrics and groups |
@@ -59,12 +60,12 @@ The readable task tools match 15 of the 16 tools of Google's Classroom MCP serve
 
 - "Which students have not turned in the Chapter 4 quiz?" Claude finds the course with `classroom_list_courses`, the quiz with `classroom_list_coursework`, then runs `classroom_list_submissions`. No prompt.
 - "Post an announcement in Biology 101: the lab moved to room 12." Claude runs `classroom_create_announcement`, which makes a draft unless you say to publish it. It asks first; publishing it (now or at a set time) asks twice.
-- "Add Ms. Ortiz as a teacher in the Spanish course." Claude adds a teacher. It asks first.
+- "Add Ms. Ortiz as a teacher in the Spanish course." Claude adds a teacher. It asks twice: directly adding a teacher grants course access.
 - "Delete the old draft assignment." Claude runs a coursework delete. It asks twice.
 
 ## Safety
 
-- Reads never ask. Writes ask first. Deletes ask twice, and since 1.26.3 so do course and guardian invitations, returning student work (it hands the Drive files to the student) and a published announcement.
+- Reads never ask. Writes ask first. Deletes ask twice, and since 1.26.3 so do course and guardian invitations, returning student work (it hands the Drive files to the student) and a published announcement. Directly adding a student or teacher also asks twice: it grants course access.
 - Announcements and coursework reach students when they are published. Check the course before you approve.
 - Removing students, teachers or groups changes who can see the course.
 - Student records are personal data. Keep results out of shared notes unless you need them there.

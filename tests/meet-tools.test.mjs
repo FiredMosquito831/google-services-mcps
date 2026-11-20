@@ -3,6 +3,7 @@
 // (OAuth2Client.prototype.request), so nothing leaves the machine. Fake tokens in a temp folder only.
 import { test, after } from 'node:test';
 import assert from 'node:assert/strict';
+import { execFileSync } from 'node:child_process';
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
@@ -202,7 +203,7 @@ test('meet_get_transcript: a bare record id is accepted, and a page token is pas
 test('meet_get_transcript: a meeting code or space reads the newest conference of that space', async () => {
   reset((call) => {
     if (call.path === '/v2/conferenceRecords') {
-      assert.deepEqual(call.query, { filter: 'space.name = "spaces/abc-def-ghi"', pageSize: '10' });
+      assert.deepEqual(call.query, { filter: 'space.meeting_code = "abc-def-ghi"', pageSize: '10' });
       return { conferenceRecords: [record(4)] };
     }
     if (call.path === '/v2/conferenceRecords/c4/transcripts') return { transcripts: [TRANSCRIPT] };
@@ -212,6 +213,17 @@ test('meet_get_transcript: a meeting code or space reads the newest conference o
   const answer = await run('meet_get_transcript', { space: 'abc-def-ghi' });
   assert.equal(answer.conference, 'conferenceRecords/c4');
   assert.deepEqual(answer.entries, []);
+
+  reset((call) => {
+    if (call.path === '/v2/conferenceRecords') {
+      assert.deepEqual(call.query, { filter: 'space.name = "spaces/AAA"', pageSize: '10' });
+      return { conferenceRecords: [record(5)] };
+    }
+    if (call.path === '/v2/conferenceRecords/c5/transcripts') return { transcripts: [] };
+    return {};
+  });
+  const bySpace = await run('meet_get_transcript', { space: 'spaces/AAA' });
+  assert.equal(bySpace.conference, 'conferenceRecords/c5');
 });
 
 test('meet_get_transcript: no transcript, no conference, and an unknown transcript each say what to do', async () => {
@@ -221,7 +233,7 @@ test('meet_get_transcript: no transcript, no conference, and an unknown transcri
   assert.match(none.note, /no transcript/);
 
   reset(() => ({ conferenceRecords: [] }));
-  await assert.rejects(() => run('meet_get_transcript', { space: 'abc-mnop-xyz' }), /No conference record for spaces\/abc-mnop-xyz/);
+  await assert.rejects(() => run('meet_get_transcript', { space: 'abc-mnop-xyz' }), /No conference record for abc-mnop-xyz/);
   await assert.rejects(() => run('meet_get_transcript', {}), /Give conference .* or space/);
 
   reset(transcriptCall);
@@ -255,4 +267,35 @@ test('the bundled gmeet plugin registers both tools, lists them in google, and t
   assert.ok(google.includes('meet_find_conference') && google.includes('meet_get_transcript'));
   assert.ok(!google.includes('meet_conference_records_smart_notes_get'), 'the smart notes get left the list: the list returns the same fields');
   assert.equal(google.length, 11);
+});
+
+test('meet.spaces.patch escalates to destructive only when setting config.accessType to OPEN', async () => {
+  const { isDestructiveMeetSpacePatch } = await import(DIST('core/dynamic.js'));
+  const { discoveryToolsFor } = await import(DIST('core/discovery/tools.js'));
+  const { callKind } = await import(DIST('core/tools.js'));
+  assert.equal(isDestructiveMeetSpacePatch({ config: { accessType: 'OPEN' } }), true);
+  assert.equal(isDestructiveMeetSpacePatch({ config: { accessType: 'open' } }), true);
+  assert.equal(isDestructiveMeetSpacePatch({ config: { accessType: 'TRUSTED' } }), false);
+  assert.equal(isDestructiveMeetSpacePatch({ config: { entryPointAccess: 'ALL' } }), false);
+
+  const built = await discoveryToolsFor('gmeet', cfg);
+  const patchTool = built.find((t) => t.name === 'meet_spaces_patch');
+  assert.equal(patchTool.kind, 'write');
+  assert.equal(callKind(patchTool, { name: 'spaces/abc', body: { config: { accessType: 'OPEN' } } }), 'destructive');
+  assert.equal(callKind(patchTool, { name: 'spaces/abc', body: { config: { accessType: 'TRUSTED' } } }), 'write');
+
+  const hookFile = join(REPO, 'plugins', 'gmeet', 'bin', 'gsm-hook.mjs');
+  const hookEnv = { ...process.env, GSM_TOKEN_DIR: tokenDir, CLAUDE_PLUGIN_OPTION_CONFIRMATION: 'destructive-only' };
+  const openOut = execFileSync(process.execPath, [hookFile], {
+    input: JSON.stringify({ tool_name: 'mcp__plugin_gmeet_gmeet__meet_spaces_patch', tool_input: { name: 'spaces/abc', body: { config: { accessType: 'OPEN' } } } }),
+    env: hookEnv,
+    encoding: 'utf8',
+  });
+  assert.match(openOut, /"permissionDecision":"ask"/);
+  const trustedOut = execFileSync(process.execPath, [hookFile], {
+    input: JSON.stringify({ tool_name: 'mcp__plugin_gmeet_gmeet__meet_spaces_patch', tool_input: { name: 'spaces/abc', body: { config: { accessType: 'TRUSTED' } } } }),
+    env: hookEnv,
+    encoding: 'utf8',
+  });
+  assert.equal(trustedOut.trim(), '');
 });

@@ -92,6 +92,11 @@ const DESTRUCTIVE = [
   { id: 'siteVerification.webResource.patch', rule: 'b', plugin: 'gsc', tool: 'siteverif_web_resource_patch', gateway: false, versions: ['siteVerification:v1'], evidence: 'Modify the list of owners for your website or domain.' },
   { id: 'siteVerification.webResource.update', rule: 'b', plugin: 'gsc', tool: 'siteverif_web_resource_update', gateway: false, versions: ['siteVerification:v1'], evidence: 'Modify the list of owners for your website or domain.' },
   { id: 'classroom.courses.courseWork.studentSubmissions.return', rule: 'b', plugin: 'gclassroom', tool: 'class_work_submissions_return', gateway: false, versions: ['classroom:v1'], evidence: 'Returning a student submission transfers ownership of attached Drive files to the student' },
+  { id: 'meet.spaces.members.create', rule: 'b', plugin: 'gmeet', tool: 'meet_spaces_members_create', gateway: false, versions: ['meet:v2'], evidence: 'To add a member to a meeting space, use the create method on the spaces.members resource; members can join without knocking' },
+  { id: 'meet.spaces.members.patch', rule: 'b', plugin: 'gmeet', tool: 'meet_spaces_members_patch', gateway: false, versions: ['meet:v2'], evidence: "To update a member's role in a meeting space, use the patch method on the spaces.members resource" },
+  { id: 'meet.spaces.members.batchUpdate', rule: 'b', plugin: 'gmeet', tool: 'meet_spaces_members_batch_update', gateway: false, versions: ['meet:v2'], evidence: 'Updates multiple members of a meeting space, changing their roles' },
+  { id: 'classroom.courses.students.create', rule: 'b', plugin: 'gclassroom', tool: 'classroom_students_create', gateway: false, versions: ['classroom:v1'], evidence: 'Adds a user as a student of a course; domain administrators may directly add users, and students may add themselves with an enrollment code' },
+  { id: 'classroom.courses.teachers.create', rule: 'b', plugin: 'gclassroom', tool: 'classroom_teachers_create', gateway: false, versions: ['classroom:v1'], evidence: 'Creates a teacher of a course. Non-admin users should send an Invitation instead.' },
   // (c) disables a security control
   { id: 'directory.twoStepVerification.turnOff', rule: 'c', plugin: 'gadmin', tool: 'admin_two_step_verification_turn_off', gateway: false, versions: ['admin:directory_v1'], evidence: 'Turns off 2-Step Verification for user.' },
   { id: 'cloudidentity.inboundSamlSsoProfiles.create', rule: 'c', plugin: 'gadmin', tool: 'clou_inbound_saml_sso_profiles_create', gateway: true, versions: ['cloudidentity:v1', 'cloudidentity:v1beta1'], evidence: 'Creates an InboundSamlSsoProfile for a customer.' },
@@ -226,7 +231,7 @@ const SET_IAM = [...new Set(catalog.apis.filter((a) => reached.has(`${a.name}.${
 // 1. The data
 
 test('config/tool-kinds.json pins every entry of the rule, the POST reads and the GET writes, and adds no note', () => {
-  assert.equal(DESTRUCTIVE.length, 66);
+  assert.equal(DESTRUCTIVE.length, 71);
   assert.equal(POST_READS.length, 45);
   assert.equal(GET_WRITES.length, 4);
   assert.equal(new Set(ALL.map((m) => m.id)).size, ALL.length, 'no id twice');
@@ -239,6 +244,10 @@ test('config/tool-kinds.json pins every entry of the rule, the POST reads and th
   for (const id of ['identitytoolkit.relyingparty.getOobConfirmationCode', 'secretmanager.projects.secrets.versions.access', 'apikeys.projects.locations.keys.getKeyString']) {
     assert.equal(kindsFile[id], 'write', id);
   }
+  // Statically, a plain space-settings patch stays a write; config.accessType === 'OPEN' escalates at call time / in the hook.
+  assert.equal(classifyMethod('PATCH', 'patch', 'meet.spaces.patch', overrides), 'write');
+  assert.equal(fallbackClassify('PATCH', 'patch', 'meet.spaces.patch', overrides), 'write');
+  assert.equal(readJson('plugins', 'gmeet', 'tool-map.json').find((t) => t.name === full('gmeet', 'meet_spaces_patch')).kind, 'write');
 });
 
 test('every IAM policy setter a plugin reaches is destructive: it grants or changes roles and replaces the whole policy', () => {

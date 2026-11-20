@@ -52,7 +52,7 @@ Reads never ask for approval. Tools that change or delete data are listed only w
 
 ## Tools
 
-The `gclassroom` MCP server lists up to 129 tools with the `all` toolset: 59 read, 49 write, 21 destructive, counting its 7 runtime tools (`health` and the sign-in tools). Write and destructive tools are listed only when writes are allowed, and a tool loads only when the sign-in holds one of its scopes. The `google` toolset lists 19 of them plus the runtime tools.
+The `gclassroom` MCP server lists up to 129 tools with the `all` toolset: 59 read, 47 write, 23 destructive, counting its 7 runtime tools (`health` and the sign-in tools). Write and destructive tools are listed only when writes are allowed, and a tool loads only when the sign-in holds one of its scopes. The `google` toolset lists 19 of them plus the runtime tools.
 
 ## APIs
 

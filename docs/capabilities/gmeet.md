@@ -4,7 +4,7 @@ Google Meet spaces, conference records, participants and recordings.
 
 - Plugin: `gmeet`, MCP server: `gmeet`, login: Desktop OAuth client, then `login workspace-user`
 - Install: `claude plugin install gmeet@google-services-mcps`
-- Tools: 34 total. Curated 9, per-method 24, gateway 0. Read 23, write 9, destructive 2, dynamic 0.
+- Tools: 34 total. Curated 9, per-method 24, gateway 0. Read 23, write 6, destructive 5, dynamic 0.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
@@ -69,12 +69,12 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `meet_spaces_create` | write | meet.spaces.create | meetings.space.created |
 | `meet_spaces_end_active_conference` | destructive | meet.spaces.endActiveConference | meetings.space.created |
 | `meet_spaces_get` | read | meet.spaces.get | meetings.space.created, meetings.space.readonly, +1 more |
-| `meet_spaces_members_batch_update` | write | meet.spaces.members.batchUpdate | meetings.space.created |
-| `meet_spaces_members_create` | write | meet.spaces.members.create | meetings.space.created |
+| `meet_spaces_members_batch_update` | destructive | meet.spaces.members.batchUpdate | meetings.space.created |
+| `meet_spaces_members_create` | destructive | meet.spaces.members.create | meetings.space.created |
 | `meet_spaces_members_delete` | destructive | meet.spaces.members.delete | meetings.space.created |
 | `meet_spaces_members_get` | read | meet.spaces.members.get | meetings.space.created, meetings.space.readonly |
 | `meet_spaces_members_list` | read | meet.spaces.members.list | meetings.space.created, meetings.space.readonly |
-| `meet_spaces_members_patch` | write | meet.spaces.members.patch | meetings.space.created |
+| `meet_spaces_members_patch` | destructive | meet.spaces.members.patch | meetings.space.created |
 | `meet_spaces_patch` | write | meet.spaces.patch | meetings.space.created, meetings.space.settings |
 
 ## Listing tool (1)

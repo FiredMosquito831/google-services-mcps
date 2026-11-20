@@ -229,13 +229,13 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
         let record = conference?.trim();
         if (record && !/^conferenceRecords\//i.test(record)) record = `conferenceRecords/${record}`;
         if (!record && space) {
-          const name = spaceNameOf(space);
+          const filter = conferenceFilter(space, undefined, undefined);
           const list = await call<{ conferenceRecords?: ConferenceRecord[] }>({
             url: `${API}/conferenceRecords`,
-            query: { filter: `space.name = "${name}"`, pageSize: 10 },
+            query: { ...(filter ? { filter } : {}), pageSize: 10 },
           });
           const newest = (list.data.conferenceRecords ?? [])[0];
-          if (!newest?.name) throw new Error(`No conference record for ${name}: Google keeps a record 30 days after a meeting ends.`);
+          if (!newest?.name) throw new Error(`No conference record for ${space.trim()}: Google keeps a record 30 days after a meeting ends.`);
           record = newest.name;
         }
         const transcripts = (await call<{ transcripts?: Transcript[]; nextPageToken?: string }>({ url: `${API}/${record}/transcripts`, query: { pageSize: 100 } })).data.transcripts ?? [];

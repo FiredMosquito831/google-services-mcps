@@ -4,7 +4,7 @@ Google Classroom courses, coursework, submissions, students and teachers.
 
 - Plugin: `gclassroom`, MCP server: `gclassroom`, login: Desktop OAuth client, then `login workspace-user`
 - Install: `claude plugin install gclassroom@google-services-mcps`
-- Tools: 129 total. Curated 23, per-method 105, gateway 0. Read 59, write 49, destructive 21, dynamic 0.
+- Tools: 129 total. Curated 23, per-method 105, gateway 0. Read 59, write 47, destructive 23, dynamic 0.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
@@ -157,14 +157,14 @@ The tools that match Google's official MCP server for this product (https://deve
 | `classroom_materials_patch` | write | classroom.courses.courseWorkMaterials.patch | classroom.courseworkmaterials |
 | `classroom_modify_assignees` | write | classroom.courses.announcements.modifyAssignees | classroom.announcements |
 | `classroom_modify_attachments` | write | classroom.courses.courseWork.studentSubmissions.modifyAttachments | classroom.coursework.me, classroom.coursework.students |
-| `classroom_students_create` | write | classroom.courses.students.create | classroom.profile.emails, classroom.profile.photos, +1 more |
+| `classroom_students_create` | destructive | classroom.courses.students.create | classroom.profile.emails, classroom.profile.photos, +1 more |
 | `classroom_students_delete` | destructive | classroom.courses.students.delete | classroom.rosters |
 | `classroom_students_get` | read | classroom.courses.students.get | classroom.profile.emails, classroom.profile.photos, +2 more |
 | `classroom_students_list` | read | classroom.courses.students.list | classroom.profile.emails, classroom.profile.photos, +2 more |
 | `classroom_submissions_get` | read | classroom.courses.posts.addOnAttachments.studentSubmissions.get | classroom.addons.student, classroom.addons.teacher, +6 more |
 | `classroom_submissions_list` | read | classroom.courses.courseWork.addOnAttachments.studentSubmissions.list | classroom.addons.student, classroom.addons.teacher, +6 more |
 | `classroom_submissions_patch` | write | classroom.courses.posts.addOnAttachments.studentSubmissions.patch | classroom.addons.teacher |
-| `classroom_teachers_create` | write | classroom.courses.teachers.create | classroom.profile.emails, classroom.profile.photos, +1 more |
+| `classroom_teachers_create` | destructive | classroom.courses.teachers.create | classroom.profile.emails, classroom.profile.photos, +1 more |
 | `classroom_teachers_delete` | destructive | classroom.courses.teachers.delete | classroom.rosters |
 | `classroom_teachers_get` | read | classroom.courses.teachers.get | classroom.profile.emails, classroom.profile.photos, +2 more |
 | `classroom_teachers_list` | read | classroom.courses.teachers.list | classroom.profile.emails, classroom.profile.photos, +2 more |

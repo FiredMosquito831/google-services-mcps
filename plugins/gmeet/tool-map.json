@@ -248,7 +248,7 @@
   },
   {
     "name": "mcp__plugin_gmeet_gmeet__meet_spaces_members_batch_update",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/meetings.space.created"
     ],
@@ -257,7 +257,7 @@
   },
   {
     "name": "mcp__plugin_gmeet_gmeet__meet_spaces_members_create",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/meetings.space.created"
     ],
@@ -295,7 +295,7 @@
   },
   {
     "name": "mcp__plugin_gmeet_gmeet__meet_spaces_members_patch",
-    "kind": "write",
+    "kind": "destructive",
     "scopes": [
       "https://www.googleapis.com/auth/meetings.space.created"
     ],

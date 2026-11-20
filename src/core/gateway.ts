@@ -47,7 +47,13 @@ import { ADS_HOST, adsHostForApi, customerIdOf, isGoogleAdsUrl, LOGIN_CUSTOMER_I
 import { classifyMethod } from './discovery/methods.js';
 import { buildUrl, loadToolKinds, rootForPath, sendAuthorized, type RegionalEndpoint } from './discovery/tools.js';
 import type { GateFn } from './approval.js';
-import { BIGQUERY_JOBS_QUERY_METHOD, isDestructiveBigQuerySql, resolveDynamicKind } from './dynamic.js';
+import {
+  BIGQUERY_JOBS_QUERY_METHOD,
+  isDestructiveBigQuerySql,
+  isDestructiveMeetSpacePatch,
+  MEET_SPACES_PATCH_METHOD,
+  resolveDynamicKind,
+} from './dynamic.js';
 import { redactCredentials } from './credential-fields.js';
 import { MediaBody, mediaPart, rangeHeader } from './media.js';
 import { describeError, scopeHint, type ActionKind, type ToolContext, type ToolDef, type ToolKind } from './tools.js';
@@ -792,6 +798,7 @@ let requestOverride: TestRequest | undefined;
  */
 function callKindOf(entry: IndexEntry, body: unknown): ActionKind {
   if (entry.id === BIGQUERY_JOBS_QUERY_METHOD) return isDestructiveBigQuerySql(body) ? 'destructive' : 'write';
+  if (entry.id === MEET_SPACES_PATCH_METHOD) return isDestructiveMeetSpacePatch(body) ? 'destructive' : 'write';
   if (entry.kind !== 'dynamic') return entry.kind;
   return resolveDynamicKind(entry.id, body) ?? 'destructive';
 }

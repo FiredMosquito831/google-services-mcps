@@ -36,7 +36,7 @@ Start with `--profile readonly`. Creating or changing spaces needs a `readwrite`
 | | `meet_spaces_create`, `meet_spaces_patch` | write | Create a space, change its settings |
 | | `meet_spaces_end_active_conference` | destructive | End the active conference in a space |
 | Space members | list, get | read | List and read space members |
-| | create, patch, batch update | write | Add or change members |
+| | create, patch, batch update | destructive | Ask twice: adding a member or changing a role admits someone or changes access |
 | | `meet_spaces_members_delete` | destructive | Remove a member |
 | Conference records | `meet_find_conference` | read | Find a meeting by code, space or time range, with its link and its participants (hand-written) |
 | | `meet_conference_records_list`, `meet_conference_records_get` | read | List and read past and current meetings |
@@ -52,6 +52,10 @@ Google has no official MCP server for Meet (none was found on 2026-10-29). With 
 
 Scopes, with every toolset: `meetings.space.created` lets the app "create, modify, and read metadata about meeting spaces created by your app", and `meetings.space.readonly` lets it "read metadata about any meeting space the user has access to" (Google's Meet scope table). Until 1.33.0 a `readwrite` or `full` login asked only for `meetings.space.created`, which covers every tool, so the records, transcripts and recordings of meetings this app did not create were out of reach. Since 1.33.0 both ask for `meetings.space.readonly` too (`scopePolicy.prefer` in `config/products.json`). A token from an earlier `readwrite` login lacks it: sign in again, naming the account (`--account`, in the chat `auth_login` with `account`), so the stored scopes are kept.
 
+Meeting codes and conference records: both `meet_find_conference` and `meet_get_transcript` normalize bare meeting codes to `space.meeting_code = "<code>"` and resource names (`spaces/...`) to `space.name = "spaces/..."`.
+
+Settings scope and impersonation: `meetings.space.settings` lets the app "Edit, and see settings for all of your Google Meet calls" and is declared on `meet_spaces_get` and `meet_spaces_patch` (`data/discovery/meet.v2.json`), though `readonly`, `readwrite` and `full` hold it back by default (`readonly` requests `meetings.space.readonly`, covering 20 of 27 scoped tools; `readwrite` and `full` request `created` + `readonly`, covering all 27). Editing settings for spaces this app did not create needs a terminal login with `--scopes` including `https://www.googleapis.com/auth/meetings.space.settings`. `gmeet` stays OAuth-user-only (it does not reuse `gadmin`'s DWD key).
+
 ## Example requests
 
 - "Create a Meet space for the board call and give me the link." Claude runs `meet_spaces_create`. It asks first.
@@ -62,7 +66,7 @@ Scopes, with every toolset: `meetings.space.created` lets the app "create, modif
 
 ## Safety
 
-- Reads never ask. Creates and changes ask first. Ending a conference and removing a member ask twice.
+- Reads never ask. Creates and changes ask first. Ending a conference, removing a member, adding a member or changing a member's role, and patching a space to `config.accessType: "OPEN"` ask twice: they remove everyone or open access without knocking. Plain space-settings patches ask once.
 - Ending a conference removes everyone from it.
 - Recordings and transcripts hold private meeting content. Fetch them only when you need them.
 - The `confirmation` option defaults to `every-change`. Change it with `printf '%s' '{"confirmation":"destructive-only"}' | claude plugin configure gmeet@google-services-mcps --values-stdin` (JSON on stdin), or `/plugin configure gmeet@google-services-mcps` in Claude Code.

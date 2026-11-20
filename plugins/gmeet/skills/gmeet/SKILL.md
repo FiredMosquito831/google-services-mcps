@@ -48,7 +48,7 @@ Reads never ask for approval. Tools that change or delete data are listed only w
 
 ## Tools
 
-The `gmeet` MCP server lists up to 34 tools with the `all` toolset: 23 read, 9 write, 2 destructive, counting its 7 runtime tools (`health` and the sign-in tools). Write and destructive tools are listed only when writes are allowed, and a tool loads only when the sign-in holds one of its scopes. The `google` toolset lists 11 of them plus the runtime tools.
+The `gmeet` MCP server lists up to 34 tools with the `all` toolset: 23 read, 6 write, 5 destructive, counting its 7 runtime tools (`health` and the sign-in tools). Write and destructive tools are listed only when writes are allowed, and a tool loads only when the sign-in holds one of its scopes. The `google` toolset lists 11 of them plus the runtime tools.
 
 ## APIs
 

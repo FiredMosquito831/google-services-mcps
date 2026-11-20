@@ -20,6 +20,8 @@ const GOOGLE_ADS_PREFIX = 'googleads.';
 export const GOOGLE_ADS_MUTATE_METHOD = 'googleads.customers.googleAds.mutate';
 /** BigQuery's generic query execution method; writes/DDL/DML are escalated to destructive at call time. */
 export const BIGQUERY_JOBS_QUERY_METHOD = 'bigquery.jobs.query';
+/** Meet spaces.patch; setting config.accessType to OPEN opens a meeting to anyone with the link and escalates to destructive. */
+export const MEET_SPACES_PATCH_METHOD = 'meet.spaces.patch';
 
 /** The curated ads_mutate tool's validate_only default: a call that does not say is validate-only, so Google only checks it. */
 export const CURATED_VALIDATE_ONLY_DEFAULT = true;
@@ -90,5 +92,15 @@ export function isDestructiveBigQuerySql(body: unknown): boolean {
   if (!/^(?:SELECT|WITH|EXPLAIN|SHOW|DESCRIBE)\b/i.test(trimmedEnd)) return true;
   return /\b(?:DROP|DELETE|TRUNCATE|UPDATE|INSERT|MERGE|ALTER|CREATE|REPLACE|GRANT|REVOKE|EXECUTE|CALL|EXPORT|LOAD|RAISE)\b/i.test(
     trimmedEnd,
+  );
+}
+
+/** True when a meet.spaces.patch request body sets config.accessType to OPEN. */
+export function isDestructiveMeetSpacePatch(body: unknown): boolean {
+  return (
+    isObject(body) &&
+    isObject(body.config) &&
+    typeof body.config.accessType === 'string' &&
+    body.config.accessType.toUpperCase() === 'OPEN'
   );
 }
