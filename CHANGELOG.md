@@ -2,6 +2,23 @@
 
 All notable changes to the npm package `google-services-mcps`. Each release has a matching GitHub release (`vX.Y.Z`), whose notes are the entry below. Versions 0.1.0 to 0.1.2 are listed on the GitHub releases page.
 
+## 2.18.0 - 2026-11-20
+
+### Added & Fixed across the 23 MCP servers and core runtime
+- **Auth, multi-account health, CLI & installers (PR-01):** Added per-call `account` selection to `health` (`accounts_list` / named account grant & expiry reporting), persisted `refresh_token_expires_in` expiry metadata, serialized concurrent token refreshes per token file (single-flight lock/dedup), normalized `gsm doctor` tool-alias checks to short names, added `--token-dir` to `install`, added read-only `gsm audit`, narrowed non-Claude installer safety notes, and revealed all any-of scopes with `+N more` in `gen-capabilities`.
+- **Discovery, schemas & approvals (PR-02):** Stripped `readOnly: true` fields from generated Discovery request schemas (`schemaToZod`), and added People `targetQueryDefaults` approval previews.
+- **gadmin (PR-03):** Suppressed `gadmin` tools until a DWD key exists, cached DWD admin JWT assertions per setup/subject with clock skew, reloaded tools/curated client immediately after in-chat `auth_setup_admin`, and pinned in-chat admin profile guidance.
+- **gdrive (PR-04):** Added Sheets scope guard to `drive_read_text`, `scopeOverrides` for `drivelabels.v2`, `corpora=allDrives` with 400 fallback + `incomplete_search` on `drive_search`, temp-cached export pagination for `drive_download`, and read-only `prepare` preview on `drive_update_file`.
+- **gmaps (PR-05):** Added Street View Publish dual API-key + OAuth bearer route + standalone `gsm login` / `groupScopes` support, plus 4 curated Weather v1 reads (`maps_weather_history`, `maps_weather_alerts`, `maps_weather_minutes`, `maps_weather_tile`).
+- **gads (PR-06):** Added curated `ads_search_stream` (`SearchStream`) read to `toolset: google`, per-call `login_customer_id` header support on generated and gateway Ads tools, and 4 read-only MCP reference resources (`resource://discovery-document`, `metrics`, `segments`, `release-notes`).
+- **gai (PR-07):** Added `document_ocr` & `audio_track_extraction` (`embedContentConfig`), `instances` on `vertex_count_tokens`, and `model_armor_config` on `vertex_generate_content` (with UNVERIFIED live REST caveats noted).
+- **gbusiness (PR-08):** Added Business Information `v1alpha` `getExtended` tools, 4 curated v4 reads (`mbreviews_list`, `mbreviews_get`, `mblocalposts_list`, `mblocalposts_get`), and regression coverage for narrow `mbinfo_locations_patch` bodies.
+- **gcloud (PR-09):** Added call-time & PreToolUse-hook SQL DDL/DML destructive escalation for `bigquery.jobs.query` (preserving `kind: write` in `tool-map.json`), moved `bq_query_read` dry runs to `jobs.query`, and added 7 curated Logging and Cloud Billing read wrappers.
+- **gmeet & gclassroom (PR-10):** Fixed `meet_get_transcript` meeting-code filter (`space.meeting_code = ...` vs `space.name`), classified Meet/Classroom direct member-adds as `destructive`, and added call-time & PreToolUse-hook destructive escalation for `meet.spaces.patch` with `config.accessType: OPEN`.
+- **gapps (PR-11):** Added opt-in read-only `previewProjectId` code-version preview on `appsscript_scripts_run`, curated paginated/file-filtered `appsscript_get_content` (`file_name`, `include_source`, `offset`, `max_chars`), dashboard grant setup docs, and accurate tool counts.
+- **ganalytics (PR-12):** Added curated `ga_custom_dimension_create` and `ga_key_event_create` (`prepare` previews, `analytics.edit`) plus `gaadmin_props_key_events_list` to `toolset: google` (12 tools matching all 13 `google-analytics-mcp` README tools).
+- **gplay, gsearch, gcalendar, gfirebase, gmerchant (PR-13):** Trimmed unsafe write/edit-id tools from `gplay`'s `google` toolset and added 4 Developer Reporting reads, added curated `crux_record` and `crux_history` reads to `gsearch`, pinned `send_updates=none` default & Calendar Developer Preview notes, and updated Firebase Hosting / Merchant parity caveats.
+
 ## 2.17.0 - 2026-11-01
 
 ### Added: `ga_get_metadata`, which answers a metadata question instead of returning the catalogue

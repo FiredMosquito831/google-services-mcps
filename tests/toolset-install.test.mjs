@@ -155,8 +155,8 @@ test('agy warnings: a product over the limit is named with the counts of the oth
   assert.equal(AGY_TOOL_LIMIT, 100);
   const lines = agyToolWarnings({}, env, ['gcloud', 'gmail', 'gsc']);
   assert.equal(lines.length, 2, lines.join('\n'));
-  // gcloud has a google list since 1.10.0 (59 tools and the runtime tools).
-  assert.match(lines[0], /^\[agy\] warning: gcloud can list up to \d+ tools with toolset all\. Antigravity is reported to refuse a server with more than 100 tools \(not verified by gsm\)\. Fewer tools: --toolset google: up to 68, --toolset curated: up to \d+\.$/);
+  // gcloud has a google list since 1.10.0 (66 tools + 9 runtime tools since PR-09 Logging/Billing reads).
+  assert.match(lines[0], /^\[agy\] warning: gcloud can list up to \d+ tools with toolset all\. Antigravity is reported to refuse a server with more than 100 tools \(not verified by gsm\)\. Fewer tools: --toolset google: up to 75, --toolset curated: up to \d+\.$/);
   // 1.39.0: gmail_create_label is new (all and curated one more); google lists 13 (was 14).
   assert.match(lines[1], /^\[agy\] warning: gmail can list up to 116 tools with toolset all\. .* Fewer tools: --toolset google: up to 22, --toolset curated: up to 28\.$/);
   // With google, gcloud, gmail and gai are under the limit (gai has a google list of 6 since 1.21.0).

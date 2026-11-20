@@ -500,7 +500,8 @@ function runPreviewsOf(value, id, apiMethods, apis) {
     const methods = entry.methods;
     if (typeof methods !== 'object' || methods === null || Array.isArray(methods) || Object.keys(methods).length === 0) fail(`${where}["${api}"].methods must be a non-empty object`);
     const version = apis.find((a) => a.api === api)?.version;
-    const doc = version ? readJson(join(ROOT, 'data', 'discovery', `${api}.${version}.json`)) : undefined;
+    const docFile = version ? join(ROOT, 'data', 'discovery', `${api}.${version}.json`) : undefined;
+    const doc = docFile && existsSync(docFile) ? readJson(docFile) : undefined;
     for (const [method, rule] of Object.entries(methods)) {
       const snapshot = checkMethodOf(`${where}["${api}"]`, api, method, apiMethods);
       if (typeof rule !== 'object' || rule === null || Array.isArray(rule)) fail(`${where}["${api}"]["${method}"] must be an object`);
