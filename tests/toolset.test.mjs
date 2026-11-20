@@ -227,6 +227,8 @@ const BUSINESS_LEAN = {
     'mbveri_locations_merchant_state',
   ],
 };
+/** OD13g: the four curated My Business API v4 reads. */
+const GBUSINESS_READS = ['mbreviews_list', 'mbreviews_get', 'mblocalposts_list', 'mblocalposts_get'];
 /**
  * The gfirebase list (1.20.0): Google's Firebase MCP tools that call an API, through generated tools and six curated
  * ones (Firestore, Remote Config, Authentication users, the SDK config). Since 2.11.0 one curated SDK-config tool takes
@@ -1228,4 +1230,39 @@ test('runServer: google on gmeet lists its 11 tools and the runtime tools (2.6.0
   // The curated toolset holds the two hand-written tools and nothing else.
   const curated = await withClient(entry, childEnv(dir, tokenDir, { GSM_TOOLSET: 'curated' }), listTools);
   assert.deepEqual(curated.map((t) => t.name), ['meet_find_conference', 'meet_get_transcript', ...RUNTIME_OAUTH].sort());
+});
+
+test('runServer: gbusiness gains four v4 reads and two v1alpha reads (all 59 -> 65, google stays 20, curated 11)', async () => {
+  const dir = tempDir('gsm-toolset-gbusiness-');
+  const entry = curatedEntry(dir, 'gbusiness', 'gbusiness');
+  const tokenDir = fakeLogin(dir, 'gbusiness', 'business');
+  const unset = await withClient(entry, childEnv(dir, tokenDir), listTools);
+  assert.equal(unset.length, 65, 'all: 59 baseline + 4 curated v4 reads + 2 v1alpha edit-status reads');
+  for (const name of GBUSINESS_READS) assert.ok(unset.some((t) => t.name === name), `${name} is in all`);
+  const expectedOutside = unset.length - (4 + RUNTIME_OAUTH.length); // 53 generated methods and api_methods
+
+  const google = await withClient(entry, childEnv(dir, tokenDir, { GSM_TOOLSET: 'google' }), async (c) => ({ tools: await listTools(c), health: await health(c) }));
+  assert.deepEqual(google.tools.map((t) => t.name), [...BUSINESS_LEAN.gbusiness, ...RUNTIME_OAUTH].sort(), 'the 13 names stay pinned and google stays 20');
+  for (const t of google.tools) assert.deepEqual(t, unset.find((u) => u.name === t.name), `${t.name}: unchanged in all and google`);
+  assert.deepEqual(google.health.toolset, { requested: 'google', effective: 'google', outsideToolset: 65 - 20 });
+
+  const curated = await withClient(entry, childEnv(dir, tokenDir, { GSM_TOOLSET: 'curated' }), async (c) => ({ tools: await listTools(c), health: await health(c) }));
+  assert.deepEqual(curated.tools.map((t) => t.name), [...GBUSINESS_READS, ...RUNTIME_OAUTH].sort(), 'curated: four reads and seven runtime tools');
+  for (const t of curated.tools) assert.deepEqual(t, unset.find((u) => u.name === t.name), `${t.name}: unchanged in all and curated`);
+  assert.equal(curated.health.toolset.effective, 'curated', 'no fallback to all now that the product has curated tools');
+  assert.equal('note' in curated.health.toolset, false, 'the old curated fallback note is no longer emitted');
+  assert.deepEqual(curated.health.toolset, { requested: 'curated', effective: 'curated', outsideToolset: expectedOutside });
+  assert.equal(expectedOutside, 54, 'the 53 generated per-method tools and api_methods are outside curated');
+  const toolMap = readJson('plugins', 'gbusiness', 'tool-map.json');
+  for (const t of unset.filter((u) => !curated.tools.some((c) => c.name === u.name))) {
+    const row = toolMap.find((r) => r.name === `mcp__plugin_gbusiness_gbusiness__${t.name}`);
+    assert.ok(row && (row.methodId || t.name === 'api_methods'), `${t.name} is a generated tool or api_methods`);
+  }
+
+  // The hook's tool map still classifies every tool whatever the toolset.
+  const full = dumpCount(entry, childEnv(dir, tokenDir));
+  assert.equal(full.length, 67, 'the tool map holds the 65 registered tools and two unregistered setup tools');
+  for (const t of unset) assert.ok(full.some((r) => r.name === t.name || r.name.endsWith(`__${t.name}`)), `${t.name} is classified by the hook`);
+  assert.deepEqual(dumpCount(entry, childEnv(dir, tokenDir, { GSM_TOOLSET: 'google' })), full);
+  assert.deepEqual(dumpCount(entry, childEnv(dir, tokenDir, { GSM_TOOLSET: 'curated' })), full);
 });

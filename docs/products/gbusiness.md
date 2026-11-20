@@ -2,14 +2,15 @@
 
 Install with the simplest command: `npx google-services-mcps install --agent claude --plugin <id>` (see docs/TUTORIAL.md).
 
-Google Business Profile accounts, locations, admins, verifications, lodging, place actions, notifications and performance metrics. It reads and edits the public listing of a business you manage. It has 59 tools and no gateway. Reviews and local posts are not covered (see Caveats).
+Google Business Profile accounts, locations, admins, verifications, lodging, place actions, notifications and performance metrics. It reads and edits the public listing of a business you manage. It has 65 tools and no gateway. It reads reviews and local posts through four curated My Business API v4 tools and exposes the two read-only v1alpha edit-status GETs (`locations.getExtended` and `locations.attributes.getExtended`) in `all`; replying to reviews, creating or editing local posts, and media are still not covered (see Caveats).
 
 ## When to install it
 
 - You read or update your business locations: hours, categories and attributes.
-- You read performance metrics for a location.
+- You read performance metrics or per-field edit status for a location.
 - You manage location owners or start a verification.
-- Wrong choice: you need reviews or local posts. This plugin does not cover them. Or you have no verified listing yet.
+- You read reviews or the local posts of a location (four read-only v4 tools).
+- Wrong choice: you need to reply to reviews, write or delete local posts, or use media. This plugin does not cover them. Or you have no verified listing yet.
 
 ## Install and set up
 
@@ -45,12 +46,13 @@ Every Business Profile API uses one OAuth scope, `business.manage`, which has no
 | Lodging, place actions, notifications | lodging get, update; place action links | read, write | Read and change lodging and place actions |
 | | place action link delete | destructive | Remove a place action link |
 | Performance (3) | multi-metric daily time series, search impressions, monthly metrics | read | Read location performance |
-| Per-method (51) | | mixed | Account Management (16), Business Information (15), Verifications (6), Place Actions (6), Lodging (3), Notifications (2), Performance (3) |
+| Reviews and local posts (4) | `mbreviews_list`, `mbreviews_get`, `mblocalposts_list`, `mblocalposts_get` | read | Read Google reviews and local posts of a location through My Business API v4; replies and post writes are not included |
+| Per-method (53) | | mixed | Account Management (16), Business Information (15), Business Information v1alpha edit status (2), Verifications (6), Place Actions (6), Lodging (3), Notifications (2), Performance (3) |
 | Gateway | none | | No gateway tools |
 
-The full list is in `docs/capabilities/gbusiness.md`.
+The full list is in `docs/capabilities/gbusiness.md`. Of the 53 per-method tools, 51 use v1 APIs and two use My Business Business Information v1alpha: `mbinfo_locations_get_extended` (`locations.getExtended`) and `mbinfo_attributes_get_extended` (`locations.attributes.getExtended`). Both are reads in `all`, use the already-declared `business.manage` scope, and stay out of the 13-tool `google` list. `mbinfo_locations_patch` accepts partial top-level `Location` bodies directly (such as `{ websiteUri }` or `{ profile: { description } }`); only atomic sub-objects like `categories` and `phoneNumbers` must be sent whole to avoid clearing sibling subfields on Google's backend.
 
-Google has no official MCP server for Business Profile. With the plugin option `toolset: google`, the server lists a small set chosen here, 13 tools: accounts list and admins list, locations list and get, the multi-metric daily time series, search keyword impressions, verifications, a location update, and since 2.16.0 the categories list, the attributes list and a location's attribute values, what Google has changed on a location (`getGoogleUpdated`) and the location's Voice of Merchant state, plus `health` and the sign-in tools. That set can complete the category example below: list the categories for the id, read the location, then patch it. They declare `business.manage`, as in the `all` toolset (since 1.24.1), so they need a `readwrite` login too.
+Google has no official MCP server for Business Profile. With the plugin option `toolset: google`, the server lists a small set chosen here, 13 tools: accounts list and admins list, locations list and get, the multi-metric daily time series, search keyword impressions, verifications, a location update, and since 2.16.0 the categories list, the attributes list and a location's attribute values, what Google has changed on a location (`getGoogleUpdated`) and the location's Voice of Merchant state, plus `health` and the sign-in tools. That set can complete the category example below: list the categories for the id, read the location, then patch it. They declare `business.manage`, as in the `all` toolset (since 1.24.1), so they need a `readwrite` login too. With `toolset: curated`, `gbusiness` lists the four curated v4 reads plus the seven runtime tools (11 total).
 
 A `readonly` login covers no gbusiness tool, with any toolset. Since 1.32.0 the login, `gsm scopes` and `auth_login` say so in a `Not covered:` line before the browser opens, and the plugin's skill names `--profile readwrite`.
 
@@ -74,7 +76,8 @@ The fee is UNVERIFIED. Most APIs allow 300 requests per minute, and Update Locat
 
 ## Caveats
 
-- Reviews and local posts are not in this plugin, and neither is media. They live in the older My Business API v4 (`mybusiness` v4: `accounts.locations.reviews`, `localPosts`, `media`), which Google does not list in its Discovery directory. Its direct Discovery URL (`https://mybusiness.googleapis.com/$discovery/rest?version=v4`) answered 404 on 2026-11-01, so no snapshot can be made here; adding v4 also needs an `include` list and a decision on where those tools belong. It is reported for the owner and not done. The Business Profile Q&A API is retired (Google's sunset page) and is not in the catalog.
+- My Business Business Information `v1alpha` exposes two read-only edit-status GETs (`locations.getExtended`, `locations.attributes.getExtended`); Google warns alpha features have no stability commitment. Live responses from `v1alpha` are UNVERIFIED.
+- Reviews and local posts are read-only here (`mbreviews_list`, `mbreviews_get`, `mblocalposts_list`, `mblocalposts_get` via My Business API v4). The public v4 Discovery URL (`https://mybusiness.googleapis.com/$discovery/rest?version=v4`) returned 404 on 2026-11-19, so these four reads are hand-written from dated REST references; review replies, post writes/deletes, and media remain absent and live v4 behavior is UNVERIFIED. The Business Profile Q&A API is retired (Google's sunset page) and is not in the catalog.
 - Google's own `dailyMetrics` performance call takes 15 flat arguments (six date parts and five unsupported `dailySubEntityType` fields). The `google` toolset lists the multi-metric form instead, which takes one metric or several; the flat one stays in `all`.
 - Review time for access is UNVERIFIED. Third-party sources give different answers.
 - Error codes at the limit are UNVERIFIED.

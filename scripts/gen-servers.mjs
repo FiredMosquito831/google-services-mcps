@@ -55,6 +55,7 @@ const CURATED_FILES = {
   play: 'src/servers/gplay.ts',
   search: 'src/servers/gsearch.ts',
   tagmanager: 'src/servers/gtm.ts',
+  business: 'src/servers/gbusiness.ts',
 };
 
 const ID_PATTERN = /^[a-z]+$/;

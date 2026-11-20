@@ -2488,8 +2488,8 @@
       "name": "gbusiness",
       "plugin": "gbusiness",
       "group": "business",
-      "kind": "discovery",
-      "curated": null,
+      "kind": "curated+discovery",
+      "curated": "src/servers/gbusiness.ts",
       "apis": [
         {
           "api": "mybusinessaccountmanagement",
@@ -2498,6 +2498,14 @@
         {
           "api": "mybusinessbusinessinformation",
           "version": "v1"
+        },
+        {
+          "api": "mybusinessbusinessinformation",
+          "version": "v1alpha",
+          "include": [
+            "locations.getExtended",
+            "locations.attributes.getExtended"
+          ]
         },
         {
           "api": "mybusinesslodging",

@@ -258,6 +258,15 @@
     "title": "mybusinessbusinessinformation.accounts.locations.list"
   },
   {
+    "name": "mcp__plugin_gbusiness_gbusiness__mbinfo_attributes_get_extended",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
+    "methodId": "mybusinessbusinessinformation.locations.attributes.getExtended",
+    "title": "mybusinessbusinessinformation.locations.attributes.getExtended"
+  },
+  {
     "name": "mcp__plugin_gbusiness_gbusiness__mbinfo_attributes_list",
     "kind": "read",
     "scopes": [
@@ -348,6 +357,15 @@
     "title": "mybusinessbusinessinformation.locations.getAttributes"
   },
   {
+    "name": "mcp__plugin_gbusiness_gbusiness__mbinfo_locations_get_extended",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
+    "methodId": "mybusinessbusinessinformation.locations.getExtended",
+    "title": "mybusinessbusinessinformation.locations.getExtended"
+  },
+  {
     "name": "mcp__plugin_gbusiness_gbusiness__mbinfo_locations_patch",
     "kind": "write",
     "scopes": [
@@ -366,6 +384,22 @@
     "title": "mybusinessbusinessinformation.locations.updateAttributes"
   },
   {
+    "name": "mcp__plugin_gbusiness_gbusiness__mblocalposts_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
+    "title": "Get one local post of a business location"
+  },
+  {
+    "name": "mcp__plugin_gbusiness_gbusiness__mblocalposts_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
+    "title": "List local posts of a business location"
+  },
+  {
     "name": "mcp__plugin_gbusiness_gbusiness__mbnotify_get_notif_setting",
     "kind": "read",
     "scopes": [
@@ -382,6 +416,22 @@
     ],
     "methodId": "mybusinessnotifications.accounts.updateNotificationSetting",
     "title": "mybusinessnotifications.accounts.updateNotificationSetting"
+  },
+  {
+    "name": "mcp__plugin_gbusiness_gbusiness__mbreviews_get",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
+    "title": "Get one review of a business location"
+  },
+  {
+    "name": "mcp__plugin_gbusiness_gbusiness__mbreviews_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/business.manage"
+    ],
+    "title": "List reviews of a business location"
   },
   {
     "name": "mcp__plugin_gbusiness_gbusiness__mbv_locations_verification_opts",

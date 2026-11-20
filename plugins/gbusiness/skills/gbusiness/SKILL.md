@@ -52,7 +52,7 @@ Reads never ask for approval. Tools that change or delete data are listed only w
 
 ## Tools
 
-The `gbusiness` MCP server lists up to 59 tools with the `all` toolset: 32 read, 18 write, 9 destructive, counting its 7 runtime tools (`health` and the sign-in tools). Write and destructive tools are listed only when writes are allowed, and a tool loads only when the sign-in holds one of its scopes. The `google` toolset lists 13 of them plus the runtime tools.
+The `gbusiness` MCP server lists up to 65 tools with the `all` toolset: 38 read, 18 write, 9 destructive, counting its 7 runtime tools (`health` and the sign-in tools). Write and destructive tools are listed only when writes are allowed, and a tool loads only when the sign-in holds one of its scopes. The `google` toolset lists 13 of them plus the runtime tools.
 
 ## APIs
 
@@ -60,6 +60,7 @@ Per-method tools:
 
 - My Business Account Management API (mybusinessaccountmanagement v1)
 - My Business Business Information API (mybusinessbusinessinformation v1)
+- My Business Business Information API (mybusinessbusinessinformation v1alpha)
 - My Business Lodging API (mybusinesslodging v1)
 - My Business Notifications API (mybusinessnotifications v1)
 - My Business Place Actions API (mybusinessplaceactions v1)

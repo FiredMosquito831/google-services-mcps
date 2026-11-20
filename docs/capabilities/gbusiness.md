@@ -4,11 +4,11 @@ Business Profile accounts, locations, verifications, lodging, place actions, not
 
 - Plugin: `gbusiness`, MCP server: `gbusiness`, login: Desktop OAuth client, then `login business`
 - Install: `claude plugin install gbusiness@google-services-mcps`
-- Tools: 59 total. Curated 7, per-method 51, gateway 0. Read 32, write 18, destructive 9, dynamic 0.
+- Tools: 65 total. Curated 11, per-method 53, gateway 0. Read 38, write 18, destructive 9, dynamic 0.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 59, google 20, curated 59 (all) tools, each counting the 7 runtime tools this server registers (`account_remove`, `account_set_default`, `accounts_list`, `auth_login`, `auth_setup_client`, `auth_status`, `health`). "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 65, google 20, curated 11 tools, each counting the 7 runtime tools this server registers (`account_remove`, `account_set_default`, `accounts_list`, `auth_login`, `auth_setup_client`, `auth_status`, `health`). "(all)" means the product has no such toolset yet, so it lists every tool.
 
 ## Not registered by this server (2)
 
@@ -36,7 +36,7 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `mbinfo_get_google_updated` | (none) | The fields Google has changed on a location since it was last edited (locations.getGoogleUpdated); Google owns them and a normal edit does not overwrite them. |
 | `mbveri_locations_merchant_state` | (none) | A location's Voice of Merchant state: whether it is verified, whether it has a holding state (such as pending verification or a suspended profile) and what it needs (getVoiceOfMerchantState). |
 
-## Curated tools (7)
+## Curated tools (11)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
@@ -47,8 +47,12 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `auth_setup_client` | write | Save the Google OAuth client | (none) |
 | `auth_status` | read | Sign-in status | (none) |
 | `health` | read | Server health | (none) |
+| `mblocalposts_get` | read | Get one local post of a business location | business.manage |
+| `mblocalposts_list` | read | List local posts of a business location | business.manage |
+| `mbreviews_get` | read | Get one review of a business location | business.manage |
+| `mbreviews_list` | read | List reviews of a business location | business.manage |
 
-## Per-method tools (51)
+## Per-method tools (53)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
@@ -74,6 +78,7 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `mbinf_attributes_google_updated` | read | mybusinessbusinessinformation.locations.attributes.getGoogleUpdated | business.manage |
 | `mbinfo_accounts_create` | write | mybusinessbusinessinformation.accounts.locations.create | business.manage |
 | `mbinfo_accounts_locations_list` | read | mybusinessbusinessinformation.accounts.locations.list | business.manage |
+| `mbinfo_attributes_get_extended` | read | mybusinessbusinessinformation.locations.attributes.getExtended | business.manage |
 | `mbinfo_attributes_list` | read | mybusinessbusinessinformation.attributes.list | business.manage |
 | `mbinfo_categories_batch_get` | read | mybusinessbusinessinformation.categories.batchGet | business.manage |
 | `mbinfo_categories_list` | read | mybusinessbusinessinformation.categories.list | business.manage |
@@ -84,6 +89,7 @@ Google has no official MCP server for this product. The google toolset is a lean
 | `mbinfo_locations_delete` | destructive | mybusinessbusinessinformation.locations.delete | business.manage |
 | `mbinfo_locations_get` | read | mybusinessbusinessinformation.locations.get | business.manage |
 | `mbinfo_locations_get_attributes` | read | mybusinessbusinessinformation.locations.getAttributes | business.manage |
+| `mbinfo_locations_get_extended` | read | mybusinessbusinessinformation.locations.getExtended | business.manage |
 | `mbinfo_locations_patch` | write | mybusinessbusinessinformation.locations.patch | business.manage |
 | `mbinfo_update_attributes` | write | mybusinessbusinessinformation.locations.updateAttributes | business.manage |
 | `mbnotify_get_notif_setting` | read | mybusinessnotifications.accounts.getNotificationSetting | business.manage |
@@ -116,6 +122,7 @@ Each API links to Google's documentation for it, as Google's Discovery directory
 
 - My Business Account Management API (`mybusinessaccountmanagement/v1`), 16 methods in the catalog. Documentation: <https://developers.google.com/my-business/>
 - My Business Business Information API (`mybusinessbusinessinformation/v1`), 15 methods in the catalog. Documentation: <https://developers.google.com/my-business/>
+- My Business Business Information API (`mybusinessbusinessinformation/v1alpha`), 17 methods in the catalog. Documentation: <https://developers.google.com/my-business/>
 - My Business Lodging API (`mybusinesslodging/v1`), 3 methods in the catalog. Documentation: <https://developers.google.com/my-business/>
 - My Business Notifications API (`mybusinessnotifications/v1`), 2 methods in the catalog. Documentation: <https://developers.google.com/my-business/>
 - My Business Place Actions API (`mybusinessplaceactions/v1`), 6 methods in the catalog. Documentation: <https://developers.google.com/my-business/>

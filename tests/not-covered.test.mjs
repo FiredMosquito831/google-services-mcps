@@ -85,19 +85,19 @@ const notCoveredOf = async (group, servers, toolset) => {
 test('gsm scopes: readonly leaves gbusiness with no tool and says so; readwrite and full cover it', async () => {
   const lines = await notCoveredOf('business', undefined);
   assert.equal(lines.readonly.length, 1, lines.readonly.join('\n'));
-  assert.match(lines.readonly[0], /^Not covered: the readonly profile covers none of the 51 tool\(s\) of gbusiness that need a Google scope \(none of them offers a read-only scope\)\. The readwrite profile covers all 51: --profile readwrite/);
+  assert.match(lines.readonly[0], /^Not covered: the readonly profile covers none of the 57 tool\(s\) of gbusiness that need a Google scope \(none of them offers a read-only scope\)\. The readwrite profile covers all 57: --profile readwrite/);
   assert.deepEqual(lines.readwrite, []);
   assert.deepEqual(lines.full, []);
 
   const text = capture();
   await runScopes({ group: 'business', servers: ['gbusiness'], json: false, profile: 'readonly' }, registry(), text.out);
-  assert.match(text.text(), /^ {2}Not covered: the readonly profile covers none of the 51 tool\(s\) of gbusiness/m);
+  assert.match(text.text(), /^ {2}Not covered: the readonly profile covers none of the 57 tool\(s\) of gbusiness/m);
 });
 
 test('gsm scopes: with the google toolset, readonly leaves gads (adwords has no read-only form) and gbusiness with no tool', async () => {
   const lines = await notCoveredOf('business', undefined, 'google');
   assert.equal(lines.readonly.length, 2, lines.readonly.join('\n'));
-  assert.match(lines.readonly.find((l) => / of gads /.test(l)), /covers none of the 3 tool\(s\) of gads .*The readwrite profile covers all 3/);
+  assert.match(lines.readonly.find((l) => / of gads /.test(l)), /covers none of the 4 tool\(s\) of gads .*The readwrite profile covers all 4/);
   assert.match(lines.readonly.find((l) => / of gbusiness /.test(l)), /covers none of the 13 tool\(s\) of gbusiness/);
   assert.deepEqual(lines.readwrite, []);
 });
@@ -156,7 +156,7 @@ test('gsm login business --servers gbusiness (readonly): the line comes before t
   const run = capture();
   const google = fakeGoogle('owner@example.com', () => run.text());
   assert.equal(await runLogin({ group: 'business', servers: ['gbusiness'], profile: 'readonly' }, registry, run.out, google.deps(cfg)), 0, run.text());
-  assert.match(google.seen.printedBefore, /^Not covered: the readonly profile covers none of the 51 tool\(s\) of gbusiness/m);
+  assert.match(google.seen.printedBefore, /^Not covered: the readonly profile covers none of the 57 tool\(s\) of gbusiness/m);
   assert.deepEqual(google.seen.scopes, [G('userinfo.email')], 'the login asks for what readonly resolves to, unchanged');
   assert.match(run.text(), /^Saved token:/m);
 });
@@ -193,7 +193,7 @@ test('the chat sign-in passes the Not covered line of the login on with the sign
   writeFileSync(
     cli,
     [
-      "console.log('Not covered: the readonly profile covers none of the 51 tool(s) of gbusiness that need a Google scope.');",
+      "console.log('Not covered: the readonly profile covers none of the 57 tool(s) of gbusiness that need a Google scope.');",
       "console.log('https://accounts.google.com/o/oauth2/v2/auth?scope=x');",
       '',
     ].join('\n'),
@@ -201,7 +201,7 @@ test('the chat sign-in passes the Not covered line of the login on with the sign
   const signIn = createSignIn({ cliFile: cli, group: 'business', server: 'gbusiness', cfg: loadConfig({ GSM_TOKEN_DIR: dir }), adcScopes: () => [], onSignedIn: () => undefined });
   const answer = await signIn.start('readonly', 'oauth');
   assert.match(answer, /https:\/\/accounts\.google\.com\//);
-  assert.match(answer, /\nNot covered: the readonly profile covers none of the 51 tool\(s\) of gbusiness/);
+  assert.match(answer, /\nNot covered: the readonly profile covers none of the 57 tool\(s\) of gbusiness/);
 });
 
 /** Starts a built plugin server and talks to it over stdio. */
@@ -257,7 +257,7 @@ test('auth_login on gbusiness (oauth, readonly): the answer names readwrite; rea
   await withServer(GBUSINESS, serverEnv(dir), async ({ call }) => {
     const answer = await call('auth_login', { method: 'oauth', profile: 'readonly' });
     assert.match(answer, /https:\/\/accounts\.google\.com\//);
-    assert.match(answer, /\nNot covered: the readonly profile covers none of the 51 tool\(s\) of gbusiness .*--profile readwrite \(in the chat: auth_login with profile "readwrite"\)/);
+    assert.match(answer, /\nNot covered: the readonly profile covers none of the 57 tool\(s\) of gbusiness .*--profile readwrite \(in the chat: auth_login with profile "readwrite"\)/);
   });
   await withServer(GBUSINESS, serverEnv(dir), async ({ call }) => {
     const answer = await call('auth_login', { method: 'oauth', profile: 'readwrite' });
@@ -282,7 +282,7 @@ test('auth_login on gbusiness (adc, readonly): the ADC route says the same, from
   await withServer(GBUSINESS, env, async ({ call }) => {
     const answer = await call('auth_login', { method: 'adc', profile: 'readonly' });
     assert.match(answer, /https:\/\/accounts\.google\.com\//);
-    assert.match(answer, /\nNot covered: the readonly profile covers none of the 51 tool\(s\) of gbusiness/);
+    assert.match(answer, /\nNot covered: the readonly profile covers none of the 57 tool\(s\) of gbusiness/);
   });
   assert.equal(readFileSync(adcFile, 'utf8').includes('rt-not-covered'), true, 'the fake ADC file is left as it was');
 });

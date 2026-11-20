@@ -1,0 +1,73 @@
+{
+ "_source": "Hand-written test fixture for the four read-only curated gbusiness tools (src/servers/gbusiness.ts), not a Discovery document and not a data/discovery/ snapshot: no refresh script reads tests/fixtures/discovery. Dated public REST references, all fetched 2026-11-19: reviews list https://developers.google.com/my-business/reference/rest/v4/accounts.locations.reviews/list (GET v4/{parent=accounts/*/locations/*}/reviews, pageSize maximum 50, orderBy rating, rating desc, updateTime desc); reviews get https://developers.google.com/my-business/reference/rest/v4/accounts.locations.reviews/get (GET v4/{name=accounts/*/locations/*/reviews/*}, only the name path parameter); localPosts list https://developers.google.com/my-business/reference/rest/v4/accounts.locations.localPosts/list (GET v4/{parent=accounts/*/locations/*}/localPosts, default pageSize 20, minimum 1, maximum 100); localPosts get https://developers.google.com/my-business/reference/rest/v4/accounts.locations.localPosts/get (GET v4/{name=accounts/*/locations/*/localPosts/*}, only the name path parameter). Both candidate public Discovery URLs, https://www.googleapis.com/discovery/v1/apis/mybusiness/v4/rest and https://mybusiness.googleapis.com/$discovery/rest?version=v4, returned HTTP 404 on 2026-11-19 by unauthenticated fetch. Only the paths, verbs, parameters and page limits the reference pages state are written here; response schemas and envelopes are deliberately not invented. For tests/curated-contract.test.mjs.",
+ "name": "mybusiness",
+ "version": "v4",
+ "title": "My Business API v4 (four curated reads)",
+ "rootUrl": "https://mybusiness.googleapis.com/",
+ "servicePath": "",
+ "baseUrl": "https://mybusiness.googleapis.com/",
+ "schemas": {},
+ "resources": {
+  "accounts": {
+   "resources": {
+    "locations": {
+     "resources": {
+      "reviews": {
+       "methods": {
+        "list": {
+         "id": "mybusiness.accounts.locations.reviews.list",
+         "path": "v4/accounts/{account}/locations/{location}/reviews",
+         "flatPath": "v4/accounts/{account}/locations/{location}/reviews",
+         "httpMethod": "GET",
+         "description": "Lists all reviews for a specified location.",
+         "parameters": [
+          { "name": "parent", "location": "path", "type": "string", "required": true },
+          { "name": "pageSize", "location": "query", "type": "integer", "description": "The maximum number of reviews to return. The maximum pageSize is 50." },
+          { "name": "pageToken", "location": "query", "type": "string", "description": "A page token from a previous list call." },
+          { "name": "orderBy", "location": "query", "type": "string", "description": "Optional. Sort order for results: rating, rating desc or updateTime desc." }
+         ]
+        },
+        "get": {
+         "id": "mybusiness.accounts.locations.reviews.get",
+         "path": "v4/accounts/{account}/locations/{location}/reviews/{review}",
+         "flatPath": "v4/accounts/{account}/locations/{location}/reviews/{review}",
+         "httpMethod": "GET",
+         "description": "Gets a review. The name is the review's full resource name.",
+         "parameters": [
+          { "name": "name", "location": "path", "type": "string", "required": true }
+         ]
+        }
+       }
+      },
+      "localPosts": {
+       "methods": {
+        "list": {
+         "id": "mybusiness.accounts.locations.localPosts.list",
+         "path": "v4/accounts/{account}/locations/{location}/localPosts",
+         "flatPath": "v4/accounts/{account}/locations/{location}/localPosts",
+         "httpMethod": "GET",
+         "description": "Lists the local posts of a specified location.",
+         "parameters": [
+          { "name": "parent", "location": "path", "type": "string", "required": true },
+          { "name": "pageSize", "location": "query", "type": "integer", "description": "The number of posts to return. Default 20, minimum 1, maximum 100." },
+          { "name": "pageToken", "location": "query", "type": "string", "description": "A page token from a previous list call." }
+         ]
+        },
+        "get": {
+         "id": "mybusiness.accounts.locations.localPosts.get",
+         "path": "v4/accounts/{account}/locations/{location}/localPosts/{post}",
+         "flatPath": "v4/accounts/{account}/locations/{location}/localPosts/{post}",
+         "httpMethod": "GET",
+         "description": "Gets a local post. The name is the post's full resource name.",
+         "parameters": [
+          { "name": "name", "location": "path", "type": "string", "required": true }
+         ]
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+}

@@ -13,6 +13,7 @@
     "mbaccount_locatio_admins_delete": "mbaccount_admins_delete",
     "mbaccount_location_admins_patch": "mbaccount_admins_patch",
     "mbinfo_accounts_location_create": "mbinfo_accounts_create",
+    "mbinfo_locatio_attribu_get_exte": "mbinfo_attributes_get_extended",
     "mbinfo_locatio_attribu_get_goog": "mbinf_attributes_google_updated",
     "mbinfo_locations_get_google_upd": "mbinfo_get_google_updated",
     "mbinfo_locations_update_attribu": "mbinfo_update_attributes",

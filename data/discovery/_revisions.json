@@ -397,6 +397,10 @@
       "revision": "20261028",
       "fetchedAt": "2026-10-30T15:04:05.909Z"
     },
+    "mybusinessbusinessinformation.v1alpha": {
+      "revision": "20261118",
+      "fetchedAt": "2026-11-20T09:08:25.741Z"
+    },
     "mybusinesslodging.v1": {
       "revision": "20261028",
       "fetchedAt": "2026-10-30T15:04:06.516Z"

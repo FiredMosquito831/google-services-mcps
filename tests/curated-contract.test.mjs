@@ -180,6 +180,9 @@ const FIXTURE_DOCS = [
   // Hand-written from Google's REST reference: the Routes API's Discovery document needs an API key (see its _source).
   'routes.v2',
   'androidmanagement.v1',
+  // OD13g: the four curated gbusiness reads call My Business API v4, whose two public Discovery URLs 404ed on
+  // 2026-11-19; this file is a test fixture, not a refreshable data/discovery snapshot (see its _source).
+  'mybusiness.v4',
 ];
 
 /**
@@ -318,7 +321,7 @@ function problemsOf(call) {
 // ---------------------------------------------------------------------------
 // The servers and their tools.
 
-const SERVERS = ['gmail', 'gcalendar', 'gdrive', 'searchconsole', 'cloud', 'gads', 'workspace-admin', 'gchat', 'gcontacts', 'gclassroom', 'ganalytics', 'gfirebase', 'gai', 'gmaps', 'gplay', 'meet', 'gsearch', 'gtm'];
+const SERVERS = ['gmail', 'gcalendar', 'gdrive', 'searchconsole', 'cloud', 'gads', 'workspace-admin', 'gchat', 'gcontacts', 'gclassroom', 'ganalytics', 'gfirebase', 'gai', 'gmaps', 'gplay', 'meet', 'gsearch', 'gtm', 'gbusiness'];
 const tools = new Map();
 for (const mod of SERVERS) {
   const { buildTools } = await import(DIST(`servers/${mod}.js`));
@@ -1318,6 +1321,46 @@ const CASES = {
       },
     },
   ],
+
+  // OD13g: the four read-only My Business API v4 tools of gbusiness.
+  mbreviews_list: [
+    {
+      args: { parent: 'accounts/123/locations/456' },
+      expect: ['mybusiness.accounts.locations.reviews.list'],
+      assertQuery: (q) => assert.deepEqual(q, {}, 'only the documented query parameters are sent when given'),
+    },
+    {
+      args: { parent: 'accounts/123/locations/456', page_size: 50, page_token: 'p1', order_by: 'rating desc' },
+      expect: ['mybusiness.accounts.locations.reviews.list'],
+      sends: { pageSize: '50', pageToken: 'p1', orderBy: 'rating desc' },
+    },
+  ],
+  mbreviews_get: [
+    {
+      args: { name: 'accounts/123/locations/456/reviews/789' },
+      expect: ['mybusiness.accounts.locations.reviews.get'],
+      assertQuery: (q) => assert.deepEqual(q, {}, 'the get tool sends only the name path parameter'),
+    },
+  ],
+  mblocalposts_list: [
+    {
+      args: { parent: 'accounts/123/locations/456' },
+      expect: ['mybusiness.accounts.locations.localPosts.list'],
+      assertQuery: (q) => assert.deepEqual(q, {}, 'only the documented query parameters are sent when given'),
+    },
+    {
+      args: { parent: 'accounts/123/locations/456', page_size: 100, page_token: 'p2' },
+      expect: ['mybusiness.accounts.locations.localPosts.list'],
+      sends: { pageSize: '100', pageToken: 'p2' },
+    },
+  ],
+  mblocalposts_get: [
+    {
+      args: { name: 'accounts/123/locations/456/localPosts/789' },
+      expect: ['mybusiness.accounts.locations.localPosts.get'],
+      assertQuery: (q) => assert.deepEqual(q, {}, 'the get tool sends only the name path parameter'),
+    },
+  ],
 };
 
 /** Tools that cannot run here, with the reason. Counted. */
@@ -1330,7 +1373,7 @@ test('every curated tool has a contract row, a skip reason or a known defect, an
   const listed = new Set([...Object.keys(CASES), ...Object.keys(SKIPPED), ...Object.keys(KNOWN_DEFECTS)]);
   assert.deepEqual([...tools.keys()].filter((name) => !listed.has(name)), [], 'curated tools without a row');
   assert.deepEqual([...listed].filter((name) => !tools.has(name)), [], 'rows for tools that do not exist');
-  assert.equal(tools.size, 170, 'the curated tool count; update the table when it changes');
+  assert.equal(tools.size, 174, 'the curated tool count; update the table when it changes');
 });
 
 for (const [name, cases] of Object.entries(CASES)) {

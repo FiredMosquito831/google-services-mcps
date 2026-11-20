@@ -32,12 +32,13 @@ test.after(() => {
   for (const dir of temps) rmSync(dir, { recursive: true, force: true });
 });
 
-test('the data: gbusiness declares business.manage for each of its generated APIs, and no other product declares overrides', () => {
+test('the data: gbusiness and gdrive declare scopeOverrides; no other product declares overrides', () => {
   const products = readJson('config', 'products.json').products;
-  const apis = products.gbusiness.generated.map((a) => a.api);
+  assert.deepEqual(Object.keys(products).filter((id) => products[id].scopeOverrides !== undefined).sort(), ['gbusiness', 'gdrive']);
+  const apis = [...new Set(products.gbusiness.generated.map((a) => a.api))];
   assert.deepEqual(Object.keys(products.gbusiness.scopeOverrides).sort(), [...apis].sort());
   for (const api of apis) assert.deepEqual(products.gbusiness.scopeOverrides[api], [BM], api);
-  for (const [id, p] of Object.entries(products)) if (id !== 'gbusiness') assert.equal(p.scopeOverrides, undefined, id);
+  for (const [id, p] of Object.entries(products)) if (id !== 'gbusiness' && id !== 'gdrive') assert.equal(p.scopeOverrides, undefined, id);
   // The three copies carry it: config/servers.json, the plugin's servers.json and the CLI's conversion of products.json.
   const map = readJson('config', 'servers.json').servers.find((s) => s.name === 'gbusiness');
   assert.deepEqual(map.scopeOverrides, products.gbusiness.scopeOverrides);

@@ -12,6 +12,7 @@ import { buildTools as buildCloud } from './cloud.js';
 import { buildTools as buildGads } from './gads.js';
 import { buildTools as buildGai } from './gai.js';
 import { buildTools as buildGanalytics } from './ganalytics.js';
+import { buildTools as buildGbusiness } from './gbusiness.js';
 import { buildTools as buildGcalendar } from './gcalendar.js';
 import { buildTools as buildGchat } from './gchat.js';
 import { buildTools as buildGclassroom } from './gclassroom.js';
@@ -38,6 +39,7 @@ const CURATED: Record<string, Builder> = {
   'src/servers/searchconsole.ts': buildSearchConsole,
   'src/servers/gads.ts': buildGads,
   'src/servers/gchat.ts': buildGchat,
+  'src/servers/gbusiness.ts': buildGbusiness,
   'src/servers/gcontacts.ts': buildGcontacts,
   'src/servers/gclassroom.ts': buildGclassroom,
   'src/servers/ganalytics.ts': buildGanalytics,
