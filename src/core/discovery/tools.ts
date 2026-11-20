@@ -41,7 +41,7 @@ import {
 import { assignReadableToolNames, registerRenames, type ToolRename } from './tool-names.js';
 import { clipText, paramToZod, schemaToZod } from './schema.js';
 import { ApiKeyClient } from './apikey-client.js';
-import { adsHeaders, isGoogleAdsUrl, redactedError } from '../ads.js';
+import { adsHeaders, customerIdOf, isGoogleAdsUrl, LOGIN_CUSTOMER_ID_ARG, redactedError } from '../ads.js';
 import { resolveDynamicKind } from '../dynamic.js';
 import { redactCredentials } from '../credential-fields.js';
 import { targetFieldsOf, targetGetFor } from '../target-preview.js';
@@ -59,6 +59,18 @@ export const LIST_METHODS_SUFFIX = 'api_methods';
  * (confirm becomes confirmParam), so it cannot be mistaken for a tool's own argument.
  */
 const RESERVED_ARGS = ['confirm'];
+
+/** Synthetic, header-only argument of the generated Ads tools. It is never part of a request plan. */
+const ADS_LOGIN_ARG = 'login_customer_id';
+
+/** The normalized manager in dynamic-write approval args, without changing the body sent to Google. */
+function approvalArgsWithManager(args: unknown, loginCustomerId: string | undefined): unknown {
+  if (loginCustomerId === undefined) return args;
+  if (args !== null && typeof args === 'object' && !Array.isArray(args)) {
+    return { ...(args as Record<string, unknown>), [ADS_LOGIN_ARG]: loginCustomerId };
+  }
+  return { body: args, [ADS_LOGIN_ARG]: loginCustomerId };
+}
 
 /**
  * The longest tool description the suite sends. Claude Code cut longer descriptions before version 2.1.296 (since then
@@ -441,6 +453,11 @@ export interface AuthorizedRequest {
   authMethodId?: string;
   /** Narrow credential route claimed by the caller. */
   credentialRoute?: string;
+  /**
+   * An already-normalized manager account id for this one call. Sent as login-customer-id after the configured Ads
+   * headers, and only on the Ads host. Absent: exactly the headers of a call without a per-call manager.
+   */
+  loginCustomerId?: string;
 }
 
 /** Test seam for dual-credential route; never set in production. */
@@ -502,8 +519,13 @@ export async function sendAuthorized(
     throw new Error('Street View credential route refused: the method identity, group or host is not the approved one.');
   }
   const ads = isGoogleAdsUrl(req.url) ? adsHeaders(cfg) : undefined;
-  // The request's own headers (a field mask), then the Google Ads headers, which no request header replaces.
-  const headers = { ...(req.headers ?? {}), ...(ads ?? {}) };
+  // The request's own headers (a field mask), then the Google Ads headers, which no request header replaces, then the
+  // per-call manager, which replaces even the configured one for this request only.
+  const headers = {
+    ...(req.headers ?? {}),
+    ...(ads ?? {}),
+    ...(ads && req.loginCustomerId ? { 'login-customer-id': req.loginCustomerId } : {}),
+  };
   const client = await authFor(group, cfg);
   // An OAuth or ADC client retries inside its own request method (core/auth.ts), so every request sent through it is covered.
   if (client instanceof ApiKeyClient) {
@@ -637,6 +659,8 @@ function buildMethodTool(
   const fields: RequestField[] = [];
   const argFor = (param: string): string => (RESERVED_ARGS.includes(param) ? `${param}Param` : param);
   const defaults = defaultsOf(src, m.fullId);
+  // Only methods of the Google Ads API get the synthetic manager argument. Other products' schemas stay byte-identical.
+  const adsLogin = isGoogleAdsUrl(doc.rootUrl);
 
   for (const p of m.parameters.filter((p) => p.location === 'path')) {
     const arg = argFor(p.name);
@@ -687,6 +711,16 @@ function buildMethodTool(
   const takesOffset = media !== undefined && free(OFFSET_ARG);
   if (takesOffset) shape[OFFSET_ARG] = z.number().int().min(0).optional().describe(offsetText(partBytes));
 
+  if (adsLogin) {
+    // A future Discovery parameter must never be silently renamed or overwritten by the synthetic argument.
+    for (const argName of [ADS_LOGIN_ARG, 'loginCustomerId']) {
+      if (argName in shape) {
+        throw new Error(`${m.fullId} declares a "${argName}" parameter that collides with the Ads login_customer_id argument.`);
+      }
+    }
+    shape[ADS_LOGIN_ARG] = LOGIN_CUSTOMER_ID_ARG;
+  }
+
   const tail = [...(note ? [`Note: ${note}`] : []), `Method ${m.fullId}: ${m.httpMethod} ${m.path}.`].join(' ');
   const lead = m.description || `Calls ${m.fullId}.`;
   const parts = [clipText(lead, TOOL_DESCRIPTION_MAX - tail.length - 1) ?? lead, tail];
@@ -709,6 +743,8 @@ function buildMethodTool(
     methodId: m.fullId,
     description: parts.join(' '),
     kind: m.kind,
+    // Static generated Ads writes are gated in runServer, before this handler: show the manager there too.
+    ...(adsLogin ? { loginCustomerArg: ADS_LOGIN_ARG } : {}),
     // The method's own scope list from the Discovery document (any one of them grants it). When the document lists none,
     // the product's declared scopes for that API (scopeOverrides), if it has them.
     scopes: m.scopes.length > 0 ? [...m.scopes] : scopesWhenNone?.length ? [...scopesWhenNone] : undefined,
@@ -717,7 +753,11 @@ function buildMethodTool(
     idempotent: m.kind === 'read' || IDEMPOTENT_VERBS.has(m.httpMethod),
     inputSchema: shape,
     async handler(args, ctx) {
-      const req = buildRequest(plan, args as Record<string, unknown>);
+      // Normalize before the request plan, the gate and the request. A bad manager id sends nothing and asks nothing.
+      const a = args as Record<string, unknown>;
+      const loginCustomerId =
+        adsLogin && a[ADS_LOGIN_ARG] !== undefined ? customerIdOf(a[ADS_LOGIN_ARG] as string | number, ADS_LOGIN_ARG) : undefined;
+      const req = buildRequest(plan, a);
       let callKind: ToolKind = m.kind;
       if (m.kind === 'dynamic') {
         // The kind depends on the request body. A call that changes something goes through the gate first.
@@ -728,21 +768,21 @@ function buildMethodTool(
           if (typeof ctx?.gate !== 'function') {
             throw new Error(`${name} needs the approval gate, which is not wired for this call, so it was not run.`);
           }
-          await ctx.gate({ kind, target: name, methodId: m.fullId, args: req.data });
+          await ctx.gate({ kind, target: name, methodId: m.fullId, args: approvalArgsWithManager(req.data, loginCustomerId) });
         }
       }
       // A media download (alt=media) asks for one part with a Range header; a method that may answer with a file reads the
       // answer as bytes. Every other request is sent as before.
-      const a = args as Record<string, unknown>;
       const offset = takesOffset && typeof a[OFFSET_ARG] === 'number' ? (a[OFFSET_ARG] as number) : 0;
       const asMedia = media === 'download' && a[ALT_ARG] === 'media';
       const identity = src.credentialOverride ? { authMethodId: m.fullId } : {};
       const route = methodInOverride(src.credentialOverride, m.fullId, doc.name, doc.version) ? { credentialRoute: STREETVIEW_ROUTE } : {};
+      const manager = loginCustomerId === undefined ? {} : { loginCustomerId };
       const sent: AuthorizedRequest = asMedia
-        ? { ...req, ...identity, ...route, headers: { ...(req.headers ?? {}), Range: rangeHeader(offset, cfg.maxResultChars) }, read: 'media' }
+        ? { ...req, ...identity, ...route, ...manager, headers: { ...(req.headers ?? {}), Range: rangeHeader(offset, cfg.maxResultChars) }, read: 'media' }
         : media
-          ? { ...req, ...identity, ...route, read: 'bytes' }
-          : { ...req, ...identity, ...route };
+          ? { ...req, ...identity, ...route, ...manager, read: 'bytes' }
+          : { ...req, ...identity, ...route, ...manager };
       const res = await sendAuthorized(group, cfg, sent);
       // A file is returned as one part that fits the result limit, never as text.
       if (res.data instanceof MediaBody) return mediaPart(res.data, { offset, maxResultChars: cfg.maxResultChars, canContinue: takesOffset });

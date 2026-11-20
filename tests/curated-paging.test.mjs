@@ -309,6 +309,43 @@ test('ads_search: page_token reads the next page; next_page_token first; rows th
   assert.match(out.truncated.how_to_continue, /next_page_token continues after this whole page/);
 });
 
+test('ads_search_stream: two vendor batches are joined in order, with rowCount equal to the rows shown', async () => {
+  const ads = await toolsOf('gads');
+  const batches = [{ results: [{ campaign: { id: '1' } }, { campaign: { id: '2' } }] }, { results: [{ campaign: { id: '3' } }] }];
+  reset((_call) => batches);
+  const out = await ads.get('ads_search_stream').handler({ customer_id: '1234567890', query: 'SELECT campaign.id FROM campaign' }, ctx);
+  assert.deepEqual(out, {
+    rowCount: 3,
+    results: [{ campaign: { id: '1' } }, { campaign: { id: '2' } }, { campaign: { id: '3' } }],
+  });
+  assert.deepEqual(calls[0].body, { query: 'SELECT campaign.id FROM campaign' });
+  assert.equal(Object.keys(calls[0].body).includes('pageSize'), false);
+  assert.equal(Object.keys(calls[0].body).includes('pageToken'), false);
+});
+
+test('ads_search_stream: a cut between two rows of one batch keeps whole rows and offers no resume token', async () => {
+  const budget = 2000;
+  const ads = await toolsOf('gads', budget);
+  const first = Array.from({ length: 40 }, (_, i) => ({ campaign: { id: String(i), name: `Campaign ${i}`.padEnd(100, 'x') } }));
+  const second = Array.from({ length: 40 }, (_, i) => ({ campaign: { id: String(i + 40), name: `Campaign ${i + 40}`.padEnd(100, 'x') } }));
+  reset(() => [{ results: first }, { results: second }]);
+  const out = await ads.get('ads_search_stream').handler({ customer_id: '1234567890', fields: ['campaign.id', 'campaign.name'], resource: 'campaign' }, ctx);
+  assert.ok(out.results.length > 0, 'some rows fit');
+  assert.ok(out.results.length < first.length, 'the cut lands inside the rows of the first batch, not at a batch boundary');
+  assert.ok(sizeOf(out) <= budget, `the answer fits ${budget} characters`);
+  assert.equal(out.rowCount, out.results.length);
+  assert.deepEqual(out.results, [...first, ...second].slice(0, out.results.length));
+  assert.equal(out.truncated.items, 'results');
+  assert.equal(out.truncated.limit_chars, budget);
+  assert.equal(out.truncated.shown, out.results.length);
+  assert.equal(out.truncated.omitted, 80 - out.results.length);
+  assert.match(out.truncated.how_to_continue, /cut by the result limit/);
+  assert.match(out.truncated.how_to_continue, /no row offset and a stream has no page token to resume from/);
+  assert.match(out.truncated.how_to_continue, /narrow the query/);
+  assert.equal(out.truncated.how_to_continue.includes('next_page_token'), false, 'no resume token is advertised');
+  assert.equal(out.next_page_token, undefined);
+});
+
 test('drive_read_text: offset and next_offset read a long text in parts that join; the parts fit the result limit with their escapes; comments do not crowd out the text', async () => {
   const budget = 3000;
   const drive = await toolsOf('gdrive', budget);

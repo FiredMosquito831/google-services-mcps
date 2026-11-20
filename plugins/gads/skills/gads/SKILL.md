@@ -38,7 +38,7 @@ Only if the chat tools fail, the same steps in a terminal: `node "${CLAUDE_PLUGI
 
 ## Notes
 
-- Reaching client accounts through a manager account needs the manager's id in the plugin option ads_login_customer_id.
+- Reaching client accounts through a manager account needs the manager's id in the plugin option ads_login_customer_id, or an optional login_customer_id on ads_search, ads_search_stream, ads_resource_metadata, ads_mutate, the 33 generated googleads.* tools and the shared gAds api_call. A per-call id is a string or number, dashes allowed and surrounding whitespace trimmed; it replaces the configured manager for that call only, is refused on non-Ads methods, and write approvals show the normalized digits.
 
 ## Untrusted content
 
@@ -50,7 +50,7 @@ Reads never ask for approval. Tools that change or delete data are listed only w
 
 ## Tools
 
-The `gads` MCP server lists up to 338 tools with the `all` toolset: 105 read, 189 write, 20 destructive and 24 dynamic (decided per call), counting its 7 runtime tools (`health` and the sign-in tools). Write and destructive tools are listed only when writes are allowed, and a tool loads only when the sign-in holds one of its scopes. The `google` toolset lists 3 of them plus the runtime tools. The gateway APIs below are reached through `api_search` (find a method), `api_describe` (its parameters) and `api_call` (run it).
+The `gads` MCP server lists up to 339 tools with the `all` toolset: 106 read, 189 write, 20 destructive and 24 dynamic (decided per call), counting its 7 runtime tools (`health` and the sign-in tools). Write and destructive tools are listed only when writes are allowed, and a tool loads only when the sign-in holds one of its scopes. The `google` toolset lists 4 of them plus the runtime tools. The gateway APIs below are reached through `api_search` (find a method), `api_describe` (its parameters) and `api_call` (run it).
 
 ## APIs
 

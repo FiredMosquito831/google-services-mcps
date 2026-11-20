@@ -201,7 +201,7 @@
         { "title": "Report", "steps": ["{tool:ads_resource_metadata} with resource (such as campaign) lists the fields you can select.", "{tool:ads_search} with customer_id and a GAQL query, such as SELECT campaign.name, metrics.clicks, metrics.cost_micros FROM campaign WHERE segments.date DURING LAST_30_DAYS. Money is in micros: divide by 1,000,000."] },
         { "title": "Change", "steps": ["{tool:ads_mutate} with validate_only true first, then the same operations without it (it asks first)."] }
       ],
-      "notes": ["Reaching client accounts through a manager account needs the manager's id in the plugin option ads_login_customer_id."]
+      "notes": ["Reaching client accounts through a manager account needs the manager's id in the plugin option ads_login_customer_id, or an optional login_customer_id on ads_search, ads_search_stream, ads_resource_metadata, ads_mutate, the 33 generated googleads.* tools and the shared gAds api_call. A per-call id is a string or number, dashes allowed and surrounding whitespace trimmed; it replaces the configured manager for that call only, is refused on non-Ads methods, and write approvals show the normalized digits."]
     },
     "gmerchant": {
       "description": "Google Merchant Center through a service account: accounts, products, product issues, programs, data sources, reports (MCQL) and the Comparison Shopping Service.",

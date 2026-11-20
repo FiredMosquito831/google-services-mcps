@@ -9,6 +9,8 @@ import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { OAuth2Client } from 'google-auth-library';
+import { Client } from '@modelcontextprotocol/sdk/client/index.js';
+import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
 
 delete process.env.GOOGLE_APPLICATION_CREDENTIALS;
 delete process.env.GSM_ADS_DEVELOPER_TOKEN;
@@ -49,6 +51,7 @@ const reset = (fn = () => ({})) => {
 test('ads_resource_metadata and ads_search are reads with the adwords scope, and name the Google tool they match', () => {
   for (const [name, official] of [
     ['ads_search', 'search'],
+    ['ads_search_stream', 'search'],
     ['ads_resource_metadata', 'get_resource_metadata'],
   ]) {
     const t = tools.get(name);
@@ -62,6 +65,21 @@ test('ads_resource_metadata and ads_search are reads with the adwords scope, and
   assert.deepEqual(Object.keys(tools.get('ads_mutate').inputSchema), ['customer_id', 'login_customer_id', 'operations', 'validate_only']);
   assert.equal(tools.get('ads_mutate').kind, 'dynamic');
   assert.deepEqual(Object.keys(tools.get('ads_search').inputSchema), ['customer_id', 'login_customer_id', 'query', 'fields', 'resource', 'conditions', 'orderings', 'limit', 'page_token']);
+  assert.deepEqual(Object.keys(tools.get('ads_search_stream').inputSchema), ['customer_id', 'login_customer_id', 'query', 'fields', 'resource', 'conditions', 'orderings', 'limit'], 'a stream has no page token');
+});
+
+test('the curated stream matches official search by method, not by ads_search pagination', async () => {
+  reset(() => [{ results: [{ campaign: { id: '1' } }] }]);
+  const out = await run('ads_search_stream', { customer_id: CUSTOMER, fields: ['campaign.id'], resource: 'campaign' });
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0].url, `${BASE}/customers/${CUSTOMER}/googleAds:searchStream`);
+  assert.deepEqual(calls[0].body, { query: 'SELECT campaign.id FROM campaign PARAMETERS omit_unselected_resource_names=true' });
+  assert.deepEqual(out, { query: calls[0].body.query, rowCount: 1, results: [{ campaign: { id: '1' } }] });
+
+  reset(() => ({ results: [{ campaign: { id: '1' } }], nextPageToken: 'n' }));
+  const page = await run('ads_search', { customer_id: CUSTOMER, query: 'SELECT campaign.id FROM campaign' });
+  assert.equal(calls[0].url, `${BASE}/customers/${CUSTOMER}/googleAds:search`);
+  assert.equal(page.next_page_token, 'n', 'ads_search still paginates and is unchanged');
 });
 
 // ---- GAQL from parts ----
@@ -216,12 +234,60 @@ test('ads_resource_metadata says so when Google knows no fields, and refuses a b
 
 // ---- the google toolset ----
 
-test("the gads google list covers the 3 tools of Google's Google Ads MCP server, all reads; ads_mutate stays out", () => {
+test('the gads google list has the four read tools; ads_mutate stays out', () => {
   const google = JSON.parse(readFileSync(join(REPO, 'config', 'products.json'), 'utf8')).products.gads.toolsets.google;
-  assert.deepEqual(google.tools, ['ads_list_customers', 'ads_search', 'ads_resource_metadata']);
-  assert.deepEqual(google.matches, { ads_list_customers: ['list_accessible_customers'], ads_search: ['search'], ads_resource_metadata: ['get_resource_metadata'] });
+  assert.deepEqual(google.tools, ['ads_list_customers', 'ads_search', 'ads_resource_metadata', 'ads_search_stream']);
+  assert.deepEqual(google.matches, { ads_list_customers: ['list_accessible_customers'], ads_search: ['search'], ads_resource_metadata: ['get_resource_metadata'], ads_search_stream: ['search'] });
   assert.equal(google.tools.includes('ads_mutate'), false);
-  assert.match(google.notes.ads_search, /Google's server is read-only, so ads_mutate/);
+  assert.doesNotMatch(google.notes.ads_search, /is read.only, so ads_mutate/);
+  assert.match(google.notes.ads_search, /four read tools plus the four read-only reference resources/);
+  assert.match(google.notes.ads_search_stream, /curated SELECT-only streamed read/);
+  assert.match(google.notes.ads_search_stream, /one SearchStream request as one operation however many batches it returns/);
   const map = JSON.parse(readFileSync(join(REPO, 'plugins', 'gads', 'tool-map.json'), 'utf8'));
   for (const name of google.tools) assert.equal(map.find((t) => t.name === `mcp__plugin_gads_gads__${name}`)?.kind, 'read', name);
+});
+
+test('Q015: built gads server mounts all four read-only MCP reference resources regardless of login or toolset', async () => {
+  const dir = mkdtempSync(join(tmpdir(), 'gsm-gads-resources-'));
+  const client = new Client({ name: 'test', version: '0.0.1' });
+  const transport = new StdioClientTransport({
+    command: process.execPath,
+    args: [join(REPO, 'plugins', 'gads', 'servers', 'gads.mjs')],
+    env: { ...process.env, GSM_TOKEN_DIR: dir, GSM_TOOLSET: 'google', GOOGLE_APPLICATION_CREDENTIALS: '' },
+    stderr: 'pipe',
+  });
+  await client.connect(transport);
+  try {
+    const listed = await client.listResources();
+    const uris = listed.resources.map((r) => r.uri).sort();
+    assert.deepEqual(uris, [
+      'resource://discovery-document',
+      'resource://metrics',
+      'resource://release-notes',
+      'resource://segments',
+    ]);
+    for (const uri of uris) {
+      const read = await client.readResource({ uri });
+      assert.equal(read.contents.length, 1, uri);
+      assert.equal(read.contents[0].mimeType, 'application/json', uri);
+      const parsed = JSON.parse(read.contents[0].text);
+      if (uri === 'resource://discovery-document') {
+        assert.equal(parsed.api, 'googleads');
+        assert.equal(parsed.version, 'v26');
+        assert.ok(parsed.gaqlRowResources.includes('campaign'));
+      } else if (uri === 'resource://metrics') {
+        assert.ok(parsed.count > 100);
+        assert.ok(parsed.fields.some((f) => f.gaql === 'metrics.clicks'));
+      } else if (uri === 'resource://segments') {
+        assert.ok(parsed.count > 50);
+        assert.ok(parsed.fields.some((f) => f.gaql === 'segments.date'));
+      } else if (uri === 'resource://release-notes') {
+        assert.equal(parsed.apiVersion, 'v26');
+        assert.deepEqual(parsed.tools.googleToolset, ['ads_list_customers', 'ads_search', 'ads_resource_metadata', 'ads_search_stream']);
+      }
+    }
+  } finally {
+    await transport.close();
+    rmSync(dir, { recursive: true, force: true });
+  }
 });

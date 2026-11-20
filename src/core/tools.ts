@@ -44,6 +44,27 @@ import { settleWithin, TARGET_PREVIEW_KEY, TARGET_READ_TIMEOUT_MS } from './targ
 import { pageSizeArgOf, shapeResult, type ShapeOptions } from './result-shape.js';
 import { serverInstructions } from './instructions.js';
 import { decide, loadPolicyFile, riskFromKind, type Policy } from './policy.js';
+import { customerIdOf } from './ads.js';
+
+/**
+ * The arguments shown in a static write approval. A generated Ads tool that takes a per-call manager shows its
+ * normalized digits; every other tool, and any call that omits the argument, shows exactly the original arguments.
+ */
+export function approvalArgsWithManager(tool: Pick<ToolDef, 'loginCustomerArg'>, rawArgs: Record<string, unknown>, shown: unknown): unknown {
+  const arg = tool.loginCustomerArg;
+  if (arg === undefined || rawArgs[arg] === undefined) return shown;
+  return { ...(shown as Record<string, unknown>), [arg]: customerIdOf(rawArgs[arg] as string | number, arg) };
+}
+
+/** A read-only MCP reference resource mounted by a server regardless of login or toolset. */
+export interface ResourceDef {
+  name: string;
+  uri: string;
+  title: string;
+  description: string;
+  mimeType: string;
+  read: () => Promise<string> | string;
+}
 
 /**
  * Exact argv `auth_setup_admin` passes to the plugin CLI. Pure: absent or unknown profile keeps the readonly default.
@@ -155,6 +176,12 @@ export interface ToolDef<A extends ZodRawShape = ZodRawShape> {
   describeTarget?(args: z.infer<z.ZodObject<A>>, ctx: ToolContext): Promise<Record<string, string> | undefined>;
   /** Optional metadata: what a destructive action would do, for describe output. The gate does not use it. */
   preview?(args: z.infer<z.ZodObject<A>>): Promise<unknown> | unknown;
+  /**
+   * The name of a synthetic, per-call manager argument shown (normalized) in the approval of a generated Ads write.
+   * Set only on generated Ads tools; runServer's static write gate uses it before the handler runs. Dynamic Ads writes
+   * put the same value in their handler's ctx.gate call instead.
+   */
+  loginCustomerArg?: string;
   /**
    * Where the tool comes from (curated module, Discovery document or gateway), set where a server's tools are assembled
    * (withOrigin in toolset.ts). The curated toolset reads it. Never shown to the client.
@@ -447,6 +474,7 @@ export async function runServer(opts: {
   name: string;
   version: string;
   buildTools: (cfg: RuntimeConfig) => Promise<ToolDef[]> | ToolDef[];
+  buildResources?: (cfg: RuntimeConfig) => Promise<readonly ResourceDef[]> | readonly ResourceDef[];
 }): Promise<void> {
   // The messages of this server name the command that signs in: the plugin's own bin/gsm.mjs, by its full path.
   setInvocation(invocationFor(import.meta.url, process.cwd()));
@@ -529,6 +557,17 @@ export async function runServer(opts: {
     readonlyCoversNothing: signsInWithOAuth && adcNotesFor('readonly', []).length > 0,
   });
   const server = new McpServer({ name: opts.name, version: opts.version }, { instructions });
+  if (opts.buildResources) {
+    const resources = await opts.buildResources(cfg);
+    for (const r of resources) {
+      server.registerResource(
+        r.name,
+        r.uri,
+        { title: r.title, description: r.description, mimeType: r.mimeType },
+        async (uri) => ({ contents: [{ uri: uri.href, mimeType: r.mimeType, text: await r.read() }] }),
+      );
+    }
+  }
   const currentGrant = (): string[] | null => (group ? grantedScopes(group, cfg) : null);
 
   // Before a login, the OAuth groups register only the tools that need no scope. auth_status loads the rest after a login.
@@ -639,7 +678,9 @@ export async function runServer(opts: {
                     )
                   : undefined;
               const shown = fields ? { [TARGET_PREVIEW_KEY]: fields, ...rawArgs } : rawArgs;
-              await gate({ kind, target: tool.name, methodId: tool.methodId, args: shown });
+              // The manager decides which account the write affects, so the approval shows its normalized digits.
+              // Validate before asking; with the argument omitted, `shown` is exactly what it was before.
+              await gate({ kind, target: tool.name, methodId: tool.methodId, args: approvalArgsWithManager(tool, rawArgs, shown) });
             }
             // The account argument picks the account for this call. It is not passed to the handler, so it never reaches Google.
             const { account, ...args } = rawArgs;

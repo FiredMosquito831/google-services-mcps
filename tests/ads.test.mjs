@@ -85,7 +85,7 @@ const googleError = (status, body) =>
 
 // ---- tool metadata ----
 
-test('the four ads tools: names, kinds, the adwords scope and the name length', () => {
+test('the five ads tools: names, kinds, the adwords scope and the name length', () => {
   assert.deepEqual(
     tools.map((t) => [t.name, t.kind]).sort(),
     [
@@ -93,6 +93,7 @@ test('the four ads tools: names, kinds, the adwords scope and the name length', 
       ['ads_mutate', 'dynamic'],
       ['ads_resource_metadata', 'read'],
       ['ads_search', 'read'],
+      ['ads_search_stream', 'read'],
     ],
   );
   for (const t of tools) {
@@ -157,6 +158,76 @@ test('ads_search never sends pageSize, and takes no page_size input (Google Ads 
   reset(() => ({ results: [] }));
   await tool('ads_search').handler({ customer_id: CUSTOMER, query: 'SELECT campaign.id FROM campaign', page_size: 600 });
   assert.deepEqual(calls[0].body, { query: 'SELECT campaign.id FROM campaign' });
+});
+
+// ---- ads_search_stream: the curated SearchStream read ----
+
+test('ads_search_stream refuses anything but a SELECT, and a query over 10000 characters, before any request', async () => {
+  reset();
+  for (const query of ['DELETE FROM campaign', 'INSERT INTO campaign', 'UPDATE campaign SET name = "x"', 'SELECTX campaign.id FROM campaign', '', 'campaign.id FROM campaign']) {
+    await assert.rejects(tool('ads_search_stream').handler({ customer_id: CUSTOMER, query }), /GAQL SELECT query/, query);
+  }
+  const oversized = `SELECT campaign.id FROM campaign WHERE campaign.name = '${'x'.repeat(10_000)}'`;
+  await assert.rejects(tool('ads_search_stream').handler({ customer_id: CUSTOMER, query: oversized }), /at most 10000/);
+  assert.equal(calls.length, 0, 'no request was sent');
+});
+
+test('ads_search_stream posts exactly {query} to googleAds:searchStream, with no page size, page token or row cap', async () => {
+  reset(() => [{ results: [{ campaign: { id: '1' } }] }, { results: [{ campaign: { id: '2' } }] }]);
+  const out = await tool('ads_search_stream').handler({ customer_id: CUSTOMER, query: 'select campaign.id from campaign' });
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0].method, 'POST');
+  assert.equal(calls[0].url, `${BASE}/customers/${CUSTOMER}/googleAds:searchStream`);
+  assert.deepEqual(calls[0].body, { query: 'select campaign.id from campaign' });
+  assert.deepEqual(Object.keys(calls[0].body), ['query'], 'no pageSize or pageToken on the stream request');
+  assert.equal(calls[0].headers['developer-token'], TOKEN);
+  assert.equal(calls[0].headers['login-customer-id'], undefined);
+  assert.deepEqual(out, { rowCount: 2, results: [{ campaign: { id: '1' } }, { campaign: { id: '2' } }] });
+  assert.equal(Object.hasOwn(tool('ads_search_stream').inputSchema, 'page_token'), false, 'no continuation input');
+  assert.equal(Object.hasOwn(tool('ads_search_stream').inputSchema, 'page_size'), false);
+  reset(() => []);
+  await tool('ads_search_stream').handler({ customer_id: CUSTOMER, query: 'SELECT campaign.id FROM campaign', page_token: 'p1' });
+  assert.deepEqual(calls[0].body, { query: 'SELECT campaign.id FROM campaign' });
+});
+
+test('ads_search_stream builds PARAMETERS from structured parts, echoes that query and takes a per-call manager id', async () => {
+  reset(() => [{ results: [] }]);
+  const out = await tool('ads_search_stream').handler({
+    customer_id: '123-456-7890',
+    login_customer_id: '111-111-1111',
+    fields: ['campaign.id', 'campaign.name'],
+    resource: 'campaign',
+    conditions: ["campaign.status = 'ENABLED'"],
+    orderings: ['campaign.name DESC'],
+    limit: 25,
+  });
+  assert.equal(
+    calls[0].body.query,
+    "SELECT campaign.id, campaign.name FROM campaign WHERE campaign.status = 'ENABLED' ORDER BY campaign.name DESC LIMIT 25 PARAMETERS omit_unselected_resource_names=true",
+  );
+  assert.equal(calls[0].url, `${BASE}/customers/1234567890/googleAds:searchStream`);
+  assert.equal(calls[0].headers['login-customer-id'], '1111111111');
+  assert.equal(out.query, calls[0].body.query, 'the SELECT built from parts is echoed');
+  assert.deepEqual(out.results, []);
+  assert.match(tool('ads_search_stream').description, /one SearchStream request as one operation however many batches it returns/);
+});
+
+test('ads_search_stream joins every batch in order and applies no local row cap', async () => {
+  const first = Array.from({ length: 300 }, (_, i) => ({ campaign: { id: String(i) } }));
+  const second = Array.from({ length: 300 }, (_, i) => ({ campaign: { id: String(i + 300) } }));
+  reset(() => [{ results: first }, { results: second }]);
+  const out = await tool('ads_search_stream').handler({ customer_id: CUSTOMER, query: 'SELECT campaign.id FROM campaign' });
+  assert.equal(out.rowCount, 600);
+  assert.equal(out.results.length, 600);
+  assert.deepEqual(out.results, [...first, ...second]);
+  assert.equal(out.truncated, undefined, '600 rows are not cut by the absent row cap');
+  assert.equal(out.next_page_token, undefined);
+});
+
+test('ads_search_stream accepts the documented array envelope only; it does not invent a single-object fallback', async () => {
+  reset(() => ({ results: [{ campaign: { id: '1' } }] }));
+  await assert.rejects(tool('ads_search_stream').handler({ customer_id: CUSTOMER, query: 'SELECT campaign.id FROM campaign' }), /expected an array of batches/);
+  assert.equal(calls.length, 1);
 });
 
 test('ads_list_customers sends a GET to customers:listAccessibleCustomers and returns the resource names', async () => {
@@ -400,6 +471,11 @@ test('login_customer_id: a manager account for one call, sent as the login-custo
   await tool('ads_search').handler({ customer_id: '111-222-3333', login_customer_id: '999-888-7777', query: 'SELECT campaign.id FROM campaign' });
   assert.equal(calls[0].headers['login-customer-id'], '9998887777');
   assert.equal(calls[0].url, 'https://googleads.googleapis.com/v26/customers/1112223333/googleAds:search');
+  // The shared helper still trims after removing dashes, so surrounding whitespace is accepted.
+  reset(() => ({ results: [] }));
+  await tool('ads_search').handler({ customer_id: CUSTOMER, login_customer_id: ' 1234567890 ', query: 'SELECT campaign.id FROM campaign' });
+  assert.equal(calls[0].headers['login-customer-id'], '1234567890');
+  reset(() => ({ results: [] }));
   // The field catalog takes it too, and the mutate call carries it.
   reset(() => ({ results: [] }));
   await tool('ads_resource_metadata').handler({ resource: 'campaign', login_customer_id: 4445556666 });
@@ -410,6 +486,9 @@ test('login_customer_id: a manager account for one call, sent as the login-custo
   assert.equal(calls[0].headers['login-customer-id'], '1111111111');
   // A bad id is refused before any request.
   reset(() => ({}));
-  await assert.rejects(tool('ads_search').handler({ customer_id: CUSTOMER, login_customer_id: 'abc', query: 'SELECT campaign.id FROM campaign' }), /login_customer_id must be the customer id, digits only/);
+  await assert.rejects(
+    tool('ads_search').handler({ customer_id: CUSTOMER, login_customer_id: 'abc', query: 'SELECT campaign.id FROM campaign' }),
+    (err) => err.message === 'login_customer_id must be the customer id, digits only (dashes are allowed and removed).',
+  );
   assert.equal(calls.length, 0);
 });

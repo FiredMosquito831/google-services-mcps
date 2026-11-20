@@ -10,6 +10,7 @@
  */
 import { existsSync, statSync } from 'node:fs';
 import { join } from 'node:path';
+import { z } from 'zod';
 import type { RuntimeConfig } from './config.js';
 import { readSecretText } from './secret-files.js';
 import { optionValue } from './plugin-option.js';
@@ -18,6 +19,28 @@ import { optionValue } from './plugin-option.js';
 export const ADS_HOST = 'googleads.googleapis.com';
 export const DEVELOPER_TOKEN_ENV = 'GSM_ADS_DEVELOPER_TOKEN';
 export const LOGIN_CUSTOMER_ENV = 'GSM_ADS_LOGIN_CUSTOMER_ID';
+/** The declared API name whose methods run on ADS_HOST. Used to detect an Ads gateway API before reading the catalog. */
+export const ADS_API_NAME = 'googleads';
+
+/** Pure, catalog-free host derivation from a declared API ref: no tools/list build ever loads the catalog. */
+export function adsHostForApi(api: string): string | undefined {
+  return api === ADS_API_NAME ? ADS_HOST : undefined;
+}
+
+/** A customer or manager account id as the tools take it: digits, with or without dashes, as the Ads UI shows it. */
+export function customerIdOf(value: number | string, what: string): string {
+  const digits = String(value).replace(/-/g, '').trim();
+  if (!/^\d+$/.test(digits)) throw new Error(`${what} must be the customer id, digits only (dashes are allowed and removed).`);
+  return digits;
+}
+
+/** The optional per-call manager argument, shared by the curated, generated and gateway Ads tools. */
+export const LOGIN_CUSTOMER_ID_ARG = z
+  .union([z.string(), z.number()])
+  .optional()
+  .describe(
+    'The manager account this call acts through (login-customer-id), such as 123-456-7890. It replaces the account configured for the plugin (ads_login_customer_id) for this call only, so one session can reach several managers or a direct account.',
+  );
 
 /** True when the URL is on the Google Ads host. */
 export function isGoogleAdsUrl(url: string): boolean {

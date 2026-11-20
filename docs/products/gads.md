@@ -22,32 +22,37 @@ node <plugin>/bin/gsm.mjs status
 
 `<plugin>` is the plugin folder (in this repo, `plugins/gads`).
 
+**Scope breadth:** the `node <plugin>/bin/gsm.mjs login ...` commands above use the plugin's own CLI, whose registry contains only the `gads` server; that login still requests the full set of Ads and gateway scopes. `npx google-services-mcps login business` uses the repository registry and, without `--servers`, covers all five `business` servers — `ganalytics`, `gtm`, `gyoutube`, `gbusiness` and `gads` — so it asks for a broader scope set. To request only the `gads` server's scopes with the npm CLI, use `npx google-services-mcps login business --profile readwrite --servers gads`. For a named account that already has broader `business` scopes stored, `--replace` drops those stored scopes; it also drops stored scopes for `ganalytics`, `gtm`, `gyoutube` and `gbusiness`, so their tools will not load until the user signs in again for those servers. Use `--replace` only when that narrowing is intended. `npx google-services-mcps scopes business --json` and `npx google-services-mcps scopes business --servers gads --json` show the two sets locally without signing in.
+
 1. In a Google Cloud project, enable the Google Ads API. Enable the other ad APIs you use.
 2. Set up the OAuth consent screen. Use Internal for a Workspace domain. Create an OAuth client ID of type Desktop app and download the JSON file.
 3. Run `setup-client`, then `login business`. Restart the MCP server (`/mcp`) after login.
 
 Access comes from the Cloud project of the OAuth client. The project needs a Google Ads API access level: Test, Explorer, Basic or Standard. A developer token is optional. The suite sends the header only if you set one.
 
-Sign in with `--profile readwrite`. The Google Ads API has one scope, `adwords`, and it has no read-only form, so a `readonly` login covers none of the Google Ads tools: not `ads_search`, `ads_list_customers` or `ads_resource_metadata` (with the `all` toolset it covers only a few AdSense and AdMob reads). The login and `auth_login` say so in a `Not covered:` line. With `readwrite` the reads load; changes still need the plugin option `allow_writes`, so a `readwrite` login with writes off lists the reads only.
+Sign in with `--profile readwrite`. The Google Ads API has one scope, `adwords`, and it has no read-only form, so a `readonly` login covers none of the Google Ads tools: not `ads_search`, `ads_search_stream`, `ads_list_customers` or `ads_resource_metadata` (with the `all` toolset it covers only a few AdSense and AdMob reads). The login and `auth_login` say so in a `Not covered:` line. With `readwrite` the reads load; changes still need the plugin option `allow_writes`, so a `readwrite` login with writes off lists the reads only.
 
 ## What it can do
 
 | Area | Tools | Safety | What it does |
 |---|---|---|---|
 | Accounts (hand-written) | `ads_list_customers` | read | List the Google Ads accounts the user can reach |
-| Reporting (hand-written) | `ads_search` | read | Run a read-only GAQL query, as text or as fields, resource, conditions, orderings and limit. It accepts SELECT only. |
+| Reporting (hand-written) | `ads_search` | read | Run a read-only GAQL query, as text or as fields, resource, conditions, orderings and limit. It accepts SELECT only, and shows one page of at most 500 rows. |
+| Streaming (hand-written) | `ads_search_stream` | read | Stream all rows of a GAQL SELECT, as text or as fields, resource, conditions, orderings and limit; no local row cap, no resume token, and only the 25,000-character result limit can cut whole rows. |
 | Fields (hand-written) | `ads_resource_metadata` | read | The fields a resource can select, filter by and sort by |
 | Changes (hand-written) | `ads_mutate` | dynamic | Change Google Ads resources. A validate-only check asks nothing. A removal is destructive. Any other change is a write, and the approval lists one line per operation, removals first. |
 | Per-method (323) | | mixed | Google Ads API (175 methods), Search Ads 360 (161), Display & Video 360 (179), AdMob, Bid Manager |
 | Gateway (25 APIs) | `api_search`, `api_describe`, `api_call` | read, read, dynamic | AdSense, Ad Exchange Buyer II, Campaign Manager 360, Real-time Bidding, Authorized Buyers, Data Manager and others |
+| Reference resources (4 MCP resources) | `resource://discovery-document`, `resource://metrics`, `resource://segments`, `resource://release-notes` | read | Offline Google Ads API v26 Discovery metadata, GAQL metrics/segments reference catalogs, and server release notes (always mounted regardless of login or toolset). |
 
 The full list is in `docs/capabilities/gads.md`.
 
-`ads_search`, `ads_resource_metadata` and `ads_mutate` each take `login_customer_id`, a manager account to act through for that call (Google's `login-customer-id` header). It replaces the configured one (`ads_login_customer_id`, `GSM_ADS_LOGIN_CUSTOMER_ID`) for that call, so one session can reach two managers or a manager's client and a direct account. Customer ids are taken with or without dashes, as the Ads UI shows them.
+`ads_search`, `ads_search_stream`, `ads_resource_metadata` and `ads_mutate` each take `login_customer_id`, a manager account to act through for that call (Google's `login-customer-id` header). It replaces the configured one (`ads_login_customer_id`, `GSM_ADS_LOGIN_CUSTOMER_ID`) for that call, so one session can reach two managers or a manager's client and a direct account. Customer ids are taken as a string or number, with or without dashes, and surrounding whitespace is trimmed after the dashes are removed (`123-456-7890` and `' 1234567890 '` both become `1234567890`). The 33 generated `googleads.*` tools and the gAds gateway's `api_call` take the same optional argument on Google Ads calls; an invalid value is refused before any request or approval with `login_customer_id must be the customer id, digits only (dashes are allowed and removed).`, and there is no fall-back to the configured manager. A generated or gateway write's approval shows the normalized digits. `api_call` is one shared schema for all declared gAds gateway APIs: supplying `login_customer_id` with a non-Ads method (for example `searchads360.*`) or a final URL outside `googleads.googleapis.com` is refused before scope check, approval and request.
 
 ## Example requests
 
 - "Which campaigns spent the most last month?" Claude runs `ads_search` with a GAQL SELECT. No prompt.
+- "Pull every matching row of a large report." Claude runs `ads_search_stream` with a GAQL SELECT. No prompt; if the result limit cuts rows, narrow the query, because a stream has no page token to resume from. Google documents one SearchStream request as one operation however many batches it returns.
 - "Which fields can I report on for ad groups?" Claude runs `ads_resource_metadata` with `resource: "ad_group"`. No prompt.
 - "List the Google Ads accounts I can use." Claude runs `ads_list_customers`. No prompt.
 - "Check whether this budget change would work." Claude runs `ads_mutate` with validate-only set. It asks nothing, and nothing changes.
@@ -57,9 +62,10 @@ The full list is in `docs/capabilities/gads.md`.
 
 ## Safety
 
-- `ads_mutate` can change live campaigns. Validate first, then approve the real change. The approval the server shows lists one line per operation (verb, resource, target and update mask), removals first, then a count of any it did not list; the consent hook's own line is built from the raw arguments and is still cut at 2,000 characters, so with the hook active read the server's form when it appears.
+- `ads_mutate` can change live campaigns. Validate first, then approve the real change. The approval the server shows lists one line per operation (verb, resource, target and update mask), removals first, then a count of any it did not list (keeping big batches compact rather than expanding every remainder line in approvals); the consent hook's own line is built from the raw arguments and is still cut at 2,000 characters, so with the hook active read the server's form when it appears.
 - `ads_search` cannot change data. It rejects anything but SELECT, and checks the parts of a structured query before sending it.
-- With the plugin option `toolset` set to `google`, gads lists only `ads_list_customers`, `ads_search` and `ads_resource_metadata`, the tools of Google's read-only Google Ads MCP server.
+- `ads_search_stream` cannot change data. It accepts SELECT only, calls `googleAds:searchStream` once, redacts credential fields in every batch, and does not expose `page_token` or a synthetic row cap.
+- With the plugin option `toolset` set to `google`, gads lists the four read tools (`ads_list_customers`, `ads_search`, `ads_resource_metadata`, `ads_search_stream`) alongside the four read-only MCP reference resources (`resource://discovery-document`, `resource://metrics`, `resource://segments`, `resource://release-notes`). Google's hosted server also mounts `assets_create_asset`, `assets_upload_video_asset`, `labels_manage_labels` and `labels_manage_label_associations` when the `assets`/`labels` namespaces are enabled (https://developers.google.com/google-ads/api/docs/developer-toolkit/mcp-server). Here, `toolset: google` stays read-only while `ads_mutate` and generated `googleads.customers.*` mutate tools live in `curated` and `all`.
 - Reads never ask. Writes ask first. Removals ask twice.
 - The gateway reaches APIs that have no per-method tool. Check each call with `api_describe`.
 - The `confirmation` option defaults to `every-change`. Change it with `printf '%s' '{"confirmation":"destructive-only"}' | claude plugin configure gads@google-services-mcps --values-stdin` (JSON on stdin), or `/plugin configure gads@google-services-mcps` in Claude Code.
@@ -73,5 +79,5 @@ No cost is stated for the Google Ads access levels, but tools that fail Required
 - Explorer does not allow account creation, user management, Keyword Plan, Audience Insights, Reach Plan or billing.
 - Whether a validate-only mutate counts against the daily quota, and the per-second rules and reset time, are UNVERIFIED.
 - Google sunset developer tokens on 2026-09-09. The access level is what counts now.
-- Only the three hand-written tools take `login_customer_id`. The per-method and gateway tools send the configured manager account (`ads_login_customer_id`); a per-call one there is a separate change.
+- Calls that omit `login_customer_id` still use only the configured manager account (`ads_login_customer_id`). Search Ads 360 per-method tools do not take the per-call argument; the shared gAds `api_call` schema does, but refuses it for non-Ads method ids.
 - Not every resource has a per-method tool. Use `api_search` for the rest.

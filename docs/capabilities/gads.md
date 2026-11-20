@@ -4,11 +4,11 @@ Google Ads API (accounts, campaigns, ad groups, ads, keywords, budgets, conversi
 
 - Plugin: `gads`, MCP server: `gads`, login: Desktop OAuth client, then `login business`
 - Install: `claude plugin install gads@google-services-mcps`
-- Tools: 338 total. Curated 11, per-method 323, gateway 3. Read 105, write 189, destructive 20, dynamic 24.
+- Tools: 339 total. Curated 12, per-method 323, gateway 3. Read 106, write 189, destructive 20, dynamic 24.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 338, google 10, curated 14 tools, each counting the 7 runtime tools this server registers (`account_remove`, `account_set_default`, `accounts_list`, `auth_login`, `auth_setup_client`, `auth_status`, `health`). "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 339, google 11, curated 15 tools, each counting the 7 runtime tools this server registers (`account_remove`, `account_set_default`, `accounts_list`, `auth_login`, `auth_setup_client`, `auth_status`, `health`). "(all)" means the product has no such toolset yet, so it lists every tool.
 
 ## Not registered by this server (2)
 
@@ -16,17 +16,18 @@ The tool map (`plugins/<id>/tool-map.json`) also lists these, so the consent hoo
 
 - Sign-in tools of other sign-in kinds: `auth_setup_admin`, `auth_setup_service_account`.
 
-## Toolset google (3)
+## Toolset google (4)
 
-The tools that match Google's official MCP server for this product (https://developers.google.com/google-ads/api/docs/developer-toolkit/mcp-server, https://github.com/googleads/google-ads-mcp).
+Our read-only google toolset exposes four read tools (matching Google's three read tools with both paged search and SearchStream) plus the four read-only MCP reference resources (`resource://discovery-document`, `resource://metrics`, `resource://segments`, `resource://release-notes`). Google's hosted server also mounts partial asset, video and label mutate tools when those namespaces are enabled, and can be configured read-only by disabling them (https://developers.google.com/google-ads/api/docs/developer-toolkit/mcp-server, https://github.com/googleads/google-ads-mcp).
 
 | Tool | Google's tool | Note |
 |---|---|---|
 | `ads_list_customers` | `list_accessible_customers` | The customer resource names the signed-in user can reach; the digits are the customer_id of the other tools. Google's server exposes it as customers_list_accessible_customers. |
-| `ads_search` | `search` | One page of GAQL, at most 500 rows, given as text or as fields, resource, conditions, orderings and limit (Google's structured form, with PARAMETERS omit_unselected_resource_names=true). It calls googleAds:search, not searchStream, and never sends pageSize; next_page_token with page_token reads the next page. Google's server is read-only, so ads_mutate (validate first, then gated changes) is not in this list; it stays in the all and curated toolsets. The manager account is ads_login_customer_id (GSM_ADS_LOGIN_CUSTOMER_ID) unless a call names its own login_customer_id, which applies to that call only. |
+| `ads_search` | `search` | One page of GAQL, at most 500 rows, given as text or as fields, resource, conditions, orderings and limit (Google's structured form, with PARAMETERS omit_unselected_resource_names=true). It calls googleAds:search, not searchStream, and never sends pageSize; next_page_token with page_token reads the next page. Google's hosted Ads MCP server also mounts narrow asset-creation, video-upload and label mutations when the assets/labels namespaces are enabled, and can be deployed read-only by disabling them; this google profile keeps four read tools plus the four read-only reference resources (resource://discovery-document, resource://metrics, resource://segments, resource://release-notes). ads_mutate (validate first, then gated changes) and generated Ads mutate tools stay in the all and curated toolsets. The manager account is ads_login_customer_id (GSM_ADS_LOGIN_CUSTOMER_ID) unless a call names its own login_customer_id, which applies to that call only. |
 | `ads_resource_metadata` | `get_resource_metadata` | The two field queries Google's get_resource_metadata runs (the resource's attributes, then every field selectable with it), as selectable, filterable and sortable name lists. |
+| `ads_search_stream` | `search` | The curated SELECT-only streamed read: googleAds:searchStream joins all batches into one results array, with no row cap and no resume token; only the result limit can cut whole rows. It takes the same query forms and per-call login_customer_id as ads_search. Google documents one SearchStream request as one operation however many batches it returns. |
 
-## Curated tools (11)
+## Curated tools (12)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
@@ -37,6 +38,7 @@ The tools that match Google's official MCP server for this product (https://deve
 | `ads_mutate` | dynamic | Change Google Ads resources | adwords |
 | `ads_resource_metadata` | read | Fields of a Google Ads resource | adwords |
 | `ads_search` | read | Search Google Ads (GAQL) | adwords |
+| `ads_search_stream` | read | Stream a Google Ads GAQL read | adwords |
 | `auth_login` | write | Sign in to Google | (none) |
 | `auth_setup_client` | write | Save the Google OAuth client | (none) |
 | `auth_status` | read | Sign-in status | (none) |

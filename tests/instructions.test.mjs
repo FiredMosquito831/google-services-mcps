@@ -204,7 +204,7 @@ test('a server on the google toolset says so in its instructions', { timeout: 12
   assert.ok(!text.includes('profile readwrite (readonly covers none'), 'gmail keeps readonly');
   const fallback = await instructionsOf('gcloud', false, 'curated');
   assert.ok(fallback.text.includes('Toolset: curated'), fallback.text);
-  // The google list of gads is the three Google Ads tools, which have no read-only scope.
+  // The google list of gads is four read tools, which have no read-only scope.
   const ads = await instructionsOf('gads', false, 'google');
   assert.ok(ads.text.includes('profile readwrite (readonly covers none of these tools'), ads.text);
 });

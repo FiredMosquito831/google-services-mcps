@@ -43,6 +43,7 @@ import type { RuntimeConfig } from './config.js';
 import { invocation } from './invocation.js';
 import { loadRegistry, serverByName, type AuthGroup } from './registry.js';
 import { overrideForMethod, STREETVIEW_ROUTE } from './credential-route.js';
+import { ADS_HOST, adsHostForApi, customerIdOf, isGoogleAdsUrl, LOGIN_CUSTOMER_ID_ARG } from './ads.js';
 import { classifyMethod } from './discovery/methods.js';
 import { buildUrl, loadToolKinds, rootForPath, sendAuthorized, type RegionalEndpoint } from './discovery/tools.js';
 import type { GateFn } from './approval.js';
@@ -168,6 +169,14 @@ const callShape = {
 type SearchArgs = z.infer<z.ZodObject<typeof searchShape>>;
 type DescribeArgs = z.infer<z.ZodObject<typeof describeShape>>;
 type CallArgs = z.infer<z.ZodObject<typeof callShape>>;
+/** The extra argument of the one shared gAds api_call schema. Other products' schemas never include it. */
+type AdsCallArgs = CallArgs & { login_customer_id?: string | number };
+
+/** api_call is one static tool per product; adding the Ads argument changes only products that declare an Ads API. */
+const adsCallShape = { ...callShape, login_customer_id: LOGIN_CUSTOMER_ID_ARG };
+function hasAdsApi(apis: readonly { api: string; version: string }[]): boolean {
+  return apis.some((ref) => adsHostForApi(ref.api) !== undefined);
+}
 
 const TOOL_TEXT = {
   search: {
@@ -750,6 +759,8 @@ interface WireRequest {
   read?: 'bytes' | 'media';
   authMethodId?: string;
   credentialRoute?: string;
+  /** The normalized per-call Ads manager, applied by sendAuthorized after the configured headers. */
+  loginCustomerId?: string;
 }
 
 /** The identity and route of an approved Street View method, for the one sendAuthorized path the gateway uses. */
@@ -784,7 +795,27 @@ function callKindOf(entry: IndexEntry, body: unknown): ActionKind {
   return resolveDynamicKind(entry.id, body) ?? 'destructive';
 }
 
-async function runCall(core: Core, args: CallArgs, ctx: ToolContext | undefined): Promise<unknown> {
+/** The read-only preparation of one call: Discovery facts, validated path/query and the final URL. Sends nothing. */
+async function prepareCall(core: Core, entry: IndexEntry, args: CallArgs) {
+  const { input } = core;
+  const { method, api } = entry;
+  const { doc, raw } = await rawMethodFor(entry, input.cfg);
+  const credentials = credentialFields(input.product, input.cfg, entry, doc.name ?? api.name, doc.version ?? api.version, input.group);
+  const declaredPath = new Set(paramsOf(raw.parameters).filter((p) => p.location === 'path').map((p) => p.name));
+  const allowedQuery = new Set([...paramsOf(raw.parameters), ...paramsOf(doc.parameters)].filter((p) => p.location === 'query').map((p) => p.name));
+  const pathParams = validatePathParams(method.path, args.pathParams ?? {}, declaredPath);
+  const query = validateQuery(args.query ?? {}, allowedQuery);
+
+  // A path that names a location the document has a host for goes to that host (Vertex AI us-central1, Document AI eu,
+  // Discovery Engine us); any other, to the catalog's root as before. The URL is checked against the root it was built on.
+  const onRoot = buildUrl(api.rootUrl, api.servicePath, method.path, pathParams);
+  const root = rootForPath(api.rootUrl, doc.endpoints, new URL(onRoot).pathname);
+  const url = root === api.rootUrl ? onRoot : buildUrl(root, api.servicePath, method.path, pathParams);
+  checkUrl(url, root, api.servicePath);
+  return { doc, raw, credentials, pathParams, query, url, data: method.httpMethod === 'GET' ? undefined : args.body, kind: callKindOf(entry, args.body) };
+}
+
+async function runCall(core: Core, args: AdsCallArgs, ctx: ToolContext | undefined): Promise<unknown> {
   const { input } = core;
   const entry = resolveMethod(core, args.method);
   const { method, api } = entry;
@@ -792,6 +823,18 @@ async function runCall(core: Core, args: CallArgs, ctx: ToolContext | undefined)
   if (method.upload) throw new Error('upload methods are not supported by the gateway');
   if (!GROUPS.includes(input.group)) throw new Error(`Unknown auth group "${input.group}" for product "${input.product}".`);
   const group = input.group as AuthGroup;
+
+  // A per-call manager is normalized here, before any scope check, gate or request. A bad value sends nothing.
+  const loginCustomerId = args.login_customer_id === undefined ? undefined : customerIdOf(args.login_customer_id, 'login_customer_id');
+  if (loginCustomerId !== undefined && adsHostForApi(api.name) === undefined) {
+    throw new Error(`login_customer_id is only accepted for Google Ads calls, not ${entry.id}.`);
+  }
+  // With a manager named, resolve the final URL before the scope check too: a regional endpoint that is not on the Ads
+  // host must be refused, never silently sent with a manager the caller believed was selected.
+  const early = loginCustomerId === undefined ? undefined : await prepareCall(core, entry, args);
+  if (early && !isGoogleAdsUrl(early.url)) {
+    throw new Error(`login_customer_id is only accepted for calls on ${ADS_HOST}; ${entry.id} resolves to ${early.url}.`);
+  }
 
   // A method whose scopes the stored grant does not hold is refused before the gate, so no approval is asked for it.
   // The apikey group has no OAuth grant, so the check does not apply there.
@@ -803,33 +846,22 @@ async function runCall(core: Core, args: CallArgs, ctx: ToolContext | undefined)
   if (method.httpMethod === 'GET' && hasBody) throw new Error(`${entry.id} is a GET method, so it takes no body.`);
 
   // Read-only: fetches the Discovery document (cached) to learn which parameters the method declares.
-  const { doc, raw } = await rawMethodFor(entry, input.cfg);
-  const credentials = credentialFields(input.product, input.cfg, entry, doc.name ?? entry.api.name, doc.version ?? entry.api.version, input.group);
+  const { doc, raw, credentials, pathParams, query, url, data, kind } = early ?? (await prepareCall(core, entry, args));
   if (hasBody && !refOf(raw.request)) throw new Error(`${entry.id} takes no request body.`);
 
-  const declaredPath = new Set(paramsOf(raw.parameters).filter((p) => p.location === 'path').map((p) => p.name));
-  const allowedQuery = new Set(
-    [...paramsOf(raw.parameters), ...paramsOf(doc.parameters)].filter((p) => p.location === 'query').map((p) => p.name),
-  );
-  const pathParams = validatePathParams(method.path, args.pathParams ?? {}, declaredPath);
-  const query = validateQuery(args.query ?? {}, allowedQuery);
-
-  // A path that names a location the document has a host for goes to that host (Vertex AI us-central1, Document AI eu,
-  // Discovery Engine us); any other, to the catalog's root as before. The URL is checked against the root it was built on.
-  const onRoot = buildUrl(api.rootUrl, api.servicePath, method.path, pathParams);
-  const root = rootForPath(api.rootUrl, doc.endpoints, new URL(onRoot).pathname);
-  const url = root === api.rootUrl ? onRoot : buildUrl(root, api.servicePath, method.path, pathParams);
-  checkUrl(url, root, api.servicePath);
-  const data = method.httpMethod === 'GET' ? undefined : args.body;
-
-  const kind = callKindOf(entry, args.body);
   if (kind !== 'read') {
     // The gate sees the arguments with secrets redacted. The request below uses the real values.
     await gateOf(ctx)({
       kind,
       target: entry.id,
       methodId: entry.id,
-      args: redactValue({ method: args.method, pathParams: args.pathParams, query: args.query, body: args.body }),
+      args: redactValue({
+        method: args.method,
+        pathParams: args.pathParams,
+        query: args.query,
+        body: args.body,
+        ...(loginCustomerId === undefined ? {} : { login_customer_id: loginCustomerId }),
+      }),
     });
   }
 
@@ -843,11 +875,12 @@ async function runCall(core: Core, args: CallArgs, ctx: ToolContext | undefined)
   const mayBeFile = raw.supportsMediaDownload === true || (method.httpMethod === 'GET' && /HttpBody$/.test(refOf(raw.response) ?? ''));
   const read = asMedia ? ('media' as const) : mayBeFile ? ('bytes' as const) : undefined;
   const extra = { ...(asMedia ? { headers: { Range: rangeHeader(offset, input.cfg.maxResultChars) } } : {}), ...(read ? { read } : {}) };
+  const manager = loginCustomerId === undefined ? {} : { loginCustomerId };
   let res: { status: number; data: unknown };
   try {
     res = requestOverride
       ? await requestOverride({ url, method: method.httpMethod, params, data, ...extra })
-      : await sendRequest(input.cfg, input.group, { url, method: method.httpMethod, params, data, ...extra, ...credentials });
+      : await sendRequest(input.cfg, input.group, { url, method: method.httpMethod, params, data, ...extra, ...credentials, ...manager });
   } catch (err) {
     throw new Error(httpError(err, input.group, isApiKey ? input.cfg.apiKey : undefined));
   }
@@ -921,8 +954,8 @@ export function gatewayTools(input: GatewayInput): ToolDef[] {
       title: TOOL_TEXT.call.title,
       description: TOOL_TEXT.call.description,
       kind: 'dynamic',
-      inputSchema: callShape,
-      handler: async (args: CallArgs, ctx: ToolContext) => runCall(core, args, ctx),
+      inputSchema: hasAdsApi(input.apis) ? adsCallShape : callShape,
+      handler: async (args: AdsCallArgs, ctx: ToolContext) => runCall(core, args, ctx),
     },
   ];
 }

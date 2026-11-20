@@ -143,8 +143,8 @@ const LEAN_GOOGLE = {
     'appsscript_scripts_run',
   ],
 };
-/** The gads list (1.16.0): Google's 3 Google Ads MCP tools, all reads. */
-const ADS_GOOGLE = ['ads_list_customers', 'ads_search', 'ads_resource_metadata'];
+/** The gads list (Q016): Google's official reads plus the curated SearchStream read; all four are reads. */
+const ADS_GOOGLE = ['ads_list_customers', 'ads_search', 'ads_resource_metadata', 'ads_search_stream'];
 /** The ganalytics list (1.17.0): Google's 10 Google Analytics MCP tools, through four generated and five curated tools. */
 const ANALYTICS_GOOGLE = [
   'gaadmin_acct_summaries_list',
@@ -945,7 +945,7 @@ test('runServer: google on gclassroom lists its 19 tools and the runtime tools, 
   for (const t of google) assert.deepEqual(t, unset.find((u) => u.name === t.name), t.name);
 });
 
-test('runServer: google on gads lists its 3 reads and the runtime tools, with the same schemas as all; ads_mutate is hidden', async () => {
+test('runServer: google on gads lists its 4 reads and the runtime tools, with the same schemas as all; ads_mutate is hidden', async () => {
   const dir = tempDir('gsm-toolset-gads-');
   const entry = curatedEntry(dir, 'gads', 'gads');
   const tokenDir = fakeLogin(dir, 'gads', 'business');

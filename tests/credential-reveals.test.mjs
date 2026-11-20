@@ -18,6 +18,7 @@ import { createRequire } from 'node:module';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { OAuth2Client } from 'google-auth-library';
 
 const require = createRequire(import.meta.url);
 const dist = (p) => new URL(`../dist/${p}`, import.meta.url).href;
@@ -536,6 +537,48 @@ test('Google Ads: a nested webhook secret in a search row and in each element of
   });
   assert.equal(stream.length, 2);
   for (const chunk of stream) assert.equal(chunk.results[0].asset.leadFormAsset.deliveryMethods[0].webhook.googleSecret, '[redacted: webhook anti-spoofing secret]');
+});
+
+test('the curated ads_search_stream handler redacts a secret-bearing row in every batch of one response', async () => {
+  const dir = tempDir('gsm-cred-ads-stream-');
+  writeFileSync(join(dir, 'client_secret.json'), JSON.stringify({ installed: { client_id: 'test-client', client_secret: 'test-secret' } }));
+  writeFileSync(
+    join(dir, 'business.token.json'),
+    JSON.stringify({ access_token: 'test-token', refresh_token: 'test-refresh', expiry_date: Date.now() + 3600_000, token_type: 'Bearer', scope: 'https://www.googleapis.com/auth/adwords' }),
+  );
+  const cfg = loadConfig({ GSM_TOKEN_DIR: dir, GSM_ALLOW_WRITES: 'true' });
+  const { buildTools } = await import(dist('servers/gads.js'));
+  const tool = (await buildTools(cfg)).find((t) => t.name === 'ads_search_stream');
+  assert.ok(tool, 'the curated stream tool is registered');
+  const row = (id) => ({
+    campaign: { id },
+    asset: {
+      resourceName: `customers/1/assets/${id}`,
+      leadFormAsset: { deliveryMethods: [{ webhook: { advertiserWebhookUrl: 'https://example.com/hook', googleSecret: `shared-secret-${id}`, payloadSchemaVersion: '3' } }] },
+    },
+  });
+  const originalRequest = OAuth2Client.prototype.request;
+  const requests = [];
+  OAuth2Client.prototype.request = async function fakeRequest(opts) {
+    requests.push(opts);
+    return { data: [{ results: [row('1')] }, { results: [row('2')] }] };
+  };
+  try {
+    const out = await tool.handler({ customer_id: '1234567890', query: 'SELECT campaign.id FROM campaign' });
+    assert.equal(requests.length, 1, 'one stream request');
+    assert.match(String(requests[0].url), /googleAds:searchStream$/);
+    assert.equal(out.rowCount, 2);
+    assert.equal(out.results.length, 2);
+    for (const [i, id] of ['1', '2'].entries()) {
+      const webhook = out.results[i].asset.leadFormAsset.deliveryMethods[0].webhook;
+      assert.equal(webhook.googleSecret, '[redacted: webhook anti-spoofing secret]');
+      assert.equal(webhook.advertiserWebhookUrl, 'https://example.com/hook');
+      assert.equal(out.results[i].campaign.id, id);
+    }
+    assert.equal(JSON.stringify(out).includes('shared-secret-'), false, 'no secret reaches the answer');
+  } finally {
+    OAuth2Client.prototype.request = originalRequest;
+  }
 });
 
 /** Generated tools of one snapshot, served by the apikey group with a fake key and a fake fetch (no network). */

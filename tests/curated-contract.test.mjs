@@ -832,6 +832,18 @@ const CASES = {
       expect: ['googleads.customers.googleAds.search'],
     },
   ],
+  ads_search_stream: [
+    {
+      args: { customer_id: '1234567890', query: 'SELECT campaign.id FROM campaign' },
+      expect: ['googleads.customers.googleAds.searchStream'],
+      respond: () => [{ results: [{ campaign: { id: '1' } }] }, { results: [] }],
+    },
+    {
+      args: { customer_id: '1234567890', fields: ['campaign.id'], resource: 'campaign', login_customer_id: '111-111-1111' },
+      expect: ['googleads.customers.googleAds.searchStream'],
+      respond: () => [{ results: [] }],
+    },
+  ],
   ads_resource_metadata: [
     {
       args: { resource: 'campaign' },
@@ -1293,7 +1305,7 @@ test('every curated tool has a contract row, a skip reason or a known defect, an
   const listed = new Set([...Object.keys(CASES), ...Object.keys(SKIPPED), ...Object.keys(KNOWN_DEFECTS)]);
   assert.deepEqual([...tools.keys()].filter((name) => !listed.has(name)), [], 'curated tools without a row');
   assert.deepEqual([...listed].filter((name) => !tools.has(name)), [], 'rows for tools that do not exist');
-  assert.equal(tools.size, 169, 'the curated tool count; update the table when it changes');
+  assert.equal(tools.size, 170, 'the curated tool count; update the table when it changes');
 });
 
 for (const [name, cases] of Object.entries(CASES)) {

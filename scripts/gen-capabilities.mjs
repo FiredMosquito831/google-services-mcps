@@ -52,6 +52,12 @@ const marketplace = readJson('.claude-plugin/marketplace.json');
 
 const GATEWAY_TOOLS = new Set(['api_search', 'api_describe', 'api_call']);
 const LIST_TOOL = 'api_methods';
+// gAds only: the generic "matches the official server" intro would imply full mutation parity, while our google toolset
+// exposes the four read tools (including ads_search_stream) plus the four reference resources (resource://* URIs)
+// and keeps asset/video/label mutations in all/curated.
+const GOOGLE_TOOLSET_INTRO = {
+  gads: "Our read-only google toolset exposes four read tools (matching Google's three read tools with both paged search and SearchStream) plus the four read-only MCP reference resources (`resource://discovery-document`, `resource://metrics`, `resource://segments`, `resource://release-notes`). Google's hosted server also mounts partial asset, video and label mutate tools when those namespaces are enabled, and can be configured read-only by disabling them (https://developers.google.com/google-ads/api/docs/developer-toolkit/mcp-server, https://github.com/googleads/google-ads-mcp).",
+};
 
 const LOGIN = {
   cloud: 'Desktop OAuth client, then `login cloud`',
@@ -214,7 +220,8 @@ for (const p of perProduct) {
     // A source that is a sentence ends with a period already: the line adds one, so strip it (before 2.4.0 eight pages
     // read "…chosen here.."; a source that is a URL has no trailing period).
     const source = (Array.isArray(p.google.source) ? p.google.source.join(', ') : p.google.source)?.replace(/\.+$/, '');
-    lines.push(
+    if (GOOGLE_TOOLSET_INTRO[p.id]) lines.push(GOOGLE_TOOLSET_INTRO[p.id]);
+    else lines.push(
       official
         ? `The tools that match Google's official MCP server for this product${source ? ` (${source})` : ''}.`
         : `Google has no official MCP server for this product. The google toolset is a lean set chosen here${source ? `: ${source}` : ''}.`,

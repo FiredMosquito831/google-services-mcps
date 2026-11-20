@@ -226,7 +226,8 @@
         "google": [
           "ads_list_customers",
           "ads_search",
-          "ads_resource_metadata"
+          "ads_resource_metadata",
+          "ads_search_stream"
         ]
       },
       "scopes": [

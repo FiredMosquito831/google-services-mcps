@@ -108,6 +108,14 @@
     "title": "Search Google Ads (GAQL)"
   },
   {
+    "name": "mcp__plugin_gads_gads__ads_search_stream",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "title": "Stream a Google Ads GAQL read"
+  },
+  {
     "name": "mcp__plugin_gads_gads__api_call",
     "kind": "dynamic",
     "scopes": [],
