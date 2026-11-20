@@ -1280,6 +1280,10 @@
             "billing_services_list",
             "billing_services_skus_list",
             "billing_price_lookup",
+            "billing_account_services",
+            "billing_account_sku_groups",
+            "billing_account_skus",
+            "billing_sku_groups",
             "iam_policies_list_policies",
             "iam_policies_get",
             "iam_policies_create_policy",
@@ -1289,6 +1293,9 @@
             "iam_roles_list",
             "iam_role_get",
             "logging_entries_list",
+            "logging_log_names_list",
+            "logging_buckets",
+            "logging_views",
             "monitor_projects_time_series_list",
             "monitoring_query_promql",
             "monitor_metric_descriptors_list",
@@ -1406,6 +1413,26 @@
               "list_billing_account_prices",
               "get_billing_account_price"
             ],
+            "billing_account_services": [
+              "list_billing_account_services",
+              "get_billing_account_service"
+            ],
+            "billing_account_sku_groups": [
+              "list_billing_account_sku_groups",
+              "get_billing_account_sku_group",
+              "list_billing_account_sku_group_skus",
+              "get_billing_account_sku_group_sku"
+            ],
+            "billing_account_skus": [
+              "list_billing_account_skus",
+              "get_billing_account_sku"
+            ],
+            "billing_sku_groups": [
+              "list_sku_groups",
+              "get_sku_group",
+              "list_sku_group_skus",
+              "get_sku_group_sku"
+            ],
             "iam_policies_list_policies": [
               "list_deny_policies"
             ],
@@ -1432,6 +1459,17 @@
             ],
             "logging_entries_list": [
               "list_log_entries"
+            ],
+            "logging_log_names_list": [
+              "list_log_names"
+            ],
+            "logging_buckets": [
+              "list_buckets",
+              "get_bucket"
+            ],
+            "logging_views": [
+              "list_views",
+              "get_view"
             ],
             "monitor_projects_time_series_list": [
               "list_timeseries"
@@ -1491,13 +1529,20 @@
           "notes": {
             "cloud_project_iam_policy": "Google's IAM server reads deny policies and roles, not who holds a role on a project. Kept because that is the first IAM question; Resource Manager's getIamPolicy, a read.",
             "bq_table_preview": "No tool of Google's BigQuery server reads rows without a query. Kept: tabledata.list, which has no query cost.",
-            "bq_query_read": "A dry run first refuses any statement that is not a SELECT, so it stays a read; bigquery_jobs_query (execute_sql) runs any statement and asks first.",
+            "bq_query_read": "A dry run via jobs.query first refuses any statement that is not a SELECT, so it stays a read; bigquery_jobs_query (execute_sql) escalates DDL/DML/mutating or multi-statement SQL (DROP, DELETE, TRUNCATE, UPDATE, INSERT, MERGE, CREATE, ALTER) to destructive and asks twice, while single SELECT writes ask once.",
             "billing_services_list": "Google's get_service has no method in Cloud Billing v1; the list covers it.",
             "billing_services_skus_list": "Google's get_sku has no method in Cloud Billing v1; the list covers it, and billing_price_lookup finds SKUs by words.",
-            "billing_price_lookup": "Prices of one SKU (v1beta skus.price.get), or SKUs of a service found by words and region with their list prices, and a billing account's own prices (v1beta billingAccounts.skus.price.get). Google's SKU-group and billing-account SKU and service listings are reached with the gateway (api_call) in the all toolset.",
+            "billing_price_lookup": "Prices of one SKU (v1beta skus.price.get), or SKUs of a service found by words and region with their list prices, and a billing account's own prices (v1beta billingAccounts.skus.price.get). Google's SKU-group and billing-account SKU and service listings now have named curated tools: billing_account_services, billing_account_sku_groups, billing_account_skus and billing_sku_groups. Other operations are still reached with the gateway (api_call) in the all toolset.",
+            "billing_account_services": "Curated v1beta read matching Google's list_billing_account_services and get_billing_account_service. Compact service rows with next_page_token; only page_token is accepted because no source here reports a pageSize maximum. Anything else needs the gateway (api_call) in the all toolset.",
+            "billing_account_sku_groups": "Curated v1beta read matching Google's list_billing_account_sku_groups, get_billing_account_sku_group, list_billing_account_sku_group_skus and get_billing_account_sku_group_sku. Compact rows with next_page_token; only page_token is accepted because no source here reports a pageSize maximum. Anything else needs the gateway (api_call) in the all toolset.",
+            "billing_account_skus": "Curated v1beta read matching Google's list_billing_account_skus and get_billing_account_sku. Compact SKU rows with next_page_token; only page_token is accepted because no source here reports a pageSize maximum. Anything else needs the gateway (api_call) in the all toolset.",
+            "billing_sku_groups": "Curated public v1beta read matching Google's list_sku_groups, get_sku_group, list_sku_group_skus and get_sku_group_sku. Compact rows with next_page_token; only page_token is accepted because no source here reports a pageSize maximum. Anything else needs the gateway (api_call) in the all toolset.",
             "iam_roles_list": "Reads only. Google's create_role, update_role, delete_role and undelete_role (IAM v1) are reached with the gateway (api_call) in the all toolset. IAM lists only the cloud-platform scope for roles, so a readonly login cannot run it.",
             "iam_role_get": "IAM lists only the cloud-platform scope for roles, so a readonly login cannot run it.",
-            "logging_entries_list": "Google's list_log_names, list_buckets, list_views (and the observability server's sinks and log scopes) are reached with the gateway (api_call) in the all toolset. Without a time limit the last day is searched, as gcloud logging read does.",
+            "logging_entries_list": "Google's list_log_names, list_buckets and list_views now have named curated tools: logging_log_names_list, logging_buckets and logging_views. The observability server's sinks and log scopes are still reached with the gateway (api_call) in the all toolset. Without a time limit the last day is searched, as gcloud logging read does.",
+            "logging_log_names_list": "Curated Logging v2 read matching Google's list_log_names. Compact log_name rows with next_page_token; only page_token is accepted because no source here reports a pageSize maximum. Anything else needs the gateway (api_call) in the all toolset.",
+            "logging_buckets": "Curated Logging v2 read matching Google's list_buckets and get_bucket. Compact bucket rows with next_page_token on lists; only page_token is accepted because no source here reports a pageSize maximum. Anything else needs the gateway (api_call) in the all toolset.",
+            "logging_views": "Curated Logging v2 read matching Google's list_views and get_view. Compact view rows with next_page_token on lists; only page_token is accepted because no source here reports a pageSize maximum. Anything else needs the gateway (api_call) in the all toolset.",
             "monitoring_query_promql": "Also runs instant queries (Prometheus /query) when no range is given. Our kind is read, as Google marks query_range; since 1.24.5 the gateway's Prometheus POST queries (query, query_range, query_exemplars, series, labels) are reads too (config/tool-kinds.json).",
             "gcs_read_text": "Google's read_text is deprecated in favour of read_object; kept for text, decoded with the object's charset.",
             "gcs_write_text": "Unlike Google's write_text it does not replace an existing object unless overwrite is true (ifGenerationMatch=0). It also uploads a local file (local_path)."

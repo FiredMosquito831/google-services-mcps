@@ -1,5 +1,5 @@
 {
- "_source": "Trimmed from Google's Discovery document cloudbilling v1beta, revision 20261009: only the methods the curated tools call (cloudbilling.billingAccounts.skus.price.get, cloudbilling.skus.price.get) and the schemas their request bodies reach. For tests/curated-contract.test.mjs; this API has no per-method tools, so data/discovery has no snapshot of it.",
+ "_source": "Trimmed from Google's Discovery document cloudbilling v1beta, revision 20261009: only the methods the curated tools call (the two price.get methods plus billingAccounts.services.list/.get, billingAccounts.skuGroups.list/.get, billingAccounts.skuGroups.skus.list/.get, billingAccounts.skus.list/.get, skuGroups.list/.get and skuGroups.skus.list/.get) and the schemas their request bodies reach. For tests/curated-contract.test.mjs; this API has no per-method tools, so data/discovery has no snapshot of it.",
  "name": "cloudbilling",
  "version": "v1beta",
  "title": "Cloud Billing API",
@@ -47,6 +47,276 @@
         }
        }
       }
+     },
+     "methods": {
+      "list": {
+       "id": "cloudbilling.billingAccounts.skus.list",
+       "path": "v1beta/{+parent}/skus",
+       "flatPath": "v1beta/billingAccounts/{billingAccountsId}/skus",
+       "httpMethod": "GET",
+       "description": "Reads cloudbilling.billingAccounts.skus.list.",
+       "parameters": [
+        {
+         "name": "parent",
+         "location": "path",
+         "type": "string",
+         "required": true,
+         "description": "parent parameter."
+        },
+        {
+         "name": "filter",
+         "location": "query",
+         "type": "string",
+         "description": "filter parameter."
+        },
+        {
+         "name": "pageSize",
+         "location": "query",
+         "type": "integer",
+         "description": "pageSize parameter."
+        },
+        {
+         "name": "pageToken",
+         "location": "query",
+         "type": "string",
+         "description": "pageToken parameter."
+        }
+       ],
+       "parameterOrder": [
+        "parent"
+       ],
+       "response": "object",
+       "scopes": [
+        "https://www.googleapis.com/auth/cloud-billing",
+        "https://www.googleapis.com/auth/cloud-billing.readonly",
+        "https://www.googleapis.com/auth/cloud-platform"
+       ]
+      },
+      "get": {
+       "id": "cloudbilling.billingAccounts.skus.get",
+       "path": "v1beta/{+name}",
+       "flatPath": "v1beta/billingAccounts/{billingAccountsId}/skus/{skusId}",
+       "httpMethod": "GET",
+       "description": "Reads cloudbilling.billingAccounts.skus.get.",
+       "parameters": [
+        {
+         "name": "name",
+         "location": "path",
+         "type": "string",
+         "required": true,
+         "description": "name parameter."
+        }
+       ],
+       "parameterOrder": [
+        "name"
+       ],
+       "response": "object",
+       "scopes": [
+        "https://www.googleapis.com/auth/cloud-billing",
+        "https://www.googleapis.com/auth/cloud-billing.readonly",
+        "https://www.googleapis.com/auth/cloud-platform"
+       ]
+      }
+     }
+    },
+    "services": {
+     "methods": {
+      "list": {
+       "id": "cloudbilling.billingAccounts.services.list",
+       "path": "v1beta/{+parent}/services",
+       "flatPath": "v1beta/billingAccounts/{billingAccountsId}/services",
+       "httpMethod": "GET",
+       "description": "Reads cloudbilling.billingAccounts.services.list.",
+       "parameters": [
+        {
+         "name": "parent",
+         "location": "path",
+         "type": "string",
+         "required": true,
+         "description": "parent parameter."
+        },
+        {
+         "name": "pageSize",
+         "location": "query",
+         "type": "integer",
+         "description": "pageSize parameter."
+        },
+        {
+         "name": "pageToken",
+         "location": "query",
+         "type": "string",
+         "description": "pageToken parameter."
+        }
+       ],
+       "parameterOrder": [
+        "parent"
+       ],
+       "response": "object",
+       "scopes": [
+        "https://www.googleapis.com/auth/cloud-billing",
+        "https://www.googleapis.com/auth/cloud-billing.readonly",
+        "https://www.googleapis.com/auth/cloud-platform"
+       ]
+      },
+      "get": {
+       "id": "cloudbilling.billingAccounts.services.get",
+       "path": "v1beta/{+name}",
+       "flatPath": "v1beta/billingAccounts/{billingAccountsId}/services/{servicesId}",
+       "httpMethod": "GET",
+       "description": "Reads cloudbilling.billingAccounts.services.get.",
+       "parameters": [
+        {
+         "name": "name",
+         "location": "path",
+         "type": "string",
+         "required": true,
+         "description": "name parameter."
+        }
+       ],
+       "parameterOrder": [
+        "name"
+       ],
+       "response": "object",
+       "scopes": [
+        "https://www.googleapis.com/auth/cloud-billing",
+        "https://www.googleapis.com/auth/cloud-billing.readonly",
+        "https://www.googleapis.com/auth/cloud-platform"
+       ]
+      }
+     }
+    },
+    "skuGroups": {
+     "methods": {
+      "list": {
+       "id": "cloudbilling.billingAccounts.skuGroups.list",
+       "path": "v1beta/{+parent}/skuGroups",
+       "flatPath": "v1beta/billingAccounts/{billingAccountsId}/skuGroups",
+       "httpMethod": "GET",
+       "description": "Reads cloudbilling.billingAccounts.skuGroups.list.",
+       "parameters": [
+        {
+         "name": "parent",
+         "location": "path",
+         "type": "string",
+         "required": true,
+         "description": "parent parameter."
+        },
+        {
+         "name": "pageSize",
+         "location": "query",
+         "type": "integer",
+         "description": "pageSize parameter."
+        },
+        {
+         "name": "pageToken",
+         "location": "query",
+         "type": "string",
+         "description": "pageToken parameter."
+        }
+       ],
+       "parameterOrder": [
+        "parent"
+       ],
+       "response": "object",
+       "scopes": [
+        "https://www.googleapis.com/auth/cloud-billing",
+        "https://www.googleapis.com/auth/cloud-billing.readonly",
+        "https://www.googleapis.com/auth/cloud-platform"
+       ]
+      },
+      "get": {
+       "id": "cloudbilling.billingAccounts.skuGroups.get",
+       "path": "v1beta/{+name}",
+       "flatPath": "v1beta/billingAccounts/{billingAccountsId}/skuGroups/{skuGroupsId}",
+       "httpMethod": "GET",
+       "description": "Reads cloudbilling.billingAccounts.skuGroups.get.",
+       "parameters": [
+        {
+         "name": "name",
+         "location": "path",
+         "type": "string",
+         "required": true,
+         "description": "name parameter."
+        }
+       ],
+       "parameterOrder": [
+        "name"
+       ],
+       "response": "object",
+       "scopes": [
+        "https://www.googleapis.com/auth/cloud-billing",
+        "https://www.googleapis.com/auth/cloud-billing.readonly",
+        "https://www.googleapis.com/auth/cloud-platform"
+       ]
+      }
+     },
+     "resources": {
+      "skus": {
+       "methods": {
+        "list": {
+         "id": "cloudbilling.billingAccounts.skuGroups.skus.list",
+         "path": "v1beta/{+parent}/skus",
+         "flatPath": "v1beta/billingAccounts/{billingAccountsId}/skuGroups/{skuGroupsId}/skus",
+         "httpMethod": "GET",
+         "description": "Reads cloudbilling.billingAccounts.skuGroups.skus.list.",
+         "parameters": [
+          {
+           "name": "parent",
+           "location": "path",
+           "type": "string",
+           "required": true,
+           "description": "parent parameter."
+          },
+          {
+           "name": "pageSize",
+           "location": "query",
+           "type": "integer",
+           "description": "pageSize parameter."
+          },
+          {
+           "name": "pageToken",
+           "location": "query",
+           "type": "string",
+           "description": "pageToken parameter."
+          }
+         ],
+         "parameterOrder": [
+          "parent"
+         ],
+         "response": "object",
+         "scopes": [
+          "https://www.googleapis.com/auth/cloud-billing",
+          "https://www.googleapis.com/auth/cloud-billing.readonly",
+          "https://www.googleapis.com/auth/cloud-platform"
+         ]
+        },
+        "get": {
+         "id": "cloudbilling.billingAccounts.skuGroups.skus.get",
+         "path": "v1beta/{+name}",
+         "flatPath": "v1beta/billingAccounts/{billingAccountsId}/skuGroups/{skuGroupsId}/skus/{skusId}",
+         "httpMethod": "GET",
+         "description": "Reads cloudbilling.billingAccounts.skuGroups.skus.get.",
+         "parameters": [
+          {
+           "name": "name",
+           "location": "path",
+           "type": "string",
+           "required": true,
+           "description": "name parameter."
+          }
+         ],
+         "parameterOrder": [
+          "name"
+         ],
+         "response": "object",
+         "scopes": [
+          "https://www.googleapis.com/auth/cloud-billing",
+          "https://www.googleapis.com/auth/cloud-billing.readonly",
+          "https://www.googleapis.com/auth/cloud-platform"
+         ]
+        }
+       }
+      }
      }
     }
    }
@@ -80,6 +350,131 @@
         "name"
        ],
        "response": "GoogleCloudBillingPricesV1betaPrice",
+       "scopes": [
+        "https://www.googleapis.com/auth/cloud-billing",
+        "https://www.googleapis.com/auth/cloud-billing.readonly",
+        "https://www.googleapis.com/auth/cloud-platform"
+       ]
+      }
+     }
+    }
+   }
+  },
+  "skuGroups": {
+   "methods": {
+    "list": {
+     "id": "cloudbilling.skuGroups.list",
+     "path": "v1beta/skuGroups",
+     "flatPath": "v1beta/skuGroups",
+     "httpMethod": "GET",
+     "description": "Reads cloudbilling.skuGroups.list.",
+     "parameters": [
+      {
+       "name": "pageSize",
+       "location": "query",
+       "type": "integer",
+       "description": "pageSize parameter."
+      },
+      {
+       "name": "pageToken",
+       "location": "query",
+       "type": "string",
+       "description": "pageToken parameter."
+      }
+     ],
+     "parameterOrder": [],
+     "response": "object",
+     "scopes": [
+      "https://www.googleapis.com/auth/cloud-billing",
+      "https://www.googleapis.com/auth/cloud-billing.readonly",
+      "https://www.googleapis.com/auth/cloud-platform"
+     ]
+    },
+    "get": {
+     "id": "cloudbilling.skuGroups.get",
+     "path": "v1beta/{+name}",
+     "flatPath": "v1beta/skuGroups/{skuGroupsId}",
+     "httpMethod": "GET",
+     "description": "Reads cloudbilling.skuGroups.get.",
+     "parameters": [
+      {
+       "name": "name",
+       "location": "path",
+       "type": "string",
+       "required": true,
+       "description": "name parameter."
+      }
+     ],
+     "parameterOrder": [
+      "name"
+     ],
+     "response": "object",
+     "scopes": [
+      "https://www.googleapis.com/auth/cloud-billing",
+      "https://www.googleapis.com/auth/cloud-billing.readonly",
+      "https://www.googleapis.com/auth/cloud-platform"
+     ]
+    }
+   },
+   "resources": {
+    "skus": {
+     "methods": {
+      "list": {
+       "id": "cloudbilling.skuGroups.skus.list",
+       "path": "v1beta/{+parent}/skus",
+       "flatPath": "v1beta/skuGroups/{skuGroupsId}/skus",
+       "httpMethod": "GET",
+       "description": "Reads cloudbilling.skuGroups.skus.list.",
+       "parameters": [
+        {
+         "name": "parent",
+         "location": "path",
+         "type": "string",
+         "required": true,
+         "description": "parent parameter."
+        },
+        {
+         "name": "pageSize",
+         "location": "query",
+         "type": "integer",
+         "description": "pageSize parameter."
+        },
+        {
+         "name": "pageToken",
+         "location": "query",
+         "type": "string",
+         "description": "pageToken parameter."
+        }
+       ],
+       "parameterOrder": [
+        "parent"
+       ],
+       "response": "object",
+       "scopes": [
+        "https://www.googleapis.com/auth/cloud-billing",
+        "https://www.googleapis.com/auth/cloud-billing.readonly",
+        "https://www.googleapis.com/auth/cloud-platform"
+       ]
+      },
+      "get": {
+       "id": "cloudbilling.skuGroups.skus.get",
+       "path": "v1beta/{+name}",
+       "flatPath": "v1beta/skuGroups/{skuGroupsId}/skus/{skusId}",
+       "httpMethod": "GET",
+       "description": "Reads cloudbilling.skuGroups.skus.get.",
+       "parameters": [
+        {
+         "name": "name",
+         "location": "path",
+         "type": "string",
+         "required": true,
+         "description": "name parameter."
+        }
+       ],
+       "parameterOrder": [
+        "name"
+       ],
+       "response": "object",
        "scopes": [
         "https://www.googleapis.com/auth/cloud-billing",
         "https://www.googleapis.com/auth/cloud-billing.readonly",

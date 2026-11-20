@@ -121,20 +121,25 @@ const queryArgs = { project_id: 'my-project-123', query: 'SELECT 1', max_bytes_b
 test('bq_query_read refuses a DELETE after the dry run and never sends the real query', async () => {
   reset((opts) => {
     assert.equal(opts.method, 'POST');
-    return { statistics: { totalBytesProcessed: '0', query: { statementType: 'DELETE' } } };
+    return { statementType: 'DELETE', totalBytesProcessed: '0' };
   });
   await assert.rejects(
     tool('bq_query_read').handler({ ...queryArgs, query: 'DELETE FROM ds.t WHERE TRUE' }),
     /This statement is DELETE\. Changes to data or schema need a write tool and approval\./,
   );
   assert.equal(calls.length, 1, 'only the dry run was sent');
-  assert.equal(calls[0].path, '/bigquery/v2/projects/my-project-123/jobs');
-  assert.deepEqual(calls[0].body.configuration, { dryRun: true, query: { query: 'DELETE FROM ds.t WHERE TRUE', useLegacySql: false } });
+  assert.equal(calls[0].path, '/bigquery/v2/projects/my-project-123/queries');
+  assert.ok(!calls.some((call) => call.path.includes('/jobs')), 'no jobs.insert preflight');
+  assert.deepEqual(JSON.parse(JSON.stringify(calls[0].body)), {
+    query: 'DELETE FROM ds.t WHERE TRUE',
+    useLegacySql: false,
+    dryRun: true,
+  });
 });
 
 test('bq_query_read runs a SELECT after a clean dry run and returns objects keyed by column', async () => {
-  reset((_opts, url) => {
-    if (url.pathname.endsWith('/jobs')) return { statistics: { totalBytesProcessed: '2048', query: { statementType: 'SELECT' } } };
+  reset((opts) => {
+    if (opts.data?.dryRun === true) return { statementType: 'SELECT', totalBytesProcessed: '2048' };
     return { jobComplete: true, jobReference: { jobId: 'job_1', location: 'US' }, schema, rows, totalRows: '2', totalBytesProcessed: '2048', cacheHit: false };
   });
   const out = await tool('bq_query_read').handler({ ...queryArgs, query: 'SELECT id, name FROM ds.t' });
@@ -145,6 +150,14 @@ test('bq_query_read runs a SELECT after a clean dry run and returns objects keye
   assert.equal(out.cache_hit, false);
   assert.deepEqual(out.columns, ['id', 'name', 'active', 'score', 'tags', 'address']);
   assert.equal(out.rows[0].name, 'Ann');
+  assert.equal(calls.length, 2);
+  assert.equal(calls[0].path, '/bigquery/v2/projects/my-project-123/queries');
+  assert.ok(!calls.some((call) => call.path.includes('/jobs')), 'no jobs.insert preflight');
+  assert.deepEqual(JSON.parse(JSON.stringify(calls[0].body)), {
+    query: 'SELECT id, name FROM ds.t',
+    useLegacySql: false,
+    dryRun: true,
+  });
   const job = calls[1];
   assert.equal(job.path, '/bigquery/v2/projects/my-project-123/queries');
   // Compared as the JSON that goes on the wire, so an unset location is absent.
@@ -156,15 +169,24 @@ test('bq_query_read runs a SELECT after a clean dry run and returns objects keye
   });
 });
 
+test('bq_query_read refuses a canned dry-run response without a statementType', async () => {
+  reset(() => ({ totalBytesProcessed: '0' }));
+  await assert.rejects(tool('bq_query_read').handler(queryArgs), {
+    message: 'Only read-only SELECT statements are allowed by bq_query_read. This statement is unknown. Changes to data or schema need a write tool and approval.',
+  });
+  assert.equal(calls.length, 1, 'only the dry run was sent');
+  assert.ok(!calls.some((call) => call.path.includes('/jobs')), 'no jobs.insert preflight');
+});
+
 test('bq_query_read refuses a scan above max_bytes_billed before running the query', async () => {
-  reset(() => ({ statistics: { totalBytesProcessed: '5000', query: { statementType: 'SELECT' } } }));
+  reset(() => ({ statementType: 'SELECT', totalBytesProcessed: '5000' }));
   await assert.rejects(tool('bq_query_read').handler({ ...queryArgs, max_bytes_billed: 1000 }), /would scan 5000 bytes, more than max_bytes_billed \(1000\)/);
   assert.equal(calls.length, 1);
 });
 
 test('bq_query_read returns the job id when the query is still running, and bq_job_get fetches the rows', async () => {
-  reset((_opts, url) => {
-    if (url.pathname.endsWith('/jobs')) return { statistics: { totalBytesProcessed: '10', query: { statementType: 'SELECT' } } };
+  reset((opts, url) => {
+    if (opts.data?.dryRun === true) return { statementType: 'SELECT', totalBytesProcessed: '10' };
     if (url.pathname.endsWith('/queries')) return { jobComplete: false, jobReference: { jobId: 'job_9', location: 'EU' } };
     return { jobComplete: true, schema, rows, totalRows: '2', totalBytesProcessed: '10' };
   });
@@ -172,6 +194,19 @@ test('bq_query_read returns the job id when the query is still running, and bq_j
   assert.equal(started.status, 'running');
   assert.equal(started.job_id, 'job_9');
   assert.equal(started.location, 'EU');
+  assert.deepEqual(JSON.parse(JSON.stringify(calls[0].body)), {
+    query: 'SELECT 1',
+    useLegacySql: false,
+    location: 'EU',
+    dryRun: true,
+  });
+  assert.deepEqual(JSON.parse(JSON.stringify(calls[1].body)), {
+    query: 'SELECT 1',
+    useLegacySql: false,
+    maxResults: 100,
+    maximumBytesBilled: '1000000000',
+    location: 'EU',
+  });
 
   const polled = await tool('bq_job_get').handler({ project_id: 'my-project-123', job_id: 'job_9', location: 'EU', max_rows: 10 });
   assert.equal(polled.status, 'done');
@@ -191,6 +226,43 @@ test('a BigQuery error reaches describeError with its HTTP status, reason and me
     assert.match(text, /^HTTP 403 \| reason=accessDenied \| Access Denied: Table my-project\.ds\.secret/);
     return true;
   });
+  assert.equal(calls[0].path, '/bigquery/v2/projects/my-project-123/queries');
+});
+
+test('OD01: bigquery.jobs.query keeps kind write in tool-map while escalating DDL/DML/multi-statement SQL to destructive', async () => {
+  const { execFileSync } = await import('node:child_process');
+  const { fileURLToPath } = await import('node:url');
+  const { isDestructiveBigQuerySql } = await import(dist('core/dynamic.js'));
+  const { discoveryToolsFor } = await import(dist('core/discovery/tools.js'));
+  const { callKind } = await import(dist('core/tools.js'));
+  assert.equal(isDestructiveBigQuerySql({ query: 'SELECT 1' }), false);
+  assert.equal(isDestructiveBigQuerySql({ query: "-- comment\nWITH x AS (SELECT 'DROP TABLE' AS s) SELECT * FROM x;" }), false);
+  assert.equal(isDestructiveBigQuerySql({ query: 'DROP TABLE ds.t', dryRun: true }), false);
+  for (const sql of ['DROP TABLE ds.t', 'DELETE FROM ds.t WHERE TRUE', 'TRUNCATE TABLE ds.t', 'UPDATE ds.t SET a=1 WHERE TRUE', 'MERGE ds.t USING ds.s ON TRUE WHEN MATCHED THEN DELETE', 'SELECT 1; DROP TABLE ds.t', '']) {
+    assert.equal(isDestructiveBigQuerySql({ query: sql }), true, sql);
+  }
+  const gcloudTools = await discoveryToolsFor('gcloud', cfg);
+  const jobsQuery = gcloudTools.find((t) => t.methodId === 'bigquery.jobs.query');
+  assert.equal(jobsQuery.kind, 'write');
+  assert.equal(callKind(jobsQuery, { projectId: 'p', body: { query: 'SELECT 1' } }), 'write');
+  assert.equal(callKind(jobsQuery, { projectId: 'p', body: { query: 'DROP TABLE ds.t' } }), 'destructive');
+  assert.equal(callKind(jobsQuery, { projectId: 'p', body: { query: 'DELETE FROM ds.t WHERE TRUE' } }), 'destructive');
+
+  // Verify the built gcloud PreToolUse hook escalates DDL/DML under destructive-only while allowing SELECT without an ask.
+  const hookFile = fileURLToPath(new URL('../plugins/gcloud/bin/gsm-hook.mjs', import.meta.url));
+  const hookEnv = { ...process.env, GSM_TOKEN_DIR: cfg.tokenDir, CLAUDE_PLUGIN_OPTION_CONFIRMATION: 'destructive-only' };
+  const askOut = execFileSync(process.execPath, [hookFile], {
+    input: JSON.stringify({ tool_name: 'mcp__plugin_gcloud_gcloud__bigquery_jobs_query', tool_input: { projectId: 'p', body: { query: 'DROP TABLE ds.t' } } }),
+    env: hookEnv,
+    encoding: 'utf8',
+  });
+  assert.match(askOut, /"permissionDecision":"ask"/);
+  const selectOut = execFileSync(process.execPath, [hookFile], {
+    input: JSON.stringify({ tool_name: 'mcp__plugin_gcloud_gcloud__bigquery_jobs_query', tool_input: { projectId: 'p', body: { query: 'SELECT 1' } } }),
+    env: hookEnv,
+    encoding: 'utf8',
+  });
+  assert.equal(selectOut.trim(), '');
 });
 
 test('bq_dataset_list and bq_table_list pass the paging limit and map the list items', async () => {

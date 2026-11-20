@@ -62,6 +62,17 @@ const reset = (responder = () => ({})) => {
 /** A Google error as gaxios reports it. */
 const googleError = (status, message) => Object.assign(new Error(message), { response: { status, data: { error: { code: status, message, errors: [{ reason: 'conditionNotMet' }] } } } });
 
+// The seven read-family wrappers (OD12) sit immediately before the 1.9.0 tail; their order is part of the contract.
+const FAMILY_TOOLS = [
+  'logging_log_names_list',
+  'logging_buckets',
+  'logging_views',
+  'billing_account_services',
+  'billing_account_sku_groups',
+  'billing_account_skus',
+  'billing_sku_groups',
+];
+
 const NEW_TOOLS = [
   'logging_entries_list',
   'monitoring_query_promql',
@@ -103,6 +114,8 @@ test('the ten tools exist after the 1.9.0 tools, in order, and the old tools kee
   const names = [...tools.keys()];
   assert.deepEqual(names.slice(-10), NEW_TOOLS);
   assert.equal(names.indexOf('cloud_apikey_delete'), names.length - 11, 'the 1.9.0 tools come first, as before');
+  assert.deepEqual(names.slice(-(10 + FAMILY_TOOLS.length + 1), -(10 + 1)), FAMILY_TOOLS, 'the read-family block is inserted before cloud_apikey_delete');
+  assert.deepEqual(names.slice(0, names.length - (10 + FAMILY_TOOLS.length + 1)).filter((n) => FAMILY_TOOLS.includes(n)), [], 'the block appears exactly once');
 });
 
 test('kinds follow classifyMethod, except the PromQL query, which only evaluates (Google marks query_range read-only)', () => {
@@ -151,6 +164,26 @@ test('each tool takes the scopes Discovery lists for the methods it calls', () =
   same('gcs_read_text', discoveryScopes('storage.v1', 'storage.objects.get'));
   same('gcs_read_object', discoveryScopes('storage.v1', 'storage.objects.get'));
   same('gcs_write_text', discoveryScopes('storage.v1', 'storage.objects.insert'));
+  // The read-family wrappers reuse the Logging and Billing read scopes of the methods they call.
+  same('logging_log_names_list', discoveryScopes('logging.v2', 'logging.projects.logs.list'));
+  same('logging_buckets', discoveryScopes('logging.v2', 'logging.projects.locations.buckets.list'), discoveryScopes('logging.v2', 'logging.projects.locations.buckets.get'));
+  same('logging_views', discoveryScopes('logging.v2', 'logging.projects.locations.buckets.views.list'), discoveryScopes('logging.v2', 'logging.projects.locations.buckets.views.get'));
+  same('billing_account_services', discoveryScopes('cloudbilling.v1beta', 'cloudbilling.billingAccounts.services.list'), discoveryScopes('cloudbilling.v1beta', 'cloudbilling.billingAccounts.services.get'));
+  same(
+    'billing_account_sku_groups',
+    discoveryScopes('cloudbilling.v1beta', 'cloudbilling.billingAccounts.skuGroups.list'),
+    discoveryScopes('cloudbilling.v1beta', 'cloudbilling.billingAccounts.skuGroups.get'),
+    discoveryScopes('cloudbilling.v1beta', 'cloudbilling.billingAccounts.skuGroups.skus.list'),
+    discoveryScopes('cloudbilling.v1beta', 'cloudbilling.billingAccounts.skuGroups.skus.get'),
+  );
+  same('billing_account_skus', discoveryScopes('cloudbilling.v1beta', 'cloudbilling.billingAccounts.skus.list'), discoveryScopes('cloudbilling.v1beta', 'cloudbilling.billingAccounts.skus.get'));
+  same(
+    'billing_sku_groups',
+    discoveryScopes('cloudbilling.v1beta', 'cloudbilling.skuGroups.list'),
+    discoveryScopes('cloudbilling.v1beta', 'cloudbilling.skuGroups.get'),
+    discoveryScopes('cloudbilling.v1beta', 'cloudbilling.skuGroups.skus.list'),
+    discoveryScopes('cloudbilling.v1beta', 'cloudbilling.skuGroups.skus.get'),
+  );
 });
 
 // ---------------------------------------------------------------------------
@@ -414,6 +447,152 @@ test('billing_price_lookup: one SKU, a service found by name with SKUs by words 
   reset();
   await assert.rejects(run('billing_price_lookup', {}), /needs sku_id, or service/);
   await assert.rejects(run('billing_price_lookup', { sku_id: 'D041-B8A1-6E0B', service: 'x' }), /sku_id alone/);
+  assert.equal(calls.length, 0);
+});
+
+// ---------------------------------------------------------------------------
+// The 17 official read names, covered by seven curated family wrappers.
+
+test('logging_log_names_list: one logs.list GET, compact names, a first-class page token and checked parent', async () => {
+  const { z } = await import('zod');
+  const schema = z.object(tools.get('logging_log_names_list').inputSchema).strict();
+  assert.equal(schema.safeParse({ parent: 'projects/Oops' }).success, true);
+  assert.equal(schema.safeParse({ parent: 'projects/P/logs' }).success, false);
+  assert.equal(schema.safeParse({ parent: 'projects/P', page_size: 10 }).success, false, 'no undocumented page_size');
+  reset(() => ({ logNames: ['projects/my-project-123/logs/cloudaudit.googleapis.com%2Factivity', 'projects/my-project-123/logs/run'], nextPageToken: 'n2' }));
+  const got = await run('logging_log_names_list', { parent: 'projects/my-project-123', page_token: 'p1' });
+  assert.deepEqual(calls.map((c) => [c.method, c.url, c.query]), [['GET', 'https://logging.googleapis.com/v2/projects/my-project-123/logs', { pageToken: 'p1' }]]);
+  assert.equal(got.count, 2);
+  assert.deepEqual(got.log_names[1], { log_name: 'projects/my-project-123/logs/run', id: 'run' });
+  assert.equal(got.next_page_token, 'n2');
+  reset(() => ({}));
+  assert.equal((await run('logging_log_names_list', { parent: 'folders/123' })).next_page_token, undefined);
+  assert.deepEqual(calls[0].query, {});
+});
+
+test('logging_buckets: a paged bucket list, one bucket by id or resource name, and contradictory arguments refused', async () => {
+  const { z } = await import('zod');
+  assert.equal(z.object(tools.get('logging_buckets').inputSchema).safeParse({ parent: 'projects/P' }).success, false);
+  reset(() => ({ buckets: [{ name: 'projects/my-project-123/locations/global/buckets/b1', description: 'All logs', location: 'global', retentionDays: 7 }], nextPageToken: 'n2' }));
+  const listed = await run('logging_buckets', { parent: 'projects/my-project-123/locations/global', page_token: 'p1' });
+  assert.deepEqual(calls.map((c) => [c.method, c.url, c.query]), [['GET', 'https://logging.googleapis.com/v2/projects/my-project-123/locations/global/buckets', { pageToken: 'p1' }]]);
+  assert.deepEqual(listed.buckets[0], { name: 'projects/my-project-123/locations/global/buckets/b1', id: 'b1', description: 'All logs', location: 'global', retention_days: 7 });
+  assert.equal(listed.next_page_token, 'n2');
+  reset(() => ({ name: 'projects/my-project-123/locations/global/buckets/b1', locked: true }));
+  const one = await run('logging_buckets', { parent: 'projects/my-project-123/locations/global', bucket_id: 'b1' });
+  assert.equal(calls[0].url, 'https://logging.googleapis.com/v2/projects/my-project-123/locations/global/buckets/b1');
+  assert.deepEqual(calls[0].query, {});
+  assert.equal(one.bucket.id, 'b1');
+  assert.equal(one.bucket.locked, true);
+  await run('logging_buckets', { name: 'projects/my-project-123/locations/global/buckets/b1' });
+  assert.equal(calls[1].url, calls[0].url);
+  reset();
+  await assert.rejects(run('logging_buckets', { parent: 'projects/my-project-123/locations/global', bucket_id: 'b1', page_token: 'p1' }), /continues a list/);
+  await assert.rejects(run('logging_buckets', { name: 'projects/P/locations/global/buckets/b1', parent: 'projects/P/locations/global' }), /not both/);
+  assert.equal(calls.length, 0);
+});
+
+test('logging_views: a paged view list, one view by id or resource name, and contradictory arguments refused', async () => {
+  const { z } = await import('zod');
+  assert.equal(z.object(tools.get('logging_views').inputSchema).safeParse({ parent: 'projects/P/locations/global/buckets/B' }).success, true);
+  assert.equal(z.object(tools.get('logging_views').inputSchema).safeParse({ parent: 'projects/P/locations/global' }).success, false);
+  reset(() => ({ views: [{ name: 'projects/my-project-123/locations/global/buckets/b1/views/v1', description: 'View all' }], nextPageToken: 'n2' }));
+  const listed = await run('logging_views', { parent: 'projects/my-project-123/locations/global/buckets/b1', page_token: 'p1' });
+  assert.equal(calls[0].url, 'https://logging.googleapis.com/v2/projects/my-project-123/locations/global/buckets/b1/views');
+  assert.deepEqual(calls[0].query, { pageToken: 'p1' });
+  assert.deepEqual(listed.views[0], { name: 'projects/my-project-123/locations/global/buckets/b1/views/v1', id: 'v1', description: 'View all' });
+  assert.equal(listed.next_page_token, 'n2');
+  reset(() => ({ name: 'projects/my-project-123/locations/global/buckets/b1/views/v1' }));
+  await run('logging_views', { parent: 'projects/my-project-123/locations/global/buckets/b1', view_id: 'v1' });
+  assert.equal(calls[0].url, 'https://logging.googleapis.com/v2/projects/my-project-123/locations/global/buckets/b1/views/v1');
+  reset();
+  await assert.rejects(run('logging_views', { parent: 'projects/my-project-123/locations/global/buckets/b1', view_id: 'v1', page_token: 'p1' }), /continues a list/);
+  await assert.rejects(run('logging_views', { name: 'projects/P/locations/global/buckets/B/views/V', view_id: 'V' }), /not both/);
+  assert.equal(calls.length, 0);
+});
+
+test('billing_account_services: v1beta list and get, compact rows, a page token and an account id check', async () => {
+  const { z } = await import('zod');
+  assert.equal(z.object(tools.get('billing_account_services').inputSchema).safeParse({ billing_account: 'not-an-account' }).success, false);
+  reset(() => ({ services: [{ serviceId: '6F81-5844-456A', displayName: 'Compute Engine' }], nextPageToken: 'n2' }));
+  const listed = await run('billing_account_services', { billing_account: 'billingAccounts/012345-6789AB-CDEF01', page_token: 'p1' });
+  assert.deepEqual(calls.map((c) => [c.method, c.url, c.query]), [['GET', 'https://cloudbilling.googleapis.com/v1beta/billingAccounts/012345-6789AB-CDEF01/services', { pageToken: 'p1' }]]);
+  assert.deepEqual(listed.services[0], { service_id: '6F81-5844-456A', display_name: 'Compute Engine' });
+  assert.equal(listed.next_page_token, 'n2');
+  reset(() => ({ serviceId: '6F81-5844-456A', displayName: 'Compute Engine' }));
+  const one = await run('billing_account_services', { billing_account: '012345-6789AB-CDEF01', service: '6F81-5844-456A' });
+  assert.equal(calls[0].url, 'https://cloudbilling.googleapis.com/v1beta/billingAccounts/012345-6789AB-CDEF01/services/6F81-5844-456A');
+  assert.equal(one.service.display_name, 'Compute Engine');
+  reset();
+  await assert.rejects(run('billing_account_services', { billing_account: '012345-6789AB-CDEF01', service: '6F81-5844-456A', page_token: 'p1' }), /continues a list/);
+  assert.equal(calls.length, 0);
+});
+
+test('billing_account_sku_groups: list groups, get one, list its SKUs and get one SKU, with no page_size', async () => {
+  const account = '012345-6789AB-CDEF01';
+  const base = 'https://cloudbilling.googleapis.com/v1beta/billingAccounts/012345-6789AB-CDEF01/skuGroups';
+  reset(() => ({ skuGroups: [{ name: `billingAccounts/${account}/skuGroups/g1`, displayName: 'Compute' }], nextPageToken: 'n2' }));
+  const groups = await run('billing_account_sku_groups', { billing_account: account, page_token: 'p1' });
+  assert.deepEqual(calls.map((c) => [c.method, c.url, c.query]), [['GET', base, { pageToken: 'p1' }]]);
+  assert.equal(groups.sku_groups[0].id, 'g1');
+  assert.equal(groups.next_page_token, 'n2');
+  reset(() => ({ name: `billingAccounts/${account}/skuGroups/g1`, displayName: 'Compute' }));
+  await run('billing_account_sku_groups', { billing_account: account, group_id: 'g1' });
+  assert.equal(calls[0].url, `${base}/g1`);
+  reset(() => ({ skus: [{ skuId: 'D041-B8A1-6E0B', description: 'N2 core' }], nextPageToken: 'n3' }));
+  const skus = await run('billing_account_sku_groups', { billing_account: account, group_id: 'g1', list_skus: true, page_token: 'p2' });
+  assert.equal(calls[0].url, `${base}/g1/skus`);
+  assert.deepEqual(calls[0].query, { pageToken: 'p2' });
+  assert.equal(skus.skus[0].sku_id, 'D041-B8A1-6E0B');
+  assert.equal(skus.next_page_token, 'n3');
+  reset(() => ({ skuId: 'D041-B8A1-6E0B', description: 'N2 core' }));
+  await run('billing_account_sku_groups', { billing_account: account, group_id: 'g1', sku_id: 'D041-B8A1-6E0B' });
+  assert.equal(calls[0].url, `${base}/g1/skus/D041-B8A1-6E0B`);
+  reset();
+  await assert.rejects(run('billing_account_sku_groups', { billing_account: account, sku_id: 'D041-B8A1-6E0B' }), /needs group_id/);
+  await assert.rejects(run('billing_account_sku_groups', { billing_account: account, group_id: 'g1', sku_id: 'D041-B8A1-6E0B', list_skus: true }), /not both/);
+  assert.equal(calls.length, 0);
+});
+
+test('billing_account_skus: v1beta list with a documented filter, get one SKU, and refusals', async () => {
+  const account = '012345-6789AB-CDEF01';
+  const base = 'https://cloudbilling.googleapis.com/v1beta/billingAccounts/012345-6789AB-CDEF01/skus';
+  reset(() => ({ skus: [{ skuId: 'D041-B8A1-6E0B', description: 'N2 core', category: { resourceFamily: 'Compute' } }], nextPageToken: 'n2' }));
+  const listed = await run('billing_account_skus', { billing_account: account, filter: 'service="6F81-5844-456A"', page_token: 'p1' });
+  assert.deepEqual(calls.map((c) => [c.method, c.url, c.query]), [['GET', base, { filter: 'service="6F81-5844-456A"', pageToken: 'p1' }]]);
+  assert.deepEqual(listed.skus[0], { sku_id: 'D041-B8A1-6E0B', description: 'N2 core', resource_family: 'Compute', resource_group: undefined, usage_type: undefined });
+  assert.equal(listed.next_page_token, 'n2');
+  reset(() => ({ skuId: 'D041-B8A1-6E0B', description: 'N2 core' }));
+  await run('billing_account_skus', { billing_account: account, sku_id: 'D041-B8A1-6E0B' });
+  assert.equal(calls[0].url, `${base}/D041-B8A1-6E0B`);
+  assert.deepEqual(calls[0].query, {});
+  const { z } = await import('zod');
+  assert.equal(z.object(tools.get('billing_account_skus').inputSchema).safeParse({ billing_account: account, sku_id: 'not-an-sku' }).success, false);
+  reset();
+  await assert.rejects(run('billing_account_skus', { billing_account: account, sku_id: 'D041-B8A1-6E0B', page_token: 'p1' }), /sku_id alone/);
+  assert.equal(calls.length, 0);
+});
+
+test('billing_sku_groups: public v1beta groups and their SKUs, with next_page_token kept', async () => {
+  const base = 'https://cloudbilling.googleapis.com/v1beta/skuGroups';
+  reset(() => ({ skuGroups: [{ name: 'skuGroups/g1', displayName: 'Compute' }], nextPageToken: 'n2' }));
+  const groups = await run('billing_sku_groups', { page_token: 'p1' });
+  assert.deepEqual(calls.map((c) => [c.method, c.url, c.query]), [['GET', base, { pageToken: 'p1' }]]);
+  assert.equal(groups.sku_groups[0].id, 'g1');
+  assert.equal(groups.next_page_token, 'n2');
+  reset(() => ({ name: 'skuGroups/g1', displayName: 'Compute' }));
+  await run('billing_sku_groups', { group_id: 'g1' });
+  assert.equal(calls[0].url, `${base}/g1`);
+  reset(() => ({ skus: [{ skuId: 'D041-B8A1-6E0B' }], nextPageToken: 'n3' }));
+  const skus = await run('billing_sku_groups', { group_id: 'g1', list_skus: true, page_token: 'p2' });
+  assert.equal(calls[0].url, `${base}/g1/skus`);
+  assert.equal(skus.next_page_token, 'n3');
+  reset(() => ({ skuId: 'D041-B8A1-6E0B' }));
+  await run('billing_sku_groups', { group_id: 'g1', sku_id: 'D041-B8A1-6E0B' });
+  assert.equal(calls[0].url, `${base}/g1/skus/D041-B8A1-6E0B`);
+  reset();
+  await assert.rejects(run('billing_sku_groups', { sku_id: 'D041-B8A1-6E0B' }), /needs group_id/);
+  await assert.rejects(run('billing_sku_groups', { group_id: 'g1', page_token: 'p1' }), /continues a list/);
   assert.equal(calls.length, 0);
 });
 

@@ -114,10 +114,10 @@ test('requirements: the gdrive google list resolves to drive.readonly (readonly)
   assert.deepEqual(resolveScopes(google, 'readwrite').scopes, [G('drive')]);
 });
 
-test('requirements: the gcloud google list (59 tools, no gateway) resolves to Cloud read-only scopes and to cloud-platform', async () => {
+test('requirements: the gcloud google list (66 tools, no gateway) resolves to Cloud read-only scopes and to cloud-platform', async () => {
   const { cfg } = tempTokens();
   const google = await requirementsFor(['gcloud'], cfg, { ...quiet, toolset: 'google' });
-  assert.equal(google.length, 59);
+  assert.equal(google.length, 66);
   assert.equal(google.filter((r) => r.gateway).length, 0, 'no api_call in the list, so no gateway method counts');
   const readonly = resolveScopes(google, 'readonly');
   // Since 1.32.1 monitoring.read counts as view-only (Google: "View monitoring data ..."), so the Monitoring reads join.
@@ -126,7 +126,12 @@ test('requirements: the gcloud google list (59 tools, no gateway) resolves to Cl
   for (const tool of ['iam_roles_list', 'iam_role_get', 'iam_policies_get']) {
     assert.ok(readonly.uncovered.includes(`gcloud/${tool}`), tool);
   }
-  for (const tool of ['monitoring_query_promql', 'monitoring_dashboards_list', 'monitoring_dashboard_get', 'logging_entries_list', 'gcs_read_text', 'billing_price_lookup', 'bq_query_read', 'cloud_projects_search']) {
+  for (const tool of [
+    'monitoring_query_promql', 'monitoring_dashboards_list', 'monitoring_dashboard_get', 'logging_entries_list',
+    'logging_log_names_list', 'logging_buckets', 'logging_views',
+    'billing_price_lookup', 'billing_account_services', 'billing_account_sku_groups', 'billing_account_skus', 'billing_sku_groups',
+    'gcs_read_text', 'bq_query_read', 'cloud_projects_search',
+  ]) {
     assert.ok(readonly.covered.includes(`gcloud/${tool}`), tool);
   }
   // cloud-platform covers every tool but the curated BigQuery reads, which list bigquery and not cloud-platform.

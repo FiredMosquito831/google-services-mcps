@@ -32,7 +32,7 @@ import {
 import { defineTool, type ToolDef } from '../core/tools.js';
 import { fitItems } from '../core/result-shape.js';
 import { makeCloudCall } from './cloud-http.js';
-import { opsTools } from './cloud-ops.js';
+import { cloudReadFamilyTools, opsTools } from './cloud-ops.js';
 import { storageTools } from './cloud-storage.js';
 
 type Auth = OAuth2Client | JWT;
@@ -88,6 +88,7 @@ interface BqRowSet {
 interface BqQueryResponse extends BqRowSet {
   jobComplete?: boolean;
   jobReference?: { jobId?: string; location?: string };
+  statementType?: string;
   totalRows?: string;
   totalBytesProcessed?: string;
   cacheHit?: boolean;
@@ -112,9 +113,6 @@ export function bqRowsAnswer<T extends Record<string, unknown> & { rows: unknown
           how_to_continue: `Google returned ${got} rows; the first ${shown} fit the result limit (${budget} characters). Call bq_job_get with job_id ${answer.job_id ?? ''} and start_index=${start + shown} for the next rows (next_page_token would skip the rows left out here).`,
         },
   );
-}
-interface BqJob {
-  statistics?: { totalBytesProcessed?: string; query?: { statementType?: string } };
 }
 interface BqTable {
   type?: string;
@@ -406,17 +404,13 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
       async handler({ project_id, query, max_bytes_billed, max_rows, location }) {
         const maxBytes = max_bytes_billed ?? BQ_DEFAULT_MAX_BYTES;
         const maxRows = max_rows ?? 100;
-        const jobsPath = `projects/${encodeURIComponent(project_id)}/jobs`;
 
-        // Dry run: bills nothing and reports the statement type and the bytes it would scan.
-        const dry = await bqCall<BqJob>(cfg, 'POST', jobsPath, {
-          body: {
-            jobReference: location ? { projectId: project_id, location } : undefined,
-            configuration: { dryRun: true, query: { query, useLegacySql: false } },
-          },
+        // Dry run: does not run the job; reports the statement type and the bytes it would scan.
+        const dry = await bqCall<BqQueryResponse>(cfg, 'POST', `projects/${encodeURIComponent(project_id)}/queries`, {
+          body: { query, useLegacySql: false, ...(location ? { location } : {}), dryRun: true },
         });
-        assertReadOnlyStatement(dry.statistics?.query?.statementType);
-        const scanned = Number(dry.statistics?.totalBytesProcessed ?? 0);
+        assertReadOnlyStatement(dry.statementType);
+        const scanned = Number(dry.totalBytesProcessed ?? 0);
         if (scanned > maxBytes) {
           throw new Error(
             `This query would scan ${scanned} bytes, more than max_bytes_billed (${maxBytes}). Narrow the query, filter on a partition column, or raise max_bytes_billed up to ${BQ_MAX_BYTES}.`,
@@ -784,7 +778,13 @@ export async function buildTools(cfg: RuntimeConfig): Promise<ToolDef[]> {
   ];
 
   // Logging, Monitoring, IAM roles, Billing prices and Cloud Storage objects (1.10.0), after the tools above so their
-  // order is unchanged.
+  // order is unchanged. The seven Logging/Billing read-family wrappers are inserted immediately before cloud_apikey_delete
+  // (the start of the 1.9.0 tail), so the pinned names.slice(-10) and cloud_apikey_delete positions stay true and the new
+  // block is the only addition to the order.
   const call = makeCloudCall(() => authFor(cfg));
-  return [...own, ...opsTools(call), ...storageTools(cfg, call)];
+  const ordered = [...own];
+  const tailAt = ordered.findIndex((t) => t.name === 'cloud_apikey_delete');
+  if (tailAt < 0) throw new Error('cloud_apikey_delete must be present to keep the curated tool order stable.');
+  ordered.splice(tailAt, 0, ...cloudReadFamilyTools(call));
+  return [...ordered, ...opsTools(call), ...storageTools(cfg, call)];
 }

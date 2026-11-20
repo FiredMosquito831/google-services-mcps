@@ -227,8 +227,8 @@ test('bq_query_read and bq_job_get: next_page_token from Google; rows that do no
   const schema = { fields: [{ name: 'id', type: 'INTEGER' }, { name: 'label', type: 'STRING' }] };
   const bqRows = (n, from = 0) => Array.from({ length: n }, (_, i) => ({ f: [{ v: String(from + i) }, { v: `label number ${from + i}` }] }));
   reset((call) =>
-    call.path.endsWith('/jobs')
-      ? { statistics: { totalBytesProcessed: '10', query: { statementType: 'SELECT' } } }
+    call.body?.dryRun === true
+      ? { statementType: 'SELECT', totalBytesProcessed: '10' }
       : { jobComplete: true, jobReference: { jobId: 'job-1' }, totalRows: '5000', pageToken: 'pt-2', schema, rows: bqRows(300) },
   );
   const out = await cloud.get('bq_query_read').handler({ project_id: 'my-project-123', query: 'SELECT 1', max_rows: 300 }, ctx);

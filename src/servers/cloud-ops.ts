@@ -182,6 +182,16 @@ const BILLING_ACCOUNT_RE = /^(billingAccounts\/)?([0-9A-F]{6}-[0-9A-F]{6}-[0-9A-
 /** Loop guard for the paged Billing lists: at most this many pages of 5000 are read. */
 const BILLING_PAGES = 50;
 
+// Path shapes of the Logging resources the read-family wrappers name. A path segment is encoded separately, so the
+// slashes that separate parent, location, bucket and view stay in the URL as Discovery's {+name}/{+parent} expects.
+const PARENT_RE = /^(projects|folders|organizations|billingAccounts)\/[^/]+$/;
+const LOCATION_PARENT_RE = /^(projects|folders|organizations|billingAccounts)\/[^/]+\/locations\/[^/]+$/;
+const BUCKET_RE = /^(projects|folders|organizations|billingAccounts)\/[^/]+\/locations\/[^/]+\/buckets\/[^/]+$/;
+const VIEW_RE = /^(projects|folders|organizations|billingAccounts)\/[^/]+\/locations\/[^/]+\/buckets\/[^/]+\/views\/[^/]+$/;
+const PATH_PART = z.string().min(1).regex(/^[^/]+$/, 'Give one path segment, not a resource name.');
+const resourcePath = (base: string, name: string): string => `${base}/${name.split('/').map(encodeURIComponent).join('/')}`;
+const lastPart = (name: string | undefined): string | undefined => (name ? decodeURIComponent(name.split('/').pop() ?? name) : undefined);
+
 interface BillingSku {
   skuId?: string;
   description?: string;
@@ -566,6 +576,280 @@ export function opsTools(call: CloudCall): ToolDef[] {
           ...(token ? { incomplete: `Only the first ${BILLING_PAGES} pages of SKUs were read.` } : {}),
           skus,
         };
+      },
+    }),
+  ];
+}
+
+/**
+ * Read wrappers for the 17 official Cloud MCP read names that have no named tool of their own (five Logging and twelve
+ * Cloud Billing). All use the read scopes Discovery lists for the underlying GET methods.
+ */
+export function cloudReadFamilyTools(call: CloudCall): ToolDef[] {
+  const enc = encodeURIComponent;
+  const accountId = z.string().regex(BILLING_ACCOUNT_RE, 'billing_account looks like 012345-6789AB-CDEF01.');
+  const accountOf = (value: string): string => (BILLING_ACCOUNT_RE.exec(value) as RegExpExecArray)[2] as string;
+  const next = (token: string | undefined): Record<string, string> => (token ? { next_page_token: token } : {});
+  const tokenQuery = (token: string | undefined): { pageToken: string | undefined } => ({ pageToken: token });
+
+  const bucketRow = (b: { name?: string; description?: string; location?: string; retentionDays?: number; locked?: boolean }) => ({
+    name: b.name,
+    id: lastPart(b.name),
+    description: b.description,
+    location: b.location,
+    ...(b.retentionDays !== undefined ? { retention_days: b.retentionDays } : {}),
+    ...(b.locked ? { locked: true } : {}),
+  });
+  const viewRow = (v: { name?: string; description?: string }) => ({ name: v.name, id: lastPart(v.name), description: v.description });
+  const serviceRow = (s: { serviceId?: string; displayName?: string }) => ({ service_id: s.serviceId, display_name: s.displayName });
+  const groupRow = (g: { name?: string; displayName?: string; description?: string }) => ({
+    name: g.name,
+    id: lastPart(g.name),
+    display_name: g.displayName,
+    description: g.description,
+  });
+  const skuRow = (s: { skuId?: string; description?: string; category?: { resourceFamily?: string; resourceGroup?: string; usageType?: string } }) => ({
+    sku_id: s.skuId,
+    description: s.description,
+    resource_family: s.category?.resourceFamily,
+    resource_group: s.category?.resourceGroup,
+    usage_type: s.category?.usageType,
+  });
+
+  return [
+    defineTool({
+      name: 'logging_log_names_list',
+      title: 'List Cloud Logging log names',
+      description: `List the log names of a Logging parent (matches list_log_names in Google's Logging MCP server). Give parent as projects/P, folders/F, organizations/O or billingAccounts/B. Returns one compact log_name row per name and next_page_token; page_token continues where Google left off. No page_size is offered because no source available here documents a maximum: Google's server default is used.`,
+      kind: 'read',
+      scopes: LOGGING_READ_SCOPES,
+      inputSchema: {
+        parent: z.string().regex(PARENT_RE, 'parent looks like projects/P, folders/F, organizations/O or billingAccounts/B.').describe('The container whose log names to list.'),
+        page_token: pageToken,
+      },
+      async handler({ parent, page_token }) {
+        const res = await call<{ logNames?: string[]; nextPageToken?: string }>({
+          url: `${resourcePath(LOGGING, parent)}/logs`,
+          query: tokenQuery(page_token),
+        });
+        const names = res.data.logNames ?? [];
+        return {
+          parent,
+          count: names.length,
+          log_names: names.map((n) => ({ log_name: n, id: lastPart(n) })),
+          ...next(res.data.nextPageToken),
+        };
+      },
+    }),
+    defineTool({
+      name: 'logging_buckets',
+      title: 'List or read Cloud Logging buckets',
+      description: `List the log buckets of a project and location, or read one bucket (matches list_buckets and get_bucket in Google's Logging MCP server). Give parent such as projects/P/locations/global and bucket_id, or name for a full projects/P/locations/L/buckets/B resource. Lists return compact bucket rows and next_page_token; page_token continues where Google left off. No page_size is offered because no source available here documents a maximum: Google's server default is used.`,
+      kind: 'read',
+      scopes: LOGGING_READ_SCOPES,
+      inputSchema: {
+        parent: z.string().regex(LOCATION_PARENT_RE, 'parent looks like projects/P/locations/L.').optional().describe('The location whose buckets to list, or the parent of bucket_id.'),
+        bucket_id: PATH_PART.optional().describe('One bucket in parent, to get instead of listing.'),
+        name: z.string().regex(BUCKET_RE, 'name looks like projects/P/locations/L/buckets/B.').optional().describe('A full bucket resource name, instead of parent and bucket_id.'),
+        page_token: pageToken,
+      },
+      async handler({ parent, bucket_id, name, page_token }) {
+        if (name && (parent || bucket_id || page_token)) throw new Error('Give name, or parent with bucket_id or page_token, not both.');
+        if (!name && !parent) throw new Error('logging_buckets needs parent (projects/P/locations/L), or name.');
+        if (page_token && bucket_id) throw new Error('page_token continues a list; remove bucket_id to list buckets.');
+        if (name || bucket_id) {
+          const resource = name ?? `${parent}/buckets/${bucket_id}`;
+          const res = await call<{ name?: string; description?: string; location?: string; retentionDays?: number; locked?: boolean }>({ url: resourcePath(LOGGING, resource) });
+          return { bucket: bucketRow(res.data) };
+        }
+        const res = await call<{ buckets?: Array<{ name?: string; description?: string; location?: string; retentionDays?: number; locked?: boolean }>; nextPageToken?: string }>({
+          url: `${resourcePath(LOGGING, parent as string)}/buckets`,
+          query: tokenQuery(page_token),
+        });
+        const buckets = res.data.buckets ?? [];
+        return {
+          parent,
+          count: buckets.length,
+          buckets: buckets.map(bucketRow),
+          ...next(res.data.nextPageToken),
+        };
+      },
+    }),
+    defineTool({
+      name: 'logging_views',
+      title: 'List or read Cloud Logging bucket views',
+      description: `List the views of a log bucket, or read one view (matches list_views and get_view in Google's Logging MCP server). Give parent as projects/P/locations/L/buckets/B, with view_id for one view, or name for a full bucket view resource. Lists return compact view rows and next_page_token; page_token continues where Google left off. No page_size is offered because no source available here documents a maximum: Google's server default is used.`,
+      kind: 'read',
+      scopes: LOGGING_READ_SCOPES,
+      inputSchema: {
+        parent: z.string().regex(BUCKET_RE, 'parent looks like projects/P/locations/L/buckets/B.').optional().describe('The bucket whose views to list, or the parent of view_id.'),
+        view_id: PATH_PART.optional().describe('One view in parent, to get instead of listing.'),
+        name: z.string().regex(VIEW_RE, 'name looks like projects/P/locations/L/buckets/B/views/V.').optional().describe('A full view resource name, instead of parent and view_id.'),
+        page_token: pageToken,
+      },
+      async handler({ parent, view_id, name, page_token }) {
+        if (name && (parent || view_id || page_token)) throw new Error('Give name, or parent with view_id or page_token, not both.');
+        if (!name && !parent) throw new Error('logging_views needs parent (projects/P/locations/L/buckets/B), or name.');
+        if (page_token && view_id) throw new Error('page_token continues a list; remove view_id to list views.');
+        if (name || view_id) {
+          const resource = name ?? `${parent}/views/${view_id}`;
+          const res = await call<{ name?: string; description?: string }>({ url: resourcePath(LOGGING, resource) });
+          return { view: viewRow(res.data) };
+        }
+        const res = await call<{ views?: Array<{ name?: string; description?: string }>; nextPageToken?: string }>({
+          url: `${resourcePath(LOGGING, parent as string)}/views`,
+          query: tokenQuery(page_token),
+        });
+        const views = res.data.views ?? [];
+        return {
+          parent,
+          count: views.length,
+          views: views.map(viewRow),
+          ...next(res.data.nextPageToken),
+        };
+      },
+    }),
+    defineTool({
+      name: 'billing_account_services',
+      title: 'List or read billing-account services',
+      description: `List the services of a Cloud Billing account, or read one service (matches list_billing_account_services and get_billing_account_service in Google's Cloud Billing MCP server). Uses Cloud Billing v1beta. Lists return compact service rows and next_page_token; page_token continues where Google left off. No page_size is offered because no source available here documents a maximum: Google's server default is used.`,
+      kind: 'read',
+      scopes: BILLING_READ_SCOPES,
+      inputSchema: {
+        billing_account: accountId.describe('The billing account, for example 012345-6789AB-CDEF01.'),
+        service: PATH_PART.optional().describe('One service id or resource name, to get instead of listing.'),
+        page_token: pageToken,
+      },
+      async handler({ billing_account, service, page_token }) {
+        if (service && page_token) throw new Error('page_token continues a list; remove service to list services.');
+        const account = accountOf(billing_account);
+        const base = `${BILLING_V1BETA}/billingAccounts/${enc(account)}/services`;
+        if (service) {
+          const res = await call<{ serviceId?: string; displayName?: string }>({ url: `${base}/${enc(service)}` });
+          return { billing_account: account, service: serviceRow(res.data) };
+        }
+        const res = await call<{ services?: Array<{ serviceId?: string; displayName?: string }>; nextPageToken?: string }>({ url: base, query: tokenQuery(page_token) });
+        const services = res.data.services ?? [];
+        return {
+          billing_account: account,
+          count: services.length,
+          services: services.map(serviceRow),
+          ...next(res.data.nextPageToken),
+        };
+      },
+    }),
+    defineTool({
+      name: 'billing_account_sku_groups',
+      title: 'List or read billing-account SKU groups',
+      description: `List the SKU groups of a Cloud Billing account, read one group, list the SKUs in a group, or read one of those SKUs (matches list_billing_account_sku_groups, get_billing_account_sku_group, list_billing_account_sku_group_skus and get_billing_account_sku_group_sku in Google's Cloud Billing MCP server). Uses Cloud Billing v1beta. Give group_id for a group; add list_skus to list its SKUs, or sku_id to read one. Lists return compact rows and next_page_token; page_token continues where Google left off. No page_size is offered because no source available here documents a maximum: Google's server default is used.`,
+      kind: 'read',
+      scopes: BILLING_READ_SCOPES,
+      inputSchema: {
+        billing_account: accountId,
+        group_id: PATH_PART.optional().describe('One SKU group, to get it or its SKUs.'),
+        sku_id: PATH_PART.optional().describe('One SKU in group_id, to get instead of listing.'),
+        list_skus: z.boolean().optional().describe('List the SKUs of group_id instead of the groups.'),
+        page_token: pageToken,
+      },
+      async handler({ billing_account, group_id, sku_id, list_skus, page_token }) {
+        if (sku_id && !group_id) throw new Error('billing_account_sku_groups needs group_id with sku_id.');
+        if (sku_id && list_skus) throw new Error('Give sku_id or list_skus, not both.');
+        if (page_token && (group_id || sku_id) && !list_skus) throw new Error('page_token continues a list; remove group_id and sku_id when listing groups.');
+        const account = accountOf(billing_account);
+        const groups = `${BILLING_V1BETA}/billingAccounts/${enc(account)}/skuGroups`;
+        if (sku_id) {
+          const res = await call<{ skuId?: string; description?: string; category?: { resourceFamily?: string; resourceGroup?: string; usageType?: string } }>({
+            url: `${groups}/${enc(group_id as string)}/skus/${enc(sku_id)}`,
+          });
+          return { billing_account: account, group_id, sku: skuRow(res.data) };
+        }
+        if (group_id && !list_skus) {
+          const res = await call<{ name?: string; displayName?: string; description?: string }>({ url: `${groups}/${enc(group_id)}` });
+          return { billing_account: account, group: groupRow(res.data) };
+        }
+        const url = group_id ? `${groups}/${enc(group_id)}/skus` : groups;
+        const res = await call<{ skuGroups?: Array<{ name?: string; displayName?: string; description?: string }>; skus?: Array<{ skuId?: string; description?: string; category?: { resourceFamily?: string; resourceGroup?: string; usageType?: string } }>; nextPageToken?: string }>({
+          url,
+          query: tokenQuery(page_token),
+        });
+        if (group_id) {
+          const skus = res.data.skus ?? [];
+          return { billing_account: account, group_id, count: skus.length, skus: skus.map(skuRow), ...next(res.data.nextPageToken) };
+        }
+        const rows = res.data.skuGroups ?? [];
+        return { billing_account: account, count: rows.length, sku_groups: rows.map(groupRow), ...next(res.data.nextPageToken) };
+      },
+    }),
+    defineTool({
+      name: 'billing_account_skus',
+      title: 'List or read billing-account SKUs',
+      description: `List the SKUs of a Cloud Billing account, or read one SKU (matches list_billing_account_skus and get_billing_account_sku in Google's Cloud Billing MCP server). Uses Cloud Billing v1beta; filter narrows a list. Returns compact SKU rows and next_page_token; page_token continues where Google left off. No page_size is offered because no source available here documents a maximum: Google's server default is used.`,
+      kind: 'read',
+      scopes: BILLING_READ_SCOPES,
+      inputSchema: {
+        billing_account: accountId,
+        sku_id: z.string().regex(SKU_ID_RE, 'sku_id looks like D041-B8A1-6E0B.').optional().describe('One SKU, to get instead of listing.'),
+        filter: z.string().min(1).optional().describe('A v1beta filter for the list, for example service="6F81-5844-456A".'),
+        page_token: pageToken,
+      },
+      async handler({ billing_account, sku_id, filter, page_token }) {
+        if (sku_id && (filter || page_token)) throw new Error('Give sku_id alone, or filter and page_token to list SKUs.');
+        const account = accountOf(billing_account);
+        const base = `${BILLING_V1BETA}/billingAccounts/${enc(account)}/skus`;
+        if (sku_id) {
+          const res = await call<{ skuId?: string; description?: string; category?: { resourceFamily?: string; resourceGroup?: string; usageType?: string } }>({ url: `${base}/${enc(sku_id)}` });
+          return { billing_account: account, sku: skuRow(res.data) };
+        }
+        const res = await call<{ skus?: Array<{ skuId?: string; description?: string; category?: { resourceFamily?: string; resourceGroup?: string; usageType?: string } }>; nextPageToken?: string }>({
+          url: base,
+          query: { filter, ...tokenQuery(page_token) },
+        });
+        const skus = res.data.skus ?? [];
+        return {
+          billing_account: account,
+          count: skus.length,
+          skus: skus.map(skuRow),
+          ...next(res.data.nextPageToken),
+        };
+      },
+    }),
+    defineTool({
+      name: 'billing_sku_groups',
+      title: 'List or read public SKU groups',
+      description: `List publicly listed Cloud Billing SKU groups, read one group, list the SKUs in a group, or read one of those SKUs (matches list_sku_groups, get_sku_group, list_sku_group_skus and get_sku_group_sku in Google's Cloud Billing MCP server). Uses Cloud Billing v1beta. Give group_id for a group; add list_skus to list its SKUs, or sku_id to read one. Lists return compact rows and next_page_token; page_token continues where Google left off. No page_size is offered because no source available here documents a maximum: Google's server default is used.`,
+      kind: 'read',
+      scopes: BILLING_READ_SCOPES,
+      inputSchema: {
+        group_id: PATH_PART.optional().describe('One public SKU group, to get it or its SKUs.'),
+        sku_id: PATH_PART.optional().describe('One SKU in group_id, to get instead of listing.'),
+        list_skus: z.boolean().optional().describe('List the SKUs of group_id instead of the groups.'),
+        page_token: pageToken,
+      },
+      async handler({ group_id, sku_id, list_skus, page_token }) {
+        if (sku_id && !group_id) throw new Error('billing_sku_groups needs group_id with sku_id.');
+        if (sku_id && list_skus) throw new Error('Give sku_id or list_skus, not both.');
+        if (page_token && group_id && !list_skus) throw new Error('page_token continues a list; remove group_id when listing groups.');
+        const groups = `${BILLING_V1BETA}/skuGroups`;
+        if (sku_id) {
+          const res = await call<{ skuId?: string; description?: string; category?: { resourceFamily?: string; resourceGroup?: string; usageType?: string } }>({
+            url: `${groups}/${enc(group_id as string)}/skus/${enc(sku_id)}`,
+          });
+          return { group_id, sku: skuRow(res.data) };
+        }
+        if (group_id && !list_skus) {
+          const res = await call<{ name?: string; displayName?: string; description?: string }>({ url: `${groups}/${enc(group_id)}` });
+          return { group: groupRow(res.data) };
+        }
+        const res = await call<{ skuGroups?: Array<{ name?: string; displayName?: string; description?: string }>; skus?: Array<{ skuId?: string; description?: string; category?: { resourceFamily?: string; resourceGroup?: string; usageType?: string } }>; nextPageToken?: string }>({
+          url: group_id ? `${groups}/${enc(group_id)}/skus` : groups,
+          query: tokenQuery(page_token),
+        });
+        if (group_id) {
+          const skus = res.data.skus ?? [];
+          return { group_id, count: skus.length, skus: skus.map(skuRow), ...next(res.data.nextPageToken) };
+        }
+        const rows = res.data.skuGroups ?? [];
+        return { count: rows.length, sku_groups: rows.map(groupRow), ...next(res.data.nextPageToken) };
       },
     }),
   ];

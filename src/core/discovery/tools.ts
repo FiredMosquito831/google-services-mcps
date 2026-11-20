@@ -42,7 +42,7 @@ import { assignReadableToolNames, registerRenames, type ToolRename } from './too
 import { clipText, paramToZod, schemaToZod } from './schema.js';
 import { ApiKeyClient } from './apikey-client.js';
 import { adsHeaders, customerIdOf, isGoogleAdsUrl, LOGIN_CUSTOMER_ID_ARG, redactedError } from '../ads.js';
-import { resolveDynamicKind } from '../dynamic.js';
+import { BIGQUERY_JOBS_QUERY_METHOD, isDestructiveBigQuerySql, resolveDynamicKind } from '../dynamic.js';
 import { redactCredentials } from '../credential-fields.js';
 import { targetFieldsOf, targetGetFor } from '../target-preview.js';
 import { contentRange, fromBytes, MediaBody, mediaPart, rangeHeader } from '../media.js';
@@ -796,6 +796,10 @@ function buildMethodTool(
     // for that call (callKind in tools.ts). The tool's kind, and so the tool map and the hook, stay write.
     const arg = bodyArg;
     tool.destructiveWhen = (args) => bodyMeetsRule((args as Record<string, unknown>)[arg], bodyRule);
+  } else if (m.fullId === BIGQUERY_JOBS_QUERY_METHOD && m.kind === 'write' && bodyArg !== undefined) {
+    // BigQuery jobs.query can run DROP/DELETE/TRUNCATE/DDL; escalate non-SELECT/DML/DDL statements at call time while keeping tool-map kind write.
+    const arg = bodyArg;
+    tool.destructiveWhen = (args) => isDestructiveBigQuerySql((args as Record<string, unknown>)[arg]);
   }
   if (m.kind === 'destructive') {
     tool.preview = (args) => {

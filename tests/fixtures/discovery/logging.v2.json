@@ -1,5 +1,5 @@
 {
- "_source": "Trimmed from Google's Discovery document logging v2, revision 20261001: only the methods the curated tools call (logging.entries.list) and the schemas their request bodies reach. For tests/curated-contract.test.mjs; this API has no per-method tools, so data/discovery has no snapshot of it.",
+ "_source": "Trimmed from Google's Discovery document logging v2, revision 20261001: only the methods the curated tools call (logging.entries.list, logging.projects.logs.list, logging.projects.locations.buckets.list/.get and logging.projects.locations.buckets.views.list/.get) and the schemas their request bodies reach. For tests/curated-contract.test.mjs; this API has no per-method tools, so data/discovery has no snapshot of it.",
  "name": "logging",
  "version": "v2",
  "title": "Cloud Logging API",
@@ -66,6 +66,194 @@
       "https://www.googleapis.com/auth/logging.admin",
       "https://www.googleapis.com/auth/logging.read"
      ]
+    }
+   }
+  },
+  "projects": {
+   "resources": {
+    "logs": {
+     "methods": {
+      "list": {
+       "id": "logging.projects.logs.list",
+       "path": "v2/{+parent}/logs",
+       "flatPath": "v2/projects/{projectsId}/logs",
+       "httpMethod": "GET",
+       "description": "Reads logging.projects.logs.list.",
+       "parameters": [
+        {
+         "name": "parent",
+         "location": "path",
+         "type": "string",
+         "required": true,
+         "description": "parent parameter."
+        },
+        {
+         "name": "pageSize",
+         "location": "query",
+         "type": "integer",
+         "description": "pageSize parameter."
+        },
+        {
+         "name": "pageToken",
+         "location": "query",
+         "type": "string",
+         "description": "pageToken parameter."
+        }
+       ],
+       "parameterOrder": [
+        "parent"
+       ],
+       "response": "object",
+       "scopes": [
+        "https://www.googleapis.com/auth/cloud-platform",
+        "https://www.googleapis.com/auth/cloud-platform.read-only",
+        "https://www.googleapis.com/auth/logging.admin",
+        "https://www.googleapis.com/auth/logging.read"
+       ]
+      }
+     }
+    },
+    "locations": {
+     "resources": {
+      "buckets": {
+       "methods": {
+        "list": {
+         "id": "logging.projects.locations.buckets.list",
+         "path": "v2/{+parent}/buckets",
+         "flatPath": "v2/projects/{projectsId}/locations/{locationsId}/buckets",
+         "httpMethod": "GET",
+         "description": "Reads logging.projects.locations.buckets.list.",
+         "parameters": [
+          {
+           "name": "parent",
+           "location": "path",
+           "type": "string",
+           "required": true,
+           "description": "parent parameter."
+          },
+          {
+           "name": "pageSize",
+           "location": "query",
+           "type": "integer",
+           "description": "pageSize parameter."
+          },
+          {
+           "name": "pageToken",
+           "location": "query",
+           "type": "string",
+           "description": "pageToken parameter."
+          }
+         ],
+         "parameterOrder": [
+          "parent"
+         ],
+         "response": "object",
+         "scopes": [
+          "https://www.googleapis.com/auth/cloud-platform",
+          "https://www.googleapis.com/auth/cloud-platform.read-only",
+          "https://www.googleapis.com/auth/logging.admin",
+          "https://www.googleapis.com/auth/logging.read"
+         ]
+        },
+        "get": {
+         "id": "logging.projects.locations.buckets.get",
+         "path": "v2/{+name}",
+         "flatPath": "v2/projects/{projectsId}/locations/{locationsId}/buckets/{bucketsId}",
+         "httpMethod": "GET",
+         "description": "Reads logging.projects.locations.buckets.get.",
+         "parameters": [
+          {
+           "name": "name",
+           "location": "path",
+           "type": "string",
+           "required": true,
+           "description": "name parameter."
+          }
+         ],
+         "parameterOrder": [
+          "name"
+         ],
+         "response": "object",
+         "scopes": [
+          "https://www.googleapis.com/auth/cloud-platform",
+          "https://www.googleapis.com/auth/cloud-platform.read-only",
+          "https://www.googleapis.com/auth/logging.admin",
+          "https://www.googleapis.com/auth/logging.read"
+         ]
+        }
+       },
+       "resources": {
+        "views": {
+         "methods": {
+          "list": {
+           "id": "logging.projects.locations.buckets.views.list",
+           "path": "v2/{+parent}/views",
+           "flatPath": "v2/projects/{projectsId}/locations/{locationsId}/buckets/{bucketsId}/views",
+           "httpMethod": "GET",
+           "description": "Reads logging.projects.locations.buckets.views.list.",
+           "parameters": [
+            {
+             "name": "parent",
+             "location": "path",
+             "type": "string",
+             "required": true,
+             "description": "parent parameter."
+            },
+            {
+             "name": "pageSize",
+             "location": "query",
+             "type": "integer",
+             "description": "pageSize parameter."
+            },
+            {
+             "name": "pageToken",
+             "location": "query",
+             "type": "string",
+             "description": "pageToken parameter."
+            }
+           ],
+           "parameterOrder": [
+            "parent"
+           ],
+           "response": "object",
+           "scopes": [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/cloud-platform.read-only",
+            "https://www.googleapis.com/auth/logging.admin",
+            "https://www.googleapis.com/auth/logging.read"
+           ]
+          },
+          "get": {
+           "id": "logging.projects.locations.buckets.views.get",
+           "path": "v2/{+name}",
+           "flatPath": "v2/projects/{projectsId}/locations/{locationsId}/buckets/{bucketsId}/views/{viewsId}",
+           "httpMethod": "GET",
+           "description": "Reads logging.projects.locations.buckets.views.get.",
+           "parameters": [
+            {
+             "name": "name",
+             "location": "path",
+             "type": "string",
+             "required": true,
+             "description": "name parameter."
+            }
+           ],
+           "parameterOrder": [
+            "name"
+           ],
+           "response": "object",
+           "scopes": [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/cloud-platform.read-only",
+            "https://www.googleapis.com/auth/logging.admin",
+            "https://www.googleapis.com/auth/logging.read"
+           ]
+          }
+         }
+        }
+       }
+      }
+     }
     }
    }
   }

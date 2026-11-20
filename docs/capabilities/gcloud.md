@@ -4,11 +4,11 @@ Google Cloud console APIs: projects, service enablement, API keys, billing, moni
 
 - Plugin: `gcloud`, MCP server: `gcloud`, login: Desktop OAuth client, then `login cloud`
 - Install: `claude plugin install gcloud@google-services-mcps`
-- Tools: 393 total. Curated 39, per-method 350, gateway 3. Read 197, write 133, destructive 62, dynamic 1.
+- Tools: 400 total. Curated 46, per-method 350, gateway 3. Read 204, write 133, destructive 62, dynamic 1.
 
 Read tools never ask. Write, destructive and dynamic tools ask before they run, unless the plugin option `confirmation` is set to `off` or `destructive-only` (see docs/SECURITY.md).
 
-Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 393, google 66, curated 42 tools, each counting the 7 runtime tools this server registers (`account_remove`, `account_set_default`, `accounts_list`, `auth_login`, `auth_setup_client`, `auth_status`, `health`). "(all)" means the product has no such toolset yet, so it lists every tool.
+Toolsets (the plugin option `toolset`, `GSM_TOOLSET`): all 400, google 73, curated 49 tools, each counting the 7 runtime tools this server registers (`account_remove`, `account_set_default`, `accounts_list`, `auth_login`, `auth_setup_client`, `auth_status`, `health`). "(all)" means the product has no such toolset yet, so it lists every tool.
 
 ## Not registered by this server (2)
 
@@ -16,7 +16,7 @@ The tool map (`plugins/<id>/tool-map.json`) also lists these, so the consent hoo
 
 - Sign-in tools of other sign-in kinds: `auth_setup_admin`, `auth_setup_service_account`.
 
-## Toolset google (59)
+## Toolset google (66)
 
 The tools that match Google's official MCP server for this product (https://docs.cloud.google.com/resource-manager/reference/mcp, https://docs.cloud.google.com/api-keys/docs/reference/mcp, https://docs.cloud.google.com/bigquery/docs/reference/mcp, https://docs.cloud.google.com/billing/docs/reference/mcp, https://docs.cloud.google.com/iam/docs/reference/mcp, https://docs.cloud.google.com/logging/docs/reference/v2_mcp/mcp, https://docs.cloud.google.com/monitoring/api/ref_v3_mcp/mcp, https://docs.cloud.google.com/storage/docs/reference/mcp).
 
@@ -37,7 +37,7 @@ The tools that match Google's official MCP server for this product (https://docs
 | `bq_table_list` | `list_table_ids` |  |
 | `bq_table_get` | `get_table_info` |  |
 | `bq_table_preview` | (none) | No tool of Google's BigQuery server reads rows without a query. Kept: tabledata.list, which has no query cost. |
-| `bq_query_read` | `execute_sql_readonly` | A dry run first refuses any statement that is not a SELECT, so it stays a read; bigquery_jobs_query (execute_sql) runs any statement and asks first. |
+| `bq_query_read` | `execute_sql_readonly` | A dry run via jobs.query first refuses any statement that is not a SELECT, so it stays a read; bigquery_jobs_query (execute_sql) escalates DDL/DML/mutating or multi-statement SQL (DROP, DELETE, TRUNCATE, UPDATE, INSERT, MERGE, CREATE, ALTER) to destructive and asks twice, while single SELECT writes ask once. |
 | `bigquery_jobs_query` | `execute_sql` |  |
 | `bq_job_get` | `get_query_results` |  |
 | `bigquery_jobs_get` | `get_job` |  |
@@ -53,7 +53,11 @@ The tools that match Google's official MCP server for this product (https://docs
 | `billin_billing_accounts_projects_list` | `list_project_billing_info` |  |
 | `billing_services_list` | `list_services`, `get_service` | Google's get_service has no method in Cloud Billing v1; the list covers it. |
 | `billing_services_skus_list` | `list_skus`, `get_sku` | Google's get_sku has no method in Cloud Billing v1; the list covers it, and billing_price_lookup finds SKUs by words. |
-| `billing_price_lookup` | `list_prices`, `get_price`, `list_billing_account_prices`, `get_billing_account_price` | Prices of one SKU (v1beta skus.price.get), or SKUs of a service found by words and region with their list prices, and a billing account's own prices (v1beta billingAccounts.skus.price.get). Google's SKU-group and billing-account SKU and service listings are reached with the gateway (api_call) in the all toolset. |
+| `billing_price_lookup` | `list_prices`, `get_price`, `list_billing_account_prices`, `get_billing_account_price` | Prices of one SKU (v1beta skus.price.get), or SKUs of a service found by words and region with their list prices, and a billing account's own prices (v1beta billingAccounts.skus.price.get). Google's SKU-group and billing-account SKU and service listings now have named curated tools: billing_account_services, billing_account_sku_groups, billing_account_skus and billing_sku_groups. Other operations are still reached with the gateway (api_call) in the all toolset. |
+| `billing_account_services` | `list_billing_account_services`, `get_billing_account_service` | Curated v1beta read matching Google's list_billing_account_services and get_billing_account_service. Compact service rows with next_page_token; only page_token is accepted because no source here reports a pageSize maximum. Anything else needs the gateway (api_call) in the all toolset. |
+| `billing_account_sku_groups` | `list_billing_account_sku_groups`, `get_billing_account_sku_group`, `list_billing_account_sku_group_skus`, `get_billing_account_sku_group_sku` | Curated v1beta read matching Google's list_billing_account_sku_groups, get_billing_account_sku_group, list_billing_account_sku_group_skus and get_billing_account_sku_group_sku. Compact rows with next_page_token; only page_token is accepted because no source here reports a pageSize maximum. Anything else needs the gateway (api_call) in the all toolset. |
+| `billing_account_skus` | `list_billing_account_skus`, `get_billing_account_sku` | Curated v1beta read matching Google's list_billing_account_skus and get_billing_account_sku. Compact SKU rows with next_page_token; only page_token is accepted because no source here reports a pageSize maximum. Anything else needs the gateway (api_call) in the all toolset. |
+| `billing_sku_groups` | `list_sku_groups`, `get_sku_group`, `list_sku_group_skus`, `get_sku_group_sku` | Curated public v1beta read matching Google's list_sku_groups, get_sku_group, list_sku_group_skus and get_sku_group_sku. Compact rows with next_page_token; only page_token is accepted because no source here reports a pageSize maximum. Anything else needs the gateway (api_call) in the all toolset. |
 | `iam_policies_list_policies` | `list_deny_policies` |  |
 | `iam_policies_get` | `get_deny_policy` |  |
 | `iam_policies_create_policy` | `create_deny_policy` |  |
@@ -62,7 +66,10 @@ The tools that match Google's official MCP server for this product (https://docs
 | `iam_policies_operations_get` | `get_deny_policy_status` |  |
 | `iam_roles_list` | `list_roles` | Reads only. Google's create_role, update_role, delete_role and undelete_role (IAM v1) are reached with the gateway (api_call) in the all toolset. IAM lists only the cloud-platform scope for roles, so a readonly login cannot run it. |
 | `iam_role_get` | `get_role` | IAM lists only the cloud-platform scope for roles, so a readonly login cannot run it. |
-| `logging_entries_list` | `list_log_entries` | Google's list_log_names, list_buckets, list_views (and the observability server's sinks and log scopes) are reached with the gateway (api_call) in the all toolset. Without a time limit the last day is searched, as gcloud logging read does. |
+| `logging_entries_list` | `list_log_entries` | Google's list_log_names, list_buckets and list_views now have named curated tools: logging_log_names_list, logging_buckets and logging_views. The observability server's sinks and log scopes are still reached with the gateway (api_call) in the all toolset. Without a time limit the last day is searched, as gcloud logging read does. |
+| `logging_log_names_list` | `list_log_names` | Curated Logging v2 read matching Google's list_log_names. Compact log_name rows with next_page_token; only page_token is accepted because no source here reports a pageSize maximum. Anything else needs the gateway (api_call) in the all toolset. |
+| `logging_buckets` | `list_buckets`, `get_bucket` | Curated Logging v2 read matching Google's list_buckets and get_bucket. Compact bucket rows with next_page_token on lists; only page_token is accepted because no source here reports a pageSize maximum. Anything else needs the gateway (api_call) in the all toolset. |
+| `logging_views` | `list_views`, `get_view` | Curated Logging v2 read matching Google's list_views and get_view. Compact view rows with next_page_token on lists; only page_token is accepted because no source here reports a pageSize maximum. Anything else needs the gateway (api_call) in the all toolset. |
 | `monitor_projects_time_series_list` | `list_timeseries` |  |
 | `monitoring_query_promql` | `query_range` | Also runs instant queries (Prometheus /query) when no range is given. Our kind is read, as Google marks query_range; since 1.24.5 the gateway's Prometheus POST queries (query, query_range, query_exemplars, series, labels) are reads too (config/tool-kinds.json). |
 | `monitor_metric_descriptors_list` | `list_metric_descriptors` |  |
@@ -82,7 +89,7 @@ The tools that match Google's official MCP server for this product (https://docs
 | `gcs_write_text` | `write_text` | Unlike Google's write_text it does not replace an existing object unless overwrite is true (ifGenerationMatch=0). It also uploads a local file (local_path). |
 | `storage_objects_delete` | `delete_object` |  |
 
-## Curated tools (39)
+## Curated tools (46)
 
 | Tool | Safety | Method or purpose | Scopes |
 |---|---|---|---|
@@ -92,7 +99,11 @@ The tools that match Google's official MCP server for this product (https://docs
 | `auth_login` | write | Sign in to Google | (none) |
 | `auth_setup_client` | write | Save the Google OAuth client | (none) |
 | `auth_status` | read | Sign-in status | (none) |
+| `billing_account_services` | read | List or read billing-account services | cloud-billing.readonly, cloud-billing, +1 more |
+| `billing_account_sku_groups` | read | List or read billing-account SKU groups | cloud-billing.readonly, cloud-billing, +1 more |
+| `billing_account_skus` | read | List or read billing-account SKUs | cloud-billing.readonly, cloud-billing, +1 more |
 | `billing_price_lookup` | read | Look up Google Cloud prices | cloud-billing.readonly, cloud-billing, +1 more |
+| `billing_sku_groups` | read | List or read public SKU groups | cloud-billing.readonly, cloud-billing, +1 more |
 | `bq_dataset_list` | read | List BigQuery datasets | bigquery.readonly, cloud-platform.read-only, +1 more |
 | `bq_job_get` | read | Get BigQuery job rows | bigquery.readonly, cloud-platform.read-only, +1 more |
 | `bq_query_read` | read | Run read-only BigQuery query | bigquery.readonly, cloud-platform.read-only, +1 more |
@@ -119,7 +130,10 @@ The tools that match Google's official MCP server for this product (https://docs
 | `health` | read | Server health | (none) |
 | `iam_role_get` | read | Get an IAM role | cloud-platform |
 | `iam_roles_list` | read | List IAM roles | cloud-platform |
+| `logging_buckets` | read | List or read Cloud Logging buckets | logging.read, cloud-platform.read-only, +2 more |
 | `logging_entries_list` | read | List log entries | logging.read, cloud-platform.read-only, +2 more |
+| `logging_log_names_list` | read | List Cloud Logging log names | logging.read, cloud-platform.read-only, +2 more |
+| `logging_views` | read | List or read Cloud Logging bucket views | logging.read, cloud-platform.read-only, +2 more |
 | `monitoring_dashboard_get` | read | Get a monitoring dashboard | monitoring.read, monitoring, +1 more |
 | `monitoring_dashboards_list` | read | List monitoring dashboards | monitoring.read, monitoring, +1 more |
 | `monitoring_query_promql` | read | Query Cloud Monitoring with PromQL | monitoring.read, monitoring, +1 more |

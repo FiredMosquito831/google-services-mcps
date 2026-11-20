@@ -15,7 +15,7 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { decide, describeAction, loadPolicyFile, riskFromKind, setToolAliasLookup, type Policy } from '../core/policy.js';
 import { readToolAliases } from '../core/tool-aliases.js';
-import { curatedMutateBody, GOOGLE_ADS_MUTATE_METHOD, resolveDynamicKind } from '../core/dynamic.js';
+import { BIGQUERY_JOBS_QUERY_METHOD, curatedMutateBody, GOOGLE_ADS_MUTATE_METHOD, isDestructiveBigQuerySql, resolveDynamicKind } from '../core/dynamic.js';
 import type { ToolMapEntry, ToolMapKind } from '../core/dump.js';
 import { optionValue } from '../core/plugin-option.js';
 
@@ -63,7 +63,12 @@ function kindOfDynamicCall(root: string, entry: ToolMapEntry, input: unknown): {
   if (entry.methodId === undefined && named !== undefined) {
     const tabled = readMethodKinds(root)?.[named];
     if (typeof tabled !== 'string') return null;
-    if (CONCRETE_KINDS.has(tabled)) return { kind: tabled as ToolMapKind, methodId: named };
+    if (CONCRETE_KINDS.has(tabled)) {
+      if (named === BIGQUERY_JOBS_QUERY_METHOD && tabled === 'write' && isDestructiveBigQuerySql(obj.body)) {
+        return { kind: 'destructive', methodId: named };
+      }
+      return { kind: tabled as ToolMapKind, methodId: named };
+    }
     if (tabled !== 'dynamic') return null;
     const kind = resolveDynamicKind(named, obj.body);
     return kind === null ? null : { kind, methodId: named };
@@ -281,6 +286,10 @@ function check(event: HookEvent, root: string): void {
     methodId = resolved.methodId;
   } else {
     kind = entry.kind;
+    if (methodId === BIGQUERY_JOBS_QUERY_METHOD && kind === 'write') {
+      const obj = typeof event.tool_input === 'object' && event.tool_input !== null ? (event.tool_input as Record<string, unknown>) : {};
+      if (isDestructiveBigQuerySql(obj.body)) kind = 'destructive';
+    }
   }
 
   const risk = riskFromKind(kind);

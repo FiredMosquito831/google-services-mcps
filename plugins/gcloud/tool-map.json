@@ -887,6 +887,36 @@
     "title": "cloudbilling.billingAccounts.projects.list"
   },
   {
+    "name": "mcp__plugin_gcloud_gcloud__billing_account_services",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-billing.readonly",
+      "https://www.googleapis.com/auth/cloud-billing",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "title": "List or read billing-account services"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__billing_account_sku_groups",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-billing.readonly",
+      "https://www.googleapis.com/auth/cloud-billing",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "title": "List or read billing-account SKU groups"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__billing_account_skus",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-billing.readonly",
+      "https://www.googleapis.com/auth/cloud-billing",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "title": "List or read billing-account SKUs"
+  },
+  {
     "name": "mcp__plugin_gcloud_gcloud__billing_billing_accounts_create",
     "kind": "write",
     "scopes": [
@@ -1108,6 +1138,16 @@
     ],
     "methodId": "cloudbilling.services.skus.list",
     "title": "cloudbilling.services.skus.list"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__billing_sku_groups",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/cloud-billing.readonly",
+      "https://www.googleapis.com/auth/cloud-billing",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "title": "List or read public SKU groups"
   },
   {
     "name": "mcp__plugin_gcloud_gcloud__billing_sub_accts_create",
@@ -2271,6 +2311,17 @@
     "title": "List IAM roles"
   },
   {
+    "name": "mcp__plugin_gcloud_gcloud__logging_buckets",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/logging.read",
+      "https://www.googleapis.com/auth/cloud-platform.read-only",
+      "https://www.googleapis.com/auth/logging.admin",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "title": "List or read Cloud Logging buckets"
+  },
+  {
     "name": "mcp__plugin_gcloud_gcloud__logging_entries_list",
     "kind": "read",
     "scopes": [
@@ -2280,6 +2331,28 @@
       "https://www.googleapis.com/auth/cloud-platform"
     ],
     "title": "List log entries"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__logging_log_names_list",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/logging.read",
+      "https://www.googleapis.com/auth/cloud-platform.read-only",
+      "https://www.googleapis.com/auth/logging.admin",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "title": "List Cloud Logging log names"
+  },
+  {
+    "name": "mcp__plugin_gcloud_gcloud__logging_views",
+    "kind": "read",
+    "scopes": [
+      "https://www.googleapis.com/auth/logging.read",
+      "https://www.googleapis.com/auth/cloud-platform.read-only",
+      "https://www.googleapis.com/auth/logging.admin",
+      "https://www.googleapis.com/auth/cloud-platform"
+    ],
+    "title": "List or read Cloud Logging bucket views"
   },
   {
     "name": "mcp__plugin_gcloud_gcloud__monitor_alert_policies_create",

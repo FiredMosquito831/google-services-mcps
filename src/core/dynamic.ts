@@ -18,6 +18,8 @@ const GOOGLE_ADS_PREFIX = 'googleads.';
 
 /** The Discovery method id of googleAds:mutate. Policy rules and the audit log match this id. */
 export const GOOGLE_ADS_MUTATE_METHOD = 'googleads.customers.googleAds.mutate';
+/** BigQuery's generic query execution method; writes/DDL/DML are escalated to destructive at call time. */
+export const BIGQUERY_JOBS_QUERY_METHOD = 'bigquery.jobs.query';
 
 /** The curated ads_mutate tool's validate_only default: a call that does not say is validate-only, so Google only checks it. */
 export const CURATED_VALIDATE_ONLY_DEFAULT = true;
@@ -63,4 +65,30 @@ export function resolveDynamicKind(methodId: string, body: unknown): DynamicRisk
   if (body.validateOnly === true) return 'read';
   const risks = [operationsRisk(body.operations), operationsRisk(body.mutateOperations)];
   return risks.includes('destructive') ? 'destructive' : 'write';
+}
+
+/**
+ * True when a bigquery.jobs.query request body runs DDL/DML/multi-statement or unrecognized SQL (not dryRun: true).
+ * Single pure SELECT/WITH/EXPLAIN/SHOW/DESCRIBE queries without mutating SQL keywords stay write; anything else
+ * (DROP, DELETE, TRUNCATE, UPDATE, INSERT, MERGE, ALTER, CREATE, multi-statement, or missing query) escalates to destructive.
+ */
+export function isDestructiveBigQuerySql(body: unknown): boolean {
+  if (!isObject(body)) return true;
+  if (body.dryRun === true) return false;
+  const raw = typeof body.query === 'string' ? body.query : '';
+  const stripped = raw
+    .replace(/\/\*[\s\S]*?\*\//g, ' ')
+    .replace(/--[^\n]*/g, ' ')
+    .replace(/#[^\n]*/g, ' ')
+    .replace(/'(?:\\.|''|[^'\\])*'/g, "''")
+    .replace(/"(?:\\.|""|[^"\\])*"/g, '""')
+    .replace(/`(?:\\.|[^`\\])*`/g, '``')
+    .trim();
+  if (!stripped) return true;
+  const trimmedEnd = stripped.replace(/;+\s*$/, '');
+  if (trimmedEnd.includes(';')) return true;
+  if (!/^(?:SELECT|WITH|EXPLAIN|SHOW|DESCRIBE)\b/i.test(trimmedEnd)) return true;
+  return /\b(?:DROP|DELETE|TRUNCATE|UPDATE|INSERT|MERGE|ALTER|CREATE|REPLACE|GRANT|REVOKE|EXECUTE|CALL|EXPORT|LOAD|RAISE)\b/i.test(
+    trimmedEnd,
+  );
 }

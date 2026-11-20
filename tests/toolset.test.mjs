@@ -524,11 +524,9 @@ test('the gdrive google list covers the 20 tools of Google\'s Drive, Docs, Sheet
 
 test("the gcloud google list covers the tools of Google's Cloud MCP servers for its APIs, without a shell command", () => {
   const google = readJson('config', 'products.json').products.gcloud.toolsets.google;
-  assert.equal(google.tools.length, 59);
+  assert.equal(google.tools.length, 66);
   assert.equal(google.source.length, 8);
   const official = new Set(Object.values(google.matches).flat());
-  // docs.cloud.google.com/<product>/.../mcp/tools_list: Resource Manager, API Keys, BigQuery, IAM, Logging, Monitoring,
-  // Cloud Storage, and the Cloud Billing tools that are not SKU groups or billing-account SKU and service listings.
   const expected = {
     resourcemanager: ['search_projects'],
     apikeys: ['apikeys_list_keys', 'apikeys_get_key', 'apikeys_get_key_string', 'apikeys_create_key', 'apikeys_update_key', 'apikeys_delete_key', 'apikeys_undelete_key', 'apikeys_lookup_key'],
@@ -537,20 +535,32 @@ test("the gcloud google list covers the tools of Google's Cloud MCP servers for 
       'get_billing_account', 'list_billing_accounts', 'create_billing_account', 'move_billing_account', 'get_iam_policy', 'set_iam_policy', 'test_iam_permissions',
       'get_project_billing_info', 'list_project_billing_info', 'list_prices', 'get_price', 'list_billing_account_prices', 'get_billing_account_price',
       'list_services', 'get_service', 'list_skus', 'get_sku',
+      'list_billing_account_services', 'get_billing_account_service',
+      'list_billing_account_sku_groups', 'get_billing_account_sku_group', 'list_billing_account_sku_group_skus', 'get_billing_account_sku_group_sku',
+      'list_billing_account_skus', 'get_billing_account_sku',
+      'list_sku_groups', 'get_sku_group', 'list_sku_group_skus', 'get_sku_group_sku',
     ],
     iam: ['list_deny_policies', 'get_deny_policy', 'create_deny_policy', 'update_deny_policy', 'delete_deny_policy', 'get_deny_policy_status', 'list_roles', 'get_role'],
-    logging: ['list_log_entries'],
+    logging: ['list_log_entries', 'list_log_names', 'get_bucket', 'list_buckets', 'get_view', 'list_views'],
     monitoring: ['list_timeseries', 'query_range', 'get_alert_policy', 'list_alert_policies', 'get_alert', 'list_alerts', 'list_metric_descriptors', 'list_dashboards', 'get_dashboard'],
     storage: ['list_buckets', 'list_objects', 'create_bucket', 'delete_bucket', 'read_text', 'read_object', 'write_text', 'delete_object', 'get_object_metadata'],
   };
   for (const [area, names] of Object.entries(expected)) for (const name of names) assert.ok(official.has(name), `${area}: no tool of ours matches ${name}`);
-  assert.equal(official.size, Object.values(expected).flat().length);
+  const expectedNames = Object.values(expected).flat();
+  assert.equal(expectedNames.length - new Set(expectedNames).size, 1);
+  assert.equal(official.size, 78);
   // Not copied: Google's shell-command tools would bypass the approval gate.
   assert.equal(google.tools.some((t) => /gcloud_command|bq_command/.test(t)), false);
   assert.equal(official.has('run_gcloud_command'), false);
   for (const name of ['cloud_project_iam_policy', 'bq_table_preview']) assert.deepEqual(google.matches[name], [], name);
   assert.match(google.notes.gcs_write_text, /does not replace an existing object unless overwrite is true/);
   assert.match(google.notes.iam_roles_list, /readonly login cannot run it/);
+  assert.match(google.notes.billing_price_lookup, /billing_account_services, billing_account_sku_groups, billing_account_skus and billing_sku_groups/);
+  assert.match(google.notes.logging_entries_list, /logging_log_names_list, logging_buckets and logging_views/);
+  for (const tool of ['logging_log_names_list', 'logging_buckets', 'logging_views', 'billing_account_services', 'billing_account_sku_groups', 'billing_account_skus', 'billing_sku_groups']) {
+    assert.match(google.notes[tool], /next_page_token/);
+    assert.match(google.notes[tool], /no source here reports a pageSize maximum/);
+  }
 });
 
 test('the gsc google list is a lean set: no official server, so every tool says why it is kept', () => {

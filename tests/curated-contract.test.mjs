@@ -113,6 +113,8 @@ const generic = () => ({
   calendars: {},
   mimeType: 'text/plain',
   statistics: { totalBytesProcessed: '10', query: { statementType: 'SELECT' } },
+  statementType: 'SELECT',
+  totalBytesProcessed: '10',
   jobComplete: true,
   jobReference: { jobId: 'job-1', location: 'US' },
   schema: { fields: [] },
@@ -730,7 +732,7 @@ const CASES = {
   cloud_apikey_get: [{ args: { key_name: 'projects/123456789012/locations/global/keys/key-1' }, expect: ['apikeys.projects.locations.keys.get'] }],
   cloud_apikey_reveal: [{ args: { key_name: 'projects/123456789012/locations/global/keys/key-1' }, expect: ['apikeys.projects.locations.keys.getKeyString'] }],
   bq_query_read: [
-    { args: { project_id: 'my-project-123', query: 'SELECT 1', max_bytes_billed: 1000000, max_rows: 10, location: 'EU' }, expect: ['bigquery.jobs.insert', 'bigquery.jobs.query'] },
+    { args: { project_id: 'my-project-123', query: 'SELECT 1', max_bytes_billed: 1000000, max_rows: 10, location: 'EU' }, expect: ['bigquery.jobs.query'] },
   ],
   bq_job_get: [
     { args: { project_id: 'my-project-123', job_id: 'job-1', location: 'EU', max_rows: 10 }, expect: ['bigquery.jobs.getQueryResults'] },
@@ -807,6 +809,36 @@ const CASES = {
             ? { skus: [{ skuId: 'AAAA-BBBB-CCCC', description: 'N2 Instance Core running in Americas', serviceRegions: ['us-central1'] }] }
             : {},
     },
+  ],
+  logging_log_names_list: [{ args: { parent: 'projects/my-project-123', page_token: 'p1' }, expect: ['logging.projects.logs.list'] }],
+  logging_buckets: [
+    { args: { parent: 'projects/my-project-123/locations/global', page_token: 'p1' }, expect: ['logging.projects.locations.buckets.list'] },
+    { args: { parent: 'projects/my-project-123/locations/global', bucket_id: 'bucket-1' }, expect: ['logging.projects.locations.buckets.get'] },
+    { args: { name: 'projects/my-project-123/locations/global/buckets/bucket-1' }, expect: ['logging.projects.locations.buckets.get'] },
+  ],
+  logging_views: [
+    { args: { parent: 'projects/my-project-123/locations/global/buckets/bucket-1', page_token: 'p1' }, expect: ['logging.projects.locations.buckets.views.list'] },
+    { args: { name: 'projects/my-project-123/locations/global/buckets/bucket-1/views/view-1' }, expect: ['logging.projects.locations.buckets.views.get'] },
+  ],
+  billing_account_services: [
+    { args: { billing_account: '012345-6789AB-CDEF01', page_token: 'p1' }, expect: ['cloudbilling.billingAccounts.services.list'] },
+    { args: { billing_account: 'billingAccounts/012345-6789AB-CDEF01', service: '6F81-5844-456A' }, expect: ['cloudbilling.billingAccounts.services.get'] },
+  ],
+  billing_account_sku_groups: [
+    { args: { billing_account: '012345-6789AB-CDEF01', page_token: 'p1' }, expect: ['cloudbilling.billingAccounts.skuGroups.list'] },
+    { args: { billing_account: '012345-6789AB-CDEF01', group_id: 'group-1' }, expect: ['cloudbilling.billingAccounts.skuGroups.get'] },
+    { args: { billing_account: '012345-6789AB-CDEF01', group_id: 'group-1', list_skus: true, page_token: 'p1' }, expect: ['cloudbilling.billingAccounts.skuGroups.skus.list'] },
+    { args: { billing_account: '012345-6789AB-CDEF01', group_id: 'group-1', sku_id: 'D041-B8A1-6E0B' }, expect: ['cloudbilling.billingAccounts.skuGroups.skus.get'] },
+  ],
+  billing_account_skus: [
+    { args: { billing_account: '012345-6789AB-CDEF01', filter: 'service="6F81-5844-456A"', page_token: 'p1' }, expect: ['cloudbilling.billingAccounts.skus.list'] },
+    { args: { billing_account: '012345-6789AB-CDEF01', sku_id: 'D041-B8A1-6E0B' }, expect: ['cloudbilling.billingAccounts.skus.get'] },
+  ],
+  billing_sku_groups: [
+    { args: { page_token: 'p1' }, expect: ['cloudbilling.skuGroups.list'] },
+    { args: { group_id: 'group-1' }, expect: ['cloudbilling.skuGroups.get'] },
+    { args: { group_id: 'group-1', list_skus: true, page_token: 'p1' }, expect: ['cloudbilling.skuGroups.skus.list'] },
+    { args: { group_id: 'group-1', sku_id: 'D041-B8A1-6E0B' }, expect: ['cloudbilling.skuGroups.skus.get'] },
   ],
   gcs_read_text: [
     {
@@ -1373,7 +1405,7 @@ test('every curated tool has a contract row, a skip reason or a known defect, an
   const listed = new Set([...Object.keys(CASES), ...Object.keys(SKIPPED), ...Object.keys(KNOWN_DEFECTS)]);
   assert.deepEqual([...tools.keys()].filter((name) => !listed.has(name)), [], 'curated tools without a row');
   assert.deepEqual([...listed].filter((name) => !tools.has(name)), [], 'rows for tools that do not exist');
-  assert.equal(tools.size, 174, 'the curated tool count; update the table when it changes');
+  assert.equal(tools.size, 181, 'the curated tool count; update the table when it changes');
 });
 
 for (const [name, cases] of Object.entries(CASES)) {
